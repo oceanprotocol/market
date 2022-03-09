@@ -35,7 +35,3 @@
 .userLiquidity [class*='Token_token'] div {
   font-size: var(--font-size-small);
 }
-
-.userLiquidity [class*='Token_icon'] {
-  display: none;
-}

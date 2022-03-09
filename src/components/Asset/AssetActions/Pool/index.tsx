@@ -149,8 +149,6 @@ export default function Pool(): ReactElement {
             }
             baseTokenValue={`${poolInfo?.totalLiquidityInOcean}`}
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            // datatokenValue={`${poolData?.datatokenLiquidity}`}
-            // datatokenSymbol={poolInfo?.datatokenSymbol}
             conversion={poolInfo?.totalLiquidityInOcean}
           />
 
