@@ -16,10 +16,13 @@
   }
 }
 
+/* Sledgehammer !important cause Next.js reordering of styles is clashing with
+our Blockies implementation.
+See https://github.com/oceanprotocol/market/issues/1143 */
 .imageWrap,
 .image {
-  width: 96px;
-  height: 96px;
+  width: 96px !important;
+  height: 96px !important;
 }
 
 .imageWrap {
