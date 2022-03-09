@@ -89,5 +89,5 @@ module.exports = {
     process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_EWC || '',
   rinkebyMigrationContractAddresss:
     process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_RINKEBY ||
-    '0x3b2A8De44C8C5E2e472c67B3f8da75f26294E875'
+    '0x2Fad948eE01019c316D729Ef7d930B4791aF8660'
 }
