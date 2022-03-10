@@ -15,6 +15,7 @@ import { downloadFile } from '@utils/provider'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
+import { getOrderFeedback } from '@utils/feedback'
 
 export default function Download({
   asset,
