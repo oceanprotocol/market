@@ -80,7 +80,7 @@ export function Feedback(): ReactElement {
     const { feedback, pricing, services } = values
 
     let timer: number
-    if (services[0].access && pricing.price > 0) {
+    if (web3 && services[0].access && pricing.price > 0) {
       setShowEstimates(true)
       calculateGasFeeToken()
       calculateGasFeeDDO()
