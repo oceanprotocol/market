@@ -17,6 +17,7 @@ export function Feedback(): ReactElement {
   const [gasFeeDDO, setGasFeeDDO] = useState('')
   const { web3, chainId } = useWeb3()
   const { prices } = usePrices()
+  const [showEstimates, setShowEstimates] = useState(false)
 
   const getEstGasFeeToken = async (
     values: FormPublishData,
@@ -76,16 +77,21 @@ export function Feedback(): ReactElement {
     const calculateGasFeeDDO = async () =>
       setGasFeeDDO(await getEstGasFeeDDO(values, values.user.accountId))
 
-    const { feedback } = values
+    const { feedback, pricing, services } = values
 
-    calculateGasFeeToken()
-    calculateGasFeeDDO()
     let timer: number
-    if (feedback['1'].status !== 'success') {
-      timer = window.setInterval(() => {
-        calculateGasFeeToken()
-        calculateGasFeeDDO()
-      }, 3000)
+    if (services[0].access && pricing.price > 0) {
+      setShowEstimates(true)
+      calculateGasFeeToken()
+      calculateGasFeeDDO()
+      if (feedback['1'].status !== 'success') {
+        timer = window.setInterval(() => {
+          calculateGasFeeToken()
+          calculateGasFeeDDO()
+        }, 3000)
+      }
+    } else {
+      setShowEstimates(false)
     }
 
     return () => {
@@ -103,6 +109,7 @@ export function Feedback(): ReactElement {
             chainId={values.user.chainId}
             txHash={value.txHash}
             gasFeesOcean={gasFeeToken}
+            showEstimates={showEstimates}
           />
         )}
         {value.txCount > 0 && index === 2 && (
@@ -111,6 +118,7 @@ export function Feedback(): ReactElement {
             chainId={values.user.chainId}
             txHash={value.txHash}
             gasFeesOcean={gasFeeDDO}
+            showEstimates={showEstimates}
           />
         )}
       </h3>
