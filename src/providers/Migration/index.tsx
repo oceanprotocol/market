@@ -135,13 +135,6 @@ function MigrationProvider({
   }
 
   const startMigration = async (): Promise<void> => {
-    console.log(
-      migrationAddress,
-      status,
-      status,
-      ddo?.dataToken,
-      price?.address
-    )
     if (
       migrationAddress &&
       status !== MigrationStatus.ALLOWED &&
@@ -156,7 +149,6 @@ function MigrationProvider({
       const estGas = await migration.methods
         .startMigration(ddo.dataToken, price.address)
         .estimateGas({ from: accountId })
-      console.log('Starting start migration, estimated gas: ', estGas)
       const tx = await migration.methods
         .startMigration(ddo.dataToken, price.address)
         .send({
@@ -164,17 +156,10 @@ function MigrationProvider({
           gas: estGas + 100000,
           gasPrice: await getFairGasPrice(web3)
         })
-      console.log('Start migration tx: ', tx)
     }
   }
 
   const completeMigration = async (): Promise<void> => {
-    console.log(
-      'Complete migration, ',
-      migrationAddress,
-      ddo?.dataToken,
-      price?.address
-    )
     if (migrationAddress && price?.address) {
       const migration = new web3.eth.Contract(
         migrationAbi.abi as AbiItem[],
@@ -183,7 +168,6 @@ function MigrationProvider({
       const estGas = await migration.methods
         .liquidate(price.address, ['1', '1'])
         .estimateGas({ from: accountId })
-      console.log('Starting liquidate migration, estimated gas: ', estGas)
       const tx = await migration.methods
         .liquidate(price.address, ['1', '1'])
         .send({
@@ -191,7 +175,6 @@ function MigrationProvider({
           gas: estGas + 100000,
           gasPrice: await getFairGasPrice(web3)
         })
-      console.log('Liquidate migration tx: ', tx)
     }
   }
 
@@ -267,7 +250,6 @@ function MigrationProvider({
   }
 
   async function loadMigrationInfo(): Promise<void> {
-    console.log('loadMigrationInfo')
     const migration = new web3.eth.Contract(
       migrationAbi.abi as AbiItem[],
       migrationAddress
