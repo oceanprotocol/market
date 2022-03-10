@@ -1,12 +1,9 @@
 import React, { ReactElement } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
-import classNames from 'classnames/bind'
 import Conversion from './Conversion'
 import styles from './PriceUnit.module.css'
 import { useUserPreferences } from '@context/UserPreferences'
 import Badge from '@shared/atoms/Badge'
-
-const cx = classNames.bind(styles)
 
 export function formatPrice(price: string, locale: string): string {
   return formatCurrency(Number(price), '', locale, false, {
@@ -20,7 +17,7 @@ export function formatPrice(price: string, locale: string): string {
 export default function PriceUnit({
   price,
   className,
-  small,
+  size = 'small',
   conversion,
   symbol,
   type
@@ -28,20 +25,14 @@ export default function PriceUnit({
   price: string
   type?: string
   className?: string
-  small?: boolean
+  size?: 'small' | 'mini' | 'large'
   conversion?: boolean
   symbol?: string
 }): ReactElement {
   const { locale } = useUserPreferences()
 
-  const styleClasses = cx({
-    price: true,
-    small: small,
-    [className]: className
-  })
-
   return (
-    <div className={styleClasses}>
+    <div className={`${styles.price} ${styles[size]} ${className}`}>
       {type && type === 'free' ? (
         <div> Free </div>
       ) : (

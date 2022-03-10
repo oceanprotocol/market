@@ -1,28 +1,32 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import React, { useEffect, useState, ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
-import {
-  getAccountLiquidityInOwnAssets,
-  UserLiquidity,
-  calculateUserLiquidity
-} from '@utils/subgraph'
+import { getAccountTVLInOwnAssets, UserLiquidity } from '@utils/subgraph'
 import Conversion from '@shared/Price/Conversion'
 import NumberUnit from './NumberUnit'
 import styles from './Stats.module.css'
 import { useProfile } from '@context/Profile'
 import { PoolShares_poolShares as PoolShare } from '../../../@types/subgraph/PoolShares'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
+import { calculateUserTVL } from '@utils/pool'
+import Decimal from 'decimal.js'
+import { MAX_DECIMALS } from '@utils/constants'
 
 async function getPoolSharesLiquidity(
   poolShares: PoolShare[]
-): Promise<number> {
-  let totalLiquidity = 0
+): Promise<string> {
+  let tvl = new Decimal(0)
+
   for (const poolShare of poolShares) {
-    const poolLiquidity = calculateUserLiquidity(poolShare)
-    totalLiquidity += poolLiquidity
+    const poolUserTvl = calculateUserTVL(
+      poolShare.shares,
+      poolShare.pool.totalShares,
+      poolShare.pool.baseTokenLiquidity
+    )
+    tvl = tvl.add(new Decimal(poolUserTvl))
   }
 
-  return totalLiquidity
+  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
 }
 
 export default function Stats({
@@ -33,13 +37,13 @@ export default function Stats({
   const { chainIds } = useUserPreferences()
   const { poolShares, assets, assetsTotal, sales } = useProfile()
 
-  const [publisherLiquidity, setPublisherLiquidity] = useState<UserLiquidity>()
-  const [totalLiquidity, setTotalLiquidity] = useState(0)
+  const [publisherTvl, setPublisherTvl] = useState('0')
+  const [totalTvl, setTotalTvl] = useState('0')
 
   useEffect(() => {
     if (!accountId || chainIds.length === 0) {
-      setPublisherLiquidity({ price: '0', oceanBalance: '0' })
-      setTotalLiquidity(0)
+      setPublisherTvl('0')
+      setTotalTvl('0')
     }
   }, [accountId, chainIds])
 
@@ -57,12 +61,12 @@ export default function Stats({
             )
           }
         }
-        const userLiquidity = await getAccountLiquidityInOwnAssets(
+        const userTvl = await getAccountTVLInOwnAssets(
           accountId,
           chainIds,
           accountPoolAdresses
         )
-        setPublisherLiquidity(userLiquidity)
+        setPublisherTvl(userTvl)
       } catch (error) {
         LoggerInstance.error(error.message)
       }
@@ -75,10 +79,10 @@ export default function Stats({
 
     async function getTotalLiquidity() {
       try {
-        const totalLiquidity = await getPoolSharesLiquidity(poolShares)
-        setTotalLiquidity(totalLiquidity)
+        const totalTvl = await getPoolSharesLiquidity(poolShares)
+        setTotalTvl(totalTvl)
       } catch (error) {
-        console.error('Error fetching pool shares: ', error.message)
+        LoggerInstance.error('Error fetching pool shares: ', error.message)
       }
     }
     getTotalLiquidity()
@@ -87,14 +91,12 @@ export default function Stats({
   return (
     <div className={styles.stats}>
       <NumberUnit
-        label="Liquidity in Own Assets"
-        value={
-          <Conversion price={publisherLiquidity?.price} hideApproximateSymbol />
-        }
+        label="TVL in Own Assets"
+        value={<Conversion price={publisherTvl} hideApproximateSymbol />}
       />
       <NumberUnit
-        label="Total Liquidity"
-        value={<Conversion price={`${totalLiquidity}`} hideApproximateSymbol />}
+        label="TVL"
+        value={<Conversion price={totalTvl} hideApproximateSymbol />}
       />
       <NumberUnit label={`Sale${sales === 1 ? '' : 's'}`} value={sales} />
       <NumberUnit label="Published" value={assetsTotal} />

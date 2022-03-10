@@ -154,7 +154,11 @@ function ProfileProvider({
       await fetchPoolShares(accountId, chainIds, isEthAddress)
 
       if (poolSharesInterval) return
+
       const interval = setInterval(async () => {
+        LoggerInstance.log(
+          `[profile] Re-fetching pool shares after ${refreshInterval / 1000}s.`
+        )
         await fetchPoolShares(accountId, chainIds, isEthAddress)
       }, refreshInterval)
       setPoolSharesInterval(interval)

@@ -2,7 +2,7 @@
   display: inline-block;
   font-weight: var(--font-weight-bold);
   font-family: var(--font-family-base);
-  font-size: var(--font-size-large);
+
   color: var(--font-color-text);
   line-height: 1.2;
 }
@@ -17,6 +17,10 @@
   font-size: var(--font-size-base);
 }
 
+.price.large {
+  font-size: var(--font-size-large);
+}
+
 .price.small {
   display: inline-block;
   font-size: var(--font-size-base);
@@ -24,6 +28,15 @@
 
 .price.small .symbol {
   font-size: var(--font-size-small);
+}
+
+.price.mini {
+  display: inline-block;
+  font-size: var(--font-size-small);
+}
+
+.price.mini .symbol {
+  font-size: var(--font-size-mini);
 }
 
 .price .badge {

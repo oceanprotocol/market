@@ -260,6 +260,12 @@ export async function createTokensAndPricing(
       )
       LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
 
+      if (!txApprove) {
+        throw new Error(
+          'MetaMask Approve TX Signature: User denied transaction signature'
+        )
+      }
+
       const result = await nftFactory.createNftErc20WithPool(
         accountId,
         nftCreateData,

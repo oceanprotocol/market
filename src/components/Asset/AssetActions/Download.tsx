@@ -258,13 +258,19 @@ export default function Download({
             accessDetails={asset.accessDetails}
             orderPriceAndFees={orderPriceAndFees}
             conversion
+            size="large"
           />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-      <div className={styles.collect}>
-        {asset.nft.owner === accountId && <CollectTokensButton />}
-      </div>
+
+      {asset?.accessDetails?.datatoken?.name !== '' &&
+        asset?.nft.owner === accountId && (
+          <div className={styles.collect}>
+            <CollectTokensButton />
+          </div>
+        )}
+
       {asset?.metadata?.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute
           algorithmDid={asset.id}

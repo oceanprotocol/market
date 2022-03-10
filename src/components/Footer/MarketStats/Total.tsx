@@ -21,8 +21,12 @@ export default function MarketStatsTotal({
       />{' '}
       <abbr title="Total Value Locked">TVL</abbr> across{' '}
       <strong>{total.pools}</strong> asset pools that contain{' '}
-      <PriceUnit price={`${total.totalOceanLiquidity}`} symbol="OCEAN" small />,
-      plus datatokens for each pool.
+      <PriceUnit
+        price={`${total.totalOceanLiquidity}`}
+        symbol="OCEAN"
+        size="small"
+      />
+      , plus datatokens for each pool.
     </>
   )
 }

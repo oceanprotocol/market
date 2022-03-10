@@ -110,7 +110,7 @@ export default function AssetSelection({
                 <PriceUnit
                   price={asset.price}
                   type={asset.price === '0' ? 'free' : undefined}
-                  small
+                  size="small"
                   className={styles.price}
                 />
               </div>

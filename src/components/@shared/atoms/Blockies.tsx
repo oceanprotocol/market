@@ -16,7 +16,7 @@ export default function Blockies({
 
   return (
     <img
-      className={`${styles.blockies} ${className || ''}`}
+      className={`${className || ''} ${styles.blockies} `}
       src={blockies}
       alt="Blockies"
       aria-hidden="true"

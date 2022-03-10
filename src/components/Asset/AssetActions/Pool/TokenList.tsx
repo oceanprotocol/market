@@ -12,29 +12,36 @@ export default function TokenList({
   datatokenValue,
   datatokenSymbol,
   conversion,
-  highlight
+  highlight,
+  size = 'small'
 }: {
-  title: string | ReactNode
+  title?: string | ReactNode
   children?: ReactNode
   baseTokenValue: string
   baseTokenSymbol: string
   datatokenValue?: string
   datatokenSymbol?: string
-  conversion: Decimal
+  conversion?: Decimal
   highlight?: boolean
+  size?: 'small' | 'mini'
 }): ReactElement {
   return (
     <div className={`${styles.tokenlist} ${highlight ? styles.highlight : ''}`}>
-      <h3 className={styles.title}>{title}</h3>
+      {title && <h3 className={styles.title}>{title}</h3>}
       <div className={styles.tokens}>
-        <Token symbol={baseTokenSymbol} balance={baseTokenValue} />
-        {datatokenValue && (
-          <Token symbol={datatokenSymbol} balance={datatokenValue} />
-        )}
-        {conversion.greaterThan(0) && (
+        <Token symbol={baseTokenSymbol} balance={baseTokenValue} size={size} />
+
+        {conversion?.greaterThan(0) && (
           <Conversion
             price={conversion.toString()}
             className={styles.totalLiquidity}
+          />
+        )}
+        {datatokenValue && (
+          <Token
+            symbol={datatokenSymbol}
+            balance={datatokenValue}
+            size={size}
           />
         )}
         {children}
