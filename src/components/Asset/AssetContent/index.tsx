@@ -16,6 +16,7 @@ import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useWeb3 } from '@context/Web3'
+import CollectTokens from './CollectTokens'
 
 export default function AssetContent({
   asset
@@ -74,11 +75,14 @@ export default function AssetContent({
         <div className={styles.actions}>
           <AssetActions asset={asset} />
           {isOwner && isAssetNetwork && (
-            <div className={styles.ownerActions}>
-              <Link href={`/asset/${asset?.id}/edit`}>
-                <a>Edit</a>
-              </Link>
-            </div>
+            <>
+              <div className={styles.ownerActions}>
+                <Link href={`/asset/${asset?.id}/edit`}>
+                  <a>Edit</a>
+                </Link>
+                <CollectTokens />
+              </div>
+            </>
           )}
         </div>
       </article>
