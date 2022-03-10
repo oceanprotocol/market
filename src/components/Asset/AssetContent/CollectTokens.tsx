@@ -24,7 +24,7 @@ const FixedRateExchangesQuery = gql`
 `
 
 export default function CollectTokens(): ReactElement {
-  const { asset, error, loading, owner } = useAsset()
+  const { asset, error, owner } = useAsset()
   const [isOnwer, setIsOwner] = useState(false)
   const [baseTokenBalance, setBaseTokenBalance] = useState(0)
   const [isCollectLoading, setIsCollectLoading] = useState(false)
@@ -95,6 +95,7 @@ export default function CollectTokens(): ReactElement {
   return (
     asset &&
     isOnwer &&
+    baseTokenBalance > 0 &&
     (!isCollectLoading ? (
       <a onClick={handleCollectTokens}>
         Collect {baseTokenBalance} {asset?.accessDetails?.baseToken.symbol}
