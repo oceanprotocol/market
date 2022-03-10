@@ -8,6 +8,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import { FixedRateExchange, LoggerInstance } from '@oceanprotocol/lib'
 import { getCollectTokensFeedback } from '@utils/feedback'
 import { getOceanConfig } from '@utils/ocean'
+import Loader from '@shared/atoms/Loader'
 
 const FixedRateExchangesQuery = gql`
   query FixedRateExchanges($user: String, $exchangeId: String) {
@@ -62,6 +63,7 @@ export default function CollectTokens(): ReactElement {
   }, [accountId, asset?.accessDetails?.addressOrId, asset.chainId, asset.nft])
 
   async function handleCollectTokens() {
+    if (baseTokenBalance === 0) return
     setIsCollectLoading(true)
     const config = getOceanConfig(asset?.chainId)
     const fixed = new FixedRateExchange(web3, config.fixedRateExchangeAddress)
@@ -85,7 +87,6 @@ export default function CollectTokens(): ReactElement {
       return tx
     } catch (error) {
       LoggerInstance.log(error.message)
-      setIsCollectLoading(false)
     } finally {
       setIsCollectLoading(false)
     }
@@ -93,12 +94,14 @@ export default function CollectTokens(): ReactElement {
 
   return (
     asset &&
-    !loading &&
-    isOnwer && (
+    isOnwer &&
+    (!isCollectLoading ? (
       <a onClick={handleCollectTokens}>
-        Collect {baseTokenBalance} {asset.accessDetails.baseToken.symbol}
-        <Tooltip content="As an asset owner you can collect base tokens " />
+        Collect {baseTokenBalance} {asset?.accessDetails?.baseToken.symbol}
+        <Tooltip content="As an asset owner you can collect base tokens in the contract." />
       </a>
-    )
+    ) : (
+      <Loader message="Collecting tokens..." />
+    ))
   )
 }
