@@ -8,7 +8,7 @@ import {
   TokensPriceQuery,
   TokensPriceQuery_tokens as TokensPrice
 } from '../@types/subgraph/TokensPriceQuery'
-import { Asset, ProviderInstance } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { calculateBuyPrice } from './pool'
 import { getFixedBuyPrice } from './fixedRateExchange'
@@ -229,41 +229,42 @@ function getAccessDetailsFromTokenPrice(
  */
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
-  accountId?: string
+  accountId: string
 ): Promise<OrderPriceAndFees> {
-  const orderPriceAndFee = {
-    price: '0',
-    publisherMarketOrderFee: '0',
-    publisherMarketPoolSwapFee: '0',
-    publisherMarketFixedSwapFee: '0',
-    consumeMarketOrderFee: '0',
-    consumeMarketPoolSwapFee: '0',
-    consumeMarketFixedSwapFee: '0',
-    providerFee: {},
-    opcFee: '0'
-  } as OrderPriceAndFees
-  const { accessDetails } = asset
   const { appConfig } = getSiteMetadata()
 
-  // fetch publish market order fee
-  orderPriceAndFee.publisherMarketOrderFee =
-    asset.accessDetails.publisherMarketOrderFee
-  // fetch consume market order fee
-  orderPriceAndFee.consumeMarketOrderFee = appConfig.consumeMarketOrderFee
+  const orderPriceAndFee = {
+    price: '0',
+    publisherMarketOrderFee:
+      asset?.accessDetails?.publisherMarketOrderFee || '0',
+    publisherMarketPoolSwapFee: '0',
+    publisherMarketFixedSwapFee: '0',
+    consumeMarketOrderFee: appConfig.consumeMarketOrderFee || '0',
+    consumeMarketPoolSwapFee: '0',
+    consumeMarketFixedSwapFee: '0',
+    providerFee: {
+      providerFeeAmount: '0'
+    },
+    opcFee: '0'
+  } as OrderPriceAndFees
+
   // fetch provider fee
   const initializeData = await ProviderInstance.initialize(
-    asset.id,
+    asset?.id,
     asset.services[0].id,
     0,
     accountId,
-    asset.services[0].serviceEndpoint
+    asset?.services[0].serviceEndpoint
   )
   orderPriceAndFee.providerFee = initializeData.providerFee
 
   // fetch price and swap fees
-  switch (accessDetails.type) {
+  switch (asset?.accessDetails?.type) {
     case 'dynamic': {
-      const poolPrice = await calculateBuyPrice(accessDetails, asset.chainId)
+      const poolPrice = await calculateBuyPrice(
+        asset?.accessDetails,
+        asset?.chainId
+      )
       orderPriceAndFee.price = poolPrice.tokenAmount
       orderPriceAndFee.liquidityProviderSwapFee =
         poolPrice.liquidityProviderSwapFeeAmount
@@ -274,7 +275,7 @@ export async function getOrderPriceAndFees(
       break
     }
     case 'fixed': {
-      const fixed = await getFixedBuyPrice(accessDetails, asset.chainId)
+      const fixed = await getFixedBuyPrice(asset?.accessDetails, asset?.chainId)
       orderPriceAndFee.price = fixed.baseTokenAmount
       orderPriceAndFee.opcFee = fixed.oceanFeeAmount
       orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount
@@ -297,9 +298,9 @@ export async function getOrderPriceAndFees(
 /**
  * @param {number} chain
  * @param {string} datatokenAddress
- * @param {number=} timeout timout of the service, this is needed to return order details
- * @param {string=} account account that wants to buy, is needed to return order details
- * @param {bool=} includeOrderPriceAndFees if false price will be spot price (pool) and rate (fre), if true you will get the order price including fees !! fees not yet done
+ * @param {number} timeout timout of the service, this is needed to return order details
+ * @param {string} account account that wants to buy, is needed to return order details
+ * @param {bool} includeOrderPriceAndFees if false price will be spot price (pool) and rate (fre), if true you will get the order price including fees !! fees not yet done
  * @returns {Promise<AccessDetails>}
  */
 export async function getAccessDetails(
@@ -308,22 +309,26 @@ export async function getAccessDetails(
   timeout?: number,
   account = ''
 ): Promise<AccessDetails> {
-  const queryContext = getQueryContext(Number(chainId))
-  const tokenQueryResult: OperationResult<
-    TokenPriceQuery,
-    { datatokenId: string; account: string }
-  > = await fetchData(
-    TokenPriceQuery,
-    {
-      datatokenId: datatokenAddress.toLowerCase(),
-      account: account?.toLowerCase()
-    },
-    queryContext
-  )
+  try {
+    const queryContext = getQueryContext(Number(chainId))
+    const tokenQueryResult: OperationResult<
+      TokenPriceQuery,
+      { datatokenId: string; account: string }
+    > = await fetchData(
+      TokenPriceQuery,
+      {
+        datatokenId: datatokenAddress.toLowerCase(),
+        account: account?.toLowerCase()
+      },
+      queryContext
+    )
 
-  const tokenPrice: TokenPrice = tokenQueryResult.data.token
-  const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
-  return accessDetails
+    const tokenPrice: TokenPrice = tokenQueryResult.data.token
+    const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
+    return accessDetails
+  } catch (error) {
+    LoggerInstance.error('Error getting access details: ', error.message)
+  }
 }
 
 export async function getAccessDetailsForAssets(
@@ -333,43 +338,48 @@ export async function getAccessDetailsForAssets(
   const assetsExtended: AssetExtended[] = assets
   const chainAssetLists: { [key: number]: string[] } = {}
 
-  for (const asset of assets) {
-    if (chainAssetLists[asset.chainId]) {
-      chainAssetLists[asset.chainId].push(
-        asset.services[0].datatokenAddress.toLowerCase()
-      )
-    } else {
-      chainAssetLists[asset.chainId] = []
-      chainAssetLists[asset.chainId].push(
-        asset.services[0].datatokenAddress.toLowerCase()
-      )
+  try {
+    for (const asset of assets) {
+      if (chainAssetLists[asset.chainId]) {
+        chainAssetLists[asset.chainId].push(
+          asset.services[0].datatokenAddress.toLowerCase()
+        )
+      } else {
+        chainAssetLists[asset.chainId] = []
+        chainAssetLists[asset.chainId].push(
+          asset.services[0].datatokenAddress.toLowerCase()
+        )
+      }
     }
-  }
 
-  for (const chainKey in chainAssetLists) {
-    const queryContext = getQueryContext(Number(chainKey))
-    const tokenQueryResult: OperationResult<
-      TokensPriceQuery,
-      { datatokenIds: [string]; account: string }
-    > = await fetchData(
-      TokensPriceQuery,
-      {
-        datatokenIds: chainAssetLists[chainKey],
-        account: account?.toLowerCase()
-      },
-      queryContext
-    )
-    tokenQueryResult.data?.tokens.forEach((token) => {
-      const currentAsset = assetsExtended.find(
-        (asset) => asset.services[0].datatokenAddress.toLowerCase() === token.id
+    for (const chainKey in chainAssetLists) {
+      const queryContext = getQueryContext(Number(chainKey))
+      const tokenQueryResult: OperationResult<
+        TokensPriceQuery,
+        { datatokenIds: [string]; account: string }
+      > = await fetchData(
+        TokensPriceQuery,
+        {
+          datatokenIds: chainAssetLists[chainKey],
+          account: account?.toLowerCase()
+        },
+        queryContext
       )
-      const accessDetails = getAccessDetailsFromTokenPrice(
-        token,
-        currentAsset?.services[0]?.timeout
-      )
+      tokenQueryResult.data?.tokens.forEach((token) => {
+        const currentAsset = assetsExtended.find(
+          (asset) =>
+            asset.services[0].datatokenAddress.toLowerCase() === token.id
+        )
+        const accessDetails = getAccessDetailsFromTokenPrice(
+          token,
+          currentAsset?.services[0]?.timeout
+        )
 
-      currentAsset.accessDetails = accessDetails
-    })
+        currentAsset.accessDetails = accessDetails
+      })
+    }
+    return assetsExtended
+  } catch (error) {
+    LoggerInstance.error('Error getting access details: ', error.message)
   }
-  return assetsExtended
 }

@@ -34,3 +34,7 @@
 .noIcon {
   opacity: 0;
 }
+
+.token.mini {
+  font-size: var(--font-size-mini);
+}

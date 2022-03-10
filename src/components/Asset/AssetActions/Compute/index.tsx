@@ -389,7 +389,7 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        <Price accessDetails={accessDetails} conversion />
+        <Price accessDetails={accessDetails} conversion size="large" />
       </div>
 
       {ddo.metadata.type === 'algorithm' ? (

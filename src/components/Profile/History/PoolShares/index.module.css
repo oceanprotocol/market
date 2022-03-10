@@ -1,0 +1,18 @@
+.poolSharesTable [role='gridcell'] {
+  align-items: flex-start;
+  margin: calc(var(--spacer) / 2) 0;
+}
+
+.poolSharesTable [class*='AssetListTitle_title'] {
+  line-height: 0 !important;
+}
+
+.poolSharesTable [class*='Token_token'] div {
+  color: var(--color-secondary);
+}
+
+@media (min-width: 30rem) {
+  .poolSharesTable [class*='AssetListTitle_title'] {
+    line-height: 0 !important;
+  }
+}

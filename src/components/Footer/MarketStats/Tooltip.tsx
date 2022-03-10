@@ -34,7 +34,7 @@ export default function MarketStatsTooltip({
             <PriceUnit
               price={totalOceanLiquidity?.[chainId] || '0'}
               symbol="OCEAN"
-              small
+              size="small"
             />
           </li>
         ))}
