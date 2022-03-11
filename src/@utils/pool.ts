@@ -56,6 +56,9 @@ export async function buyDtFromPool(
     dtPrice.tokenAmount,
     false
   )
+  if (!approveTx) {
+    return
+  }
   const result = await pool.swapExactAmountOut(
     accountId,
     accessDetails.addressOrId,
