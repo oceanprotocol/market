@@ -1,4 +1,4 @@
-import { toDataUrl } from 'ethereum-blockies'
+import { toDataUrl } from 'myetherwallet-blockies'
 import React, { ReactElement } from 'react'
 import styles from './Blockies.module.css'
 
@@ -14,7 +14,7 @@ export default function Blockies({
 
   return (
     <img
-      className={`${styles.blockies} ${className || ''}`}
+      className={`${className || ''} ${styles.blockies} `}
       src={blockies}
       alt="Blockies"
       aria-hidden="true"

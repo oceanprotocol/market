@@ -62,7 +62,11 @@
 }
 
 .free {
-  text-align: center;
-  margin: calc(var(--spacer) / 2) 0;
+  text-align: left;
+  margin: calc(var(--spacer) / 2);
   font-size: var(--font-size-base);
+}
+
+.free [class*='FormInput_field'] {
+  margin: 0;
 }

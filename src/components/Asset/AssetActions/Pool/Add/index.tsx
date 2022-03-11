@@ -13,7 +13,7 @@ import DebugOutput from '@shared/DebugOutput'
 import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
-import { LoggerInstance, Pool } from '@oceanprotocol/lib'
+import { calcMaxExactIn, LoggerInstance, Pool } from '@oceanprotocol/lib'
 
 export interface FormAddLiquidity {
   amount: string
@@ -73,11 +73,12 @@ export default function Add({
       try {
         const poolInstance = new Pool(web3)
 
-        const amountMaxPool = await poolInstance.getReserve(
+        const poolReserve = await poolInstance.getReserve(
           poolAddress,
           tokenInAddress
         )
 
+        const amountMaxPool = calcMaxExactIn(poolReserve)
         const amountMax =
           Number(balance.ocean) > Number(amountMaxPool)
             ? amountMaxPool
@@ -100,7 +101,7 @@ export default function Add({
   // Submit
   async function handleAddLiquidity(amount: string, resetForm: () => void) {
     const poolInstance = new Pool(web3)
-    const minPoolAmountOut = '0' // ? TODO: how to get?
+    const minPoolAmountOut = '0' // ? how to get? : you would get this value by using `calcPoolOutGivenSingleIn` and substracting slippage from that , like we don in trade. it is ok to be 0 here. We can change after we implement global slippage
 
     try {
       const result = await poolInstance.joinswapExternAmountIn(

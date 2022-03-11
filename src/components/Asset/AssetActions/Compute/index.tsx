@@ -17,8 +17,7 @@ import { useWeb3 } from '@context/Web3'
 import {
   generateBaseQuery,
   getFilterTerm,
-  queryMetadata,
-  transformDDOToAssetSelection
+  queryMetadata
 } from '@utils/aquarius'
 import { Formik } from 'formik'
 import { getInitialValues, validationSchema } from './_constants'
@@ -37,6 +36,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { AccessDetails } from 'src/@types/Price'
+import { transformAssetToAssetSelection } from '@utils/assetConvertor'
 
 export default function Compute({
   ddo,
@@ -158,11 +158,10 @@ export default function Compute({
       )
       setDdoAlgorithmList(gueryResults.results)
 
-      algorithmSelectionList = await transformDDOToAssetSelection(
+      algorithmSelectionList = await transformAssetToAssetSelection(
         computeService?.serviceEndpoint,
         gueryResults.results,
-        [],
-        newCancelToken()
+        []
       )
     }
     return algorithmSelectionList
@@ -390,7 +389,7 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        <Price accessDetails={accessDetails} conversion />
+        <Price accessDetails={accessDetails} conversion size="large" />
       </div>
 
       {ddo.metadata.type === 'algorithm' ? (

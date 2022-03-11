@@ -1,12 +1,37 @@
+.edit ul > li[class*='Tabs_tab'] {
+  padding: calc(var(--spacer) / 4) var(--spacer);
+}
+
+.edit [class*='Tabs_tabContent'] {
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+}
+
 .grid {
-  composes: grid from '../../AssetContent/index.module.css';
-  margin-top: var(--spacer);
+  display: grid;
+  gap: calc(var(--spacer) * 1.5);
+  position: relative;
+  margin-top: -1rem;
+}
+
+.grid > div {
+  overflow: hidden;
+}
+
+.contianer {
+  composes: box from '@shared/atoms/Box.module.css';
+  position: relative;
+}
+
+@media (min-width: 60rem) {
+  .grid {
+    grid-template-columns: 1.5fr 1fr;
+  }
 }
 
 .description {
   font-size: var(--font-size-large);
-  margin-top: -1.5rem;
-  max-width: 50rem;
 }
 
 .title {

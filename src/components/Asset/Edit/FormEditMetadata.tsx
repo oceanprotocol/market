@@ -1,64 +1,75 @@
-import React, { ChangeEvent, ReactElement } from 'react'
+import React, { ChangeEvent, ReactElement, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
-import styles from './FormEditMetadata.module.css'
+import styles from './FormEdit.module.css'
 import { FormPublishData } from '../../Publish/_types'
 import { useAsset } from '@context/Asset'
+import { MetadataEditForm } from './_types'
 
-// function handleTimeoutCustomOption(
-//   data: FormFieldContent[],
-//   values: Partial<FormPublishData>
-// ) {
-//   const timeoutFieldContent = data.filter(
-//     (field) => field.name === 'timeout'
-//   )[0]
-//   const timeoutInputIndex = data.findIndex(
-//     (element) => element.name === 'timeout'
-//   )
-//   if (
-//     data[timeoutInputIndex].options.length < 6 &&
-//     !checkIfTimeoutInPredefinedValues(
-//       values.timeout,
-//       timeoutFieldContent.options
-//     )
-//   ) {
-//     data[timeoutInputIndex].options.push(values.timeout)
-//   } else if (
-//     data[timeoutInputIndex].options.length === 6 &&
-//     checkIfTimeoutInPredefinedValues(
-//       values.timeout,
-//       timeoutFieldContent.options
-//     )
-//   ) {
-//     data[timeoutInputIndex].options.pop()
-//   } else if (
-//     data[timeoutInputIndex].options.length === 6 &&
-//     data[timeoutInputIndex].options[5] !== values.timeout
-//   ) {
-//     data[timeoutInputIndex].options[5] = values.timeout
-//   }
-// }
+export function checkIfTimeoutInPredefinedValues(
+  timeout: string,
+  timeoutOptions: string[]
+): boolean {
+  if (timeoutOptions.indexOf(timeout) > -1) {
+    return true
+  }
+  return false
+}
+
+function handleTimeoutCustomOption(
+  data: FormFieldContent[],
+  values: Partial<FormPublishData>
+) {
+  const timeoutFieldContent = data.filter(
+    (field) => field.name === 'timeout'
+  )[0]
+  const timeoutInputIndex = data.findIndex(
+    (element) => element.name === 'timeout'
+  )
+  if (
+    data[timeoutInputIndex].options.length < 6 &&
+    !checkIfTimeoutInPredefinedValues(
+      values?.services[0]?.timeout,
+      timeoutFieldContent.options
+    )
+  ) {
+    data[timeoutInputIndex].options.push(values?.services[0]?.timeout)
+  } else if (
+    data[timeoutInputIndex].options.length === 6 &&
+    checkIfTimeoutInPredefinedValues(
+      values?.services[0]?.timeout,
+      timeoutFieldContent.options
+    )
+  ) {
+    data[timeoutInputIndex].options.pop()
+  } else if (
+    data[timeoutInputIndex].options.length === 6 &&
+    data[timeoutInputIndex].options[5] !== values?.services[0]?.timeout
+  ) {
+    data[timeoutInputIndex].options[5] = values?.services[0]?.timeout
+  }
+}
+
 export default function FormEditMetadata({
   data,
-  setShowEdit,
   setTimeoutStringValue,
   values,
   showPrice,
   isComputeDataset
 }: {
   data: InputProps[]
-  setShowEdit: (show: boolean) => void
   setTimeoutStringValue: (value: string) => void
-  values: Partial<FormPublishData>
+  values: Partial<MetadataEditForm>
   showPrice: boolean
   isComputeDataset: boolean
 }): ReactElement {
   const { oceanConfig } = useAsset()
+  const [showEdit, setShowEdit] = useState<boolean>()
   const {
     validateField,
     setFieldValue
-  }: FormikContextType<Partial<FormPublishData>> = useFormikContext()
+  }: FormikContextType<Partial<MetadataEditForm>> = useFormikContext()
 
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
@@ -78,12 +89,12 @@ export default function FormEditMetadata({
     (field) => field.name === 'timeout'
   )[0].options
 
-  // if (isComputeDataset && timeoutOptionsArray.includes('Forever')) {
-  //   const foreverOptionIndex = timeoutOptionsArray.indexOf('Forever')
-  //   timeoutOptionsArray.splice(foreverOptionIndex, 1)
-  // } else if (!isComputeDataset && !timeoutOptionsArray.includes('Forever')) {
-  //   timeoutOptionsArray.push('Forever')
-  // }
+  if (isComputeDataset && timeoutOptionsArray.includes('Forever')) {
+    const foreverOptionIndex = timeoutOptionsArray.indexOf('Forever')
+    timeoutOptionsArray.splice(foreverOptionIndex, 1)
+  } else if (!isComputeDataset && !timeoutOptionsArray.includes('Forever')) {
+    timeoutOptionsArray.push('Forever')
+  }
 
   return (
     <Form className={styles.form}>
@@ -107,10 +118,10 @@ export default function FormEditMetadata({
           )
       )}
 
-      {/* <FormActions
+      <FormActions
         setShowEdit={setShowEdit}
-        handleClick={() => setTimeoutStringValue(values.timeout)}
-      /> */}
+        // handleClick={() => setTimeoutStringValue(values?.services[0]?.timeout)}
+      />
     </Form>
   )
 }

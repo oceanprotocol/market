@@ -1,5 +1,11 @@
 import React, { ReactElement, useState } from 'react'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import {
+  AmountsInMaxFee,
+  AmountsOutMaxFee,
+  LoggerInstance,
+  Pool,
+  TokenInOutMarket
+} from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Actions from '../Pool/Actions'
@@ -15,36 +21,33 @@ import { FormTradeData } from './_types'
 import { initialValues } from './_constants'
 import content from '../../../../../content/price.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { usePool } from '@context/Pool'
+import { useSiteMetadata } from '@hooks/useSiteMetadata'
 
 export default function FormTrade({
   asset,
-  balance,
-  maxDt,
-  maxOcean
+  balance
 }: {
   asset: AssetExtended
   balance: PoolBalance
-  maxDt: string
-  maxOcean: string
 }): ReactElement {
-  const { accountId } = useWeb3()
+  const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
+  const { appConfig } = useSiteMetadata()
+  const { poolInfo } = usePool()
   const [txId, setTxId] = useState<string>()
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
 
-  const [maximumOcean, setMaximumOcean] = useState(maxOcean)
-  const [maximumDt, setMaximumDt] = useState(maxDt)
+  const [maximumBaseToken, setMaximumBaseToken] = useState('0')
+  const [maximumDt, setMaximumDt] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
-
-  const tokenAddress = ''
-  const tokenSymbol = ''
 
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
     .shape({
-      ocean: Yup.number()
+      baseToken: Yup.number()
         .max(
-          Number(maximumOcean),
+          Number(maximumBaseToken),
           (param) => `Must be less or equal to ${param.max}`
         )
         .min(0.001, (param) => `Must be more or equal to ${param.min}`)
@@ -64,32 +67,81 @@ export default function FormTrade({
     .defined()
 
   async function handleTrade(values: FormTradeData) {
+    if (!web3 || !asset || !poolInfo || !values) return
+
     try {
-      const impact = new Decimal(
-        new Decimal(100).sub(new Decimal(values.slippage))
-      ).div(100)
-      const precision = 15
-      // const tx =
-      //   values.type === 'buy'
-      //     ? await ocean.pool.buyDTWithExactOcean(
-      //         accountId,
-      //         price.address,
-      //         new Decimal(values.datatoken)
-      //           .mul(impact)
-      //           .toFixed(precision)
-      //           .toString(),
-      //         new Decimal(values.ocean).toFixed(precision).toString()
-      //       )
-      //     : await ocean.pool.sellDT(
-      //         accountId,
-      //         price.address,
-      //         new Decimal(values.datatoken).toFixed(precision).toString(),
-      //         new Decimal(values.ocean)
-      //           .mul(impact)
-      //           .toFixed(precision)
-      //           .toString()
-      //       )
-      // setTxId(tx?.transactionHash)
+      const poolInstance = new Pool(web3)
+      let tx
+      if (values.output === 'exactIn') {
+        const tokenInOutMarket: TokenInOutMarket = {
+          tokenIn:
+            values.type === 'sell'
+              ? poolInfo.datatokenAddress
+              : poolInfo.baseTokenAddress,
+          tokenOut:
+            values.type === 'sell'
+              ? poolInfo.baseTokenAddress
+              : poolInfo.datatokenAddress,
+          marketFeeAddress: appConfig.marketFeeAddress
+        }
+
+        const amountsInOutMaxFee: AmountsInMaxFee = {
+          tokenAmountIn:
+            values.type === 'sell' ? values.datatoken : values.baseToken,
+          minAmountOut: new Decimal(
+            values.type === 'sell' ? values.baseToken : values.datatoken
+          )
+            .mul(
+              new Decimal(1)
+                .minus(new Decimal(values.slippage).div(new Decimal(100)))
+                .toString()
+            )
+            .toString(),
+          swapMarketFee: appConfig.consumeMarketPoolSwapFee
+        }
+        tx = await poolInstance.swapExactAmountIn(
+          accountId,
+          asset.accessDetails.addressOrId,
+          tokenInOutMarket,
+          amountsInOutMaxFee
+        )
+      }
+      if (values.output === 'exactOut') {
+        const tokenOutMarket: TokenInOutMarket = {
+          tokenIn:
+            values.type === 'sell'
+              ? poolInfo.datatokenAddress
+              : poolInfo.baseTokenAddress,
+          tokenOut:
+            values.type === 'sell'
+              ? poolInfo.baseTokenAddress
+              : poolInfo.datatokenAddress,
+          marketFeeAddress: appConfig.marketFeeAddress
+        }
+
+        const amountsOutMaxFee: AmountsOutMaxFee = {
+          maxAmountIn: new Decimal(
+            values.type === 'sell' ? values.datatoken : values.baseToken
+          )
+            .mul(
+              new Decimal(1)
+                .plus(new Decimal(values.slippage).div(new Decimal(100)))
+                .toString()
+            )
+            .toString(),
+          tokenAmountOut:
+            values.type === 'sell' ? values.baseToken : values.datatoken,
+          swapMarketFee: appConfig.consumeMarketPoolSwapFee
+        }
+        tx = await poolInstance.swapExactAmountOut(
+          accountId,
+          asset.accessDetails.addressOrId,
+          tokenOutMarket,
+          amountsOutMaxFee
+        )
+      }
+
+      setTxId(tx?.transactionHash)
     } catch (error) {
       LoggerInstance.error(error.message)
       toast.error(error.message)
@@ -112,10 +164,8 @@ export default function FormTrade({
             <Swap
               asset={asset}
               balance={balance}
-              maxDt={maxDt}
-              maxOcean={maxOcean}
               setCoin={setCoinFrom}
-              setMaximumOcean={setMaximumOcean}
+              setMaximumBaseToken={setMaximumBaseToken}
               setMaximumDt={setMaximumDt}
             />
           ) : (
@@ -154,8 +204,16 @@ export default function FormTrade({
             }
             action={submitForm}
             txId={txId}
-            tokenAddress={tokenAddress}
-            tokenSymbol={tokenSymbol}
+            tokenAddress={
+              values.type === 'buy'
+                ? poolInfo.baseTokenAddress
+                : poolInfo.datatokenAddress
+            }
+            tokenSymbol={
+              values.type === 'buy'
+                ? poolInfo.baseTokenSymbol
+                : poolInfo.datatokenSymbol
+            }
             setSubmitting={setSubmitting}
           />
 

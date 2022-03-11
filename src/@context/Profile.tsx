@@ -154,7 +154,11 @@ function ProfileProvider({
       await fetchPoolShares(accountId, chainIds, isEthAddress)
 
       if (poolSharesInterval) return
+
       const interval = setInterval(async () => {
+        LoggerInstance.log(
+          `[profile] Re-fetching pool shares after ${refreshInterval / 1000}s.`
+        )
         await fetchPoolShares(accountId, chainIds, isEthAddress)
       }, refreshInterval)
       setPoolSharesInterval(interval)
@@ -220,18 +224,14 @@ function ProfileProvider({
     async (cancelToken: CancelToken) => {
       if (!accountId || !chainIds) return
 
-      const didList: string[] = []
+      const dtList: string[] = []
       const tokenOrders = await getUserTokenOrders(accountId, chainIds)
 
       for (let i = 0; i < tokenOrders?.length; i++) {
-        const did = web3.utils
-          .toChecksumAddress(tokenOrders[i].datatoken.address)
-          .replace('0x', 'did:op:')
-        didList.push(did)
+        dtList.push(tokenOrders[i].datatoken.address)
       }
-
       const downloads = await getDownloadAssets(
-        didList,
+        dtList,
         tokenOrders,
         chainIds,
         cancelToken

@@ -14,7 +14,7 @@ function UserLiquidityLine({
   return (
     <div>
       <span>{title}</span>
-      <PriceUnit price={amount} symbol={symbol} small />
+      <PriceUnit price={amount} symbol={symbol} size="small" />
     </div>
   )
 }
