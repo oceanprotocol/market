@@ -10,7 +10,6 @@ import {
   Metadata,
   NftCreateData,
   NftFactory,
-  Pool,
   PoolCreationParams,
   Service,
   ZERO_ADDRESS
