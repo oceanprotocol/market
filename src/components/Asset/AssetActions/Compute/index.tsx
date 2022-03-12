@@ -42,6 +42,7 @@ import { OrderPriceAndFees } from 'src/@types/Price'
 import { buyDtFromPool } from '@utils/pool'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { getComputeFeedback } from '@utils/feedback'
 
 export default function Compute({
   asset,
@@ -73,18 +74,15 @@ export default function Compute({
 
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-  const [orderPriceAndFees, setOrderPriceAndFees] =
-    useState<OrderPriceAndFees>()
   const [isAlgorithmOwned, setIsAlgorithmOwned] = useState(false)
   const [validAlgorithmOrderTx, setValidAlgorithmOrderTx] = useState('')
-  const [orderAlgorithmPriceAndFees, setOrderAlgorithmPriceAndFees] =
-    useState<OrderPriceAndFees>()
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [isAlgoConsumablePrice, setIsAlgoConsumablePrice] = useState(true)
+  const [computeStatusText, setComputeStatusText] = useState('')
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
@@ -108,30 +106,9 @@ export default function Compute({
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
     setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
-
-    async function init() {
-      if (asset?.accessDetails?.addressOrId === ZERO_ADDRESS) return
-      const computeEnv = await getComputeEnviroment(asset)
-      const validUntil = getValidUntilTime(
-        computeEnv?.maxJobDuration,
-        asset?.services[0]?.timeout
-      )
-      const orderPriceAndFees = await getOrderPriceAndFees(
-        asset,
-        ZERO_ADDRESS,
-        computeEnv?.id,
-        validUntil
-      )
-      setOrderPriceAndFees(orderPriceAndFees)
-    }
-    init()
   }, [asset?.accessDetails])
 
   useEffect(() => {
-    console.log(
-      'selectedAlgorithmAsset?.accessDetails == ',
-      selectedAlgorithmAsset?.accessDetails
-    )
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
 
     checkAssetDTBalance(selectedAlgorithmAsset)
@@ -140,26 +117,6 @@ export default function Compute({
     setValidAlgorithmOrderTx(
       selectedAlgorithmAsset?.accessDetails?.validOrderTx
     )
-
-    async function init() {
-      if (selectedAlgorithmAsset?.accessDetails?.addressOrId === ZERO_ADDRESS)
-        return
-      const computeEnv = await getComputeEnviroment(selectedAlgorithmAsset)
-      const validUntil = getValidUntilTime(
-        computeEnv?.maxJobDuration,
-        asset?.services[0]?.timeout,
-        selectedAlgorithmAsset?.services[0]?.timeout
-      )
-      const orderPriceAndFees = await getOrderPriceAndFees(
-        selectedAlgorithmAsset,
-        ZERO_ADDRESS,
-        computeEnv?.id,
-        validUntil
-      )
-      setOrderAlgorithmPriceAndFees(orderPriceAndFees)
-      console.log('orderPriceAndFees ', orderPriceAndFees)
-    }
-    init()
   }, [selectedAlgorithmAsset])
 
   useEffect(() => {
@@ -215,6 +172,26 @@ export default function Compute({
         asset.services[0].timeout,
         selectedAlgorithmAsset.services[0].timeout
       )
+
+      setComputeStatusText(
+        getComputeFeedback(
+          asset.accessDetails.baseToken?.symbol,
+          asset.accessDetails.datatoken?.symbol,
+          asset.metadata.type
+        )[0]
+      )
+      const datasetPriceAndFees = await getOrderPriceAndFees(
+        asset,
+        ZERO_ADDRESS,
+        computeEnv?.id,
+        validUntil
+      )
+      if (!datasetPriceAndFees) {
+        setError('Error setting dataset price and fees!')
+        toast.error('Error setting dataset price and fees!')
+        return
+      }
+
       let datasetOrderTx
       if (isOwned) {
         datasetOrderTx = validOrderTx
@@ -222,6 +199,13 @@ export default function Compute({
       } else {
         try {
           if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
+            setComputeStatusText(
+              getComputeFeedback(
+                asset.accessDetails.baseToken?.symbol,
+                asset.accessDetails.datatoken?.symbol,
+                asset.metadata.type
+              )[1]
+            )
             const tx = await buyDtFromPool(
               asset?.accessDetails,
               accountId,
@@ -233,11 +217,18 @@ export default function Compute({
               return
             }
           }
-          LoggerInstance.log('dataset orderPriceAndFees: ', orderPriceAndFees)
+          LoggerInstance.log('dataset orderPriceAndFees: ', datasetPriceAndFees)
+          setComputeStatusText(
+            getComputeFeedback(
+              asset.accessDetails.baseToken?.symbol,
+              asset.accessDetails.datatoken?.symbol,
+              asset.metadata.type
+            )[asset.accessDetails?.type === 'fixed' ? 3 : 2]
+          )
           const orderTx = await order(
             web3,
             asset,
-            orderPriceAndFees,
+            datasetPriceAndFees,
             accountId,
             computeEnv?.id,
             validUntil,
@@ -261,6 +252,26 @@ export default function Compute({
         }
       }
 
+      setComputeStatusText(
+        getComputeFeedback(
+          selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
+          selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
+          selectedAlgorithmAsset.metadata.type
+        )[0]
+      )
+      const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
+        selectedAlgorithmAsset,
+        ZERO_ADDRESS,
+        computeEnv?.id,
+        validUntil
+      )
+
+      if (!algorithmOrderPriceAndFees) {
+        setError('Error setting algorithm price and fees!')
+        toast.error('Error setting algorithm price and fees!')
+        return
+      }
+
       let algorithmOrderTx
       if (isAlgorithmOwned) {
         algorithmOrderTx = validAlgorithmOrderTx
@@ -274,6 +285,13 @@ export default function Compute({
             !hasAlgoAssetDatatoken &&
             selectedAlgorithmAsset?.accessDetails?.type === 'dynamic'
           ) {
+            setComputeStatusText(
+              getComputeFeedback(
+                selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
+                selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
+                selectedAlgorithmAsset.metadata.type
+              )[1]
+            )
             const tx = await buyDtFromPool(
               selectedAlgorithmAsset?.accessDetails,
               accountId,
@@ -285,14 +303,17 @@ export default function Compute({
               return
             }
           }
-          LoggerInstance.log(
-            'algorithm orderPriceAndFees: ',
-            orderAlgorithmPriceAndFees
+          setComputeStatusText(
+            getComputeFeedback(
+              selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
+              selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
+              selectedAlgorithmAsset.metadata.type
+            )[selectedAlgorithmAsset.accessDetails?.type === 'fixed' ? 3 : 2]
           )
           const orderTx = await order(
             web3,
             selectedAlgorithmAsset,
-            orderAlgorithmPriceAndFees,
+            algorithmOrderPriceAndFees,
             accountId,
             computeEnv?.id,
             validUntil,
@@ -327,6 +348,7 @@ export default function Compute({
         publishAlgorithmLog: true,
         publishOutput: true
       }
+      setComputeStatusText(getComputeFeedback()[4])
       const response = await ProviderInstance.computeStart(
         asset.services[0].serviceEndpoint,
         web3,
@@ -410,7 +432,7 @@ export default function Compute({
               selectedAlgorithmAsset?.services[0]?.timeout
             )}
             // lazy comment when removing pricingStepText
-            stepText={'pricingStepText' || 'Starting Compute Job...'}
+            stepText={computeStatusText}
             isConsumable={isConsumable}
             consumableFeedback={consumableFeedback}
           />

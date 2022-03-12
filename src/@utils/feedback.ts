@@ -18,9 +18,16 @@ export function getCollectTokensFeedback(
   return `Collecting ${baseTokenBalance} ${baseTokenSymbol} from asset `
 }
 
-// TODO: customize for compute
-export const computeFeedback: { [key in number]: string } = {
-  0: 'Ordering asset...',
-  1: 'Transfering datatoken.',
-  2: 'Access granted. Starting job...'
+export function getComputeFeedback(
+  baseTokenSymbol?: string,
+  datatokenSymbol?: string,
+  assetType?: string
+): { [key in number]: string } {
+  return {
+    0: `Setting price and fees for ${assetType}`,
+    1: `Approving and buying one ${datatokenSymbol} from pool`,
+    2: `Ordering  ${assetType} and transfering datatoken ...`,
+    3: `Approving ${baseTokenSymbol} and ordering ${assetType}`,
+    4: 'Generating signature. Starting compute job ...'
+  }
 }
