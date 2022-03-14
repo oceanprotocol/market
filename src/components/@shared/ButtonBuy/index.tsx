@@ -94,13 +94,7 @@ function getComputeAssetHelpText(
     isConsumable === false ||
     isAlgorithmConsumable === false
       ? ''
-      : // : algorithmConsumableStatus === 1
-      // ? 'The selected algorithm has been temporarily disabled by the publisher, please try again later.'
-      // : algorithmConsumableStatus === 2
-      // ? 'Access denied, your wallet address is not found on the selected algorithm allow list.'
-      // : algorithmConsumableStatus === 3
-      // ? 'Access denied, your wallet address is found on the selected algorithm deny list.'
-      hasPreviousOrderSelectedComputeAsset
+      : hasPreviousOrderSelectedComputeAsset
       ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
       : hasDatatokenSelectedComputeAsset
       ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`

@@ -277,19 +277,21 @@ export async function getComputeJobs(
         user: accountId.toLowerCase()
       }
 
+  console.log(' getComputeJobs variables ', variables)
   const results = await fetchDataForMultipleChains(
     assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
     variables,
     assetDTAddress ? [asset?.chainId] : chainIds
   )
 
+  console.log(' getComputeJobs results getComputeOrders', results)
   let tokenOrders: TokenOrder[] = []
   results.map((result) => {
     result.orders.forEach((tokenOrder: TokenOrder) =>
       tokenOrders.push(tokenOrder)
     )
   })
-
+  console.log(' getComputeJobs tokenOrders ', tokenOrders)
   if (tokenOrders.length === 0) {
     return computeResult
   }
