@@ -146,9 +146,7 @@ export default function Download({
               asset.accessDetails.datatoken?.symbol
             )[0]
           )
-
           const tx = await buyDtFromPool(asset.accessDetails, accountId, web3)
-
           if (!tx) {
             toast.error('Failed to buy datatoken from pool!')
             setIsLoading(false)
@@ -162,7 +160,11 @@ export default function Download({
           )[asset.accessDetails?.type === 'fixed' ? 2 : 1]
         )
         const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
-
+        if (!orderTx) {
+          toast.error('Failed to buy datatoken from pool!')
+          setIsLoading(false)
+          return
+        }
         setIsOwned(true)
         setValidOrderTx(orderTx.transactionHash)
       } catch (ex) {
@@ -258,13 +260,19 @@ export default function Download({
             accessDetails={asset.accessDetails}
             orderPriceAndFees={orderPriceAndFees}
             conversion
+            size="large"
           />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-      <div className={styles.collect}>
-        {asset.nft.owner === accountId && <CollectTokensButton />}
-      </div>
+
+      {asset?.accessDetails?.datatoken?.name !== '' &&
+        asset?.nft.owner === accountId && (
+          <div className={styles.collect}>
+            <CollectTokensButton />
+          </div>
+        )}
+
       {asset?.metadata?.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute
           algorithmDid={asset.id}
