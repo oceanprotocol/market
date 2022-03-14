@@ -69,6 +69,9 @@ export async function order(
         orderPriceAndFees.price,
         false
       )
+      if (!txApprove) {
+        return
+      }
 
       const freParams = {
         exchangeContract: config.fixedRateExchangeAddress,
