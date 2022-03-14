@@ -88,10 +88,11 @@ function getComputeAssetHelpText(
     isBalanceSufficient,
     consumableFeedback
   )
+  console.log('isAlgorithmConsumable', isAlgorithmConsumable)
   const computeAlgoHelpText =
     (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
     isConsumable === false ||
-    isAlgorithmConsumable
+    isAlgorithmConsumable === false
       ? ''
       : // : algorithmConsumableStatus === 1
       // ? 'The selected algorithm has been temporarily disabled by the publisher, please try again later.'
