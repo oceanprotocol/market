@@ -11,7 +11,10 @@ import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset } from '@oceanprotocol/lib'
 import { AccessDetails } from 'src/@types/Price'
-import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
+import {
+  getAccessDetailsForAssets,
+  getAccessDetails
+} from '@utils/accessDetailsAndPricing'
 import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function FormStartCompute({
@@ -81,9 +84,18 @@ export default function FormStartCompute({
   useEffect(() => {
     if (!values.algorithm || !accountId || !isConsumable) return
     async function fetchAlgorithmAssetExtended() {
-      const algorithmDDO = getAlgorithmAsset(values.algorithm)
-      const extendedAlgoAsset = await getAccessDetailsForAssets([algorithmDDO])
-      setSelectedAlgorithm(extendedAlgoAsset[0])
+      const algorithmAsset = getAlgorithmAsset(values.algorithm)
+      const accessDetails = await getAccessDetails(
+        algorithmAsset.chainId,
+        algorithmAsset.services[0].datatokenAddress,
+        algorithmAsset.services[0].timeout,
+        accountId
+      )
+      const extendedAlgoAsset: AssetExtended = {
+        ...algorithmAsset,
+        accessDetails: accessDetails
+      }
+      setSelectedAlgorithm(extendedAlgoAsset)
     }
     fetchAlgorithmAssetExtended()
   }, [values.algorithm, accountId, isConsumable])
