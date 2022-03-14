@@ -99,7 +99,7 @@ export default function CollectTokens(): ReactElement {
     (!isCollectLoading ? (
       <a onClick={handleCollectTokens}>
         Collect {baseTokenBalance} {asset?.accessDetails?.baseToken.symbol}
-        <Tooltip content="As an asset owner you can collect base tokens in the contract." />
+        <Tooltip content="Collect the tokens that you earned by selling this asset." />
       </a>
     ) : (
       <Loader message="Collecting tokens..." />
