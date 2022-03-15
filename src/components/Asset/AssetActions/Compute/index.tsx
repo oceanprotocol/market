@@ -110,7 +110,6 @@ export default function Compute({
 
   useEffect(() => {
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
-
     checkAssetDTBalance(selectedAlgorithmAsset)
     setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
     setIsAlgorithmOwned(selectedAlgorithmAsset?.accessDetails?.isOwned)

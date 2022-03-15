@@ -88,7 +88,6 @@ function getComputeAssetHelpText(
     isBalanceSufficient,
     consumableFeedback
   )
-  console.log('isAlgorithmConsumable', isAlgorithmConsumable)
   const computeAlgoHelpText =
     (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
     isConsumable === false ||
