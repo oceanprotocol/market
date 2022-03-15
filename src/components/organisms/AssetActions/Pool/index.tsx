@@ -24,6 +24,7 @@ import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 
 import { isValidNumber } from './../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
+import Alert from '../../../atoms/Alert'
 
 const REFETCH_INTERVAL = 5000
 
@@ -487,14 +488,12 @@ export default function Pool(): ReactElement {
           </div>
 
           <div className={stylesActions.actions}>
-            <Button
-              style="primary"
-              size="small"
-              onClick={() => setShowAdd(true)}
-              disabled={isInPurgatory}
-            >
-              Add Liquidity
-            </Button>
+            <Alert
+              title="V3 are being migrated to V4"
+              text="Adding and removing liquidity is disabled while the pool is in
+              the process of being migrated from V3 to v4"
+              state="warning"
+            />
 
             {hasAddedLiquidity && !isRemoveDisabled && (
               <Button

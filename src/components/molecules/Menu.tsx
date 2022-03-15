@@ -9,6 +9,13 @@ import Badge from '../atoms/Badge'
 import Logo from '../atoms/Logo'
 import Networks from './UserPreferences/Networks'
 import SearchBar from './SearchBar'
+import Tooltip from '../atoms/Tooltip'
+import { ReactComponent as Caret } from '../../images/caret.svg'
+import appConfig from '../../../app.config'
+
+const redirectToMarketV4 = (): void => {
+  window.location.href = appConfig.marketV4Url
+}
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -39,10 +46,32 @@ export default function Menu(): ReactElement {
     <nav className={styles.menu}>
       <Link to="/" className={styles.logo}>
         <Logo noWordmark />
-        <h1 className={styles.title}>
-          {siteTitle} <Badge label="v3" />
-        </h1>
+        <h1 className={styles.title}>{siteTitle}</h1>
       </Link>
+      <Tooltip
+        content={
+          <ul className={styles.preferencesDetails}>
+            <li>
+              <button
+                className={styles.button}
+                onClick={(e) => e.preventDefault()}
+              >
+                <Badge label="v3" />
+              </button>
+            </li>
+            <li>
+              <button className={styles.button} onClick={redirectToMarketV4}>
+                <Badge label="v4" />
+              </button>
+            </li>
+          </ul>
+        }
+        trigger="click focus"
+        className={`${styles.preferences} ${styles.tooltip}`}
+      >
+        <Badge label="v3" className={styles.badge} />
+        <Caret aria-hidden="true" className={styles.caret} />
+      </Tooltip>
 
       <ul className={styles.navigation}>
         {menu.map((item: MenuItem) => (

@@ -8,7 +8,7 @@
 }
 
 .logo {
-  order: 1;
+  order: 0;
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -60,7 +60,6 @@
 
   .title {
     margin: 0;
-    margin-right: var(--spacer);
     display: block;
     color: var(--color-secondary);
     font-size: var(--font-size-h4);
@@ -116,9 +115,91 @@
 }
 
 .logo svg {
-  margin-right: calc(var(--spacer) / 3);
+  margin-right: calc(var(--spacer) / 6);
 }
 
 .actions button {
   text-transform: none;
+}
+
+.tooltip {
+  composes: box from '../atoms/Box.module.css';
+  box-shadow: none;
+  padding: 0;
+  margin-right: var(--spacer);
+}
+
+.preferences {
+  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 6);
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  margin-left: calc(var(--spacer) / 3);
+  background-color: var(--background-content);
+  white-space: nowrap;
+}
+
+.preferences svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.preferences[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.caret,
+svg.caret {
+  width: var(--font-size-small);
+  height: var(--font-size-small);
+  fill: var(--border-color);
+  margin-left: calc(var(--spacer) / 8);
+  transition: transform 0.2s ease-out;
+  display: none;
+}
+
+@media screen and (min-width: 42rem) {
+  .caret,
+  svg.caret {
+    display: inline-block;
+  }
+}
+
+.preferencesDetails {
+  padding: calc(var(--spacer) / 8) calc(var(--spacer) / 4);
+  max-width: 20rem;
+}
+
+.preferencesDetails > li > div,
+.preferencesDetails p:last-child {
+  margin-bottom: 0;
+}
+
+.preferencesDetails li p {
+  margin-top: calc(var(--spacer) / 12);
+}
+
+.preferencesDetails > li {
+  padding-top: calc(var(--spacer) / 8);
+  padding-bottom: calc(var(--spacer) / 8);
+}
+
+.preferencesDetails li:last-child,
+.preferencesDetails li:last-child p {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.badge {
+  margin: calc(var(--spacer) / 6);
+}
+
+.button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
 }
