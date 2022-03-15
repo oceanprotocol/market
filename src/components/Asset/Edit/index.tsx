@@ -13,7 +13,6 @@ import Alert from '@shared/atoms/Alert'
 export default function Edit({ uri }: { uri: string }): ReactElement {
   const { asset, error, loading, owner } = useAsset()
   const [isCompute, setIsCompute] = useState(false)
-  const [isOnwer, setIsOwner] = useState(false)
   const { accountId } = useWeb3()
 
   // Switch type value upon tab change
@@ -27,7 +26,6 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
       return
     }
     setIsCompute(asset?.services[0]?.type === 'compute')
-    setIsOwner(owner === accountId)
   }, [asset, error])
 
   const tabs = [
@@ -42,18 +40,11 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
     }
   ].filter((tab) => tab !== undefined)
 
-  return asset && !loading && isOnwer ? (
-    <Page uri={uri}>
-      <div className={styles.contianer}>
-        <Tabs
-          items={tabs}
-          handleTabChange={handleTabChange}
-          defaultIndex={0}
-          className={styles.edit}
-        />
-      </div>
+  return loading ? (
+    <Page title={undefined} uri={uri}>
+      <Loader />
     </Page>
-  ) : !isOnwer ? (
+  ) : accountId !== owner ? (
     <Page
       title="Edit action available only to asset owner"
       noPageHeader
@@ -66,8 +57,15 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
       />
     </Page>
   ) : (
-    <Page title={undefined} uri={uri}>
-      <Loader />
+    <Page uri={uri}>
+      <div className={styles.contianer}>
+        <Tabs
+          items={tabs}
+          handleTabChange={handleTabChange}
+          defaultIndex={0}
+          className={styles.edit}
+        />
+      </div>
     </Page>
   )
 }
