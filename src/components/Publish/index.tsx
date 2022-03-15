@@ -63,7 +63,8 @@ export default function PublishPage({
         ...prevState,
         '1': {
           ...prevState['1'],
-          status: 'active'
+          status: 'active',
+          txCount: values.pricing.type === 'dynamic' ? 2 : 1
         }
       }))
 
