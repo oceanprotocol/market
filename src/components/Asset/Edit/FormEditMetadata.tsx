@@ -53,19 +53,14 @@ function handleTimeoutCustomOption(
 
 export default function FormEditMetadata({
   data,
-  setTimeoutStringValue,
-  values,
   showPrice,
   isComputeDataset
 }: {
   data: InputProps[]
-  setTimeoutStringValue: (value: string) => void
-  values: Partial<MetadataEditForm>
   showPrice: boolean
   isComputeDataset: boolean
 }): ReactElement {
   const { oceanConfig } = useAsset()
-  const [showEdit, setShowEdit] = useState<boolean>()
   const {
     validateField,
     setFieldValue
@@ -118,10 +113,7 @@ export default function FormEditMetadata({
           )
       )}
 
-      <FormActions
-        setShowEdit={setShowEdit}
-        // handleClick={() => setTimeoutStringValue(values?.services[0]?.timeout)}
-      />
+      <FormActions />
     </Form>
   )
 }
