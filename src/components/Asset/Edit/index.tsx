@@ -41,7 +41,7 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
   ].filter((tab) => tab !== undefined)
 
   return loading ? (
-    <Page title={undefined} uri={uri}>
+    <Page uri={uri}>
       <Loader />
     </Page>
   ) : accountId !== owner ? (

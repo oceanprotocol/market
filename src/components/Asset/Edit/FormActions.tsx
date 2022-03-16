@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import { useAsset } from '@context/Asset'
 import Button from '@shared/atoms/Button'
 import styles from './FormActions.module.css'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 export default function FormActions({
   handleClick
@@ -11,8 +11,6 @@ export default function FormActions({
   handleClick?: () => void
 }): ReactElement {
   const { isAssetNetwork, asset } = useAsset()
-  const router = useRouter()
-  const { did } = router.query
   const { isValid }: FormikContextType<Partial<any>> = useFormikContext()
 
   return (
@@ -24,14 +22,9 @@ export default function FormActions({
       >
         Submit
       </Button>
-      <Button
-        style="text"
-        onClick={() => {
-          router.push(`/asset/${did}`)
-        }}
-      >
+      <Link href={`/asset/${asset?.id}`} key={asset?.id}>
         Cancel
-      </Button>
+      </Link>
     </footer>
   )
 }
