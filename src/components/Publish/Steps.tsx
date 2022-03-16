@@ -1,6 +1,6 @@
 import { ReactElement, useEffect } from 'react'
 import { useFormikContext } from 'formik'
-import { wizardSteps } from './_constants'
+import { wizardSteps, initialPublishFeedback } from './_constants'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData, PublishFeedback } from './_types'
 
@@ -38,7 +38,7 @@ export function Steps({
                 'a single transaction',
                 'a single transaction, after an initial approve transaction'
               )
-            : feedback['1'].description
+            : initialPublishFeedback['1'].description
       }
     })
   }, [values.pricing.type, setFieldValue])

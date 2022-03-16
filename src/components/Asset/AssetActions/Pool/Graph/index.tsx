@@ -85,11 +85,18 @@ export default function Graph({
 
     const newGraphData = {
       labels: timestamps,
-      datasets: [{ ...lineStyle, data, borderColor: `#8b98a9` }]
+      datasets: [
+        {
+          ...lineStyle,
+          data,
+          borderColor: `#8b98a9`,
+          backgroundColor: darkMode.value ? '#201f1f' : '#f7f7f7'
+        }
+      ]
     }
     setGraphData(newGraphData)
     LoggerInstance.log('[pool graph] New graph data created:', newGraphData)
-  }, [poolSnapshots, graphType, currency, prices, locale])
+  }, [poolSnapshots, graphType, currency, prices, locale, darkMode.value])
 
   return (
     <div className={styles.graphWrap}>

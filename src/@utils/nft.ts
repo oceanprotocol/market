@@ -4,7 +4,8 @@ import {
   getHash,
   Nft,
   ProviderInstance,
-  DDO
+  DDO,
+  MetadataAndTokenURI
 } from '@oceanprotocol/lib'
 import { SvgWaves } from './SvgWaves'
 import Web3 from 'web3'
@@ -45,17 +46,12 @@ function encodeSvg(svgString: string): string {
 export function generateNftMetadata(): NftMetadata {
   const waves = new SvgWaves()
   const svg = waves.generateSvg()
-
-  // TODO: figure out if also image URI needs base64 encoding
-  // e.g. 'data:image/svg+xml;base64,'
-  // generated SVG embedded as 'data:image/svg+xml' and encoded characters
   const imageData = `data:image/svg+xml,${encodeSvg(svg.outerHTML)}`
 
   const newNft: NftMetadata = {
     name: 'Ocean Asset NFT',
     symbol: 'OCEAN-NFT',
     description: `This NFT represents an asset in the Ocean Protocol v4 ecosystem.`,
-    // TODO: ideally this includes the final DID
     external_url: 'https://market.oceanprotocol.com',
     background_color: '141414', // dark background
     image_data: imageData
@@ -67,15 +63,11 @@ export function generateNftMetadata(): NftMetadata {
 const tokenUriPrefix = 'data:application/json;base64,'
 
 export function generateNftCreateData(nftMetadata: NftMetadata): any {
-  const encodedMetadata = Buffer.from(JSON.stringify(nftMetadata)).toString(
-    'base64'
-  )
-
   const nftCreateData = {
     name: nftMetadata.name,
     symbol: nftMetadata.symbol,
     templateIndex: 1,
-    tokenURI: `${tokenUriPrefix}${encodedMetadata}`
+    tokenURI: ''
   }
 
   return nftCreateData
@@ -140,4 +132,67 @@ export async function setNftMetadata(
   )
 
   return setMetadataTx
+}
+
+export async function setNFTMetadataAndTokenURI(
+  asset: Asset | DDO,
+  accountId: string,
+  web3: Web3,
+  nftMetadata: NftMetadata,
+  signal: AbortSignal
+): Promise<TransactionReceipt> {
+  const encryptedDdo = await ProviderInstance.encrypt(
+    asset,
+    asset.services[0].serviceEndpoint,
+    signal
+  )
+  LoggerInstance.log(
+    '[setNFTMetadataAndTokenURI] Got encrypted DDO',
+    encryptedDdo
+  )
+
+  const metadataHash = getHash(JSON.stringify(asset))
+
+  // add final did to external_url and asset link to description in nftMetadata before encoding
+  const externalUrl = `${nftMetadata.external_url}/asset/${asset.id}`
+  const encodedMetadata = Buffer.from(
+    JSON.stringify({
+      ...nftMetadata,
+      description: `${nftMetadata.description}\n\nView on Ocean Market: ${externalUrl}`,
+      external_url: externalUrl
+    })
+  ).toString('base64')
+  const nft = new Nft(web3)
+
+  // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
+  const flags = '0x02'
+
+  const metadataAndTokenURI: MetadataAndTokenURI = {
+    metaDataState: 0,
+    metaDataDecryptorUrl: asset.services[0].serviceEndpoint,
+    metaDataDecryptorAddress: '',
+    flags,
+    data: encryptedDdo,
+    metaDataHash: '0x' + metadataHash,
+    tokenId: 1,
+    tokenURI: `data:application/json;base64,${encodedMetadata}`,
+    metadataProofs: []
+  }
+
+  const estGasSetMetadataAndTokenURI = await nft.estGasSetMetadataAndTokenURI(
+    asset.nftAddress,
+    accountId,
+    metadataAndTokenURI
+  )
+  LoggerInstance.log(
+    '[setNFTMetadataAndTokenURI] est Gas set metadata and token uri --',
+    estGasSetMetadataAndTokenURI
+  )
+  const setMetadataAndTokenURITx = await nft.setMetadataAndTokenURI(
+    asset.nftAddress,
+    accountId,
+    metadataAndTokenURI
+  )
+
+  return setMetadataAndTokenURITx
 }
