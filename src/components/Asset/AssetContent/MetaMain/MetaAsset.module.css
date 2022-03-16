@@ -1,0 +1,26 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-left: calc(var(--spacer) / 2);
+  justify-content: center;
+}
+
+.datatoken {
+  white-space: pre;
+  margin-right: calc(var(--spacer) / 3);
+}
+
+.owner {
+  display: block;
+}
+
+.addWrap {
+  padding-left: calc(var(--spacer) / 5);
+  border-left: 1px solid var(--border-color);
+  display: inline-block;
+}
+
+.add {
+  font-size: var(--font-size-mini);
+}

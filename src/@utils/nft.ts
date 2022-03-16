@@ -1,13 +1,13 @@
-import { SvgWaves } from './SvgWaves'
 import {
-  Asset,
   LoggerInstance,
+  Asset,
   getHash,
   Nft,
   ProviderInstance,
   DDO,
   MetadataAndTokenURI
 } from '@oceanprotocol/lib'
+import { SvgWaves } from './SvgWaves'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-core'
 
@@ -60,6 +60,8 @@ export function generateNftMetadata(): NftMetadata {
   return newNft
 }
 
+const tokenUriPrefix = 'data:application/json;base64,'
+
 export function generateNftCreateData(nftMetadata: NftMetadata): any {
   const nftCreateData = {
     name: nftMetadata.name,
@@ -69,6 +71,19 @@ export function generateNftCreateData(nftMetadata: NftMetadata): any {
   }
 
   return nftCreateData
+}
+
+export function decodeTokenURI(tokenURI: string): NftMetadata {
+  if (!tokenURI) return undefined
+  try {
+    const nftMeta = JSON.parse(
+      Buffer.from(tokenURI.replace(tokenUriPrefix, ''), 'base64').toString()
+    ) as NftMetadata
+
+    return nftMeta
+  } catch (error) {
+    LoggerInstance.error(`[NFT] ${error.message}`)
+  }
 }
 
 export async function setNftMetadata(
