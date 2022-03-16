@@ -23,7 +23,7 @@ const TokensPriceQuery = gql`
       symbol
       name
       orders(
-        where: { consumer: $account }
+        where: { payer: $account }
         orderBy: createdTimestamp
         orderDirection: desc
       ) {
@@ -84,7 +84,7 @@ const TokenPriceQuery = gql`
       symbol
       name
       orders(
-        where: { consumer: $account }
+        where: { payer: $account }
         orderBy: createdTimestamp
         orderDirection: desc
       ) {
@@ -223,7 +223,7 @@ function getAccessDetailsFromTokenPrice(
 }
 
 /**
- * This will be used to get price including feed before ordering
+ * This will be used to get price including fees before ordering
  * @param {AssetExtended} asset
  * @return {Promise<OrdePriceAndFee>}
  */
