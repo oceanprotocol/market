@@ -24,7 +24,7 @@ import {
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
-import { setNftMetadata } from '@utils/nft'
+import { setNFTMetadataAndTokenURI } from '@utils/nft'
 
 // TODO: restore FormikPersist, add back clear form action
 const formName = 'ocean-publish-form'
@@ -173,10 +173,11 @@ export default function PublishPage({
 
       if (!_ddo || !_encryptedDdo) throw new Error('No DDO received.')
 
-      const res = await setNftMetadata(
+      const res = await setNFTMetadataAndTokenURI(
         _ddo,
         accountId,
         web3,
+        values.metadata.nft,
         newAbortController()
       )
 
