@@ -1,0 +1,12 @@
+.collectButton {
+  text-transform: none;
+  font-weight: var(--font-size-base);
+  text-align: center;
+  width: auto;
+}
+
+.collectButton:hover,
+.collectButton:focus {
+  color: var(--color-secondary);
+  transform: none;
+}

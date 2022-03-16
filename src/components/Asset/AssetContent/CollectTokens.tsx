@@ -8,6 +8,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import { FixedRateExchange, LoggerInstance } from '@oceanprotocol/lib'
 import Loader from '@shared/atoms/Loader'
 import Button from '@shared/atoms/Button'
+import styles from './CollectTokens.module.css'
 
 const FixedRateExchangesQuery = gql`
   query FixedRateExchanges($user: String, $exchangeId: String) {
@@ -91,8 +92,13 @@ export default function CollectTokens(): ReactElement {
     isOwner &&
     baseTokenBalance > 0 &&
     (!isCollectLoading ? (
-      <Button style="text" onClick={handleCollectTokens}>
+      <Button
+        style="text"
+        onClick={handleCollectTokens}
+        className={styles.collectButton}
+      >
         Collect {baseTokenBalance} {asset?.accessDetails?.baseToken.symbol}
+        <Tooltip content="Collect the tokens that you earned by selling this asset" />
       </Button>
     ) : (
       <Loader message="Collecting tokens..." />

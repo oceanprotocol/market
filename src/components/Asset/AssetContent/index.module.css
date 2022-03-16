@@ -45,11 +45,9 @@
 
 .ownerActions a,
 .ownerActions button {
-  cursor: pointer;
   color: var(--color-secondary);
   margin-left: calc(var(--spacer) / 4);
   margin-right: calc(var(--spacer) / 4);
-  padding: calc(var(--spacer) / 4) var(--spacer);
 }
 
 .separator {
