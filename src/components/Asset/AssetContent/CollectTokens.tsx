@@ -6,9 +6,8 @@ import { fetchData, getQueryContext } from '@utils/subgraph'
 import { FixedRateExchanges } from 'src/@types/subgraph/FixedRateExchanges'
 import Tooltip from '@shared/atoms/Tooltip'
 import { FixedRateExchange, LoggerInstance } from '@oceanprotocol/lib'
-import { getCollectTokensFeedback } from '@utils/feedback'
-import { getOceanConfig } from '@utils/ocean'
 import Loader from '@shared/atoms/Loader'
+import Button from '@shared/atoms/Button'
 
 const FixedRateExchangesQuery = gql`
   query FixedRateExchanges($user: String, $exchangeId: String) {
@@ -24,23 +23,23 @@ const FixedRateExchangesQuery = gql`
 `
 
 export default function CollectTokens(): ReactElement {
-  const { asset, error, owner } = useAsset()
-  const [isOnwer, setIsOwner] = useState(false)
+  const { asset, error, owner, oceanConfig } = useAsset()
+  const [isOwner, setIsOwner] = useState(false)
   const [baseTokenBalance, setBaseTokenBalance] = useState(0)
   const [isCollectLoading, setIsCollectLoading] = useState(false)
-  const [collectStatusText, setCollectStatusText] = useState('')
+  // const [collectStatusText, setCollectStatusText] = useState('')
 
   const { accountId, web3 } = useWeb3()
 
   useEffect(() => {
-    if (!asset || error) {
+    if (!asset || !accountId || error) {
       return
     }
     setIsOwner(owner === accountId)
-  }, [asset, error])
+  }, [asset, accountId, error])
 
   useEffect(() => {
-    if (!accountId || asset.nft.owner !== accountId) return
+    if (!accountId || !isOwner) return
     const queryContext = getQueryContext(Number(asset.chainId))
 
     async function getBaseTokenBalance() {
@@ -65,16 +64,11 @@ export default function CollectTokens(): ReactElement {
   async function handleCollectTokens() {
     if (baseTokenBalance === 0) return
     setIsCollectLoading(true)
-    const config = getOceanConfig(asset?.chainId)
-    const fixed = new FixedRateExchange(web3, config.fixedRateExchangeAddress)
+    const fixed = new FixedRateExchange(
+      web3,
+      oceanConfig.fixedRateExchangeAddress
+    )
     try {
-      setCollectStatusText(
-        getCollectTokensFeedback(
-          asset.accessDetails.baseToken?.symbol,
-          baseTokenBalance.toString()
-        )
-      )
-
       const tx = await fixed.collectBT(
         accountId,
         asset?.accessDetails?.addressOrId
@@ -94,13 +88,12 @@ export default function CollectTokens(): ReactElement {
 
   return (
     asset &&
-    isOnwer &&
+    isOwner &&
     baseTokenBalance > 0 &&
     (!isCollectLoading ? (
-      <a onClick={handleCollectTokens}>
+      <Button style="text" onClick={handleCollectTokens}>
         Collect {baseTokenBalance} {asset?.accessDetails?.baseToken.symbol}
-        <Tooltip content="Collect the tokens that you earned by selling this asset." />
-      </a>
+      </Button>
     ) : (
       <Loader message="Collecting tokens..." />
     ))

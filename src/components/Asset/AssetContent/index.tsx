@@ -75,14 +75,12 @@ export default function AssetContent({
         <div className={styles.actions}>
           <AssetActions asset={asset} />
           {isOwner && isAssetNetwork && (
-            <>
-              <div className={styles.ownerActions}>
-                <Link href={`/asset/${asset?.id}/edit`}>
-                  <a>Edit</a>
-                </Link>
-                <CollectTokens />
-              </div>
-            </>
+            <div className={styles.ownerActions}>
+              <Link href={`/asset/${asset?.id}/edit`}>
+                <a>Edit</a>
+              </Link>
+              <CollectTokens />
+            </div>
           )}
         </div>
       </article>
