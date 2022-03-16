@@ -88,7 +88,6 @@ export default function CollectTokens(): ReactElement {
   return (
     asset &&
     isOwner &&
-    baseTokenBalance > 0 &&
     (!isCollectLoading ? (
       <Button
         style="text"
