@@ -334,14 +334,18 @@ export async function createTrustedAlgorithmList(
   )
 
   for (const selectedAlgorithm of selectedAssets) {
+    const sanitizedAlgorithmContainer = {
+      entrypoint: selectedAlgorithm.metadata.algorithm.container.entrypoint,
+      image: selectedAlgorithm.metadata.algorithm.container.image,
+      tag: selectedAlgorithm.metadata.algorithm.container.tag,
+      checksum: selectedAlgorithm.metadata.algorithm.container.checksum
+    }
     const trustedAlgorithm = {
       did: selectedAlgorithm.id,
       containerSectionChecksum: getHash(
-        JSON.stringify(selectedAlgorithm.metadata.algorithm.container)
+        JSON.stringify(sanitizedAlgorithmContainer)
       ),
-      filesChecksum: getHash(
-        JSON.stringify(selectedAlgorithm.services[0].files)
-      )
+      filesChecksum: getHash(selectedAlgorithm.services[0].files)
     }
     trustedAlgorithms.push(trustedAlgorithm)
   }
