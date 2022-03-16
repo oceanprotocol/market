@@ -28,8 +28,6 @@ export default function CollectTokens(): ReactElement {
   const [isOwner, setIsOwner] = useState(false)
   const [baseTokenBalance, setBaseTokenBalance] = useState(0)
   const [isCollectLoading, setIsCollectLoading] = useState(false)
-  // const [collectStatusText, setCollectStatusText] = useState('')
-
   const { accountId, web3 } = useWeb3()
 
   useEffect(() => {
