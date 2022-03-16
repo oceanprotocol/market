@@ -16,6 +16,7 @@ import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useWeb3 } from '@context/Web3'
+import Web3 from 'web3'
 
 export default function AssetContent({
   asset
@@ -23,7 +24,7 @@ export default function AssetContent({
   asset: AssetExtended
 }): ReactElement {
   const [isOwner, setIsOwner] = useState(false)
-  const { accountId, web3 } = useWeb3()
+  const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData, owner, isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [receipts, setReceipts] = useState([])
@@ -31,7 +32,7 @@ export default function AssetContent({
 
   useEffect(() => {
     setNftPublisher(
-      web3.utils.toChecksumAddress(
+      Web3.utils.toChecksumAddress(
         receipts?.find((e) => e.type === 'METADATA_CREATED')?.nft?.owner
       )
     )

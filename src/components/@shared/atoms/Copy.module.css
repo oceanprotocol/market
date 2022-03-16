@@ -6,7 +6,6 @@
   background: none;
   padding: 0;
   cursor: pointer;
-  position: relative;
 }
 
 .icon {
@@ -25,11 +24,12 @@
   fill: var(--brand-alert-green);
 }
 
-.copied::after {
-  content: 'Copied!';
-  position: absolute;
-  top: -150%;
-  left: -140%;
+.action {
+  display: flex;
+  gap: 5px;
+}
+
+.feedback {
   font-size: var(--font-size-mini);
   color: var(--brand-alert-green);
 }

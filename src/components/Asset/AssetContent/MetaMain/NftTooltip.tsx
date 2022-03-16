@@ -5,6 +5,7 @@ import { NftMetadata } from '@utils/nft'
 import React, { ReactElement } from 'react'
 import styles from './NftTooltip.module.css'
 import explorerLinkStyles from '@shared/ExplorerLink/index.module.css'
+import { accountTruncate } from '@utils/web3'
 
 export default function NftTooltip({
   nft,
@@ -41,7 +42,7 @@ export default function NftTooltip({
         {nft && <h5>{nft.name}</h5>}
         {address && (
           <span title={address} className={styles.address}>
-            {address} <Copy text={address} />
+            {accountTruncate(address)} <Copy text={address} />
           </span>
         )}
         <div className={styles.links}>
