@@ -58,7 +58,7 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
     </Page>
   ) : (
     <Page uri={uri}>
-      <div className={styles.contianer}>
+      <div className={styles.container}>
         <Tabs
           items={tabs}
           handleTabChange={handleTabChange}
