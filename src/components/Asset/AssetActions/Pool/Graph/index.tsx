@@ -89,7 +89,7 @@ export default function Graph({
         {
           ...lineStyle,
           data,
-          borderColor: darkMode.value ? '#8b98a9' : `#8b98a9`,
+          borderColor: `#8b98a9`,
           backgroundColor: darkMode.value ? '#201f1f' : '#f7f7f7'
         }
       ]
