@@ -242,12 +242,6 @@ export async function getAlgorithmDatasetsForCompute(
         }
       }
     },
-    // filters: [
-    //   getFilterTerm(
-    //     'service.compite.publisherTrustedAlgorithms.did',
-    //     algorithmId
-    //   )
-    // ],
     sortOptions: {
       sortBy: SortTermOptions.Created,
       sortDirection: SortDirectionOptions.Descending
