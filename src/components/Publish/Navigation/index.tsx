@@ -20,7 +20,8 @@ export default function Navigation(): ReactElement {
     const isSuccessMetadata = errors.metadata === undefined
     const isSuccessServices = errors.services === undefined
     const isSuccessPricing =
-      errors.pricing === undefined && touched.pricing?.price
+      errors.pricing === undefined &&
+      (touched.pricing?.price || touched.pricing?.freeAgreement)
     const isSuccessPreview =
       isSuccessMetadata && isSuccessServices && isSuccessPricing
 
