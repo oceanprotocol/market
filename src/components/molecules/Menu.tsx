@@ -67,10 +67,12 @@ export default function Menu(): ReactElement {
           </ul>
         }
         trigger="click focus"
-        className={`${styles.preferences} ${styles.tooltip}`}
+        className={`${styles.preferences} `}
       >
-        <Badge label="v3" className={styles.badge} />
-        <Caret aria-hidden="true" className={styles.caret} />
+        <div className={styles.badge}>
+          <span className={styles.badgeText}>v3 </span>{' '}
+          <Caret aria-hidden="true" className={styles.caret} />
+        </div>
       </Tooltip>
 
       <ul className={styles.navigation}>

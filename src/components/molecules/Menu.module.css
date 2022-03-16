@@ -130,12 +130,7 @@
 }
 
 .preferences {
-  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 6);
   cursor: pointer;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  margin-left: calc(var(--spacer) / 3);
-  background-color: var(--background-content);
   white-space: nowrap;
 }
 
@@ -150,10 +145,9 @@
 
 .caret,
 svg.caret {
-  width: var(--font-size-small);
-  height: var(--font-size-small);
-  fill: var(--border-color);
-  margin-left: calc(var(--spacer) / 8);
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
+  fill: var(--brand-white);
   transition: transform 0.2s ease-out;
   display: none;
 }
@@ -190,10 +184,6 @@ svg.caret {
   margin-bottom: 0;
 }
 
-.badge {
-  margin: calc(var(--spacer) / 6);
-}
-
 .button {
   background: none;
   color: inherit;
@@ -202,4 +192,24 @@ svg.caret {
   font: inherit;
   cursor: pointer;
   outline: inherit;
+}
+
+.badge {
+  display: inline-block;
+  font-size: var(--font-size-mini);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  line-height: 1 !important;
+  text-transform: uppercase;
+  padding: calc(var(--spacer) / 10);
+  border-radius: var(--border-radius);
+  color: var(--brand-white);
+  background: var(--brand-purple);
+  vertical-align: middle;
+  margin: calc(var(--spacer) / 6);
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.badgeText {
+  vertical-align: middle;
 }
