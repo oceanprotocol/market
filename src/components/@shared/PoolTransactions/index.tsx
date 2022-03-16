@@ -5,11 +5,10 @@ import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { useUserPreferences } from '@context/UserPreferences'
 import { gql } from 'urql'
 import { TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions } from '../../../@types/subgraph/TransactionHistory'
-import web3 from 'web3'
 import { fetchDataForMultipleChains } from '@utils/subgraph'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import NetworkName from '@shared/NetworkName'
-import { retrieveDDOListByDIDs } from '@utils/aquarius'
+import { getAssetsFromDtList } from '@utils/aquarius'
 import { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
@@ -128,13 +127,14 @@ export default function PoolTransactions({
   minimal?: boolean
   accountId: string
 }): ReactElement {
-  const [transactions, setTransactions] = useState<PoolTransaction[]>()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { chainIds } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
+  const cancelToken = useCancelToken()
+
+  const [transactions, setTransactions] = useState<PoolTransaction[]>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const [data, setData] = useState<PoolTransaction[]>()
-  const cancelToken = useCancelToken()
 
   const getPoolTransactionData = useCallback(async () => {
     const variables = {
@@ -165,24 +165,18 @@ export default function PoolTransactions({
         return
       }
       const poolTransactions: PoolTransaction[] = []
-      const didList: string[] = []
+      const dtList: string[] = []
 
       for (let i = 0; i < data.length; i++) {
-        const { address } = data[i].datatoken
-        const did = web3.utils
-          .toChecksumAddress(address)
-          .replace('0x', 'did:op:')
-        didList.push(did)
+        dtList.push(data[i]?.datatoken?.address)
       }
-      if (didList.length === 0) {
+
+      if (dtList.length === 0) {
         setIsLoading(false)
         return
       }
-      const ddoList = await retrieveDDOListByDIDs(
-        didList,
-        chainIds,
-        cancelToken
-      )
+      const ddoList = await getAssetsFromDtList(dtList, chainIds, cancelToken)
+
       for (let i = 0; i < data.length; i++) {
         poolTransactions.push({
           ...data[i],

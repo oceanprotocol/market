@@ -7,7 +7,6 @@ import content from '../../../../content/publish/form.json'
 import { getFieldContent } from '../_utils'
 import { FormPublishData } from '../_types'
 import { getOceanConfig } from '@utils/ocean'
-import { computeEnvironmentDefaults } from '../_constants'
 
 const accessTypeOptionsTitles = getFieldContent(
   'access',
@@ -41,20 +40,14 @@ export default function ServicesFields(): ReactElement {
     }
   ]
 
-  const computeEnvironmentOptions = [
-    `Default: ${computeEnvironmentDefaults.cpu} CPU, ${
-      computeEnvironmentDefaults.gpu > 0
-        ? `${computeEnvironmentDefaults.gpu} ${computeEnvironmentDefaults.gpuType} GPU, `
-        : ''
-    } ${computeEnvironmentDefaults.memory} memory, ${
-      computeEnvironmentDefaults.volumeSize
-    } disk`
-  ]
-
   // Auto-change access type based on algo privacy boolean.
   // Could be also done later in transformPublishFormToDdo().
   useEffect(() => {
-    if (!values.services[0].algorithmPrivacy) return
+    if (
+      values.services[0].algorithmPrivacy === null ||
+      values.services[0].algorithmPrivacy === undefined
+    )
+      return
 
     setFieldValue(
       'services[0].access',
@@ -97,16 +90,6 @@ export default function ServicesFields(): ReactElement {
         component={Input}
         name="services[0].providerUrl"
       />
-      {values.services[0].access === 'compute' && (
-        <Field
-          {...getFieldContent('computeOptions', content.services.fields)}
-          component={Input}
-          name="services[0].computeOptions"
-          options={computeEnvironmentOptions}
-          disabled
-          checked
-        />
-      )}
       <Field
         {...getFieldContent('files', content.services.fields)}
         component={Input}

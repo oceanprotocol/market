@@ -12,12 +12,12 @@ import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare
 } from '../@types/subgraph/PoolShares'
-import {
-  OrdersData_orders as OrdersData,
-  OrdersData_orders_datatoken as OrdersDatatoken
-} from '../@types/subgraph/OrdersData'
+import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
+import { calculateUserTVL } from './pool'
+import Decimal from 'decimal.js'
+import { MAX_DECIMALS } from './constants'
 
 export interface UserLiquidity {
   price: string
@@ -164,7 +164,7 @@ const UserTokenOrders = gql`
 `
 
 const UserSalesQuery = gql`
-  query UserSalesQuery($user: String!) {
+  query UserSalesQuery($user: ID!) {
     users(where: { id: $user }) {
       id
       totalSales
@@ -177,7 +177,7 @@ const TopSalesQuery = gql`
   query TopSalesQuery {
     users(
       first: 20
-      orderBy: tokensOwned
+      orderBy: sharesOwned
       orderDirection: desc
       where: { tokenBalancesOwned_not: "0" }
     ) {
@@ -206,14 +206,17 @@ export function getSubgraphUri(chainId: number): string {
 }
 
 export function getQueryContext(chainId: number): OperationContext {
-  const queryContext: OperationContext = {
-    url: `${getSubgraphUri(
-      Number(chainId)
-    )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    requestPolicy: 'cache-and-network'
+  try {
+    const queryContext: OperationContext = {
+      url: `${getSubgraphUri(
+        Number(chainId)
+      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      requestPolicy: 'cache-and-network'
+    }
+    return queryContext
+  } catch (error) {
+    LoggerInstance.error('Get query context error: ', error.message)
   }
-
-  return queryContext
 }
 
 export async function fetchData(
@@ -223,12 +226,13 @@ export async function fetchData(
 ): Promise<any> {
   try {
     const client = getUrqlClientInstance()
+
     const response = await client.query(query, variables, context).toPromise()
     return response
   } catch (error) {
-    console.error('Error fetchData: ', error.message)
-    throw Error(error.message)
+    LoggerInstance.error('Error fetchData: ', error.message)
   }
+  return null
 }
 
 export async function fetchDataForMultipleChains(
@@ -237,21 +241,20 @@ export async function fetchDataForMultipleChains(
   chainIds: number[]
 ): Promise<any[]> {
   let datas: any[] = []
-  for (const chainId of chainIds) {
-    const context: OperationContext = {
-      url: `${getSubgraphUri(
-        chainId
-      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-      requestPolicy: 'network-only'
-    }
-    try {
+  try {
+    for (const chainId of chainIds) {
+      // console.log('fetch chainID', chainId)
+      const context: OperationContext = getQueryContext(chainId)
       const response = await fetchData(query, variables, context)
-      datas = datas.concat(response.data)
-    } catch (error) {
-      console.error('Error fetchData: ', error.message)
+      // console.log('fetch response', response)
+      if (!response || response.error) continue
+      datas = datas.concat(response?.data)
+      // console.log('fetch datas', datas)
     }
+    return datas
+  } catch (error) {
+    LoggerInstance.error('Error fetchDataForMultipleChains: ', error.message)
   }
-  return datas
 }
 
 export async function getOpcFees(chainId: number) {
@@ -268,7 +271,7 @@ export async function getOpcFees(chainId: number) {
     )
     opcFees = response?.data?.opc
   } catch (error) {
-    console.error('Error fetchData: ', error.message)
+    LoggerInstance.error('Error getOpcFees: ', error.message)
     throw Error(error.message)
   }
   return opcFees
@@ -320,6 +323,7 @@ export async function getHighestLiquidityDatatokens(
 ): Promise<string[]> {
   const dtList: string[] = []
   let highestLiquidityAssets: HighestLiquidityAssetsPool[] = []
+
   for (const chain of chainIds) {
     const queryContext = getQueryContext(Number(chain))
     const fetchedPools: OperationResult<HighestLiquidityGraphAssets, any> =
@@ -339,22 +343,11 @@ export async function getHighestLiquidityDatatokens(
   return dtList
 }
 
-export function calculateUserLiquidity(poolShare: PoolShare): number {
-  const ocean =
-    (poolShare.shares / poolShare.pool.totalShares) *
-    poolShare.pool.baseTokenLiquidity
-  const datatokens =
-    (poolShare.shares / poolShare.pool.totalShares) *
-    poolShare.pool.datatokenLiquidity
-  const totalLiquidity = ocean + datatokens * poolShare.pool.spotPrice
-  return totalLiquidity
-}
-
-export async function getAccountLiquidityInOwnAssets(
+export async function getAccountTVLInOwnAssets(
   accountId: string,
   chainIds: number[],
   pools: string[]
-): Promise<UserLiquidity> {
+): Promise<string> {
   const queryVariables = {
     user: accountId.toLowerCase(),
     pools: pools
@@ -364,22 +357,22 @@ export async function getAccountLiquidityInOwnAssets(
     queryVariables,
     chainIds
   )
-  let totalLiquidity = 0
-  let totalOceanLiquidity = 0
+  let tvl = new Decimal(0)
+  // console.log('resss', results)
 
   for (const result of results) {
+    // console.log('result.poolShares', result.poolShares)
     for (const poolShare of result.poolShares) {
-      const userShare = poolShare.shares / poolShare.pool.totalShares
-      const userBalance = userShare * poolShare.pool.baseTokenLiquidity
-      totalOceanLiquidity += userBalance
-      const poolLiquidity = calculateUserLiquidity(poolShare)
-      totalLiquidity += poolLiquidity
+      const poolUserTvl = calculateUserTVL(
+        poolShare.shares,
+        poolShare.pool.totalShares,
+        poolShare.pool.baseTokenLiquidity
+      )
+      tvl = tvl.add(new Decimal(poolUserTvl))
+      // console.log('result.poolShares', tvl.toString())
     }
   }
-  return {
-    price: totalLiquidity.toString(),
-    oceanBalance: totalOceanLiquidity.toString()
-  }
+  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
 }
 
 export async function getPoolSharesData(
@@ -388,17 +381,21 @@ export async function getPoolSharesData(
 ): Promise<PoolShare[]> {
   const variables = { user: accountId?.toLowerCase() }
   const data: PoolShare[] = []
-  const result = await fetchDataForMultipleChains(
-    userPoolSharesQuery,
-    variables,
-    chainIds
-  )
-  for (let i = 0; i < result.length; i++) {
-    result[i].poolShares.forEach((poolShare: PoolShare) => {
-      data.push(poolShare)
-    })
+  try {
+    const result = await fetchDataForMultipleChains(
+      userPoolSharesQuery,
+      variables,
+      chainIds
+    )
+    for (let i = 0; i < result.length; i++) {
+      result[i].poolShares.forEach((poolShare: PoolShare) => {
+        data.push(poolShare)
+      })
+    }
+    return data
+  } catch (error) {
+    LoggerInstance.error('Error getPoolSharesData: ', error.message)
   }
-  return data
 }
 
 export async function getUserTokenOrders(
@@ -422,7 +419,7 @@ export async function getUserTokenOrders(
 
     return data
   } catch (error) {
-    LoggerInstance.error(error.message)
+    LoggerInstance.error('Error getUserTokenOrders', error.message)
   }
 }
 
@@ -445,7 +442,7 @@ export async function getUserSales(
     }
     return salesSum
   } catch (error) {
-    LoggerInstance.log(error.message)
+    LoggerInstance.error('Error getUserSales', error.message)
   }
 }
 

@@ -10,7 +10,6 @@ import {
   Metadata,
   NftCreateData,
   NftFactory,
-  Pool,
   PoolCreationParams,
   Service,
   ZERO_ADDRESS
@@ -260,6 +259,12 @@ export async function createTokensAndPricing(
         false
       )
       LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
+
+      if (!txApprove) {
+        throw new Error(
+          'MetaMask Approve TX Signature: User denied transaction signature'
+        )
+      }
 
       const result = await nftFactory.createNftErc20WithPool(
         accountId,

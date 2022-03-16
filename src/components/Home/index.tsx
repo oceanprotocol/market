@@ -56,7 +56,10 @@ function SectionQueryResult({
   const [loading, setLoading] = useState<boolean>()
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
+
   useEffect(() => {
+    if (!query) return
+
     async function init() {
       if (chainIds.length === 0) {
         const result: PagedAssets = {
@@ -91,11 +94,13 @@ function SectionQueryResult({
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
+
       <AssetList
         assets={result?.results}
         showPagination={false}
-        isLoading={loading}
+        isLoading={loading || !query}
       />
+
       {action && action}
     </section>
   )
@@ -130,28 +135,24 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
-      {queryAndDids && (
-        <SectionQueryResult
-          title="Highest Liquidity"
-          query={queryAndDids[0]}
-          queryData={queryAndDids[1]}
-        />
-      )}
+      <SectionQueryResult
+        title="Highest Liquidity"
+        query={queryAndDids?.[0]}
+        queryData={queryAndDids?.[1]}
+      />
 
-      {queryLatest && (
-        <SectionQueryResult
-          title="Recently Published"
-          query={queryLatest}
-          action={
-            <Button
-              style="text"
-              to="/search?sort=metadata.created&sortOrder=desc"
-            >
-              All data sets and algorithms →
-            </Button>
-          }
-        />
-      )}
+      <SectionQueryResult
+        title="Recently Published"
+        query={queryLatest}
+        action={
+          <Button
+            style="text"
+            to="/search?sort=metadata.created&sortOrder=desc"
+          >
+            All data sets and algorithms →
+          </Button>
+        }
+      />
     </>
   )
 }

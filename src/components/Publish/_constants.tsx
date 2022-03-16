@@ -38,13 +38,7 @@ export const wizardSteps: StepContent[] = [
   }
 ]
 
-export const computeEnvironmentDefaults: ServiceComputeOptions = {
-  namespace: 'ocean-compute',
-  cpu: 1,
-  gpu: 0,
-  gpuType: '',
-  memory: '1Gb',
-  volumeSize: '1Gb',
+const computeOptions: ServiceComputeOptions = {
   allowRawAlgorithm: false,
   allowNetworkAccess: true,
   publisherTrustedAlgorithmPublishers: null,
@@ -76,12 +70,12 @@ export const initialValues: FormPublishData = {
       links: [{ url: '' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
-      access: '',
+      access: 'access',
       providerUrl: {
         url: 'https://provider.mainnet.oceanprotocol.com',
         valid: true
       },
-      computeOptions: computeEnvironmentDefaults
+      computeOptions
     }
   ],
   pricing: {

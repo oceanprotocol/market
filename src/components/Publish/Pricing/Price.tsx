@@ -49,7 +49,7 @@ export default function Price({
               Expected first price:{' '}
               <PriceUnit
                 price={Number(firstPrice) > 0 ? firstPrice : '-'}
-                small
+                size="small"
                 conversion
               />
             </aside>
