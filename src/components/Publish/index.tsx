@@ -63,7 +63,15 @@ export default function PublishPage({
         ...prevState,
         '1': {
           ...prevState['1'],
-          status: 'active'
+          status: 'active',
+          txCount: values.pricing.type === 'dynamic' ? 2 : 1,
+          description:
+            values.pricing.type === 'dynamic'
+              ? prevState['1'].description.replace(
+                  'a single transaction',
+                  'a single transaction, after an initial approve transaction'
+                )
+              : prevState['1'].description
         }
       }))
 
@@ -102,7 +110,14 @@ export default function PublishPage({
         '1': {
           ...prevState['1'],
           status: 'error',
-          errorMessage: error.message
+          errorMessage: error.message,
+          description:
+            values.pricing.type === 'dynamic'
+              ? prevState['1'].description.replace(
+                  'a single transaction',
+                  'a single transaction, after an initial approve transaction'
+                )
+              : prevState['1'].description
         }
       }))
     }
