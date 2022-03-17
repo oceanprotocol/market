@@ -30,8 +30,8 @@ export default function EditHistory({
   receipts,
   setReceipts
 }: {
-  receipts: ReceiptData[]
-  setReceipts: (receipts: ReceiptData[]) => void
+  receipts: NftUpdate[]
+  setReceipts: (receipts: NftUpdate[]) => void
 }): ReactElement {
   const { asset } = useAsset()
 
@@ -73,8 +73,6 @@ export default function EditHistory({
   //
   // 2. Construct display data based on fetched data.
   //
-  const [receipts, setReceipts] = useState<NftUpdate[]>()
-
   useEffect(() => {
     if (!data || data.nftUpdates.length === 0) return
     const receiptCollection = data.nftUpdates
