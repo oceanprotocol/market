@@ -27,7 +27,10 @@ export default function Copy({ text }: { text: string }): ReactElement {
       onSuccess={() => setIsCopied(true)}
       className={`${styles.button} ${isCopied ? styles.copied : ''}`}
     >
-      <IconCopy className={styles.icon} />
+      <div className={styles.action}>
+        <IconCopy className={styles.icon} />
+        {isCopied && <span className={styles.feedback}>Copied!</span>}
+      </div>
     </Clipboard>
   )
 }

@@ -1,7 +1,7 @@
 import { BoxSelectionOption } from '@shared/FormFields/BoxSelection'
 import Input from '@shared/FormInput'
 import { Field, useFormikContext } from 'formik'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import content from '../../../../content/publish/form.json'
 import { FormPublishData } from '../_types'
 import { getFieldContent } from '../_utils'
@@ -17,7 +17,7 @@ const assetTypeOptionsTitles = getFieldContent(
 
 export default function MetadataFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
-  const { values } = useFormikContext<FormPublishData>()
+  const { values, setFieldValue } = useFormikContext<FormPublishData>()
 
   // BoxSelection component is not a Formik component
   // so we need to handle checked state manually.
@@ -44,6 +44,17 @@ export default function MetadataFields(): ReactElement {
       title: `${preset.image}:${preset.tag}`,
       checked: values.metadata.dockerImage === `${preset.image}:${preset.tag}`
     }))
+
+  useEffect(() => {
+    setFieldValue(
+      'services[0].access',
+      values.metadata.type === 'algorithm' ? 'compute' : 'access'
+    )
+    setFieldValue(
+      'services[0].algorithmPrivacy',
+      values.metadata.type === 'algorithm'
+    )
+  }, [values.metadata.type])
 
   dockerImageOptions.push({ name: 'custom', title: 'Custom', checked: false })
 

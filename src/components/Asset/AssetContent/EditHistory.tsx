@@ -17,6 +17,7 @@ const getReceipts = gql`
       id
       nft {
         address
+        owner
       }
       tx
       timestamp
@@ -25,7 +26,13 @@ const getReceipts = gql`
   }
 `
 
-export default function EditHistory(): ReactElement {
+export default function EditHistory({
+  receipts,
+  setReceipts
+}: {
+  receipts: ReceiptData[]
+  setReceipts: (receipts: ReceiptData[]) => void
+}): ReactElement {
   const { asset } = useAsset()
 
   function getUpdateType(type: string): string {
@@ -72,7 +79,7 @@ export default function EditHistory(): ReactElement {
     if (!data || data.nftUpdates.length === 0) return
     const receiptCollection = data.nftUpdates
     setReceipts(receiptCollection)
-  }, [data])
+  }, [data, setReceipts])
 
   return (
     <>

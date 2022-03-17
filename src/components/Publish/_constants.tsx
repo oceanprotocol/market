@@ -70,7 +70,7 @@ export const initialValues: FormPublishData = {
       links: [{ url: '' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
-      access: '',
+      access: 'access',
       providerUrl: {
         url: 'https://provider.mainnet.oceanprotocol.com',
         valid: true
