@@ -75,7 +75,7 @@ export default function Download({
     async function init() {
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
-        asset?.accessDetails.type === 'free'
+        asset?.accessDetails?.type === 'free'
       )
         return
       setIsLoading(true)
