@@ -1,6 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { usePrices } from '@context/Prices'
 import { useWeb3 } from '@context/Web3'
+import Web3 from 'web3'
 import useNftFactory from '@hooks/contracts/useNftFactory'
 import { NftFactory } from '@oceanprotocol/lib'
 import Conversion from '@shared/Price/Conversion'
@@ -20,7 +21,7 @@ const getEstGasFee = async (
 
   const gasPrice = await web3.eth.getGasPrice()
   const gasLimit = await nftFactory?.estGasCreateNFT(address, nft)
-  const gasFeeEth = web3.utils.fromWei(
+  const gasFeeEth = Web3.utils.fromWei(
     (+gasPrice * +gasLimit).toString(),
     'ether'
   )
