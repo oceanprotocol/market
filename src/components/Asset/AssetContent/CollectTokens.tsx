@@ -34,11 +34,11 @@ export default function CollectTokens(): ReactElement {
     if (!asset || !accountId || error) {
       return
     }
-    setIsOwner(owner === accountId)
+    setIsOwner(owner.toLowerCase() === accountId.toLowerCase())
   }, [asset, accountId, error])
 
   useEffect(() => {
-    if (!accountId || !isOwner) return
+    if (!accountId || !isOwner || !asset) return
     const queryContext = getQueryContext(Number(asset.chainId))
 
     async function getBaseTokenBalance() {
