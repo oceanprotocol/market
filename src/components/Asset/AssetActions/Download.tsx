@@ -236,7 +236,7 @@ export default function Download({
       disabled={baseTokenBalance === 0 || !baseTokenBalance}
       hasPreviousOrder={false}
       hasDatatoken={false}
-      dtSymbol={asset?.accessDetails?.baseToken.symbol}
+      dtSymbol={asset.accessDetails.datatoken.symbol}
       dtBalance={baseTokenBalance.toString()}
       datasetLowPoolLiquidity={false}
       assetType=""
@@ -267,7 +267,8 @@ export default function Download({
       </div>
 
       {asset?.accessDetails?.datatoken?.name !== '' &&
-        asset?.nft.owner === accountId && (
+        asset?.nft.owner === accountId &&
+        asset?.accessDetails?.datatoken?.symbol && (
           <div className={styles.collect}>
             <CollectTokensButton />
           </div>
