@@ -73,7 +73,11 @@ export default function Download({
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
     // get full price and fees
     async function init() {
-      if (asset?.accessDetails?.addressOrId === ZERO_ADDRESS) return
+      if (
+        asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
+        asset?.accessDetails?.type === 'free'
+      )
+        return
       setIsLoading(true)
       setStatusText('Calculating price including fees.')
       const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
