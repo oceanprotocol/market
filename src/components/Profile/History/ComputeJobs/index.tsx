@@ -98,6 +98,7 @@ export default function ComputeJobs({
         asset,
         newCancelToken()
       )
+      console.log('computeJobs index jobs: ', jobs)
       isMounted() && setJobs(jobs.computeJobs)
       setIsLoading(!jobs.isLoaded)
     } catch (error) {
