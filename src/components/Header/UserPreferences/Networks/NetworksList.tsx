@@ -13,10 +13,10 @@ export default function NetworksList({
     <NetworkItem key={chainId} chainId={chainId} />
   ))
 
-  return (
+  return content.length ? (
     <>
       <h4 className={styles.titleGroup}>{title}</h4>
       <div className={styles.networks}>{content}</div>
     </>
-  )
+  ) : null
 }
