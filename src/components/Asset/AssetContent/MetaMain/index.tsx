@@ -20,12 +20,18 @@ export default function MetaMain({
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
   const isBlockscoutExplorer = blockscoutNetworks.includes(asset?.chainId)
 
+  const nftImage = nftMetadata?.image_data
+    ? nftMetadata.image_data
+    : asset?.accessDetails?.datatoken?.image
+    ? asset.accessDetails.datatoken.image
+    : null
+
   return (
     <aside className={styles.meta}>
       <header className={styles.asset}>
         <div className={styles.nftImage}>
-          {nftMetadata?.image_data ? (
-            <img src={nftMetadata?.image_data} alt={asset?.nft?.name} />
+          {nftImage ? (
+            <img src={nftImage} alt={asset?.nft?.name} />
           ) : (
             <Logo noWordmark />
           )}
