@@ -10,7 +10,7 @@ import { FormPublishData } from 'src/components/Publish/_types'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
-  const [urlHasError, setUrlHasError] = useState(false)
+  const [isInvalidUrl, setIsInvalidUrl] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { values } = useFormikContext<FormPublishData>()
 
@@ -24,7 +24,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         try {
           setIsLoading(true)
           const checkedFile = await getFileUrlInfo(url, providerUri)
-          checkedFile[0]?.valid === false && setUrlHasError(true)
+          setIsInvalidUrl(!checkedFile[0].valid)
           checkedFile && helpers.setValue([{ url, ...checkedFile[0] }])
         } catch (error) {
           toast.error(
@@ -74,7 +74,7 @@ export default function FilesInput(props: InputProps): ReactElement {
           submitText="Validate"
           {...props}
           name={`${field.name}[0].url`}
-          hasError={Boolean(meta.touched && urlHasError)}
+          hasError={Boolean(meta.touched && isInvalidUrl)}
           isLoading={isLoading}
           handleButtonClick={handleButtonClick}
         />
