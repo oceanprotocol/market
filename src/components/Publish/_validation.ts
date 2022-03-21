@@ -3,6 +3,7 @@ import * as Yup from 'yup'
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
 // hint, hint: https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
+
 const validationMetadata = {
   type: Yup.string()
     .matches(/dataset|algorithm/g, { excludeEmptyString: true })
@@ -54,6 +55,7 @@ const validationService = {
   })
 }
 
+const regexValidation = new RegExp(/^\d+(\.\d{1,8})?$/)
 const validationPricing = {
   type: Yup.string()
     .matches(/fixed|dynamic|free/g, { excludeEmptyString: true })
@@ -61,6 +63,15 @@ const validationPricing = {
   // https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
   price: Yup.number()
     .min(1, (param: { min: number }) => `Must be more or equal to ${param.min}`)
+    .max(
+      1000000,
+      (param: { max: number }) => `Must be less than or equal to ${param.max}`
+    )
+    .test(
+      'maxDigitsAfterDecimal',
+      'Must have less than 7 decimal digits',
+      (param) => regexValidation.test(param.toString())
+    )
     .required('Required'),
   amountDataToken: Yup.number()
     .min(50, (param) => `Must be more or equal to ${param.min}`)
