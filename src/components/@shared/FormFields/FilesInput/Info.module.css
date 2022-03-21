@@ -42,3 +42,7 @@
 .info li.success {
   color: var(--brand-alert-green);
 }
+
+.info li.error {
+  color: var(--brand-alert-red);
+}
