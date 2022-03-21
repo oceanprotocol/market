@@ -14,7 +14,6 @@ export default function Preview(): ReactElement {
   useEffect(() => {
     async function makeDdo() {
       const asset = (await transformPublishFormToDdo(values)) as AssetExtended
-
       // dummy BestPrice to trigger certain AssetActions
       asset.accessDetails = {
         type: values.pricing.type,
@@ -28,8 +27,7 @@ export default function Preview(): ReactElement {
         datatoken: {
           address: ZERO_ADDRESS,
           name: '',
-          symbol: '',
-          image: values.metadata.nft.image_data
+          symbol: ''
         },
         isPurchasable: true,
         isOwned: false,

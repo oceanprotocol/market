@@ -7,6 +7,8 @@ import MetaInfo from './MetaInfo'
 import Tooltip from '@shared/atoms/Tooltip'
 import NftTooltip from './NftTooltip'
 import Logo from '@shared/atoms/Logo'
+import { FormPublishData } from '../../../Publish/_types'
+import { useFormikContext } from 'formik'
 
 export default function MetaMain({
   asset,
@@ -15,6 +17,7 @@ export default function MetaMain({
   asset: Asset
   nftPublisher: string
 }): ReactElement {
+  const { values } = useFormikContext<FormPublishData>()
   const nftMetadata = decodeTokenURI(asset?.nft?.tokenURI)
 
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
@@ -22,8 +25,8 @@ export default function MetaMain({
 
   const nftImage = nftMetadata?.image_data
     ? nftMetadata.image_data
-    : asset?.accessDetails?.datatoken?.image
-    ? asset.accessDetails.datatoken.image
+    : values?.metadata?.nft?.image_data
+    ? values.metadata.nft.image_data
     : null
 
   return (
