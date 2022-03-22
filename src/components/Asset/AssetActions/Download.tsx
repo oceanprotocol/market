@@ -194,7 +194,8 @@ export default function Download({
 
       const tx = await fixed.collectBT(
         accountId,
-        asset?.accessDetails?.addressOrId
+        asset?.accessDetails?.addressOrId,
+        baseTokenBalance.toString()
       )
 
       if (!tx) {
