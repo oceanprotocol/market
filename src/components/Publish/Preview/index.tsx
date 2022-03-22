@@ -31,7 +31,9 @@ export default function Preview(): ReactElement {
         },
         isPurchasable: true,
         isOwned: false,
-        validOrderTx: ''
+        validOrderTx: '',
+        // adding NFT image for preview
+        dataImage: values.metadata.nft.image_data
       }
       setAsset(asset)
     }
