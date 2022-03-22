@@ -29,7 +29,7 @@ export default function FileInfo({
       <ul>
         <li className={styles.error}>
           {' '}
-          x No valid file detected. Check your URL and try again.
+          ✗ No valid file detected. Check your URL and try again.
         </li>
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}
         {file.contentType && <li>{cleanupContentType(file.contentType)}</li>}
