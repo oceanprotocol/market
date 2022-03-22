@@ -7,6 +7,7 @@ import {
   useFormikContext,
   useField
 } from 'formik'
+import debounce from 'lodash.debounce'
 import Button from '@shared/atoms/Button'
 import Input from '@shared/FormInput'
 import Error from '@shared/FormInput/Error'
@@ -64,10 +65,8 @@ export default function TradeInput({
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               handleChange(e)
               handleValueChange(name, Number(e.target.value))
-              // timeout needed to avoid validating the wrong (pass) value
-              setTimeout(() => {
-                validateForm()
-              }, 100)
+              // debounce needed to avoid validating the wrong (pass) value
+              debounce(() => validateForm(), 100)
             }}
             disabled={!accountId || disabled}
             additionalComponent={<Error meta={meta} />}
