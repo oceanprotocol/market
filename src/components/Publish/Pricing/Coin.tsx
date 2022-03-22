@@ -4,7 +4,7 @@ import InputElement from '@shared/FormInput/InputElement'
 import Logo from '@images/logo.svg'
 import Conversion from '@shared/Price/Conversion'
 import { useField } from 'formik'
-import Error from './Error'
+import Error from '@shared/FormInput/Error'
 
 export default function Coin({
   datatokenOptions,
