@@ -24,7 +24,7 @@ export default function FileInfo({
       </button>
     </div>
   ) : (
-    <div className={styles.info}>
+    <div className={`${styles.info} ${!file.valid ? styles.hasError : ''}`}>
       <h3 className={styles.url}>{file.url}</h3>
       <ul>
         <li className={styles.error}>
