@@ -55,7 +55,7 @@ const validationService = {
   })
 }
 
-const regexValidation = new RegExp(/^\d+(\.\d{1,8})?$/)
+const decimalDigitsValidation = new RegExp(/^\d+(\.\d{1,6})?$/)
 const validationPricing = {
   type: Yup.string()
     .matches(/fixed|dynamic|free/g, { excludeEmptyString: true })
@@ -70,7 +70,7 @@ const validationPricing = {
     .test(
       'maxDigitsAfterDecimal',
       'Must have less than 7 decimal digits',
-      (param) => regexValidation.test(param.toString())
+      (param) => decimalDigitsValidation.test(param?.toString())
     )
     .required('Required'),
   amountDataToken: Yup.number()
