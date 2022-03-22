@@ -4,10 +4,12 @@ import {
   Field,
   FieldInputProps,
   FormikContextType,
-  useFormikContext
+  useFormikContext,
+  useField
 } from 'formik'
-import Input from '@shared/FormInput'
 import Button from '@shared/atoms/Button'
+import Input from '@shared/FormInput'
+import Error from '@shared/FormInput/Error'
 import { FormTradeData, TradeItem } from './_types'
 import UserLiquidity from '../UserLiquidity'
 import { useWeb3 } from '@context/Web3'
@@ -28,11 +30,10 @@ export default function TradeInput({
   // Connect with form
   const {
     handleChange,
-    setFieldValue,
     validateForm,
     values
   }: FormikContextType<FormTradeData> = useFormikContext()
-
+  const [field, meta] = useField(name)
   const isTopField =
     (name === 'baseToken' && values.type === 'buy') ||
     (name === 'datatoken' && values.type === 'sell')
@@ -61,11 +62,15 @@ export default function TradeInput({
             form={form}
             value={`${field.value}`}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              handleValueChange(name, Number(e.target.value))
-              validateForm()
               handleChange(e)
+              handleValueChange(name, Number(e.target.value))
+              // timeout needed to avoid validating the wrong (pass) value
+              setTimeout(() => {
+                validateForm()
+              }, 100)
             }}
             disabled={!accountId || disabled}
+            additionalComponent={<Error meta={meta} />}
           />
         )}
       </Field>
