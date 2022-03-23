@@ -181,6 +181,7 @@ export async function transformPublishFormToDdo(
         }
       ],
       nft: {
+        ...generateNftCreateData(values?.metadata.nft),
         owner: accountId
       }
     })

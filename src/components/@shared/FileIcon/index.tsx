@@ -27,8 +27,6 @@ export default function FileIcon({
   small?: boolean
   isLoading?: boolean
 }): ReactElement {
-  if (!file) return null
-
   const styleClasses = cx({
     file: true,
     small: small,
@@ -37,7 +35,7 @@ export default function FileIcon({
 
   return (
     <ul className={styleClasses}>
-      {isLoading === false || isLoading === undefined ? (
+      {!isLoading && file ? (
         <>
           {file.contentType || file.contentLength ? (
             <>

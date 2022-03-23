@@ -43,7 +43,11 @@ export default function ServicesFields(): ReactElement {
   // Auto-change access type based on algo privacy boolean.
   // Could be also done later in transformPublishFormToDdo().
   useEffect(() => {
-    if (!values.services[0].algorithmPrivacy) return
+    if (
+      values.services[0].algorithmPrivacy === null ||
+      values.services[0].algorithmPrivacy === undefined
+    )
+      return
 
     setFieldValue(
       'services[0].access',
