@@ -1,3 +1,4 @@
+import { MAX_DECIMALS } from '@utils/constants'
 import * as Yup from 'yup'
 
 // TODO: conditional validation
@@ -55,7 +56,7 @@ const validationService = {
   })
 }
 
-const decimalDigitsValidation = new RegExp(/^\d+(\.\d{1,6})?$/)
+const maxDecimalsValidation = new RegExp(/^\d+(\.\d{1,5})?$/)
 const validationPricing = {
   type: Yup.string()
     .matches(/fixed|dynamic|free/g, { excludeEmptyString: true })
@@ -69,8 +70,8 @@ const validationPricing = {
     )
     .test(
       'maxDigitsAfterDecimal',
-      'Must have less than 7 decimal digits',
-      (param) => decimalDigitsValidation.test(param?.toString())
+      `Must have maximum ${MAX_DECIMALS} decimal digits`,
+      (param) => maxDecimalsValidation.test(param?.toString())
     )
     .required('Required'),
   amountDataToken: Yup.number()
