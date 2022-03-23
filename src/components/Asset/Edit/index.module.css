@@ -32,6 +32,8 @@
 
 .description {
   font-size: var(--font-size-large);
+  margin: calc(var(--spacer) * 0.3 / var(--line-height)) 0
+    calc(var(--spacer) / var(--line-height)) 0;
 }
 
 .title {

@@ -18,3 +18,15 @@
   margin-left: calc(var(--spacer) / 2);
   margin-right: calc(var(--spacer) / 2);
 }
+
+.actions a {
+  padding: calc(var(--spacer) / 3);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  transition: 0.2s ease-out;
+}
+
+.actions a:hover {
+  transform: translate3d(0, -0.05rem, 0);
+  text-decoration: none;
+}

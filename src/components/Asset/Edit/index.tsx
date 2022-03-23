@@ -11,24 +11,19 @@ import { useWeb3 } from '@context/Web3'
 import Alert from '@shared/atoms/Alert'
 
 export default function Edit({ uri }: { uri: string }): ReactElement {
-  const { asset, error, loading, owner } = useAsset()
+  const { asset, error, isInPurgatory, owner, title } = useAsset()
   const [isCompute, setIsCompute] = useState(false)
-  const [isOnwer, setIsOwner] = useState(false)
+  const [pageTitle, setPageTitle] = useState<string>('')
   const { accountId } = useWeb3()
 
-  // Switch type value upon tab change
-  function handleTabChange(tabName: string) {
-    LoggerInstance.log('switched to tab', tabName)
-    // add store restore from
-  }
-
   useEffect(() => {
-    if (!asset || error) {
+    if (!asset || error || accountId !== owner) {
+      setPageTitle('Edit action not available')
       return
     }
+    setPageTitle(isInPurgatory ? '' : `Edit ${title}`)
     setIsCompute(asset?.services[0]?.type === 'compute')
-    setIsOwner(owner === accountId)
-  }, [asset, error])
+  }, [asset, error, isInPurgatory, title])
 
   const tabs = [
     {
@@ -42,23 +37,14 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
     }
   ].filter((tab) => tab !== undefined)
 
-  return asset && !loading && isOnwer ? (
-    <Page uri={uri}>
-      <div className={styles.contianer}>
-        <Tabs
-          items={tabs}
-          handleTabChange={handleTabChange}
-          defaultIndex={0}
-          className={styles.edit}
-        />
+  return asset && asset?.accessDetails && accountId === owner ? (
+    <Page title={pageTitle} noPageHeader uri={uri}>
+      <div className={styles.container}>
+        <Tabs items={tabs} defaultIndex={0} className={styles.edit} />
       </div>
     </Page>
-  ) : !isOnwer ? (
-    <Page
-      title="Edit action available only to asset owner"
-      noPageHeader
-      uri={uri}
-    >
+  ) : asset && asset?.accessDetails && accountId !== owner ? (
+    <Page title={pageTitle} noPageHeader uri={uri}>
       <Alert
         title="Edit action available only to asset owner"
         text={error}
@@ -66,7 +52,7 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
       />
     </Page>
   ) : (
-    <Page title={undefined} uri={uri}>
+    <Page title={pageTitle} noPageHeader uri={uri}>
       <Loader />
     </Page>
   )
