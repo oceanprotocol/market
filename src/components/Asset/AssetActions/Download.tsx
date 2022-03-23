@@ -133,16 +133,17 @@ export default function Download({
 
   async function handleOrderOrDownload() {
     setIsLoading(true)
-    if (isOwned) {
-      setStatusText(
-        getOrderFeedback(
-          asset.accessDetails?.baseToken?.symbol,
-          asset.accessDetails?.datatoken?.symbol
-        )[3]
-      )
-      await downloadFile(web3, asset, accountId, validOrderTx)
-    } else {
-      try {
+    try {
+      if (isOwned) {
+        setStatusText(
+          getOrderFeedback(
+            asset.accessDetails?.baseToken?.symbol,
+            asset.accessDetails?.datatoken?.symbol
+          )[3]
+        )
+
+        await downloadFile(web3, asset, accountId, validOrderTx)
+      } else {
         if (!hasDatatoken && asset.accessDetails.type === 'dynamic') {
           setStatusText(
             getOrderFeedback(
@@ -152,9 +153,7 @@ export default function Download({
           )
           const tx = await buyDtFromPool(asset.accessDetails, accountId, web3)
           if (!tx) {
-            toast.error('Failed to buy datatoken from pool!')
-            setIsLoading(false)
-            return
+            throw new Error()
           }
         }
         setStatusText(
@@ -165,18 +164,18 @@ export default function Download({
         )
         const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
         if (!orderTx) {
-          toast.error('Failed to buy datatoken from pool!')
-          setIsLoading(false)
-          return
+          throw new Error()
         }
         setIsOwned(true)
         setValidOrderTx(orderTx.transactionHash)
-      } catch (ex) {
-        LoggerInstance.log(ex.message)
-        setIsLoading(false)
       }
+    } catch (error) {
+      LoggerInstance.log(error)
+      const message = isOwned
+        ? 'Failed to download file!'
+        : 'Failed to buy datatoken from pool!'
+      toast.error(message)
     }
-
     setIsLoading(false)
   }
 
