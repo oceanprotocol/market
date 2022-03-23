@@ -170,7 +170,7 @@ export default function Download({
         setValidOrderTx(orderTx.transactionHash)
       }
     } catch (error) {
-      LoggerInstance.log(error)
+      LoggerInstance.error(error)
       const message = isOwned
         ? 'Failed to download file!'
         : 'Failed to buy datatoken from pool!'
