@@ -119,11 +119,9 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (!poolData) return
 
     // Total Liquidity
-    const totalLiquidityInOcean = isValidNumber(poolData.spotPrice)
-      ? new Decimal(poolData.baseTokenLiquidity).add(
-          new Decimal(poolData.datatokenLiquidity).mul(poolData.spotPrice)
-        )
-      : new Decimal(0)
+    const totalLiquidityInOcean = new Decimal(
+      poolData.baseTokenLiquidity ? poolData.baseTokenLiquidity : 0
+    )
 
     const newPoolInfo = {
       liquidityProviderSwapFee: getFee(poolData.liquidityProviderSwapFee),
