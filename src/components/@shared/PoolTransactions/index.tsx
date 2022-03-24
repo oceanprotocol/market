@@ -22,7 +22,7 @@ const txHistoryQueryByPool = gql`
     poolTransactions(
       orderBy: timestamp
       orderDirection: desc
-      where: { user: $user, pool: $pool }
+      where: { pool: $pool }
       first: 1000
     ) {
       baseToken {
