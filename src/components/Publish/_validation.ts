@@ -56,7 +56,9 @@ const validationService = {
   })
 }
 
-const maxDecimalsValidation = new RegExp(/^\d+(\.\d{1,5})?$/)
+const maxDecimalsValidation = new RegExp(
+  '^\\d+(\\.\\d{1,' + MAX_DECIMALS + '})?$'
+)
 const validationPricing = {
   type: Yup.string()
     .matches(/fixed|dynamic|free/g, { excludeEmptyString: true })
