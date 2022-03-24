@@ -4,7 +4,7 @@ import styles from './index.module.css'
 import Loader from '../atoms/Loader'
 
 interface ButtonBuyProps {
-  action: 'download' | 'compute' | 'collect'
+  action: 'download' | 'compute'
   disabled: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
@@ -153,8 +153,6 @@ export default function ButtonBuy({
       ? 'Start Compute Job'
       : priceType === 'free' && algorithmPriceType === 'free'
       ? 'Order Compute Job'
-      : action === 'collect'
-      ? `Collect ${dtBalance} ${dtSymbol}`
       : `Buy Compute Job`
 
   return (
