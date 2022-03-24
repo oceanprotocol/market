@@ -32,7 +32,7 @@ export default function Preview(): ReactElement {
         isPurchasable: true,
         isOwned: false,
         validOrderTx: '',
-        // adding NFT image for preview
+        // adding NFT's svg image for preview
         dataImage: values.metadata.nft.image_data
       }
       setAsset(asset)

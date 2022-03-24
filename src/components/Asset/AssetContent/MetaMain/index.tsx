@@ -20,6 +20,10 @@ export default function MetaMain({
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
   const isBlockscoutExplorer = blockscoutNetworks.includes(asset?.chainId)
 
+  // checking if the NFT has an image associated (tokenURI)
+  // if tokenURI is undefined, then we are in Preview
+  // for Preview we need to show accessDetails.dataImage
+  // as this is where the NFT's SVG (during publish) is stored
   const nftImage = nftMetadata?.image_data
     ? nftMetadata.image_data
     : asset?.accessDetails?.dataImage
