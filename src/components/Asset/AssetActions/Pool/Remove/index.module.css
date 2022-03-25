@@ -38,6 +38,10 @@
   text-align: center;
 }
 
+.maximum:hover {
+  transform: none;
+}
+
 .toggle {
   margin-top: calc(var(--spacer) / 2);
   margin-bottom: 0;
