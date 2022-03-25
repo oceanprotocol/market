@@ -150,25 +150,12 @@ export default function AssetActions({
     />
   )
 
-  const tabs: TabsItem[] = [
-    {
-      title: 'Use',
-      content: UseContent
-    }
-  ]
+  const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
 
   asset?.accessDetails?.type === 'dynamic' &&
     tabs.push(
-      {
-        title: 'Pool',
-        content: <Pool />,
-        disabled: asset?.accessDetails.datatoken.name === ''
-      },
-      {
-        title: 'Trade',
-        content: <Trade />,
-        disabled: asset?.accessDetails.datatoken.name === ''
-      }
+      { title: 'Pool', content: <Pool /> },
+      { title: 'Trade', content: <Trade /> }
     )
 
   return (
