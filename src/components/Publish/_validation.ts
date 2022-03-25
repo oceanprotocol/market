@@ -59,13 +59,40 @@ const validationService = {
 const maxDecimalsValidation = new RegExp(
   '^\\d+(\\.\\d{1,' + MAX_DECIMALS + '})?$'
 )
+// const leadingZeroValidation = new RegExp('^[1-9][0-9]*$')
 const validationPricing = {
   type: Yup.string()
     .matches(/fixed|dynamic|free/g, { excludeEmptyString: true })
     .required('Required'),
   // https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
+
   price: Yup.number()
-    .min(1, (param: { min: number }) => `Must be more or equal to ${param.min}`)
+    .min(
+      1.0,
+      (param: { min: number }) => `Must be more or equal to ${param.min}`
+    )
+    .max(
+      1000000,
+      (param: { max: number }) => `Must be less than or equal to ${param.max}`
+    )
+    .test(
+      'nonLeadingZero',
+      'Leading 0 is not allowed',
+      (param) => !param?.toString().startsWith('0')
+    )
+    .test(
+      'maxDigitsAfterDecimal',
+      `Must have maximum ${MAX_DECIMALS} decimal digits`,
+      (param) => maxDecimalsValidation.test(param?.toString())
+    )
+    .required('Required'),
+
+  amountDataToken: Yup.number()
+    .min(50, (param) => `Must be more or equal to ${param.min}`)
+    .required('Required'),
+
+  amountOcean: Yup.number()
+    .min(50, (param) => `Must be more or equal to ${param.min}`)
     .max(
       1000000,
       (param: { max: number }) => `Must be less than or equal to ${param.max}`
@@ -76,12 +103,7 @@ const validationPricing = {
       (param) => maxDecimalsValidation.test(param?.toString())
     )
     .required('Required'),
-  amountDataToken: Yup.number()
-    .min(50, (param) => `Must be more or equal to ${param.min}`)
-    .required('Required'),
-  amountOcean: Yup.number()
-    .min(50, (param) => `Must be more or equal to ${param.min}`)
-    .required('Required'),
+
   weightOnDataToken: Yup.string().required('Required'),
   weightOnOcean: Yup.string().required('Required'),
   swapFee: Yup.number()
