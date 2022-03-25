@@ -4,6 +4,10 @@
   margin-bottom: var(--spacer);
   margin-left: calc(var(--spacer) / -4);
   margin-right: calc(var(--spacer) / -4);
+
+  /* Disable all user actions as to not run into unintended
+  consequences of browsing away from publish. */
+  pointer-events: none;
 }
 
 @media (min-width: 60rem) {
