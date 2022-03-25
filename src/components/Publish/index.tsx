@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useRef, useEffect } from 'react'
+import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik } from 'formik'
 import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -14,20 +14,14 @@ import { Steps } from './Steps'
 import { FormPublishData, PublishFeedback } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import useNftFactory from '@hooks/contracts/useNftFactory'
-import {
-  Nft,
-  getHash,
-  ProviderInstance,
-  LoggerInstance,
-  DDO
-} from '@oceanprotocol/lib'
+import { ProviderInstance, LoggerInstance, DDO } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
 
 // TODO: restore FormikPersist, add back clear form action
-const formName = 'ocean-publish-form'
+// const formName = 'ocean-publish-form'
 
 export default function PublishPage({
   content
@@ -276,7 +270,7 @@ export default function PublishPage({
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={async (values, { resetForm }) => {
+      onSubmit={async (values) => {
         // kick off publishing
         await handleSubmit(values)
       }}
