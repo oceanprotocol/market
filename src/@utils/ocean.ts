@@ -3,8 +3,23 @@ import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 import { AbiItem } from 'web3-utils/types'
 import Web3 from 'web3'
 
+export function getDevelopmentConfig(): Config {
+  return {
+    oceanTokenAddress: contractAddresses.development?.Ocean,
+    erc721FactoryAddress: contractAddresses.development?.ERC721Factory,
+    poolTemplateAddress: contractAddresses.development?.poolTemplate,
+    fixedRateExchangeAddress: contractAddresses.development?.FixedPrice,
+    dispenserAddress: contractAddresses.development?.Dispenser,
+    sideStakingAddress: contractAddresses.development?.Staking,
+    // metadataContractAddress: contractAddresses.development?.Metadata,
+    subgraphUri:
+      process.env.NEXT_PUBLIC_SUBGRAPH_URI ||
+      'https://v4.subgraph.rinkeby.oceanprotocol.com'
+  } as unknown as Config
+}
+
 export function getOceanConfig(network: string | number): Config {
-  const config = new ConfigHelper().getConfig(
+  let config = new ConfigHelper().getConfig(
     network,
     network === 'polygon' ||
       network === 'moonbeamalpha' ||
@@ -16,20 +31,10 @@ export function getOceanConfig(network: string | number): Config {
       ? undefined
       : process.env.NEXT_PUBLIC_INFURA_PROJECT_ID
   ) as Config
+  if (network === 8996) {
+    config = { ...config, ...getDevelopmentConfig() }
+  }
   return config as Config
-}
-
-export function getDevelopmentConfig(): Config {
-  return {
-    oceanTokenAddress: contractAddresses.development?.Ocean,
-    erc721FactoryAddress: contractAddresses.development?.ERC721Factory,
-    poolTemplateAddress: contractAddresses.development?.poolTemplate,
-    fixedRateExchangeAddress: contractAddresses.development?.FixedPrice,
-    dispenserAddress: contractAddresses.development?.Dispenser,
-    sideStakingAddress: contractAddresses.development?.Staking,
-    // metadataContractAddress: contractAddresses.development?.Metadata,
-    subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI || 'https://v4.subgraph.rinkeby.oceanprotocol.com'
-  } as unknown as Config
 }
 
 export async function getOceanBalance(
