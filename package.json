@@ -6,10 +6,12 @@
   "homepage": "https://market.oceanprotocol.com",
   "scripts": {
     "start": "npm run pregenerate && next dev -p 8000",
+    "start-local": "npm run pregenerate-local && next dev -p 8000",
     "build": "npm run pregenerate && next build",
     "build:static": "npm run build && next export",
     "serve": "serve -s public/",
     "pregenerate": "bash scripts/pregenerate.sh",
+    "pregenerate-local": "bash scripts/pregenerate-local.sh",
     "test": "npm run pregenerate && npm run lint && npm run type-check && npm run jest",
     "jest": "jest -c .jest/jest.config.js",
     "jest:watch": "jest -c .jest/jest.config.js --watch",
@@ -19,6 +21,7 @@
     "deploy:s3": "bash scripts/deploy-s3.sh",
     "postinstall": "husky install",
     "codegen:apollo": "apollo client:codegen --endpoint=https://v4.subgraph.ropsten.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/",
+    "codegen:apollo-local": "apollo client:codegen --endpoint=http://localhost:9000/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/",
     "storybook": "cross-env NODE_ENV=test start-storybook -p 6006 --quiet",
     "storybook:build": "cross-env NODE_ENV=test build-storybook"
   },
