@@ -28,10 +28,8 @@ export function getDevelopmentConfig(): Config {
     dispenserAddress: contractAddresses.development?.Dispenser,
     sideStakingAddress: contractAddresses.development?.Staking,
     // metadataContractAddress: contractAddresses.development?.Metadata,
-    // oceanTokenAddress: contractAddresses.development?.Ocean,
-    // There is no subgraph in barge so we hardcode the Rinkeby one for now
-    subgraphUri: 'https://v4.subgraph.rinkeby.oceanprotocol.com'
-  } as Config
+    subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI || 'https://v4.subgraph.rinkeby.oceanprotocol.com'
+  } as unknown as Config
 }
 
 export async function getOceanBalance(
