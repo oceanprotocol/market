@@ -1,5 +1,5 @@
 import { ConfigHelper, LoggerInstance, Config } from '@oceanprotocol/lib'
-// import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
+import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 import { AbiItem } from 'web3-utils/types'
 import Web3 from 'web3'
 
@@ -21,9 +21,12 @@ export function getOceanConfig(network: string | number): Config {
 
 export function getDevelopmentConfig(): Config {
   return {
-    // factoryAddress: contractAddresses.development?.DTFactory,
-    // poolFactoryAddress: contractAddresses.development?.BFactory,
-    // fixedRateExchangeAddress: contractAddresses.development?.FixedRateExchange,
+    oceanTokenAddress: contractAddresses.development?.Ocean,
+    erc721FactoryAddress: contractAddresses.development?.ERC721Factory,
+    poolTemplateAddress: contractAddresses.development?.poolTemplate,
+    fixedRateExchangeAddress: contractAddresses.development?.FixedPrice,
+    dispenserAddress: contractAddresses.development?.Dispenser,
+    sideStakingAddress: contractAddresses.development?.Staking,
     // metadataContractAddress: contractAddresses.development?.Metadata,
     // oceanTokenAddress: contractAddresses.development?.Ocean,
     // There is no subgraph in barge so we hardcode the Rinkeby one for now
