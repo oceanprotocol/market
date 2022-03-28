@@ -159,6 +159,15 @@ export default function InputElement({
             disabled={disabled}
             {...field}
             {...props}
+            onKeyPress={
+              type === 'number'
+                ? (event) => {
+                    if (!/[0-9.]/.test(event.key)) {
+                      event.preventDefault()
+                    }
+                  }
+                : props.onKeyPress
+            }
           />
           {postfix && (
             <div className={cx({ postfix: true, [size]: size })}>{postfix}</div>
@@ -172,6 +181,15 @@ export default function InputElement({
           disabled={disabled}
           {...field}
           {...props}
+          onKeyPress={
+            type === 'number'
+              ? (event) => {
+                  if (!/[0-9.]/.test(event.key)) {
+                    event.preventDefault()
+                  }
+                }
+              : props.onKeyPress
+          }
         />
       )
   }

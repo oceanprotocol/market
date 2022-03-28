@@ -62,11 +62,6 @@ export default function TradeInput({
             field={field}
             form={form}
             value={`${field.value}`}
-            onKeyPress={(event) => {
-              if (!/[0-9.]/.test(event.key)) {
-                event.preventDefault()
-              }
-            }}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               handleChange(e)
               handleValueChange(name, Number(e.target.value))
