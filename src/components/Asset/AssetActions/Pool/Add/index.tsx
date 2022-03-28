@@ -123,7 +123,10 @@ export default function Add({
     <>
       <Header
         title={content.pool.add.title}
-        backAction={() => setShowAdd(false)}
+        backAction={() => {
+          setShowAdd(false)
+          fetchAllData()
+        }}
       />
       <Formik
         initialValues={initialValues}

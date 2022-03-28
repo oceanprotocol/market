@@ -157,7 +157,10 @@ export default function Remove({
     <div className={styles.remove}>
       <Header
         title={content.pool.remove.title}
-        backAction={() => setShowRemove(false)}
+        backAction={() => {
+          setShowRemove(false)
+          fetchAllData()
+        }}
       />
 
       <form className={styles.removeInput}>
