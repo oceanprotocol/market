@@ -294,10 +294,10 @@ export async function getOrderPriceAndFees(
   }
 
   // calculate full price, we assume that all the values are in ocean, otherwise this will be incorrect
-  orderPriceAndFee.price = new Decimal(orderPriceAndFee.price)
-    .add(new Decimal(orderPriceAndFee.consumeMarketOrderFee))
-    .add(new Decimal(orderPriceAndFee.publisherMarketOrderFee))
-    .add(new Decimal(orderPriceAndFee.providerFee.providerFeeAmount))
+  orderPriceAndFee.price = new Decimal(+orderPriceAndFee.price || 0)
+    .add(new Decimal(+orderPriceAndFee?.consumeMarketOrderFee || 0))
+    .add(new Decimal(+orderPriceAndFee?.publisherMarketOrderFee || 0))
+    .add(new Decimal(+orderPriceAndFee?.providerFee?.providerFeeAmount || 0))
     .toString()
   return orderPriceAndFee
 }
