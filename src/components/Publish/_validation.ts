@@ -59,6 +59,9 @@ const validationService = {
 const maxDecimalsValidation = new RegExp(
   '^\\d+(\\.\\d{1,' + MAX_DECIMALS + '})?$'
 )
+const swapFeeMaxDecimalsValidation = new RegExp(
+  '^\\d+(\\.\\d{1,' + (MAX_DECIMALS - 1) + '})?$'
+)
 
 const validationPricing = {
   type: Yup.string()
@@ -100,8 +103,8 @@ const validationPricing = {
     .max(10, 'Maximum is 10%')
     .test(
       'maxDigitsAfterDecimal',
-      `Must have maximum ${MAX_DECIMALS} decimal digits`,
-      (param) => maxDecimalsValidation.test(param?.toString())
+      `Must have maximum ${MAX_DECIMALS - 1} decimal digits`,
+      (param) => swapFeeMaxDecimalsValidation.test(param?.toString())
     )
     .required('Required')
 }
