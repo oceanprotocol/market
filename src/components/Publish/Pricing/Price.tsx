@@ -20,7 +20,6 @@ export default function Price({
   const { values } = useFormikContext<FormPublishData>()
   const { dataTokenOptions } = values.services[0]
 
-  console.log('VALUES: ', values.pricing)
   return (
     <div className={styles.price}>
       {values.pricing.type === 'free' ? (
@@ -37,7 +36,8 @@ export default function Price({
             <div className={styles.form}>
               <Input
                 type="number"
-                pattern="[1-9]\d*"
+                min="1"
+                placeholder="0"
                 prefix="OCEAN"
                 {...field}
               />
