@@ -9,6 +9,7 @@ import { fetchDataForMultipleChains } from '@utils/subgraph'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import NetworkName from '@shared/NetworkName'
 import { getAssetsFromDtList } from '@utils/aquarius'
+import { getAsset } from '../../Profile/History/PoolShares/_utils'
 import { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
@@ -177,17 +178,21 @@ export default function PoolTransactions({
       }
       const ddoList = await getAssetsFromDtList(dtList, chainIds, cancelToken)
 
+      console.log('DATA: ', data)
+      console.log('DDO LIST: ', ddoList)
+
       for (let i = 0; i < data.length; i++) {
         poolTransactions.push({
           ...data[i],
-          networkId: ddoList[i]?.chainId,
-          asset: ddoList[i]
+          networkId: getAsset(ddoList, data[i].datatoken.address).chainId,
+          asset: getAsset(ddoList, data[i].datatoken.address)
         })
       }
       const sortedTransactions = poolTransactions.sort(
         (a, b) => b.timestamp - a.timestamp
       )
 
+      console.log('SORTED TRANSCATIONS: ', sortedTransactions)
       setTransactions(sortedTransactions)
       setIsLoading(false)
     },

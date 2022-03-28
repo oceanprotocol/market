@@ -27,7 +27,6 @@ export default function ExplorerLink({
 
   useEffect(() => {
     if (!networkId) return
-
     const oceanConfig = getOceanConfig(networkId)
     setOceanConfig(oceanConfig)
     setUrl(oceanConfig?.explorerUri)

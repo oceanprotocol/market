@@ -61,7 +61,6 @@ function getTitle(row: PoolTransaction, locale: string) {
         Math.abs(tokenValueMoved).toString(),
         locale
       )}${tokenSymbol}`
-
       break
     }
   }
@@ -78,7 +77,7 @@ export default function Title({ row }: { row: PoolTransaction }): ReactElement {
 
     const title = getTitle(row, locale)
     setTitle(title)
-  }, [row, locale])
+  }, [row, locale, row.networkId])
 
   return title ? (
     <ExplorerLink networkId={row.networkId} path={`/tx/${row.tx}`}>

@@ -5,7 +5,7 @@ import { PoolShares_poolShares as PoolShare } from '../../../../@types/subgraph/
 import { AssetPoolShare } from '.'
 import { Asset } from '@oceanprotocol/lib'
 
-function getAsset(items: Asset[], datatoken: string): Asset {
+export function getAsset(items: Asset[], datatoken: string): Asset {
   for (let i = 0; i < items.length; i++) {
     if (
       items[i].datatokens[0].address.toLowerCase() === datatoken.toLowerCase()
