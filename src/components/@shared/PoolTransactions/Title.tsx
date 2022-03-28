@@ -52,7 +52,6 @@ function getTitle(row: PoolTransaction, locale: string) {
     }
     case 'JOIN':
     case 'EXIT': {
-      console.log('ROW VALUE: ', row)
       const tokenMoved =
         Math.abs(row.baseTokenValue) > 0 ? row.baseToken : row.datatoken
       const tokenValueMoved =
