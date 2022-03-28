@@ -11,13 +11,6 @@ export function getOrderFeedback(
   }
 }
 
-export function getCollectTokensFeedback(
-  baseTokenSymbol: string,
-  baseTokenBalance: string
-) {
-  return `Collecting ${baseTokenBalance} ${baseTokenSymbol} from asset `
-}
-
 export function getComputeFeedback(
   baseTokenSymbol?: string,
   datatokenSymbol?: string,
