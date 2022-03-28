@@ -36,7 +36,6 @@ export async function getAssetsFromPoolShares(
       data[i].pool.totalShares,
       data[i].pool.baseTokenLiquidity
     )
-    console.log(data[i].pool.datatoken.address, userLiquidity)
     assetList.push({
       poolShare: data[i],
       userLiquidity,

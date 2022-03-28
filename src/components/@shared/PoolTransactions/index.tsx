@@ -178,9 +178,6 @@ export default function PoolTransactions({
       }
       const ddoList = await getAssetsFromDtList(dtList, chainIds, cancelToken)
 
-      console.log('DATA: ', data)
-      console.log('DDO LIST: ', ddoList)
-
       for (let i = 0; i < data.length; i++) {
         poolTransactions.push({
           ...data[i],
@@ -192,7 +189,6 @@ export default function PoolTransactions({
         (a, b) => b.timestamp - a.timestamp
       )
 
-      console.log('SORTED TRANSCATIONS: ', sortedTransactions)
       setTransactions(sortedTransactions)
       setIsLoading(false)
     },
