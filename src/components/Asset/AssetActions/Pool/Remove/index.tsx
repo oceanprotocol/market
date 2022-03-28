@@ -124,6 +124,11 @@ export default function Remove({
   }, [amountPoolShares, accountId, poolTokens, poolAddress, totalPoolTokens])
 
   useEffect(() => {
+    if (!amountOcean || amountPercent === '0') {
+      setMinOceanAmount('0')
+      return
+    }
+
     const minOceanAmount = new Decimal(amountOcean)
       .mul(new Decimal(100).minus(new Decimal(slippage)))
       .dividedBy(100)
@@ -226,7 +231,10 @@ export default function Remove({
         action={handleRemoveLiquidity}
         successMessage="Successfully removed liquidity."
         isDisabled={
-          !isAssetNetwork || amountOcean === '0' || poolTokens === '0'
+          !isAssetNetwork ||
+          amountPercent === '0' ||
+          amountOcean === '0' ||
+          poolTokens === '0'
         }
         txId={txId}
         tokenAddress={tokenOutAddress}
