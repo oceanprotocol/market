@@ -56,7 +56,13 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
 
   const fetchAllData = useCallback(async () => {
-    if (!asset?.chainId || !asset?.accessDetails?.addressOrId || !owner) return
+    if (
+      !accountId ||
+      !asset?.chainId ||
+      !asset?.accessDetails?.addressOrId ||
+      !owner
+    )
+      return
 
     const response = await getPoolData(
       asset.chainId,
@@ -64,6 +70,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       owner,
       accountId || ''
     )
+
     if (!response) return
 
     setPoolData(response.poolData)
@@ -109,6 +116,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (asset?.accessDetails?.type !== 'dynamic') return
 
     fetchAllData()
+
     initFetchInterval()
   }, [fetchAllData, initFetchInterval, asset?.accessDetails?.type])
 
