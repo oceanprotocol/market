@@ -220,7 +220,7 @@ async function getJobs(
     try {
       const providerComputeJobs = (await ProviderInstance.computeStatus(
         providerUrl,
-        accountId.toLowerCase()
+        accountId
       )) as ComputeJob[]
 
       console.log(
