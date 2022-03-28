@@ -52,9 +52,12 @@ function getTitle(row: PoolTransaction, locale: string) {
     }
     case 'JOIN':
     case 'EXIT': {
-      const tokenMoved = row.baseTokenValue > 0 ? row.baseToken : row.datatoken
+      const tokenMoved =
+        Math.abs(row.baseTokenValue) > 0 ? row.baseToken : row.datatoken
       const tokenValueMoved =
-        row.baseTokenValue > 0 ? row.baseTokenValue : row.datatokenValue
+        Math.abs(row.baseTokenValue) > 0
+          ? row.baseTokenValue
+          : row.datatokenValue
       const tokenSymbol = tokenMoved.symbol
 
       title += `${row.type === 'JOIN' ? 'Add' : 'Remove'} ${formatPrice(
