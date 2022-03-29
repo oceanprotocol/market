@@ -41,7 +41,9 @@ export default function URLInput({
       <InputGroup>
         <InputElement
           className={`${styles.input} ${
-            !isLoading && meta.error !== undefined ? styles.hasError : ''
+            !isLoading && meta.error !== undefined && meta.touched
+              ? styles.hasError
+              : ''
           }`}
           {...props}
           {...field}
