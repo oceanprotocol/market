@@ -1,6 +1,5 @@
 import React, { ReactElement, useState } from 'react'
 import { useField, useFormikContext } from 'formik'
-import { toast } from 'react-toastify'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
@@ -26,7 +25,9 @@ export default function FilesInput(props: InputProps): ReactElement {
       setIsInvalidUrl(!checkedFile[0].valid)
       checkedFile && helpers.setValue([{ url, ...checkedFile[0] }])
     } catch (error) {
-      toast.error('Could not fetch file info. Please check URL and try again')
+      helpers.setError(
+        'Could not fetch file info. Please check URL and try again'
+      )
       LoggerInstance.error(error.message)
     } finally {
       setIsLoading(false)
