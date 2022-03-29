@@ -10,9 +10,8 @@ import { LoggerInstance } from '@oceanprotocol/lib'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
-  const [isInvalidUrl, setIsInvalidUrl] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { values } = useFormikContext<FormPublishData>()
+  const { values, setFieldError } = useFormikContext<FormPublishData>()
 
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
@@ -22,12 +21,18 @@ export default function FilesInput(props: InputProps): ReactElement {
       const providerUrl = values?.services[0].providerUrl.url
       setIsLoading(true)
       const checkedFile = await getFileUrlInfo(url, providerUrl)
-      setIsInvalidUrl(!checkedFile[0].valid)
-      checkedFile && helpers.setValue([{ url, ...checkedFile[0] }])
+
+      // error if something's not right from response
+      if (!checkedFile)
+        throw Error('Could not fetch file info. Please check URL and try again')
+
+      if (checkedFile[0].valid === false)
+        throw Error('✗ No valid file detected. Check your URL and try again.')
+
+      // if all good, add file to formik state
+      helpers.setValue([{ url, ...checkedFile[0] }])
     } catch (error) {
-      helpers.setError(
-        'Could not fetch file info. Please check URL and try again'
-      )
+      setFieldError(`${field.name}[0].url`, error.message)
       LoggerInstance.error(error.message)
     } finally {
       setIsLoading(false)
@@ -41,14 +46,13 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   return (
     <>
-      {field?.value && field?.value[0]?.valid !== undefined ? (
+      {field.value[0].valid === true ? (
         <FileInfo file={field.value[0]} handleClose={handleClose} />
       ) : (
         <UrlInput
           submitText="Validate"
           {...props}
           name={`${field.name}[0].url`}
-          hasError={Boolean(meta.touched && isInvalidUrl)}
           isLoading={isLoading}
           handleButtonClick={handleValidation}
         />

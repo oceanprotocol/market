@@ -25,13 +25,7 @@ export default function FileInfo({
     <div className={`${styles.info} ${file.valid ? '' : styles.hasError}`}>
       <h3 className={styles.url}>{file.url}</h3>
       <ul>
-        {file.valid ? (
-          <li className={styles.success}>✓ URL confirmed</li>
-        ) : (
-          <li className={styles.error}>
-            ✗ No valid file detected. Check your URL and try again.
-          </li>
-        )}
+        <li className={styles.success}>✓ URL confirmed</li>
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}
         {contentTypeCleaned && <li>{contentTypeCleaned}</li>}
       </ul>

@@ -54,7 +54,6 @@ export default function CustomProvider(props: InputProps): ReactElement {
         submitText="Validate"
         {...props}
         name={`${field.name}.url`}
-        hasError={Boolean(meta.touched && meta.error)}
         isLoading={isLoading}
         handleButtonClick={handleValidateButtonClick}
       />
