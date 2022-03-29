@@ -4,6 +4,7 @@ import { randomIntFromInterval } from './numbers'
 export interface WaveProperties {
   width?: number
   height?: number
+  viewBox?: string
   color?: string
   fill?: boolean
   layerCount?: number
@@ -53,6 +54,7 @@ export class SvgWaves {
     return {
       width: 99,
       height: 99,
+      viewBox: '0 0 99 99',
       color: WaveColors.Pink,
       fill: true,
       layerCount: 4,
@@ -107,8 +109,7 @@ export class SvgWaves {
 
   generateSvg(): Element {
     const svg = document.createElementNS(SvgWaves.xmlns, 'svg')
-    svg.setAttribute('width', this.properties.width.toString())
-    svg.setAttribute('height', this.properties.height.toString())
+    svg.setAttribute('viewBox', this.properties.viewBox.toString())
     svg.setAttribute('fill', this.properties.fill ? undefined : 'transparent')
     svg.setAttribute('xmlns', SvgWaves.xmlns)
 

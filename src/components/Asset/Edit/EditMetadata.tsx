@@ -17,7 +17,6 @@ import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
 import content from '../../../../content/pages/edit.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
 import { useAbortController } from '@hooks/useAbortController'
 import DebugEditMetadata from './DebugEditMetadata'
 import { getOceanConfig } from '@utils/ocean'
@@ -36,7 +35,6 @@ export default function Edit({
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
-  const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
   const isComputeType = asset?.services[0]?.type === 'compute'
   const hasFeedback = error || success
 
@@ -130,7 +128,7 @@ export default function Edit({
         await handleSubmit(values, resetForm)
       }}
     >
-      {({ isSubmitting, values, initialValues }) =>
+      {({ isSubmitting, values }) =>
         isSubmitting || hasFeedback ? (
           <EditFeedback
             title="Updating Data Set"
@@ -151,8 +149,6 @@ export default function Edit({
             <article>
               <FormEditMetadata
                 data={content.form.data}
-                setTimeoutStringValue={setTimeoutStringValue}
-                values={initialValues}
                 showPrice={asset?.accessDetails?.type === 'fixed'}
                 isComputeDataset={isComputeType}
               />

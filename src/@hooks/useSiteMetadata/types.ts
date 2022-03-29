@@ -2,7 +2,6 @@ export interface UseSiteMetadata {
   siteTitle: string
   siteTagline: string
   siteUrl: string
-  siteIcon: string
   siteImage: string
   copyright: string
   menu: {
