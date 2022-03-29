@@ -47,18 +47,28 @@ export function Steps({
 
   // Auto-change default providerUrl on user network change
   useEffect(() => {
-    if (!values?.user?.chainId) return
+    if (
+      !values?.user?.chainId ||
+      values?.services[0]?.providerUrl.custom === true
+    )
+      return
 
     const config = getOceanConfig(values.user.chainId)
     if (config) {
       setFieldValue('services[0].providerUrl', {
         url: config.providerUri,
-        valid: true
+        valid: true,
+        custom: false
       })
     }
 
     setTouched({ ...touched, services: [{ providerUrl: { url: true } }] })
-  }, [values.user.chainId, setFieldValue, setTouched])
+  }, [
+    values?.user?.chainId,
+    values?.services[0]?.providerUrl.custom,
+    setFieldValue,
+    setTouched
+  ])
 
   const { component } = wizardSteps.filter(
     (stepContent) => stepContent.step === values.user.stepCurrent

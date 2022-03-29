@@ -74,7 +74,8 @@ export const initialValues: FormPublishData = {
       access: 'access',
       providerUrl: {
         url: 'https://provider.mainnet.oceanprotocol.com',
-        valid: true
+        valid: true,
+        custom: false
       },
       computeOptions
     }
