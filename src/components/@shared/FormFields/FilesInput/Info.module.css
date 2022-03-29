@@ -50,3 +50,8 @@
 .info li.error {
   color: var(--brand-alert-red);
 }
+
+.warning {
+  margin-top: calc(var(--spacer) / 3);
+  margin-left: 0;
+}
