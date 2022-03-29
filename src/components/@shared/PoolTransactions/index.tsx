@@ -173,6 +173,7 @@ export default function PoolTransactions({
       }
 
       if (dtList.length === 0) {
+        setTransactions([])
         setIsLoading(false)
         return
       }
