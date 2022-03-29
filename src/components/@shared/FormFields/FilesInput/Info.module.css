@@ -8,7 +8,6 @@
 
 .hasError {
   border-color: var(--brand-alert-red);
-  background-color: var(--brand-white);
 }
 
 .url {
