@@ -28,7 +28,8 @@ export default function Pool(): ReactElement {
     poolInfoOwner,
     poolSnapshots,
     hasUserAddedLiquidity,
-    isRemoveDisabled
+    isRemoveDisabled,
+    fetchAllData
     // refreshInterval
   } = usePool()
 
@@ -176,9 +177,12 @@ export default function Pool(): ReactElement {
             />
           </TokenList>
 
-          {/* <div className={styles.update}>
-            Fetching every {refreshInterval / 1000} sec.
-          </div> */}
+          <div className={styles.update}>
+            <Button style="text" size="small" onClick={() => fetchAllData()}>
+              Refresh Data
+            </Button>
+            {/* Fetching every {refreshInterval / 1000} sec. */}
+          </div>
           <div className={stylesActions.actions}>
             <Button
               style="primary"
