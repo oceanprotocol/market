@@ -16,6 +16,7 @@ import { getOrderFeedback } from '@utils/feedback'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
+import { useIsMounted } from '@hooks/useIsMounted'
 
 export default function Download({
   asset,
@@ -34,6 +35,8 @@ export default function Download({
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
   const { isInPurgatory, isAssetNetwork } = useAsset()
+  const isMounted = useIsMounted()
+
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [statusText, setStatusText] = useState('')
@@ -71,12 +74,14 @@ export default function Download({
   }, [dtBalance])
 
   useEffect(() => {
-    if (!accountId || !asset?.accessDetails) return
-    setIsDisabled(
+    if (!isMounted || !accountId || !asset?.accessDetails) return
+
+    const isDisabled =
       !asset?.accessDetails.isPurchasable ||
-        ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
-    )
+      ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
+    setIsDisabled(isDisabled)
   }, [
+    isMounted,
     asset?.accessDetails,
     isBalanceSufficient,
     isAssetNetwork,
