@@ -50,7 +50,13 @@ export function Steps({
     if (!values?.user?.chainId) return
 
     const config = getOceanConfig(values.user.chainId)
-    config && setFieldValue('services[0].providerUrl.url', config.providerUri)
+    if (config) {
+      setFieldValue('services[0].providerUrl', {
+        url: config.providerUri,
+        valid: true
+      })
+    }
+
     setTouched({ ...touched, services: [{ providerUrl: { url: true } }] })
   }, [values.user.chainId, setFieldValue, setTouched])
 

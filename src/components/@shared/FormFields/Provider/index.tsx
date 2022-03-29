@@ -8,8 +8,11 @@ import Button from '@shared/atoms/Button'
 import { initialValues } from 'src/components/Publish/_constants'
 import { LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { FormPublishData } from 'src/components/Publish/_types'
+import { getOceanConfig } from '@utils/ocean'
+import { useWeb3 } from '@context/Web3'
 
 export default function CustomProvider(props: InputProps): ReactElement {
+  const { chainId } = useWeb3()
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
   const { setFieldError } = useFormikContext<FormPublishData>()
@@ -47,7 +50,13 @@ export default function CustomProvider(props: InputProps): ReactElement {
 
   function handleDefault(e: React.SyntheticEvent) {
     e.preventDefault()
-    helpers.setValue(initialValues.services[0].providerUrl)
+
+    const oceanConfig = getOceanConfig(chainId)
+    const providerUrl =
+      oceanConfig?.providerUri || initialValues.services[0].providerUrl.url
+
+    console.log(providerUrl)
+    helpers.setValue({ url: providerUrl, valid: true })
   }
 
   return field?.value?.valid === true ? (
