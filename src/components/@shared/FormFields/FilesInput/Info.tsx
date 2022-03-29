@@ -22,7 +22,7 @@ export default function FileInfo({
   const shouldWarnAboutFile = file.valid && contentTypeCleaned === 'html'
 
   return (
-    <div className={`${styles.info} ${file.valid ? '' : styles.hasError}`}>
+    <div className={styles.info}>
       <h3 className={styles.url}>{file.url}</h3>
       <ul>
         <li className={styles.success}>✓ URL confirmed</li>
