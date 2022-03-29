@@ -7,26 +7,22 @@ import MetaInfo from './MetaInfo'
 import Tooltip from '@shared/atoms/Tooltip'
 import NftTooltip from './NftTooltip'
 import Logo from '@shared/atoms/Logo'
+import withFormikDynamicContext from './FormikDynamicContext'
 import { FormPublishData } from '../../../Publish/_types'
-import { useFormikContext } from 'formik'
 
-export default function MetaMain({
+const MetaMain = ({
   asset,
-  nftPublisher
+  nftPublisher,
+  formikContext
 }: {
   asset: AssetExtended
   nftPublisher: string
-}): ReactElement {
+  formikContext?: FormPublishData
+}): ReactElement => {
   const nftMetadata = decodeTokenURI(asset?.nft?.tokenURI)
 
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
   const isBlockscoutExplorer = blockscoutNetworks.includes(asset?.chainId)
-
-  // TODO: using this for the publish preview works fine, but produces a console warning
-  // on asset details page as there is no formik context there:
-  // Warning: Formik context is undefined, please verify you are calling useFormikContext()
-  // as child of a <Formik> component.
-  const formikState = useFormikContext<FormPublishData>()
 
   // checking if the NFT has an image associated (tokenURI)
   // if tokenURI is undefined, then we are in Preview
@@ -34,8 +30,8 @@ export default function MetaMain({
   // as this is where the NFT's SVG (during publish) is stored
   const nftImage = nftMetadata?.image_data
     ? nftMetadata.image_data
-    : formikState?.values?.metadata?.nft?.image_data
-    ? formikState.values.metadata.nft.image_data
+    : formikContext?.values?.metadata?.nft?.image_data
+    ? formikContext.values.metadata.nft.image_data
     : null
 
   return (
@@ -69,3 +65,5 @@ export default function MetaMain({
     </aside>
   )
 }
+
+export default withFormikDynamicContext(MetaMain)

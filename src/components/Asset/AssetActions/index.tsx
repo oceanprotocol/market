@@ -14,24 +14,20 @@ import { getOceanConfig } from '@utils/ocean'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
-import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import PoolProvider from '@context/Pool'
+import forFormikContext from '../AssetContent/MetaMain/FormikDynamicContext'
 
-export default function AssetActions({
-  asset
+const AssetActions = ({
+  asset,
+  formikState
 }: {
   asset: AssetExtended
-}): ReactElement {
+  formikState?: FormPublishData
+}): ReactElement => {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
-
-  // TODO: using this for the publish preview works fine, but produces a console warning
-  // on asset details page as there is no formik context there:
-  // Warning: Formik context is undefined, please verify you are calling useFormikContext()
-  // as child of a <Formik> component.
-  const formikState = useFormikContext<FormPublishData>()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -170,3 +166,5 @@ export default function AssetActions({
     </>
   )
 }
+
+export default forFormikContext(AssetActions)
