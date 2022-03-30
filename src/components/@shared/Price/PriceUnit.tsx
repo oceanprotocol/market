@@ -6,6 +6,14 @@ import { useUserPreferences } from '@context/UserPreferences'
 import Badge from '@shared/atoms/Badge'
 
 export function formatPrice(price: string, locale: string): string {
+  console.log('PRICE: ', price)
+  console.log(
+    'FORMAT PRICE: ',
+    formatCurrency(Number(price), '', locale, false, {
+      significantFigures: 4,
+      decimalPlaces: 6
+    })
+  )
   return formatCurrency(Number(price), '', locale, false, {
     // Not exactly clear what `significant figures` are for this library,
     // but setting this seems to give us the formatting we want.

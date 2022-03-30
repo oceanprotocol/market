@@ -33,7 +33,7 @@ export default function Graph({
   //
   useEffect(() => {
     if (!poolSnapshots) return
-
+    console.log('LOCALE, CURRENCY: ', locale, currency)
     LoggerInstance.log('[pool graph] Fired getOptions().')
     const symbol =
       graphType === 'tvl' ? currency : poolSnapshots[0]?.baseToken?.symbol
@@ -54,19 +54,19 @@ export default function Graph({
 
     const tvlHistory = poolSnapshots.map((item) => {
       const conversionSpotPrice = prices[currency.toLowerCase()]
-
       const tvl = new Decimal(item.baseTokenLiquidity)
         .mul(2)
         .mul(conversionSpotPrice) // convert to user currency
         .toString()
+      console.log('TVL: ', tvl)
       return tvl
     })
-
     const priceHistory = poolSnapshots.map((item) => item.spotPrice)
     const volumeHistory = poolSnapshots.map((item) => {
       const volume = new Decimal(item.swapVolume)
         .toDecimalPlaces(MAX_DECIMALS)
         .toString()
+
       return volume
     })
 
@@ -82,7 +82,6 @@ export default function Graph({
         data = tvlHistory
         break
     }
-
     const newGraphData = {
       labels: timestamps,
       datasets: [
@@ -94,7 +93,10 @@ export default function Graph({
         }
       ]
     }
+    console.log('DATA: ', newGraphData)
+
     setGraphData(newGraphData)
+
     LoggerInstance.log('[pool graph] New graph data created:', newGraphData)
   }, [poolSnapshots, graphType, currency, prices, locale, darkMode.value])
 
