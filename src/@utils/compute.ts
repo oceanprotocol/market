@@ -213,20 +213,13 @@ async function getJobs(
   accountId: string,
   assets: Asset[]
 ): Promise<ComputeJobMetaData[]> {
-  console.log('compute.ts getJobs providerUrls:', providerUrls)
   const computeJobs: ComputeJobMetaData[] = []
-  console.log('compute.ts getJobs assets:', providerUrls)
-  providerUrls.forEach(async (providerUrl) => {
+  for await (const providerUrl of providerUrls) {
     try {
       const providerComputeJobs = (await ProviderInstance.computeStatus(
         providerUrl,
         accountId
       )) as ComputeJob[]
-
-      console.log(
-        'compute.ts getJobs providerComputeJobs:',
-        providerComputeJobs
-      )
 
       if (providerComputeJobs) {
         providerComputeJobs.sort((a, b) => {
@@ -239,18 +232,10 @@ async function getJobs(
           return 0
         })
 
-        console.log(
-          'compute.ts getJobs providerComputeJobs sorted:',
-          providerComputeJobs
-        )
-
         providerComputeJobs.forEach((job) => {
           const did = job.inputDID[0]
           const asset = assets.filter((x) => x.id === did)[0]
-
-          console.log('compute.ts getJobs did:', providerComputeJobs)
-          console.log('compute.ts getJobs asset:', asset)
-          if (!asset) {
+          if (asset) {
             const compJob: ComputeJobMetaData = {
               ...job,
               assetName: asset.metadata.name,
@@ -262,10 +247,9 @@ async function getJobs(
         })
       }
     } catch (err) {
-      console.log('compute.ts getJobs err:', err)
       LoggerInstance.error(err.message)
     }
-  })
+  }
   return computeJobs
 }
 export async function getComputeJobs(
@@ -289,21 +273,18 @@ export async function getComputeJobs(
         user: accountId.toLowerCase()
       }
 
-  console.log('compute.ts getComputeJobs variables: ', variables)
   const results = await fetchDataForMultipleChains(
     assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
     variables,
     assetDTAddress ? [asset?.chainId] : chainIds
   )
 
-  console.log('compute.ts getComputeJobs results getComputeOrders:', results)
   let tokenOrders: TokenOrder[] = []
   results.map((result) => {
     result.orders.forEach((tokenOrder: TokenOrder) =>
       tokenOrders.push(tokenOrder)
     )
   })
-  console.log('compute.ts getComputeJobs tokenOrders:', tokenOrders)
   if (tokenOrders.length === 0) {
     return computeResult
   }
@@ -311,7 +292,6 @@ export async function getComputeJobs(
   tokenOrders = tokenOrders.sort(
     (a, b) => b.createdTimestamp - a.createdTimestamp
   )
-  console.log('compute.ts getComputeJobs tokenOrders sorted:', tokenOrders)
 
   const datatokenAddressList = tokenOrders.map(
     (tokenOrder: TokenOrder) => tokenOrder.datatoken.address
@@ -324,18 +304,12 @@ export async function getComputeJobs(
     chainIds
   )
 
-  console.log('compute.ts assets:', assets)
   const providerUrls: string[] = []
   assets.forEach((asset: Asset) =>
     providerUrls.push(asset.services[0].serviceEndpoint)
   )
 
-  console.log('compute.ts providerUrls:', providerUrls)
   computeResult.computeJobs = await getJobs(providerUrls, accountId, assets)
-  console.log(
-    'compute.ts computeResult.computeJobs:',
-    computeResult.computeJobs
-  )
   computeResult.isLoaded = true
 
   return computeResult
