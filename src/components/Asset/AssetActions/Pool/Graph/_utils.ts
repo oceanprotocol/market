@@ -25,7 +25,7 @@ export function getOptions(
         borderColor: isDarkMode ? `#41474e` : `#e2e2e2`,
         callbacks: {
           label: (tooltipItem: TooltipItem<any>) =>
-            `${formatPrice(`${tooltipItem.formattedValue}`, locale)} ${symbol}`
+            `${formatPrice(`${tooltipItem.raw}`, locale)} ${symbol}`
         }
       }
     },
