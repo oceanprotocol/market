@@ -33,7 +33,6 @@ export default function Graph({
   //
   useEffect(() => {
     if (!poolSnapshots) return
-    console.log('LOCALE, CURRENCY: ', locale, currency)
     LoggerInstance.log('[pool graph] Fired getOptions().')
     const symbol =
       graphType === 'tvl' ? currency : poolSnapshots[0]?.baseToken?.symbol
@@ -58,7 +57,6 @@ export default function Graph({
         .mul(2)
         .mul(conversionSpotPrice) // convert to user currency
         .toString()
-      console.log('TVL: ', tvl)
       return tvl
     })
     const priceHistory = poolSnapshots.map((item) => item.spotPrice)
@@ -93,7 +91,6 @@ export default function Graph({
         }
       ]
     }
-    console.log('DATA: ', newGraphData)
 
     setGraphData(newGraphData)
 
