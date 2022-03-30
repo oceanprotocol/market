@@ -32,7 +32,7 @@ export default function FileInfo({
       {shouldWarnAboutFile && (
         <Alert
           state="info"
-          text={`Your file was detected as ${contentTypeCleaned}, which is unusal for a data asset. Are you sure?`}
+          text={`Your file was detected as ${contentTypeCleaned}, which is unusal for a data asset. If you did not intend to use a ${contentTypeCleaned} file, try a different URL pointing directly to your data asset file.`}
           className={styles.warning}
         />
       )}
