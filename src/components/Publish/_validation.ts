@@ -60,7 +60,7 @@ const maxDecimalsValidation = new RegExp(
   '^\\d+(\\.\\d{1,' + MAX_DECIMALS + '})?$'
 )
 const swapFeeMaxDecimalsValidation = new RegExp(
-  '^\\d+(\\.\\d{1,' + (MAX_DECIMALS - 2) + '})?$'
+  '^\\d+(\\.\\d{1,' + MAX_DECIMALS + '})?$'
 )
 
 const validationPricing = {
@@ -103,7 +103,7 @@ const validationPricing = {
     .max(10, 'Maximum is 10%')
     .test(
       'maxDigitsAfterDecimal',
-      `Must have maximum ${MAX_DECIMALS - 2} decimal digits`,
+      `Must have maximum ${MAX_DECIMALS} decimal digits`,
       (param) => swapFeeMaxDecimalsValidation.test(param?.toString())
     )
     .required('Required')
