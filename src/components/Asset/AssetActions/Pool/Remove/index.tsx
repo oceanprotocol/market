@@ -20,6 +20,7 @@ import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
+import { usePool } from '@context/Pool'
 
 const slippagePresets = ['5', '10', '15', '25', '50']
 
@@ -29,8 +30,7 @@ export default function Remove({
   poolTokens,
   totalPoolTokens,
   tokenOutAddress,
-  tokenOutSymbol,
-  fetchAllData
+  tokenOutSymbol
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
@@ -38,10 +38,10 @@ export default function Remove({
   totalPoolTokens: string
   tokenOutAddress: string
   tokenOutSymbol: string
-  fetchAllData: () => void
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
+  const { fetchAllData } = usePool()
 
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
@@ -157,7 +157,10 @@ export default function Remove({
     <div className={styles.remove}>
       <Header
         title={content.pool.remove.title}
-        backAction={() => setShowRemove(false)}
+        backAction={() => {
+          setShowRemove(false)
+          fetchAllData()
+        }}
       />
 
       <form className={styles.removeInput}>

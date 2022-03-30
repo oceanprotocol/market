@@ -6,6 +6,11 @@
   position: relative;
 }
 
+.hasError {
+  border-color: var(--brand-alert-red);
+  background-color: var(--brand-white);
+}
+
 .url {
   margin: 0;
   font-size: var(--font-size-base);
@@ -41,4 +46,8 @@
 
 .info li.success {
   color: var(--brand-alert-green);
+}
+
+.info li.error {
+  color: var(--brand-alert-red);
 }

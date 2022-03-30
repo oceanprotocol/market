@@ -14,14 +14,14 @@ export default function DebugEditMetadata({
   const linksTransformed = values.links?.length &&
     values.links[0].valid && [values.links[0].url.replace('javascript:', '')]
   const newMetadata: Metadata = {
-    ...asset.metadata,
+    ...asset?.metadata,
     name: values.name,
     description: values.description,
     links: linksTransformed,
     author: values.author
   }
   const updatedService: Service = {
-    ...asset.services[0],
+    ...asset?.services[0],
     timeout: mapTimeoutStringToSeconds(values.timeout)
   }
   const updatedAsset: Asset = {

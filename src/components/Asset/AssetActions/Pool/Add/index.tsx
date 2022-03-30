@@ -14,6 +14,7 @@ import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
 import { calcMaxExactIn, LoggerInstance, Pool } from '@oceanprotocol/lib'
+import { usePool } from '@context/Pool'
 
 export interface FormAddLiquidity {
   amount: string
@@ -31,8 +32,7 @@ export default function Add({
   swapFee,
   datatokenSymbol,
   tokenInSymbol,
-  tokenInAddress,
-  fetchAllData
+  tokenInAddress
 }: {
   setShowAdd: (show: boolean) => void
   poolAddress: string
@@ -42,10 +42,10 @@ export default function Add({
   datatokenSymbol: string
   tokenInSymbol: string
   tokenInAddress: string
-  fetchAllData: () => void
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
+  const { fetchAllData } = usePool()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
   const [amountMax, setAmountMax] = useState<string>()
@@ -123,7 +123,10 @@ export default function Add({
     <>
       <Header
         title={content.pool.add.title}
-        backAction={() => setShowAdd(false)}
+        backAction={() => {
+          setShowAdd(false)
+          fetchAllData()
+        }}
       />
       <Formik
         initialValues={initialValues}
