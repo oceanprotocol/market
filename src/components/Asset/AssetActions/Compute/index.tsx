@@ -83,13 +83,17 @@ export default function Compute({
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [isAlgoConsumablePrice, setIsAlgoConsumablePrice] = useState(true)
   const [computeStatusText, setComputeStatusText] = useState('')
+  const [datasetOrderPriceAndFees, setDatasetOrderPriceAndFees] =
+    useState<OrderPriceAndFees>()
+  const [algoOrderPriceAndFees, setAlgoOrderPriceAndFees] =
+    useState<OrderPriceAndFees>()
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
     (!validOrderTx && !hasDatatoken && !isConsumablePrice) ||
     (!validAlgorithmOrderTx && !hasAlgoAssetDatatoken && !isAlgoConsumablePrice)
 
-  async function checkAssetDTBalance(asset: DDO) {
+  async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
     const datatokenInstance = new Datatoken(web3)
     const dtBalance = await datatokenInstance.balance(
@@ -97,7 +101,9 @@ export default function Compute({
       accountId
     )
     setAlgorithmDTBalance(new Decimal(dtBalance).toString())
-    setHasAlgoAssetDatatoken(Number(dtBalance) >= 1)
+    const hasAlgoDt = Number(dtBalance) >= 1
+    setHasAlgoAssetDatatoken(hasAlgoDt)
+    return hasAlgoDt
   }
 
   useEffect(() => {
@@ -106,16 +112,48 @@ export default function Compute({
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
     setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
+
+    async function initDatasetPriceAndFees() {
+      if (
+        asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
+        asset?.accessDetails?.type === 'free'
+      )
+        return
+      const orderPriceAndFees = await getOrderPriceAndFees(asset, accountId)
+      setDatasetOrderPriceAndFees(orderPriceAndFees)
+    }
+
+    initDatasetPriceAndFees()
   }, [asset?.accessDetails])
 
   useEffect(() => {
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
-    checkAssetDTBalance(selectedAlgorithmAsset)
+
     setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
     setIsAlgorithmOwned(selectedAlgorithmAsset?.accessDetails?.isOwned)
     setValidAlgorithmOrderTx(
       selectedAlgorithmAsset?.accessDetails?.validOrderTx
     )
+
+    async function initAlgoPriceAndFees() {
+      if (
+        selectedAlgorithmAsset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
+        selectedAlgorithmAsset?.accessDetails?.type === 'free'
+      )
+        return
+      const orderPriceAndFees = await getOrderPriceAndFees(
+        selectedAlgorithmAsset,
+        accountId
+      )
+      setAlgoOrderPriceAndFees(orderPriceAndFees)
+    }
+
+    async function initSelectedAlgo() {
+      const hasAlgoDt = await checkAssetDTBalance(selectedAlgorithmAsset)
+      !hasAlgoDt && (await initAlgoPriceAndFees())
+    }
+
+    initSelectedAlgo()
   }, [selectedAlgorithmAsset])
 
   useEffect(() => {
@@ -436,6 +474,8 @@ export default function Compute({
             stepText={computeStatusText}
             isConsumable={isConsumable}
             consumableFeedback={consumableFeedback}
+            datasetOrderPriceAndFees={datasetOrderPriceAndFees}
+            algoOrderPriceAndFees={algoOrderPriceAndFees}
           />
         </Formik>
       )}

@@ -10,7 +10,7 @@ import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset } from '@oceanprotocol/lib'
-import { AccessDetails } from 'src/@types/Price'
+import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import {
   getAccessDetailsForAssets,
   getAccessDetails
@@ -40,7 +40,9 @@ export default function FormStartCompute({
   selectedComputeAssetTimeout,
   stepText,
   isConsumable,
-  consumableFeedback
+  consumableFeedback,
+  datasetOrderPriceAndFees,
+  algoOrderPriceAndFees
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: Asset[]
@@ -65,6 +67,8 @@ export default function FormStartCompute({
   stepText: string
   isConsumable: boolean
   consumableFeedback: string
+  datasetOrderPriceAndFees?: OrderPriceAndFees
+  algoOrderPriceAndFees?: OrderPriceAndFees
 }): ReactElement {
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
@@ -107,11 +111,16 @@ export default function FormStartCompute({
     if (!asset?.accessDetails || !selectedAlgorithmAsset?.accessDetails) return
 
     const priceDataset =
-      hasPreviousOrder || hasDatatoken ? 0 : Number(asset.accessDetails.price)
+      hasPreviousOrder || hasDatatoken
+        ? 0
+        : Number(datasetOrderPriceAndFees?.price || asset.accessDetails.price)
     const priceAlgo =
       hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
         ? 0
-        : Number(selectedAlgorithmAsset?.accessDetails.price)
+        : Number(
+            algoOrderPriceAndFees?.price ||
+              selectedAlgorithmAsset?.accessDetails.price
+          )
 
     setTotalPrice((priceDataset + priceAlgo).toString())
   }, [
@@ -120,7 +129,9 @@ export default function FormStartCompute({
     hasPreviousOrder,
     hasDatatoken,
     hasPreviousOrderSelectedComputeAsset,
-    hasDatatokenSelectedComputeAsset
+    hasDatatokenSelectedComputeAsset,
+    datasetOrderPriceAndFees,
+    algoOrderPriceAndFees
   ])
 
   useEffect(() => {
