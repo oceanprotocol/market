@@ -24,7 +24,7 @@ export default function FilesInput(props: InputProps): ReactElement {
 
       // error if something's not right from response
       if (!checkedFile)
-        throw Error('Could not fetch file info. Please check URL and try again')
+        throw Error('Could not fetch file info. Is your network down?')
 
       if (checkedFile[0].valid === false)
         throw Error('✗ No valid file detected. Check your URL and try again.')

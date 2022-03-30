@@ -22,6 +22,11 @@ export default function CustomProvider(props: InputProps): ReactElement {
       const isValid = await ProviderInstance.isValidProvider(field.value.url)
 
       // error if something's not right from response
+      // TODO: Figure out way to detect failed response, and throw that before
+      // this check.
+      // No way to detect a failed response with ProviderInstance.isValidProvider,
+      // making this error show up for multiple cases it shouldn't, namely network
+      // or provider down.
       if (!isValid)
         throw Error(
           '✗ No valid provider detected. Check your URL and try again.'
