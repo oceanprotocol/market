@@ -11,7 +11,8 @@ export default function TokenApproval({
   amount,
   tokenAddress,
   tokenSymbol,
-  setSubmitting
+  setSubmitting,
+  setIsTokenApproved
 }: {
   actionButton: JSX.Element
   disabled: boolean
@@ -19,6 +20,7 @@ export default function TokenApproval({
   tokenAddress: string
   tokenSymbol: string
   setSubmitting?: (isSubmitting: boolean) => void
+  setIsTokenApproved: (isApproved: boolean) => void
 }): ReactElement {
   const { asset, isAssetNetwork } = useAsset()
   const [tokenApproved, setTokenApproved] = useState(false)
@@ -44,6 +46,9 @@ export default function TokenApproval({
       setTokenApproved(
         new Decimal(allowanceValue).greaterThanOrEqualTo(new Decimal(amount))
       )
+    setIsTokenApproved(
+      new Decimal(allowanceValue).greaterThanOrEqualTo(new Decimal(amount))
+    )
   }, [web3, tokenAddress, spender, accountId, amount, isAssetNetwork])
 
   useEffect(() => {
