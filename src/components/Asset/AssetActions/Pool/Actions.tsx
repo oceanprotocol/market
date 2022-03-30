@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import Loader from '@shared/atoms/Loader'
 import Button from '@shared/atoms/Button'
 import styles from './Actions.module.css'
@@ -36,6 +36,7 @@ export default function Actions({
   setSubmitting?: (isSubmitting: boolean) => void
 }): ReactElement {
   const { networkId } = useWeb3()
+  const [isTokenApproved, setIsTokenApproved] = useState(false)
 
   const actionButton = (
     <Button
@@ -64,11 +65,18 @@ export default function Actions({
     <>
       <div className={styles.actions}>
         {isLoading ? (
-          <Loader message={loaderMessage} />
+          <Loader
+            message={
+              isTokenApproved || actionName === 'Remove'
+                ? loaderMessage
+                : `Approving ${tokenSymbol}...`
+            }
+          />
         ) : actionName === 'Supply' || actionName === 'Swap' ? (
           <TokenApproval
             actionButton={actionButton}
             amount={slippage ? applySlippage(amount) : amount}
+            setIsTokenApproved={setIsTokenApproved}
             tokenAddress={tokenAddress}
             tokenSymbol={tokenSymbol}
             disabled={isDisabled}
