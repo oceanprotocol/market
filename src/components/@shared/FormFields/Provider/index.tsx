@@ -1,39 +1,40 @@
 import React, { ReactElement, useState } from 'react'
-import { ErrorMessage, useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
 import FileInfo from '../FilesInput/Info'
 import styles from './index.module.css'
 import Button from '@shared/atoms/Button'
 import { initialValues } from 'src/components/Publish/_constants'
-import { ProviderInstance } from '@oceanprotocol/lib'
+import { LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
+import { FormPublishData } from 'src/components/Publish/_types'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
+  const { setFieldError } = useFormikContext<FormPublishData>()
 
-  async function validateProvider(url: string) {
-    setIsLoading(true)
+  async function handleValidation(e: React.SyntheticEvent) {
+    e.preventDefault()
 
     try {
-      const isValid = await ProviderInstance.isValidProvider(url)
-      helpers.setValue({ url, valid: isValid })
-      helpers.setError(undefined)
+      setIsLoading(true)
+      const isValid = await ProviderInstance.isValidProvider(field.value.url)
+
+      // error if something's not right from response
+      if (!isValid)
+        throw Error(
+          '✗ No valid provider detected. Check your URL and try again.'
+        )
+
+      // if all good, add provider to formik state
+      helpers.setValue({ url: field.value.url, valid: isValid })
     } catch (error) {
-      helpers.setError(
-        'Could not validate provider. Please check URL and try again.'
-      )
+      setFieldError(`${field.name}.url`, error.message)
+      LoggerInstance.error(error.message)
     } finally {
       setIsLoading(false)
     }
-  }
-
-  async function handleValidateButtonClick(
-    e: React.SyntheticEvent,
-    url: string
-  ) {
-    e.preventDefault()
-    validateProvider(url)
   }
 
   function handleFileInfoClose() {
@@ -46,7 +47,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
     helpers.setValue(initialValues.services[0].providerUrl)
   }
 
-  return field?.value?.valid ? (
+  return field?.value?.valid === true ? (
     <FileInfo file={field.value} handleClose={handleFileInfoClose} />
   ) : (
     <>
@@ -55,7 +56,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
         {...props}
         name={`${field.name}.url`}
         isLoading={isLoading}
-        handleButtonClick={handleValidateButtonClick}
+        handleButtonClick={handleValidation}
       />
       <Button
         style="text"
@@ -65,11 +66,6 @@ export default function CustomProvider(props: InputProps): ReactElement {
       >
         Use Default Provider
       </Button>
-      {typeof meta.error === 'string' && meta.touched && meta.error && (
-        <div className={styles.error}>
-          <ErrorMessage name={field.name} />
-        </div>
-      )}
     </>
   )
 }
