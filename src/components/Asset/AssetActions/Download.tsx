@@ -16,6 +16,7 @@ import { getOrderFeedback } from '@utils/feedback'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
+import { useIsMounted } from '@hooks/useIsMounted'
 
 export default function Download({
   asset,
@@ -34,6 +35,8 @@ export default function Download({
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
   const { isInPurgatory, isAssetNetwork } = useAsset()
+  const isMounted = useIsMounted()
+
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [statusText, setStatusText] = useState('')
@@ -71,12 +74,14 @@ export default function Download({
   }, [dtBalance])
 
   useEffect(() => {
-    if (!accountId || !asset?.accessDetails) return
-    setIsDisabled(
+    if (!isMounted || !accountId || !asset?.accessDetails) return
+
+    const isDisabled =
       !asset?.accessDetails.isPurchasable ||
-        ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
-    )
+      ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
+    setIsDisabled(isDisabled)
   }, [
+    isMounted,
     asset?.accessDetails,
     isBalanceSufficient,
     isAssetNetwork,
@@ -87,16 +92,17 @@ export default function Download({
 
   async function handleOrderOrDownload() {
     setIsLoading(true)
-    if (isOwned) {
-      setStatusText(
-        getOrderFeedback(
-          asset.accessDetails?.baseToken?.symbol,
-          asset.accessDetails?.datatoken?.symbol
-        )[3]
-      )
-      await downloadFile(web3, asset, accountId, validOrderTx)
-    } else {
-      try {
+    try {
+      if (isOwned) {
+        setStatusText(
+          getOrderFeedback(
+            asset.accessDetails?.baseToken?.symbol,
+            asset.accessDetails?.datatoken?.symbol
+          )[3]
+        )
+
+        await downloadFile(web3, asset, accountId, validOrderTx)
+      } else {
         if (!hasDatatoken && asset.accessDetails.type === 'dynamic') {
           setStatusText(
             getOrderFeedback(
@@ -106,9 +112,7 @@ export default function Download({
           )
           const tx = await buyDtFromPool(asset.accessDetails, accountId, web3)
           if (!tx) {
-            toast.error('Failed to buy datatoken from pool!')
-            setIsLoading(false)
-            return
+            throw new Error()
           }
         }
         setStatusText(
@@ -119,18 +123,18 @@ export default function Download({
         )
         const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
         if (!orderTx) {
-          toast.error('Failed to buy datatoken from pool!')
-          setIsLoading(false)
-          return
+          throw new Error()
         }
         setIsOwned(true)
         setValidOrderTx(orderTx.transactionHash)
-      } catch (ex) {
-        LoggerInstance.log(ex.message)
-        setIsLoading(false)
       }
+    } catch (error) {
+      LoggerInstance.error(error)
+      const message = isOwned
+        ? 'Failed to download file!'
+        : 'Failed to buy datatoken from pool!'
+      toast.error(message)
     }
-
     setIsLoading(false)
   }
 

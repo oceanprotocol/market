@@ -10,7 +10,7 @@ function useNftFactory(): NftFactory {
   useEffect(() => {
     if (!web3 || !chainId) return
     const config = getOceanConfig(chainId)
-    const factory = new NftFactory(config.erc721FactoryAddress, web3)
+    const factory = new NftFactory(config?.erc721FactoryAddress, web3)
     setNftFactory(factory)
   }, [web3, chainId])
 

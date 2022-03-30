@@ -207,7 +207,7 @@ export async function createTokensAndPricing(
   const ercParams: Erc20CreateParams = {
     templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
     minter: accountId,
-    feeManager: accountId,
+    paymentCollector: accountId,
     mpFeeAddress: appConfig.marketFeeAddress,
     feeToken: config.oceanTokenAddress,
     feeAmount: appConfig.publisherMarketOrderFee,
