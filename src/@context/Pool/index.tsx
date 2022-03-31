@@ -132,17 +132,21 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   // 2 Pool Creator Info
   //
   useEffect(() => {
-    if (!poolData || !poolInfo?.totalPoolTokens || ownerPoolShares === '0')
+    if (
+      !poolData ||
+      !poolInfo?.totalPoolTokens ||
+      !poolInfo.totalLiquidityInOcean ||
+      ownerPoolShares === '0'
+    )
       return
 
     // Pool share tokens.
-    const poolShare =
-      isValidNumber(ownerPoolShares) && isValidNumber(poolInfo.totalPoolTokens)
-        ? new Decimal(ownerPoolShares)
-            .dividedBy(poolInfo.totalLiquidityInOcean)
-            .mul(100)
-            .toFixed(2)
-        : '0'
+    const poolShare = new Decimal(ownerPoolShares)
+      .dividedBy(poolInfo.totalLiquidityInOcean)
+      .mul(100)
+      .toFixed(2)
+
+    console.log(ownerPoolShares, poolShare)
 
     const newPoolOwnerInfo = {
       liquidity: new Decimal(ownerPoolShares), // liquidity in base token, values from from `calcSingleOutGivenPoolIn` method
@@ -192,13 +196,8 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
 
     setUserHasAddedLiquidity(Number(poolShare) > 0)
 
-    // Liquidity in base token, calculated from pool share tokens.
-    const liquidity = new Decimal(userPoolShares)
-      .dividedBy(new Decimal(poolInfo.totalLiquidityInOcean))
-      .mul(poolData.baseTokenLiquidity)
-
     const newPoolInfoUser = {
-      liquidity,
+      liquidity: new Decimal(userPoolShares), // liquidity in base token, values from from `calcSingleOutGivenPoolIn` method
       poolShare
     }
     setPoolInfoUser((prevState: PoolInfoUser) => ({
