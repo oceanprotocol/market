@@ -208,7 +208,7 @@ export default function Pool(): ReactElement {
               <PoolTransactions
                 accountId={accountId}
                 poolAddress={asset?.accessDetails?.addressOrId}
-                poolChainId={[asset?.chainId]}
+                poolChainId={asset?.chainId}
                 minimal
               />
             </AssetActionHistoryTable>
