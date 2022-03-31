@@ -1,4 +1,4 @@
-.graphWrap {
+/* .graphWrap {
   min-height: 120px;
   display: flex;
   align-items: center;
@@ -13,6 +13,10 @@
     margin-left: -2rem;
     margin-right: -2rem;
   }
+} */
+
+.graphWrap {
+  width: 100%;
 }
 
 .graphWrap canvas {

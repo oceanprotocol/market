@@ -11,17 +11,14 @@ import Decimal from 'decimal.js'
 import { lineStyle, GraphType } from './_constants'
 import Nav from './Nav'
 import { getOptions } from './_utils'
-import { PoolData_poolSnapshots as PoolDataPoolSnapshots } from 'src/@types/subgraph/PoolData'
 import { usePrices } from '@context/Prices'
 import { MAX_DECIMALS } from '@utils/constants'
+import { usePool } from '@context/Pool'
 
-export default function Graph({
-  poolSnapshots
-}: {
-  poolSnapshots: PoolDataPoolSnapshots[]
-}): ReactElement {
+export default function Graph(): ReactElement {
   const { locale, currency } = useUserPreferences()
   const { prices } = usePrices()
+  const { poolSnapshots } = usePool()
   const darkMode = useDarkMode(false, darkModeConfig)
 
   const [options, setOptions] = useState<ChartOptions<any>>()

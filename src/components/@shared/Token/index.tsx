@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './Token.module.css'
+import styles from './index.module.css'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Logo from '@shared/atoms/Logo'
 import Decimal from 'decimal.js'

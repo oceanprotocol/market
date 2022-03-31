@@ -6,11 +6,11 @@ import React, {
   useRef
 } from 'react'
 import styles from './index.module.css'
-import Header from '../Header'
+import Header from '../Actions/Header'
 import { toast } from 'react-toastify'
 import Actions from '../Actions'
 import { LoggerInstance, Pool, calcMaxExactOut } from '@oceanprotocol/lib'
-import Token from '../Token'
+import Token from '../../../../@shared/Token'
 import FormHelp from '@shared/FormInput/Help'
 import Button from '@shared/atoms/Button'
 import debounce from 'lodash.debounce'
@@ -25,23 +25,13 @@ import { usePool } from '@context/Pool'
 const slippagePresets = ['5', '10', '15', '25', '50']
 
 export default function Remove({
-  setShowRemove,
-  poolAddress,
-  poolTokens,
-  totalPoolTokens,
-  tokenOutAddress,
-  tokenOutSymbol
+  setShowRemove
 }: {
   setShowRemove: (show: boolean) => void
-  poolAddress: string
-  poolTokens: string
-  totalPoolTokens: string
-  tokenOutAddress: string
-  tokenOutSymbol: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
-  const { fetchAllData } = usePool()
+  const { poolData, poolInfo, poolInfoUser, fetchAllData } = usePool()
 
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
@@ -62,7 +52,7 @@ export default function Remove({
     try {
       const result = await poolInstance.exitswapPoolAmountIn(
         accountId,
-        poolAddress,
+        poolData?.id,
         amountPoolShares,
         minOceanAmount
       )
@@ -82,13 +72,23 @@ export default function Remove({
   }
 
   useEffect(() => {
-    if (!accountId || !poolTokens) return
+    if (
+      !accountId ||
+      !poolInfoUser?.poolShares ||
+      !poolInfo?.totalPoolTokens ||
+      !poolData?.id
+    )
+      return
 
     async function getMax() {
       const poolTokensAmount =
-        !poolTokens || poolTokens === '0' ? '1' : poolTokens
-      const maxTokensToRemoveFromPool = calcMaxExactOut(totalPoolTokens)
+        !poolInfo.totalPoolTokens || poolInfo.totalPoolTokens === '0'
+          ? '1'
+          : poolInfo.totalPoolTokens
       const poolTokensDecimal = new Decimal(poolTokensAmount)
+      const maxTokensToRemoveFromPool = calcMaxExactOut(
+        poolInfo.totalPoolTokens
+      )
       const maxTokensToRemoveForUser = maxTokensToRemoveFromPool.greaterThan(
         poolTokensDecimal
       )
@@ -103,13 +103,18 @@ export default function Remove({
       )
     }
     getMax()
-  }, [accountId, poolAddress, poolTokens, totalPoolTokens])
+  }, [
+    accountId,
+    poolData?.id,
+    poolInfoUser?.poolShares,
+    poolInfo?.totalPoolTokens
+  ])
 
   const getValues = useRef(
     debounce(async (newAmountPoolShares) => {
       const newAmountOcean = await poolInstance.calcSingleOutGivenPoolIn(
-        poolAddress,
-        tokenOutAddress,
+        poolData?.id,
+        poolInfo?.baseTokenAddress,
         newAmountPoolShares
       )
 
@@ -119,9 +124,21 @@ export default function Remove({
 
   // Check and set outputs when amountPoolShares changes
   useEffect(() => {
-    if (!accountId || !poolTokens) return
+    if (
+      !accountId ||
+      !poolInfoUser?.poolShares ||
+      !poolInfo?.totalPoolTokens ||
+      !poolData?.id
+    )
+      return
     getValues.current(amountPoolShares)
-  }, [amountPoolShares, accountId, poolTokens, poolAddress, totalPoolTokens])
+  }, [
+    amountPoolShares,
+    accountId,
+    poolInfoUser?.poolShares,
+    poolData?.id,
+    poolInfo?.totalPoolTokens
+  ])
 
   useEffect(() => {
     if (!amountOcean || amountPercent === '0') {
@@ -140,11 +157,11 @@ export default function Remove({
   // Set amountPoolShares based on set slider value
   function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
     setAmountPercent(e.target.value)
-    if (!poolTokens) return
+    if (!poolInfoUser?.poolShares) return
 
     const amountPoolShares = new Decimal(e.target.value)
       .dividedBy(100)
-      .mul(new Decimal(poolTokens))
+      .mul(new Decimal(poolInfoUser.poolShares))
       .toString()
 
     setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
@@ -156,7 +173,7 @@ export default function Remove({
 
     const amountPoolShares = new Decimal(amountMaxPercent)
       .dividedBy(100)
-      .mul(new Decimal(poolTokens))
+      .mul(new Decimal(poolInfoUser?.poolShares))
       .toString()
 
     setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
@@ -177,7 +194,7 @@ export default function Remove({
       />
 
       <form className={styles.removeInput}>
-        <UserLiquidity amount={poolTokens} symbol="pool shares" />
+        <UserLiquidity amount={poolInfoUser?.poolShares} symbol="pool shares" />
         <div className={styles.range}>
           <h3>{amountPercent}%</h3>
           <div className={styles.slider}>
@@ -206,7 +223,7 @@ export default function Remove({
       <div className={styles.output}>
         <div>
           <p>{content.pool.remove.output.titleOut} minimum</p>
-          <Token symbol={tokenOutSymbol} balance={minOceanAmount} />
+          <Token symbol={poolInfo?.baseTokenSymbol} balance={minOceanAmount} />
         </div>
         {/* <div>
           <p>{content.pool.remove.output.titleIn}</p>
@@ -237,11 +254,11 @@ export default function Remove({
           !isAssetNetwork ||
           amountPercent === '0' ||
           amountOcean === '0' ||
-          poolTokens === '0'
+          poolInfo?.totalPoolTokens === '0'
         }
         txId={txId}
-        tokenAddress={tokenOutAddress}
-        tokenSymbol={tokenOutSymbol}
+        tokenAddress={poolInfo?.baseTokenAddress}
+        tokenSymbol={poolInfo?.baseTokenSymbol}
       />
     </div>
   )

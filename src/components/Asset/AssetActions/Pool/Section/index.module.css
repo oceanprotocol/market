@@ -18,6 +18,11 @@
   background: var(--background-highlight);
 }
 
+.section:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
