@@ -74,6 +74,12 @@ export default function FormStartCompute({
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
   const [totalPrice, setTotalPrice] = useState(asset?.accessDetails?.price)
+  const [datasetOrderPrice, setDatasetOrderPrice] = useState(
+    asset?.accessDetails?.price
+  )
+  const [algoOrderPrice, setAlgoOrderPrice] = useState(
+    selectedAlgorithmAsset?.accessDetails?.price
+  )
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
   const { accountId, balance } = useWeb3()
 
@@ -110,6 +116,13 @@ export default function FormStartCompute({
   useEffect(() => {
     if (!asset?.accessDetails || !selectedAlgorithmAsset?.accessDetails) return
 
+    setDatasetOrderPrice(
+      datasetOrderPriceAndFees?.price || asset.accessDetails.price
+    )
+    setAlgoOrderPrice(
+      algoOrderPriceAndFees?.price ||
+        selectedAlgorithmAsset?.accessDetails.price
+    )
     const priceDataset =
       hasPreviousOrder || hasDatatoken
         ? 0
@@ -164,6 +177,8 @@ export default function FormStartCompute({
         algorithmConsumeDetails={selectedAlgorithmAsset?.accessDetails}
         symbol={oceanSymbol}
         totalPrice={Number.parseFloat(totalPrice)}
+        datasetOrderPrice={datasetOrderPrice}
+        algoOrderPrice={algoOrderPrice}
       />
 
       <ButtonBuy

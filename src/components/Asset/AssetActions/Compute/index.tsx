@@ -85,8 +85,12 @@ export default function Compute({
   const [computeStatusText, setComputeStatusText] = useState('')
   const [datasetOrderPriceAndFees, setDatasetOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+  const [isRequestingDataseOrderPrice, setIsRequestingDataseOrderPrice] =
+    useState(false)
   const [algoOrderPriceAndFees, setAlgoOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+  const [isRequestingAlgoOrderPrice, setIsRequestingAlgoOrderPrice] =
+    useState(false)
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
@@ -119,8 +123,12 @@ export default function Compute({
         asset?.accessDetails?.type === 'free'
       )
         return
+
+      setIsRequestingDataseOrderPrice(true)
+      setComputeStatusText('Calculating price including fees.')
       const orderPriceAndFees = await getOrderPriceAndFees(asset, accountId)
       setDatasetOrderPriceAndFees(orderPriceAndFees)
+      setIsRequestingDataseOrderPrice(false)
     }
 
     initDatasetPriceAndFees()
@@ -141,11 +149,15 @@ export default function Compute({
         selectedAlgorithmAsset?.accessDetails?.type === 'free'
       )
         return
+
+      setIsRequestingAlgoOrderPrice(true)
+      setComputeStatusText('Calculating price including fees.')
       const orderPriceAndFees = await getOrderPriceAndFees(
         selectedAlgorithmAsset,
         accountId
       )
       setAlgoOrderPriceAndFees(orderPriceAndFees)
+      setIsRequestingAlgoOrderPrice(false)
     }
 
     async function initSelectedAlgo() {
@@ -444,7 +456,11 @@ export default function Compute({
             ddoListAlgorithms={ddoAlgorithmList}
             selectedAlgorithmAsset={selectedAlgorithmAsset}
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
-            isLoading={isJobStarting}
+            isLoading={
+              isJobStarting ||
+              isRequestingDataseOrderPrice ||
+              isRequestingAlgoOrderPrice
+            }
             isComputeButtonDisabled={isComputeButtonDisabled}
             hasPreviousOrder={validOrderTx !== undefined}
             hasDatatoken={hasDatatoken}
