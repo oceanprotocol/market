@@ -5,7 +5,7 @@ version: '2'
 checks:
   argument-count:
     config:
-      threshold: 4
+      threshold: 6
   complex-logic:
     config:
       threshold: 10
@@ -29,7 +29,7 @@ checks:
       threshold: 4
   similar-code:
     config:
-      threshold: 3
+      threshold: 4
   identical-code:
     config:
       threshold: 3
