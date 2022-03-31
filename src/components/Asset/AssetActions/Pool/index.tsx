@@ -7,7 +7,6 @@ import Add from './Add'
 import Remove from './Remove'
 import Tooltip from '@shared/atoms/Tooltip'
 import ExplorerLink from '@shared/ExplorerLink'
-import TokenList from './TokenList'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import Graph from './Graph'
 import { useAsset } from '@context/Asset'
@@ -17,6 +16,7 @@ import Decimal from 'decimal.js'
 import content from '../../../../../content/price.json'
 import { usePool } from '@context/Pool'
 import Token from './Token'
+import PoolSection from './PoolSection'
 
 export default function Pool(): ReactElement {
   const { accountId } = useWeb3()
@@ -63,7 +63,7 @@ export default function Pool(): ReactElement {
         />
       ) : (
         <>
-          <div className={styles.dataToken}>
+          <PoolSection className={styles.dataToken}>
             <PriceUnit
               price="1"
               symbol={poolInfo?.datatokenSymbol}
@@ -94,73 +94,64 @@ export default function Pool(): ReactElement {
                 Datatoken
               </ExplorerLink>
             </div>
-          </div>
-          <TokenList
-            title={
-              <>
-                Your Value Locked
-                <Tooltip
-                  content={content.pool.tooltips.liquidity.replace(
-                    'SWAPFEE',
-                    poolInfo?.liquidityProviderSwapFee
-                  )}
-                />
-                {poolInfoUser?.poolShare && (
-                  <span className={styles.titleInfo}>
-                    {poolInfoUser?.poolShare}% of pool
-                  </span>
-                )}
-              </>
-            }
-            baseTokenValue={poolInfoUser?.liquidity.toString()}
-            baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            conversion={poolInfoUser?.liquidity}
+          </PoolSection>
+
+          <PoolSection
+            title="Your Value Locked"
+            titlePostfix={`${poolInfoUser?.poolShare}% of pool`}
+            tooltip={content.pool.tooltips.liquidity.replace(
+              'SWAPFEE',
+              poolInfo?.liquidityProviderSwapFee
+            )}
             highlight
-          />
-          <TokenList
-            title={
-              <>
-                Owner Value Locked
-                <span className={styles.titleInfo}>
-                  {poolInfoOwner?.poolShare}% of pool
-                </span>
-              </>
+          >
+            <Token
+              symbol={poolInfo?.baseTokenSymbol}
+              balance={poolInfoUser?.liquidity.toString()}
+              conversion={poolInfoUser?.liquidity}
+            />
+          </PoolSection>
+
+          <PoolSection
+            title="Owner Value Locked"
+            titlePostfix={`${poolInfoOwner?.poolShare}% of pool`}
+          >
+            <Token
+              symbol={poolInfo?.baseTokenSymbol}
+              balance={poolInfoOwner?.liquidity.toString()}
+              conversion={poolInfoOwner?.liquidity}
+            />
+          </PoolSection>
+
+          <PoolSection title="Total Value Locked">
+            <Token
+              symbol={poolInfo?.baseTokenSymbol}
+              balance={poolInfo?.totalLiquidityInOcean.toString()}
+              conversion={poolInfo?.totalLiquidityInOcean}
+            />
+          </PoolSection>
+
+          <PoolSection
+            title="Pool Statistics"
+            titlePostfix={
+              poolInfo?.weightDt &&
+              `${poolInfo?.weightBaseToken}/${poolInfo?.weightDt}`
             }
-            baseTokenValue={poolInfoOwner?.liquidity.toString()}
-            baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            conversion={poolInfoOwner?.liquidity}
-          />
-          <TokenList
-            title="Total Value Locked"
-            baseTokenValue={poolInfo?.totalLiquidityInOcean.toString()}
-            baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            conversion={poolInfo?.totalLiquidityInOcean}
-          />
-          <TokenList
-            title={
-              <>
-                Pool Statistics
-                {poolInfo?.weightDt && (
-                  <span
-                    className={styles.titleInfo}
-                    title={`Weight of ${poolInfo?.weightBaseToken}% ${poolInfo?.baseTokenSymbol} & ${poolInfo?.weightDt}% ${poolInfo?.datatokenSymbol}`}
-                  >
-                    {poolInfo?.weightBaseToken}/{poolInfo?.weightDt}
-                  </span>
-                )}
-              </>
-            }
+            titlePostfixTitle={`Weight of ${poolInfo?.weightBaseToken}% ${poolInfo?.baseTokenSymbol} & ${poolInfo?.weightDt}% ${poolInfo?.datatokenSymbol}`}
           >
             <Graph poolSnapshots={poolSnapshots} />
-          </TokenList>
 
-          <TokenList
-            size="mini"
-            baseTokenValue={`${poolData?.baseTokenLiquidity}`}
-            baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            datatokenValue={`${poolData?.datatokenLiquidity}`}
-            datatokenSymbol={poolInfo?.datatokenSymbol}
-          >
+            <Token
+              symbol={poolInfo?.baseTokenSymbol}
+              balance={`${poolData?.baseTokenLiquidity}`}
+              size="mini"
+            />
+            <Token
+              symbol={poolInfo?.datatokenSymbol}
+              balance={`${poolData?.datatokenLiquidity}`}
+              size="mini"
+            />
+
             <Token
               symbol="% pool fee"
               balance={poolInfo?.liquidityProviderSwapFee}
@@ -179,7 +170,7 @@ export default function Pool(): ReactElement {
               noIcon
               size="mini"
             />
-          </TokenList>
+          </PoolSection>
 
           <div className={styles.update}>
             <Button style="text" size="small" onClick={() => fetchAllData()}>

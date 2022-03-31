@@ -1,0 +1,24 @@
+.section {
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding: calc(var(--spacer) / 1.5) calc(var(--spacer) / 1.5)
+    calc(var(--spacer) / 2) calc(var(--spacer) / 1.5);
+  border-top: 1px solid var(--border-color);
+  position: relative;
+}
+
+@media (min-width: 40rem) {
+  .section {
+    padding-left: var(--spacer);
+    padding-right: var(--spacer);
+  }
+}
+
+.section.highlight {
+  background: var(--background-highlight);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+}
