@@ -1,0 +1,25 @@
+name: 'Deploy'
+
+on:
+  push:
+    branches:
+      - dev
+
+
+jobs:
+  deployment:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v1
+      - name: Prep helm chart
+        run: |
+          mv ./oval-chart/Chart.yaml ./oval-chart/Chart.old.yaml &&
+          cat ./oval-chart/Chart.old.yaml | grep -v appVersion > ./oval-chart/Chart.yaml &&
+          echo -e "\r\nappVersion: v${GITHUB_REF##*/}\r\n" >> ./oval-chart/Chart.yaml &&
+          cat ./oval-chart/Chart.yaml
+      - name: Deploy
+        uses: WyriHaximus/github-action-helm3@v2
+        with:
+          exec: helm upgrade APP_NAME ./oval-chart --install --wait --atomic --namespace=oval --set=app.name=prod_oval --values=./oval-chart/prod-values.yaml
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
+

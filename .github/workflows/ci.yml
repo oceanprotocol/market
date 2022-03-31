@@ -26,4 +26,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/oval-marketplace:v3
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/oval-marketplacev3:dev
