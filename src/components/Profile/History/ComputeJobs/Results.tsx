@@ -1,4 +1,4 @@
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance, Provider } from '@oceanprotocol/lib'
 import React, { ReactElement, useState } from 'react'
 import Loader from '@shared/atoms/Loader'
 import { ListItem } from '@shared/atoms/Lists'
@@ -13,7 +13,8 @@ export default function Results({
 }: {
   job: ComputeJobMetaData
 }): ReactElement {
-  const { accountId } = useWeb3()
+  const providerInstance = new Provider()
+  const { accountId, web3 } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)
   const isFinished = job.dateFinished !== null
@@ -23,13 +24,15 @@ export default function Results({
 
     try {
       setIsLoading(true)
-      // const jobStatus = await ocean.compute.status(
-      //   account,
-      //   job.did,
-      //   undefined,
-      //   undefined,
-      //   job.jobId
-      // )
+      console.log('getResults job: ', job)
+      const jobResult = await providerInstance.computeResult(
+        job.jobId,
+        0,
+        accountId,
+        'https://v4.provider.rinkeby.oceanprotocol.com/',
+        web3
+      )
+      console.log('getResults jobResult: ', jobResult)
       // if (jobStatus?.length > 0) {
       //   job.algorithmLogUrl = jobStatus[0].algorithmLogUrl
       //   job.resultsUrl = jobStatus[0].resultsUrl
