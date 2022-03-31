@@ -3,7 +3,6 @@ import { useField, useFormikContext } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
-import { initialValues } from 'src/components/Publish/_constants'
 import { getFileUrlInfo } from '@utils/provider'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { LoggerInstance } from '@oceanprotocol/lib'
@@ -40,13 +39,13 @@ export default function FilesInput(props: InputProps): ReactElement {
   }
 
   function handleClose() {
-    helpers.setValue(initialValues.services[0].files)
+    helpers.setValue(meta.initialValue)
     helpers.setTouched(false)
   }
 
   return (
     <>
-      {field.value[0].valid === true ? (
+      {field?.value?.[0]?.valid === true ? (
         <FileInfo file={field.value[0]} handleClose={handleClose} />
       ) : (
         <UrlInput
