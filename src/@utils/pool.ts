@@ -114,3 +114,28 @@ export function calculateUserTVL(
   const tvl = new Decimal(liquidity).mul(2) // we multiply by 2 because of 50/50 weight
   return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
 }
+
+export async function calculateSharesVL(
+  pool: string,
+  tokenAddress: string,
+  shares: string,
+  chainId?: number,
+  web3?: Web3
+): Promise<string> {
+  if (!web3 && !chainId)
+    throw new Error("web3 and chainId can't be undefined at the same time!")
+
+  if (!web3) {
+    web3 = await getDummyWeb3(chainId)
+  }
+
+  const poolInstance = new Pool(web3)
+  // get owner's shares VL in ocean
+  const amountOcean = await poolInstance.calcSingleOutGivenPoolIn(
+    pool,
+    tokenAddress,
+    shares
+  )
+  const tvl = new Decimal(amountOcean).mul(2) // we multiply by 2 because of 50/50 weight
+  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
+}
