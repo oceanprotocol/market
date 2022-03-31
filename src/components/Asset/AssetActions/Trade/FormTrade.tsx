@@ -193,6 +193,7 @@ export default function FormTrade({
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."
             actionName={content.trade.action}
+            slippage={values.slippage}
             amount={
               values.type === 'sell'
                 ? values.datatoken

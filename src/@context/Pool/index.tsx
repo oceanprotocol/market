@@ -53,7 +53,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   const [poolSnapshots, setPoolSnapshots] = useState<PoolDataPoolSnapshots[]>()
   const [hasUserAddedLiquidity, setUserHasAddedLiquidity] = useState(false)
   const [isRemoveDisabled, setIsRemoveDisabled] = useState(false)
-  const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
+  // const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
 
   const fetchAllData = useCallback(async () => {
     if (!asset?.chainId || !asset?.accessDetails?.addressOrId || !owner) return
@@ -78,27 +78,27 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   }, [asset?.chainId, asset?.accessDetails?.addressOrId, owner, accountId])
 
   // Helper: start interval fetching
-  const initFetchInterval = useCallback(() => {
-    if (fetchInterval) return
+  // const initFetchInterval = useCallback(() => {
+  //   if (fetchInterval) return
 
-    const newInterval = setInterval(() => {
-      fetchAllData()
-      LoggerInstance.log(
-        `[pool] Refetch interval fired after ${refreshInterval / 1000}s`
-      )
-    }, refreshInterval)
-    setFetchInterval(newInterval)
+  //   const newInterval = setInterval(() => {
+  //     fetchAllData()
+  //     LoggerInstance.log(
+  //       `[pool] Refetch interval fired after ${refreshInterval / 1000}s`
+  //     )
+  //   }, refreshInterval)
+  //   setFetchInterval(newInterval)
 
-    // Having `accountId` as dependency is important for interval to
-    // change after user account switch.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchInterval, fetchAllData, accountId])
+  //   // Having `accountId` as dependency is important for interval to
+  //   // change after user account switch.
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [fetchInterval, fetchAllData, accountId])
 
-  useEffect(() => {
-    return () => {
-      clearInterval(fetchInterval)
-    }
-  }, [fetchInterval])
+  // useEffect(() => {
+  //   return () => {
+  //     clearInterval(fetchInterval)
+  //   }
+  // }, [fetchInterval])
 
   //
   // 0 Fetch all the data on mount if we are on a pool.
@@ -109,8 +109,8 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (asset?.accessDetails?.type !== 'dynamic') return
 
     fetchAllData()
-    initFetchInterval()
-  }, [fetchAllData, initFetchInterval, asset?.accessDetails?.type])
+    // initFetchInterval()
+  }, [fetchAllData, asset?.accessDetails?.type])
 
   //
   // 1 General Pool Info

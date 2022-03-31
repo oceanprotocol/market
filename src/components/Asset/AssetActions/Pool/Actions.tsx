@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import Loader from '@shared/atoms/Loader'
 import Button from '@shared/atoms/Button'
 import styles from './Actions.module.css'
@@ -6,11 +6,13 @@ import ExplorerLink from '@shared/ExplorerLink'
 import SuccessConfetti from '@shared/SuccessConfetti'
 import { useWeb3 } from '@context/Web3'
 import TokenApproval from '@shared/TokenApproval'
+import Decimal from 'decimal.js'
 
 export default function Actions({
   isLoading,
   loaderMessage,
   successMessage,
+  slippage,
   txId,
   actionName,
   amount,
@@ -23,6 +25,7 @@ export default function Actions({
   isLoading: boolean
   loaderMessage: string
   successMessage: string
+  slippage?: string
   txId: string
   actionName: string
   amount?: string
@@ -33,6 +36,7 @@ export default function Actions({
   setSubmitting?: (isSubmitting: boolean) => void
 }): ReactElement {
   const { networkId } = useWeb3()
+  const [isTokenApproved, setIsTokenApproved] = useState(false)
 
   const actionButton = (
     <Button
@@ -45,15 +49,34 @@ export default function Actions({
     </Button>
   )
 
+  const applySlippage = (amount: string) => {
+    if (!amount) return '0'
+    const newAmount = new Decimal(amount)
+      .mul(
+        new Decimal(1)
+          .plus(new Decimal(slippage).div(new Decimal(100)))
+          .toString()
+      )
+      .toString()
+    return newAmount
+  }
+
   return (
     <>
       <div className={styles.actions}>
         {isLoading ? (
-          <Loader message={loaderMessage} />
+          <Loader
+            message={
+              isTokenApproved || actionName === 'Remove'
+                ? loaderMessage
+                : `Approving ${tokenSymbol}...`
+            }
+          />
         ) : actionName === 'Supply' || actionName === 'Swap' ? (
           <TokenApproval
             actionButton={actionButton}
-            amount={amount}
+            amount={slippage ? applySlippage(amount) : amount}
+            setIsTokenApproved={setIsTokenApproved}
             tokenAddress={tokenAddress}
             tokenSymbol={tokenSymbol}
             disabled={isDisabled}
