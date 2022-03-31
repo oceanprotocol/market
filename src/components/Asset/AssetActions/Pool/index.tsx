@@ -131,6 +131,12 @@ export default function Pool(): ReactElement {
             conversion={poolInfoOwner?.liquidity}
           />
           <TokenList
+            title="Total Value Locked"
+            baseTokenValue={poolInfo?.totalLiquidityInOcean.toString()}
+            baseTokenSymbol={poolInfo?.baseTokenSymbol}
+            conversion={poolInfo?.totalLiquidityInOcean}
+          />
+          <TokenList
             title={
               <>
                 Pool Statistics
@@ -142,13 +148,11 @@ export default function Pool(): ReactElement {
                     {poolInfo?.weightBaseToken}/{poolInfo?.weightDt}
                   </span>
                 )}
-                <Graph poolSnapshots={poolSnapshots} />
               </>
             }
-            baseTokenValue={`${poolInfo?.totalLiquidityInOcean}`}
-            baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            conversion={poolInfo?.totalLiquidityInOcean}
-          />
+          >
+            <Graph poolSnapshots={poolSnapshots} />
+          </TokenList>
 
           <TokenList
             size="mini"

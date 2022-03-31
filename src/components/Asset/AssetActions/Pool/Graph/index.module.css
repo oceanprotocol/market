@@ -3,7 +3,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: calc(var(--spacer) / 6) -1.35rem calc(var(--spacer) / 1.5) -1.35rem;
+  flex-direction: column;
+  margin: calc(var(--spacer) / 6) -1.35rem 0 -1.35rem;
   position: relative;
 }
 

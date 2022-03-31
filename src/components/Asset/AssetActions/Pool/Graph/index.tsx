@@ -104,13 +104,13 @@ export default function Graph({
         <Loader />
       ) : (
         <>
-          <Nav graphType={graphType} setGraphType={setGraphType} />
-
           {graphType === 'volume' ? (
             <Bar width={416} height={120} data={graphData} options={options} />
           ) : (
             <Line width={416} height={120} data={graphData} options={options} />
           )}
+
+          <Nav graphType={graphType} setGraphType={setGraphType} />
         </>
       )}
     </div>
