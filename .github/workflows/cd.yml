@@ -20,6 +20,6 @@ jobs:
       - name: Deploy
         uses: WyriHaximus/github-action-helm3@v2
         with:
-          exec: helm upgrade APP_NAME ./oval-chart --install --wait --atomic --namespace=oval --set=app.name=prod_oval --values=./oval-chart/prod-values.yaml
+          exec: helm upgrade prod-oval ./oval-chart --install --wait --atomic --namespace=oval --set=app.name=prod_oval --values=./oval-chart/prod-values.yaml
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
