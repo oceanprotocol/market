@@ -96,13 +96,12 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!poolData) return
 
-    // once we have poolData, we need to get owner's ownerOceans (OVL)
+    // once we have poolData, we need to get owner's pool shares (OVL)
     calculateSharesVL(
       poolData.id,
       poolData.baseToken.address,
       poolData.shares[0].shares,
-      chainId || asset.chainId,
-      web3
+      asset.chainId
     ).then((shares) => {
       setOwnerPoolShares(shares)
     })
@@ -180,8 +179,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       poolData.id,
       poolData.baseToken.address,
       poolInfoUser.poolShares,
-      chainId || asset.chainId,
-      web3
+      asset.chainId
     ).then((shares) => {
       setUserPoolShares(shares)
     })
