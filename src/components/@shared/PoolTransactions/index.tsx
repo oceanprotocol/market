@@ -23,7 +23,7 @@ const txHistoryQueryByPool = gql`
     poolTransactions(
       orderBy: timestamp
       orderDirection: desc
-      where: { pool: $pool }
+      where: { pool: $pool, user: $user }
       first: 1000
     ) {
       baseToken {
@@ -40,6 +40,9 @@ const txHistoryQueryByPool = gql`
       tx
       timestamp
       pool {
+        datatoken {
+          id
+        }
         id
       }
     }
@@ -67,6 +70,9 @@ const txHistoryQuery = gql`
       tx
       timestamp
       pool {
+        datatoken {
+          id
+        }
         id
       }
     }
@@ -124,7 +130,7 @@ export default function PoolTransactions({
   accountId
 }: {
   poolAddress?: string
-  poolChainId?: number[]
+  poolChainId?: number
   minimal?: boolean
   accountId: string
 }): ReactElement {
@@ -146,7 +152,7 @@ export default function PoolTransactions({
     const result = await fetchDataForMultipleChains(
       poolAddress ? txHistoryQueryByPool : txHistoryQuery,
       variables,
-      poolAddress ? poolChainId : chainIds
+      poolAddress ? [poolChainId] : chainIds
     )
 
     for (let i = 0; i < result.length; i++) {
@@ -166,24 +172,24 @@ export default function PoolTransactions({
         return
       }
       const poolTransactions: PoolTransaction[] = []
-      const dtList: string[] = []
+      let dtList: string[] = []
 
-      for (let i = 0; i < data.length; i++) {
-        dtList.push(data[i]?.datatoken?.address)
-      }
-
+      dtList = [...new Set(data.map((item) => item.pool.datatoken.id))]
       if (dtList.length === 0) {
         setTransactions([])
         setIsLoading(false)
         return
       }
-      const ddoList = await getAssetsFromDtList(dtList, chainIds, cancelToken)
-
+      const ddoList = !minimal
+        ? await getAssetsFromDtList(dtList, chainIds, cancelToken)
+        : []
       for (let i = 0; i < data.length; i++) {
         poolTransactions.push({
           ...data[i],
-          networkId: getAsset(ddoList, data[i].datatoken.address).chainId,
-          asset: getAsset(ddoList, data[i].datatoken.address)
+          networkId: !minimal
+            ? getAsset(ddoList, data[i].pool.datatoken.id).chainId
+            : poolChainId,
+          asset: !minimal ? getAsset(ddoList, data[i].pool.datatoken.id) : null
         })
       }
       const sortedTransactions = poolTransactions.sort(
