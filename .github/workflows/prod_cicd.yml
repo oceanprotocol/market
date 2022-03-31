@@ -26,7 +26,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/oval-marketplacev3:dev
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/oval-marketplacev3:prod
   deployment:
     needs: build
     runs-on: 'ubuntu-latest'
