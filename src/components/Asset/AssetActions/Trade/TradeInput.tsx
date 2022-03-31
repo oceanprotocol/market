@@ -59,7 +59,7 @@ export default function TradeInput({
             min="0"
             prefix={item?.token}
             placeholder="0"
-            field={field}
+            // field={field}
             form={form}
             value={`${field.value}`}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +70,7 @@ export default function TradeInput({
             }}
             disabled={!accountId || disabled}
             additionalComponent={<Error meta={meta} />}
+            {...field}
           />
         )}
       </Field>
