@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
 :root {
   --brand-white: #ffffff;
   --brand-black: #141414;
@@ -33,9 +34,9 @@
   --border-color: #e2e2e2;
   --box-shadow-color: rgba(0, 0, 0, 0.05);
 
-  --font-family-base: 'Sharp Sans', -apple-system, BlinkMacSystemFont,
+  --font-family-base: 'Montserrat', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Helvetica, Arial, sans-serif;
-  --font-family-heading: 'Sharp Sans Display', -apple-system, BlinkMacSystemFont,
+  --font-family-heading: 'Montserrat', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Helvetica, Arial, sans-serif;
   --font-family-monospace: 'Fira Code', 'Fira Mono', Menlo, Monaco, Consolas,
     'Courier New', monospace;
