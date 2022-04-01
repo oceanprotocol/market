@@ -53,7 +53,7 @@ ingress:
         - path: /
           pathType: Prefix
   tls: 
-    - secretName: oval-market-tls
+    - secretName: dev-oval-market-tls
       hosts:
          - dev.oval.pepro.io
 
