@@ -1,7 +1,7 @@
 {
   "site": {
-    "siteTitle": "Ocean Market",
-    "siteTagline": "A marketplace to find, publish and trade data sets in the Ocean Network.",
+    "siteTitle": "Oval Market",
+    "siteTagline": "A marketplace to find assets for virtual validation",
     "siteUrl": "https://market.oceanprotocol.com",
     "siteIcon": "node_modules/@oceanprotocol/art/logo/favicon-white.png",
     "siteImage": "../src/images/share.png",
@@ -12,9 +12,14 @@
         "link": "/publish"
       },
       {
-        "name": "Profile",
+        "name": "My Assets",
         "link": "/profile"
+      },
+      {
+        "name": "About Pepro",
+        "link": "https://perpetuum-progress.io/"
       }
+
     ],
     "warning": {
       "main": "We are in beta. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).",
