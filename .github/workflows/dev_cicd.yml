@@ -11,7 +11,7 @@ jobs:
         name: Checkout 
         uses: actions/checkout@v2
           with:
-             ref: dev
+            ref: 'dev'
       -
         name: Login to Docker Hub
         uses: docker/login-action@v1
