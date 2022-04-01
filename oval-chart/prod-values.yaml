@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: spokorny/oval-marketplacev3
+  repository: perpetuumprogress/oval-marketplacev3
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "prod"
