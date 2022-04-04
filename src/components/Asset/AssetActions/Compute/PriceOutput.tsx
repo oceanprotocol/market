@@ -15,6 +15,8 @@ interface PriceOutputProps {
   hasDatatokenSelectedComputeAsset: boolean
   algorithmConsumeDetails: AccessDetails
   selectedComputeAssetTimeout: string
+  datasetOrderPrice?: number
+  algoOrderPrice?: number
 }
 
 function Row({
@@ -62,7 +64,9 @@ export default function PriceOutput({
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
   algorithmConsumeDetails,
-  selectedComputeAssetTimeout
+  selectedComputeAssetTimeout,
+  datasetOrderPrice,
+  algoOrderPrice
 }: PriceOutputProps): ReactElement {
   const { asset } = useAsset()
 
@@ -76,14 +80,20 @@ export default function PriceOutput({
             <Row
               hasPreviousOrder={hasPreviousOrder}
               hasDatatoken={hasDatatoken}
-              price={Number.parseFloat(asset?.accessDetails?.price)}
+              price={
+                datasetOrderPrice ||
+                Number.parseFloat(asset?.accessDetails?.price)
+              }
               timeout={assetTimeout}
               symbol={symbol}
             />
             <Row
               hasPreviousOrder={hasPreviousOrderSelectedComputeAsset}
               hasDatatoken={hasDatatokenSelectedComputeAsset}
-              price={Number.parseFloat(algorithmConsumeDetails?.price)}
+              price={
+                algoOrderPrice ||
+                Number.parseFloat(algorithmConsumeDetails?.price)
+              }
               timeout={selectedComputeAssetTimeout}
               symbol={symbol}
               sign="+"
