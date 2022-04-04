@@ -32,26 +32,37 @@ export default function PricingFields(): ReactElement {
   useEffect(() => {
     if (type === 'fixed' || type === 'free') return
 
+    const amountOcean =
+      isValidNumber(weightOnOcean) &&
+      isValidNumber(price) &&
+      isValidNumber(weightOnDataToken) &&
+      price > 0
+        ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10))
+        : '50'
+
+    console.log(amountOcean.toString())
+
+    setFieldValue('pricing.amountOcean', amountOcean)
+  }, [price, weightOnDataToken, weightOnOcean, type, setFieldValue])
+
+  // Always update everything when price value changes
+  useEffect(() => {
+    if (type === 'fixed' || type === 'free') return
+
     const amountDataToken =
       isValidNumber(amountOcean) &&
       isValidNumber(weightOnOcean) &&
       isValidNumber(price) &&
-      isValidNumber(weightOnDataToken)
+      isValidNumber(weightOnDataToken) &&
+      price > 0
         ? new Decimal(amountOcean)
             .dividedBy(new Decimal(weightOnOcean))
             .dividedBy(new Decimal(price))
             .mul(new Decimal(weightOnDataToken))
-        : 0
+        : '50'
 
     setFieldValue('pricing.amountDataToken', amountDataToken)
-  }, [
-    price,
-    amountOcean,
-    weightOnOcean,
-    weightOnDataToken,
-    type,
-    setFieldValue
-  ])
+  }, [amountOcean, weightOnOcean, weightOnDataToken, type, setFieldValue])
 
   const tabs = [
     appConfig.allowFixedPricing === 'true'
