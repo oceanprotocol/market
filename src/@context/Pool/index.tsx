@@ -133,7 +133,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
 
     setPoolInfo(newPoolInfo)
     LoggerInstance.log('[pool] Created new pool info:', newPoolInfo)
-  }, [asset.chainId, chainId, poolData, web3])
+  }, [asset?.chainId, chainId, poolData, web3])
 
   //
   // 2 Pool Creator Info
