@@ -43,6 +43,9 @@ export default function Swap({
   const { poolInfo, poolData } = usePool()
   const { appConfig } = useSiteMetadata()
 
+  console.log('BALANCE: ', balance)
+  console.log('POOL DATA: ', poolData)
+
   const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
     token: poolInfo?.baseTokenSymbol,
@@ -101,6 +104,8 @@ export default function Swap({
             : new Decimal(balance.baseToken)
           : maxBaseTokenFromPool
 
+      console.log('AMOUNT BASE TOKEN : ', amountBaseToken)
+
       try {
         const maxBuyBaseToken: PoolPriceAndFees =
           await poolInstance.getAmountOutExactIn(
@@ -144,10 +149,17 @@ export default function Swap({
 
         setBaseTokenItem((prevState) => ({
           ...prevState,
-          amount: amountBaseToken.toDecimalPlaces(MAX_DECIMALS).toString(),
+          amount: new Decimal(balance.baseToken)
+            .toDecimalPlaces(MAX_DECIMALS)
+            .toString(),
           maxAmount: maximumBaseToken
         }))
 
+        console.log(
+          'FINAL AMOUNT: ',
+          amountBaseToken.toDecimalPlaces(MAX_DECIMALS).toString(),
+          maximumBaseToken
+        )
         setDtItem((prevState) => ({
           ...prevState,
           amount: amountDataToken.toDecimalPlaces(MAX_DECIMALS).toString(),
@@ -314,6 +326,8 @@ export default function Swap({
       LoggerInstance.error(ex)
     }
   }
+
+  console.log('BASE TOKEN ITEM: ', baseTokenItem)
 
   return (
     <div className={styles.swap}>
