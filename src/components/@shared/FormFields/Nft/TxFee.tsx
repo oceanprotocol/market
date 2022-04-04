@@ -17,7 +17,7 @@ const getEstGasFee = async (
     return
 
   const { web3 } = nftFactory
-  const nft = generateNftCreateData(nftMetadata)
+  const nft = generateNftCreateData(nftMetadata, address)
 
   const gasPrice = await web3.eth.getGasPrice()
   const gasLimit = await nftFactory?.estGasCreateNFT(address, nft)
