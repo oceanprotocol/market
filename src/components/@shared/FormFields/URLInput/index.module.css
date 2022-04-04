@@ -10,8 +10,3 @@
 .error {
   composes: error from '@shared/FormInput/index.module.css';
 }
-
-.success {
-  background: var(--brand-alert-green);
-  opacity: 1 !important;
-}
