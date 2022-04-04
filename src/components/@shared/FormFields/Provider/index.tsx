@@ -34,7 +34,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
         )
 
       // if all good, add provider to formik state
-      helpers.setValue({ url: field.value.url, valid: isValid })
+      helpers.setValue({ url: field.value.url, valid: isValid, custom: true })
     } catch (error) {
       setFieldError(`${field.name}.url`, error.message)
       LoggerInstance.error(error.message)
