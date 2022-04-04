@@ -40,8 +40,6 @@ export default function PricingFields(): ReactElement {
         ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10))
         : '50'
 
-    console.log(amountOcean.toString())
-
     setFieldValue('pricing.amountOcean', amountOcean)
   }, [price, weightOnDataToken, weightOnOcean, type, setFieldValue])
 

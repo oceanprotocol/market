@@ -78,6 +78,7 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
           name="amountOcean"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
           weight={`${Number(weightOnOcean) * 10}%`}
+          min={(price * Number(weightOnOcean) * 10).toString()}
         />
         <Coin
           name="amountDataToken"
