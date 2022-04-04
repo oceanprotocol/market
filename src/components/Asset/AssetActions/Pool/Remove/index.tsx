@@ -67,11 +67,16 @@ export default function Remove({
         minOceanAmount
       )
       setTxId(result?.transactionHash)
+      // fetch new data
       fetchAllData()
     } catch (error) {
       LoggerInstance.error(error.message)
       toast.error(error.message)
     } finally {
+      // reset slider after transaction
+      setAmountPercent('0')
+      setAmountOcean('0')
+      setMinOceanAmount('0')
       setIsLoading(false)
     }
   }
@@ -80,8 +85,10 @@ export default function Remove({
     if (!accountId || !poolTokens) return
 
     async function getMax() {
+      const poolTokensAmount =
+        !poolTokens || poolTokens === '0' ? '1' : poolTokens
       const maxTokensToRemoveFromPool = calcMaxExactOut(totalPoolTokens)
-      const poolTokensDecimal = new Decimal(poolTokens)
+      const poolTokensDecimal = new Decimal(poolTokensAmount)
       const maxTokensToRemoveForUser = maxTokensToRemoveFromPool.greaterThan(
         poolTokensDecimal
       )
@@ -105,6 +112,7 @@ export default function Remove({
         tokenOutAddress,
         newAmountPoolShares
       )
+
       setAmountOcean(newAmountOcean)
     }, 150)
   )
@@ -116,6 +124,11 @@ export default function Remove({
   }, [amountPoolShares, accountId, poolTokens, poolAddress, totalPoolTokens])
 
   useEffect(() => {
+    if (!amountOcean || amountPercent === '0') {
+      setMinOceanAmount('0')
+      return
+    }
+
     const minOceanAmount = new Decimal(amountOcean)
       .mul(new Decimal(100).minus(new Decimal(slippage)))
       .dividedBy(100)
@@ -220,7 +233,12 @@ export default function Remove({
         actionName={content.pool.remove.action}
         action={handleRemoveLiquidity}
         successMessage="Successfully removed liquidity."
-        isDisabled={!isAssetNetwork || amountOcean === '0'}
+        isDisabled={
+          !isAssetNetwork ||
+          amountPercent === '0' ||
+          amountOcean === '0' ||
+          poolTokens === '0'
+        }
         txId={txId}
         tokenAddress={tokenOutAddress}
         tokenSymbol={tokenOutSymbol}
