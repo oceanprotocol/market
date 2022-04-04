@@ -28,6 +28,7 @@ export default function Results({
 
     try {
       setIsLoading(true)
+      console.log(' Job: ', job)
       const jobResult = await providerInstance.getComputeResultUrl(
         'https://v4.provider.rinkeby.oceanprotocol.com/',
         web3,
