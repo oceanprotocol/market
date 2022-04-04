@@ -2,8 +2,14 @@
   composes: error from '@shared/FormInput/index.module.css';
 }
 
-.restore {
+.default {
   font-family: var(--font-family-base);
   text-transform: none;
   font-weight: var(--font-weight-base);
+
+  /* take it out of layout so error messages 
+  are not pushed down */
+  position: absolute;
+  left: 0;
+  bottom: -30%;
 }

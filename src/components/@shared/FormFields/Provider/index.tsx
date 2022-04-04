@@ -45,7 +45,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
     helpers.setTouched(false)
   }
 
-  function handleRestore(e: React.SyntheticEvent) {
+  function handleDefault(e: React.SyntheticEvent) {
     e.preventDefault()
     helpers.setValue(initialValues.services[0].providerUrl)
   }
@@ -64,8 +64,8 @@ export default function CustomProvider(props: InputProps): ReactElement {
       <Button
         style="text"
         size="small"
-        onClick={handleRestore}
-        className={styles.restore}
+        onClick={handleDefault}
+        className={styles.default}
       >
         Use Default Provider
       </Button>
