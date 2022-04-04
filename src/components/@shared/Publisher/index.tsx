@@ -24,13 +24,17 @@ export default function Publisher({
   // const { accountId } = useWeb3()
   const isMounted = useIsMounted()
   const [profile, setProfile] = useState<Profile>()
-  const [name, setName] = useState(accountTruncate(account))
+  const [name, setName] = useState('')
   const [accountEns, setAccountEns] = useState<string>()
 
   // const showAdd = account === accountId && !profile
 
   useEffect(() => {
     if (!account) return
+
+    // set default name on hook
+    // to avoid side effect (UI not updating on account's change)
+    setName(accountTruncate(account))
 
     const source = axios.CancelToken.source()
 
