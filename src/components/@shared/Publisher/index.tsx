@@ -2,6 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import Link from 'next/link'
+import get3BoxProfile from '@utils/profile'
 import { accountTruncate } from '@utils/web3'
 import axios from 'axios'
 import { getEnsName } from '@utils/ens'
@@ -19,6 +20,7 @@ export default function Publisher({
   className?: string
 }): ReactElement {
   const isMounted = useIsMounted()
+  const [profile, setProfile] = useState<Profile>()
   const [name, setName] = useState('')
   const [accountEns, setAccountEns] = useState<string>()
 
@@ -38,6 +40,13 @@ export default function Publisher({
         setAccountEns(accountEns)
         setName(accountEns)
       }
+
+      // 3box
+      const profile = await get3BoxProfile(account, source.token)
+      if (!profile) return
+      setProfile(profile)
+      const { name, emoji } = profile
+      name && setName(`${emoji || ''} ${name}`)
     }
     getExternalName()
 
