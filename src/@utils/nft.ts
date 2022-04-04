@@ -62,12 +62,16 @@ export function generateNftMetadata(): NftMetadata {
 
 const tokenUriPrefix = 'data:application/json;base64,'
 
-export function generateNftCreateData(nftMetadata: NftMetadata): any {
+export function generateNftCreateData(
+  nftMetadata: NftMetadata,
+  accountId: string
+): any {
   const nftCreateData = {
     name: nftMetadata.name,
     symbol: nftMetadata.symbol,
     templateIndex: 1,
-    tokenURI: ''
+    tokenURI: '',
+    owner: accountId
   }
 
   return nftCreateData
