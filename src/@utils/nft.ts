@@ -5,7 +5,8 @@ import {
   Nft,
   ProviderInstance,
   DDO,
-  MetadataAndTokenURI
+  MetadataAndTokenURI,
+  NftCreateData
 } from '@oceanprotocol/lib'
 import { SvgWaves } from './SvgWaves'
 import Web3 from 'web3'
@@ -62,12 +63,18 @@ export function generateNftMetadata(): NftMetadata {
 
 const tokenUriPrefix = 'data:application/json;base64,'
 
-export function generateNftCreateData(nftMetadata: NftMetadata): any {
-  const nftCreateData = {
+export function generateNftCreateData(
+  nftMetadata: NftMetadata,
+  accountId: string,
+  transferable = true
+): any {
+  const nftCreateData: NftCreateData = {
     name: nftMetadata.name,
     symbol: nftMetadata.symbol,
     templateIndex: 1,
-    tokenURI: ''
+    tokenURI: '',
+    transferable,
+    owner: accountId
   }
 
   return nftCreateData
