@@ -1,22 +1,15 @@
-/* .graphWrap {
+.graphWrap {
+  composes: container from '../Section/index.module.css';
+
+  padding: 0;
+  grid-column: full;
   min-height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin: calc(var(--spacer) / 6) -1.35rem 0 -1.35rem;
+  margin-bottom: calc(var(--spacer) / 2);
   position: relative;
-}
-
-@media (min-width: 40rem) {
-  .graphWrap {
-    margin-left: -2rem;
-    margin-right: -2rem;
-  }
-} */
-
-.graphWrap {
-  width: 100%;
 }
 
 .graphWrap canvas {
