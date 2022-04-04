@@ -1,4 +1,4 @@
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import React, {
@@ -16,6 +16,7 @@ import {
 } from 'src/@types/subgraph/PoolData'
 import { useAsset } from '../Asset'
 import { useWeb3 } from '../Web3'
+import { calculateSharesVL } from '@utils/pool'
 import { PoolProviderValue, PoolInfo, PoolInfoUser } from './_types'
 import { getFee, getPoolData, getWeight } from './_utils'
 
@@ -37,7 +38,7 @@ const initialPoolInfoUser: Partial<PoolInfoUser> = {
 const initialPoolInfoCreator: Partial<PoolInfoUser> = initialPoolInfoUser
 
 function PoolProvider({ children }: { children: ReactNode }): ReactElement {
-  const { accountId } = useWeb3()
+  const { accountId, web3, chainId } = useWeb3()
   const { isInPurgatory, asset, owner } = useAsset()
 
   const [poolData, setPoolData] = useState<PoolDataPoolData>()
@@ -54,6 +55,8 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   const [hasUserAddedLiquidity, setUserHasAddedLiquidity] = useState(false)
   const [isRemoveDisabled, setIsRemoveDisabled] = useState(false)
   // const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
+  const [ownerPoolShares, setOwnerPoolShares] = useState('0')
+  const [userPoolShares, setUserPoolShares] = useState('0')
 
   const fetchAllData = useCallback(async () => {
     if (
@@ -84,30 +87,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     LoggerInstance.log('[pool] Fetched pool snapshots:', response.poolSnapshots)
   }, [asset?.chainId, asset?.accessDetails?.addressOrId, owner, accountId])
 
-  // Helper: start interval fetching
-  // const initFetchInterval = useCallback(() => {
-  //   if (fetchInterval) return
-
-  //   const newInterval = setInterval(() => {
-  //     fetchAllData()
-  //     LoggerInstance.log(
-  //       `[pool] Refetch interval fired after ${refreshInterval / 1000}s`
-  //     )
-  //   }, refreshInterval)
-  //   setFetchInterval(newInterval)
-
-  //   // Having `accountId` as dependency is important for interval to
-  //   // change after user account switch.
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [fetchInterval, fetchAllData, accountId])
-
-  // useEffect(() => {
-  //   return () => {
-  //     clearInterval(fetchInterval)
-  //   }
-  // }, [fetchInterval])
-
-  //
   // 0 Fetch all the data on mount if we are on a pool.
   // All further effects depend on the fetched data
   // and only do further data checking and manipulation.
@@ -116,7 +95,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (asset?.accessDetails?.type !== 'dynamic') return
 
     fetchAllData()
-    // initFetchInterval()
   }, [fetchAllData, asset?.accessDetails?.type])
 
   //
@@ -125,12 +103,19 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!poolData) return
 
+    // once we have poolData, we need to get owner's pool shares (OVL)
+    calculateSharesVL(
+      poolData.id,
+      poolData.baseToken.address,
+      poolData.shares[0].shares,
+      asset.chainId
+    ).then((shares) => {
+      setOwnerPoolShares(shares)
+    })
     // Total Liquidity
-    const totalLiquidityInOcean = isValidNumber(poolData.spotPrice)
-      ? new Decimal(poolData.baseTokenLiquidity).add(
-          new Decimal(poolData.datatokenLiquidity).mul(poolData.spotPrice)
-        )
-      : new Decimal(0)
+    const totalLiquidityInOcean = new Decimal(
+      poolData.baseTokenLiquidity * 2 || 0
+    )
 
     const newPoolInfo = {
       liquidityProviderSwapFee: getFee(poolData.liquidityProviderSwapFee),
@@ -145,48 +130,44 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       totalPoolTokens: poolData.totalShares,
       totalLiquidityInOcean
     }
+
     setPoolInfo(newPoolInfo)
     LoggerInstance.log('[pool] Created new pool info:', newPoolInfo)
-  }, [poolData])
+  }, [asset.chainId, chainId, poolData, web3])
 
   //
   // 2 Pool Creator Info
   //
   useEffect(() => {
-    if (!poolData || !poolInfo?.totalPoolTokens) return
-
-    // Staking bot receives half the pool shares so for display purposes
-    // we can multiply by 2 as we have a hardcoded 50/50 pool weight.
-    const ownerPoolShares = new Decimal(poolData.shares[0]?.shares)
-      .mul(2)
-      .toString()
-
-    // Liquidity in base token, calculated from pool share tokens.
-    const liquidity =
-      isValidNumber(ownerPoolShares) &&
-      isValidNumber(poolInfo.totalPoolTokens) &&
-      isValidNumber(poolData.baseTokenLiquidity)
-        ? new Decimal(ownerPoolShares)
-            .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-            .mul(poolData.baseTokenLiquidity)
-        : new Decimal(0)
+    if (
+      !poolData ||
+      !poolInfo?.totalPoolTokens ||
+      !poolInfo.totalLiquidityInOcean ||
+      ownerPoolShares === '0'
+    )
+      return
 
     // Pool share tokens.
-    const poolShare =
-      isValidNumber(ownerPoolShares) && isValidNumber(poolInfo.totalPoolTokens)
-        ? new Decimal(ownerPoolShares)
-            .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-            .mul(100)
-            .toFixed(2)
-        : '0'
+    const poolShare = new Decimal(ownerPoolShares)
+      .dividedBy(poolInfo.totalLiquidityInOcean)
+      .mul(100)
+      .toFixed(2)
+
+    console.log(ownerPoolShares, poolShare)
+
     const newPoolOwnerInfo = {
-      liquidity,
+      liquidity: new Decimal(ownerPoolShares), // liquidity in base token, values from from `calcSingleOutGivenPoolIn` method
       poolShares: ownerPoolShares,
       poolShare
     }
     setPoolInfoOwner(newPoolOwnerInfo)
     LoggerInstance.log('[pool] Created new owner pool info:', newPoolOwnerInfo)
-  }, [poolData, poolInfo?.totalPoolTokens])
+  }, [
+    ownerPoolShares,
+    poolData,
+    poolInfo.totalLiquidityInOcean,
+    poolInfo.totalPoolTokens
+  ])
 
   //
   // 3 User Pool Info
@@ -196,40 +177,34 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       !poolData ||
       !poolInfo?.totalPoolTokens ||
       !poolInfoUser?.poolShares ||
+      !poolInfo?.totalLiquidityInOcean ||
+      !poolData?.baseTokenLiquidity ||
       !asset?.chainId ||
       !accountId ||
       !poolInfoUser
     )
       return
-    // Staking bot receives half the pool shares so for display purposes
-    // we can multiply by 2 as we have a hardcoded 50/50 pool weight.
-    const userPoolShares = new Decimal(poolInfoUser.poolShares || 0)
-      .mul(2)
-      .toString()
+
+    // once we have poolData, we need to get user's pool shares (VL)
+    calculateSharesVL(
+      poolData.id,
+      poolData.baseToken.address,
+      poolInfoUser.poolShares,
+      asset.chainId
+    ).then((shares) => {
+      setUserPoolShares(shares)
+    })
 
     // Pool share in %.
-    const poolShare =
-      isValidNumber(userPoolShares) &&
-      isValidNumber(poolInfo.totalPoolTokens) &&
-      new Decimal(userPoolShares)
-        .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-        .mul(100)
-        .toFixed(2)
+    const poolShare = new Decimal(userPoolShares)
+      .dividedBy(new Decimal(poolInfo.totalLiquidityInOcean))
+      .mul(100)
+      .toFixed(2)
 
     setUserHasAddedLiquidity(Number(poolShare) > 0)
 
-    // Liquidity in base token, calculated from pool share tokens.
-    const liquidity =
-      isValidNumber(userPoolShares) &&
-      isValidNumber(poolInfo.totalPoolTokens) &&
-      isValidNumber(poolData.baseTokenLiquidity)
-        ? new Decimal(userPoolShares)
-            .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-            .mul(poolData.baseTokenLiquidity)
-        : new Decimal(0)
-
     const newPoolInfoUser = {
-      liquidity,
+      liquidity: new Decimal(userPoolShares), // liquidity in base token, values from from `calcSingleOutGivenPoolIn` method
       poolShare
     }
     setPoolInfoUser((prevState: PoolInfoUser) => ({
@@ -247,6 +222,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     poolData,
     poolInfoUser?.poolShares,
     accountId,
+    userPoolShares,
     asset?.chainId,
     owner,
     poolInfo?.totalPoolTokens
