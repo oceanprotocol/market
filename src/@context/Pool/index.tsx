@@ -153,8 +153,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       .mul(100)
       .toFixed(2)
 
-    console.log(ownerPoolShares, poolShare)
-
     const newPoolOwnerInfo = {
       liquidity: new Decimal(ownerPoolShares), // liquidity in base token, values from from `calcSingleOutGivenPoolIn` method
       poolShares: ownerPoolShares,
