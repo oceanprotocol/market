@@ -181,7 +181,7 @@ export async function transformPublishFormToDdo(
         }
       ],
       nft: {
-        ...generateNftCreateData(values?.metadata.nft),
+        ...generateNftCreateData(values?.metadata.nft, accountId),
         owner: accountId
       }
     })
@@ -198,7 +198,8 @@ export async function createTokensAndPricing(
   web3: Web3
 ) {
   const nftCreateData: NftCreateData = generateNftCreateData(
-    values.metadata.nft
+    values.metadata.nft,
+    accountId
   )
   const { appConfig } = getSiteMetadata()
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)

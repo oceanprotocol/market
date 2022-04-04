@@ -133,7 +133,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
 
     setPoolInfo(newPoolInfo)
     LoggerInstance.log('[pool] Created new pool info:', newPoolInfo)
-  }, [asset.chainId, chainId, poolData, web3])
+  }, [asset?.chainId, chainId, poolData, web3])
 
   //
   // 2 Pool Creator Info
@@ -152,8 +152,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       .dividedBy(poolInfo.totalLiquidityInOcean)
       .mul(100)
       .toFixed(2)
-
-    console.log(ownerPoolShares, poolShare)
 
     const newPoolOwnerInfo = {
       liquidity: new Decimal(ownerPoolShares), // liquidity in base token, values from from `calcSingleOutGivenPoolIn` method
