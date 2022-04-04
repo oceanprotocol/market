@@ -34,7 +34,13 @@ export default function Price({
         <>
           <div className={styles.grid}>
             <div className={styles.form}>
-              <Input type="number" prefix="OCEAN" {...field} />
+              <Input
+                type="number"
+                min="1"
+                placeholder="0"
+                prefix="OCEAN"
+                {...field}
+              />
               <Error meta={meta} />
             </div>
             <div className={styles.datatoken}>
