@@ -1,4 +1,8 @@
-import { LoggerInstance, Provider } from '@oceanprotocol/lib'
+import {
+  downloadFileBrowser,
+  LoggerInstance,
+  Provider
+} from '@oceanprotocol/lib'
 import React, { ReactElement, useState } from 'react'
 import Loader from '@shared/atoms/Loader'
 import { ListItem } from '@shared/atoms/Lists'
@@ -24,19 +28,14 @@ export default function Results({
 
     try {
       setIsLoading(true)
-      console.log('getResults job: ', job)
-      const jobResult = await providerInstance.computeResult(
-        job.jobId,
-        0,
-        accountId,
+      const jobResult = await providerInstance.getComputeResultUrl(
         'https://v4.provider.rinkeby.oceanprotocol.com/',
-        web3
+        web3,
+        accountId,
+        job.jobId,
+        0
       )
-      console.log('getResults jobResult: ', jobResult)
-      // if (jobStatus?.length > 0) {
-      //   job.algorithmLogUrl = jobStatus[0].algorithmLogUrl
-      //   job.resultsUrl = jobStatus[0].resultsUrl
-      // }
+      await downloadFileBrowser(jobResult)
     } catch (error) {
       LoggerInstance.error(error.message)
     } finally {
