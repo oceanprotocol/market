@@ -152,7 +152,9 @@ export default function Swap({
 
         setDtItem((prevState) => ({
           ...prevState,
-          amount: amountDataToken.toDecimalPlaces(MAX_DECIMALS).toString(),
+          amount: new Decimal(balance.datatoken)
+            .toDecimalPlaces(MAX_DECIMALS)
+            .toString(),
           maxAmount: maximumDt
         }))
       } catch (error) {
