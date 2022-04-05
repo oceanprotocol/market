@@ -1,5 +1,4 @@
-import { LoggerInstance, Pool } from '@oceanprotocol/lib'
-import { isValidNumber } from '@utils/numbers'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import Decimal from 'decimal.js'
 import React, {
   useContext,
@@ -19,8 +18,6 @@ import { useWeb3 } from '../Web3'
 import { calculateSharesVL } from '@utils/pool'
 import { PoolProviderValue, PoolInfo, PoolInfoUser } from './_types'
 import { getFee, getPoolData, getWeight } from './_utils'
-
-Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const PoolContext = createContext({} as PoolProviderValue)
 
@@ -225,14 +222,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     owner,
     poolInfo?.totalPoolTokens
   ])
-
-  //
-  // Check if removing liquidity should be disabled.
-  //
-  useEffect(() => {
-    if (!owner || !accountId) return
-    setIsRemoveDisabled(isInPurgatory && owner === accountId)
-  }, [isInPurgatory, owner, accountId])
 
   return (
     <PoolContext.Provider
