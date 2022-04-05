@@ -30,7 +30,8 @@
   display: inline;
 }
 
-.copyright {
+.copyright,
+.grid > div:first-child {
   text-align: center;
 }
 
