@@ -4,6 +4,7 @@ import PriceUnit from '@shared/Price/PriceUnit'
 import Logo from '@shared/atoms/Logo'
 import Decimal from 'decimal.js'
 import Conversion from '@shared/Price/Conversion'
+import { MAX_DECIMALS } from '@utils/constants'
 
 export default function Token({
   symbol,
@@ -30,7 +31,7 @@ export default function Token({
       </div>
       {conversion?.greaterThan(0) && (
         <Conversion
-          price={conversion.toString()}
+          price={conversion.toDecimalPlaces(MAX_DECIMALS).toString()}
           className={styles.conversion}
         />
       )}
