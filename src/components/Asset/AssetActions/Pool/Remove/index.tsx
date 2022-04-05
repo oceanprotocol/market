@@ -9,7 +9,7 @@ import styles from './index.module.css'
 import Header from '../Actions/Header'
 import { toast } from 'react-toastify'
 import Actions from '../Actions'
-import { LoggerInstance, Pool, calcMaxExactOut } from '@oceanprotocol/lib'
+import { LoggerInstance, Pool } from '@oceanprotocol/lib'
 import Token from '../../../../@shared/Token'
 import FormHelp from '@shared/FormInput/Help'
 import Button from '@shared/atoms/Button'
@@ -21,6 +21,7 @@ import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
 import { usePool } from '@context/Pool'
+import { getMax } from './_utils'
 
 const slippagePresets = ['5', '10', '15', '25', '50']
 
@@ -71,44 +72,17 @@ export default function Remove({
     }
   }
 
+  //
+  // Calculate and set maximum shares user is able to remove
+  //
   useEffect(() => {
-    if (
-      !accountId ||
-      !poolInfoUser?.poolShares ||
-      !poolInfo?.totalPoolTokens ||
-      !poolData?.id
-    )
+    if (!accountId || !poolInfoUser?.poolShares || !poolInfo?.totalPoolTokens)
       return
 
-    async function getMax() {
-      const poolTokensAmount =
-        !poolInfo.totalPoolTokens || poolInfo.totalPoolTokens === '0'
-          ? '1'
-          : poolInfo.totalPoolTokens
-      const poolTokensDecimal = new Decimal(poolTokensAmount)
-      const maxTokensToRemoveFromPool = calcMaxExactOut(
-        poolInfo.totalPoolTokens
-      )
-      const maxTokensToRemoveForUser = maxTokensToRemoveFromPool.greaterThan(
-        poolTokensDecimal
-      )
-        ? poolTokensDecimal
-        : maxTokensToRemoveFromPool
-
-      const maxPercent = new Decimal(100)
-        .mul(maxTokensToRemoveForUser)
-        .div(poolTokensDecimal)
-      setAmountMaxPercent(
-        maxPercent.toDecimalPlaces(0, Decimal.ROUND_DOWN).toString()
-      )
-    }
-    getMax()
-  }, [
-    accountId,
-    poolData?.id,
-    poolInfoUser?.poolShares,
-    poolInfo?.totalPoolTokens
-  ])
+    getMax(poolInfoUser.poolShares, poolInfo.totalPoolTokens).then((max) =>
+      setAmountMaxPercent(max)
+    )
+  }, [accountId, poolInfoUser?.poolShares, poolInfo?.totalPoolTokens])
 
   const getValues = useRef(
     debounce(async (newAmountPoolShares) => {
@@ -152,7 +126,7 @@ export default function Remove({
       .toString()
 
     setMinOceanAmount(minOceanAmount.slice(0, 18))
-  }, [slippage, amountOcean])
+  }, [slippage, amountOcean, amountPercent])
 
   // Set amountPoolShares based on set slider value
   function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
