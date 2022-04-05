@@ -1,4 +1,5 @@
 import { MAX_DECIMALS } from '@utils/constants'
+import { minAmountOcean } from './_constants'
 import * as Yup from 'yup'
 
 // TODO: conditional validation
@@ -78,11 +79,9 @@ const validationPricing = {
       (param) => maxDecimalsValidation.test(param?.toString())
     )
     .required('Required'),
-  amountDataToken: Yup.number()
-    .min(50, (param) => `Must be more or equal to ${param.min}`)
-    .required('Required'),
+  amountDataToken: Yup.number().required('Required'),
   amountOcean: Yup.number()
-    .min(50, (param) => `Must be more or equal to ${param.min}`)
+    .min(minAmountOcean, (param) => `Must be more or equal to ${param.min}`)
     .max(
       1000000,
       (param: { max: number }) => `Must be less than or equal to ${param.max}`
