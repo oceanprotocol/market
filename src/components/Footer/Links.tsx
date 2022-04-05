@@ -4,6 +4,8 @@ import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Button from '@shared/atoms/Button'
 import Link from 'next/link'
 import React from 'react'
+import content from '../../../content/footer.json'
+import External from '@images/external.svg'
 import styles from './Links.module.css'
 
 export default function Links() {
@@ -13,18 +15,15 @@ export default function Links() {
 
   return (
     <div className={styles.links}>
-      <Button style="text" size="small" href="https://docs.oceanprotocol.com">
-        Docs
-      </Button>
-      {' — '}
-      <Button style="text" size="small" href="https://github.com/oceanprotocol">
-        GitHub
-      </Button>
-      {' — '}
-      <Button style="text" size="small" href="https://discord.gg/TnXjkR5">
-        Discord
-      </Button>
-      {' — '}
+      {content.links.map(({ name, url }) => (
+        <>
+          <Button style="text" size="small" href={url}>
+            {name} <External />
+          </Button>
+          {' — '}
+        </>
+      ))}
+
       <Link href="/imprint">
         <a>Imprint</a>
       </Link>
