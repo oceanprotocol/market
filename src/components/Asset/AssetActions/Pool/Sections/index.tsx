@@ -48,7 +48,9 @@ export default function PoolSections() {
 
       <PoolSection
         title="Your Value Locked"
-        titlePostfix={`${poolInfoUser?.poolShare}% of pool`}
+        titlePostfix={
+          poolInfoUser?.poolShare && `${poolInfoUser?.poolShare}% of pool`
+        }
         tooltip={content.pool.tooltips.liquidity.replace(
           'SWAPFEE',
           poolInfo?.liquidityProviderSwapFee
