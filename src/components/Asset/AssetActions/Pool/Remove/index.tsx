@@ -196,13 +196,17 @@ export default function Remove({
       </form>
       <div className={styles.output}>
         <div>
-          <p>{content.pool.remove.output.titleOut} minimum</p>
+          <p>{content.pool.remove.output.titleOutExpected}</p>
+          <Token
+            symbol={poolInfo?.baseTokenSymbol}
+            balance={amountOcean}
+            noIcon
+          />
+        </div>
+        <div>
+          <p>{content.pool.remove.output.titleOutMinimum}</p>
           <Token symbol={poolInfo?.baseTokenSymbol} balance={minOceanAmount} />
         </div>
-        {/* <div>
-          <p>{content.pool.remove.output.titleIn}</p>
-          <Token symbol="pool shares" balance={amountPoolShares} noIcon />
-        </div> */}
       </div>
       <div className={styles.slippage}>
         <strong>Slippage Tolerance</strong>

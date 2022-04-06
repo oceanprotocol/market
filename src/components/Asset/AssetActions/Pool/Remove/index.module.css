@@ -50,23 +50,28 @@
 }
 
 .output {
-  composes: output from '../Add/Output.module.css';
-}
-
-.output [class*='token'] {
-  white-space: nowrap;
-}
-
-.output [class*='token'] > figure {
-  display: inline-block;
-}
-
-.output figure[class*='pool shares'] {
-  display: none;
+  border-top: 1px solid var(--border-color);
+  padding: var(--spacer);
+  padding-bottom: calc(var(--spacer) / 1.5);
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+  margin-left: -2rem;
+  margin-right: -2rem;
 }
 
 .output p {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: calc(var(--spacer) / 8);
   font-size: var(--font-size-small);
+}
+
+.output [class*='token'] {
+  white-space: normal;
+}
+
+.output [class*='token'] > figure {
+  display: none;
 }
 
 .slippage {
