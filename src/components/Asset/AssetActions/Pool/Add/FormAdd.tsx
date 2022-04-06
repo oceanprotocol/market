@@ -14,29 +14,21 @@ import { useWeb3 } from '@context/Web3'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
-import { LoggerInstance, Pool } from '@oceanprotocol/lib'
+import { Pool } from '@oceanprotocol/lib'
+import { usePool } from '@context/Pool'
 
 export default function FormAdd({
-  tokenInAddress,
-  tokenInSymbol,
   amountMax,
-  totalPoolTokens,
-  totalBalance,
-  poolAddress,
   setNewPoolTokens,
   setNewPoolShare
 }: {
-  tokenInAddress: string
-  tokenInSymbol: string
   amountMax: string
-  totalPoolTokens: string
-  totalBalance: PoolBalance
-  poolAddress: string
   setNewPoolTokens: (value: string) => void
   setNewPoolShare: (value: string) => void
 }): ReactElement {
   const { balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
+  const { poolData, poolInfo } = usePool()
 
   // Connect with form
   const {
@@ -47,9 +39,9 @@ export default function FormAdd({
 
   useEffect(() => {
     async function calculatePoolShares() {
-      if (!web3) return
+      if (!web3 || !poolData?.id || !poolInfo?.totalPoolTokens) return
 
-      if (!values.amount || !tokenInAddress) {
+      if (!values.amount || !poolInfo?.baseTokenAddress) {
         setNewPoolTokens('0')
         setNewPoolShare('0')
         return
@@ -59,31 +51,32 @@ export default function FormAdd({
       const poolInstance = new Pool(web3)
 
       const poolTokens = await poolInstance.calcPoolOutGivenSingleIn(
-        poolAddress,
-        tokenInAddress,
+        poolData.id,
+        poolInfo.baseTokenAddress,
         values.amount
       )
       setNewPoolTokens(poolTokens)
       const newPoolShareDecimal =
-        isValidNumber(poolTokens) && isValidNumber(totalPoolTokens)
+        isValidNumber(poolTokens) && isValidNumber(poolInfo.totalPoolTokens)
           ? new Decimal(poolTokens)
               .dividedBy(
-                new Decimal(totalPoolTokens).plus(new Decimal(poolTokens))
+                new Decimal(poolInfo.totalPoolTokens).plus(
+                  new Decimal(poolTokens)
+                )
               )
               .mul(100)
               .toString()
           : '0'
-      totalBalance && setNewPoolShare(newPoolShareDecimal)
+      setNewPoolShare(newPoolShareDecimal)
     }
     calculatePoolShares()
   }, [
-    tokenInAddress,
+    poolInfo?.baseTokenAddress,
     web3,
     values.amount,
-    totalBalance,
-    totalPoolTokens,
+    poolInfo?.totalPoolTokens,
     amountMax,
-    poolAddress,
+    poolData?.id,
     setNewPoolTokens,
     setNewPoolShare
   ])
@@ -93,7 +86,7 @@ export default function FormAdd({
       <UserLiquidity
         amount={balance.ocean}
         amountMax={amountMax}
-        symbol={tokenInSymbol}
+        symbol={poolInfo?.baseTokenSymbol}
       />
 
       <Field name="amount">
@@ -111,7 +104,7 @@ export default function FormAdd({
             min="0"
             value={values.amount}
             step="any"
-            prefix={tokenInSymbol}
+            prefix={poolInfo?.baseTokenSymbol}
             placeholder="0"
             field={field}
             form={form}
