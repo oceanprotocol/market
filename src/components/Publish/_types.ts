@@ -29,6 +29,7 @@ export interface FormPublishData {
   }
   metadata: {
     nft: NftMetadata
+    transferable: boolean
     type: 'dataset' | 'algorithm'
     name: string
     description: string

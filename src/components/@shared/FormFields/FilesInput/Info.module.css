@@ -6,9 +6,19 @@
   position: relative;
 }
 
-.hasError {
-  border-color: var(--brand-alert-red);
-  background-color: var(--brand-white);
+.info ul {
+  margin: 0;
+}
+
+.info li {
+  display: inline-block;
+  font-size: var(--font-size-small);
+  margin-right: calc(var(--spacer) / 2);
+  color: var(--color-secondary);
+}
+
+.info li.success {
+  color: var(--brand-alert-green);
 }
 
 .url {
@@ -21,15 +31,9 @@
   padding-right: calc(var(--spacer) / 2);
 }
 
-.info ul {
-  margin: 0;
-}
-
-.info li {
-  display: inline-block;
-  font-size: var(--font-size-small);
-  margin-right: calc(var(--spacer) / 2);
-  color: var(--color-secondary);
+.warning {
+  margin-top: calc(var(--spacer) / 3);
+  margin-left: 0;
 }
 
 .removeButton {
@@ -42,12 +46,4 @@
   cursor: pointer;
   color: var(--font-color-text);
   background-color: transparent;
-}
-
-.info li.success {
-  color: var(--brand-alert-green);
-}
-
-.info li.error {
-  color: var(--brand-alert-red);
 }
