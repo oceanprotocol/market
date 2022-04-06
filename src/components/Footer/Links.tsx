@@ -3,7 +3,7 @@ import { useGdprMetadata } from '@hooks/useGdprMetadata'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Button from '@shared/atoms/Button'
 import Link from 'next/link'
-import React from 'react'
+import React, { Fragment } from 'react'
 import content from '../../../content/footer.json'
 import External from '@images/external.svg'
 import styles from './Links.module.css'
@@ -16,12 +16,12 @@ export default function Links() {
   return (
     <div className={styles.links}>
       {content.links.map(({ name, url }) => (
-        <>
+        <Fragment key={name}>
           <Button style="text" size="small" href={url}>
             {name} <External />
           </Button>
           {' — '}
-        </>
+        </Fragment>
       ))}
 
       <Link href="/imprint">
