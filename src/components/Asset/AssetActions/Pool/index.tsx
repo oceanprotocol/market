@@ -13,7 +13,7 @@ import PoolSections from './Sections'
 
 export default function Pool(): ReactElement {
   const { isInPurgatory, asset, isAssetNetwork } = useAsset()
-  const { hasUserAddedLiquidity, isRemoveDisabled } = usePool()
+  const { hasUserAddedLiquidity } = usePool()
   const { accountId } = useWeb3()
 
   const [showAdd, setShowAdd] = useState(false)
@@ -39,7 +39,7 @@ export default function Pool(): ReactElement {
               Add Liquidity
             </Button>
 
-            {hasUserAddedLiquidity && !isRemoveDisabled && (
+            {hasUserAddedLiquidity && (
               <Button
                 size="small"
                 onClick={() => setShowRemove(true)}

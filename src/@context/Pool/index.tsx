@@ -36,7 +36,7 @@ const initialPoolInfoCreator: Partial<PoolInfoUser> = initialPoolInfoUser
 
 function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   const { accountId, web3, chainId } = useWeb3()
-  const { isInPurgatory, asset, owner } = useAsset()
+  const { asset, owner } = useAsset()
 
   const [poolData, setPoolData] = useState<PoolDataPoolData>()
   const [poolInfo, setPoolInfo] = useState<PoolInfo>(
@@ -50,7 +50,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   )
   const [poolSnapshots, setPoolSnapshots] = useState<PoolDataPoolSnapshots[]>()
   const [hasUserAddedLiquidity, setUserHasAddedLiquidity] = useState(false)
-  const [isRemoveDisabled, setIsRemoveDisabled] = useState(false)
   // const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
   const [ownerPoolShares, setOwnerPoolShares] = useState('0')
   const [userPoolShares, setUserPoolShares] = useState('0')
@@ -227,7 +226,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
           poolInfoUser,
           poolSnapshots,
           hasUserAddedLiquidity,
-          isRemoveDisabled,
           refreshInterval,
           fetchAllData
         } as PoolProviderValue
