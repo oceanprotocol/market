@@ -9,7 +9,8 @@ import {
   Datatoken,
   ProviderInstance,
   ComputeAsset,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
+  ComputeEnvironment
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -83,6 +84,8 @@ export default function Compute({
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [isAlgoConsumablePrice, setIsAlgoConsumablePrice] = useState(true)
   const [computeStatusText, setComputeStatusText] = useState('')
+  const [computeEnv, setComputeEnv] = useState<ComputeEnvironment>()
+  const [computeValidUntil, setComputeValidUntil] = useState<number>()
   const [datasetOrderPriceAndFees, setDatasetOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   const [isRequestingDataseOrderPrice, setIsRequestingDataseOrderPrice] =
@@ -110,28 +113,76 @@ export default function Compute({
     return hasAlgoDt
   }
 
+  async function initPriceAndFees() {
+    const computeEnv = await getComputeEnviroment(asset)
+    setComputeEnv(computeEnv)
+    const validUntil = getValidUntilTime(
+      computeEnv?.maxJobDuration,
+      asset.services[0].timeout,
+      selectedAlgorithmAsset.services[0].timeout
+    )
+    setComputeValidUntil(validUntil)
+    if (
+      asset?.accessDetails?.addressOrId !== ZERO_ADDRESS ||
+      asset?.accessDetails?.type !== 'free'
+    ) {
+      setIsRequestingDataseOrderPrice(true)
+      setComputeStatusText(
+        getComputeFeedback(
+          asset.accessDetails.baseToken?.symbol,
+          asset.accessDetails.datatoken?.symbol,
+          asset.metadata.type
+        )[0]
+      )
+      const datasetPriceAndFees = await getOrderPriceAndFees(
+        asset,
+        accountId,
+        computeEnv?.id,
+        validUntil
+      )
+      if (!datasetPriceAndFees) {
+        setError('Error setting dataset price and fees!')
+        toast.error('Error setting dataset price and fees!')
+        return
+      }
+      setDatasetOrderPriceAndFees(datasetPriceAndFees)
+      setIsRequestingDataseOrderPrice(false)
+    }
+
+    if (
+      selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS ||
+      selectedAlgorithmAsset?.accessDetails?.type !== 'free'
+    ) {
+      setIsRequestingAlgoOrderPrice(true)
+      setComputeStatusText(
+        getComputeFeedback(
+          selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol,
+          selectedAlgorithmAsset?.accessDetails?.datatoken?.symbol,
+          selectedAlgorithmAsset?.metadata?.type
+        )[0]
+      )
+      const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
+        selectedAlgorithmAsset,
+        ZERO_ADDRESS,
+        computeEnv?.id,
+        validUntil
+      )
+      if (!algorithmOrderPriceAndFees) {
+        setError('Error setting algorithm price and fees!')
+        toast.error('Error setting algorithm price and fees!')
+        return
+      }
+      setAlgoOrderPriceAndFees(algorithmOrderPriceAndFees)
+      setIsRequestingAlgoOrderPrice(false)
+    }
+  }
+
   useEffect(() => {
     if (!asset?.accessDetails || !accountId) return
 
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
     setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
-
-    async function initDatasetPriceAndFees() {
-      if (
-        asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
-        asset?.accessDetails?.type === 'free'
-      )
-        return
-
-      setIsRequestingDataseOrderPrice(true)
-      setComputeStatusText('Calculating price including fees.')
-      const orderPriceAndFees = await getOrderPriceAndFees(asset, accountId)
-      setDatasetOrderPriceAndFees(orderPriceAndFees)
-      setIsRequestingDataseOrderPrice(false)
-    }
-
-    initDatasetPriceAndFees()
   }, [asset?.accessDetails])
 
   useEffect(() => {
@@ -143,26 +194,9 @@ export default function Compute({
       selectedAlgorithmAsset?.accessDetails?.validOrderTx
     )
 
-    async function initAlgoPriceAndFees() {
-      if (
-        selectedAlgorithmAsset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
-        selectedAlgorithmAsset?.accessDetails?.type === 'free'
-      )
-        return
-
-      setIsRequestingAlgoOrderPrice(true)
-      setComputeStatusText('Calculating price including fees.')
-      const orderPriceAndFees = await getOrderPriceAndFees(
-        selectedAlgorithmAsset,
-        accountId
-      )
-      setAlgoOrderPriceAndFees(orderPriceAndFees)
-      setIsRequestingAlgoOrderPrice(false)
-    }
-
     async function initSelectedAlgo() {
-      const hasAlgoDt = await checkAssetDTBalance(selectedAlgorithmAsset)
-      !hasAlgoDt && (await initAlgoPriceAndFees())
+      await checkAssetDTBalance(selectedAlgorithmAsset)
+      await initPriceAndFees()
     }
 
     initSelectedAlgo()
@@ -215,32 +249,6 @@ export default function Compute({
         return
       }
 
-      const computeEnv = await getComputeEnviroment(asset)
-      const validUntil = getValidUntilTime(
-        computeEnv?.maxJobDuration,
-        asset.services[0].timeout,
-        selectedAlgorithmAsset.services[0].timeout
-      )
-
-      setComputeStatusText(
-        getComputeFeedback(
-          asset.accessDetails.baseToken?.symbol,
-          asset.accessDetails.datatoken?.symbol,
-          asset.metadata.type
-        )[0]
-      )
-      const datasetPriceAndFees = await getOrderPriceAndFees(
-        asset,
-        accountId,
-        computeEnv?.id,
-        validUntil
-      )
-      if (!datasetPriceAndFees) {
-        setError('Error setting dataset price and fees!')
-        toast.error('Error setting dataset price and fees!')
-        return
-      }
-
       let datasetOrderTx
       if (isOwned) {
         datasetOrderTx = validOrderTx
@@ -266,7 +274,10 @@ export default function Compute({
               return
             }
           }
-          LoggerInstance.log('dataset orderPriceAndFees: ', datasetPriceAndFees)
+          LoggerInstance.log(
+            'dataset orderPriceAndFees: ',
+            datasetOrderPriceAndFees
+          )
           setComputeStatusText(
             getComputeFeedback(
               asset.accessDetails.baseToken?.symbol,
@@ -277,10 +288,10 @@ export default function Compute({
           const orderTx = await order(
             web3,
             asset,
-            datasetPriceAndFees,
+            datasetOrderPriceAndFees,
             accountId,
             computeEnv?.id,
-            validUntil,
+            computeValidUntil,
             computeEnv?.consumerAddress
           )
           if (!orderTx) {
@@ -299,26 +310,6 @@ export default function Compute({
           toast.error('Failed to order dataset asset!')
           return
         }
-      }
-
-      setComputeStatusText(
-        getComputeFeedback(
-          selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
-          selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
-          selectedAlgorithmAsset.metadata.type
-        )[0]
-      )
-      const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
-        selectedAlgorithmAsset,
-        ZERO_ADDRESS,
-        computeEnv?.id,
-        validUntil
-      )
-
-      if (!algorithmOrderPriceAndFees) {
-        setError('Error setting algorithm price and fees!')
-        toast.error('Error setting algorithm price and fees!')
-        return
       }
 
       let algorithmOrderTx
@@ -362,10 +353,10 @@ export default function Compute({
           const orderTx = await order(
             web3,
             selectedAlgorithmAsset,
-            algorithmOrderPriceAndFees,
+            algoOrderPriceAndFees,
             accountId,
             computeEnv?.id,
-            validUntil,
+            computeValidUntil,
             computeEnv?.consumerAddress
           )
           if (!orderTx) {
