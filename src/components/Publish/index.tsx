@@ -25,6 +25,7 @@ import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
+import UnsupportedNetwork from '@shared/UnsupportedNetwork'
 
 // TODO: restore FormikPersist, add back clear form action
 const formName = 'ocean-publish-form'
@@ -35,7 +36,7 @@ export default function PublishPage({
   content: { title: string; description: string; warning: string }
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { accountId, web3, chainId } = useWeb3()
+  const { accountId, web3, chainId, isSupportedOceanNetwork } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const scrollToRef = useRef()
   const nftFactory = useNftFactory()
@@ -283,10 +284,14 @@ export default function PublishPage({
     >
       {({ values }) => (
         <>
-          <PageHeader
-            title={<Title networkId={values.user.chainId} />}
-            description={content.description}
-          />
+          {isSupportedOceanNetwork ? (
+            <PageHeader
+              title={<Title networkId={values.user.chainId} />}
+              description={content.description}
+            />
+          ) : (
+            <UnsupportedNetwork />
+          )}
           <Form className={styles.form} ref={scrollToRef}>
             <Navigation />
             <Steps feedback={feedback} />
