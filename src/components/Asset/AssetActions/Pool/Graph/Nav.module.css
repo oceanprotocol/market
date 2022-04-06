@@ -1,9 +1,11 @@
 .type {
-  position: absolute;
-  bottom: -10px;
+  position: relative;
   z-index: 1;
+  width: 100%;
   text-align: center;
   padding: 5px var(--spacer);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .button,
