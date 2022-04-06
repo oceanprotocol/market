@@ -1,5 +1,6 @@
 .stats {
   margin-bottom: calc(var(--spacer) * 2);
+  text-align: center;
 }
 
 /* specificity sledgehammer override without !important */
