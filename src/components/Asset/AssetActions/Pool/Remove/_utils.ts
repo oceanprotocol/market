@@ -11,9 +11,17 @@ export async function getMax(poolTokens: string, totalPoolTokens: string) {
     ? poolTokensDecimal
     : maxTokensToRemoveFromPool
 
-  const maxPercent = new Decimal(100)
-    .mul(maxTokensToRemoveForUser)
-    .div(poolTokensDecimal)
+  // small hack because if the values are equal the decimal.js result is 99.(9)
+  const maxPercent = maxTokensToRemoveForUser.equals(poolTokensDecimal)
+    ? new Decimal(100)
+    : new Decimal(100).mul(maxTokensToRemoveForUser).div(poolTokensDecimal)
+
+  console.log(
+    'percent',
+    maxPercent.toString(),
+    maxTokensToRemoveForUser.toString(),
+    poolTokensDecimal.toString()
+  )
 
   return maxPercent.toDecimalPlaces(0, Decimal.ROUND_DOWN).toString()
 }

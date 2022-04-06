@@ -16,12 +16,12 @@ export default function Links() {
   return (
     <div className={styles.links}>
       {content.links.map(({ name, url }) => (
-        <>
+        <React.Fragment key={name}>
           <Button style="text" size="small" href={url}>
             {name} <External />
           </Button>
           {' — '}
-        </>
+        </React.Fragment>
       ))}
 
       <Link href="/imprint">

@@ -43,8 +43,6 @@ export default function Remove({
   const [slippage, setSlippage] = useState<string>('5')
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
 
-  // TODO: precision needs to be set based on baseToken decimals
-  Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
   const poolInstance = new Pool(web3)
 
   async function handleRemoveLiquidity() {
@@ -76,6 +74,12 @@ export default function Remove({
   // Calculate and set maximum shares user is able to remove
   //
   useEffect(() => {
+    console.log(
+      'poolinfo',
+      poolInfoUser?.poolShares,
+      poolInfo?.totalPoolTokens,
+      poolInfoUser
+    )
     if (!accountId || !poolInfoUser?.poolShares || !poolInfo?.totalPoolTokens)
       return
 
@@ -91,7 +95,7 @@ export default function Remove({
         poolInfo?.baseTokenAddress,
         newAmountPoolShares
       )
-
+      console.log('calc share', newAmountPoolShares, newAmountOcean)
       setAmountOcean(newAmountOcean)
     }, 150)
   )
@@ -138,19 +142,15 @@ export default function Remove({
       .mul(new Decimal(poolInfoUser.poolShares))
       .toString()
 
-    setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
+    console.log('slider calc', amountPoolShares, poolInfoUser.poolShares)
+    setAmountPoolShares(amountPoolShares)
   }
 
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
     setAmountPercent(amountMaxPercent)
 
-    const amountPoolShares = new Decimal(amountMaxPercent)
-      .dividedBy(100)
-      .mul(new Decimal(poolInfoUser?.poolShares))
-      .toString()
-
-    setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
+    setAmountPoolShares(poolInfoUser.poolShares)
   }
 
   function handleSlippageChange(e: ChangeEvent<HTMLSelectElement>) {

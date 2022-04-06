@@ -15,13 +15,14 @@ import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
 import { calcMaxExactIn, LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { usePool } from '@context/Pool'
+import { MAX_DECIMALS } from '@utils/constants'
 
 export interface FormAddLiquidity {
-  amount: string
+  amount: number
 }
 
 const initialValues: FormAddLiquidity = {
-  amount: ''
+  amount: 0
 }
 
 export default function Add({
@@ -40,14 +41,24 @@ export default function Add({
   const [newPoolShare, setNewPoolShare] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
+  // eslint-disable-next-line security/detect-non-literal-regexp
+  const maxDecimalsValidation = new RegExp(
+    '^\\d+(\\.\\d{1,' + MAX_DECIMALS + '})?$'
+  )
+
   // Live validation rules
   // https://github.com/jquense/yup#number
   const validationSchema: Yup.SchemaOf<FormAddLiquidity> = Yup.object().shape({
-    amount: Yup.string()
+    amount: Yup.number()
       .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
       .max(
         Number(amountMax),
         `Maximum you can add is ${Number(amountMax).toFixed(2)} OCEAN`
+      )
+      .test(
+        'maxDigitsAfterDecimal',
+        `Must have maximum ${MAX_DECIMALS} decimal digits`,
+        (param) => maxDecimalsValidation.test(param?.toString())
       )
       .required('Required')
   })
@@ -126,7 +137,7 @@ export default function Add({
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
-          await handleAddLiquidity(values.amount, resetForm)
+          await handleAddLiquidity(values.amount.toString(), resetForm)
           setSubmitting(false)
         }}
       >
@@ -162,15 +173,14 @@ export default function Add({
                 !isValid ||
                 !isWarningAccepted ||
                 !values.amount ||
-                values.amount === '' ||
-                values.amount === '0'
+                values.amount === 0
               }
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."
               actionName={content.pool.add.action}
               action={submitForm}
-              amount={values.amount}
+              amount={values.amount.toString()}
               tokenAddress={poolInfo?.baseTokenAddress}
               tokenSymbol={poolInfo?.baseTokenSymbol}
               txId={txId}

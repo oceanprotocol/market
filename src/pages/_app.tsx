@@ -10,8 +10,10 @@ import App from 'src/components/App'
 
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../stylesGlobal/styles.css'
+import Decimal from 'decimal.js'
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
+  Decimal.set({ rounding: 1 })
   return (
     <Web3Provider>
       <UrqlProvider>
