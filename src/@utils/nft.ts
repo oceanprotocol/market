@@ -50,7 +50,7 @@ export function generateNftMetadata(): NftMetadata {
   const imageData = `data:image/svg+xml,${encodeSvg(svg.outerHTML)}`
 
   const newNft: NftMetadata = {
-    name: 'Ocean Asset NFT',
+    name: 'Ocean Data NFT',
     symbol: 'OCEAN-NFT',
     description: `This NFT represents an asset in the Ocean Protocol v4 ecosystem.`,
     external_url: 'https://market.oceanprotocol.com',
