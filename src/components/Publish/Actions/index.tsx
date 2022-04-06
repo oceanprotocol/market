@@ -80,7 +80,13 @@ export default function Actions({
               Connect Wallet
             </Button>
           ) : (
-            <Button type="submit" style="primary" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              style="primary"
+              disabled={
+                values.user.accountId === '' || !isValid || isSubmitting
+              }
+            >
               Submit
             </Button>
           )}
