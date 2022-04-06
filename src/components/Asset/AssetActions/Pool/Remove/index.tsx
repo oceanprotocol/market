@@ -74,12 +74,6 @@ export default function Remove({
   // Calculate and set maximum shares user is able to remove
   //
   useEffect(() => {
-    console.log(
-      'poolinfo',
-      poolInfoUser?.poolShares,
-      poolInfo?.totalPoolTokens,
-      poolInfoUser
-    )
     if (!accountId || !poolInfoUser?.poolShares || !poolInfo?.totalPoolTokens)
       return
 
@@ -95,7 +89,6 @@ export default function Remove({
         poolInfo?.baseTokenAddress,
         newAmountPoolShares
       )
-      console.log('calc share', newAmountPoolShares, newAmountOcean)
       setAmountOcean(newAmountOcean)
     }, 150)
   )
@@ -141,8 +134,6 @@ export default function Remove({
       .dividedBy(100)
       .mul(new Decimal(poolInfoUser.poolShares))
       .toString()
-
-    console.log('slider calc', amountPoolShares, poolInfoUser.poolShares)
     setAmountPoolShares(amountPoolShares)
   }
 

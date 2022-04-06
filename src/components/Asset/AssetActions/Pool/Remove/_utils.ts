@@ -16,12 +16,5 @@ export async function getMax(poolTokens: string, totalPoolTokens: string) {
     ? new Decimal(100)
     : new Decimal(100).mul(maxTokensToRemoveForUser).div(poolTokensDecimal)
 
-  console.log(
-    'percent',
-    maxPercent.toString(),
-    maxTokensToRemoveForUser.toString(),
-    poolTokensDecimal.toString()
-  )
-
   return maxPercent.toDecimalPlaces(0, Decimal.ROUND_DOWN).toString()
 }
