@@ -1,6 +1,5 @@
 .token {
   font-weight: var(--font-weight-bold);
-  margin-bottom: calc(var(--spacer) / 4);
   white-space: nowrap;
 }
 
@@ -24,6 +23,21 @@
 .icon svg {
   width: var(--font-size-base);
   height: var(--font-size-base);
+}
+
+.conversion {
+  composes: token;
+  margin-bottom: 0;
+  font-weight: var(--font-weight-base) !important;
+  font-size: var(--font-size-small);
+  padding-left: var(--font-size-base);
+  padding-top: calc(var(--spacer) / 10);
+}
+
+.conversion strong {
+  font-size: var(--font-size-base);
+  color: var(--font-color-heading);
+  line-height: 1;
 }
 
 /* Data Token Icon Style */

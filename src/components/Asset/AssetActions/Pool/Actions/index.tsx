@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from 'react'
 import Loader from '@shared/atoms/Loader'
 import Button from '@shared/atoms/Button'
-import styles from './Actions.module.css'
+import styles from './index.module.css'
 import ExplorerLink from '@shared/ExplorerLink'
 import SuccessConfetti from '@shared/SuccessConfetti'
 import { useWeb3 } from '@context/Web3'

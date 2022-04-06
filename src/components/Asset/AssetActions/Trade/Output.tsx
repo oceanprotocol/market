@@ -1,7 +1,7 @@
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useAsset } from '@context/Asset'
-import Token from '../Pool/Token'
+import Token from '../../../@shared/Token'
 import styles from './Output.module.css'
 
 import Decimal from 'decimal.js'
