@@ -31,7 +31,6 @@ export interface PoolProviderValue {
   poolInfoUser: PoolInfoUser
   poolSnapshots: PoolDataPoolSnapshots[]
   hasUserAddedLiquidity: boolean
-  isRemoveDisabled: boolean
   refreshInterval: number
   fetchAllData: () => void
 }
