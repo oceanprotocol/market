@@ -14,7 +14,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
 import { getEnsName } from '@utils/ens'
-import { getOceanBalance } from '@utils/ocean'
+import { getOceanBalance, getOceanConfig } from '@utils/ocean'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName,
@@ -37,6 +37,7 @@ interface Web3ProviderValue {
   block: number
   isTestnet: boolean
   web3Loading: boolean
+  isSupportedOceanNetwork: boolean
   connect: () => Promise<void>
   logout: () => Promise<void>
 }
@@ -106,6 +107,8 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     eth: '0',
     ocean: '0'
   })
+  const [isSupportedOceanNetwork, setIsSupportedOceanNetwork] =
+    useState<boolean>()
 
   // -----------------------------------
   // Helper: connect to web3
@@ -304,6 +307,18 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     }
     await web3Modal.clearCachedProvider()
   }
+  // -----------------------------------
+  // Get valid Networks and set isSupportedOceanNetwork
+  // -----------------------------------
+  useEffect(() => {
+    // take network from user when present
+    const network = networkId || 1
+
+    // Check networkId against ocean.js ConfigHelper configs
+    // to figure out if network is supported.
+    const isSupportedOceanNetwork = Boolean(getOceanConfig(network))
+    setIsSupportedOceanNetwork(isSupportedOceanNetwork)
+  }, [networkId])
 
   // -----------------------------------
   // Handle change events
@@ -358,6 +373,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         block,
         isTestnet,
         web3Loading,
+        isSupportedOceanNetwork,
         connect,
         logout
       }}
