@@ -33,7 +33,8 @@ function Asset({
         </a>
       </h3>
       <p className={styles.assetMeta}>
-        {symbol} | <code>{did}</code>
+        <span> {`${symbol} | `}</span>
+        <code>{did}</code>
       </p>
     </div>
   )
@@ -97,7 +98,7 @@ export default function Details({
             />
           )}
           <MetaItem title="Job ID" content={<code>{job.jobId}</code>} />
-          {/* {job.resultsDid && (
+          {/* {job.results[0]. && (
             <MetaItem
               title="Published Results DID"
               content={<code>{job.resultsDid}</code>}
