@@ -5,7 +5,7 @@ import Tabs from '@shared/atoms/Tabs'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { FormPublishData } from '../_types'
-import { minAmountDataToken, minAmountOcean } from '../_constants'
+import { initialValues } from '../_constants'
 import Dynamic from './Dynamic'
 import Fixed from './Fixed'
 import Free from './Free'
@@ -39,7 +39,7 @@ export default function PricingFields(): ReactElement {
       isValidNumber(weightOnDataToken) &&
       price > 0
         ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10))
-        : new Decimal(minAmountOcean)
+        : new Decimal(initialValues.pricing.amountOcean)
 
     setFieldValue('pricing.amountOcean', amountOcean)
   }, [price, weightOnDataToken, weightOnOcean, type, setFieldValue])
@@ -58,7 +58,7 @@ export default function PricingFields(): ReactElement {
             .dividedBy(new Decimal(weightOnOcean))
             .dividedBy(new Decimal(price))
             .mul(new Decimal(weightOnDataToken))
-        : new Decimal(minAmountDataToken)
+        : new Decimal(initialValues.pricing.amountDataToken)
 
     setFieldValue('pricing.amountDataToken', amountDataToken)
   }, [amountOcean, weightOnOcean, weightOnDataToken, type, setFieldValue])

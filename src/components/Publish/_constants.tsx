@@ -118,6 +118,3 @@ export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
 ]
 
 export const initialPublishFeedback: PublishFeedback = contentFeedback
-
-export const minAmountOcean = 50
-export const minAmountDataToken = 50

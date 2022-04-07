@@ -10,7 +10,7 @@ import Price from './Price'
 import Decimal from 'decimal.js'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData } from '../_types'
-import { minAmountOcean } from '../_constants'
+import { initialValues } from '../_constants'
 import { MAX_DECIMALS } from '../../../@utils/constants'
 
 export default function Dynamic({ content }: { content: any }): ReactElement {
@@ -87,7 +87,7 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
                   .mul(10)
                   .toDecimalPlaces(MAX_DECIMALS)
                   .toString()
-              : minAmountOcean.toString()
+              : initialValues.pricing.amountOcean.toString()
           }
         />
         <Coin
