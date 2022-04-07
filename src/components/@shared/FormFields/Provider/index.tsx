@@ -5,7 +5,6 @@ import { InputProps } from '@shared/FormInput'
 import FileInfo from '../FilesInput/Info'
 import styles from './index.module.css'
 import Button from '@shared/atoms/Button'
-import { initialValues } from 'src/components/Publish/_constants'
 import { LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { getOceanConfig } from '@utils/ocean'
@@ -15,8 +14,8 @@ import { useCancelToken } from '@hooks/useCancelToken'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const { chainId } = useWeb3()
-  const { setFieldError } = useFormikContext<FormPublishData>()
   const newCancelToken = useCancelToken()
+  const { initialValues, setFieldError } = useFormikContext<FormPublishData>()
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
 
