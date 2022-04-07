@@ -41,8 +41,9 @@ export default function CustomProvider(props: InputProps): ReactElement {
         cancelToken: newCancelToken()
       })
       const providerChainId = providerResponse?.data?.chainId
+      const userChainId = chainId || 1
 
-      if (providerChainId !== chainId)
+      if (providerChainId !== userChainId)
         throw Error(
           '✗ This provider is incompatible with the network your wallet is connected to.'
         )
