@@ -142,21 +142,38 @@ export default function Swap({
         setMaximumDt(maximumDt)
         setMaximumBaseToken(maximumBaseToken)
 
+        const amountBT =
+          values.type === 'buy'
+            ? new Decimal(balance.baseToken).greaterThan(
+                calcMaxExactIn(poolData.baseTokenLiquidity)
+              )
+              ? new Decimal(balance.baseToken)
+              : calcMaxExactIn(poolData.baseTokenLiquidity)
+            : maxBaseTokenFromPool
+
+        const amountDT =
+          values.type === 'buy'
+            ? maxDtFromPool
+            : new Decimal(balance.baseToken).greaterThan(
+                calcMaxExactIn(poolData.datatokenLiquidity)
+              )
+            ? new Decimal(balance.baseToken)
+            : calcMaxExactIn(poolData.datatokenLiquidity)
+
         setBaseTokenItem((prevState) => ({
           ...prevState,
-          amount: new Decimal(balance.baseToken)
-            .toDecimalPlaces(MAX_DECIMALS)
-            .toString(),
+          amount: amountBT.toString(),
           maxAmount: maximumBaseToken
         }))
 
         setDtItem((prevState) => ({
           ...prevState,
-          amount: new Decimal(balance.datatoken)
-            .toDecimalPlaces(MAX_DECIMALS)
-            .toString(),
+          amount: amountDT.toString(),
           maxAmount: maximumDt
         }))
+
+        console.log('BASE TOKEN ITEM: ', baseTokenItem)
+        console.log('DT ITEM: ', dtItem)
       } catch (error) {
         LoggerInstance.error(error.message)
       }
@@ -171,7 +188,9 @@ export default function Swap({
     asset,
     web3,
     dtItem.token,
+    dtItem.amount,
     baseTokenItem.token,
+    baseTokenItem.amount,
     poolInfo.liquidityProviderSwapFee,
     poolInfo.datatokenAddress,
     poolInfo.baseTokenAddress,
