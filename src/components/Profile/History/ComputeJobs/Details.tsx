@@ -33,8 +33,8 @@ function Asset({
         </a>
       </h3>
       <p className={styles.assetMeta}>
-        <span> {`${symbol} | `}</span>
-        <code>{did}</code>
+        <span className={styles.assetMeta}> {`${symbol} | `}</span>
+        <code className={styles.assetMeta}>{did}</code>
       </p>
     </div>
   )

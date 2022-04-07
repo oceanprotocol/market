@@ -56,7 +56,7 @@ export default function Results({
                     onClick={() => downloadResults(i)}
                     disabled={isLoading || !isFinished}
                   >
-                    {jobResult.filename}
+                    {`Download ${jobResult.filename}`}
                   </Button>
                 </ListItem>
               ) : (
