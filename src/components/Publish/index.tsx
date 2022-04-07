@@ -36,7 +36,7 @@ export default function PublishPage({
   content: { title: string; description: string; warning: string }
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { accountId, web3, chainId, isSupportedOceanNetwork } = useWeb3()
+  const { accountId, web3, chainId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const scrollToRef = useRef()
   const nftFactory = useNftFactory()
@@ -284,14 +284,11 @@ export default function PublishPage({
     >
       {({ values }) => (
         <>
-          {isSupportedOceanNetwork ? (
-            <PageHeader
-              title={<Title networkId={values.user.chainId} />}
-              description={content.description}
-            />
-          ) : (
-            <UnsupportedNetwork />
-          )}
+          <PageHeader
+            title={<Title networkId={values.user.chainId} />}
+            description={content.description}
+          />
+
           <Form className={styles.form} ref={scrollToRef}>
             <Navigation />
             <Steps feedback={feedback} />

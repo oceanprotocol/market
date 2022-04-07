@@ -2,7 +2,10 @@
   color: var(--font-color-heading);
   margin-left: calc(var(--spacer) / 3);
 }
-
+.wrongNetwork {
+  color: var(--brand-alert-red);
+  margin-left: calc(var(--spacer) / 3);
+}
 .network svg {
   width: 1em;
   height: 1em;
@@ -13,4 +16,18 @@
 .tooltip {
   width: 0.5em;
   height: 0.5em;
+}
+.errorTooltip {
+  width: 0.5em;
+  height: 0.5em;
+  fill: var(--brand-alert-red);
+}
+.errorIcon {
+  width: 0.85em;
+  height: 0.85em;
+  cursor: help;
+  display: inline-block;
+  margin-bottom: -0.1em;
+  margin-left: calc(var(--spacer) / 6);
+  color: var(--brand-alert-red);
 }
