@@ -19,7 +19,7 @@ export default function FileInfo({
   // Prevent accidential publishing of error pages (e.g. 404) for
   // popular file hosting services by warning about it.
   // See https://github.com/oceanprotocol/market/issues/1246
-  const shouldWarnAboutFile = file.valid && contentTypeCleaned === 'html'
+  const shouldWarnAboutFile = file.valid && contentTypeCleaned !== null
 
   return (
     <div className={styles.info}>
@@ -32,7 +32,7 @@ export default function FileInfo({
       {shouldWarnAboutFile && (
         <Alert
           state="info"
-          text={`Your file was detected as ${contentTypeCleaned}, which is unusal for a data asset. If you did not intend to use a ${contentTypeCleaned} file, try a different URL pointing directly to your data asset file.`}
+          text="Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials."
           className={styles.warning}
         />
       )}
