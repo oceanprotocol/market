@@ -64,7 +64,7 @@
   font-size: var(--font-size-small);
   overflow: hidden;
   width: 100%;
-  flex: 4;
+  flex: 6;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
