@@ -151,20 +151,6 @@ export default function Swap({
               : calcMaxExactIn(poolData.baseTokenLiquidity)
             : maxBaseTokenFromPool
 
-        // const amountDT =
-        //   values.type === 'sell'
-        //     ? maxDtFromPool
-        //     : new Decimal(balance.datatoken).greaterThan(
-        //         calcMaxExactIn(poolData.datatokenLiquidity)
-        //       )
-        //     ? new Decimal(balance.datatoken)
-        //     : calcMaxExactIn(poolData.datatokenLiquidity)
-
-        console.log(
-          'COMP: ',
-          balance.datatoken,
-          calcMaxExactIn(poolData.datatokenLiquidity)
-        )
         const amountDT =
           values.type === 'sell'
             ? new Decimal(balance.datatoken).greaterThan(
@@ -185,9 +171,6 @@ export default function Swap({
           amount: amountDT.toString(),
           maxAmount: maximumDt
         }))
-
-        console.log('BASE TOKEN ITEM: ', baseTokenItem)
-        console.log('DT ITEM: ', dtItem)
       } catch (error) {
         LoggerInstance.error(error.message)
       }
