@@ -151,14 +151,28 @@ export default function Swap({
               : calcMaxExactIn(poolData.baseTokenLiquidity)
             : maxBaseTokenFromPool
 
+        // const amountDT =
+        //   values.type === 'sell'
+        //     ? maxDtFromPool
+        //     : new Decimal(balance.datatoken).greaterThan(
+        //         calcMaxExactIn(poolData.datatokenLiquidity)
+        //       )
+        //     ? new Decimal(balance.datatoken)
+        //     : calcMaxExactIn(poolData.datatokenLiquidity)
+
+        console.log(
+          'COMP: ',
+          balance.datatoken,
+          calcMaxExactIn(poolData.datatokenLiquidity)
+        )
         const amountDT =
-          values.type === 'buy'
-            ? maxDtFromPool
-            : new Decimal(balance.baseToken).greaterThan(
+          values.type === 'sell'
+            ? new Decimal(balance.datatoken).greaterThan(
                 calcMaxExactIn(poolData.datatokenLiquidity)
               )
-            ? new Decimal(balance.baseToken)
-            : calcMaxExactIn(poolData.datatokenLiquidity)
+              ? calcMaxExactIn(poolData.datatokenLiquidity)
+              : new Decimal(balance.datatoken)
+            : maxDtFromPool
 
         setBaseTokenItem((prevState) => ({
           ...prevState,
