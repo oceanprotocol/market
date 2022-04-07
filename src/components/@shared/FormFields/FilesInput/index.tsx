@@ -6,6 +6,9 @@ import { InputProps } from '@shared/FormInput'
 import { getFileUrlInfo } from '@utils/provider'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { LoggerInstance } from '@oceanprotocol/lib'
+import content from '../../../../../content/publish/form.json'
+import FormHelp from '@shared/FormInput/Help'
+import styles from './index.module.css'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -56,6 +59,16 @@ export default function FilesInput(props: InputProps): ReactElement {
           handleButtonClick={handleValidation}
         />
       )}
+      <FormHelp>
+        {content.services.fields[2].help.replace(
+          'Please enter the URL to your data set file and click "ADD FILE" to validate the data.',
+          ''
+        )}
+      </FormHelp>
+      <FormHelp className={styles.help}>
+        Please make sure that the endpoint is accessible over the internet and
+        is not protected by a firewall or by credentials.
+      </FormHelp>
     </>
   )
 }

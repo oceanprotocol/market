@@ -19,7 +19,7 @@ export default function FileInfo({
   // Prevent accidential publishing of error pages (e.g. 404) for
   // popular file hosting services by warning about it.
   // See https://github.com/oceanprotocol/market/issues/1246
-  const shouldWarnAboutFile = file.valid && contentTypeCleaned !== null
+  // const shouldWarnAboutFile = file.valid && contentTypeCleaned !== null
 
   return (
     <div className={styles.info}>
@@ -29,13 +29,6 @@ export default function FileInfo({
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}
         {contentTypeCleaned && <li>{contentTypeCleaned}</li>}
       </ul>
-      {shouldWarnAboutFile && (
-        <Alert
-          state="info"
-          text="Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials."
-          className={styles.warning}
-        />
-      )}
       <button className={styles.removeButton} onClick={handleClose}>
         &times;
       </button>
