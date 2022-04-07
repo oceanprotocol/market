@@ -21,8 +21,7 @@ export default function Actions({
     isSubmitting,
     setFieldValue
   }: FormikContextType<FormPublishData> = useFormikContext()
-
-  const { connect } = useWeb3()
+  const { connect, accountId } = useWeb3()
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in
@@ -75,12 +74,16 @@ export default function Actions({
             >
               Continue
             </Button>
-          ) : values.user.accountId === '' || !isValid ? (
+          ) : !accountId ? (
             <Button type="submit" style="primary" onClick={handleActivation}>
               Connect Wallet
             </Button>
           ) : (
-            <Button type="submit" style="primary" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              style="primary"
+              disabled={isSubmitting || !isValid}
+            >
               Submit
             </Button>
           )}
