@@ -135,5 +135,5 @@ export async function calculateSharesVL(
   )
 
   const tvl = new Decimal(amountOcean || 0).mul(2) // we multiply by 2 because of 50/50 weight
-  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
+  return tvl.toDecimalPlaces(MAX_DECIMALS, Decimal.ROUND_DOWN).toString()
 }

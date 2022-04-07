@@ -77,7 +77,7 @@ export default function Remove({
     if (!accountId || !poolInfoUser?.poolShares || !poolInfo?.totalPoolTokens)
       return
 
-    getMax(poolInfoUser.poolShares, poolInfo.totalPoolTokens).then((max) =>
+    getMax(poolInstance, poolInfo, poolInfoUser, poolData).then((max) =>
       setAmountMaxPercent(max)
     )
   }, [accountId, poolInfoUser?.poolShares, poolInfo?.totalPoolTokens])
@@ -137,11 +137,15 @@ export default function Remove({
     setAmountPoolShares(amountPoolShares)
   }
 
-  function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
+  async function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
     setAmountPercent(amountMaxPercent)
+    const amountPoolShares = new Decimal(amountMaxPercent)
+      .dividedBy(100)
+      .mul(new Decimal(poolInfoUser?.poolShares))
+      .toString()
 
-    setAmountPoolShares(poolInfoUser.poolShares)
+    setAmountPoolShares(amountPoolShares)
   }
 
   function handleSlippageChange(e: ChangeEvent<HTMLSelectElement>) {

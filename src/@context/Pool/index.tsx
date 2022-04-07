@@ -138,7 +138,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       return
 
     // Pool share tokens.
-    const poolShare = new Decimal(ownerPoolShares)
+    const poolSharePercentage = new Decimal(ownerPoolShares)
       .dividedBy(poolInfo.totalLiquidityInOcean)
       .mul(100)
       .toFixed(2)
@@ -146,7 +146,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     const newPoolOwnerInfo = {
       liquidity: new Decimal(ownerPoolShares), // liquidity in base token, values from from `calcSingleOutGivenPoolIn` method
       poolShares: ownerPoolShares,
-      poolShare
+      poolSharePercentage
     }
     setPoolInfoOwner(newPoolOwnerInfo)
     LoggerInstance.log('[pool] Created new owner pool info:', newPoolOwnerInfo)
@@ -184,16 +184,16 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     })
 
     // Pool share in %.
-    const poolShare = new Decimal(userPoolShares)
+    const poolSharePercentage = new Decimal(userPoolShares)
       .dividedBy(new Decimal(poolInfo.totalLiquidityInOcean))
       .mul(100)
       .toFixed(2)
 
-    setUserHasAddedLiquidity(Number(poolShare) > 0)
+    setUserHasAddedLiquidity(Number(poolSharePercentage) > 0)
 
     const newPoolInfoUser = {
       liquidity: new Decimal(userPoolShares), // liquidity in base token, values from from `calcSingleOutGivenPoolIn` method
-      poolShare
+      poolSharePercentage
     }
     setPoolInfoUser((prevState: PoolInfoUser) => ({
       ...prevState,
