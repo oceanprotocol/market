@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import Alert from '@shared/atoms/Alert'
 import styles from './index.module.css'
 
 export default function UnsuportedNetwork(): ReactElement {
@@ -7,16 +6,12 @@ export default function UnsuportedNetwork(): ReactElement {
     console.log('Change Network')
   }
   return (
-    <Alert
-      title="You are on an unsupported network"
-      text="Please switch to a supported network"
-      state="error"
-      className={styles.alert}
-      action={{
-        name: 'Change Network',
-        style: 'primary',
-        handleAction: () => changeNetwork()
-      }}
-    />
+    <>
+      You are currently on an unsupported network. Please switch to a supported
+      network to proceed with publishing.
+      <br />
+      <br />
+      <b>Supported Networks:</b>
+    </>
   )
 }

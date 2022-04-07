@@ -5,6 +5,7 @@ import styles from './index.module.css'
 import content from '../../../../content/publish/index.json'
 import { useWeb3 } from '@context/Web3'
 import Info from '@images/info.svg'
+import UnsuportedNetwork from '@shared/UnsupportedNetwork'
 
 export default function Title({
   networkId
@@ -31,7 +32,7 @@ export default function Title({
             />
           ) : (
             <Tooltip
-              content={content.wrongNetwork}
+              content={<UnsuportedNetwork />}
               className={styles.errorTooltip}
             >
               <Info className={styles.errorIcon} />
