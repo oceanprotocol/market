@@ -10,27 +10,42 @@ import { LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { getOceanConfig } from '@utils/ocean'
 import { useWeb3 } from '@context/Web3'
+import axios from 'axios'
+import { useCancelToken } from '@hooks/useCancelToken'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const { chainId } = useWeb3()
+  const { setFieldError } = useFormikContext<FormPublishData>()
+  const newCancelToken = useCancelToken()
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
-  const { setFieldError } = useFormikContext<FormPublishData>()
 
   async function handleValidation(e: React.SyntheticEvent) {
     e.preventDefault()
 
     try {
       setIsLoading(true)
+
+      // Check if provider is a valid provider
       const isValid = await ProviderInstance.isValidProvider(field.value.url)
 
-      // error if something's not right from response
       // No way to detect a failed request with ProviderInstance.isValidProvider,
       // making this error show up for multiple cases it shouldn't, like network
       // down.
       if (!isValid)
         throw Error(
           '✗ No valid provider detected. Check your network, your URL and try again.'
+        )
+
+      // Check if valid provider is for same chain user is on
+      const providerResponse = await axios.get(field.value.url, {
+        cancelToken: newCancelToken()
+      })
+      const providerChainId = providerResponse?.data?.chainId
+
+      if (providerChainId !== chainId)
+        throw Error(
+          '✗ This provider is incompatible with the network your wallet is connected to.'
         )
 
       // if all good, add provider to formik state
