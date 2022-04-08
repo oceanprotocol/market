@@ -3,6 +3,7 @@ import { useUserPreferences } from '@context/UserPreferences'
 import { removeItemFromArray } from '@utils/index'
 import NetworkName from '@shared/NetworkName'
 import styles from './NetworkOptions.module.css'
+import Button from '@shared/atoms/Button'
 
 export default function NetworkOptions({
   chainId
@@ -26,7 +27,9 @@ export default function NetworkOptions({
   return (
     <div key={chainId}>
       <label className={styles.radioLabel} htmlFor={`opt-${chainId}`}>
-        <NetworkName key={chainId} networkId={chainId} />
+        <Button style="text" className={styles.button}>
+          <NetworkName key={chainId} networkId={chainId} />
+        </Button>
       </label>
     </div>
   )
