@@ -370,7 +370,8 @@ export async function getFeesTokensAndPricing(
   }
 
   const nftCreateData: NftCreateData = generateNftCreateData(
-    values.metadata.nft
+    values.metadata.nft,
+    accountId
   )
   const { appConfig } = getSiteMetadata()
   LoggerInstance.log('[gas fee] Creating NFT with metadata', nftCreateData)
@@ -379,7 +380,7 @@ export async function getFeesTokensAndPricing(
   const ercParams: Erc20CreateParams = {
     templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
     minter: accountId,
-    feeManager: accountId,
+    paymentCollector: accountId,
     mpFeeAddress: appConfig.marketFeeAddress,
     feeToken: config.oceanTokenAddress,
     feeAmount: appConfig.publisherMarketOrderFee,
@@ -563,8 +564,10 @@ export async function getFeesPublishDDO(
     services['0'].providerUrl.url
   )
 
+  /** 0x1A59413e4616476F13e9E1Ec9ddEA397142Cb5E6 0x70Cac341FED368Ee93f17db439934a02a42dE2C6 */
+
   const gasEstimate = await nft.estGasSetMetadata(
-    '0x3fA50eC751F8345397e65c68292c4585B1e3c772', // dummy address needed to calculate gas fees
+    '0x1A59413e4616476F13e9E1Ec9ddEA397142Cb5E6', // dummy address needed to calculate gas fees
     accountId,
     0,
     services['0'].providerUrl.url,
