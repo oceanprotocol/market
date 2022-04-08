@@ -14,7 +14,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
 import { getEnsName } from '@utils/ens'
-import { getOceanBalance, getOceanConfig } from '@utils/ocean'
+import { getOceanBalance } from '@utils/ocean'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName,
@@ -314,13 +314,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
 
   useEffect(() => {
-    for (let i = 0; i < appConfig.chainIds.length; i++) {
-      if (networkId === appConfig.chainIds[i]) {
-        setIsSupportedOceanNetwork(true)
-        break
-      } else if (i === appConfig.chainIds.length) {
-        setIsSupportedOceanNetwork(false)
-      }
+    if (appConfig.chainIdsSupported.includes(networkId)) {
+      setIsSupportedOceanNetwork(true)
+    } else {
+      setIsSupportedOceanNetwork(false)
     }
   }, [networkId, appConfig])
 
