@@ -24,6 +24,14 @@ export default function Actions({
     isSubmitting,
     setFieldValue
   }: FormikContextType<FormPublishData> = useFormikContext()
+  const { connect, accountId } = useWeb3()
+
+  async function handleActivation(e: FormEvent<HTMLButtonElement>) {
+    // prevent accidentially submitting a form the button might be in
+    e.preventDefault()
+
+    await connect()
+  }
 
   function handleNext(e: FormEvent) {
     e.preventDefault()
@@ -69,6 +77,10 @@ export default function Actions({
             >
               Continue
             </Button>
+          ) : !accountId ? (
+            <Button type="submit" style="primary" onClick={handleActivation}>
+              Connect Wallet
+            </Button>
           ) : !isSupportedOceanNetwork ? (
             <Tooltip
               content={<UnsuportedNetwork />}
@@ -82,9 +94,7 @@ export default function Actions({
             <Button
               type="submit"
               style="primary"
-              disabled={
-                values.user.accountId === '' || !isValid || isSubmitting
-              }
+              disabled={isSubmitting || !isValid}
             >
               Submit
             </Button>
