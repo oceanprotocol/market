@@ -1,0 +1,20 @@
+.dataToken {
+  font-size: var(--font-size-large);
+  text-align: center;
+}
+
+.dataToken > div {
+  display: block;
+}
+
+.dataTokenLinks {
+  display: flex;
+  justify-content: center;
+  font-size: var(--font-size-small);
+  margin-top: calc(var(--spacer) / 4);
+}
+
+.dataTokenLinks a {
+  margin-left: calc(var(--spacer) / 3);
+  margin-right: calc(var(--spacer) / 3);
+}

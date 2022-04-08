@@ -53,6 +53,7 @@ export const initialValues: FormPublishData = {
   },
   metadata: {
     nft: { name: '', symbol: '', description: '', image_data: '' },
+    transferable: true,
     type: 'dataset',
     name: '',
     author: '',
@@ -70,7 +71,7 @@ export const initialValues: FormPublishData = {
       links: [{ url: '' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
-      access: '',
+      access: 'access',
       providerUrl: {
         url: 'https://provider.mainnet.oceanprotocol.com',
         valid: true

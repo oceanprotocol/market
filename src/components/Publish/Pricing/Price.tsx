@@ -2,7 +2,7 @@ import Conversion from '@shared/Price/Conversion'
 import { Field, useField, useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
 import Input from '@shared/FormInput'
-import Error from './Error'
+import Error from '@shared/FormInput/Error'
 import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './Price.module.css'
 import { FormPublishData } from '../_types'
@@ -34,7 +34,13 @@ export default function Price({
         <>
           <div className={styles.grid}>
             <div className={styles.form}>
-              <Input type="number" prefix="OCEAN" {...field} />
+              <Input
+                type="number"
+                min="1"
+                placeholder="0"
+                prefix="OCEAN"
+                {...field}
+              />
               <Error meta={meta} />
             </div>
             <div className={styles.datatoken}>

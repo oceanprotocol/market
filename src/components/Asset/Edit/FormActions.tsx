@@ -3,15 +3,14 @@ import React, { ReactElement } from 'react'
 import { useAsset } from '@context/Asset'
 import Button from '@shared/atoms/Button'
 import styles from './FormActions.module.css'
+import Link from 'next/link'
 
 export default function FormActions({
-  setShowEdit,
   handleClick
 }: {
-  setShowEdit: (show: boolean) => void
   handleClick?: () => void
 }): ReactElement {
-  const { isAssetNetwork } = useAsset()
+  const { isAssetNetwork, asset } = useAsset()
   const { isValid }: FormikContextType<Partial<any>> = useFormikContext()
 
   return (
@@ -23,9 +22,9 @@ export default function FormActions({
       >
         Submit
       </Button>
-      <Button style="text" onClick={() => setShowEdit(false)}>
+      <Link href={`/asset/${asset?.id}`} key={asset?.id}>
         Cancel
-      </Button>
+      </Link>
     </footer>
   )
 }

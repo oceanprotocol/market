@@ -16,16 +16,27 @@ import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useWeb3 } from '@context/Web3'
+import Web3 from 'web3'
 
 export default function AssetContent({
   asset
 }: {
   asset: AssetExtended
 }): ReactElement {
-  const { debug } = useUserPreferences()
   const [isOwner, setIsOwner] = useState(false)
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData, owner, isAssetNetwork } = useAsset()
+  const { debug } = useUserPreferences()
+  const [receipts, setReceipts] = useState([])
+  const [nftPublisher, setNftPublisher] = useState<string>()
+
+  useEffect(() => {
+    setNftPublisher(
+      Web3.utils.toChecksumAddress(
+        receipts?.find((e) => e.type === 'METADATA_CREATED')?.nft?.owner
+      )
+    )
+  }, [receipts])
 
   useEffect(() => {
     if (!accountId || !owner) return
@@ -43,11 +54,10 @@ export default function AssetContent({
       <article className={styles.grid}>
         <div>
           <div className={styles.content}>
-            <MetaMain ddo={asset} />
+            <MetaMain asset={asset} nftPublisher={nftPublisher} />
             {asset?.accessDetails?.datatoken !== null && (
               <Bookmark did={asset?.id} />
             )}
-
             {isInPurgatory === true ? (
               <Alert
                 title={content.asset.title}
@@ -64,9 +74,8 @@ export default function AssetContent({
                 <MetaSecondary ddo={asset} />
               </>
             )}
-
             <MetaFull ddo={asset} />
-            <EditHistory />
+            <EditHistory receipts={receipts} setReceipts={setReceipts} />
             {debug === true && <DebugOutput title="DDO" output={asset} />}
           </div>
         </div>

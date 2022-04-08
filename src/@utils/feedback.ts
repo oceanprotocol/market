@@ -11,13 +11,6 @@ export function getOrderFeedback(
   }
 }
 
-export function getCollectTokensFeedback(
-  baseTokenSymbol: string,
-  baseTokenBalance: string
-) {
-  return `Collecting ${baseTokenBalance} ${baseTokenSymbol} from asset `
-}
-
 // TODO: customize for compute
 export const computeFeedback: { [key in number]: string } = {
   0: 'Ordering asset...',

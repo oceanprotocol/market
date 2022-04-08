@@ -185,7 +185,7 @@ export async function transformPublishFormToDdo(
         }
       ],
       nft: {
-        owner: accountId
+        ...generateNftCreateData(values?.metadata.nft, accountId)
       }
     })
   }
@@ -201,7 +201,9 @@ export async function createTokensAndPricing(
   web3: Web3
 ) {
   const nftCreateData: NftCreateData = generateNftCreateData(
-    values.metadata.nft
+    values.metadata.nft,
+    accountId,
+    values.metadata.transferable
   )
   const { appConfig } = getSiteMetadata()
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
@@ -210,7 +212,7 @@ export async function createTokensAndPricing(
   const ercParams: Erc20CreateParams = {
     templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
     minter: accountId,
-    feeManager: accountId,
+    paymentCollector: accountId,
     mpFeeAddress: appConfig.marketFeeAddress,
     feeToken: config.oceanTokenAddress,
     feeAmount: appConfig.publisherMarketOrderFee,

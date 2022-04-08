@@ -1,7 +1,7 @@
 import React from 'react'
 import Conversion from '@shared/Price/Conversion'
 import styles from './Liquidity.module.css'
-import Token from '../../../Asset/AssetActions/Pool/Token'
+import Token from '../../../@shared/Token'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { AssetPoolShare } from './index'
