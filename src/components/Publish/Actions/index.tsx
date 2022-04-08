@@ -5,6 +5,9 @@ import { FormikContextType, useFormikContext } from 'formik'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
 import SuccessConfetti from '@shared/SuccessConfetti'
+import { useWeb3 } from '@context/Web3'
+import Tooltip from '@shared/atoms/Tooltip'
+import UnsuportedNetwork from '@shared/UnsupportedNetwork'
 
 export default function Actions({
   scrollToRef,
@@ -13,6 +16,7 @@ export default function Actions({
   scrollToRef: RefObject<any>
   did: string
 }): ReactElement {
+  const { isSupportedOceanNetwork } = useWeb3()
   const {
     values,
     errors,
@@ -65,6 +69,15 @@ export default function Actions({
             >
               Continue
             </Button>
+          ) : !isSupportedOceanNetwork ? (
+            <Tooltip
+              content={<UnsuportedNetwork />}
+              className={styles.errorTooltip}
+            >
+              <Button type="submit" style="primary" disabled>
+                Change Network
+              </Button>
+            </Tooltip>
           ) : (
             <Button
               type="submit"

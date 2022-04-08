@@ -25,7 +25,6 @@ import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
-import UnsupportedNetwork from '@shared/UnsupportedNetwork'
 
 // TODO: restore FormikPersist, add back clear form action
 const formName = 'ocean-publish-form'
