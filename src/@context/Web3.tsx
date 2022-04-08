@@ -21,6 +21,7 @@ import useNetworkMetadata, {
   getNetworkType,
   NetworkType
 } from '../@hooks/useNetworkMetadata'
+import { useSiteMetadata } from '@hooks/useSiteMetadata'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -89,6 +90,7 @@ const Web3Context = createContext({} as Web3ProviderValue)
 
 function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const { networksList } = useNetworkMetadata()
+  const { appConfig } = useSiteMetadata()
 
   const [web3, setWeb3] = useState<Web3>()
   const [web3Provider, setWeb3Provider] = useState<any>()
@@ -310,15 +312,17 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
   // Get valid Networks and set isSupportedOceanNetwork
   // -----------------------------------
-  useEffect(() => {
-    // take network from user when present
-    const network = networkId || 1
 
-    // Check networkId against ocean.js ConfigHelper configs
-    // to figure out if network is supported.
-    const isSupportedOceanNetwork = Boolean(getOceanConfig(network))
-    setIsSupportedOceanNetwork(isSupportedOceanNetwork)
-  }, [networkId])
+  useEffect(() => {
+    for (let i = 0; i < appConfig.chainIds.length; i++) {
+      if (networkId === appConfig.chainIds[i]) {
+        setIsSupportedOceanNetwork(true)
+        break
+      } else if (i === appConfig.chainIds.length) {
+        setIsSupportedOceanNetwork(false)
+      }
+    }
+  }, [networkId, appConfig])
 
   // -----------------------------------
   // Handle change events
