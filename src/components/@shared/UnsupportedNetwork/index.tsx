@@ -10,10 +10,6 @@ export default function UnsuportedNetwork(): ReactElement {
   const { networksList } = useNetworkMetadata()
   const { appConfig } = useSiteMetadata()
 
-  function changeNetwork() {
-    console.log('Change Network')
-  }
-
   const networksMain = filterNetworksByType(
     'mainnet',
     appConfig.chainIdsSupported,
@@ -25,6 +21,10 @@ export default function UnsuportedNetwork(): ReactElement {
     appConfig.chainIdsSupported,
     networksList
   )
+  const networkCategories = [
+    { title: 'Main', data: networksMain },
+    { title: 'Test', data: networksTest }
+  ]
 
   const content = (networks: number[]) =>
     networks.map((chainId) => (
@@ -35,17 +35,16 @@ export default function UnsuportedNetwork(): ReactElement {
     <>
       You are currently on an unsupported network. To proceed with publishing,
       please switch to one of our supported networks:
-      {networksMain.length > 0 && (
-        <>
-          <h4 className={styles.title}>Main</h4>
-          <div className={styles.networks}>{content(networksMain)}</div>
-        </>
-      )}
-      {networksTest.length > 0 && (
-        <>
-          <h4 className={styles.title}>Test</h4>
-          <div className={styles.networks}>{content(networksTest)}</div>
-        </>
+      {networkCategories.map(
+        (networkCategory) =>
+          networkCategory.data.length > 0 && (
+            <>
+              <h4 className={styles.title}>{networkCategory.title}</h4>
+              <div className={styles.networks}>
+                {content(networkCategory.data)}
+              </div>
+            </>
+          )
       )}
     </>
   )
