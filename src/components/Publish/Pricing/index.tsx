@@ -29,22 +29,19 @@ export default function PricingFields(): ReactElement {
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
-  // Always update everything when price value changes
+  // Update ocean amount when price is changed
   useEffect(() => {
     if (type === 'fixed' || type === 'free') return
 
-    const amountOcean =
-      isValidNumber(weightOnOcean) &&
-      isValidNumber(price) &&
-      isValidNumber(weightOnDataToken) &&
-      price > 0
-        ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10))
-        : new Decimal(initialValues.pricing.amountOcean)
+    const amountOcean = isValidNumber(weightOnOcean) && isValidNumber(price)
+    price > 0
+      ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10))
+      : new Decimal(initialValues.pricing.amountOcean)
 
     setFieldValue('pricing.amountOcean', amountOcean)
-  }, [price, weightOnDataToken, weightOnOcean, type, setFieldValue])
+  }, [price, weightOnOcean, type, setFieldValue])
 
-  // Always update everything when price value changes
+  // Update dataToken value when ocean amount is changed
   useEffect(() => {
     if (type === 'fixed' || type === 'free') return
 
