@@ -14,11 +14,6 @@ export default function FilesInput(props: InputProps): ReactElement {
   const [isLoading, setIsLoading] = useState(false)
   const { values, setFieldError } = useFormikContext<FormPublishData>()
 
-  const helperMessage = content.services.fields[2].help.replace(
-    'Please enter the URL to your data set file and click "ADD FILE" to validate the data.',
-    ''
-  )
-
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e.preventDefault()
@@ -64,7 +59,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         />
       )}
       <div>
-        <FormHelp>{helperMessage}</FormHelp>
+        <FormHelp>{content.services.fields[2].help}</FormHelp>
       </div>
     </>
   )

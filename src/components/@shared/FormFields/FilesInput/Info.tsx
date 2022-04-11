@@ -3,7 +3,6 @@ import { prettySize } from './utils'
 import cleanupContentType from '@utils/cleanupContentType'
 import styles from './Info.module.css'
 import { FileMetadata } from '@oceanprotocol/lib'
-import Alert from '@shared/atoms/Alert'
 
 export default function FileInfo({
   file,
@@ -15,11 +14,6 @@ export default function FileInfo({
   const contentTypeCleaned = file.contentType
     ? cleanupContentType(file.contentType)
     : null
-
-  // Prevent accidential publishing of error pages (e.g. 404) for
-  // popular file hosting services by warning about it.
-  // See https://github.com/oceanprotocol/market/issues/1246
-  // const shouldWarnAboutFile = file.valid && contentTypeCleaned !== null
 
   return (
     <div className={styles.info}>

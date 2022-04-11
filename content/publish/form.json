@@ -104,7 +104,7 @@
         "name": "files",
         "label": "File",
         "placeholder": "e.g. https://file.com/file.json",
-        "help": "Please enter the URL to your data set file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing. For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+        "help": "This URL will be stored encrypted after publishing. For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
         "type": "files",
         "required": true
       },
