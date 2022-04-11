@@ -58,8 +58,6 @@ async function initProvider(
  * @param web3
  * @param asset
  * @param accountId
- * @param appConfig
- * @param config
  * @param action
  * @param orderPriceAndFees
  * @returns {TransactionReceipt} receipt of the order / gas estimate
