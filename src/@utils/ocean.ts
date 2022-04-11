@@ -2,6 +2,8 @@ import { ConfigHelper, LoggerInstance, Config } from '@oceanprotocol/lib'
 // import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 import { AbiItem } from 'web3-utils/types'
 import Web3 from 'web3'
+import { getDummyWeb3 } from './web3'
+import Decimal from 'decimal.js'
 
 export function getOceanConfig(network: string | number): Config {
   const config = new ConfigHelper().getConfig(
@@ -71,4 +73,24 @@ export async function getOceanBalance(
   } catch (e) {
     LoggerInstance.error(`ERROR: Failed to get the balance: ${e.message}`)
   }
+}
+
+export async function convertGasFeesToOcean(
+  amount: Decimal,
+  ethToOceanConversionRate: number,
+  chainId: number,
+  web3?: Web3
+): Promise<string> {
+  if (!web3) {
+    web3 = await getDummyWeb3(chainId)
+  }
+  const gasPrice = await web3.eth.getGasPrice()
+
+  const gasFee = web3.utils.fromWei((+gasPrice * +amount).toString(), 'ether')
+
+  const gasFeeOcean =
+    ethToOceanConversionRate > 0
+      ? (+gasFee / +ethToOceanConversionRate).toString()
+      : ''
+  return gasFeeOcean
 }
