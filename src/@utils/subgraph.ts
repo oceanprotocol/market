@@ -15,7 +15,7 @@ import {
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import { calculateUserTVL } from './pool'
+import { getLiquidityByShares } from './pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from './constants'
 
@@ -358,11 +358,12 @@ export async function getAccountTVLInOwnAssets(
 
   for (const result of results) {
     for (const poolShare of result.poolShares) {
-      const poolUserTvl = calculateUserTVL(
-        poolShare.shares,
-        poolShare.pool.totalShares,
-        poolShare.pool.baseTokenLiquidity
-      )
+      const poolUserTvl = 0
+      // const poolUserTvl = getLiquidityByShares(
+      //   poolShare.shares,
+      //   poolShare.pool.totalShares,
+      //   poolShare.pool.baseTokenLiquidity
+      // )
       tvl = tvl.add(new Decimal(poolUserTvl))
     }
   }

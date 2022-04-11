@@ -5,7 +5,7 @@ import Token from '../../../@shared/Token'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { AssetPoolShare } from './index'
-import { calculateUserTVL } from '@utils/pool'
+import { getLiquidityByShares } from '@utils/pool'
 
 export function Liquidity({
   row,
@@ -21,11 +21,14 @@ export function Liquidity({
     price = new Decimal(row.userLiquidity).mul(2).toString()
 
     // Liquidity in base token, calculated from pool share tokens.
-    liquidity = calculateUserTVL(
-      row.poolShare.shares,
-      row.poolShare.pool.totalShares,
-      row.poolShare.pool.baseTokenLiquidity
-    )
+    liquidity = '0'
+    // )
+    // liquidity = await getLiquidityByShares(
+    //   row.poolShare.shares,
+    //   row.poolShare.pool.totalShares,
+    //   row.poolShare.pool.baseTokenLiquidity,
+    //   row.asset.chainId
+    // )
   }
   if (type === 'pool') {
     price =

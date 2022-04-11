@@ -8,7 +8,7 @@ import styles from './Stats.module.css'
 import { useProfile } from '@context/Profile'
 import { PoolShares_poolShares as PoolShare } from '../../../@types/subgraph/PoolShares'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
-import { calculateUserTVL } from '@utils/pool'
+import { getLiquidityByShares } from '@utils/pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
 
@@ -18,11 +18,12 @@ async function getPoolSharesLiquidity(
   let tvl = new Decimal(0)
 
   for (const poolShare of poolShares) {
-    const poolUserTvl = calculateUserTVL(
-      poolShare.shares,
-      poolShare.pool.totalShares,
-      poolShare.pool.baseTokenLiquidity
-    )
+    const poolUserTvl = 0
+    // const poolUserTvl = getLiquidityByShares(
+    //   poolShare.shares,
+    //   poolShare.pool.totalShares,
+    //   poolShare.pool.baseTokenLiquidity
+    // )
     tvl = tvl.add(new Decimal(poolUserTvl))
   }
 
