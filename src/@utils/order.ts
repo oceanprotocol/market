@@ -68,12 +68,13 @@ async function getTransaction(
   web3: Web3,
   asset: AssetExtended,
   accountId: string,
-  appConfig: any,
-  config: Config,
   action: string,
   orderPriceAndFees?: OrderPriceAndFees
 ) {
   const datatoken = new Datatoken(web3)
+  const config = getOceanConfig(asset.chainId)
+  const { appConfig } = getSiteMetadata()
+
   const { initializeData, orderParams } = await initProvider(
     asset,
     accountId,
@@ -177,18 +178,7 @@ export async function order(
   orderPriceAndFees: OrderPriceAndFees,
   accountId: string
 ): Promise<TransactionReceipt> {
-  const config = getOceanConfig(asset.chainId)
-  const { appConfig } = getSiteMetadata()
-
-  return getTransaction(
-    web3,
-    asset,
-    accountId,
-    appConfig,
-    config,
-    'order',
-    orderPriceAndFees
-  )
+  return getTransaction(web3, asset, accountId, 'order', orderPriceAndFees)
 }
 
 /**
@@ -207,8 +197,5 @@ export async function orderGasEstimates(
     web3 = await getDummyWeb3(asset.chainId)
   }
 
-  const config = getOceanConfig(asset.chainId)
-  const { appConfig } = getSiteMetadata()
-
-  return getTransaction(web3, asset, accountId, appConfig, config, 'gasfees')
+  return getTransaction(web3, asset, accountId, 'gasfees')
 }
