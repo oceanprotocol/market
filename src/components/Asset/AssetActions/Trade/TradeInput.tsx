@@ -31,6 +31,7 @@ export default function TradeInput({
   // Connect with form
   const {
     handleChange,
+    setFieldValue,
     validateForm,
     values
   }: FormikContextType<FormTradeData> = useFormikContext()
@@ -49,6 +50,10 @@ export default function TradeInput({
         symbol={item?.token}
         titleAvailable={titleAvailable}
         titleMaximum={titleMaximum}
+        // onClick={() => {
+        //   setFieldValue(name, item?.maxAmount)
+        //   handleValueChange(name, Number(item?.maxAmount))
+        // }}
       />
 
       <Field name={name}>

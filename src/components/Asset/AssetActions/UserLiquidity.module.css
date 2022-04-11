@@ -10,3 +10,7 @@
   transform: scale(0.8);
   transform-origin: right center;
 }
+
+.maxAmount {
+  color: var(--brand-pink) !important;
+}
