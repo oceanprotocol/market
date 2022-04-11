@@ -2,7 +2,8 @@ import React, { FormEvent, ReactElement } from 'react'
 import Button from '../atoms/Button'
 import styles from './index.module.css'
 import Loader from '../atoms/Loader'
-
+import Tooltip from '@shared/atoms/Tooltip'
+import Conversion from '@shared/Price/Conversion'
 interface ButtonBuyProps {
   action: 'download' | 'compute'
   disabled: boolean
@@ -29,6 +30,7 @@ interface ButtonBuyProps {
   priceType?: string
   algorithmPriceType?: string
   algorithmConsumableStatus?: number
+  gasFeesEstimate?: string
 }
 
 // TODO: we need to take a look at these messages
@@ -140,7 +142,8 @@ export default function ButtonBuy({
   type,
   priceType,
   algorithmPriceType,
-  algorithmConsumableStatus
+  algorithmConsumableStatus,
+  gasFeesEstimate
 }: ButtonBuyProps): ReactElement {
   const buttonText =
     action === 'download'
@@ -168,6 +171,17 @@ export default function ButtonBuy({
             disabled={disabled}
           >
             {buttonText}
+            {gasFeesEstimate && gasFeesEstimate !== '0' && (
+              <Tooltip
+                className={styles.tooltip}
+                content={
+                  <p>
+                    Gas fee estimation for this asset
+                    <Conversion price={gasFeesEstimate} />
+                  </p>
+                }
+              />
+            )}
           </Button>
           <div className={styles.help}>
             {action === 'download'

@@ -12,3 +12,11 @@
 .help:not(:empty) {
   margin-top: calc(var(--spacer) / 2);
 }
+
+.tooltip {
+  margin-left: calc(var(--spacer) / 8);
+}
+
+.tooltip svg {
+  fill: #fff;
+}
