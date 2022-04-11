@@ -6,7 +6,7 @@ import useNetworkMetadata, {
   filterNetworksByType
 } from '@hooks/useNetworkMetadata'
 
-export default function UnsuportedNetwork(): ReactElement {
+export default function AvailableNetworks(): ReactElement {
   const { networksList } = useNetworkMetadata()
   const { appConfig } = useSiteMetadata()
 
@@ -33,8 +33,8 @@ export default function UnsuportedNetwork(): ReactElement {
 
   return (
     <>
-      You are currently on an unsupported network. To proceed with publishing,
-      please switch to one of our supported networks:
+      Assets are published to the network your wallet is conected to. These
+      networks are currently supported:
       {networkCategories.map(
         (networkCategory) =>
           networkCategory.data.length > 0 && (

@@ -5,7 +5,7 @@ import styles from './index.module.css'
 import content from '../../../../content/publish/index.json'
 import { useWeb3 } from '@context/Web3'
 import Info from '@images/info.svg'
-import UnsuportedNetwork from '@shared/UnsupportedNetwork'
+import AvailableNetworks from '@shared/AvailableNetworks'
 
 export default function Title({
   networkId
@@ -27,12 +27,12 @@ export default function Title({
           />
           {isSupportedOceanNetwork ? (
             <Tooltip
-              content={content.tooltipNetwork}
+              content={<AvailableNetworks />}
               className={styles.tooltip}
             />
           ) : (
             <Tooltip
-              content={<UnsuportedNetwork />}
+              content={<AvailableNetworks />}
               className={styles.errorTooltip}
             >
               <Info className={styles.errorIcon} />

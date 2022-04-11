@@ -7,7 +7,7 @@ import { wizardSteps } from '../_constants'
 import SuccessConfetti from '@shared/SuccessConfetti'
 import { useWeb3 } from '@context/Web3'
 import Tooltip from '@shared/atoms/Tooltip'
-import UnsuportedNetwork from '@shared/UnsupportedNetwork'
+import AvailableNetworks from '@shared/AvailableNetworks'
 
 export default function Actions({
   scrollToRef,
@@ -83,7 +83,7 @@ export default function Actions({
             </Button>
           ) : !isSupportedOceanNetwork ? (
             <Tooltip
-              content={<UnsuportedNetwork />}
+              content={<AvailableNetworks />}
               className={styles.errorTooltip}
             >
               <Button type="submit" style="primary" disabled>
