@@ -18,5 +18,5 @@
 }
 
 .tooltip svg {
-  fill: #fff;
+  fill: currentColor;
 }
