@@ -63,18 +63,21 @@ export default function Download({
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
     // get full price and fees
     async function init() {
-      try {
-        const estimate = await orderGasEstimates(asset, accountId, web3)
-        const oceanTokens = await convertGasFeesToOcean(
-          new Decimal(estimate.toString()),
-          (prices as any)?.eth, // TODO: correct after https://github.com/oceanprotocol/market/pull/1132 is merged
-          chainId,
-          web3
-        )
-        setGasFeesEstimate(oceanTokens)
-      } catch (error) {
-        LoggerInstance.error(error)
-        toast.error('Failed to get gas estimates')
+      // we only show the gas estimation if the user is connected
+      if (accountId) {
+        try {
+          const estimate = await orderGasEstimates(asset, accountId, web3)
+          const oceanTokens = await convertGasFeesToOcean(
+            new Decimal(estimate.toString()),
+            (prices as any)?.eth, // TODO: correct after https://github.com/oceanprotocol/market/pull/1132 is merged
+            chainId,
+            web3
+          )
+          setGasFeesEstimate(oceanTokens)
+        } catch (error) {
+          LoggerInstance.error(error)
+          toast.error('Failed to get gas estimates')
+        }
       }
 
       if (
@@ -82,11 +85,20 @@ export default function Download({
         asset?.accessDetails?.type === 'free'
       )
         return
+
       setIsLoading(true)
       setStatusText('Calculating price including fees.')
-      const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
-      setOrderPriceAndFees(orderPriceAndFees)
 
+      try {
+        const orderPriceAndFees = await getOrderPriceAndFees(
+          asset,
+          ZERO_ADDRESS
+        )
+        setOrderPriceAndFees(orderPriceAndFees)
+      } catch (error) {
+        LoggerInstance.error(error)
+        toast.error('Failed to get price')
+      }
       setIsLoading(false)
     }
 
