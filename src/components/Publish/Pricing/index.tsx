@@ -33,10 +33,10 @@ export default function PricingFields(): ReactElement {
   useEffect(() => {
     if (type === 'fixed' || type === 'free') return
 
-    const amountOcean = isValidNumber(weightOnOcean) && isValidNumber(price)
-    price > 0
-      ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10))
-      : new Decimal(initialValues.pricing.amountOcean)
+    const amountOcean =
+      isValidNumber(weightOnOcean) && isValidNumber(price) && price > 0
+        ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10))
+        : new Decimal(initialValues.pricing.amountOcean)
 
     setFieldValue('pricing.amountOcean', amountOcean)
   }, [price, weightOnOcean, type, setFieldValue])
