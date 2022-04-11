@@ -14,6 +14,14 @@ import { TransactionReceipt } from 'web3-eth'
 import { getSiteMetadata } from './siteConfig'
 import { OrderPriceAndFees } from 'src/@types/Price'
 
+/**
+ * Before stating the transactions, we need to initialized our provider's instance
+ * @param asset
+ * @param accountId
+ * @param appConfig
+ * @param config
+ * @returns { initializeData, orderParams } provider instance's information + orderParams
+ */
 async function initProvider(
   asset: AssetExtended,
   accountId: string,
@@ -46,6 +54,117 @@ async function initProvider(
 }
 
 /**
+ * Before stating the transactions, we need to initialized our provider's instance
+ * @param web3
+ * @param asset
+ * @param accountId
+ * @param appConfig
+ * @param config
+ * @param action
+ * @param orderPriceAndFees
+ * @returns {TransactionReceipt} receipt of the order / gas estimate
+ */
+async function getTransaction(
+  web3: Web3,
+  asset: AssetExtended,
+  accountId: string,
+  appConfig: any,
+  config: Config,
+  action: string,
+  orderPriceAndFees?: OrderPriceAndFees
+) {
+  const datatoken = new Datatoken(web3)
+  const { initializeData, orderParams } = await initProvider(
+    asset,
+    accountId,
+    appConfig,
+    config
+  )
+
+  let tx
+  switch (asset.accessDetails?.type) {
+    case 'fixed': {
+      const freParams = {
+        exchangeContract: config.fixedRateExchangeAddress,
+        exchangeId: asset.accessDetails.addressOrId,
+        maxBaseTokenAmount:
+          action === 'gasfees'
+            ? asset.accessDetails?.price
+            : orderPriceAndFees.price,
+        swapMarketFee: appConfig.consumeMarketFixedSwapFee,
+        marketFeeAddress: appConfig.marketFeeAddress
+      } as FreOrderParams
+
+      if (action === 'gasfees') {
+        tx = await datatoken.estGasBuyFromFreAndOrder(
+          asset.accessDetails.datatoken.address,
+          accountId,
+          orderParams,
+          freParams
+        )
+      } else {
+        // this assumes all fees are in ocean
+        const txApprove = await approve(
+          web3,
+          accountId,
+          asset.accessDetails.baseToken.address,
+          asset.accessDetails.datatoken.address,
+          orderPriceAndFees.price,
+          false
+        )
+        if (!txApprove) {
+          throw new Error()
+        }
+
+        tx = await datatoken.buyFromFreAndOrder(
+          asset.accessDetails.datatoken.address,
+          accountId,
+          orderParams,
+          freParams
+        )
+      }
+      return tx
+    }
+    case 'dynamic': {
+      action === 'gasfees'
+        ? (tx = await datatoken.estGasStartOrder(
+            asset.accessDetails.datatoken.address,
+            accountId,
+            accountId,
+            0,
+            initializeData.providerFee
+          ))
+        : (tx = await datatoken.startOrder(
+            asset.accessDetails.datatoken.address,
+            accountId,
+            accountId,
+            0,
+            initializeData.providerFee
+          ))
+
+      return tx
+    }
+
+    case 'free': {
+      action === 'gasfees'
+        ? (tx = await datatoken.estGasBuyFromDispenserAndOrder(
+            asset.services[0].datatokenAddress,
+            accountId,
+            orderParams,
+            config.dispenserAddress
+          ))
+        : (tx = await datatoken.buyFromDispenserAndOrder(
+            asset.services[0].datatokenAddress,
+            accountId,
+            orderParams,
+            config.dispenserAddress
+          ))
+      return tx
+    }
+  }
+}
+
+/**
  * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
  * @param web3
  * @param asset
@@ -58,70 +177,18 @@ export async function order(
   orderPriceAndFees: OrderPriceAndFees,
   accountId: string
 ): Promise<TransactionReceipt> {
-  const datatoken = new Datatoken(web3)
   const config = getOceanConfig(asset.chainId)
   const { appConfig } = getSiteMetadata()
 
-  const { initializeData, orderParams } = await initProvider(
+  return getTransaction(
+    web3,
     asset,
     accountId,
     appConfig,
-    config
+    config,
+    'order',
+    orderPriceAndFees
   )
-
-  // TODO: we need to approve provider fee
-  switch (asset.accessDetails?.type) {
-    case 'fixed': {
-      // this assumes all fees are in ocean
-      const txApprove = await approve(
-        web3,
-        accountId,
-        asset.accessDetails.baseToken.address,
-        asset.accessDetails.datatoken.address,
-        orderPriceAndFees.price,
-        false
-      )
-      if (!txApprove) {
-        return
-      }
-
-      const freParams = {
-        exchangeContract: config.fixedRateExchangeAddress,
-        exchangeId: asset.accessDetails.addressOrId,
-        maxBaseTokenAmount: orderPriceAndFees.price,
-        swapMarketFee: appConfig.consumeMarketFixedSwapFee,
-        marketFeeAddress: appConfig.marketFeeAddress
-      } as FreOrderParams
-      const tx = await datatoken.buyFromFreAndOrder(
-        asset.accessDetails.datatoken.address,
-        accountId,
-        orderParams,
-        freParams
-      )
-
-      return tx
-    }
-    case 'dynamic': {
-      const tx = await datatoken.startOrder(
-        asset.accessDetails.datatoken.address,
-        accountId,
-        accountId,
-        0,
-        initializeData.providerFee
-      )
-      return tx
-    }
-
-    case 'free': {
-      const tx = await datatoken.buyFromDispenserAndOrder(
-        asset.services[0].datatokenAddress,
-        accountId,
-        orderParams,
-        config.dispenserAddress
-      )
-      return tx
-    }
-  }
 }
 
 /**
@@ -140,54 +207,8 @@ export async function orderGasEstimates(
     web3 = await getDummyWeb3(asset.chainId)
   }
 
-  const datatoken = new Datatoken(web3)
   const config = getOceanConfig(asset.chainId)
   const { appConfig } = getSiteMetadata()
 
-  const { initializeData, orderParams } = await initProvider(
-    asset,
-    accountId,
-    appConfig,
-    config
-  )
-
-  switch (asset.accessDetails?.type) {
-    case 'fixed': {
-      const freParams = {
-        exchangeContract: config.fixedRateExchangeAddress,
-        exchangeId: asset.accessDetails.addressOrId,
-        maxBaseTokenAmount: asset.accessDetails?.price,
-        swapMarketFee: appConfig.consumeMarketFixedSwapFee,
-        marketFeeAddress: appConfig.marketFeeAddress
-      } as FreOrderParams
-      const tx = await datatoken.estGasBuyFromFreAndOrder(
-        asset.accessDetails.datatoken.address,
-        accountId,
-        orderParams,
-        freParams
-      )
-
-      return tx
-    }
-    case 'dynamic': {
-      const tx = await datatoken.estGasStartOrder(
-        asset.accessDetails.datatoken.address,
-        accountId,
-        accountId,
-        0,
-        initializeData.providerFee
-      )
-      return tx
-    }
-
-    case 'free': {
-      const tx = await datatoken.estGasBuyFromDispenserAndOrder(
-        asset.services[0].datatokenAddress,
-        accountId,
-        orderParams,
-        config.dispenserAddress
-      )
-      return tx
-    }
-  }
+  return getTransaction(web3, asset, accountId, appConfig, config, 'gasfees')
 }
