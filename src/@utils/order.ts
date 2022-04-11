@@ -1,5 +1,6 @@
 import {
   approve,
+  Config,
   Datatoken,
   FreOrderParams,
   OrderParams,
@@ -13,23 +14,12 @@ import { TransactionReceipt } from 'web3-eth'
 import { getSiteMetadata } from './siteConfig'
 import { OrderPriceAndFees } from 'src/@types/Price'
 
-/**
- * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
- * @param web3
- * @param asset
- * @param accountId
- * @returns {TransactionReceipt} receipt of the order
- */
-export async function order(
-  web3: Web3,
+async function initProvider(
   asset: AssetExtended,
-  orderPriceAndFees: OrderPriceAndFees,
-  accountId: string
-): Promise<TransactionReceipt> {
-  const datatoken = new Datatoken(web3)
-  const config = getOceanConfig(asset.chainId)
-  const { appConfig } = getSiteMetadata()
-
+  accountId: string,
+  appConfig: any,
+  config: Config
+) {
   const initializeData = await ProviderInstance.initialize(
     asset.id,
     asset.services[0].id,
@@ -48,6 +38,36 @@ export async function order(
       consumeMarketFeeToken: config.oceanTokenAddress
     }
   } as OrderParams
+
+  return {
+    initializeData,
+    orderParams
+  }
+}
+
+/**
+ * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
+ * @param web3
+ * @param asset
+ * @param accountId
+ * @returns {TransactionReceipt} receipt of the order
+ */
+export async function order(
+  web3: Web3,
+  asset: AssetExtended,
+  orderPriceAndFees: OrderPriceAndFees,
+  accountId: string
+): Promise<TransactionReceipt> {
+  const datatoken = new Datatoken(web3)
+  const config = getOceanConfig(asset.chainId)
+  const { appConfig } = getSiteMetadata()
+
+  const { initializeData, orderParams } = await initProvider(
+    asset,
+    accountId,
+    appConfig,
+    config
+  )
 
   // TODO: we need to approve provider fee
   switch (asset.accessDetails?.type) {
@@ -124,24 +144,12 @@ export async function orderGasEstimates(
   const config = getOceanConfig(asset.chainId)
   const { appConfig } = getSiteMetadata()
 
-  const initializeData = await ProviderInstance.initialize(
-    asset.id,
-    asset.services[0].id,
-    0,
+  const { initializeData, orderParams } = await initProvider(
+    asset,
     accountId,
-    asset.services[0].serviceEndpoint
+    appConfig,
+    config
   )
-
-  const orderParams = {
-    consumer: accountId,
-    serviceIndex: 0,
-    _providerFee: initializeData.providerFee,
-    _consumeMarketFee: {
-      consumeMarketFeeAddress: appConfig.marketFeeAddress,
-      consumeMarketFeeAmount: appConfig.consumeMarketOrderFee,
-      consumeMarketFeeToken: config.oceanTokenAddress
-    }
-  } as OrderParams
 
   switch (asset.accessDetails?.type) {
     case 'fixed': {
