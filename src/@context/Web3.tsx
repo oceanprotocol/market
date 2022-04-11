@@ -110,7 +110,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     ocean: '0'
   })
   const [isSupportedOceanNetwork, setIsSupportedOceanNetwork] =
-    useState<boolean>()
+    useState<boolean>(true)
 
   // -----------------------------------
   // Helper: connect to web3
@@ -316,10 +316,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (appConfig.chainIdsSupported.includes(networkId)) {
       setIsSupportedOceanNetwork(true)
-    } else {
+    } else if (accountId) {
       setIsSupportedOceanNetwork(false)
     }
-  }, [networkId, appConfig])
+  }, [accountId, networkId, appConfig])
 
   // -----------------------------------
   // Handle change events
