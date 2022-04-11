@@ -7,8 +7,13 @@ import ButtonBuy from '@shared/ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
-import { FileMetadata, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
-import { order } from '@utils/order'
+import {
+  FileMetadata,
+  LoggerInstance,
+  ZERO_ADDRESS,
+  Datatoken
+} from '@oceanprotocol/lib'
+import { order, orderGasEstimates } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { buyDtFromPool } from '@utils/pool'
 import { downloadFile } from '@utils/provider'
@@ -17,6 +22,9 @@ import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { convertGasFeesToOcean } from '@utils/ocean'
+import Decimal from 'decimal.js'
+import { usePrices } from '@context/Prices'
 
 export default function Download({
   asset,
@@ -33,7 +41,8 @@ export default function Download({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3, chainId } = useWeb3()
+  const { prices } = usePrices()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const isMounted = useIsMounted()
 
@@ -43,6 +52,7 @@ export default function Download({
   const [isLoading, setIsLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
+  const [gasFeesEstimate, setGasFeesEstimate] = useState('0')
 
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
@@ -53,6 +63,20 @@ export default function Download({
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
     // get full price and fees
     async function init() {
+      try {
+        const estimate = await orderGasEstimates(asset, accountId, web3)
+        const oceanTokens = await convertGasFeesToOcean(
+          new Decimal(estimate.toString()),
+          (prices as any)?.eth, // TODO: correct after https://github.com/oceanprotocol/market/pull/1132 is merged
+          chainId,
+          web3
+        )
+        setGasFeesEstimate(oceanTokens)
+      } catch (error) {
+        LoggerInstance.error(error)
+        toast.error('Failed to get gas estimates')
+      }
+
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
         asset?.accessDetails?.type === 'free'
@@ -157,6 +181,7 @@ export default function Download({
       isConsumable={asset.accessDetails?.isPurchasable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
+      gasFeesEstimate={gasFeesEstimate}
     />
   )
 
