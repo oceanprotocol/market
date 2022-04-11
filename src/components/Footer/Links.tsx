@@ -17,7 +17,7 @@ export default function Links() {
     <div className={styles.links}>
       {content.links.map(({ name, url }) => (
         <Fragment key={name}>
-          <Button style="text" size="small" href={url}>
+          <Button style="text" size="small" href={url} target="_blank">
             {name} <External />
           </Button>
           {' — '}
