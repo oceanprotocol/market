@@ -47,7 +47,7 @@ export default function PoolSections() {
       </PoolSection>
 
       <PoolSection
-        title="Your Value Locked"
+        title="Your liquidity"
         titlePostfix={
           poolInfoUser?.poolSharePercentage &&
           `${poolInfoUser?.poolSharePercentage}% of pool`
@@ -60,19 +60,19 @@ export default function PoolSections() {
       >
         <Token
           symbol={poolInfo?.baseTokenSymbol}
-          balance={poolInfoUser?.liquidity.toString()}
-          conversion={poolInfoUser?.liquidity}
+          balance={poolInfoUser?.liquidity}
+          conversion
         />
       </PoolSection>
 
       <PoolSection
-        title="Owner Value Locked"
+        title="Owner liquidity"
         titlePostfix={`${poolInfoOwner?.poolSharePercentage}% of pool`}
       >
         <Token
           symbol={poolInfo?.baseTokenSymbol}
-          balance={poolInfoOwner?.liquidity.toString()}
-          conversion={poolInfoOwner?.liquidity}
+          balance={poolInfoOwner?.liquidity}
+          conversion
         />
       </PoolSection>
 
@@ -80,7 +80,7 @@ export default function PoolSections() {
         <Token
           symbol={poolInfo?.baseTokenSymbol}
           balance={poolInfo?.totalLiquidityInOcean.toString()}
-          conversion={poolInfo?.totalLiquidityInOcean}
+          conversion
         />
       </PoolSection>
 
@@ -93,7 +93,6 @@ export default function PoolSections() {
         titlePostfixTitle={`Weight of ${poolInfo?.weightBaseToken}% ${poolInfo?.baseTokenSymbol} & ${poolInfo?.weightDt}% ${poolInfo?.datatokenSymbol}`}
       >
         <Graph />
-
         <Token
           symbol={poolInfo?.baseTokenSymbol}
           balance={`${poolData?.baseTokenLiquidity}`}

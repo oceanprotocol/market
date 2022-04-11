@@ -19,9 +19,9 @@ export interface PoolInfo {
 }
 
 export interface PoolInfoUser {
-  liquidity: Decimal // liquidity in base token
-  poolShares: string // pool share tokens
-  poolSharePercentage: string // in %
+  liquidity: string
+  poolShares: string
+  poolSharePercentage: string
 }
 
 export interface PoolProviderValue {

@@ -5,7 +5,6 @@ import { getDummyWeb3 } from './web3'
 import { TransactionReceipt } from 'web3-eth'
 import Decimal from 'decimal.js'
 import { AccessDetails } from 'src/@types/Price'
-import { isValidNumber } from './numbers'
 import { MAX_DECIMALS } from './constants'
 /**
  * This is used to calculate the price to buy one datatoken from a pool, that is different from spot price. You need to pass either a web3 object or a chainId. If you pass a chainId a dummy web3 object will be created
@@ -79,61 +78,28 @@ export async function buyDtFromPool(
 }
 
 /**
- * Calculate the base token liquidity based on shares info
+ * Returns the amount of tokens (based on tokenAddress) that can be withdrawn from the pool
+ * @param {string} poolAddress
+ * @param {string} tokenAddress
  * @param {string} shares
- * @param {string} totalShares
- * @param {string} baseTokenLiquidity
+ * @param {number} chainId
  * @returns
  */
-export function calculateUserLiquidity(
-  shares: string,
-  totalShares: string,
-  baseTokenLiquidity: string
-): string {
-  const totalLiquidity =
-    isValidNumber(shares) &&
-    isValidNumber(totalShares) &&
-    isValidNumber(baseTokenLiquidity)
-      ? new Decimal(shares)
-          .dividedBy(new Decimal(totalShares))
-          .mul(baseTokenLiquidity)
-      : new Decimal(0)
-  return totalLiquidity.toDecimalPlaces(MAX_DECIMALS).toString()
-}
-
-export function calculateUserTVL(
-  shares: string,
-  totalShares: string,
-  baseTokenLiquidity: string
-): string {
-  const liquidity = calculateUserLiquidity(
-    shares,
-    totalShares,
-    baseTokenLiquidity
-  )
-  const tvl = new Decimal(liquidity).mul(2) // we multiply by 2 because of 50/50 weight
-  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
-}
-
-export async function calculateSharesVL(
+export async function getLiquidityByShares(
   pool: string,
   tokenAddress: string,
   shares: string,
-  chainId?: number
+  chainId: number
 ): Promise<string> {
-  if (!chainId) throw new Error("chainId can't be undefined at the same time!")
-
   // we only use the dummyWeb3 connection here
   const web3 = await getDummyWeb3(chainId)
 
   const poolInstance = new Pool(web3)
   // get shares VL in ocean
-  const amountOcean = await poolInstance.calcSingleOutGivenPoolIn(
+  const amountBaseToken = await poolInstance.calcSingleOutGivenPoolIn(
     pool,
     tokenAddress,
     shares
   )
-
-  const tvl = new Decimal(amountOcean || 0).mul(2) // we multiply by 2 because of 50/50 weight
-  return tvl.toDecimalPlaces(MAX_DECIMALS, Decimal.ROUND_DOWN).toString()
+  return amountBaseToken
 }

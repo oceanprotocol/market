@@ -15,7 +15,7 @@ import {
 } from 'src/@types/subgraph/PoolData'
 import { useAsset } from '../Asset'
 import { useWeb3 } from '../Web3'
-import { calculateSharesVL } from '@utils/pool'
+import { getLiquidityByShares } from '@utils/pool'
 import { PoolProviderValue, PoolInfo, PoolInfoUser } from './_types'
 import { getFee, getPoolData, getWeight } from './_utils'
 
@@ -28,7 +28,7 @@ const initialPoolInfo: Partial<PoolInfo> = {
 }
 
 const initialPoolInfoUser: Partial<PoolInfoUser> = {
-  liquidity: new Decimal(0),
+  liquidity: '0',
   poolShares: '0'
 }
 
@@ -51,8 +51,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   const [poolSnapshots, setPoolSnapshots] = useState<PoolDataPoolSnapshots[]>()
   const [hasUserAddedLiquidity, setUserHasAddedLiquidity] = useState(false)
   // const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
-  const [ownerPoolShares, setOwnerPoolShares] = useState('0')
-  const [userPoolShares, setUserPoolShares] = useState('0')
 
   const fetchAllData = useCallback(async () => {
     if (!asset?.chainId || !asset?.accessDetails?.addressOrId || !owner) return
@@ -93,15 +91,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!poolData) return
 
-    // once we have poolData, we need to get owner's pool shares (OVL)
-    calculateSharesVL(
-      poolData.id,
-      poolData.baseToken.address,
-      poolData.shares[0].shares,
-      asset.chainId
-    ).then((shares) => {
-      setOwnerPoolShares(shares)
-    })
     // Total Liquidity
     const totalLiquidityInOcean = new Decimal(
       poolData.baseTokenLiquidity * 2 || 0
@@ -129,89 +118,97 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   // 2 Pool Creator Info
   //
   useEffect(() => {
-    if (
-      !poolData ||
-      !poolInfo?.totalPoolTokens ||
-      !poolInfo.totalLiquidityInOcean ||
-      ownerPoolShares === '0'
-    )
-      return
+    async function calculatePoolOwnerInfo() {
+      if (
+        !poolData ||
+        !poolInfo?.totalPoolTokens ||
+        poolData.shares[0]?.shares === '0'
+      )
+        return
 
-    // Pool share tokens.
-    const poolSharePercentage = new Decimal(ownerPoolShares)
-      .dividedBy(poolInfo.totalLiquidityInOcean)
-      .mul(100)
-      .toFixed(2)
+      // Pool share tokens. We multiply by 200 to take in consideration pool shares owned by the ss bot
+      const poolSharePercentage = new Decimal(poolData.shares[0]?.shares)
+        .dividedBy(poolInfo.totalPoolTokens)
+        .mul(200)
+        .toFixed(2)
 
-    const newPoolOwnerInfo = {
-      liquidity: new Decimal(ownerPoolShares), // liquidity in base token, values from from `calcSingleOutGivenPoolIn` method
-      poolShares: ownerPoolShares,
-      poolSharePercentage
+      const ownerLiquidity = await getLiquidityByShares(
+        poolData.id,
+        poolInfo.baseTokenAddress,
+        poolData.shares[0]?.shares,
+        asset.chainId
+      )
+
+      const newPoolOwnerInfo = {
+        liquidity: ownerLiquidity,
+        poolShares: poolData.shares[0]?.shares,
+        poolSharePercentage
+      }
+      setPoolInfoOwner(newPoolOwnerInfo)
+      LoggerInstance.log(
+        '[pool] Created new pool creatorinfo:',
+        newPoolOwnerInfo
+      )
     }
-    setPoolInfoOwner(newPoolOwnerInfo)
-    LoggerInstance.log('[pool] Created new owner pool info:', newPoolOwnerInfo)
+
+    calculatePoolOwnerInfo()
   }, [
-    ownerPoolShares,
+    asset.chainId,
     poolData,
-    poolInfo.totalLiquidityInOcean,
-    poolInfo.totalPoolTokens
+    poolInfo.baseTokenAddress,
+    poolInfo?.totalPoolTokens
   ])
 
   //
   // 3 User Pool Info
   //
   useEffect(() => {
-    if (
-      !poolData ||
-      !poolInfo?.totalPoolTokens ||
-      !poolInfoUser?.poolShares ||
-      !poolInfo?.totalLiquidityInOcean ||
-      !poolData?.baseTokenLiquidity ||
-      !asset?.chainId ||
-      !accountId ||
-      !poolInfoUser
-    )
-      return
+    async function calculatePoolUserInfo() {
+      if (
+        !poolData ||
+        !poolInfo?.totalPoolTokens ||
+        !poolInfoUser?.poolShares ||
+        !poolData?.baseTokenLiquidity ||
+        !asset?.chainId ||
+        !accountId
+      )
+        return
 
-    // once we have poolData, we need to get user's pool shares (VL)
-    calculateSharesVL(
-      poolData.id,
-      poolData.baseToken.address,
-      poolInfoUser.poolShares,
-      asset.chainId
-    ).then((shares) => {
-      setUserPoolShares(shares)
-    })
+      const userLiquidity = await getLiquidityByShares(
+        poolData.id,
+        poolData.baseToken.address,
+        poolInfoUser.poolShares,
+        asset.chainId
+      )
 
-    // Pool share in %.
-    const poolSharePercentage = new Decimal(userPoolShares)
-      .dividedBy(new Decimal(poolInfo.totalLiquidityInOcean))
-      .mul(100)
-      .toFixed(2)
+      // Pool share in %. We multiply by 200 to take in consideration pool shares owned by the ss bot
+      const poolSharePercentage = new Decimal(poolInfoUser.poolShares)
+        .dividedBy(new Decimal(poolInfo.totalPoolTokens))
+        .mul(200)
+        .toFixed(2)
 
-    setUserHasAddedLiquidity(Number(poolSharePercentage) > 0)
+      setUserHasAddedLiquidity(Number(poolSharePercentage) > 0)
 
-    const newPoolInfoUser = {
-      liquidity: new Decimal(userPoolShares), // liquidity in base token, values from from `calcSingleOutGivenPoolIn` method
-      poolSharePercentage
+      const newPoolInfoUser = {
+        liquidity: userLiquidity,
+        poolshares: poolInfoUser.poolShares,
+        poolSharePercentage
+      }
+      setPoolInfoUser((prevState: PoolInfoUser) => ({
+        ...prevState,
+        ...newPoolInfoUser
+      }))
+
+      LoggerInstance.log('[pool] Created new user pool info:', {
+        ...newPoolInfoUser
+      })
     }
-    setPoolInfoUser((prevState: PoolInfoUser) => ({
-      ...prevState,
-      ...newPoolInfoUser
-    }))
-
-    LoggerInstance.log('[pool] Created new user pool info:', {
-      poolShares: userPoolShares,
-      ...newPoolInfoUser
-    })
-    // poolInfoUser was not added on purpose, we use setPoolInfoUser so it will just loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    calculatePoolUserInfo()
   }, [
     poolData,
-    poolInfoUser?.poolShares,
+    poolInfoUser.poolShares,
     accountId,
-    userPoolShares,
-    asset?.chainId,
+    asset.chainId,
     owner,
     poolInfo?.totalPoolTokens
   ])
