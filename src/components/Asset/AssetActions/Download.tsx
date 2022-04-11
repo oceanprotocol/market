@@ -69,7 +69,7 @@ export default function Download({
           const estimate = await orderGasEstimates(asset, accountId, web3)
           const oceanTokens = await convertGasFeesToOcean(
             new Decimal(estimate.toString()),
-            (prices as any)?.eth, // TODO: correct after https://github.com/oceanprotocol/market/pull/1132 is merged
+            (prices as any)?.eth, // TODO: fix matic after https://github.com/oceanprotocol/market/pull/1132 is merged
             chainId,
             web3
           )
