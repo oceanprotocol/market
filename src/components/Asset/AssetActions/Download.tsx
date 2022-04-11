@@ -193,7 +193,7 @@ export default function Download({
       isConsumable={asset.accessDetails?.isPurchasable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
-      gasFeesEstimate={gasFeesEstimate}
+      gasFeesEstimate={!isOwned ? gasFeesEstimate : null}
     />
   )
 
