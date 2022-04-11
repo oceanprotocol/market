@@ -15,6 +15,8 @@
 
 .tooltip {
   margin-left: calc(var(--spacer) / 8);
+  position: relative;
+  bottom: 1px; /* trick to perfectly align text & icon */
 }
 
 .tooltip svg {
