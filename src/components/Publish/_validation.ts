@@ -1,6 +1,7 @@
 import { MAX_DECIMALS } from '@utils/constants'
 import { initialValues } from './_constants'
 import * as Yup from 'yup'
+import Decimal from 'decimal.js'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
@@ -81,10 +82,21 @@ const validationPricing = {
     .required('Required'),
   amountDataToken: Yup.number().required('Required'),
   amountOcean: Yup.number()
-    .min(
-      initialValues.pricing.amountOcean,
-      (param) => `Must be more or equal to ${param.min}`
-    )
+    .test('validator-custom-name', '', function (value) {
+      const minValue =
+        this.parent.price > 0
+          ? new Decimal(this.parent.price)
+              .mul(this.parent.weightOnOcean)
+              .mul(10)
+              .toDecimalPlaces(MAX_DECIMALS)
+              .toString()
+          : initialValues.pricing.amountOcean.toString()
+      return value < parseInt(minValue)
+        ? this.createError({
+            message: `Must be more or equal to ${minValue}`
+          })
+        : true
+    })
     .max(
       1000000,
       (param: { max: number }) => `Must be less than or equal to ${param.max}`

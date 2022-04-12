@@ -11,7 +11,6 @@ import Decimal from 'decimal.js'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData } from '../_types'
 import { initialValues } from '../_constants'
-import { MAX_DECIMALS } from '../../../@utils/constants'
 
 export default function Dynamic({ content }: { content: any }): ReactElement {
   const { networkId, accountId, balance } = useWeb3()
@@ -80,15 +79,6 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
           name="amountOcean"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
           weight={`${Number(weightOnOcean) * 10}%`}
-          min={
-            price > 0
-              ? new Decimal(price)
-                  .mul(weightOnOcean)
-                  .mul(10)
-                  .toDecimalPlaces(MAX_DECIMALS)
-                  .toString()
-              : initialValues.pricing.amountOcean.toString()
-          }
         />
         <Coin
           name="amountDataToken"

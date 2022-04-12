@@ -10,14 +10,12 @@ export default function Coin({
   datatokenOptions,
   name,
   weight,
-  readOnly,
-  min
+  readOnly
 }: {
   datatokenOptions: { name: string; symbol: string }
   name: string
   weight: string
   readOnly?: boolean
-  min?: string
 }): ReactElement {
   const [field, meta] = useField(`pricing.${name}`)
 
@@ -43,7 +41,7 @@ export default function Coin({
           type="number"
           readOnly={readOnly}
           prefix={datatokenOptions?.symbol || 'DT'}
-          min={min || '1'}
+          min="1"
           name={name}
           value={field.value}
           {...field}
