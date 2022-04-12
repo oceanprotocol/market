@@ -6,8 +6,6 @@ import { InputProps } from '@shared/FormInput'
 import { getFileUrlInfo } from '@utils/provider'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import content from '../../../../../content/publish/form.json'
-import FormHelp from '@shared/FormInput/Help'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -58,9 +56,6 @@ export default function FilesInput(props: InputProps): ReactElement {
           handleButtonClick={handleValidation}
         />
       )}
-      <div>
-        <FormHelp>{content.services.fields[2].help}</FormHelp>
-      </div>
     </>
   )
 }
