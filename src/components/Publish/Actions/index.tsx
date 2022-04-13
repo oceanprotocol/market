@@ -8,6 +8,7 @@ import SuccessConfetti from '@shared/SuccessConfetti'
 import { useWeb3 } from '@context/Web3'
 import Tooltip from '@shared/atoms/Tooltip'
 import AvailableNetworks from '@shared/AvailableNetworks'
+import Info from '@images/info.svg'
 
 export default function Actions({
   scrollToRef,
@@ -82,12 +83,9 @@ export default function Actions({
               Connect Wallet
             </Button>
           ) : !isSupportedOceanNetwork ? (
-            <Tooltip
-              content={<AvailableNetworks />}
-              className={styles.errorTooltip}
-            >
+            <Tooltip content={<AvailableNetworks />}>
               <Button type="submit" style="primary" disabled>
-                Change Network
+                Unsupported Network <Info className={styles.infoIcon} />
               </Button>
             </Tooltip>
           ) : (

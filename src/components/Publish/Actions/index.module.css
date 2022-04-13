@@ -8,3 +8,13 @@
 .actions button {
   margin: 0 calc(var(--spacer) / 2);
 }
+
+.infoIcon {
+  width: 0.85em;
+  height: 0.85em;
+  cursor: help;
+  display: inline-block;
+  margin-bottom: -0.1em;
+  margin-left: calc(var(--spacer) / 6);
+  fill: var(--brand-white);
+}
