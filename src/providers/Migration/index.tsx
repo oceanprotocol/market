@@ -103,6 +103,15 @@ function MigrationProvider({
       case 4:
         setMigrationAddress(appConfig.rinkebyMigrationContractAddresss)
         break
+      case 3:
+        setMigrationAddress(appConfig.ropstenMigrationContractAddresss)
+        break
+      case 1287:
+        setMigrationAddress(appConfig.moonbaseMigrationContractAddresss)
+        break
+      case 80001:
+        setMigrationAddress(appConfig.mumbaiMigrationContractAddresss)
+        break
       default:
         break
     }
