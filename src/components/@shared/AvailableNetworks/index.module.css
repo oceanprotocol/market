@@ -10,3 +10,6 @@
   margin-top: calc(var(--spacer) / 2);
   color: var(--color-secondary);
 }
+.content {
+  padding: calc(var(--spacer) / 2);
+}

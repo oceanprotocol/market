@@ -32,7 +32,7 @@ export default function AvailableNetworks(): ReactElement {
     ))
 
   return (
-    <>
+    <div className={styles.content}>
       Assets are published to the network your wallet is conected to. These
       networks are currently supported:
       {networkCategories.map(
@@ -46,6 +46,6 @@ export default function AvailableNetworks(): ReactElement {
             </>
           )
       )}
-    </>
+    </div>
   )
 }
