@@ -17,7 +17,11 @@ export default function Navigation(): ReactElement {
 
   const queryString = window.location.search
   const urlParams = new URLSearchParams(queryString)
-  const step = parseInt(urlParams.get('step'))
+  let step = parseInt(urlParams.get('step'))
+  // check if exists and it's valid, if not, restart flow
+  if (!step || step > 5) {
+    step = 1
+  }
 
   useEffect(() => {
     // Change route to include steps
@@ -34,19 +38,15 @@ export default function Navigation(): ReactElement {
     setFieldValue('user.stepCurrent', step)
   }
 
-  useEffect(() => {
-    // load current step on refresh - CAUTION: all data will be deleted anyway
+  // used window object, as catching the state of the router with useRouter() causes side effects
+  window.onpopstate = function () {
     setFieldValue('user.stepCurrent', step)
-  }, [])
+  }
 
   useEffect(() => {
-    const { query } = router
-    if (query?.step === 1) return
-    console.log(query)
-    const currentStep = parseInt(query.step)
-    console.log(currentStep)
-    handleStepClick(currentStep)
-  }, [router])
+    // load current step on refresh - CAUTION: all data will be deleted anyway
+    setFieldValue('user.stepCurrent', step || 1)
+  }, [])
 
   function getSuccessClass(step: number) {
     const isSuccessMetadata = errors.metadata === undefined
