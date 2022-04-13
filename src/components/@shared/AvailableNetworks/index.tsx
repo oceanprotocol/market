@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
-import NetworkOptions from './networkOptions'
+import Network from './Network'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import useNetworkMetadata, {
   filterNetworksByType
@@ -27,9 +27,7 @@ export default function AvailableNetworks(): ReactElement {
   ]
 
   const content = (networks: number[]) =>
-    networks.map((chainId) => (
-      <NetworkOptions key={chainId} chainId={chainId} />
-    ))
+    networks.map((chainId) => <Network key={chainId} chainId={chainId} />)
 
   return (
     <div className={styles.content}>
