@@ -13,4 +13,6 @@
 
 .maxAmount {
   color: var(--brand-pink) !important;
+  cursor: pointer;
+  font-size: var(--font-size-small) !important;
 }

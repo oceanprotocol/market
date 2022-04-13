@@ -21,12 +21,15 @@ function UserLiquidityLine({
     <div>
       <span>{title}</span>
       {isAmountMax ? (
-        <span onClick={() => selectMaxAmount(name, amount)}>
+        <span
+          className={styles.maxAmount}
+          onClick={() => selectMaxAmount(name, amount)}
+        >
           <PriceUnit
             className={isAmountMax ? styles.maxAmount : ''}
             price={amount}
             symbol={symbol}
-            size="small"
+            size="mini"
           />
         </span>
       ) : (
@@ -56,7 +59,7 @@ export default function UserLiquidity({
   titleMaximum?: string
   amountMax?: string
   name?: string
-  selectMaxAmount: (name: string, amount: string) => void
+  selectMaxAmount?: (name: string, amount: string) => void
 }): ReactElement {
   return (
     <div className={styles.userLiquidity}>
