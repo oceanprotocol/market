@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useRef, useEffect } from 'react'
+import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik } from 'formik'
 import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -14,13 +14,7 @@ import { Steps } from './Steps'
 import { FormPublishData, PublishFeedback } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import useNftFactory from '@hooks/contracts/useNftFactory'
-import {
-  Nft,
-  getHash,
-  ProviderInstance,
-  LoggerInstance,
-  DDO
-} from '@oceanprotocol/lib'
+import { ProviderInstance, LoggerInstance, DDO } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
@@ -285,20 +279,22 @@ export default function PublishPage({
         await handleSubmit(values)
       }}
     >
-      {({ values }) => (
-        <>
-          <PageHeader
-            title={<Title networkId={values.user.chainId} />}
-            description={content.description}
-          />
-          <Form className={styles.form} ref={scrollToRef}>
-            <Navigation />
-            <Steps feedback={feedback} />
-            <Actions scrollToRef={scrollToRef} did={did} />
-          </Form>
-          {debug && <Debug />}
-        </>
-      )}
+      {({ values }) => {
+        return (
+          <>
+            <PageHeader
+              title={<Title networkId={values.user.chainId} />}
+              description={content.description}
+            />
+            <Form className={styles.form} ref={scrollToRef}>
+              <Navigation />
+              <Steps feedback={feedback} />
+              <Actions scrollToRef={scrollToRef} did={did} />
+            </Form>
+            {debug && <Debug />}
+          </>
+        )
+      }}
     </Formik>
   )
 }
