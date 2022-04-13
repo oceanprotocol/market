@@ -82,7 +82,7 @@ const validationPricing = {
     .required('Required'),
   amountDataToken: Yup.number().required('Required'),
   amountOcean: Yup.number()
-    .test('validator-custom-name', '', function (value) {
+    .test('validator-min-amountOcean', '', function (value) {
       const minValue =
         this.parent.price > 0
           ? new Decimal(this.parent.price)

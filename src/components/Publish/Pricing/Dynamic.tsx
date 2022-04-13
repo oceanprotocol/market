@@ -10,7 +10,6 @@ import Price from './Price'
 import Decimal from 'decimal.js'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData } from '../_types'
-import { initialValues } from '../_constants'
 
 export default function Dynamic({ content }: { content: any }): ReactElement {
   const { networkId, accountId, balance } = useWeb3()
@@ -21,7 +20,6 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
   const { dataTokenOptions } = values.services[0]
 
   const {
-    price,
     weightOnDataToken,
     weightOnOcean,
     swapFee,
