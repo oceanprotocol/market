@@ -7,10 +7,11 @@
 
 .icon {
   display: inline-block;
-  width: 1.2em;
-  height: 1.2em;
-  fill: currentColor;
   margin-right: calc(var(--spacer) / 8);
+  width: 1em;
+  height: 1em;
+  margin-top: -0.25em;
+  fill: currentColor;
 }
 
 .minimal {

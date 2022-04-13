@@ -16,5 +16,5 @@
   display: inline-block;
   margin-bottom: -0.1em;
   margin-left: calc(var(--spacer) / 6);
-  fill: var(--brand-white);
+  fill: currentColor;
 }
