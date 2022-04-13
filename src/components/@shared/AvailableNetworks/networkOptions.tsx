@@ -20,8 +20,8 @@ export default function NetworkOptions({
   }
 
   return (
-    <div key={chainId}>
-      <label className={styles.radioLabel} htmlFor={`opt-${chainId}`}>
+    <ul key={chainId}>
+      <li className={styles.radioLabel}>
         <Button
           style="text"
           className={styles.button}
@@ -29,7 +29,7 @@ export default function NetworkOptions({
         >
           <NetworkName key={chainId} networkId={chainId} />
         </Button>
-      </label>
-    </div>
+      </li>
+    </ul>
   )
 }
