@@ -42,6 +42,11 @@ export default function TradeInput({
   const titleAvailable = isTopField ? `Balance` : `Available from pool`
   const titleMaximum = isTopField ? `Maximum to spend` : `Maximum to receive`
 
+  function selectMaxAmount(name: string, maxAmount: string) {
+    setFieldValue(name, maxAmount)
+    handleValueChange(name, Number(maxAmount))
+  }
+
   return (
     <section className={styles.tradeInput}>
       <UserLiquidity
@@ -50,10 +55,8 @@ export default function TradeInput({
         symbol={item?.token}
         titleAvailable={titleAvailable}
         titleMaximum={titleMaximum}
-        // onClick={() => {
-        //   setFieldValue(name, item?.maxAmount)
-        //   handleValueChange(name, Number(item?.maxAmount))
-        // }}
+        name={name}
+        selectMaxAmount={selectMaxAmount}
       />
 
       <Field name={name}>

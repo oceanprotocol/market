@@ -1,4 +1,4 @@
-import React, { FormEvent, ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './UserLiquidity.module.css'
 
@@ -6,24 +6,37 @@ function UserLiquidityLine({
   title,
   amount,
   symbol,
-  amountMax,
-  onClick
+  isAmountMax,
+  name,
+  selectMaxAmount
 }: {
   title: string
   amount: string
   symbol: string
-  amountMax?: boolean
-  onClick?: () => void
+  isAmountMax?: boolean
+  name?: string
+  selectMaxAmount?: (name: string, amount: string) => void
 }) {
   return (
     <div>
       <span>{title}</span>
-      <PriceUnit
-        className={amountMax ? styles.maxAmount : ''}
-        price={amount}
-        symbol={symbol}
-        size="small"
-      />
+      {isAmountMax ? (
+        <span onClick={() => selectMaxAmount(name, amount)}>
+          <PriceUnit
+            className={isAmountMax ? styles.maxAmount : ''}
+            price={amount}
+            symbol={symbol}
+            size="small"
+          />
+        </span>
+      ) : (
+        <PriceUnit
+          className={isAmountMax ? styles.maxAmount : ''}
+          price={amount}
+          symbol={symbol}
+          size="small"
+        />
+      )}
     </div>
   )
 }
@@ -33,13 +46,17 @@ export default function UserLiquidity({
   symbol,
   amountMax,
   titleAvailable = 'Balance',
-  titleMaximum = 'Maximum'
+  titleMaximum = 'Maximum',
+  name,
+  selectMaxAmount
 }: {
   amount: string
   symbol: string
   titleAvailable?: string
   titleMaximum?: string
   amountMax?: string
+  name?: string
+  selectMaxAmount: (name: string, amount: string) => void
 }): ReactElement {
   return (
     <div className={styles.userLiquidity}>
@@ -53,7 +70,9 @@ export default function UserLiquidity({
           title={titleMaximum}
           amount={amountMax}
           symbol={symbol}
-          amountMax
+          isAmountMax
+          name={name}
+          selectMaxAmount={selectMaxAmount}
         />
       )}
     </div>
