@@ -94,7 +94,7 @@ const validationPricing = {
           : initialValues.pricing.amountOcean.toString()
       return value < parseInt(minValue)
         ? this.createError({
-            message: `Must be more or equal to ${minValue}, as at least ${initialValues.pricing.amountDataToken} data tokens are required for this pool to work properly`
+            message: `Must be more or equal to ${minValue}, as at least ${initialValues.pricing.amountDataToken} datatokens are required for this pool to work properly`
           })
         : true
     })
