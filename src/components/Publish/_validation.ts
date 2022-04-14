@@ -88,12 +88,13 @@ const validationPricing = {
           ? new Decimal(this.parent.price)
               .mul(this.parent.weightOnOcean)
               .mul(10)
+              .mul(2)
               .toDecimalPlaces(MAX_DECIMALS)
               .toString()
           : initialValues.pricing.amountOcean.toString()
       return value < parseInt(minValue)
         ? this.createError({
-            message: `Must be more or equal to ${minValue}`
+            message: `Must be more or equal to ${minValue}, as at least ${initialValues.pricing.amountDataToken} data tokens are required for this pool to work properly`
           })
         : true
     })
