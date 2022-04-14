@@ -1,4 +1,5 @@
 import {
+  ComputeResultType,
   downloadFileBrowser,
   LoggerInstance,
   Provider
@@ -20,6 +21,28 @@ export default function Results({
   const { accountId, web3 } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
   const isFinished = job.dateFinished !== null
+
+  function getDownloadButtonValue(type: ComputeResultType): String {
+    let buttonName
+    switch (type) {
+      case 'output':
+        buttonName = 'Download results'
+        break
+      case 'algorithmLog':
+        buttonName = 'Download algorithm logs'
+        break
+      case 'configrationLog':
+        buttonName = 'Download configuration logs'
+        break
+      case 'publishLog':
+        buttonName = 'Download publish logs'
+        break
+      default:
+        buttonName = 'Download results'
+        break
+    }
+    return buttonName
+  }
 
   async function downloadResults(resultIndex: number) {
     if (!accountId || !job) return
@@ -56,7 +79,7 @@ export default function Results({
                     onClick={() => downloadResults(i)}
                     disabled={isLoading || !isFinished}
                   >
-                    {`Download ${jobResult.filename}`}
+                    {getDownloadButtonValue(jobResult.type)}
                   </Button>
                 </ListItem>
               ) : (
