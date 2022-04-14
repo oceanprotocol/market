@@ -20,7 +20,6 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
   const { dataTokenOptions } = values.services[0]
 
   const {
-    price,
     weightOnDataToken,
     weightOnOcean,
     swapFee,
