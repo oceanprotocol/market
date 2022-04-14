@@ -81,12 +81,18 @@ export default function FormAdd({
     setNewPoolShare
   ])
 
+  function selectMaxAmount(name: string, maxAmount: string) {
+    setFieldValue(name, maxAmount)
+  }
+
   return (
     <>
       <UserLiquidity
         amount={balance.ocean}
         amountMax={amountMax}
         symbol={poolInfo?.baseTokenSymbol}
+        name="amount"
+        selectMaxAmount={selectMaxAmount}
       />
 
       <Field name="amount">
@@ -113,7 +119,7 @@ export default function FormAdd({
         )}
       </Field>
 
-      {Number(balance.ocean) > 0 && (
+      {/* {Number(balance.ocean) > 0 && (
         <Button
           className={styles.buttonMax}
           style="text"
@@ -123,7 +129,7 @@ export default function FormAdd({
         >
           Use Max
         </Button>
-      )}
+      )} */}
     </>
   )
 }
