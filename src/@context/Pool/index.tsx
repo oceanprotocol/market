@@ -15,17 +15,13 @@ import {
 } from 'src/@types/subgraph/PoolData'
 import { useAsset } from '../Asset'
 import { useWeb3 } from '../Web3'
-import { getLiquidityByShares } from '@utils/pool'
+import { calcSingleOutGivenPoolIn, getLiquidityByShares } from '@utils/pool'
 import { PoolProviderValue, PoolInfo, PoolInfoUser } from './_types'
 import { getFee, getPoolData, getWeight } from './_utils'
 
 const PoolContext = createContext({} as PoolProviderValue)
 
 const refreshInterval = 10000 // 10 sec.
-
-const initialPoolInfo: Partial<PoolInfo> = {
-  totalLiquidityInOcean: new Decimal(0)
-}
 
 const initialPoolInfoUser: Partial<PoolInfoUser> = {
   liquidity: '0',
@@ -39,9 +35,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   const { asset, owner } = useAsset()
 
   const [poolData, setPoolData] = useState<PoolDataPoolData>()
-  const [poolInfo, setPoolInfo] = useState<PoolInfo>(
-    initialPoolInfo as PoolInfo
-  )
+  const [poolInfo, setPoolInfo] = useState<PoolInfo>()
   const [poolInfoOwner, setPoolInfoOwner] = useState<PoolInfoUser>(
     initialPoolInfoCreator as PoolInfoUser
   )
@@ -91,11 +85,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!poolData) return
 
-    // Total Liquidity
-    const totalLiquidityInOcean = new Decimal(
-      poolData.baseTokenLiquidity * 2 || 0
-    )
-
     const newPoolInfo = {
       liquidityProviderSwapFee: getFee(poolData.liquidityProviderSwapFee),
       publishMarketSwapFee: getFee(poolData.publishMarketSwapFee),
@@ -106,8 +95,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       datatokenAddress: poolData.datatoken.address,
       baseTokenSymbol: poolData.baseToken.symbol,
       baseTokenAddress: poolData.baseToken.address,
-      totalPoolTokens: poolData.totalShares,
-      totalLiquidityInOcean
+      totalPoolTokens: poolData.totalShares
     }
 
     setPoolInfo(newPoolInfo)
@@ -126,17 +114,28 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       )
         return
 
-      // Pool share tokens. We multiply by 200 to take in consideration pool shares owned by the ss bot
+      // Pool share tokens.
       const poolSharePercentage = new Decimal(poolData.shares[0]?.shares)
         .dividedBy(poolInfo.totalPoolTokens)
-        .mul(200)
+        .mul(100)
         .toFixed(2)
 
       const ownerLiquidity = await getLiquidityByShares(
         poolData.id,
-        poolInfo.baseTokenAddress,
-        poolData.shares[0]?.shares,
+        poolInfo?.baseTokenAddress,
+        poolData?.shares[0]?.shares,
         asset.chainId
+      )
+
+      const ownerLiqTest = calcSingleOutGivenPoolIn(
+        poolData.baseTokenLiquidity,
+        poolData.totalShares,
+        poolData?.shares[0]?.shares
+      )
+      console.log(
+        'good value %d , bad value: %d ',
+        ownerLiquidity,
+        ownerLiqTest
       )
 
       const newPoolOwnerInfo = {
@@ -155,7 +154,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   }, [
     asset.chainId,
     poolData,
-    poolInfo.baseTokenAddress,
+    poolInfo?.baseTokenAddress,
     poolInfo?.totalPoolTokens
   ])
 
@@ -181,10 +180,10 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
         asset.chainId
       )
 
-      // Pool share in %. We multiply by 200 to take in consideration pool shares owned by the ss bot
+      // Pool share in %.
       const poolSharePercentage = new Decimal(poolInfoUser.poolShares)
         .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-        .mul(200)
+        .mul(100)
         .toFixed(2)
 
       setUserHasAddedLiquidity(Number(poolSharePercentage) > 0)

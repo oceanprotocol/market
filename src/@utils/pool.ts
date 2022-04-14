@@ -1,11 +1,10 @@
-import { approve, Pool, PoolPriceAndFees } from '@oceanprotocol/lib'
+import { approve, FeesInfo, Pool, PoolPriceAndFees } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getSiteMetadata } from './siteConfig'
 import { getDummyWeb3 } from './web3'
 import { TransactionReceipt } from 'web3-eth'
 import Decimal from 'decimal.js'
 import { AccessDetails } from 'src/@types/Price'
-import { MAX_DECIMALS } from './constants'
 /**
  * This is used to calculate the price to buy one datatoken from a pool, that is different from spot price. You need to pass either a web3 object or a chainId. If you pass a chainId a dummy web3 object will be created
  * @param {AccessDetails} accessDetails
@@ -77,6 +76,70 @@ export async function buyDtFromPool(
   return result
 }
 
+// _records[tokenIn].balance,
+// _records[tokenIn].denorm,
+// _records[tokenOut].balance,
+// _records[tokenOut].denorm
+
+export function calcInGivenOut(params: CalcInGivenOutParams): PoolPriceAndFees {
+  const result = {
+    tokenAmount: '0',
+    liquidityProviderSwapFeeAmount: '0',
+    oceanFeeAmount: '0',
+    publishMarketSwapFeeAmount: '0',
+    consumeMarketSwapFeeAmount: '0'
+  } as PoolPriceAndFees
+  // uint weightRatio = bdiv(data[3], data[1]);
+  const weightRatio = new Decimal(1)
+  const tokenOutLiqudity = new Decimal(params.tokenOutLiqudity)
+  const tokenInLiquidity = new Decimal(params.tokenInLiquidity)
+  const tokenOutAmount = new Decimal(params.tokenOutAmount)
+  const opcFee = new Decimal(params.opcFee)
+  const lpFee = new Decimal(params.lpSwapFee)
+  const publishMarketSwapFee = new Decimal(params.publishMarketSwapFee)
+  const consumeMarketSwapFee = new Decimal(params.consumeMarketSwapFee)
+
+  //       uint diff = bsub(data[2], tokenAmountOut);
+  const diff = new Decimal(params.tokenOutLiqudity).minus(
+    new Decimal(params.tokenOutAmount)
+  )
+  //       uint y = bdiv(data[2], diff);
+  //       uint foo = bpow(y, weightRatio);
+  // const y =
+  // const foo = new Decimal(params.tokenOutLiqudity).pow
+  //       foo = bsub(foo, BONE);
+  //       uint totalFee =_swapFee+getOPCFee()+_consumeMarketSwapFee+_swapPublishMarketFee;
+  //       tokenAmountIn = bdiv(bmul(data[0], foo), bsub(BONE, totalFee));
+  //       _swapfees.oceanFeeAmount =  bsub(tokenAmountIn, bmul(tokenAmountIn, bsub(BONE, getOPCFee())));
+  //       _swapfees.publishMarketFeeAmount =  bsub(tokenAmountIn, bmul(tokenAmountIn, bsub(BONE, _swapPublishMarketFee)));
+  //       _swapfees.LPFee = bsub(tokenAmountIn, bmul(tokenAmountIn, bsub(BONE, _swapFee)));
+  //       _swapfees.consumeMarketFee = bsub(tokenAmountIn, bmul(tokenAmountIn, bsub(BONE, _consumeMarketSwapFee)));
+  //       tokenAmountInBalance = bdiv(bmul(data[0], foo), bsub(BONE, _swapFee));
+  //       return (tokenAmountIn, tokenAmountInBalance,_swapfees);
+
+  return result
+}
+
+export function calcSingleOutGivenPoolIn(
+  tokenLiquidity: string,
+  poolSupply: string,
+  poolShareAmount: string
+): string {
+  const tokenLiquidityD = new Decimal(tokenLiquidity)
+  const poolSupplyD = new Decimal(poolSupply)
+  const poolShareAmountD = new Decimal(poolShareAmount)
+
+  const newPoolSupply = poolSupplyD.sub(poolShareAmountD)
+  const poolRatio = newPoolSupply.div(poolSupplyD)
+
+  const tokenOutRatio = poolRatio.pow(2)
+  const newTokenBalanceOut = tokenLiquidityD.mul(tokenOutRatio)
+
+  const tokensOut = tokenLiquidityD.sub(newTokenBalanceOut)
+
+  return tokensOut.toString()
+}
+
 /**
  * Returns the amount of tokens (based on tokenAddress) that can be withdrawn from the pool
  * @param {string} poolAddress
@@ -101,5 +164,6 @@ export async function getLiquidityByShares(
     tokenAddress,
     shares
   )
+
   return amountBaseToken
 }

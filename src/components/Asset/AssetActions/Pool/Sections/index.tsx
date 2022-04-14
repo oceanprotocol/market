@@ -79,7 +79,7 @@ export default function PoolSections() {
       <PoolSection title="Total Value Locked">
         <Token
           symbol={poolInfo?.baseTokenSymbol}
-          balance={poolInfo?.totalLiquidityInOcean.toString()}
+          balance={poolData.baseTokenLiquidity.toString()}
           conversion
         />
       </PoolSection>
