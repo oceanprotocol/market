@@ -35,7 +35,7 @@ export default function PricingFields(): ReactElement {
 
     const amountOcean =
       isValidNumber(weightOnOcean) && isValidNumber(price) && price > 0
-        ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10))
+        ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10)).mul(2)
         : new Decimal(initialValues.pricing.amountOcean)
 
     setFieldValue('pricing.amountOcean', amountOcean)
