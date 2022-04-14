@@ -8,7 +8,6 @@ import {
   useField
 } from 'formik'
 import debounce from 'lodash.debounce'
-import Button from '@shared/atoms/Button'
 import Input from '@shared/FormInput'
 import Error from '@shared/FormInput/Error'
 import { FormTradeData, TradeItem } from './_types'
@@ -81,21 +80,6 @@ export default function TradeInput({
           />
         )}
       </Field>
-
-      {/* {!isTopField && (
-        <Button
-          className={styles.buttonMax}
-          disabled={disabled}
-          style="text"
-          size="small"
-          onClick={() => {
-            setFieldValue(name, item?.maxAmount)
-            handleValueChange(name, Number(item?.maxAmount))
-          }}
-        >
-          Use Max
-        </Button>
-      )} */}
     </section>
   )
 }

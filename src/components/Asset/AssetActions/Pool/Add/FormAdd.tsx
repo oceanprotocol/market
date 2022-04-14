@@ -7,7 +7,6 @@ import {
   FormikContextType,
   useFormikContext
 } from 'formik'
-import Button from '@shared/atoms/Button'
 import { FormAddLiquidity } from '.'
 import UserLiquidity from '../../UserLiquidity'
 import { useWeb3 } from '@context/Web3'
@@ -118,18 +117,6 @@ export default function FormAdd({
           />
         )}
       </Field>
-
-      {/* {Number(balance.ocean) > 0 && (
-        <Button
-          className={styles.buttonMax}
-          style="text"
-          size="small"
-          disabled={!web3 || isSubmitting}
-          onClick={() => setFieldValue('amount', amountMax)}
-        >
-          Use Max
-        </Button>
-      )} */}
     </>
   )
 }
