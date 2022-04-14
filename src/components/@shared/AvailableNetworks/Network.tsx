@@ -20,16 +20,12 @@ export default function Network({
   }
 
   return (
-    <ul key={chainId}>
-      <li>
-        <Button
-          style="text"
-          className={styles.button}
-          onClick={() => changeNetwork(chainId)}
-        >
-          <NetworkName key={chainId} networkId={chainId} />
-        </Button>
-      </li>
-    </ul>
+    <Button
+      style="text"
+      className={styles.button}
+      onClick={() => changeNetwork(chainId)}
+    >
+      <NetworkName key={chainId} networkId={chainId} />
+    </Button>
   )
 }

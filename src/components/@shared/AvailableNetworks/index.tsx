@@ -27,7 +27,11 @@ export default function AvailableNetworks(): ReactElement {
   ]
 
   const content = (networks: number[]) =>
-    networks.map((chainId) => <Network key={chainId} chainId={chainId} />)
+    networks.map((chainId) => (
+      <li key={chainId}>
+        <Network chainId={chainId} />
+      </li>
+    ))
 
   return (
     <div className={styles.content}>
@@ -38,9 +42,9 @@ export default function AvailableNetworks(): ReactElement {
           networkCategory.data.length > 0 && (
             <>
               <h4 className={styles.title}>{networkCategory.title}</h4>
-              <div className={styles.networks}>
+              <ul className={styles.networks}>
                 {content(networkCategory.data)}
-              </div>
+              </ul>
             </>
           )
       )}
