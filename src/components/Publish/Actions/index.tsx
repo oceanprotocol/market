@@ -84,7 +84,12 @@ export default function Actions({
             </Button>
           ) : !isSupportedOceanNetwork ? (
             <Tooltip content={<AvailableNetworks />}>
-              <Button type="submit" style="primary" disabled>
+              <Button
+                type="submit"
+                style="primary"
+                disabled
+                className={styles.infoButton}
+              >
                 Unsupported Network <Info className={styles.infoIcon} />
               </Button>
             </Tooltip>

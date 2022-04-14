@@ -12,9 +12,12 @@
 .infoIcon {
   width: 0.85em;
   height: 0.85em;
-  cursor: help;
   display: inline-block;
   margin-bottom: -0.1em;
   margin-left: calc(var(--spacer) / 6);
   fill: currentColor;
+}
+.infoButton {
+  cursor: help !important;
+  pointer-events: all !important;
 }

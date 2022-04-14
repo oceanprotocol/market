@@ -25,19 +25,14 @@ export default function Title({
               isSupportedOceanNetwork ? styles.network : styles.wrongNetwork
             }
           />
-          {isSupportedOceanNetwork ? (
-            <Tooltip
-              content={<AvailableNetworks />}
-              className={styles.tooltip}
-            />
-          ) : (
-            <Tooltip
-              content={<AvailableNetworks />}
-              className={styles.errorTooltip}
-            >
-              <Info className={styles.errorIcon} />
-            </Tooltip>
-          )}
+          <Tooltip
+            content={<AvailableNetworks />}
+            className={
+              isSupportedOceanNetwork ? styles.tooltip : styles.errorTooltip
+            }
+          >
+            <Info className={styles.infoIcon} />
+          </Tooltip>
         </>
       )}
     </>
