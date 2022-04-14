@@ -21,7 +21,7 @@ export default function Network({
 
   return (
     <ul key={chainId}>
-      <li className={styles.radioLabel}>
+      <li>
         <Button
           style="text"
           className={styles.button}
