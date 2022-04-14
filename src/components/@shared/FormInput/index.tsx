@@ -24,6 +24,7 @@ export interface InputProps {
   placeholder?: string
   required?: boolean
   help?: string
+  prominentHelp?: string
   tag?: string
   type?: string
   options?: string[]
@@ -68,6 +69,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   const {
     label,
     help,
+    prominentHelp,
     additionalComponent,
     size,
     form,
@@ -118,7 +120,11 @@ export default function Input(props: Partial<InputProps>): ReactElement {
             *
           </span>
         )}
-        {help && <Tooltip content={<Markdown text={help} />} />}
+        {help &&
+          field?.name !== 'services[0].links' &&
+          field?.name !== 'services[0].files' && (
+            <Tooltip content={<Markdown text={help} />} />
+          )}
       </Label>
       <InputElement size={size} {...field} {...props} />
 
