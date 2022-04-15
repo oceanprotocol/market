@@ -33,9 +33,10 @@ export default function Actions({
   }
 
   function handleAction(action: string) {
+    const currentStep: string = router.query.step as string
     router.push(
       `${router.pathname}/?step=${
-        parseInt(router.query.step) + (action === 'next' ? +1 : -1)
+        parseInt(currentStep) + (action === 'next' ? +1 : -1)
       }`
     )
     scrollToRef.current.scrollIntoView()

@@ -40,7 +40,8 @@ export default function Navigation(): ReactElement {
   useEffect(() => {
     let step = 1
     if (router.query?.step) {
-      const stepParam: number = parseInt(router.query.step)
+      const currentStep: string = router.query.step as string
+      const stepParam: number = parseInt(currentStep)
       // check if query param is a valid step, if not we take the user to step 1
       stepParam <= wizardSteps.length ? (step = stepParam) : handleStepClick(1)
     }
