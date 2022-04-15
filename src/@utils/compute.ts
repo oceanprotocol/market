@@ -74,15 +74,14 @@ async function getAssetMetadata(
   const baseQueryparams = {
     chainIds,
     filters: [
-      getFilterTerm('datatokens', queryDtList),
-      getFilterTerm('service.type', 'compute'),
+      getFilterTerm('services.datatokenAddress', queryDtList),
+      getFilterTerm('services.type', 'compute'),
       getFilterTerm('metadata.type', 'dataset')
     ],
     ignorePurgatory: true
   } as BaseQueryParams
   const query = generateBaseQuery(baseQueryparams)
   const result = await queryMetadata(query, cancelToken)
-
   return result?.results
 }
 
@@ -215,42 +214,43 @@ async function getJobs(
   assets: Asset[]
 ): Promise<ComputeJobMetaData[]> {
   const computeJobs: ComputeJobMetaData[] = []
-  providerUrls.forEach(async (providerUrl) => {
-    try {
-      const providerComputeJobs = (await ProviderInstance.computeStatus(
-        providerUrl,
-        accountId
-      )) as ComputeJob[]
+  // commented loop since we decide how to filter jobs
+  // for await (const providerUrl of providerUrls) {
+  try {
+    const providerComputeJobs = (await ProviderInstance.computeStatus(
+      providerUrls[0],
+      accountId
+    )) as ComputeJob[]
 
-      if (!providerComputeJobs) {
-        providerComputeJobs.sort((a, b) => {
-          if (a.dateCreated > b.dateCreated) {
-            return -1
-          }
-          if (a.dateCreated < b.dateCreated) {
-            return 1
-          }
-          return 0
-        })
-        providerComputeJobs.forEach((job) => {
-          const did = job.inputDID[0]
-          const asset = assets.filter((x) => x.id === did)[0]
+    if (providerComputeJobs) {
+      providerComputeJobs.sort((a, b) => {
+        if (a.dateCreated > b.dateCreated) {
+          return -1
+        }
+        if (a.dateCreated < b.dateCreated) {
+          return 1
+        }
+        return 0
+      })
 
-          if (!asset) {
-            const compJob: ComputeJobMetaData = {
-              ...job,
-              assetName: asset.metadata.name,
-              assetDtSymbol: asset.datatokens[0].symbol,
-              networkId: asset.chainId
-            }
-            computeJobs.push(compJob)
+      providerComputeJobs.forEach((job) => {
+        const did = job.inputDID[0]
+        const asset = assets.filter((x) => x.id === did)[0]
+        if (asset) {
+          const compJob: ComputeJobMetaData = {
+            ...job,
+            assetName: asset.metadata.name,
+            assetDtSymbol: asset.datatokens[0].symbol,
+            networkId: asset.chainId
           }
-        })
-      }
-    } catch (err) {
-      LoggerInstance.error(err.message)
+          computeJobs.push(compJob)
+        }
+      })
     }
-  })
+  } catch (err) {
+    LoggerInstance.error(err.message)
+  }
+  // }
   return computeJobs
 }
 export async function getComputeJobs(
@@ -274,21 +274,18 @@ export async function getComputeJobs(
         user: accountId.toLowerCase()
       }
 
-  console.log(' getComputeJobs variables ', variables)
   const results = await fetchDataForMultipleChains(
     assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
     variables,
     assetDTAddress ? [asset?.chainId] : chainIds
   )
 
-  console.log(' getComputeJobs results getComputeOrders', results)
   let tokenOrders: TokenOrder[] = []
   results.map((result) => {
     result.orders.forEach((tokenOrder: TokenOrder) =>
       tokenOrders.push(tokenOrder)
     )
   })
-  console.log(' getComputeJobs tokenOrders ', tokenOrders)
   if (tokenOrders.length === 0) {
     return computeResult
   }
@@ -296,6 +293,7 @@ export async function getComputeJobs(
   tokenOrders = tokenOrders.sort(
     (a, b) => b.createdTimestamp - a.createdTimestamp
   )
+
   const datatokenAddressList = tokenOrders.map(
     (tokenOrder: TokenOrder) => tokenOrder.datatoken.address
   )
@@ -311,6 +309,7 @@ export async function getComputeJobs(
   assets.forEach((asset: Asset) =>
     providerUrls.push(asset.services[0].serviceEndpoint)
   )
+
   computeResult.computeJobs = await getJobs(providerUrls, accountId, assets)
   computeResult.isLoaded = true
 

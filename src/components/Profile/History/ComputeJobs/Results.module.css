@@ -3,6 +3,10 @@
   border-bottom-left-radius: var(--border-radius) !important;
 }
 
+.results li {
+  list-style-type: none;
+}
+
 .help {
   margin-top: calc(var(--spacer) / 3);
 }
