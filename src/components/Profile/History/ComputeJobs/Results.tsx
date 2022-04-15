@@ -4,13 +4,15 @@ import {
   LoggerInstance,
   Provider
 } from '@oceanprotocol/lib'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { ListItem } from '@shared/atoms/Lists'
 import Button from '@shared/atoms/Button'
 import styles from './Results.module.css'
 import FormHelp from '@shared/FormInput/Help'
 import content from '../../../../../content/pages/history.json'
 import { useWeb3 } from '@context/Web3'
+import { useCancelToken } from '@hooks/useCancelToken'
+import { retrieveAsset } from '@utils/aquarius'
 
 export default function Results({
   job
@@ -21,6 +23,16 @@ export default function Results({
   const { accountId, web3 } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
   const isFinished = job.dateFinished !== null
+
+  const [datasetProvider, setDatasetProvider] = useState<string>()
+  const newCancelToken = useCancelToken()
+  useEffect(() => {
+    async function getAssetMetadata() {
+      const ddo = await retrieveAsset(job.inputDID[0], newCancelToken())
+      setDatasetProvider(ddo.services[0].serviceEndpoint)
+    }
+    getAssetMetadata()
+  }, [job.inputDID[0]])
 
   function getDownloadButtonValue(type: ComputeResultType): string {
     let buttonName
@@ -50,7 +62,7 @@ export default function Results({
     try {
       setIsLoading(true)
       const jobResult = await providerInstance.getComputeResultUrl(
-        'https://v4.provider.rinkeby.oceanprotocol.com/',
+        datasetProvider,
         web3,
         accountId,
         job.jobId,
