@@ -125,6 +125,13 @@ export function calcInGivenOut(params: CalcInGivenOutParams): PoolPriceAndFees {
   return result
 }
 
+/**
+ * Used to calculate swap values, it's a copy of the math in the contracts.
+ * @param tokenLiquidity
+ * @param poolSupply
+ * @param poolShareAmount
+ * @returns
+ */
 export function calcSingleOutGivenPoolIn(
   tokenLiquidity: string,
   poolSupply: string,
