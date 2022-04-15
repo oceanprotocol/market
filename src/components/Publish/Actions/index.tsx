@@ -38,18 +38,17 @@ export default function Actions({
         parseInt(router.query.step) + (action === 'next' ? +1 : -1)
       }`
     )
+    scrollToRef.current.scrollIntoView()
   }
 
   function handleNext(e: FormEvent) {
     e.preventDefault()
     handleAction('next')
-    scrollToRef.current.scrollIntoView()
   }
 
   function handlePrevious(e: FormEvent) {
     e.preventDefault()
     handleAction('prev')
-    scrollToRef.current.scrollIntoView()
   }
 
   const isContinueDisabled =
