@@ -1,4 +1,4 @@
-import { approve, FeesInfo, Pool, PoolPriceAndFees } from '@oceanprotocol/lib'
+import { approve, Pool, PoolPriceAndFees } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getSiteMetadata } from './siteConfig'
 import { getDummyWeb3 } from './web3'
@@ -76,11 +76,11 @@ export async function buyDtFromPool(
   return result
 }
 
-// _records[tokenIn].balance,
-// _records[tokenIn].denorm,
-// _records[tokenOut].balance,
-// _records[tokenOut].denorm
-
+/**
+ *  This is used to calculate the actual price of buying a datatoken, it's a copy of the math in the contracts.
+ * @param params
+ * @returns
+ */
 export function calcInGivenOut(params: CalcInGivenOutParams): PoolPriceAndFees {
   const result = {
     tokenAmount: '0',
@@ -89,8 +89,7 @@ export function calcInGivenOut(params: CalcInGivenOutParams): PoolPriceAndFees {
     publishMarketSwapFeeAmount: '0',
     consumeMarketSwapFeeAmount: '0'
   } as PoolPriceAndFees
-  // uint weightRatio = bdiv(data[3], data[1]);
-  const weightRatio = new Decimal(1)
+  const one = new Decimal(1)
   const tokenOutLiqudity = new Decimal(params.tokenOutLiqudity)
   const tokenInLiquidity = new Decimal(params.tokenInLiquidity)
   const tokenOutAmount = new Decimal(params.tokenOutAmount)
@@ -99,23 +98,29 @@ export function calcInGivenOut(params: CalcInGivenOutParams): PoolPriceAndFees {
   const publishMarketSwapFee = new Decimal(params.publishMarketSwapFee)
   const consumeMarketSwapFee = new Decimal(params.consumeMarketSwapFee)
 
-  //       uint diff = bsub(data[2], tokenAmountOut);
-  const diff = new Decimal(params.tokenOutLiqudity).minus(
-    new Decimal(params.tokenOutAmount)
-  )
-  //       uint y = bdiv(data[2], diff);
-  //       uint foo = bpow(y, weightRatio);
-  // const y =
-  // const foo = new Decimal(params.tokenOutLiqudity).pow
-  //       foo = bsub(foo, BONE);
-  //       uint totalFee =_swapFee+getOPCFee()+_consumeMarketSwapFee+_swapPublishMarketFee;
-  //       tokenAmountIn = bdiv(bmul(data[0], foo), bsub(BONE, totalFee));
-  //       _swapfees.oceanFeeAmount =  bsub(tokenAmountIn, bmul(tokenAmountIn, bsub(BONE, getOPCFee())));
-  //       _swapfees.publishMarketFeeAmount =  bsub(tokenAmountIn, bmul(tokenAmountIn, bsub(BONE, _swapPublishMarketFee)));
-  //       _swapfees.LPFee = bsub(tokenAmountIn, bmul(tokenAmountIn, bsub(BONE, _swapFee)));
-  //       _swapfees.consumeMarketFee = bsub(tokenAmountIn, bmul(tokenAmountIn, bsub(BONE, _consumeMarketSwapFee)));
-  //       tokenAmountInBalance = bdiv(bmul(data[0], foo), bsub(BONE, _swapFee));
-  //       return (tokenAmountIn, tokenAmountInBalance,_swapfees);
+  const diff = tokenOutLiqudity.minus(tokenOutAmount)
+  const y = tokenOutLiqudity.div(diff)
+  let foo = y.pow(one)
+  foo = foo.minus(one)
+  const totalFee = lpFee
+    .plus(opcFee)
+    .plus(publishMarketSwapFee)
+    .plus(consumeMarketSwapFee)
+
+  const tokenAmountIn = tokenInLiquidity.mul(foo).div(one.sub(totalFee))
+  result.tokenAmount = tokenAmountIn.toString()
+  result.oceanFeeAmount = tokenAmountIn
+    .sub(tokenAmountIn.mul(one.sub(opcFee)))
+    .toString()
+  result.publishMarketSwapFeeAmount = tokenAmountIn
+    .sub(tokenAmountIn.mul(one.sub(publishMarketSwapFee)))
+    .toString()
+  result.consumeMarketSwapFeeAmount = tokenAmountIn
+    .sub(tokenAmountIn.mul(one.sub(consumeMarketSwapFee)))
+    .toString()
+  result.liquidityProviderSwapFeeAmount = tokenAmountIn
+    .sub(tokenAmountIn.mul(one.sub(lpFee)))
+    .toString()
 
   return result
 }

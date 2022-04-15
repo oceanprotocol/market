@@ -17,6 +17,7 @@ import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { usePool } from '@context/Pool'
 
 export default function Download({
   asset,
@@ -44,6 +45,7 @@ export default function Download({
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
 
+  const { poolData } = usePool()
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   useEffect(() => {
@@ -55,19 +57,35 @@ export default function Download({
     async function init() {
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
-        asset?.accessDetails?.type === 'free'
+        asset?.accessDetails?.type === 'free' ||
+        (!poolData && asset?.accessDetails?.type === 'dynamic')
       )
         return
       setIsLoading(true)
       setStatusText('Calculating price including fees.')
-      const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
+
+      const params = {
+        tokenInLiquidity: poolData?.baseTokenLiquidity,
+        tokenOutLiqudity: poolData?.datatokenLiquidity,
+        tokenOutAmount: '1',
+        opcFee: '0.001',
+        lpSwapFee: poolData?.liquidityProviderSwapFee,
+        publishMarketSwapFee: poolData?.publishMarketSwapFee,
+        consumeMarketSwapFee: '0'
+      } as CalcInGivenOutParams
+      const orderPriceAndFees = await getOrderPriceAndFees(
+        asset,
+        ZERO_ADDRESS,
+        params
+      )
+
       setOrderPriceAndFees(orderPriceAndFees)
 
       setIsLoading(false)
     }
 
     init()
-  }, [asset, accountId])
+  }, [asset, accountId, poolData])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)

@@ -15,7 +15,7 @@ import {
 } from 'src/@types/subgraph/PoolData'
 import { useAsset } from '../Asset'
 import { useWeb3 } from '../Web3'
-import { calcSingleOutGivenPoolIn, getLiquidityByShares } from '@utils/pool'
+import { calcSingleOutGivenPoolIn } from '@utils/pool'
 import { PoolProviderValue, PoolInfo, PoolInfoUser } from './_types'
 import { getFee, getPoolData, getWeight } from './_utils'
 
@@ -120,22 +120,10 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
         .mul(100)
         .toFixed(2)
 
-      const ownerLiquidity = await getLiquidityByShares(
-        poolData.id,
-        poolInfo?.baseTokenAddress,
-        poolData?.shares[0]?.shares,
-        asset.chainId
-      )
-
-      const ownerLiqTest = calcSingleOutGivenPoolIn(
+      const ownerLiquidity = calcSingleOutGivenPoolIn(
         poolData.baseTokenLiquidity,
         poolData.totalShares,
         poolData?.shares[0]?.shares
-      )
-      console.log(
-        'good value %d , bad value: %d ',
-        ownerLiquidity,
-        ownerLiqTest
       )
 
       const newPoolOwnerInfo = {
@@ -173,11 +161,10 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       )
         return
 
-      const userLiquidity = await getLiquidityByShares(
-        poolData.id,
-        poolData.baseToken.address,
-        poolInfoUser.poolShares,
-        asset.chainId
+      const userLiquidity = calcSingleOutGivenPoolIn(
+        poolData.baseTokenLiquidity,
+        poolData.totalShares,
+        poolInfoUser.poolShares
       )
 
       // Pool share in %.
