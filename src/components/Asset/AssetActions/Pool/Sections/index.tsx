@@ -79,7 +79,7 @@ export default function PoolSections() {
       <PoolSection title="Total Value Locked">
         <Token
           symbol={poolInfo?.baseTokenSymbol}
-          balance={poolData.baseTokenLiquidity.toString()}
+          balance={poolData?.baseTokenLiquidity.toString()}
           conversion
         />
       </PoolSection>
@@ -105,7 +105,7 @@ export default function PoolSections() {
         />
 
         <Token
-          symbol="% pool fee"
+          symbol="% swap fee"
           balance={poolInfo?.liquidityProviderSwapFee}
           noIcon
           size="mini"
@@ -117,7 +117,7 @@ export default function PoolSections() {
           size="mini"
         />
         <Token
-          symbol="% OPF fee"
+          symbol="% OPC fee"
           balance={poolInfo?.opcFee}
           noIcon
           size="mini"

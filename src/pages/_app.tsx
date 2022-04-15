@@ -11,6 +11,7 @@ import App from 'src/components/App'
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../stylesGlobal/styles.css'
 import Decimal from 'decimal.js'
+import GlobalDataProvider from '@context/GlobalData'
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })
@@ -18,13 +19,15 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
     <Web3Provider>
       <UrqlProvider>
         <UserPreferencesProvider>
-          <PricesProvider>
-            <ConsentProvider>
-              <App>
-                <Component {...pageProps} />
-              </App>
-            </ConsentProvider>
-          </PricesProvider>
+          <GlobalDataProvider>
+            <PricesProvider>
+              <ConsentProvider>
+                <App>
+                  <Component {...pageProps} />
+                </App>
+              </ConsentProvider>
+            </PricesProvider>
+          </GlobalDataProvider>
         </UserPreferencesProvider>
       </UrqlProvider>
     </Web3Provider>
