@@ -38,7 +38,7 @@ const columns = [
     }
   },
   {
-    name: 'Your Value Locked',
+    name: 'Your liquidity',
     selector: function getAssetRow(row: AssetPoolShare) {
       return <Liquidity row={row} type="user" />
     },
