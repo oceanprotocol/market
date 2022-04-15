@@ -6,6 +6,7 @@ import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
 import SuccessConfetti from '@shared/SuccessConfetti'
 import { useWeb3 } from '../../../@context/Web3'
+import { useRouter } from 'next/router'
 
 export default function Actions({
   scrollToRef,
@@ -14,6 +15,7 @@ export default function Actions({
   scrollToRef: RefObject<any>
   did: string
 }): ReactElement {
+  const router = useRouter()
   const {
     values,
     errors,
@@ -32,13 +34,13 @@ export default function Actions({
 
   function handleNext(e: FormEvent) {
     e.preventDefault()
-    setFieldValue('user.stepCurrent', values.user.stepCurrent + 1)
+    router.push(`${router.pathname}/?step=${parseInt(router.query.step) + 1}`)
     scrollToRef.current.scrollIntoView()
   }
 
   function handlePrevious(e: FormEvent) {
     e.preventDefault()
-    setFieldValue('user.stepCurrent', values.user.stepCurrent - 1)
+    router.push(`${router.pathname}/?step=${parseInt(router.query.step) - 1}`)
     scrollToRef.current.scrollIntoView()
   }
 

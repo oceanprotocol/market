@@ -1,5 +1,5 @@
 import { FormikContextType, useFormikContext } from 'formik'
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
@@ -7,7 +7,6 @@ import styles from './index.module.css'
 
 export default function Navigation(): ReactElement {
   const router = useRouter()
-
   const {
     values,
     errors,
@@ -15,38 +14,10 @@ export default function Navigation(): ReactElement {
     setFieldValue
   }: FormikContextType<FormPublishData> = useFormikContext()
 
-  const queryString = window.location.search
-  const urlParams = new URLSearchParams(queryString)
-  let step = parseInt(urlParams.get('step'))
-  // check if exists and it's valid, if not, restart flow
-  if (!step || step > 5) {
-    step = 1
-  }
-
-  useEffect(() => {
-    // Change route to include steps
-    router.push(
-      `${router.pathname}/?step=${values.user.stepCurrent}`,
-      undefined,
-      {
-        shallow: true
-      }
-    )
-  }, [values.user.stepCurrent])
-
   function handleStepClick(step: number) {
-    setFieldValue('user.stepCurrent', step)
+    // Change route to include steps
+    router.push(`${router.pathname}/?step=${step}`)
   }
-
-  // used window object, as catching the state of the router with useRouter() causes side effects
-  window.onpopstate = function () {
-    setFieldValue('user.stepCurrent', step)
-  }
-
-  useEffect(() => {
-    // load current step on refresh - CAUTION: all data will be deleted anyway
-    setFieldValue('user.stepCurrent', step || 1)
-  }, [])
 
   function getSuccessClass(step: number) {
     const isSuccessMetadata = errors.metadata === undefined
@@ -65,6 +36,17 @@ export default function Navigation(): ReactElement {
 
     return isSuccess ? styles.success : null
   }
+
+  useEffect(() => {
+    let step = 1
+    if (router.query?.step) {
+      const stepParam: number = parseInt(router.query.step)
+      // check if query param is a valid step, if not we take the user to step 1
+      stepParam <= wizardSteps.length ? (step = stepParam) : handleStepClick(1)
+    }
+    // load current step on refresh - CAUTION: all data will be deleted anyway
+    setFieldValue('user.stepCurrent', step)
+  }, [router])
 
   return (
     <nav className={styles.navigation}>
