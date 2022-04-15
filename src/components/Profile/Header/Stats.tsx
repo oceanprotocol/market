@@ -8,26 +8,25 @@ import styles from './Stats.module.css'
 import { useProfile } from '@context/Profile'
 import { PoolShares_poolShares as PoolShare } from '../../../@types/subgraph/PoolShares'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
-import { getLiquidityByShares } from '@utils/pool'
+import { calcSingleOutGivenPoolIn } from '@utils/pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
 
 async function getPoolSharesLiquidity(
   poolShares: PoolShare[]
 ): Promise<string> {
-  let tvl = new Decimal(0)
+  let liquidity = new Decimal(0)
 
   for (const poolShare of poolShares) {
-    const poolUserTvl = 0
-    // const poolUserTvl = getLiquidityByShares(
-    //   poolShare.shares,
-    //   poolShare.pool.totalShares,
-    //   poolShare.pool.baseTokenLiquidity
-    // )
-    tvl = tvl.add(new Decimal(poolUserTvl))
+    const poolUserLiquidity = calcSingleOutGivenPoolIn(
+      poolShare.pool.baseTokenLiquidity,
+      poolShare.pool.totalShares,
+      poolShare.shares
+    )
+    liquidity = liquidity.add(new Decimal(poolUserLiquidity))
   }
 
-  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
+  return liquidity.toDecimalPlaces(MAX_DECIMALS).toString()
 }
 
 export default function Stats({
@@ -92,11 +91,11 @@ export default function Stats({
   return (
     <div className={styles.stats}>
       <NumberUnit
-        label="TVL in Own Assets"
+        label="Liquidity in Own Assets"
         value={<Conversion price={publisherTvl} hideApproximateSymbol />}
       />
       <NumberUnit
-        label="TVL"
+        label="Liquidity"
         value={<Conversion price={totalTvl} hideApproximateSymbol />}
       />
       <NumberUnit label={`Sale${sales === 1 ? '' : 's'}`} value={sales} />
