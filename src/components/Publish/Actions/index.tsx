@@ -32,15 +32,23 @@ export default function Actions({
     await connect()
   }
 
+  function handleAction(action: string) {
+    router.push(
+      `${router.pathname}/?step=${
+        parseInt(router.query.step) + (action === 'next' ? +1 : -1)
+      }`
+    )
+  }
+
   function handleNext(e: FormEvent) {
     e.preventDefault()
-    router.push(`${router.pathname}/?step=${parseInt(router.query.step) + 1}`)
+    handleAction('next')
     scrollToRef.current.scrollIntoView()
   }
 
   function handlePrevious(e: FormEvent) {
     e.preventDefault()
-    router.push(`${router.pathname}/?step=${parseInt(router.query.step) - 1}`)
+    handleAction('prev')
     scrollToRef.current.scrollIntoView()
   }
 
