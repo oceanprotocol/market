@@ -5,6 +5,7 @@ import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import useNetworkMetadata, {
   filterNetworksByType
 } from '@hooks/useNetworkMetadata'
+import content from '../../../../content/publish/index.json'
 
 export default function AvailableNetworks(): ReactElement {
   const { networksList } = useNetworkMetadata()
@@ -26,7 +27,7 @@ export default function AvailableNetworks(): ReactElement {
     { title: 'Test', data: networksTest }
   ]
 
-  const content = (networks: number[]) =>
+  const networkList = (networks: number[]) =>
     networks.map((chainId) => (
       <li key={chainId}>
         <Network chainId={chainId} />
@@ -35,15 +36,14 @@ export default function AvailableNetworks(): ReactElement {
 
   return (
     <div className={styles.content}>
-      Assets are published to the network your wallet is conected to. These
-      networks are currently supported:
+      {content.tooltipAvailableNetworks}
       {networkCategories.map(
         (networkCategory) =>
           networkCategory.data.length > 0 && (
             <>
               <h4 className={styles.title}>{networkCategory.title}</h4>
               <ul className={styles.networks}>
-                {content(networkCategory.data)}
+                {networkList(networkCategory.data)}
               </ul>
             </>
           )
