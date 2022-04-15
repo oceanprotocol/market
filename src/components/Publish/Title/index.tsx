@@ -22,13 +22,17 @@ export default function Title({
           <NetworkName
             networkId={networkId}
             className={
-              isSupportedOceanNetwork ? styles.network : styles.wrongNetwork
+              isSupportedOceanNetwork
+                ? styles.network
+                : `${styles.network} ${styles.error}`
             }
           />
           <Tooltip
             content={<AvailableNetworks />}
             className={
-              isSupportedOceanNetwork ? styles.tooltip : styles.errorTooltip
+              isSupportedOceanNetwork
+                ? styles.tooltip
+                : `${styles.tooltip} ${styles.error}`
             }
           >
             <Info className={styles.infoIcon} />
