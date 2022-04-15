@@ -15,6 +15,7 @@ import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
+import FormHelp from './Help'
 
 const cx = classNames.bind(styles)
 
@@ -120,20 +121,17 @@ export default function Input(props: Partial<InputProps>): ReactElement {
             *
           </span>
         )}
-        {help &&
-          field?.name !== 'services[0].links' &&
-          field?.name !== 'services[0].files' && (
-            <Tooltip content={<Markdown text={help} />} />
-          )}
+        {help && !prominentHelp && (
+          <Tooltip content={<Markdown text={help} />} />
+        )}
       </Label>
       <InputElement size={size} {...field} {...props} />
-
+      {help && prominentHelp && <FormHelp>{help}</FormHelp>}
       {isFormikField && hasFormikError && (
         <div className={styles.error}>
           <ErrorMessage name={field.name} />
         </div>
       )}
-
       {disclaimer && (
         <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>
       )}

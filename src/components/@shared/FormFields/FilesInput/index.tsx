@@ -58,11 +58,6 @@ export default function FilesInput(props: InputProps): ReactElement {
           handleButtonClick={handleValidation}
         />
       )}
-      <FormHelp>
-        {field.name === 'services[0].files'
-          ? content.services.fields[2].help
-          : content.services.fields[3].help}
-      </FormHelp>
     </>
   )
 }
