@@ -15,7 +15,7 @@ import {
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import { getLiquidityByShares } from './pool'
+import { calcSingleOutGivenPoolIn, getLiquidityByShares } from './pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from './constants'
 
@@ -340,7 +340,7 @@ export async function getHighestLiquidityDatatokens(
   return dtList
 }
 
-export async function getAccountTVLInOwnAssets(
+export async function getAccountLiquidityInOwnAssets(
   accountId: string,
   chainIds: number[],
   pools: string[]
@@ -354,20 +354,20 @@ export async function getAccountTVLInOwnAssets(
     queryVariables,
     chainIds
   )
-  let tvl = new Decimal(0)
+  let totalLiquidity = new Decimal(0)
 
   for (const result of results) {
     for (const poolShare of result.poolShares) {
-      const poolUserTvl = 0
-      // const poolUserTvl = getLiquidityByShares(
-      //   poolShare.shares,
-      //   poolShare.pool.totalShares,
-      //   poolShare.pool.baseTokenLiquidity
-      // )
-      tvl = tvl.add(new Decimal(poolUserTvl))
+      const poolUserLiquidity = calcSingleOutGivenPoolIn(
+        poolShare.pool.baseTokenLiquidity,
+        poolShare.pool.totalShares,
+        poolShare.shares
+      )
+
+      totalLiquidity = totalLiquidity.add(new Decimal(poolUserLiquidity))
     }
   }
-  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
+  return totalLiquidity.toDecimalPlaces(MAX_DECIMALS).toString()
 }
 
 export async function getPoolSharesData(

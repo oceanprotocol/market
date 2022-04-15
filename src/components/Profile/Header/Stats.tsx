@@ -1,7 +1,7 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import React, { useEffect, useState, ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
-import { getAccountTVLInOwnAssets, UserLiquidity } from '@utils/subgraph'
+import { getAccountLiquidityInOwnAssets, UserLiquidity } from '@utils/subgraph'
 import Conversion from '@shared/Price/Conversion'
 import NumberUnit from './NumberUnit'
 import styles from './Stats.module.css'
@@ -62,7 +62,7 @@ export default function Stats({
             )
           }
         }
-        const userTvl = await getAccountTVLInOwnAssets(
+        const userTvl = await getAccountLiquidityInOwnAssets(
           accountId,
           chainIds,
           accountPoolAdresses
