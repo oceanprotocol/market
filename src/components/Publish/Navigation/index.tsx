@@ -16,7 +16,7 @@ export default function Navigation(): ReactElement {
 
   function handleStepClick(step: number) {
     // Change route to include steps
-    router.push(`${router.pathname}/?step=${step}`)
+    router.push({ pathname: `${router.pathname}`, query: { step: step } })
   }
 
   function getSuccessClass(step: number) {
