@@ -15,7 +15,7 @@ import { getSiteMetadata } from './siteConfig'
 import { OrderPriceAndFees } from 'src/@types/Price'
 
 /**
- * Before stating the transactions, we need to initialized our provider's instance
+ * Before stating the transactions, we need to initialize our provider's instance
  * @param asset
  * @param accountId
  * @param appConfig
@@ -54,7 +54,7 @@ async function initProvider(
 }
 
 /**
- * Before stating the transactions, we need to initialized our provider's instance
+ * Get and execute transaction based on asset type
  * @param web3
  * @param asset
  * @param accountId
