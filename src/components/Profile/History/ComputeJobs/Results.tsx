@@ -22,7 +22,7 @@ export default function Results({
   const [isLoading, setIsLoading] = useState(false)
   const isFinished = job.dateFinished !== null
 
-  function getDownloadButtonValue(type: ComputeResultType): String {
+  function getDownloadButtonValue(type: ComputeResultType): string {
     let buttonName
     switch (type) {
       case 'output':
