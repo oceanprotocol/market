@@ -7,7 +7,7 @@ import { wizardSteps } from '../_constants'
 import SuccessConfetti from '@shared/SuccessConfetti'
 import { useWeb3 } from '@context/Web3'
 import Tooltip from '@shared/atoms/Tooltip'
-import AvailableNetworks from '@shared/AvailableNetworks'
+import AvailableNetworks from 'src/components/Publish/AvailableNetworks'
 import Info from '@images/info.svg'
 
 export default function Actions({
