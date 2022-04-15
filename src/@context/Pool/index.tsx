@@ -156,8 +156,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
         !poolInfo?.totalPoolTokens ||
         !poolInfoUser?.poolShares ||
         !poolData?.baseTokenLiquidity ||
-        !asset?.chainId ||
-        !accountId
+        !asset?.chainId
       )
         return
 
@@ -193,7 +192,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   }, [
     poolData,
     poolInfoUser.poolShares,
-    accountId,
     asset.chainId,
     owner,
     poolInfo?.totalPoolTokens
