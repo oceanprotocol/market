@@ -74,7 +74,8 @@ export const initialValues: FormPublishData = {
       access: 'access',
       providerUrl: {
         url: 'https://provider.mainnet.oceanprotocol.com',
-        valid: true
+        valid: true,
+        custom: false
       },
       computeOptions
     }
@@ -87,8 +88,8 @@ export const initialValues: FormPublishData = {
         : allowFixedPricing === 'true'
         ? 'fixed'
         : 'free',
-    amountDataToken: allowDynamicPricing === 'true' ? 50 : 1000,
-    amountOcean: 50,
+    amountDataToken: allowDynamicPricing === 'true' ? 100 : 1000,
+    amountOcean: 100,
     weightOnOcean: '5', // 50% on OCEAN
     weightOnDataToken: '5', // 50% on datatoken
     swapFee: 0.1, // in %

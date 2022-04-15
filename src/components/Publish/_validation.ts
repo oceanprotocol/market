@@ -1,5 +1,7 @@
 import { MAX_DECIMALS } from '@utils/constants'
+import { initialValues } from './_constants'
 import * as Yup from 'yup'
+import Decimal from 'decimal.js'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
@@ -14,6 +16,10 @@ const validationMetadata = {
     .required('Required'),
   description: Yup.string()
     .min(10, (param) => `Description must be at least ${param.min} characters`)
+    .max(
+      5000,
+      (param) => `Description must have maximum ${param.max} characters`
+    )
     .required('Required'),
   author: Yup.string().required('Required'),
   tags: Yup.string().nullable(),
@@ -52,7 +58,8 @@ const validationService = {
     .required('Required'),
   providerUrl: Yup.object().shape({
     url: Yup.string().url('Must be a valid URL.').required('Required'),
-    valid: Yup.boolean().isTrue().required('Valid Provider is required.')
+    valid: Yup.boolean().isTrue().required('Valid Provider is required.'),
+    custom: Yup.boolean()
   })
 }
 
@@ -78,11 +85,24 @@ const validationPricing = {
       (param) => maxDecimalsValidation.test(param?.toString())
     )
     .required('Required'),
-  amountDataToken: Yup.number()
-    .min(50, (param) => `Must be more or equal to ${param.min}`)
-    .required('Required'),
+  amountDataToken: Yup.number().required('Required'),
   amountOcean: Yup.number()
-    .min(50, (param) => `Must be more or equal to ${param.min}`)
+    .test('validator-min-amountOcean', '', function (value) {
+      const minValue =
+        this.parent.price > 0
+          ? new Decimal(this.parent.price)
+              .mul(this.parent.weightOnOcean)
+              .mul(10)
+              .mul(2)
+              .toDecimalPlaces(MAX_DECIMALS)
+              .toString()
+          : initialValues.pricing.amountOcean.toString()
+      return value < parseInt(minValue)
+        ? this.createError({
+            message: `Must be more or equal to ${minValue}, as at least ${initialValues.pricing.amountDataToken} datatokens are required for this pool to work properly`
+          })
+        : true
+    })
     .max(
       1000000,
       (param: { max: number }) => `Must be less than or equal to ${param.max}`
