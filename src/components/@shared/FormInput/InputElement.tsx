@@ -65,9 +65,7 @@ export default function InputElement({
           disabled={disabled}
           multiple={multiple}
         >
-          {field !== undefined && field.value === '' && (
-            <option value="">---</option>
-          )}
+          {field !== undefined && field.value === '' && <option value="" />}
           {sortedOptions &&
             (sortedOptions as string[]).map((option: string, index: number) => (
               <option key={index} value={option}>

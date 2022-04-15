@@ -59,13 +59,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   const [userPoolShares, setUserPoolShares] = useState('0')
 
   const fetchAllData = useCallback(async () => {
-    if (
-      !accountId ||
-      !asset?.chainId ||
-      !asset?.accessDetails?.addressOrId ||
-      !owner
-    )
-      return
+    if (!asset?.chainId || !asset?.accessDetails?.addressOrId || !owner) return
 
     const response = await getPoolData(
       asset.chainId,

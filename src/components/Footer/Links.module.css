@@ -1,0 +1,12 @@
+.links a {
+  text-transform: none;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+}
+
+.links svg {
+  display: inline;
+  fill: currentColor;
+  width: 0.6em;
+  height: 0.6em;
+}

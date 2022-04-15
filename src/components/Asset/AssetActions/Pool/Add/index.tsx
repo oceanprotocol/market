@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import Header from '../Header'
+import Header from '../Actions/Header'
 import { toast } from 'react-toastify'
 import Actions from '../Actions'
 import * as Yup from 'yup'
@@ -25,28 +25,15 @@ const initialValues: FormAddLiquidity = {
 }
 
 export default function Add({
-  setShowAdd,
-  poolAddress,
-  totalPoolTokens,
-  totalBalance,
-  swapFee,
-  datatokenSymbol,
-  tokenInSymbol,
-  tokenInAddress
+  setShowAdd
 }: {
   setShowAdd: (show: boolean) => void
-  poolAddress: string
-  totalPoolTokens: string
-  totalBalance: PoolBalance
-  swapFee: string
-  datatokenSymbol: string
-  tokenInSymbol: string
-  tokenInAddress: string
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
-  const { fetchAllData } = usePool()
+  const { poolData, poolInfo, fetchAllData } = usePool()
   const { debug } = useUserPreferences()
+
   const [txId, setTxId] = useState<string>()
   const [amountMax, setAmountMax] = useState<string>()
   const [newPoolTokens, setNewPoolTokens] = useState('0')
@@ -67,15 +54,22 @@ export default function Add({
 
   // Get maximum amount for OCEAN
   useEffect(() => {
-    if (!web3 || !accountId || !isAssetNetwork || !poolAddress) return
+    if (
+      !web3 ||
+      !accountId ||
+      !isAssetNetwork ||
+      !poolData?.id ||
+      !poolInfo?.baseTokenAddress
+    )
+      return
 
     async function getMaximum() {
       try {
         const poolInstance = new Pool(web3)
 
         const poolReserve = await poolInstance.getReserve(
-          poolAddress,
-          tokenInAddress
+          poolData.id,
+          poolInfo.baseTokenAddress
         )
 
         const amountMaxPool = calcMaxExactIn(poolReserve)
@@ -93,8 +87,8 @@ export default function Add({
     web3,
     accountId,
     isAssetNetwork,
-    poolAddress,
-    tokenInAddress,
+    poolData?.id,
+    poolInfo?.baseTokenAddress,
     balance?.ocean
   ])
 
@@ -106,7 +100,7 @@ export default function Add({
     try {
       const result = await poolInstance.joinswapExternAmountIn(
         accountId,
-        poolAddress,
+        poolData?.id,
         amount,
         minPoolAmountOut
       )
@@ -141,12 +135,7 @@ export default function Add({
             <div className={styles.addInput}>
               {isWarningAccepted ? (
                 <FormAdd
-                  tokenInAddress={tokenInAddress}
-                  tokenInSymbol={tokenInSymbol}
                   amountMax={amountMax}
-                  totalPoolTokens={totalPoolTokens}
-                  totalBalance={totalBalance}
-                  poolAddress={poolAddress}
                   setNewPoolTokens={setNewPoolTokens}
                   setNewPoolShare={setNewPoolShare}
                 />
@@ -166,14 +155,7 @@ export default function Add({
               )}
             </div>
 
-            <Output
-              newPoolTokens={newPoolTokens}
-              newPoolShare={newPoolShare}
-              swapFee={swapFee}
-              datatokenSymbol={datatokenSymbol}
-              totalPoolTokens={totalPoolTokens}
-              totalBalance={totalBalance}
-            />
+            <Output newPoolTokens={newPoolTokens} newPoolShare={newPoolShare} />
 
             <Actions
               isDisabled={
@@ -189,8 +171,8 @@ export default function Add({
               actionName={content.pool.add.action}
               action={submitForm}
               amount={values.amount}
-              tokenAddress={tokenInAddress}
-              tokenSymbol={tokenInSymbol}
+              tokenAddress={poolInfo?.baseTokenAddress}
+              tokenSymbol={poolInfo?.baseTokenSymbol}
               txId={txId}
               setSubmitting={setSubmitting}
             />
