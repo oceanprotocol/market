@@ -103,7 +103,6 @@ export default function FormEditMetadata({
                   ? timeoutOptionsArray
                   : field.options
               }
-              prominentHelp={field.name === 'links'}
               {...field}
               component={Input}
               prefix={field.name === 'price' && oceanConfig.oceanTokenSymbol}

@@ -93,13 +93,11 @@ export default function ServicesFields(): ReactElement {
       <Field
         {...getFieldContent('files', content.services.fields)}
         component={Input}
-        prominentHelp
         name="services[0].files"
       />
       <Field
         {...getFieldContent('links', content.services.fields)}
         component={Input}
-        prominentHelp
         name="services[0].links"
       />
       <Field
