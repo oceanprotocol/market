@@ -25,7 +25,7 @@ export interface InputProps {
   placeholder?: string
   required?: boolean
   help?: string
-  prominentHelp?: string
+  prominentHelp?: boolean
   tag?: string
   type?: string
   options?: string[]
