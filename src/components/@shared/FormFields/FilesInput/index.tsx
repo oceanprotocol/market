@@ -19,7 +19,6 @@ export default function FilesInput(props: InputProps): ReactElement {
     e.preventDefault()
 
     try {
-      console.log('FILES URL: ', url, values, asset)
       const providerUrl = values?.services
         ? values?.services[0].providerUrl.url
         : asset.services[0].serviceEndpoint
