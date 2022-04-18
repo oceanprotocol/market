@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useRef, useEffect } from 'react'
+import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik } from 'formik'
 import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -14,20 +14,14 @@ import { Steps } from './Steps'
 import { FormPublishData, PublishFeedback } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import useNftFactory from '@hooks/contracts/useNftFactory'
-import {
-  Nft,
-  getHash,
-  ProviderInstance,
-  LoggerInstance,
-  DDO
-} from '@oceanprotocol/lib'
+import { ProviderInstance, LoggerInstance, DDO } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
 
 // TODO: restore FormikPersist, add back clear form action
-const formName = 'ocean-publish-form'
+// const formName = 'ocean-publish-form'
 
 export default function PublishPage({
   content
@@ -225,62 +219,13 @@ export default function PublishPage({
         }
       }))
     }
-
-    // --------------------------------------------------
-    // 3. Integrity check of DDO before & after publishing
-    // --------------------------------------------------
-
-    // TODO: not sure we want to do this at this step, seems overkill
-
-    // if we want to do this we just need to fetch it from aquarius. If we want to fetch from chain and decrypt, we would have more metamask pop-ups (not UX friendly)
-    // decrypt also validates the checksum
-
-    // TODO: remove the commented lines of code until `setSuccess`, didn't remove them yet because maybe i missed something
-
-    // --------------------------------------------------
-    // 1. Mint NFT & datatokens & put in pool
-    // --------------------------------------------------
-    // const nftOptions = values.metadata.nft
-    // const nftCreateData = generateNftCreateData(nftOptions)
-
-    //  figure out syntax of ercParams we most likely need to pass
-    // to createNftWithErc() as we need to pass options for the datatoken.
-    // const ercParams = {}
-    // const priceOptions = {
-    //   // swapFee is tricky: to get 0.1% you need to send 0.001 as value
-    //   swapFee: `${values.pricing.swapFee / 100}`
-    // }
-    // const txMint = await createNftWithErc(accountId, nftCreateData)
-
-    // figure out how to get nftAddress & datatokenAddress from tx log.
-    // const { nftAddress, datatokenAddress } = txMint.logs[0].args
-    // if (!nftAddress || !datatokenAddress) { throw new Error() }
-    //
-    // --------------------------------------------------
-    // 2. Construct and publish DDO
-    // --------------------------------------------------
-    // const did = sha256(`${nftAddress}${chainId}`)
-    // const ddo = transformPublishFormToDdo(values, datatokenAddress, nftAddress)
-    // const txPublish = await publish(ddo)
-    //
-    // --------------------------------------------------
-    // 3. Integrity check of DDO before & after publishing
-    // --------------------------------------------------
-    // const checksumBefore = sha256(ddo)
-    // const ddoFromChain = await getDdoFromChain(ddo.id)
-    // const ddoFromChainDecrypted = await decryptDdo(ddoFromChain)
-    // const checksumAfter = sha256(ddoFromChainDecrypted)
-
-    // if (checksumBefore !== checksumAfter) {
-    //   throw new Error('DDO integrity check failed!')
-    // }
   }
 
   return isInPurgatory && purgatoryData ? null : (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={async (values, { resetForm }) => {
+      onSubmit={async (values) => {
         // kick off publishing
         await handleSubmit(values)
       }}
