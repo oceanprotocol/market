@@ -35,21 +35,23 @@ export default function PricesProvider({
   children: ReactNode
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const tokenId = 'ocean-protocol'
+  const baseToken = 'ocean-protocol'
+  const tokenIds = 'ocean-protocol,ethereum,matic-network'
   const currencies = appConfig.currencies.join(',') // comma-separated list
-  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=${currencies}`
-  const urlMatic = `https://api.coingecko.com/api/v3/coins/matic-network`
+  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenIds}&vs_currencies=${currencies}`
 
   const [prices, setPrices] = useState(initialData)
 
-  const onSuccess = async (data: { [tokenId]: Prices }) => {
+  const onSuccess = async (data: {
+    [baseToken]: Prices
+    ['matic-network']: Prices
+  }) => {
     if (!data) return
-    LoggerInstance.log('[prices] Got new OCEAN spot prices.', data[tokenId])
-    // Fetch MATIC prices periodically with swr
-    const dataMatic = await fetchData(urlMatic)
-    const maticPrice = prices.eur / dataMatic.market_data.current_price.eur // price of Ocean in EUR / price of Matic in EUR
+    LoggerInstance.log('[prices] Got new OCEAN spot prices.', data[baseToken])
+    // We need go integrate maticPrice based on baseToken to current Prices object as it's not included in the data response
+    const maticPrice = data[baseToken].eur / data['matic-network'].eur // price of baseToken in EUR / price of Matic in EUR
     LoggerInstance.log('[prices] Got new OCEAN spot prices for Matic.')
-    setPrices({ ...data[tokenId], matic: maticPrice })
+    setPrices({ ...data[baseToken], matic: maticPrice })
   }
 
   // Fetch new prices periodically with swr
