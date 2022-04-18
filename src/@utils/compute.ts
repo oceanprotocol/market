@@ -134,6 +134,25 @@ export function getValidUntilTime(
   return Math.floor(mytime.getTime() / 1000)
 }
 
+export function getResourcesValidTime(
+  jobStartTime: string,
+  computeEnvMaxJobDuration: number,
+  datasetTimeout?: number,
+  algorithmTimeout?: number
+) {
+  const inputValues = []
+  computeEnvMaxJobDuration && inputValues.push(computeEnvMaxJobDuration * 60)
+  datasetTimeout && inputValues.push(datasetTimeout)
+  algorithmTimeout && inputValues.push(algorithmTimeout)
+
+  const minValue = Math.min(...inputValues)
+  console.log('jobStartTime', jobStartTime)
+  const jobStartDate = new Date(jobStartTime)
+  console.log('jobStartDate', jobStartDate)
+  jobStartDate.setMinutes(jobStartDate.getMinutes() + Math.floor(minValue / 60))
+  return Math.floor(jobStartDate.getTime() / 1000)
+}
+
 export async function getComputeEnviroment(
   asset: Asset
 ): Promise<ComputeEnvironment> {

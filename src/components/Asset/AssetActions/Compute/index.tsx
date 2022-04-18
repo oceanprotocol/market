@@ -28,7 +28,9 @@ import {
   getAlgorithmAssetSelectionList,
   getAlgorithmsForAsset,
   getValidUntilTime,
-  getComputeEnviroment
+  getComputeEnviroment,
+  getComputeJobs,
+  getResourcesValidTime
 } from '@utils/compute'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
@@ -177,6 +179,26 @@ export default function Compute({
     }
   }
 
+  async function checkValidProviderFees() {
+    const jobs = await getComputeJobs(
+      [asset?.chainId],
+      accountId,
+      asset,
+      newCancelToken()
+    )
+    const currentTime = new Date().getTime() / 1000
+    const jobValidFees = getResourcesValidTime(
+      parseInt(jobs.computeJobs[0].dateCreated),
+      computeEnv.maxJobDuration,
+      asset.services[0].timeout,
+      selectedAlgorithmAsset.services[0].timeout
+    )
+    console.log('route jobValidFees', jobValidFees)
+    console.log('route currentTime', currentTime)
+    if (jobs.computeJobs.length <= 0 || currentTime > jobValidFees) return
+    console.log('fees not valid')
+  }
+
   useEffect(() => {
     if (!asset?.accessDetails || !accountId) return
 
@@ -197,6 +219,7 @@ export default function Compute({
     async function initSelectedAlgo() {
       await checkAssetDTBalance(selectedAlgorithmAsset)
       await initPriceAndFees()
+      await checkValidProviderFees()
     }
 
     initSelectedAlgo()
