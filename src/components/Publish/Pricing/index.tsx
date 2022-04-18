@@ -5,6 +5,7 @@ import Tabs from '@shared/atoms/Tabs'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { FormPublishData } from '../_types'
+import { initialValues } from '../_constants'
 import Dynamic from './Dynamic'
 import Fixed from './Fixed'
 import Free from './Free'
@@ -28,7 +29,19 @@ export default function PricingFields(): ReactElement {
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
-  // Always update everything when price value changes
+  // Update ocean amount when price is changed
+  useEffect(() => {
+    if (type === 'fixed' || type === 'free') return
+
+    const amountOcean =
+      isValidNumber(weightOnOcean) && isValidNumber(price) && price > 0
+        ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10)).mul(2)
+        : new Decimal(initialValues.pricing.amountOcean)
+
+    setFieldValue('pricing.amountOcean', amountOcean)
+  }, [price, weightOnOcean, type, setFieldValue])
+
+  // Update dataToken value when ocean amount is changed
   useEffect(() => {
     if (type === 'fixed' || type === 'free') return
 
@@ -36,22 +49,16 @@ export default function PricingFields(): ReactElement {
       isValidNumber(amountOcean) &&
       isValidNumber(weightOnOcean) &&
       isValidNumber(price) &&
-      isValidNumber(weightOnDataToken)
+      isValidNumber(weightOnDataToken) &&
+      price > 0
         ? new Decimal(amountOcean)
             .dividedBy(new Decimal(weightOnOcean))
             .dividedBy(new Decimal(price))
             .mul(new Decimal(weightOnDataToken))
-        : 0
+        : new Decimal(initialValues.pricing.amountDataToken)
 
     setFieldValue('pricing.amountDataToken', amountDataToken)
-  }, [
-    price,
-    amountOcean,
-    weightOnOcean,
-    weightOnDataToken,
-    type,
-    setFieldValue
-  ])
+  }, [amountOcean, weightOnOcean, weightOnDataToken, type, setFieldValue])
 
   const tabs = [
     appConfig.allowFixedPricing === 'true'
