@@ -6,8 +6,6 @@ import { InputProps } from '@shared/FormInput'
 import { getFileUrlInfo } from '@utils/provider'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import FormHelp from '@shared/FormInput/Help'
-import content from '../../../../../content/publish/form.json'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
