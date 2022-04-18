@@ -8,7 +8,6 @@
   margin-top: -0.25em;
   fill: currentColor;
 }
-
 .tooltip {
   width: 0.5em;
   height: 0.5em;
@@ -19,10 +18,5 @@
   color: var(--brand-alert-red);
 }
 .infoIcon {
-  width: 0.85em;
-  height: 0.85em;
-  cursor: help;
-  display: inline-block;
-  margin-bottom: -0.1em;
-  margin-left: calc(var(--spacer) / 6);
+  composes: infoIcon from '../Actions/index.module.css';
 }
