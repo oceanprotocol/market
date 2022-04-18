@@ -6,18 +6,22 @@ import { InputProps } from '@shared/FormInput'
 import { getFileUrlInfo } from '@utils/provider'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { LoggerInstance } from '@oceanprotocol/lib'
+import { useAsset } from '@context/Asset'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
   const { values, setFieldError } = useFormikContext<FormPublishData>()
+  const { asset } = useAsset()
 
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e.preventDefault()
 
     try {
-      const providerUrl = values?.services[0].providerUrl.url
+      const providerUrl = values?.services
+        ? values?.services[0].providerUrl.url
+        : asset.services[0].serviceEndpoint
       setIsLoading(true)
       const checkedFile = await getFileUrlInfo(url, providerUrl)
 
