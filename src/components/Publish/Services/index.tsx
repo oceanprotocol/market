@@ -6,7 +6,6 @@ import IconCompute from '@images/compute.svg'
 import content from '../../../../content/publish/form.json'
 import { getFieldContent } from '../_utils'
 import { FormPublishData } from '../_types'
-import { getOceanConfig } from '@utils/ocean'
 
 const accessTypeOptionsTitles = getFieldContent(
   'access',
@@ -15,8 +14,7 @@ const accessTypeOptionsTitles = getFieldContent(
 
 export default function ServicesFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
-  const { values, setFieldValue, touched, setTouched } =
-    useFormikContext<FormPublishData>()
+  const { values, setFieldValue } = useFormikContext<FormPublishData>()
 
   // name and title should be download, but option value should be access, probably the best way would be to change the component so that option is an object like {name,value}
   const accessTypeOptions = [
@@ -54,15 +52,6 @@ export default function ServicesFields(): ReactElement {
       values.services[0].algorithmPrivacy === true ? 'compute' : 'access'
     )
   }, [values.services[0].algorithmPrivacy, setFieldValue])
-
-  // Auto-change default providerUrl on user network change
-  useEffect(() => {
-    if (!values?.user?.chainId) return
-
-    const config = getOceanConfig(values.user.chainId)
-    config && setFieldValue('services[0].providerUrl.url', config.providerUri)
-    setTouched({ ...touched, services: [{ providerUrl: { url: true } }] })
-  }, [values.user.chainId, setFieldValue, setTouched])
 
   return (
     <>

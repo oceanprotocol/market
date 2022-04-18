@@ -16,6 +16,10 @@ const validationMetadata = {
     .required('Required'),
   description: Yup.string()
     .min(10, (param) => `Description must be at least ${param.min} characters`)
+    .max(
+      5000,
+      (param) => `Description must have maximum ${param.max} characters`
+    )
     .required('Required'),
   author: Yup.string().required('Required'),
   tags: Yup.string().nullable(),
@@ -54,7 +58,8 @@ const validationService = {
     .required('Required'),
   providerUrl: Yup.object().shape({
     url: Yup.string().url('Must be a valid URL.').required('Required'),
-    valid: Yup.boolean().isTrue().required('Valid Provider is required.')
+    valid: Yup.boolean().isTrue().required('Valid Provider is required.'),
+    custom: Yup.boolean()
   })
 }
 
