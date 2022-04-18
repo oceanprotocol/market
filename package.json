@@ -15,7 +15,9 @@
     "type-check": "tsc --noEmit",
     "deploy:s3": "bash scripts/deploy-s3.sh",
     "postinstall": "husky install",
-    "codegen:apollo": "apollo client:codegen --endpoint=https://v4.subgraph.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/"
+    "codegen:apollo": "apollo client:codegen --endpoint=https://v4.subgraph.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@coingecko/cryptoformat": "^0.4.4",
@@ -70,6 +72,13 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@storybook/addon-actions": "^6.4.22",
+    "@storybook/addon-essentials": "^6.4.22",
+    "@storybook/addon-interactions": "^6.4.22",
+    "@storybook/addon-links": "^6.4.22",
+    "@storybook/react": "^6.4.22",
+    "@storybook/testing-library": "^0.0.9",
     "@svgr/webpack": "^6.2.1",
     "@types/chart.js": "^2.9.35",
     "@types/d3": "^7.1.0",
@@ -88,6 +97,7 @@
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
     "apollo": "^2.33.9",
+    "babel-loader": "^8.2.4",
     "eslint": "^7.27.0",
     "eslint-config-oceanprotocol": "^1.5.0",
     "eslint-config-prettier": "^8.3.0",
@@ -102,6 +112,7 @@
     "process": "^0.11.10",
     "serve": "^13.0.2",
     "stream-http": "^3.2.0",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
     "typescript": "^4.5.4"
   },
   "repository": {
