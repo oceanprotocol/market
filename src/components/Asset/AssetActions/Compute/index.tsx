@@ -136,7 +136,7 @@ export default function Compute({
       )
       const datasetPriceAndFees = await getOrderPriceAndFees(
         asset,
-        accountId,
+        ZERO_ADDRESS,
         computeEnv?.id,
         validUntil
       )
