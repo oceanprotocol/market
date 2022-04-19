@@ -29,7 +29,7 @@ export interface InputProps {
   options?: string[]
   sortOptions?: boolean
   additionalComponent?: ReactElement
-  value?: string
+  value?: string | number
   onChange?(
     e:
       | FormEvent<HTMLInputElement>
