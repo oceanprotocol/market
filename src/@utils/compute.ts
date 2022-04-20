@@ -134,23 +134,31 @@ export function getValidUntilTime(
   return Math.floor(mytime.getTime() / 1000)
 }
 
-export function getResourcesValidTime(
-  jobStartTime: string,
+export async function checkComputeResourcesValidity(
+  asset: Asset,
+  accountId: string,
   computeEnvMaxJobDuration: number,
   datasetTimeout?: number,
-  algorithmTimeout?: number
-) {
+  algorithmTimeout?: number,
+  cancelToken?: CancelToken
+): Promise<boolean> {
+  const jobs = await getComputeJobs(
+    [asset?.chainId],
+    accountId,
+    asset,
+    cancelToken
+  )
   const inputValues = []
   computeEnvMaxJobDuration && inputValues.push(computeEnvMaxJobDuration * 60)
   datasetTimeout && inputValues.push(datasetTimeout)
   algorithmTimeout && inputValues.push(algorithmTimeout)
-
   const minValue = Math.min(...inputValues)
-  console.log('jobStartTime', jobStartTime)
-  const jobStartDate = new Date(jobStartTime)
-  console.log('jobStartDate', jobStartDate)
+  const jobStartDate = new Date(
+    parseInt(jobs.computeJobs[0].dateCreated) * 1000
+  )
   jobStartDate.setMinutes(jobStartDate.getMinutes() + Math.floor(minValue / 60))
-  return Math.floor(jobStartDate.getTime() / 1000)
+  const currentTime = new Date().getTime() / 1000
+  return Math.floor(jobStartDate.getTime() / 1000) > currentTime
 }
 
 export async function getComputeEnviroment(
