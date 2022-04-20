@@ -81,6 +81,18 @@ export default function AssetActions({
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
+
+        // set the content type in the Dataset Schema
+        const datasetSchema = document.getElementById('DatasetSchema')
+        if (datasetSchema) {
+          const datasetSchemaJSON = JSON.parse(datasetSchema.innerText)
+          if (datasetSchemaJSON?.distribution[0]['@type'] === 'DataDownload') {
+            const contentType = fileInfoResponse[0]?.contentType
+            datasetSchemaJSON.distribution[0].encodingFormat = contentType
+            datasetSchema.innerText = JSON.stringify(datasetSchemaJSON)
+          }
+        }
+
         setFileIsLoading(false)
       } catch (error) {
         LoggerInstance.error(error.message)
