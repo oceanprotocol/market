@@ -148,6 +148,7 @@ export async function checkComputeResourcesValidity(
     asset,
     cancelToken
   )
+  if (jobs.computeJobs.length <= 0) return false
   const inputValues = []
   computeEnvMaxJobDuration && inputValues.push(computeEnvMaxJobDuration * 60)
   datasetTimeout && inputValues.push(datasetTimeout)
