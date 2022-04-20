@@ -35,7 +35,7 @@ export default function FormTrade({
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
-  const { poolInfo } = usePool()
+  const { poolInfo, fetchAllData } = usePool()
   const [txId, setTxId] = useState<string>()
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
 
@@ -140,7 +140,7 @@ export default function FormTrade({
           amountsOutMaxFee
         )
       }
-
+      await fetchAllData()
       setTxId(tx?.transactionHash)
     } catch (error) {
       LoggerInstance.error(error.message)

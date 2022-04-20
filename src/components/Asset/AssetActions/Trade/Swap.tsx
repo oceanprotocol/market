@@ -73,106 +73,70 @@ export default function Swap({
     const poolInstance = new Pool(web3)
 
     async function calculateMaximum() {
-      const maxDtFromPool =
-        values.type === 'buy'
-          ? calcMaxExactIn(poolData.datatokenLiquidity)
-          : calcMaxExactOut(poolData.datatokenLiquidity)
+      if (values.type === 'buy') {
+        const maxBaseTokenFromPool = calcMaxExactIn(poolData.baseTokenLiquidity)
 
-      const maxBaseTokenFromPool =
-        values.type === 'buy'
-          ? calcMaxExactOut(poolData.baseTokenLiquidity)
-          : calcMaxExactIn(poolData.baseTokenLiquidity)
+        const maxBaseTokens = maxBaseTokenFromPool.greaterThan(
+          new Decimal(balance.baseToken)
+        )
+          ? balance.baseToken
+          : maxBaseTokenFromPool.toDecimalPlaces(MAX_DECIMALS).toString()
 
-      const amountDataToken =
-        values.type === 'buy'
-          ? maxDtFromPool
-          : new Decimal(balance.baseToken).greaterThan(
-              calcMaxExactIn(poolData.datatokenLiquidity)
-            )
-          ? calcMaxExactIn(poolData.datatokenLiquidity)
-          : new Decimal(balance.datatoken)
-
-      const amountBaseToken =
-        values.type === 'buy'
-          ? new Decimal(balance.baseToken).greaterThan(
-              calcMaxExactIn(poolData.baseTokenLiquidity)
-            )
-            ? calcMaxExactIn(poolData.baseTokenLiquidity)
-            : new Decimal(balance.baseToken)
-          : maxBaseTokenFromPool
-
-      try {
-        const maxBuyBaseToken: PoolPriceAndFees =
-          await poolInstance.getAmountOutExactIn(
-            asset.accessDetails.addressOrId,
-            poolInfo.datatokenAddress,
-            poolInfo.baseTokenAddress,
-            amountDataToken.toString(),
-            appConfig.consumeMarketPoolSwapFee
-          )
-
-        const maxBuyDt: PoolPriceAndFees =
-          await poolInstance.getAmountOutExactIn(
-            asset.accessDetails?.addressOrId,
-            poolInfo.baseTokenAddress,
-            poolInfo.datatokenAddress,
-            amountBaseToken.toString(),
-            appConfig.consumeMarketPoolSwapFee
-          )
-        const maximumDt =
-          values.type === 'buy'
-            ? amountDataToken.greaterThan(new Decimal(maxBuyDt.tokenAmount))
-              ? maxBuyDt.tokenAmount
-              : amountDataToken.toDecimalPlaces(MAX_DECIMALS).toString()
-            : amountDataToken.greaterThan(new Decimal(balance.datatoken))
-            ? balance.datatoken
-            : amountDataToken.toDecimalPlaces(MAX_DECIMALS).toString()
-
-        const maximumBaseToken =
-          values.type === 'sell'
-            ? amountBaseToken.greaterThan(
-                new Decimal(maxBuyBaseToken.tokenAmount)
-              )
-              ? maxBuyBaseToken.tokenAmount
-              : amountBaseToken.toDecimalPlaces(MAX_DECIMALS).toString()
-            : amountBaseToken.greaterThan(new Decimal(balance.baseToken))
-            ? balance.baseToken
-            : amountBaseToken.toDecimalPlaces(MAX_DECIMALS).toString()
-
+        const maxDt = await poolInstance.getAmountOutExactIn(
+          asset.accessDetails?.addressOrId,
+          poolInfo.baseTokenAddress,
+          poolInfo.datatokenAddress,
+          maxBaseTokens.toString(),
+          appConfig.consumeMarketPoolSwapFee
+        )
+        const maximumDt = new Decimal(maxDt.tokenAmount)
+          .toDecimalPlaces(MAX_DECIMALS)
+          .toString()
         setMaximumDt(maximumDt)
-        setMaximumBaseToken(maximumBaseToken)
-
-        const amountBT =
-          values.type === 'buy'
-            ? new Decimal(balance.baseToken).greaterThan(
-                calcMaxExactIn(poolData.baseTokenLiquidity)
-              )
-              ? new Decimal(balance.baseToken)
-              : calcMaxExactIn(poolData.baseTokenLiquidity)
-            : maxBaseTokenFromPool
-
-        const amountDT =
-          values.type === 'sell'
-            ? new Decimal(balance.datatoken).greaterThan(
-                calcMaxExactIn(poolData.datatokenLiquidity)
-              )
-              ? calcMaxExactIn(poolData.datatokenLiquidity)
-              : new Decimal(balance.datatoken)
-            : maxDtFromPool
+        setMaximumBaseToken(maxBaseTokens)
 
         setBaseTokenItem((prevState) => ({
           ...prevState,
-          amount: amountBT.toString(),
-          maxAmount: maximumBaseToken
+          amount: balance.baseToken,
+          maxAmount: maxBaseTokens
         }))
 
         setDtItem((prevState) => ({
           ...prevState,
-          amount: amountDT.toString(),
+          amount: poolData.datatokenLiquidity,
           maxAmount: maximumDt
         }))
-      } catch (error) {
-        LoggerInstance.error(error.message)
+      } else {
+        const maxDtFromPool = calcMaxExactIn(poolData.datatokenLiquidity)
+        const maxDatatokens = maxDtFromPool.greaterThan(
+          new Decimal(balance.datatoken)
+        )
+          ? balance.datatoken
+          : maxDtFromPool.toDecimalPlaces(MAX_DECIMALS).toString()
+
+        const maxBaseTokens = await poolInstance.getAmountOutExactIn(
+          asset.accessDetails?.addressOrId,
+          poolInfo.datatokenAddress,
+          poolInfo.baseTokenAddress,
+          maxDatatokens.toString(),
+          appConfig.consumeMarketPoolSwapFee
+        )
+        const maximumBasetokens = new Decimal(maxBaseTokens.tokenAmount)
+          .toDecimalPlaces(MAX_DECIMALS)
+          .toString()
+        setMaximumDt(maxDatatokens)
+        setMaximumBaseToken(maximumBasetokens)
+
+        setDtItem((prevState) => ({
+          ...prevState,
+          amount: balance.datatoken,
+          maxAmount: maxDatatokens
+        }))
+        setBaseTokenItem((prevState) => ({
+          ...prevState,
+          amount: poolData.baseTokenLiquidity,
+          maxAmount: maximumBasetokens
+        }))
       }
     }
     calculateMaximum()
