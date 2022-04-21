@@ -11,22 +11,22 @@ import useNetworkMetadata, {
   filterNetworksByType
 } from '@hooks/useNetworkMetadata'
 import { useUserPreferences } from '@context/UserPreferences'
-import { getSiteMetadata } from '@utils/siteConfig'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function Networks(): ReactElement {
+  const { appConfig } = useMarketMetadata()
   const { networksList } = useNetworkMetadata()
-  const siteMetadata = getSiteMetadata()
   const { chainIds } = useUserPreferences()
 
   const networksMain = filterNetworksByType(
     'mainnet',
-    siteMetadata?.appConfig.chainIdsSupported,
+    appConfig.chainIdsSupported,
     networksList
   )
 
   const networksTest = filterNetworksByType(
     'testnet',
-    siteMetadata?.appConfig.chainIdsSupported,
+    appConfig.chainIdsSupported,
     networksList
   )
 

@@ -1,5 +1,3 @@
-import { getSiteMetadata } from '@utils/siteConfig'
-import { fetchData, getQueryContext } from '@utils/subgraph'
 import React, {
   createContext,
   ReactElement,
@@ -12,12 +10,10 @@ import React, {
 import { OpcQuery } from 'src/@types/subgraph/OpcQuery'
 import { OperationResult } from 'urql'
 import { opcQuery } from './_queries'
-import {
-  MarketMetadataProviderValue,
-  OpcFee,
-  SiteContent,
-  AppConfig
-} from './_types'
+import { MarketMetadataProviderValue, OpcFee } from './_types'
+import siteContent from '../../../content/site.json'
+import appConfig from '../../../app.config'
+import { fetchData, getQueryContext } from '@utils/subgraph'
 
 const MarketMetadataContext = createContext({} as MarketMetadataProviderValue)
 
@@ -26,19 +22,10 @@ function MarketMetadataProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const [siteContent, setSiteContent] = useState<SiteContent>()
-  const [appConfig, setAppConfig] = useState<AppConfig>()
   const [opcFees, setOpcFees] = useState<OpcFee[]>()
 
   useEffect(() => {
-    const { siteContent, appConfig } = getSiteMetadata()
-    setSiteContent(siteContent)
-    setAppConfig(appConfig)
-  }, [])
-
-  useEffect(() => {
     async function getOpcData() {
-      if (!appConfig) return
       const opcData = []
       for (let i = 0; i < appConfig.chainIdsSupported.length; i++) {
         const response: OperationResult<OpcQuery> = await fetchData(
@@ -57,7 +44,7 @@ function MarketMetadataProvider({
       setOpcFees(opcData)
     }
     getOpcData()
-  }, [appConfig, appConfig?.chainIdsSupported])
+  }, [])
 
   const getOpcFeeForToken = useCallback(
     (tokenAddress: string, chainId: number): string => {

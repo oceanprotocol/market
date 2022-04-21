@@ -12,9 +12,9 @@ import { Asset, LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { calcInGivenOut } from './pool'
 import { getFixedBuyPrice } from './fixedRateExchange'
-import { getSiteMetadata } from './siteConfig'
 import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import Decimal from 'decimal.js'
+import { consumeMarketOrderFee } from '../../app.config'
 
 const TokensPriceQuery = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
@@ -232,15 +232,13 @@ export async function getOrderPriceAndFees(
   accountId: string,
   paramsForPool: CalcInGivenOutParams
 ): Promise<OrderPriceAndFees> {
-  const { appConfig } = getSiteMetadata()
-
   const orderPriceAndFee = {
     price: '0',
     publisherMarketOrderFee:
       asset?.accessDetails?.publisherMarketOrderFee || '0',
     publisherMarketPoolSwapFee: '0',
     publisherMarketFixedSwapFee: '0',
-    consumeMarketOrderFee: appConfig.consumeMarketOrderFee || '0',
+    consumeMarketOrderFee: consumeMarketOrderFee || '0',
     consumeMarketPoolSwapFee: '0',
     consumeMarketFixedSwapFee: '0',
     providerFee: {

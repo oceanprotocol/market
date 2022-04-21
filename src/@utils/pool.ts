@@ -1,10 +1,11 @@
 import { approve, Pool, PoolPriceAndFees } from '@oceanprotocol/lib'
 import Web3 from 'web3'
-import { getSiteMetadata } from './siteConfig'
 import { getDummyWeb3 } from './web3'
 import { TransactionReceipt } from 'web3-eth'
 import Decimal from 'decimal.js'
 import { AccessDetails } from 'src/@types/Price'
+import { consumeMarketPoolSwapFee, marketFeeAddress } from '../../app.config'
+
 /**
  * This is used to calculate the price to buy one datatoken from a pool, that is different from spot price. You need to pass either a web3 object or a chainId. If you pass a chainId a dummy web3 object will be created
  * @param {AccessDetails} accessDetails
@@ -25,13 +26,13 @@ export async function calculateBuyPrice(
   }
 
   const pool = new Pool(web3)
-  const { appConfig } = getSiteMetadata()
+
   const estimatedPrice = await pool.getAmountInExactOut(
     accessDetails.addressOrId,
     accessDetails.baseToken.address,
     accessDetails.datatoken.address,
     '1',
-    appConfig.consumeMarketPoolSwapFee
+    consumeMarketPoolSwapFee
   )
 
   return estimatedPrice
@@ -43,7 +44,6 @@ export async function buyDtFromPool(
   web3: Web3
 ): Promise<TransactionReceipt> {
   const pool = new Pool(web3)
-  const { appConfig } = getSiteMetadata()
   // we need to calculate the actual price to buy one datatoken
   const dtPrice = await calculateBuyPrice(accessDetails, null, web3)
   const approveTx = await approve(
@@ -61,14 +61,14 @@ export async function buyDtFromPool(
     accountId,
     accessDetails.addressOrId,
     {
-      marketFeeAddress: appConfig.marketFeeAddress,
+      marketFeeAddress,
       tokenIn: accessDetails.baseToken.address,
       tokenOut: accessDetails.datatoken.address
     },
     {
       // this is just to be safe
       maxAmountIn: new Decimal(dtPrice.tokenAmount).mul(10).toString(),
-      swapMarketFee: appConfig.consumeMarketPoolSwapFee,
+      swapMarketFee: consumeMarketPoolSwapFee,
       tokenAmountOut: '1'
     }
   )
