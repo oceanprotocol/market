@@ -12,7 +12,7 @@ export default function Title({
 }: {
   networkId: number
 }): ReactElement {
-  const { isSupportedOceanNetwork } = useWeb3()
+  const { isSupportedOceanNetwork, accountId } = useWeb3()
   return (
     <>
       {content.title}{' '}
@@ -22,7 +22,7 @@ export default function Title({
           <NetworkName
             networkId={networkId}
             className={
-              isSupportedOceanNetwork
+              isSupportedOceanNetwork || !accountId
                 ? styles.network
                 : `${styles.network} ${styles.error}`
             }
@@ -30,7 +30,7 @@ export default function Title({
           <Tooltip
             content={<AvailableNetworks />}
             className={
-              isSupportedOceanNetwork
+              isSupportedOceanNetwork || !accountId
                 ? styles.tooltip
                 : `${styles.tooltip} ${styles.error}`
             }
