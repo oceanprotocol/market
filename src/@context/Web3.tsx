@@ -318,7 +318,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     } else {
       setIsSupportedOceanNetwork(false)
     }
-  }, [accountId, networkId, appConfig])
+  }, [networkId, appConfig.chainIdsSupported])
 
   // -----------------------------------
   // Handle change events
