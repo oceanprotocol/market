@@ -9,7 +9,7 @@ import styles from './Links.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function Links() {
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
   const { setShowPPC, privacyPolicySlug } = useUserPreferences()
   const cookies = useGdprMetadata()
 
@@ -35,7 +35,7 @@ export default function Links() {
       <Link href={privacyPolicySlug}>
         <a>Privacy</a>
       </Link>
-      {siteMetadata?.appConfig.privacyPreferenceCenter === 'true' && (
+      {appConfig?.privacyPreferenceCenter === 'true' && (
         <>
           {' — '}
           <Button

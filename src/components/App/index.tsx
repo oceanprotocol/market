@@ -19,14 +19,14 @@ export default function App({
 }): ReactElement {
   const router = useRouter()
 
-  const { siteMetadata } = useMarketMetadata()
+  const { siteContent, appConfig } = useMarketMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
 
   return (
     <div className={styles.app}>
-      {router.pathname === '/' && siteMetadata?.warning.main !== '' && (
-        <AnnouncementBanner text={siteMetadata?.warning.main} />
+      {router.pathname === '/' && siteContent?.warning.main !== '' && (
+        <AnnouncementBanner text={siteContent?.warning.main} />
       )}
       <Header />
 
@@ -41,7 +41,7 @@ export default function App({
       <main className={styles.main}>{children}</main>
       <Footer />
 
-      {siteMetadata?.appConfig.privacyPreferenceCenter === 'true' && (
+      {appConfig?.privacyPreferenceCenter === 'true' && (
         <PrivacyPreferenceCenter style="small" />
       )}
 

@@ -34,7 +34,7 @@ export default function FormTrade({
   const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
   const { poolInfo } = usePool()
   const [txId, setTxId] = useState<string>()
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
@@ -67,7 +67,7 @@ export default function FormTrade({
     .defined()
 
   async function handleTrade(values: FormTradeData) {
-    if (!web3 || !asset || !poolInfo || !values || !siteMetadata) return
+    if (!web3 || !asset || !poolInfo || !values || !appConfig) return
 
     try {
       const poolInstance = new Pool(web3)
@@ -82,7 +82,7 @@ export default function FormTrade({
             values.type === 'sell'
               ? poolInfo.baseTokenAddress
               : poolInfo.datatokenAddress,
-          marketFeeAddress: siteMetadata.appConfig.marketFeeAddress
+          marketFeeAddress: appConfig.marketFeeAddress
         }
 
         const amountsInOutMaxFee: AmountsInMaxFee = {
@@ -97,7 +97,7 @@ export default function FormTrade({
                 .toString()
             )
             .toString(),
-          swapMarketFee: siteMetadata.appConfig.consumeMarketPoolSwapFee
+          swapMarketFee: appConfig.consumeMarketPoolSwapFee
         }
         tx = await poolInstance.swapExactAmountIn(
           accountId,
@@ -116,7 +116,7 @@ export default function FormTrade({
             values.type === 'sell'
               ? poolInfo.baseTokenAddress
               : poolInfo.datatokenAddress,
-          marketFeeAddress: siteMetadata.appConfig.marketFeeAddress
+          marketFeeAddress: appConfig.marketFeeAddress
         }
 
         const amountsOutMaxFee: AmountsOutMaxFee = {
@@ -131,7 +131,7 @@ export default function FormTrade({
             .toString(),
           tokenAmountOut:
             values.type === 'sell' ? values.baseToken : values.datatoken,
-          swapMarketFee: siteMetadata.appConfig.consumeMarketPoolSwapFee
+          swapMarketFee: appConfig.consumeMarketPoolSwapFee
         }
         tx = await poolInstance.swapExactAmountOut(
           accountId,

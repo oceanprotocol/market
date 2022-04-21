@@ -43,7 +43,7 @@ const columns = [
 ]
 
 export default function Bookmarks(): ReactElement {
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
   const { accountId } = useWeb3()
   const { bookmarks } = useUserPreferences()
 
@@ -53,7 +53,7 @@ export default function Bookmarks(): ReactElement {
   const newCancelToken = useCancelToken()
 
   useEffect(() => {
-    if (!siteMetadata?.appConfig?.metadataCacheUri || bookmarks === []) return
+    if (!appConfig?.metadataCacheUri || bookmarks === []) return
 
     async function init() {
       if (!bookmarks?.length) {
@@ -84,7 +84,7 @@ export default function Bookmarks(): ReactElement {
     }
     init()
   }, [
-    siteMetadata?.appConfig?.metadataCacheUri,
+    appConfig?.metadataCacheUri,
     bookmarks,
     chainIds,
     accountId,

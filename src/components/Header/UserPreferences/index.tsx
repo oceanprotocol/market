@@ -11,9 +11,9 @@ import TokenApproval from './TokenApproval'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function UserPreferences(): ReactElement {
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
   // Calling this here because <Style /> is not mounted on first load
-  const darkMode = useDarkMode(false, siteMetadata?.appConfig.darkModeConfig)
+  const darkMode = useDarkMode(false, appConfig?.darkModeConfig)
 
   return (
     <Tooltip

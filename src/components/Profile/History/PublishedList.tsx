@@ -13,7 +13,7 @@ export default function PublishedList({
 }: {
   accountId: string
 }): ReactElement {
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
   const { chainIds } = useUserPreferences()
 
   const [queryResult, setQueryResult] = useState<PagedAssets>()
@@ -56,7 +56,7 @@ export default function PublishedList({
   }, [
     accountId,
     page,
-    siteMetadata?.appConfig.metadataCacheUri,
+    appConfig?.metadataCacheUri,
     chainIds,
     newCancelToken,
     getPublished,

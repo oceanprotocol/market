@@ -35,19 +35,19 @@ export default function PricesProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
   const tokenId = 'ocean-protocol'
 
   const [prices, setPrices] = useState(initialData)
   const [url, setUrl] = useState('')
 
   useEffect(() => {
-    if (!siteMetadata?.appConfig) return
+    if (!appConfig) return
     // comma-separated list
-    const currencies = siteMetadata.appConfig.currencies.join(',')
+    const currencies = appConfig.currencies.join(',')
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=${currencies}`
     setUrl(url)
-  }, [siteMetadata?.appConfig])
+  }, [appConfig])
 
   const onSuccess = async (data: { [tokenId]: Prices }) => {
     if (!data) return

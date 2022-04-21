@@ -40,7 +40,7 @@ function AssetProvider({
   did: string
   children: ReactNode
 }): ReactElement {
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const { chainId, accountId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
@@ -113,15 +113,10 @@ function AssetProvider({
   // 1. Get and set asset based on passed DID
   // -----------------------------------
   useEffect(() => {
-    if (!isMounted || !siteMetadata?.appConfig?.metadataCacheUri) return
+    if (!isMounted || !appConfig?.metadataCacheUri) return
 
     fetchAsset(newCancelToken())
-  }, [
-    siteMetadata?.appConfig?.metadataCacheUri,
-    fetchAsset,
-    newCancelToken,
-    isMounted
-  ])
+  }, [appConfig?.metadataCacheUri, fetchAsset, newCancelToken, isMounted])
 
   // -----------------------------------
   // 2. Attach access details to asset

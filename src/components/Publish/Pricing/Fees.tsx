@@ -45,7 +45,7 @@ export default function Fees({
   const [field, meta] = useField('pricing.swapFee')
   const [opcFees, setOpcFees] = useState<OpcFeesData>(undefined)
   const { chainId } = useWeb3()
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
 
   useEffect(() => {
     getOpcFees(chainId || 1).then((response: OpcFeesData) => {
@@ -88,8 +88,8 @@ export default function Fees({
           tooltip={tooltips.marketplaceFee}
           value={
             pricingType === 'dynamic'
-              ? siteMetadata?.appConfig.publisherMarketPoolSwapFee
-              : siteMetadata?.appConfig.publisherMarketFixedSwapFee
+              ? appConfig?.publisherMarketPoolSwapFee
+              : appConfig?.publisherMarketFixedSwapFee
           }
         />
       </div>

@@ -12,7 +12,12 @@ import React, {
 import { OpcQuery } from 'src/@types/subgraph/OpcQuery'
 import { OperationResult } from 'urql'
 import { opcQuery } from './_queries'
-import { MarketMetadataProviderValue, OpcFee, SiteMetadata } from './_types'
+import {
+  MarketMetadataProviderValue,
+  OpcFee,
+  SiteContent,
+  AppConfig
+} from './_types'
 
 const MarketMetadataContext = createContext({} as MarketMetadataProviderValue)
 
@@ -21,30 +26,29 @@ function MarketMetadataProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const [siteMetadata, setSiteMetadata] = useState<SiteMetadata>()
+  const [siteContent, setSiteContent] = useState<SiteContent>()
+  const [appConfig, setAppConfig] = useState<AppConfig>()
   const [opcFees, setOpcFees] = useState<OpcFee[]>()
 
   useEffect(() => {
-    setSiteMetadata(getSiteMetadata())
+    const { siteContent, appConfig } = getSiteMetadata()
+    setSiteContent(siteContent)
+    setAppConfig(appConfig)
   }, [])
 
   useEffect(() => {
     async function getOpcData() {
-      if (!siteMetadata) return
+      if (!appConfig) return
       const opcData = []
-      for (
-        let i = 0;
-        i < siteMetadata.appConfig.chainIdsSupported.length;
-        i++
-      ) {
+      for (let i = 0; i < appConfig.chainIdsSupported.length; i++) {
         const response: OperationResult<OpcQuery> = await fetchData(
           opcQuery,
           null,
-          getQueryContext(siteMetadata.appConfig.chainIdsSupported[i])
+          getQueryContext(appConfig.chainIdsSupported[i])
         )
 
         opcData.push({
-          chainId: siteMetadata.appConfig.chainIdsSupported[i],
+          chainId: appConfig.chainIdsSupported[i],
           approvedTokens: response.data?.opc.approvedTokens,
           swapApprovedFee: response.data?.opc.swapOceanFee,
           swapNotApprovedFee: response.data.opc.swapNonOceanFee
@@ -53,7 +57,7 @@ function MarketMetadataProvider({
       setOpcFees(opcData)
     }
     getOpcData()
-  }, [siteMetadata, siteMetadata?.appConfig.chainIdsSupported])
+  }, [appConfig, appConfig.chainIdsSupported])
 
   const getOpcFeeForToken = useCallback(
     (tokenAddress: string, chainId: number): string => {
@@ -68,7 +72,8 @@ function MarketMetadataProvider({
       value={
         {
           opcFees,
-          siteMetadata,
+          siteContent,
+          appConfig,
           getOpcFeeForToken
         } as MarketMetadataProviderValue
       }

@@ -52,7 +52,7 @@ export default function Compute({
   isConsumable?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
   const { accountId } = useWeb3()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()

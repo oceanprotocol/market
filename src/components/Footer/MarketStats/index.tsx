@@ -27,7 +27,7 @@ const initialTotal: StatsTotal = {
 }
 
 export default function MarketStats(): ReactElement {
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
   const { networksList } = useNetworkMetadata()
   const { currency } = useUserPreferences()
   const { prices } = usePrices()
@@ -46,20 +46,15 @@ export default function MarketStats(): ReactElement {
   // Set the main chain ids we want to display stats for
   //
   useEffect(() => {
-    if (
-      !networksList ||
-      !siteMetadata ||
-      !siteMetadata?.appConfig?.chainIdsSupported
-    )
-      return
+    if (!networksList || !appConfig || !appConfig?.chainIdsSupported) return
 
     const mainChainIdsList = filterNetworksByType(
       'mainnet',
-      siteMetadata.appConfig.chainIdsSupported,
+      appConfig.chainIdsSupported,
       networksList
     )
     setMainChainIds(mainChainIdsList)
-  }, [siteMetadata, siteMetadata?.appConfig.chainIdsSupported, networksList])
+  }, [appConfig, appConfig?.chainIdsSupported, networksList])
 
   //
   // Helper: fetch data from subgraph

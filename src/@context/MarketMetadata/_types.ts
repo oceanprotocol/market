@@ -5,7 +5,32 @@ export interface OpcFee {
   approvedTokens: string[]
 }
 
-export interface SiteMetadata {
+export interface AppConfig {
+  metadataCacheUri: string
+  infuraProjectId: string
+  chainIds: number[]
+  chainIdsSupported: number[]
+  marketFeeAddress: string
+  publisherMarketOrderFee: string
+  publisherMarketPoolSwapFee: string
+  publisherMarketFixedSwapFee: string
+  consumeMarketOrderFee: string
+  consumeMarketPoolSwapFee: string
+  consumeMarketFixedSwapFee: string
+  currencies: string[]
+  portisId: string
+  allowFixedPricing: string
+  allowDynamicPricing: string
+  allowFreePricing: string
+  defaultPrivacyPolicySlug: string
+  privacyPreferenceCenter: string
+  darkModeConfig: {
+    classNameDark: string
+    classNameLight: string
+    storageKey: string
+  }
+}
+export interface SiteContent {
   siteTitle: string
   siteTagline: string
   siteUrl: string
@@ -23,35 +48,11 @@ export interface SiteMetadata {
     main: string
     polygon: string
   }
-  appConfig: {
-    metadataCacheUri: string
-    infuraProjectId: string
-    chainIds: number[]
-    chainIdsSupported: number[]
-    marketFeeAddress: string
-    publisherMarketOrderFee: string
-    publisherMarketPoolSwapFee: string
-    publisherMarketFixedSwapFee: string
-    consumeMarketOrderFee: string
-    consumeMarketPoolSwapFee: string
-    consumeMarketFixedSwapFee: string
-    currencies: string[]
-    portisId: string
-    allowFixedPricing: string
-    allowDynamicPricing: string
-    allowFreePricing: string
-    defaultPrivacyPolicySlug: string
-    privacyPreferenceCenter: string
-    darkModeConfig: {
-      classNameDark: string
-      classNameLight: string
-      storageKey: string
-    }
-  }
 }
 
 export interface MarketMetadataProviderValue {
   opcFees: OpcFee[]
-  siteMetadata: SiteMetadata
+  siteContent: SiteContent
+  appConfig: AppConfig
   getOpcFeeForToken: (tokenAddress: string, chainId: number) => string
 }

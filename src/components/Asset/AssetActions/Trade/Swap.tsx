@@ -41,7 +41,7 @@ export default function Swap({
   const { isAssetNetwork } = useAsset()
   const { web3 } = useWeb3()
   const { poolInfo, poolData } = usePool()
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
@@ -69,7 +69,7 @@ export default function Swap({
   const [lpSwapFee, setLpSwapFee] = useState<string>()
 
   useEffect(() => {
-    if (!asset || !balance || !values?.type || !web3 || !siteMetadata) return
+    if (!asset || !balance || !values?.type || !web3 || !appConfig) return
     const poolInstance = new Pool(web3)
 
     async function calculateMaximum() {
@@ -108,7 +108,7 @@ export default function Swap({
             poolInfo.datatokenAddress,
             poolInfo.baseTokenAddress,
             amountDataToken.toString(),
-            siteMetadata.appConfig.consumeMarketPoolSwapFee
+            appConfig.consumeMarketPoolSwapFee
           )
 
         const maxBuyDt: PoolPriceAndFees =
@@ -117,7 +117,7 @@ export default function Swap({
             poolInfo.baseTokenAddress,
             poolInfo.datatokenAddress,
             amountBaseToken.toString(),
-            siteMetadata.appConfig.consumeMarketPoolSwapFee
+            appConfig.consumeMarketPoolSwapFee
           )
         const maximumDt =
           values.type === 'buy'
@@ -171,8 +171,8 @@ export default function Swap({
     poolInfo.liquidityProviderSwapFee,
     poolInfo.datatokenAddress,
     poolInfo.baseTokenAddress,
-    siteMetadata,
-    siteMetadata?.appConfig.consumeMarketPoolSwapFee
+    appConfig,
+    appConfig.consumeMarketPoolSwapFee
   ])
 
   const switchTokens = () => {
@@ -202,7 +202,7 @@ export default function Swap({
             dtItem.address,
             baseTokenItem.address,
             value.toString(),
-            siteMetadata?.appConfig.consumeMarketPoolSwapFee
+            appConfig.consumeMarketPoolSwapFee
           )
 
           setFieldValue('output', 'exactOut')
@@ -227,7 +227,7 @@ export default function Swap({
             baseTokenItem.address,
             dtItem.address,
             value.toString(),
-            siteMetadata?.appConfig.consumeMarketPoolSwapFee
+            appConfig.consumeMarketPoolSwapFee
           )
 
           setFieldValue('output', 'exactIn')
@@ -252,7 +252,7 @@ export default function Swap({
             dtItem.address,
             baseTokenItem.address,
             value.toString(),
-            siteMetadata?.appConfig.consumeMarketPoolSwapFee
+            appConfig.consumeMarketPoolSwapFee
           )
 
           setFieldValue('output', 'exactIn')
@@ -275,7 +275,7 @@ export default function Swap({
             baseTokenItem.address,
             dtItem.address,
             value.toString(),
-            siteMetadata?.appConfig.consumeMarketPoolSwapFee
+            appConfig.consumeMarketPoolSwapFee
           )
 
           setFieldValue('output', 'exactOut')
@@ -307,7 +307,7 @@ export default function Swap({
         asset.accessDetails.addressOrId,
         tokenIn,
         tokenOut,
-        siteMetadata?.appConfig.consumeMarketPoolSwapFee
+        appConfig.consumeMarketPoolSwapFee
       )
       setSpotPrice(spotPrice)
       validateForm()

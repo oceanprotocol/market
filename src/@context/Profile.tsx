@@ -49,7 +49,7 @@ function ProfileProvider({
   children: ReactNode
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const [isEthAddress, setIsEthAddress] = useState<boolean>()
 
@@ -210,12 +210,7 @@ function ProfileProvider({
     return () => {
       cancelTokenSource.cancel()
     }
-  }, [
-    accountId,
-    siteMetadata?.appConfig.metadataCacheUri,
-    chainIds,
-    isEthAddress
-  ])
+  }, [accountId, appConfig.metadataCacheUri, chainIds, isEthAddress])
 
   //
   // DOWNLOADS
@@ -255,7 +250,7 @@ function ProfileProvider({
     const cancelTokenSource = axios.CancelToken.source()
 
     async function getDownloadAssets() {
-      if (!siteMetadata.appConfig?.metadataCacheUri) return
+      if (!appConfig?.metadataCacheUri) return
 
       try {
         setIsDownloadsLoading(true)
@@ -278,11 +273,7 @@ function ProfileProvider({
       cancelTokenSource.cancel()
       clearInterval(downloadsInterval)
     }
-  }, [
-    fetchDownloads,
-    siteMetadata?.appConfig.metadataCacheUri,
-    downloadsInterval
-  ])
+  }, [fetchDownloads, appConfig.metadataCacheUri, downloadsInterval])
 
   //
   // SALES NUMBER

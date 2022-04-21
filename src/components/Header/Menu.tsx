@@ -33,7 +33,7 @@ function MenuLink({ item }: { item: MenuItem }) {
 }
 
 export default function Menu(): ReactElement {
-  const { siteMetadata } = useMarketMetadata()
+  const { siteContent } = useMarketMetadata()
 
   return (
     <nav className={styles.menu}>
@@ -41,13 +41,13 @@ export default function Menu(): ReactElement {
         <a className={styles.logo}>
           <Logo noWordmark />
           <h1 className={styles.title}>
-            {siteMetadata?.siteTitle} <Badge label="v4" />
+            {siteContent?.siteTitle} <Badge label="v4" />
           </h1>
         </a>
       </Link>
 
       <ul className={styles.navigation}>
-        {siteMetadata?.menu.map((item: MenuItem) => (
+        {siteContent?.menu.map((item: MenuItem) => (
           <li key={item.name}>
             <MenuLink item={item} />
           </li>

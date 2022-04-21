@@ -135,7 +135,7 @@ export default function PoolTransactions({
   accountId: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
   const cancelToken = useCancelToken()
 
   const [transactions, setTransactions] = useState<PoolTransaction[]>()
@@ -206,7 +206,7 @@ export default function PoolTransactions({
   // Get data, periodically
   //
   useEffect(() => {
-    if (!siteMetadata?.appConfig?.metadataCacheUri) return
+    if (!appConfig?.metadataCacheUri) return
 
     async function getTransactions() {
       try {
@@ -228,11 +228,7 @@ export default function PoolTransactions({
     return () => {
       clearInterval(dataFetchInterval)
     }
-  }, [
-    getPoolTransactionData,
-    dataFetchInterval,
-    siteMetadata?.appConfig.metadataCacheUri
-  ])
+  }, [getPoolTransactionData, dataFetchInterval, appConfig.metadataCacheUri])
 
   //
   // Transform to final transactions

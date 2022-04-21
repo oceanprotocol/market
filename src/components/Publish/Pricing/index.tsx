@@ -13,7 +13,7 @@ import styles from './index.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function PricingFields(): ReactElement {
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
 
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
@@ -61,19 +61,19 @@ export default function PricingFields(): ReactElement {
   }, [amountOcean, weightOnOcean, weightOnDataToken, type, setFieldValue])
 
   const tabs = [
-    siteMetadata?.appConfig.allowFixedPricing === 'true'
+    appConfig.allowFixedPricing === 'true'
       ? {
           title: content.create.fixed.title,
           content: <Fixed content={content.create.fixed} />
         }
       : undefined,
-    siteMetadata?.appConfig.allowDynamicPricing === 'true'
+    appConfig.allowDynamicPricing === 'true'
       ? {
           title: content.create.dynamic.title,
           content: <Dynamic content={content.create.dynamic} />
         }
       : undefined,
-    siteMetadata?.appConfig.allowFreePricing === 'true'
+    appConfig.allowFreePricing === 'true'
       ? {
           title: content.create.free.title,
           content: <Free content={content.create.free} />

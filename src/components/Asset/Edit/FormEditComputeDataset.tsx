@@ -25,7 +25,7 @@ export default function FormEditComputeDataset({
   data: InputProps[]
   title: string
 }): ReactElement {
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
   const { asset } = useAsset()
   const { values }: FormikContextType<ComputePrivacyForm> = useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
@@ -59,7 +59,7 @@ export default function FormEditComputeDataset({
     getAlgorithmList(publisherTrustedAlgorithms).then((algorithms) => {
       setAllAlgorithms(algorithms)
     })
-  }, [siteMetadata?.appConfig.metadataCacheUri, publisherTrustedAlgorithms])
+  }, [appConfig, appConfig.metadataCacheUri, publisherTrustedAlgorithms])
 
   return (
     <Form className={styles.form}>

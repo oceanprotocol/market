@@ -32,7 +32,7 @@ const ConsentContext = createContext({} as ConsentProviderValue)
 function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
   const cookies = useGdprMetadata()
 
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const [consentStatus, setConsentStatus] = useState({} as ConsentStatus)
 
@@ -80,7 +80,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
   }
 
   useEffect(() => {
-    if (siteMetadata?.appConfig?.privacyPreferenceCenter !== 'true') return
+    if (appConfig?.privacyPreferenceCenter !== 'true') return
 
     const initialValues = {} as ConsentStatus
     cookies.optionalCookies?.map((cookie) => {
@@ -100,7 +100,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
     })
 
     setConsentStatus(initialValues)
-  }, [cookies.optionalCookies, siteMetadata])
+  }, [cookies.optionalCookies, appConfig])
 
   useEffect(() => {
     Object.keys(consentStatus).map((cookieName) => {

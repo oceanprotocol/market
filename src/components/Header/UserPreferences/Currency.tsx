@@ -5,7 +5,7 @@ import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function Currency(): ReactElement {
   const { currency, setCurrency } = useUserPreferences()
-  const { siteMetadata } = useMarketMetadata()
+  const { appConfig } = useMarketMetadata()
 
   return (
     <li>
@@ -14,7 +14,7 @@ export default function Currency(): ReactElement {
         label="Currency"
         help="Your conversion display currency."
         type="select"
-        options={siteMetadata?.appConfig.currencies}
+        options={appConfig?.currencies}
         value={currency}
         onChange={(e: ChangeEvent<HTMLSelectElement>) =>
           setCurrency(e.target.value)
