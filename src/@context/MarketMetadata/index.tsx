@@ -57,7 +57,7 @@ function MarketMetadataProvider({
       setOpcFees(opcData)
     }
     getOpcData()
-  }, [appConfig, appConfig.chainIdsSupported])
+  }, [appConfig, appConfig?.chainIdsSupported])
 
   const getOpcFeeForToken = useCallback(
     (tokenAddress: string, chainId: number): string => {
