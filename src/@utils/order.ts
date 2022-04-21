@@ -144,11 +144,10 @@ export async function reuseOrder(
     computeEnv,
     computeValidUntil
   )
-
   const txApprove = await approve(
     web3,
     accountId,
-    asset.accessDetails.baseToken.address,
+    initializeData.providerFee.providerFeeToken,
     asset.accessDetails.datatoken.address,
     initializeData.providerFee.providerFeeAmount,
     false
