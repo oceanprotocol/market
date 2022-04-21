@@ -28,7 +28,8 @@ import {
   getAlgorithmAssetSelectionList,
   getAlgorithmsForAsset,
   getValidUntilTime,
-  getComputeEnviroment
+  getComputeEnviroment,
+  checkComputeResourcesValidity
 } from '@utils/compute'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
@@ -41,7 +42,7 @@ import { useAbortController } from '@hooks/useAbortController'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { buyDtFromPool } from '@utils/pool'
-import { order } from '@utils/order'
+import { order, reuseOrder } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getComputeFeedback } from '@utils/feedback'
 
@@ -94,6 +95,7 @@ export default function Compute({
     useState<OrderPriceAndFees>()
   const [isRequestingAlgoOrderPrice, setIsRequestingAlgoOrderPrice] =
     useState(false)
+  const [isProviderFeeValid, setIsProviderFeeValid] = useState(false)
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
@@ -116,6 +118,15 @@ export default function Compute({
   async function initPriceAndFees() {
     const computeEnv = await getComputeEnviroment(asset)
     setComputeEnv(computeEnv)
+    setIsProviderFeeValid(
+      await checkComputeResourcesValidity(
+        asset,
+        accountId,
+        computeEnv?.maxJobDuration,
+        asset.services[0].timeout,
+        selectedAlgorithmAsset.services[0].timeout
+      )
+    )
     const validUntil = getValidUntilTime(
       computeEnv?.maxJobDuration,
       asset.services[0].timeout,
@@ -375,6 +386,26 @@ export default function Compute({
           toast.error('Failed to order algorithm asset!')
           return
         }
+      }
+
+      if (isOwned && !isProviderFeeValid) {
+        const reuseOrderTx = await reuseOrder(
+          web3,
+          asset,
+          accountId,
+          validOrderTx,
+          computeEnv?.id,
+          computeValidUntil
+        )
+        if (!reuseOrderTx) {
+          toast.error('Failed to pay provider fees!')
+          return
+        }
+        LoggerInstance.log(
+          '[compute] Reused order: ',
+          reuseOrderTx.transactionHash
+        )
+        datasetOrderTx = reuseOrderTx.transactionHash
       }
 
       LoggerInstance.log('[compute] Starting compute job.')

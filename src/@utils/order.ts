@@ -111,3 +111,57 @@ export async function order(
     }
   }
 }
+
+/**
+ * called when having a valid order, but with expired provider access, requires approval of the provider fee
+ * @param web3
+ * @param asset
+ * @param accountId
+ * @param accountId validOrderTx
+ * @param computeEnv
+ * @param computeValidUntil
+ * @param computeConsumerAddress
+ * @returns {TransactionReceipt} receipt of the order
+ */
+export async function reuseOrder(
+  web3: Web3,
+  asset: AssetExtended,
+  accountId: string,
+  validOrderTx: string,
+  computeEnv: string = null,
+  computeValidUntil: number = null,
+  computeConsumerAddress?: string
+) {
+  const datatoken = new Datatoken(web3)
+  const initializeData = await ProviderInstance.initialize(
+    asset.id,
+    asset.services[0].id,
+    0,
+    accountId,
+    asset.services[0].serviceEndpoint,
+    null,
+    null,
+    computeEnv,
+    computeValidUntil
+  )
+  const txApprove = await approve(
+    web3,
+    accountId,
+    initializeData.providerFee.providerFeeToken,
+    asset.accessDetails.datatoken.address,
+    initializeData.providerFee.providerFeeAmount,
+    false
+  )
+  if (!txApprove) {
+    return
+  }
+
+  const tx = await datatoken.reuseOrder(
+    asset.accessDetails.datatoken.address,
+    accountId,
+    validOrderTx,
+    initializeData.providerFee
+  )
+
+  return tx
+}

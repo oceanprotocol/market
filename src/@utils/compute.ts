@@ -369,3 +369,31 @@ export async function transformComputeFormToServiceComputeOptions(
 
   return privacy
 }
+
+export async function checkComputeResourcesValidity(
+  asset: Asset,
+  accountId: string,
+  computeEnvMaxJobDuration: number,
+  datasetTimeout?: number,
+  algorithmTimeout?: number,
+  cancelToken?: CancelToken
+): Promise<boolean> {
+  const jobs = await getComputeJobs(
+    [asset?.chainId],
+    accountId,
+    asset,
+    cancelToken
+  )
+  if (jobs.computeJobs.length <= 0) return false
+  const inputValues = []
+  computeEnvMaxJobDuration && inputValues.push(computeEnvMaxJobDuration * 60)
+  datasetTimeout && inputValues.push(datasetTimeout)
+  algorithmTimeout && inputValues.push(algorithmTimeout)
+  const minValue = Math.min(...inputValues)
+  const jobStartDate = new Date(
+    parseInt(jobs.computeJobs[0].dateCreated) * 1000
+  )
+  jobStartDate.setMinutes(jobStartDate.getMinutes() + Math.floor(minValue / 60))
+  const currentTime = new Date().getTime() / 1000
+  return Math.floor(jobStartDate.getTime() / 1000) > currentTime
+}
