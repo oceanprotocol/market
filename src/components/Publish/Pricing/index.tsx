@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useFormikContext } from 'formik'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Tabs from '@shared/atoms/Tabs'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
@@ -11,9 +10,10 @@ import Fixed from './Fixed'
 import Free from './Free'
 import content from '../../../../content/price.json'
 import styles from './index.module.css'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function PricingFields(): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { siteMetadata } = useMarketMetadata()
 
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
@@ -61,19 +61,19 @@ export default function PricingFields(): ReactElement {
   }, [amountOcean, weightOnOcean, weightOnDataToken, type, setFieldValue])
 
   const tabs = [
-    appConfig.allowFixedPricing === 'true'
+    siteMetadata?.appConfig.allowFixedPricing === 'true'
       ? {
           title: content.create.fixed.title,
           content: <Fixed content={content.create.fixed} />
         }
       : undefined,
-    appConfig.allowDynamicPricing === 'true'
+    siteMetadata?.appConfig.allowDynamicPricing === 'true'
       ? {
           title: content.create.dynamic.title,
           content: <Dynamic content={content.create.dynamic} />
         }
       : undefined,
-    appConfig.allowFreePricing === 'true'
+    siteMetadata?.appConfig.allowFreePricing === 'true'
       ? {
           title: content.create.free.title,
           content: <Free content={content.create.free} />

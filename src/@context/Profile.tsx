@@ -16,11 +16,11 @@ import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/subgraph/PoolShares'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { accountTruncate } from '@utils/web3'
 import axios, { CancelToken } from 'axios'
 import get3BoxProfile from '@utils/profile'
 import web3 from 'web3'
+import { useMarketMetadata } from './MarketMetadata'
 
 interface ProfileProviderValue {
   profile: Profile
@@ -49,7 +49,7 @@ function ProfileProvider({
   children: ReactNode
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { appConfig } = useSiteMetadata()
+  const { siteMetadata } = useMarketMetadata()
 
   const [isEthAddress, setIsEthAddress] = useState<boolean>()
 
@@ -210,7 +210,12 @@ function ProfileProvider({
     return () => {
       cancelTokenSource.cancel()
     }
-  }, [accountId, appConfig.metadataCacheUri, chainIds, isEthAddress])
+  }, [
+    accountId,
+    siteMetadata?.appConfig.metadataCacheUri,
+    chainIds,
+    isEthAddress
+  ])
 
   //
   // DOWNLOADS
@@ -250,7 +255,7 @@ function ProfileProvider({
     const cancelTokenSource = axios.CancelToken.source()
 
     async function getDownloadAssets() {
-      if (!appConfig?.metadataCacheUri) return
+      if (!siteMetadata.appConfig?.metadataCacheUri) return
 
       try {
         setIsDownloadsLoading(true)
@@ -273,7 +278,11 @@ function ProfileProvider({
       cancelTokenSource.cancel()
       clearInterval(downloadsInterval)
     }
-  }, [fetchDownloads, appConfig.metadataCacheUri, downloadsInterval])
+  }, [
+    fetchDownloads,
+    siteMetadata?.appConfig.metadataCacheUri,
+    downloadsInterval
+  ])
 
   //
   // SALES NUMBER

@@ -1,4 +1,11 @@
-export interface UseSiteMetadata {
+export interface OpcFee {
+  chainId: number
+  swapNotApprovedFee: string
+  swapApprovedFee: string
+  approvedTokens: string[]
+}
+
+export interface SiteMetadata {
   siteTitle: string
   siteTagline: string
   siteUrl: string
@@ -41,4 +48,10 @@ export interface UseSiteMetadata {
       storageKey: string
     }
   }
+}
+
+export interface MarketMetadataProviderValue {
+  opcFees: OpcFee[]
+  siteMetadata: SiteMetadata
+  getOpcFeeForToken: (tokenAddress: string, chainId: number) => string
 }

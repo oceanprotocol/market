@@ -3,8 +3,8 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { getAssetsNames } from '@utils/aquarius'
 import styles from './AssetListTitle.module.css'
 import axios from 'axios'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { Asset } from '@oceanprotocol/lib'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function AssetListTitle({
   asset,
@@ -15,11 +15,11 @@ export default function AssetListTitle({
   did?: string
   title?: string
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { siteMetadata } = useMarketMetadata()
   const [assetTitle, setAssetTitle] = useState<string>(title)
 
   useEffect(() => {
-    if (title || !appConfig.metadataCacheUri) return
+    if (title || !siteMetadata?.appConfig.metadataCacheUri) return
     if (asset) {
       setAssetTitle(asset.metadata.name)
       return
@@ -37,7 +37,7 @@ export default function AssetListTitle({
     return () => {
       source.cancel()
     }
-  }, [assetTitle, appConfig.metadataCacheUri, asset, did, title])
+  }, [assetTitle, siteMetadata?.appConfig.metadataCacheUri, asset, did, title])
 
   return (
     <h3 className={styles.title}>

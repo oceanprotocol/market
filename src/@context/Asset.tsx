@@ -11,12 +11,12 @@ import { Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { retrieveAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { useMarketMetadata } from './MarketMetadata'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -40,7 +40,7 @@ function AssetProvider({
   did: string
   children: ReactNode
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { siteMetadata } = useMarketMetadata()
 
   const { chainId, accountId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
@@ -113,10 +113,15 @@ function AssetProvider({
   // 1. Get and set asset based on passed DID
   // -----------------------------------
   useEffect(() => {
-    if (!isMounted || !appConfig?.metadataCacheUri) return
+    if (!isMounted || !siteMetadata?.appConfig?.metadataCacheUri) return
 
     fetchAsset(newCancelToken())
-  }, [appConfig?.metadataCacheUri, fetchAsset, newCancelToken, isMounted])
+  }, [
+    siteMetadata?.appConfig?.metadataCacheUri,
+    fetchAsset,
+    newCancelToken,
+    isMounted
+  ])
 
   // -----------------------------------
   // 2. Attach access details to asset

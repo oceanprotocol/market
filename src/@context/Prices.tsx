@@ -3,12 +3,13 @@ import React, {
   ReactElement,
   createContext,
   useContext,
-  ReactNode
+  ReactNode,
+  useEffect
 } from 'react'
 import { fetchData } from '@utils/fetch'
 import useSWR from 'swr'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { LoggerInstance } from '@oceanprotocol/lib'
+import { useMarketMetadata } from './MarketMetadata'
 
 interface Prices {
   [key: string]: number
@@ -34,12 +35,19 @@ export default function PricesProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { siteMetadata } = useMarketMetadata()
   const tokenId = 'ocean-protocol'
-  const currencies = appConfig.currencies.join(',') // comma-separated list
-  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=${currencies}`
 
   const [prices, setPrices] = useState(initialData)
+  const [url, setUrl] = useState('')
+
+  useEffect(() => {
+    if (!siteMetadata?.appConfig) return
+    // comma-separated list
+    const currencies = siteMetadata.appConfig.currencies.join(',')
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=${currencies}`
+    setUrl(url)
+  }, [siteMetadata?.appConfig])
 
   const onSuccess = async (data: { [tokenId]: Prices }) => {
     if (!data) return

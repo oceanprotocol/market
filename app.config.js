@@ -2,9 +2,9 @@ module.exports = {
   // URI of single metadata cache instance for all networks.
   // While ocean.js includes this value for each network as part of its ConfigHelper,
   // it is assumed to be the same for all networks.
-  // In components can be accessed with the useSiteMetadata hook:
-  // const { appConfig } = useSiteMetadata()
-  // return appConfig.metadataCacheUri
+  // In components can be accessed with the useMarketMetadata hook:
+  // const { siteMetadata } = useMarketMetadata()
+  // return siteMetadata.appConfig.metadataCacheUri
   metadataCacheUri:
     process.env.NEXT_PUBLIC_METADATACACHE_URI ||
     'https://v4.aquarius.oceanprotocol.com',

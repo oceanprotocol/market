@@ -1,7 +1,8 @@
 import React, { ReactElement } from 'react'
 import Head from 'next/head'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
+
 import { isBrowser } from '@utils/index'
+import { getSiteMetadata } from '@utils/siteConfig'
 
 export default function Seo({
   title,
@@ -12,7 +13,7 @@ export default function Seo({
   description?: string
   uri: string
 }): ReactElement {
-  const { siteTitle, siteTagline, siteUrl, siteImage } = useSiteMetadata()
+  const { siteTitle, siteTagline, siteUrl, siteImage } = getSiteMetadata()
 
   // Remove trailing slash from all URLs
   const canonical = `${siteUrl}${uri}`.replace(/\/$/, '')

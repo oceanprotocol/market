@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import Label from '@shared/FormInput/Label'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import FormHelp from '@shared/FormInput/Help'
 import Tooltip from '@shared/atoms/Tooltip'
 import Caret from '@images/caret.svg'
@@ -12,21 +11,22 @@ import useNetworkMetadata, {
   filterNetworksByType
 } from '@hooks/useNetworkMetadata'
 import { useUserPreferences } from '@context/UserPreferences'
+import { getSiteMetadata } from '@utils/siteConfig'
 
 export default function Networks(): ReactElement {
   const { networksList } = useNetworkMetadata()
-  const { appConfig } = useSiteMetadata()
+  const siteMetadata = getSiteMetadata()
   const { chainIds } = useUserPreferences()
 
   const networksMain = filterNetworksByType(
     'mainnet',
-    appConfig.chainIdsSupported,
+    siteMetadata?.appConfig.chainIdsSupported,
     networksList
   )
 
   const networksTest = filterNetworksByType(
     'testnet',
-    appConfig.chainIdsSupported,
+    siteMetadata?.appConfig.chainIdsSupported,
     networksList
   )
 

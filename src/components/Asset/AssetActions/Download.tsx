@@ -18,7 +18,7 @@ import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { usePool } from '@context/Pool'
-import { useGlobalData } from '@context/GlobalData'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function Download({
   asset,
@@ -36,7 +36,7 @@ export default function Download({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
-  const { getOpcForToken } = useGlobalData()
+  const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const isMounted = useIsMounted()
 
@@ -70,7 +70,7 @@ export default function Download({
         tokenInLiquidity: poolData?.baseTokenLiquidity,
         tokenOutLiquidity: poolData?.datatokenLiquidity,
         tokenOutAmount: '1',
-        opcFee: getOpcForToken(poolData.baseToken.address, asset?.chainId),
+        opcFee: getOpcFeeForToken(poolData.baseToken.address, asset?.chainId),
         lpSwapFee: poolData?.liquidityProviderSwapFee,
         publishMarketSwapFee: poolData?.publishMarketSwapFee,
         consumeMarketSwapFee: '0'
@@ -87,7 +87,7 @@ export default function Download({
     }
 
     init()
-  }, [asset, accountId, poolData, getOpcForToken])
+  }, [asset, accountId, poolData, getOpcFeeForToken])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)

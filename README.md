@@ -134,11 +134,11 @@ const queryLatest = {
 }
 
 function Component() {
-  const { appConfig } = useSiteMetadata()
+  const { siteMetadata } = useMarketMetadata()
   const [result, setResult] = useState<QueryResult>()
 
   useEffect(() => {
-    if (!appConfig.metadataCacheUri) return
+    if (!siteMetadata?.appConfig.metadataCacheUri) return
     const source = axios.CancelToken.source()
 
     async function init() {
@@ -150,7 +150,7 @@ function Component() {
     return () => {
       source.cancel()
     }
-  }, [appConfig.metadataCacheUri, query])
+  }, [siteMetadata?.appConfig.metadataCacheUri, query])
 
   return <div>{result}</div>
 }

@@ -18,7 +18,7 @@ import { useWeb3 } from '../Web3'
 import { calcSingleOutGivenPoolIn } from '@utils/pool'
 import { PoolProviderValue, PoolInfo, PoolInfoUser } from './_types'
 import { getFee, getPoolData, getWeight } from './_utils'
-import { useGlobalData } from '@context/GlobalData'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 const PoolContext = createContext({} as PoolProviderValue)
 
@@ -34,7 +34,7 @@ const initialPoolInfoCreator: Partial<PoolInfoUser> = initialPoolInfoUser
 function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   const { accountId, web3, chainId } = useWeb3()
   const { asset, owner } = useAsset()
-  const { getOpcForToken } = useGlobalData()
+  const { getOpcFeeForToken } = useMarketMetadata()
   const [poolData, setPoolData] = useState<PoolDataPoolData>()
   const [poolInfo, setPoolInfo] = useState<PoolInfo>()
   const [poolInfoOwner, setPoolInfoOwner] = useState<PoolInfoUser>(
@@ -76,7 +76,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   //
   useEffect(() => {
     if (asset?.accessDetails?.type !== 'dynamic') return
-
+    fetchAllData()
     const interval = setInterval(() => {
       fetchAllData()
     }, refreshInterval)
@@ -93,7 +93,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       liquidityProviderSwapFee: getFee(poolData.liquidityProviderSwapFee),
       publishMarketSwapFee: getFee(poolData.publishMarketSwapFee),
       opcFee: getFee(
-        getOpcForToken(poolData.baseToken.address, asset?.chainId)
+        getOpcFeeForToken(poolData.baseToken.address, asset?.chainId)
       ),
       weightBaseToken: getWeight(poolData.baseTokenWeight),
       weightDt: getWeight(poolData.datatokenWeight),
@@ -106,7 +106,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
 
     setPoolInfo(newPoolInfo)
     LoggerInstance.log('[pool] Created new pool info:', newPoolInfo)
-  }, [asset?.chainId, chainId, getOpcForToken, poolData, web3])
+  }, [asset?.chainId, chainId, getOpcFeeForToken, poolData, web3])
 
   //
   // 2 Pool Creator Info

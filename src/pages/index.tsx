@@ -1,17 +1,17 @@
 import React, { ReactElement } from 'react'
 import Home from '../components/Home'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Page from '@shared/Page'
 import { useRouter } from 'next/router'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function PageHome(): ReactElement {
-  const { siteTitle, siteTagline } = useSiteMetadata()
+  const { siteMetadata } = useMarketMetadata()
   const router = useRouter()
 
   return (
     <Page
-      title={siteTitle}
-      description={siteTagline}
+      title={siteMetadata?.siteTitle}
+      description={siteMetadata?.siteTagline}
       uri={router.route}
       headerCenter
     >

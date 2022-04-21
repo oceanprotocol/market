@@ -2,7 +2,6 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { OperationContext } from 'urql'
 import Tooltip from '@shared/atoms/Tooltip'
 import { fetchData, getSubgraphUri } from '@utils/subgraph'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import useNetworkMetadata, {
   filterNetworksByType
 } from '@hooks/useNetworkMetadata'
@@ -16,6 +15,7 @@ import { usePrices } from '@context/Prices'
 import { useUserPreferences } from '@context/UserPreferences'
 import Decimal from 'decimal.js'
 import { StatsTotal, StatsValue } from './_types'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 const initialTotal: StatsTotal = {
   totalValueLockedInOcean: 0,
@@ -27,14 +27,15 @@ const initialTotal: StatsTotal = {
 }
 
 export default function MarketStats(): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { siteMetadata } = useMarketMetadata()
   const { networksList } = useNetworkMetadata()
   const { currency } = useUserPreferences()
   const { prices } = usePrices()
 
   const [mainChainIds, setMainChainIds] = useState<number[]>()
-  const [data, setData] =
-    useState<{ [chainId: number]: FooterStatsValuesGlobalStatistics }>()
+  const [data, setData] = useState<{
+    [chainId: number]: FooterStatsValuesGlobalStatistics
+  }>()
   const [totalValueLockedInOcean, setTotalValueLockedInOcean] =
     useState<StatsValue>()
   const [totalOceanLiquidity, setTotalOceanLiquidity] = useState<StatsValue>()
@@ -45,15 +46,20 @@ export default function MarketStats(): ReactElement {
   // Set the main chain ids we want to display stats for
   //
   useEffect(() => {
-    if (!networksList) return
+    if (
+      !networksList ||
+      !siteMetadata ||
+      !siteMetadata?.appConfig?.chainIdsSupported
+    )
+      return
 
     const mainChainIdsList = filterNetworksByType(
       'mainnet',
-      appConfig.chainIdsSupported,
+      siteMetadata.appConfig.chainIdsSupported,
       networksList
     )
     setMainChainIds(mainChainIdsList)
-  }, [appConfig.chainIdsSupported, networksList])
+  }, [siteMetadata, siteMetadata?.appConfig.chainIdsSupported, networksList])
 
   //
   // Helper: fetch data from subgraph
