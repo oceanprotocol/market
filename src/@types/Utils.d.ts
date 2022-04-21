@@ -1,6 +1,6 @@
 interface CalcInGivenOutParams {
   tokenInLiquidity: string
-  tokenOutLiqudity: string
+  tokenOutLiquidity: string
   tokenOutAmount: string
   opcFee: string
   lpSwapFee: string

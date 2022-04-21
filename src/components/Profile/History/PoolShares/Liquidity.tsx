@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Conversion from '@shared/Price/Conversion'
 import styles from './Liquidity.module.css'
 import Token from '../../../@shared/Token'
@@ -13,18 +13,30 @@ export function Liquidity({
   row: AssetPoolShare
   type: string
 }) {
-  let liquidity = '0'
+  const [liquidity, setLiquidity] = useState('0')
 
-  if (type === 'user') {
-    liquidity = calcSingleOutGivenPoolIn(
-      row.poolShare.pool.baseTokenLiquidity,
-      row.poolShare.pool.totalShares,
-      row.poolShare.shares
-    )
-  }
-  if (type === 'pool') {
-    liquidity = new Decimal(row.poolShare.pool.baseTokenLiquidity).toString()
-  }
+  useEffect(() => {
+    let calculatedLiquidity = '0'
+    if (type === 'user') {
+      calculatedLiquidity = calcSingleOutGivenPoolIn(
+        row.poolShare.pool.baseTokenLiquidity,
+        row.poolShare.pool.totalShares,
+        row.poolShare.shares
+      )
+    }
+    if (type === 'pool') {
+      calculatedLiquidity = new Decimal(
+        row.poolShare.pool.baseTokenLiquidity
+      ).toString()
+    }
+    setLiquidity(calculatedLiquidity)
+  }, [
+    row.poolShare.pool.baseTokenLiquidity,
+    row.poolShare.pool.totalShares,
+    row.poolShare.shares,
+    type
+  ])
+
   return (
     <div className={styles.userLiquidity}>
       <Conversion

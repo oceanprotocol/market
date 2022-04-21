@@ -90,7 +90,7 @@ export function calcInGivenOut(params: CalcInGivenOutParams): PoolPriceAndFees {
     consumeMarketSwapFeeAmount: '0'
   } as PoolPriceAndFees
   const one = new Decimal(1)
-  const tokenOutLiqudity = new Decimal(params.tokenOutLiqudity)
+  const tokenOutLiqudity = new Decimal(params.tokenOutLiquidity)
   const tokenInLiquidity = new Decimal(params.tokenInLiquidity)
   const tokenOutAmount = new Decimal(params.tokenOutAmount)
   const opcFee = new Decimal(params.opcFee)

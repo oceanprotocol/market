@@ -16,6 +16,7 @@ import content from '../../../../../../content/price.json'
 import { calcMaxExactIn, LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { usePool } from '@context/Pool'
 import { MAX_DECIMALS } from '@utils/constants'
+import { getMaxDecimalsValidation } from '@utils/numbers'
 
 export interface FormAddLiquidity {
   amount: number
@@ -41,11 +42,6 @@ export default function Add({
   const [newPoolShare, setNewPoolShare] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
-  // eslint-disable-next-line security/detect-non-literal-regexp
-  const maxDecimalsValidation = new RegExp(
-    '^\\d+(\\.\\d{1,' + MAX_DECIMALS + '})?$'
-  )
-
   // Live validation rules
   // https://github.com/jquense/yup#number
   const validationSchema: Yup.SchemaOf<FormAddLiquidity> = Yup.object().shape({
@@ -58,7 +54,8 @@ export default function Add({
       .test(
         'maxDigitsAfterDecimal',
         `Must have maximum ${MAX_DECIMALS} decimal digits`,
-        (param) => maxDecimalsValidation.test(param?.toString())
+        (param) =>
+          getMaxDecimalsValidation(MAX_DECIMALS).test(param?.toString())
       )
       .required('Required')
   })

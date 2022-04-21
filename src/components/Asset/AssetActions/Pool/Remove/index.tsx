@@ -80,7 +80,15 @@ export default function Remove({
     getMax(poolInstance, poolInfo, poolInfoUser, poolData).then((max) =>
       setAmountMaxPercent(max)
     )
-  }, [accountId, poolInfoUser?.poolShares, poolInfo?.totalPoolTokens])
+  }, [
+    accountId,
+    poolInfoUser?.poolShares,
+    poolInfo?.totalPoolTokens,
+    poolInfoUser,
+    poolInfo,
+    poolInstance,
+    poolData
+  ])
 
   const getValues = useRef(
     debounce(async (newAmountPoolShares) => {
@@ -137,7 +145,7 @@ export default function Remove({
     setAmountPoolShares(amountPoolShares)
   }
 
-  async function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
+  function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
     setAmountPercent(amountMaxPercent)
     const amountPoolShares = new Decimal(amountMaxPercent)

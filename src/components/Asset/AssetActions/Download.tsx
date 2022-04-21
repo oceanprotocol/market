@@ -66,15 +66,15 @@ export default function Download({
       setIsLoading(true)
       setStatusText('Calculating price including fees.')
 
-      const params = {
+      const params: CalcInGivenOutParams = {
         tokenInLiquidity: poolData?.baseTokenLiquidity,
-        tokenOutLiqudity: poolData?.datatokenLiquidity,
+        tokenOutLiquidity: poolData?.datatokenLiquidity,
         tokenOutAmount: '1',
         opcFee: getOpcForToken(poolData.baseToken.address, asset?.chainId),
         lpSwapFee: poolData?.liquidityProviderSwapFee,
         publishMarketSwapFee: poolData?.publishMarketSwapFee,
         consumeMarketSwapFee: '0'
-      } as CalcInGivenOutParams
+      }
       const orderPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,

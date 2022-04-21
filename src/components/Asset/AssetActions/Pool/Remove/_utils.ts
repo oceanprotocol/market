@@ -1,18 +1,14 @@
 import { PoolInfo, PoolInfoUser } from '@context/Pool/_types'
 import { calcMaxExactOut, Pool } from '@oceanprotocol/lib'
 import Decimal from 'decimal.js'
-// eslint-disable-next-line camelcase
-import { PoolData_poolData } from 'src/@types/subgraph/PoolData'
+import { PoolData_poolData as PoolData } from 'src/@types/subgraph/PoolData'
 
 export async function getMax(
   poolInstance: Pool,
   poolInfo: PoolInfo,
   poolInfoUser: PoolInfoUser,
-  // eslint-disable-next-line camelcase
-  poolData: PoolData_poolData
+  poolData: PoolData
 ) {
-  // calcPoolInGivenSingleOut
-
   const maxBaseTokensRemovable = calcMaxExactOut(poolData.baseTokenLiquidity)
 
   const maxPoolSharesRemovable = await poolInstance.calcPoolInGivenSingleOut(

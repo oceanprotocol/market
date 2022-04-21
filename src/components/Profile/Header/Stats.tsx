@@ -1,7 +1,7 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import React, { useEffect, useState, ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
-import { getAccountLiquidityInOwnAssets, UserLiquidity } from '@utils/subgraph'
+import { getAccountLiquidityInOwnAssets } from '@utils/subgraph'
 import Conversion from '@shared/Price/Conversion'
 import NumberUnit from './NumberUnit'
 import styles from './Stats.module.css'
@@ -12,9 +12,7 @@ import { calcSingleOutGivenPoolIn } from '@utils/pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
 
-async function getPoolSharesLiquidity(
-  poolShares: PoolShare[]
-): Promise<string> {
+function getPoolSharesLiquidity(poolShares: PoolShare[]): string {
   let liquidity = new Decimal(0)
 
   for (const poolShare of poolShares) {

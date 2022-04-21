@@ -2,6 +2,7 @@ import { MAX_DECIMALS } from '@utils/constants'
 import { initialValues } from './_constants'
 import * as Yup from 'yup'
 import Decimal from 'decimal.js'
+import { getMaxDecimalsValidation } from '@utils/numbers'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
@@ -63,10 +64,6 @@ const validationService = {
   })
 }
 
-const maxDecimalsValidation = new RegExp(
-  '^\\d+(\\.\\d{1,' + MAX_DECIMALS + '})?$'
-)
-
 const validationPricing = {
   type: Yup.string()
     .matches(/fixed|dynamic|free/g, { excludeEmptyString: true })
@@ -82,7 +79,7 @@ const validationPricing = {
     .test(
       'maxDigitsAfterDecimal',
       `Must have maximum ${MAX_DECIMALS} decimal digits`,
-      (param) => maxDecimalsValidation.test(param?.toString())
+      (param) => getMaxDecimalsValidation(MAX_DECIMALS).test(param?.toString())
     )
     .required('Required'),
   amountDataToken: Yup.number().required('Required'),
@@ -110,7 +107,7 @@ const validationPricing = {
     .test(
       'maxDigitsAfterDecimal',
       `Must have maximum ${MAX_DECIMALS} decimal digits`,
-      (param) => maxDecimalsValidation.test(param?.toString())
+      (param) => getMaxDecimalsValidation(MAX_DECIMALS).test(param?.toString())
     )
     .required('Required'),
   weightOnDataToken: Yup.string().required('Required'),
@@ -121,7 +118,7 @@ const validationPricing = {
     .test(
       'maxDigitsAfterDecimal',
       `Must have maximum ${MAX_DECIMALS} decimal digits`,
-      (param) => maxDecimalsValidation.test(param?.toString())
+      (param) => getMaxDecimalsValidation(MAX_DECIMALS).test(param?.toString())
     )
     .required('Required')
 }

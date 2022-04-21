@@ -112,41 +112,34 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   // 2 Pool Creator Info
   //
   useEffect(() => {
-    async function calculatePoolOwnerInfo() {
-      if (
-        !poolData ||
-        !poolInfo?.totalPoolTokens ||
-        poolData.shares[0]?.shares === '0'
-      )
-        return
+    if (
+      !poolData ||
+      !poolInfo?.totalPoolTokens ||
+      poolData.shares[0]?.shares === '0'
+    )
+      return
 
-      // Pool share tokens.
-      const poolSharePercentage = new Decimal(poolData.shares[0]?.shares)
-        .dividedBy(poolInfo.totalPoolTokens)
-        .mul(100)
-        .toFixed(2)
+    // Pool share tokens.
+    const poolSharePercentage = new Decimal(poolData.shares[0]?.shares)
+      .dividedBy(poolInfo.totalPoolTokens)
+      .mul(100)
+      .toFixed(2)
 
-      const ownerLiquidity = calcSingleOutGivenPoolIn(
-        poolData.baseTokenLiquidity,
-        poolData.totalShares,
-        poolData?.shares[0]?.shares
-      )
+    const ownerLiquidity = calcSingleOutGivenPoolIn(
+      poolData.baseTokenLiquidity,
+      poolData.totalShares,
+      poolData?.shares[0]?.shares
+    )
 
-      const newPoolOwnerInfo = {
-        liquidity: ownerLiquidity,
-        poolShares: poolData.shares[0]?.shares,
-        poolSharePercentage
-      }
-      setPoolInfoOwner(newPoolOwnerInfo)
-      LoggerInstance.log(
-        '[pool] Created new pool creatorinfo:',
-        newPoolOwnerInfo
-      )
+    const newPoolOwnerInfo = {
+      liquidity: ownerLiquidity,
+      poolShares: poolData.shares[0]?.shares,
+      poolSharePercentage
     }
-
-    calculatePoolOwnerInfo()
+    setPoolInfoOwner(newPoolOwnerInfo)
+    LoggerInstance.log('[pool] Created new pool creatorinfo:', newPoolOwnerInfo)
   }, [
-    asset.chainId,
+    asset?.chainId,
     poolData,
     poolInfo?.baseTokenAddress,
     poolInfo?.totalPoolTokens
@@ -156,49 +149,46 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   // 3 User Pool Info
   //
   useEffect(() => {
-    async function calculatePoolUserInfo() {
-      if (
-        !poolData ||
-        !poolInfo?.totalPoolTokens ||
-        !poolInfoUser?.poolShares ||
-        !poolData?.baseTokenLiquidity ||
-        !asset?.chainId
-      )
-        return
+    if (
+      !poolData ||
+      !poolInfo?.totalPoolTokens ||
+      !poolInfoUser?.poolShares ||
+      !poolData?.baseTokenLiquidity ||
+      !asset?.chainId
+    )
+      return
 
-      const userLiquidity = calcSingleOutGivenPoolIn(
-        poolData.baseTokenLiquidity,
-        poolData.totalShares,
-        poolInfoUser.poolShares
-      )
+    const userLiquidity = calcSingleOutGivenPoolIn(
+      poolData.baseTokenLiquidity,
+      poolData.totalShares,
+      poolInfoUser.poolShares
+    )
 
-      // Pool share in %.
-      const poolSharePercentage = new Decimal(poolInfoUser.poolShares)
-        .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-        .mul(100)
-        .toFixed(2)
+    // Pool share in %.
+    const poolSharePercentage = new Decimal(poolInfoUser.poolShares)
+      .dividedBy(new Decimal(poolInfo.totalPoolTokens))
+      .mul(100)
+      .toFixed(2)
 
-      setUserHasAddedLiquidity(Number(poolSharePercentage) > 0)
+    setUserHasAddedLiquidity(Number(poolSharePercentage) > 0)
 
-      const newPoolInfoUser = {
-        liquidity: userLiquidity,
-        poolshares: poolInfoUser.poolShares,
-        poolSharePercentage
-      }
-      setPoolInfoUser((prevState: PoolInfoUser) => ({
-        ...prevState,
-        ...newPoolInfoUser
-      }))
-
-      LoggerInstance.log('[pool] Created new user pool info:', {
-        ...newPoolInfoUser
-      })
+    const newPoolInfoUser: PoolInfoUser = {
+      liquidity: userLiquidity,
+      poolShares: poolInfoUser.poolShares,
+      poolSharePercentage
     }
-    calculatePoolUserInfo()
+    setPoolInfoUser((prevState: PoolInfoUser) => ({
+      ...prevState,
+      ...newPoolInfoUser
+    }))
+
+    LoggerInstance.log('[pool] Created new user pool info:', {
+      ...newPoolInfoUser
+    })
   }, [
     poolData,
-    poolInfoUser.poolShares,
-    asset.chainId,
+    poolInfoUser?.poolShares,
+    asset?.chainId,
     owner,
     poolInfo?.totalPoolTokens
   ])
