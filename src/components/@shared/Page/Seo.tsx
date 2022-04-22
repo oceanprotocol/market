@@ -1,7 +1,8 @@
 import React, { ReactElement } from 'react'
 import Head from 'next/head'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
+
 import { isBrowser } from '@utils/index'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function Seo({
   title,
@@ -12,14 +13,14 @@ export default function Seo({
   description?: string
   uri: string
 }): ReactElement {
-  const { siteTitle, siteTagline, siteUrl, siteImage } = useSiteMetadata()
+  const { siteContent } = useMarketMetadata()
 
   // Remove trailing slash from all URLs
-  const canonical = `${siteUrl}${uri}`.replace(/\/$/, '')
+  const canonical = `${siteContent?.siteUrl}${uri}`.replace(/\/$/, '')
 
   const pageTitle = title
-    ? `${title} - ${siteTitle}`
-    : `${siteTitle} — ${siteTagline}`
+    ? `${title} - ${siteContent?.siteTitle}`
+    : `${siteContent?.siteTitle} — ${siteContent?.siteTagline}`
 
   return (
     <Head>
@@ -47,10 +48,16 @@ export default function Seo({
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonical} />
 
-      <meta name="image" content={`${siteUrl}${siteImage}`} />
-      <meta property="og:image" content={`${siteUrl}${siteImage}`} />
+      <meta
+        name="image"
+        content={`${siteContent?.siteUrl}${siteContent?.siteImage}`}
+      />
+      <meta
+        property="og:image"
+        content={`${siteContent?.siteUrl}${siteContent?.siteImage}`}
+      />
 
-      <meta property="og:site_name" content={siteTitle} />
+      <meta property="og:site_name" content={siteContent?.siteTitle} />
       <meta name="twitter:creator" content="@oceanprotocol" />
       <meta name="twitter:card" content="summary_large_image" />
     </Head>

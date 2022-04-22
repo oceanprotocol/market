@@ -22,7 +22,7 @@ import { initialValues } from './_constants'
 import content from '../../../../../content/price.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { usePool } from '@context/Pool'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function FormTrade({
   asset,
@@ -34,11 +34,11 @@ export default function FormTrade({
   const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   const { poolInfo, fetchAllData } = usePool()
+
   const [txId, setTxId] = useState<string>()
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
-
   const [maximumBaseToken, setMaximumBaseToken] = useState('0')
   const [maximumDt, setMaximumDt] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
@@ -67,7 +67,7 @@ export default function FormTrade({
     .defined()
 
   async function handleTrade(values: FormTradeData) {
-    if (!web3 || !asset || !poolInfo || !values) return
+    if (!web3 || !asset || !poolInfo || !values || !appConfig) return
 
     try {
       const poolInstance = new Pool(web3)

@@ -53,7 +53,6 @@ export default function Graph(): ReactElement {
       const conversionSpotPrice = prices[currency.toLowerCase()]
 
       const tvl = new Decimal(item.baseTokenLiquidity)
-        .mul(2)
         .mul(conversionSpotPrice) // convert to user currency
         .toString()
       return tvl

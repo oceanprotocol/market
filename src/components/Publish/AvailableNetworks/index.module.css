@@ -1,0 +1,12 @@
+.networks {
+  column-count: 2;
+}
+.title {
+  font-size: var(--font-size-small);
+  margin-bottom: calc(var(--spacer) / 6);
+  margin-top: calc(var(--spacer) / 2);
+  color: var(--color-secondary);
+}
+.content {
+  padding: calc(var(--spacer) / 2);
+}
