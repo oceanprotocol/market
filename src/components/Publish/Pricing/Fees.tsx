@@ -7,7 +7,7 @@ import Error from '@shared/FormInput/Error'
 import { getOpcFees } from '../../../@utils/subgraph'
 import { OpcFeesQuery_opc as OpcFeesData } from '../../../@types/subgraph/OpcFeesQuery'
 import { useWeb3 } from '@context/Web3'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 const Default = ({
   title,
@@ -45,7 +45,7 @@ export default function Fees({
   const [field, meta] = useField('pricing.swapFee')
   const [opcFees, setOpcFees] = useState<OpcFeesData>(undefined)
   const { chainId } = useWeb3()
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
 
   useEffect(() => {
     getOpcFees(chainId || 1).then((response: OpcFeesData) => {
@@ -88,8 +88,8 @@ export default function Fees({
           tooltip={tooltips.marketplaceFee}
           value={
             pricingType === 'dynamic'
-              ? appConfig.publisherMarketPoolSwapFee
-              : appConfig.publisherMarketFixedSwapFee
+              ? appConfig?.publisherMarketPoolSwapFee
+              : appConfig?.publisherMarketFixedSwapFee
           }
         />
       </div>

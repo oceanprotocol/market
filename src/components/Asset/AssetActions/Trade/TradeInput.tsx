@@ -61,15 +61,16 @@ export default function TradeInput({
             placeholder="0"
             field={field}
             form={form}
+            disabled={!accountId || disabled}
+            additionalComponent={<Error meta={meta} />}
             value={`${field.value}`}
+            {...field}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               handleChange(e)
               handleValueChange(name, Number(e.target.value))
               // debounce needed to avoid validating the wrong (pass) value
               debounce(() => validateForm(), 100)
             }}
-            disabled={!accountId || disabled}
-            additionalComponent={<Error meta={meta} />}
           />
         )}
       </Field>

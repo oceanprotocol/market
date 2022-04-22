@@ -20,8 +20,8 @@ import {
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { usePool } from '@context/Pool'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { MAX_DECIMALS } from '@utils/constants'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 // Decimal.set({ toExpNeg: -15, precision: 5, rounding: Decimal.ROUND_DOWN })
 
@@ -41,7 +41,7 @@ export default function Swap({
   const { isAssetNetwork } = useAsset()
   const { web3 } = useWeb3()
   const { poolInfo, poolData } = usePool()
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
@@ -69,7 +69,7 @@ export default function Swap({
   const [lpSwapFee, setLpSwapFee] = useState<string>()
 
   useEffect(() => {
-    if (!asset || !balance || !values?.type || !web3) return
+    if (!asset || !balance || !values?.type || !web3 || !appConfig) return
     const poolInstance = new Pool(web3)
 
     async function calculateMaximum() {
@@ -171,6 +171,7 @@ export default function Swap({
     poolInfo.liquidityProviderSwapFee,
     poolInfo.datatokenAddress,
     poolInfo.baseTokenAddress,
+    appConfig,
     appConfig.consumeMarketPoolSwapFee
   ])
 
