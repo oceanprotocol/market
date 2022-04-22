@@ -1,17 +1,26 @@
 import { usePool } from '@context/Pool'
+import { useUserPreferences } from '@context/UserPreferences'
 import Button from '@shared/atoms/Button'
 import React from 'react'
 import styles from './Update.module.css'
 
 export default function Update() {
-  const { fetchAllData } = usePool()
+  const { debug } = useUserPreferences()
+  const { fetchAllData, refreshInterval } = usePool()
 
   return (
-    <div className={styles.update}>
-      <Button style="text" size="small" onClick={() => fetchAllData()}>
-        Refresh Data
-      </Button>
-      {/* Fetching every {refreshInterval / 1000} sec. */}
-    </div>
+    <p className={styles.update}>
+      Fetching every {refreshInterval / 1000} sec.{' '}
+      {debug && (
+        <Button
+          style="text"
+          size="small"
+          onClick={() => fetchAllData()}
+          className={styles.button}
+        >
+          Refresh Data
+        </Button>
+      )}
+    </p>
   )
 }

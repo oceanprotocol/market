@@ -48,6 +48,8 @@ function MarketMetadataProvider({
 
   const getOpcFeeForToken = useCallback(
     (tokenAddress: string, chainId: number): string => {
+      if (!opcFees) return
+
       const opc = opcFees.filter((x) => x.chainId === chainId)[0]
       const isTokenApproved = opc.approvedTokens.includes(tokenAddress)
       return isTokenApproved ? opc.swapApprovedFee : opc.swapNotApprovedFee
