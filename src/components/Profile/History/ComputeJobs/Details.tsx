@@ -7,8 +7,8 @@ import { retrieveAsset } from '@utils/aquarius'
 import Results from './Results'
 import styles from './Details.module.css'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import MetaItem from '../../../Asset/AssetContent/MetaItem'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 function Asset({
   title,
@@ -40,7 +40,7 @@ function Asset({
 }
 
 function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   const [algoName, setAlgoName] = useState<string>()
   const [algoDtSymbol, setAlgoDtSymbol] = useState<string>()
   const newCancelToken = useCancelToken()

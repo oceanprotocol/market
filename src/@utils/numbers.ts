@@ -30,3 +30,9 @@ export function randomIntFromInterval(min: number, max: number): number {
   // min and max are included
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
+
+export function getMaxDecimalsValidation(max: number): RegExp {
+  // eslint-disable-next-line security/detect-non-literal-regexp
+  const maxDecimalsValidation = new RegExp('^\\d+(\\.\\d{1,' + max + '})?$')
+  return maxDecimalsValidation
+}

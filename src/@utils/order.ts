@@ -9,8 +9,12 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 import { TransactionReceipt } from 'web3-eth'
-import { getSiteMetadata } from './siteConfig'
 import { OrderPriceAndFees } from 'src/@types/Price'
+import {
+  marketFeeAddress,
+  consumeMarketOrderFee,
+  consumeMarketFixedSwapFee
+} from '../../app.config'
 
 /**
  * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
@@ -27,7 +31,6 @@ export async function order(
 ): Promise<TransactionReceipt> {
   const datatoken = new Datatoken(web3)
   const config = getOceanConfig(asset.chainId)
-  const { appConfig } = getSiteMetadata()
 
   const initializeData = await ProviderInstance.initialize(
     asset.id,
@@ -42,8 +45,8 @@ export async function order(
     serviceIndex: 0,
     _providerFee: initializeData.providerFee,
     _consumeMarketFee: {
-      consumeMarketFeeAddress: appConfig.marketFeeAddress,
-      consumeMarketFeeAmount: appConfig.consumeMarketOrderFee,
+      consumeMarketFeeAddress: marketFeeAddress,
+      consumeMarketFeeAmount: consumeMarketOrderFee,
       consumeMarketFeeToken: config.oceanTokenAddress
     }
   } as OrderParams
@@ -68,8 +71,8 @@ export async function order(
         exchangeContract: config.fixedRateExchangeAddress,
         exchangeId: asset.accessDetails.addressOrId,
         maxBaseTokenAmount: orderPriceAndFees.price,
-        swapMarketFee: appConfig.consumeMarketFixedSwapFee,
-        marketFeeAddress: appConfig.marketFeeAddress
+        swapMarketFee: consumeMarketFixedSwapFee,
+        marketFeeAddress
       } as FreOrderParams
       const tx = await datatoken.buyFromFreAndOrder(
         asset.accessDetails.datatoken.address,

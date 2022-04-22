@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react'
 import Link from 'next/link'
 import loadable from '@loadable/component'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Badge from '@shared/atoms/Badge'
 import Logo from '@shared/atoms/Logo'
 import UserPreferences from './UserPreferences'
@@ -9,6 +8,7 @@ import Networks from './UserPreferences/Networks'
 import SearchBar from './SearchBar'
 import styles from './Menu.module.css'
 import { useRouter } from 'next/router'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -33,7 +33,7 @@ function MenuLink({ item }: { item: MenuItem }) {
 }
 
 export default function Menu(): ReactElement {
-  const { menu, siteTitle } = useSiteMetadata()
+  const { siteContent } = useMarketMetadata()
 
   return (
     <nav className={styles.menu}>
@@ -41,13 +41,13 @@ export default function Menu(): ReactElement {
         <a className={styles.logo}>
           <Logo noWordmark />
           <h1 className={styles.title}>
-            {siteTitle} <Badge label="v4" />
+            {siteContent?.siteTitle} <Badge label="v4" />
           </h1>
         </a>
       </Link>
 
       <ul className={styles.navigation}>
-        {menu.map((item: MenuItem) => (
+        {siteContent?.menu.map((item: MenuItem) => (
           <li key={item.name}>
             <MenuLink item={item} />
           </li>
