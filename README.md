@@ -294,6 +294,41 @@ npm run lint
 npm run format
 ```
 
+## 👩‍🎤 Storybook
+
+Storybook helps us build UI components in isolation from our app's business logic, data, and context. That makes it easy to develop hard-to-reach states and save these UI states as stories to revisit during development, testing, or QA.
+
+To start adding stories, create a `index.stories.tsx` inside the component's folder:
+
+<pre>
+src
+└─── components
+│   └─── @shared
+│       └─── <your component>
+│            │   index.tsx
+│            │   index.module.css
+│            │   <b>index.stories.tsx</b>
+│            │   index.test.tsx
+</pre>
+
+You can also write a [test](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-testing-library) against your story by creating a `index.test.tsx` file.
+
+## 🤖 Testing
+
+Test suite for unit & integration tests is setup with Storybook's Addon for [Testing Library](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-testing-library), which utilizes [Jest](https://jestjs.io/) as test runner. A combined coverage report is sent to CodeClimate via the coverage GitHub Actions job.
+
+Executing linting, type checking, unit, and integration tests:
+
+```bash
+npm run test
+```
+
+Executing only unit, and integration tests:
+
+```bash
+npm run jest
+```
+
 ## 🛳 Production
 
 To create a production build, run from the root of the project:
