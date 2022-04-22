@@ -21,7 +21,7 @@ import useNetworkMetadata, {
   getNetworkType,
   NetworkType
 } from '../@hooks/useNetworkMetadata'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
+import { useMarketMetadata } from './MarketMetadata'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -90,7 +90,7 @@ const Web3Context = createContext({} as Web3ProviderValue)
 
 function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const { networksList } = useNetworkMetadata()
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const [web3, setWeb3] = useState<Web3>()
   const [web3Provider, setWeb3Provider] = useState<any>()

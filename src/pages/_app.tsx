@@ -16,9 +16,9 @@ import MarketMetadataProvider from '@context/MarketMetadata'
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })
   return (
-    <Web3Provider>
-      <UrqlProvider>
-        <MarketMetadataProvider>
+    <MarketMetadataProvider>
+      <Web3Provider>
+        <UrqlProvider>
           <UserPreferencesProvider>
             <PricesProvider>
               <ConsentProvider>
@@ -28,9 +28,9 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
               </ConsentProvider>
             </PricesProvider>
           </UserPreferencesProvider>
-        </MarketMetadataProvider>
-      </UrqlProvider>
-    </Web3Provider>
+        </UrqlProvider>
+      </Web3Provider>
+    </MarketMetadataProvider>
   )
 }
 

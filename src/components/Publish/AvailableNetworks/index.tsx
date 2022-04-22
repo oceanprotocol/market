@@ -1,15 +1,15 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 import Network from './Network'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import useNetworkMetadata, {
   filterNetworksByType
 } from '@hooks/useNetworkMetadata'
 import content from '../../../../content/publish/index.json'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function AvailableNetworks(): ReactElement {
   const { networksList } = useNetworkMetadata()
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const networksMain = filterNetworksByType(
     'mainnet',
