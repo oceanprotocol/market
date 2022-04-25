@@ -12,6 +12,31 @@ on:
       - '**'
 
 jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: ['16', '14']
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
+
+      - run: npm run build
   test:
     runs-on: ${{ matrix.os }}
 
@@ -37,10 +62,7 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
 
       - run: npm ci
-      - run: npm run codegen:apollo
-      - run: npm run lint
       - run: npm test
-      - run: npm run build
 
   coverage:
     runs-on: ubuntu-latest
