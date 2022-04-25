@@ -27,7 +27,6 @@
     "@oceanprotocol/lib": "^1.0.0-next.35",
     "@oceanprotocol/typographies": "^0.1.0",
     "@portis/web3": "^4.0.7",
-    "@testing-library/jest-dom": "^5.16.4",
     "@tippyjs/react": "^4.2.6",
     "@urql/exchange-refocus": "^0.2.5",
     "@walletconnect/web3-provider": "^1.7.6",
@@ -74,7 +73,6 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.9",
     "@storybook/addon-actions": "^6.4.22",
     "@storybook/addon-essentials": "^6.4.22",
     "@storybook/addon-interactions": "^6.4.22",
@@ -83,6 +81,7 @@
     "@storybook/testing-library": "^0.0.9",
     "@storybook/testing-react": "^1.2.4",
     "@svgr/webpack": "^6.2.1",
+    "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.1.1",
     "@types/chart.js": "^2.9.35",
@@ -102,7 +101,6 @@
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
     "apollo": "^2.33.9",
-    "babel-loader": "^8.2.4",
     "eslint": "^7.27.0",
     "eslint-config-oceanprotocol": "^1.5.0",
     "eslint-config-prettier": "^8.3.0",
