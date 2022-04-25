@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { Fragment, ReactElement } from 'react'
 import styles from './index.module.css'
 import Network from './Network'
 import useNetworkMetadata, {
@@ -40,12 +40,12 @@ export default function AvailableNetworks(): ReactElement {
       {networkCategories.map(
         (networkCategory) =>
           networkCategory.data.length > 0 && (
-            <>
+            <Fragment key={networkCategory.title}>
               <h4 className={styles.title}>{networkCategory.title}</h4>
               <ul className={styles.networks}>
                 {networkList(networkCategory.data)}
               </ul>
-            </>
+            </Fragment>
           )
       )}
     </div>
