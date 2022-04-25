@@ -15,8 +15,8 @@ export default function Navigation(): ReactElement {
   }: FormikContextType<FormPublishData> = useFormikContext()
 
   function handleStepClick(step: number) {
-    // Change route to include steps
-    router.push({ pathname: `${router.pathname}`, query: { step: step } })
+    // Change step view
+    router.push(`/publish/${step}`)
   }
 
   function getSuccessClass(step: number) {
