@@ -8,7 +8,7 @@ import React, {
 } from 'react'
 import { LoggerInstance, LogLevel } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
+import { useMarketMetadata } from './MarketMetadata'
 
 interface UserPreferencesValue {
   debug: boolean
@@ -51,9 +51,8 @@ function UserPreferencesProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   const localStorage = getLocalStorage()
-
   // Set default values from localStorage
   const [debug, setDebug] = useState<boolean>(localStorage?.debug || false)
   const [currency, setCurrency] = useState<string>(
@@ -64,7 +63,7 @@ function UserPreferencesProvider({
   const [chainIds, setChainIds] = useState(
     localStorage?.chainIds || appConfig.chainIds
   )
-  const { defaultPrivacyPolicySlug } = useSiteMetadata().appConfig
+  const { defaultPrivacyPolicySlug } = appConfig
 
   const [privacyPolicySlug, setPrivacyPolicySlug] = useState<string>(
     localStorage?.privacyPolicySlug || defaultPrivacyPolicySlug

@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useFormikContext } from 'formik'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Tabs from '@shared/atoms/Tabs'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
@@ -11,9 +10,10 @@ import Fixed from './Fixed'
 import Free from './Free'
 import content from '../../../../content/price.json'
 import styles from './index.module.css'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function PricingFields(): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
 
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()

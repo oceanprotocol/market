@@ -134,7 +134,7 @@ const queryLatest = {
 }
 
 function Component() {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   const [result, setResult] = useState<QueryResult>()
 
   useEffect(() => {

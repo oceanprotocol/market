@@ -1,4 +1,3 @@
-import Decimal from 'decimal.js'
 import {
   PoolData_poolSnapshots as PoolDataPoolSnapshots,
   PoolData_poolData as PoolDataPoolData
@@ -15,13 +14,12 @@ export interface PoolInfo {
   baseTokenSymbol: string
   baseTokenAddress: string
   totalPoolTokens: string
-  totalLiquidityInOcean: Decimal
 }
 
 export interface PoolInfoUser {
-  liquidity: Decimal // liquidity in base token
-  poolShares: string // pool share tokens
-  poolShare: string // in %
+  liquidity: string
+  poolShares: string
+  poolSharePercentage: string
 }
 
 export interface PoolProviderValue {
@@ -31,7 +29,6 @@ export interface PoolProviderValue {
   poolInfoUser: PoolInfoUser
   poolSnapshots: PoolDataPoolSnapshots[]
   hasUserAddedLiquidity: boolean
-  isRemoveDisabled: boolean
   refreshInterval: number
   fetchAllData: () => void
 }

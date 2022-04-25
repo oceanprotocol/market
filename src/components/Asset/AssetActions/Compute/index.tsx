@@ -1,8 +1,5 @@
 import React, { useState, ReactElement, useEffect, useCallback } from 'react'
 import {
-  LoggerInstance,
-  ComputeAlgorithm,
-  ComputeOutput,
   Asset,
   DDO,
   PublisherTrustedAlgorithm,
@@ -12,7 +9,6 @@ import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useWeb3 } from '@context/Web3'
 import {
   generateBaseQuery,
@@ -25,7 +21,7 @@ import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import { getServiceByName, secondsToString } from '@utils/ddo'
+import { getServiceByName } from '@utils/ddo'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
 import { getPreviousOrders } from '@utils/subgraph'
@@ -37,6 +33,7 @@ import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { AccessDetails } from 'src/@types/Price'
 import { transformAssetToAssetSelection } from '@utils/assetConvertor'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function Compute({
   ddo,
@@ -55,7 +52,7 @@ export default function Compute({
   isConsumable?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   const { accountId } = useWeb3()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()

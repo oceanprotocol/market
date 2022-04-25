@@ -10,22 +10,27 @@ import App from 'src/components/App'
 
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../stylesGlobal/styles.css'
+import Decimal from 'decimal.js'
+import MarketMetadataProvider from '@context/MarketMetadata'
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
+  Decimal.set({ rounding: 1 })
   return (
-    <Web3Provider>
-      <UrqlProvider>
-        <UserPreferencesProvider>
-          <PricesProvider>
-            <ConsentProvider>
-              <App>
-                <Component {...pageProps} />
-              </App>
-            </ConsentProvider>
-          </PricesProvider>
-        </UserPreferencesProvider>
-      </UrqlProvider>
-    </Web3Provider>
+    <MarketMetadataProvider>
+      <Web3Provider>
+        <UrqlProvider>
+          <UserPreferencesProvider>
+            <PricesProvider>
+              <ConsentProvider>
+                <App>
+                  <Component {...pageProps} />
+                </App>
+              </ConsentProvider>
+            </PricesProvider>
+          </UserPreferencesProvider>
+        </UrqlProvider>
+      </Web3Provider>
+    </MarketMetadataProvider>
   )
 }
 
