@@ -1,5 +1,5 @@
 import { getAssetsFromDtList } from '@utils/aquarius'
-import { calculateUserLiquidity } from '@utils/pool'
+import { calcSingleOutGivenPoolIn, getLiquidityByShares } from '@utils/pool'
 import { CancelToken } from 'axios'
 import { PoolShares_poolShares as PoolShare } from '../../../../@types/subgraph/PoolShares'
 import { AssetPoolShare } from '.'
@@ -31,10 +31,10 @@ export async function getAssetsFromPoolShares(
   const ddoList = await getAssetsFromDtList(dtList, chainIds, cancelToken)
 
   for (let i = 0; i < data.length; i++) {
-    const userLiquidity = calculateUserLiquidity(
-      data[i].shares,
+    const userLiquidity = calcSingleOutGivenPoolIn(
+      data[i].pool.baseTokenLiquidity,
       data[i].pool.totalShares,
-      data[i].pool.baseTokenLiquidity
+      data[i].shares
     )
     assetList.push({
       poolShare: data[i],

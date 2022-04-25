@@ -1,0 +1,8 @@
+.button {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  line-height: var(--line-height);
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-base);
+  font-size: var(--font-size-small);
+}

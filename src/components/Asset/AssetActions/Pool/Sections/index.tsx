@@ -47,9 +47,10 @@ export default function PoolSections() {
       </PoolSection>
 
       <PoolSection
-        title="Your Value Locked"
+        title="Your liquidity"
         titlePostfix={
-          poolInfoUser?.poolShare && `${poolInfoUser?.poolShare}% of pool`
+          poolInfoUser?.poolSharePercentage &&
+          `${poolInfoUser?.poolSharePercentage}% of pool`
         }
         tooltip={content.pool.tooltips.liquidity.replace(
           'SWAPFEE',
@@ -59,27 +60,27 @@ export default function PoolSections() {
       >
         <Token
           symbol={poolInfo?.baseTokenSymbol}
-          balance={poolInfoUser?.liquidity.toString()}
-          conversion={poolInfoUser?.liquidity}
+          balance={poolInfoUser?.liquidity}
+          conversion
         />
       </PoolSection>
 
       <PoolSection
-        title="Owner Value Locked"
-        titlePostfix={`${poolInfoOwner?.poolShare}% of pool`}
+        title="Owner liquidity"
+        titlePostfix={`${poolInfoOwner?.poolSharePercentage}% of pool`}
       >
         <Token
           symbol={poolInfo?.baseTokenSymbol}
-          balance={poolInfoOwner?.liquidity.toString()}
-          conversion={poolInfoOwner?.liquidity}
+          balance={poolInfoOwner?.liquidity}
+          conversion
         />
       </PoolSection>
 
       <PoolSection title="Total Value Locked">
         <Token
           symbol={poolInfo?.baseTokenSymbol}
-          balance={poolInfo?.totalLiquidityInOcean.toString()}
-          conversion={poolInfo?.totalLiquidityInOcean}
+          balance={poolData?.baseTokenLiquidity.toString()}
+          conversion
         />
       </PoolSection>
 
@@ -92,7 +93,6 @@ export default function PoolSections() {
         titlePostfixTitle={`Weight of ${poolInfo?.weightBaseToken}% ${poolInfo?.baseTokenSymbol} & ${poolInfo?.weightDt}% ${poolInfo?.datatokenSymbol}`}
       >
         <Graph />
-
         <Token
           symbol={poolInfo?.baseTokenSymbol}
           balance={`${poolData?.baseTokenLiquidity}`}
@@ -105,7 +105,7 @@ export default function PoolSections() {
         />
 
         <Token
-          symbol="% pool fee"
+          symbol="% swap fee"
           balance={poolInfo?.liquidityProviderSwapFee}
           noIcon
           size="mini"
@@ -117,7 +117,7 @@ export default function PoolSections() {
           size="mini"
         />
         <Token
-          symbol="% OPF fee"
+          symbol="% OPC fee"
           balance={poolInfo?.opcFee}
           noIcon
           size="mini"

@@ -61,8 +61,8 @@
       "title": "Remove Liquidity",
       "simple": "Set the amount of your pool shares to spend. You will get the equivalent value in OCEAN, limited to maximum amount for pool protection.",
       "output": {
-        "titleIn": "You will spend",
-        "titleOut": "You will receive"
+        "titleOutExpected": "Expected output",
+        "titleOutMinimum": "Minimum received"
       },
       "action": "Remove"
     }

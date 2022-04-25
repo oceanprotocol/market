@@ -11,12 +11,12 @@ import { Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { retrieveAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { useMarketMetadata } from './MarketMetadata'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -40,7 +40,7 @@ function AssetProvider({
   did: string
   children: ReactNode
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const { chainId, accountId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)

@@ -17,6 +17,8 @@ import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { usePool } from '@context/Pool'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function Download({
   asset,
@@ -34,6 +36,7 @@ export default function Download({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
+  const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const isMounted = useIsMounted()
 
@@ -44,6 +47,7 @@ export default function Download({
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
 
+  const { poolData } = usePool()
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   useEffect(() => {
@@ -55,19 +59,35 @@ export default function Download({
     async function init() {
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
-        asset?.accessDetails?.type === 'free'
+        asset?.accessDetails?.type === 'free' ||
+        (!poolData && asset?.accessDetails?.type === 'dynamic')
       )
         return
       setIsLoading(true)
       setStatusText('Calculating price including fees.')
-      const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
+
+      const params: CalcInGivenOutParams = {
+        tokenInLiquidity: poolData?.baseTokenLiquidity,
+        tokenOutLiquidity: poolData?.datatokenLiquidity,
+        tokenOutAmount: '1',
+        opcFee: getOpcFeeForToken(poolData.baseToken.address, asset?.chainId),
+        lpSwapFee: poolData?.liquidityProviderSwapFee,
+        publishMarketSwapFee: poolData?.publishMarketSwapFee,
+        consumeMarketSwapFee: '0'
+      }
+      const orderPriceAndFees = await getOrderPriceAndFees(
+        asset,
+        ZERO_ADDRESS,
+        params
+      )
+
       setOrderPriceAndFees(orderPriceAndFees)
 
       setIsLoading(false)
     }
 
     init()
-  }, [asset, accountId])
+  }, [asset, accountId, poolData, getOpcFeeForToken])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
