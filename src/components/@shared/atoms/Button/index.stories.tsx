@@ -14,7 +14,16 @@ const Template: ComponentStory<typeof Button> = (args: ButtonProps) => (
   <Button {...args} />
 )
 
-export const Primary = Template.bind({})
+interface Props {
+  args: {
+    children: string
+    style: string
+    size: string
+    onClick: any
+  }
+}
+
+export const Primary: Props = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
   children: 'Button',
