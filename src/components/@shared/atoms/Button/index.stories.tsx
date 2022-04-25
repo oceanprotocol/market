@@ -21,6 +21,6 @@ Primary.args = {
   style: 'primary',
   size: 'small',
   onClick: () => {
-    alert('Clicked!')
+    console.log('Button pressed!')
   }
 }
