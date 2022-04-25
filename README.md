@@ -315,15 +315,15 @@ You can also write a [test](https://storybook.js.org/docs/react/writing-tests/im
 
 ## 🤖 Testing
 
-Test suite for unit & integration tests is setup with Storybook's Addon for [Testing Library](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-testing-library), which utilizes [Jest](https://jestjs.io/) as test runner. A combined coverage report is sent to CodeClimate via the coverage GitHub Actions job.
+Interaction tests are setup with Storybook's Addon for [Testing Library](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-testing-library), which utilizes [Jest](https://jestjs.io/) as test runner. A combined coverage report is sent to CodeClimate via the coverage GitHub Actions job.
 
-Executing linting, type checking, unit, and integration tests:
+Executing linting, type checking, and interaction tests:
 
 ```bash
 npm run test
 ```
 
-Executing only unit, and integration tests:
+Executing only interaction tests:
 
 ```bash
 npm run jest
