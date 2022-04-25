@@ -11,12 +11,12 @@ import {
 } from '@utils/aquarius'
 import { useAsset } from '@context/Asset'
 import { PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import FormActions from './FormActions'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
 import { getServiceByName } from '@utils/ddo'
 import { transformAssetToAssetSelection } from '@utils/assetConvertor'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function FormEditComputeDataset({
   data,
@@ -25,7 +25,7 @@ export default function FormEditComputeDataset({
   data: InputProps[]
   title: string
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   const { asset } = useAsset()
   const { values }: FormikContextType<ComputePrivacyForm> = useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
@@ -59,7 +59,7 @@ export default function FormEditComputeDataset({
     getAlgorithmList(publisherTrustedAlgorithms).then((algorithms) => {
       setAllAlgorithms(algorithms)
     })
-  }, [appConfig.metadataCacheUri, publisherTrustedAlgorithms])
+  }, [appConfig, appConfig.metadataCacheUri, publisherTrustedAlgorithms])
 
   return (
     <Form className={styles.form}>

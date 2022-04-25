@@ -1,12 +1,8 @@
 import React, { ReactElement, useEffect } from 'react'
 import styles from './FormAdd.module.css'
 import Input from '@shared/FormInput'
-import {
-  Field,
-  FieldInputProps,
-  FormikContextType,
-  useFormikContext
-} from 'formik'
+import Error from '@shared/FormInput/Error'
+import { FormikContextType, useField, useFormikContext } from 'formik'
 import Button from '@shared/atoms/Button'
 import { FormAddLiquidity } from '.'
 import UserLiquidity from '../../UserLiquidity'
@@ -36,7 +32,7 @@ export default function FormAdd({
     values,
     isSubmitting
   }: FormikContextType<FormAddLiquidity> = useFormikContext()
-
+  const [field, meta] = useField('amount')
   useEffect(() => {
     async function calculatePoolShares() {
       if (!web3 || !poolData?.id || !poolInfo?.totalPoolTokens) return
@@ -53,7 +49,7 @@ export default function FormAdd({
       const poolTokens = await poolInstance.calcPoolOutGivenSingleIn(
         poolData.id,
         poolInfo.baseTokenAddress,
-        values.amount
+        values.amount.toString()
       )
       setNewPoolTokens(poolTokens)
       const newPoolShareDecimal =
@@ -89,29 +85,15 @@ export default function FormAdd({
         symbol={poolInfo?.baseTokenSymbol}
       />
 
-      <Field name="amount">
-        {({
-          field,
-          form
-        }: {
-          field: FieldInputProps<FormAddLiquidity>
-          form: any
-        }) => (
-          <Input
-            type="number"
-            name="amount"
-            max={amountMax}
-            min="0"
-            value={values.amount}
-            step="any"
-            prefix={poolInfo?.baseTokenSymbol}
-            placeholder="0"
-            field={field}
-            form={form}
-            disabled={!isAssetNetwork || isSubmitting}
-          />
-        )}
-      </Field>
+      <Input
+        type="number"
+        min="0"
+        prefix={poolInfo?.baseTokenSymbol}
+        placeholder="0"
+        disabled={!isAssetNetwork || isSubmitting}
+        {...field}
+        additionalComponent={<Error meta={meta} />}
+      />
 
       {Number(balance.ocean) > 0 && (
         <Button

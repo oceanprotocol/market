@@ -1,12 +1,11 @@
 import { approve, Pool, PoolPriceAndFees } from '@oceanprotocol/lib'
 import Web3 from 'web3'
-import { getSiteMetadata } from './siteConfig'
 import { getDummyWeb3 } from './web3'
 import { TransactionReceipt } from 'web3-eth'
 import Decimal from 'decimal.js'
 import { AccessDetails } from 'src/@types/Price'
-import { isValidNumber } from './numbers'
-import { MAX_DECIMALS } from './constants'
+import { consumeMarketPoolSwapFee, marketFeeAddress } from '../../app.config'
+
 /**
  * This is used to calculate the price to buy one datatoken from a pool, that is different from spot price. You need to pass either a web3 object or a chainId. If you pass a chainId a dummy web3 object will be created
  * @param {AccessDetails} accessDetails
@@ -27,13 +26,13 @@ export async function calculateBuyPrice(
   }
 
   const pool = new Pool(web3)
-  const { appConfig } = getSiteMetadata()
+
   const estimatedPrice = await pool.getAmountInExactOut(
     accessDetails.addressOrId,
     accessDetails.baseToken.address,
     accessDetails.datatoken.address,
     '1',
-    appConfig.consumeMarketPoolSwapFee
+    consumeMarketPoolSwapFee
   )
 
   return estimatedPrice
@@ -45,7 +44,6 @@ export async function buyDtFromPool(
   web3: Web3
 ): Promise<TransactionReceipt> {
   const pool = new Pool(web3)
-  const { appConfig } = getSiteMetadata()
   // we need to calculate the actual price to buy one datatoken
   const dtPrice = await calculateBuyPrice(accessDetails, null, web3)
   const approveTx = await approve(
@@ -63,14 +61,14 @@ export async function buyDtFromPool(
     accountId,
     accessDetails.addressOrId,
     {
-      marketFeeAddress: appConfig.marketFeeAddress,
+      marketFeeAddress,
       tokenIn: accessDetails.baseToken.address,
       tokenOut: accessDetails.datatoken.address
     },
     {
       // this is just to be safe
       maxAmountIn: new Decimal(dtPrice.tokenAmount).mul(10).toString(),
-      swapMarketFee: appConfig.consumeMarketPoolSwapFee,
+      swapMarketFee: consumeMarketPoolSwapFee,
       tokenAmountOut: '1'
     }
   )
@@ -79,61 +77,105 @@ export async function buyDtFromPool(
 }
 
 /**
- * Calculate the base token liquidity based on shares info
- * @param {string} shares
- * @param {string} totalShares
- * @param {string} baseTokenLiquidity
+ *  This is used to calculate the actual price of buying a datatoken, it's a copy of the math in the contracts.
+ * @param params
  * @returns
  */
-export function calculateUserLiquidity(
-  shares: string,
-  totalShares: string,
-  baseTokenLiquidity: string
-): string {
-  const totalLiquidity =
-    isValidNumber(shares) &&
-    isValidNumber(totalShares) &&
-    isValidNumber(baseTokenLiquidity)
-      ? new Decimal(shares)
-          .dividedBy(new Decimal(totalShares))
-          .mul(baseTokenLiquidity)
-      : new Decimal(0)
-  return totalLiquidity.toDecimalPlaces(MAX_DECIMALS).toString()
+export function calcInGivenOut(params: CalcInGivenOutParams): PoolPriceAndFees {
+  const result = {
+    tokenAmount: '0',
+    liquidityProviderSwapFeeAmount: '0',
+    oceanFeeAmount: '0',
+    publishMarketSwapFeeAmount: '0',
+    consumeMarketSwapFeeAmount: '0'
+  } as PoolPriceAndFees
+  const one = new Decimal(1)
+  const tokenOutLiqudity = new Decimal(params.tokenOutLiquidity)
+  const tokenInLiquidity = new Decimal(params.tokenInLiquidity)
+  const tokenOutAmount = new Decimal(params.tokenOutAmount)
+  const opcFee = new Decimal(params.opcFee)
+  const lpFee = new Decimal(params.lpSwapFee)
+  const publishMarketSwapFee = new Decimal(params.publishMarketSwapFee)
+  const consumeMarketSwapFee = new Decimal(params.consumeMarketSwapFee)
+
+  const diff = tokenOutLiqudity.minus(tokenOutAmount)
+  const y = tokenOutLiqudity.div(diff)
+  let foo = y.pow(one)
+  foo = foo.minus(one)
+  const totalFee = lpFee
+    .plus(opcFee)
+    .plus(publishMarketSwapFee)
+    .plus(consumeMarketSwapFee)
+
+  const tokenAmountIn = tokenInLiquidity.mul(foo).div(one.sub(totalFee))
+  result.tokenAmount = tokenAmountIn.toString()
+  result.oceanFeeAmount = tokenAmountIn
+    .sub(tokenAmountIn.mul(one.sub(opcFee)))
+    .toString()
+  result.publishMarketSwapFeeAmount = tokenAmountIn
+    .sub(tokenAmountIn.mul(one.sub(publishMarketSwapFee)))
+    .toString()
+  result.consumeMarketSwapFeeAmount = tokenAmountIn
+    .sub(tokenAmountIn.mul(one.sub(consumeMarketSwapFee)))
+    .toString()
+  result.liquidityProviderSwapFeeAmount = tokenAmountIn
+    .sub(tokenAmountIn.mul(one.sub(lpFee)))
+    .toString()
+
+  return result
 }
 
-export function calculateUserTVL(
-  shares: string,
-  totalShares: string,
-  baseTokenLiquidity: string
+/**
+ * Used to calculate swap values, it's a copy of the math in the contracts.
+ * @param tokenLiquidity
+ * @param poolSupply
+ * @param poolShareAmount
+ * @returns
+ */
+export function calcSingleOutGivenPoolIn(
+  tokenLiquidity: string,
+  poolSupply: string,
+  poolShareAmount: string
 ): string {
-  const liquidity = calculateUserLiquidity(
-    shares,
-    totalShares,
-    baseTokenLiquidity
-  )
-  const tvl = new Decimal(liquidity).mul(2) // we multiply by 2 because of 50/50 weight
-  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
+  const tokenLiquidityD = new Decimal(tokenLiquidity)
+  const poolSupplyD = new Decimal(poolSupply)
+  const poolShareAmountD = new Decimal(poolShareAmount)
+
+  const newPoolSupply = poolSupplyD.sub(poolShareAmountD)
+  const poolRatio = newPoolSupply.div(poolSupplyD)
+
+  const tokenOutRatio = poolRatio.pow(2)
+  const newTokenBalanceOut = tokenLiquidityD.mul(tokenOutRatio)
+
+  const tokensOut = tokenLiquidityD.sub(newTokenBalanceOut)
+
+  return tokensOut.toString()
 }
 
-export async function calculateSharesVL(
+/**
+ * Returns the amount of tokens (based on tokenAddress) that can be withdrawn from the pool
+ * @param {string} poolAddress
+ * @param {string} tokenAddress
+ * @param {string} shares
+ * @param {number} chainId
+ * @returns
+ */
+export async function getLiquidityByShares(
   pool: string,
   tokenAddress: string,
   shares: string,
-  chainId?: number
+  chainId: number
 ): Promise<string> {
-  if (!chainId) throw new Error("chainId can't be undefined at the same time!")
-
   // we only use the dummyWeb3 connection here
   const web3 = await getDummyWeb3(chainId)
 
   const poolInstance = new Pool(web3)
   // get shares VL in ocean
-  const amountOcean = await poolInstance.calcSingleOutGivenPoolIn(
+  const amountBaseToken = await poolInstance.calcSingleOutGivenPoolIn(
     pool,
     tokenAddress,
     shares
   )
 
-  const tvl = new Decimal(amountOcean || 0).mul(2) // we multiply by 2 because of 50/50 weight
-  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
+  return amountBaseToken
 }

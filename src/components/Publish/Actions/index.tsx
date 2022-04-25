@@ -5,8 +5,11 @@ import { FormikContextType, useFormikContext } from 'formik'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import { useWeb3 } from '../../../@context/Web3'
+import { useWeb3 } from '@context/Web3'
 import { useRouter } from 'next/router'
+import Tooltip from '@shared/atoms/Tooltip'
+import AvailableNetworks from 'src/components/Publish/AvailableNetworks'
+import Info from '@images/info.svg'
 
 export default function Actions({
   scrollToRef,
@@ -16,6 +19,7 @@ export default function Actions({
   did: string
 }): ReactElement {
   const router = useRouter()
+  const { isSupportedOceanNetwork } = useWeb3()
   const {
     values,
     errors,
@@ -87,6 +91,17 @@ export default function Actions({
             <Button type="submit" style="primary" onClick={handleActivation}>
               Connect Wallet
             </Button>
+          ) : !isSupportedOceanNetwork ? (
+            <Tooltip content={<AvailableNetworks />}>
+              <Button
+                type="submit"
+                style="primary"
+                disabled
+                className={styles.infoButton}
+              >
+                Unsupported Network <Info className={styles.infoIcon} />
+              </Button>
+            </Tooltip>
           ) : (
             <Button
               type="submit"

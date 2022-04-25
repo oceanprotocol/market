@@ -1,15 +1,15 @@
 import { useUserPreferences } from '@context/UserPreferences'
 import { useGdprMetadata } from '@hooks/useGdprMetadata'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Button from '@shared/atoms/Button'
 import Link from 'next/link'
 import React, { Fragment } from 'react'
 import content from '../../../content/footer.json'
 import External from '@images/external.svg'
 import styles from './Links.module.css'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function Links() {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   const { setShowPPC, privacyPolicySlug } = useUserPreferences()
   const cookies = useGdprMetadata()
 
@@ -35,7 +35,7 @@ export default function Links() {
       <Link href={privacyPolicySlug}>
         <a>Privacy</a>
       </Link>
-      {appConfig.privacyPreferenceCenter === 'true' && (
+      {appConfig?.privacyPreferenceCenter === 'true' && (
         <>
           {' — '}
           <Button
