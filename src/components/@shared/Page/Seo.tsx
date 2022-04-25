@@ -28,7 +28,7 @@ export default function Seo({
 
       <title>{pageTitle}</title>
 
-      {isBrowser && window?.location?.hostname !== 'oceanprotocol.com' && (
+      {isBrowser && window?.location?.hostname !== 'market.oceanprotocol.com' && (
         <meta name="robots" content="noindex,nofollow" />
       )}
 
@@ -58,7 +58,9 @@ export default function Seo({
       />
 
       <meta property="og:site_name" content={siteContent?.siteTitle} />
-      <meta name="twitter:creator" content="@oceanprotocol" />
+      {isBrowser && window?.location?.hostname === 'market.oceanprotocol.com' && (
+        <meta name="twitter:creator" content="@oceanprotocol" />
+      )}
       <meta name="twitter:card" content="summary_large_image" />
     </Head>
   )
