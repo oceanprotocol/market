@@ -230,20 +230,22 @@ export default function PublishPage({
         await handleSubmit(values)
       }}
     >
-      {({ values }) => (
-        <>
-          <PageHeader
-            title={<Title networkId={values.user.chainId} />}
-            description={content.description}
-          />
-          <Form className={styles.form} ref={scrollToRef}>
-            <Navigation />
-            <Steps feedback={feedback} />
-            <Actions scrollToRef={scrollToRef} did={did} />
-          </Form>
-          {debug && <Debug />}
-        </>
-      )}
+      {({ values }) => {
+        return (
+          <>
+            <PageHeader
+              title={<Title networkId={values.user.chainId} />}
+              description={content.description}
+            />
+            <Form className={styles.form} ref={scrollToRef}>
+              <Navigation />
+              <Steps feedback={feedback} />
+              <Actions scrollToRef={scrollToRef} did={did} />
+            </Form>
+            {debug && <Debug />}
+          </>
+        )
+      }}
     </Formik>
   )
 }
