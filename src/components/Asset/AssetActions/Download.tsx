@@ -60,7 +60,8 @@ export default function Download({
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
         asset?.accessDetails?.type === 'free' ||
-        (!poolData && asset?.accessDetails?.type === 'dynamic')
+        (!poolData && asset?.accessDetails?.type === 'dynamic') ||
+        !poolData
       )
         return
       setIsLoading(true)
@@ -82,7 +83,6 @@ export default function Download({
       )
 
       setOrderPriceAndFees(orderPriceAndFees)
-
       setIsLoading(false)
     }
 
