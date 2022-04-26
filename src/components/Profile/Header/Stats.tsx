@@ -1,32 +1,30 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import React, { useEffect, useState, ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
-import { getAccountTVLInOwnAssets, UserLiquidity } from '@utils/subgraph'
+import { getAccountLiquidityInOwnAssets } from '@utils/subgraph'
 import Conversion from '@shared/Price/Conversion'
 import NumberUnit from './NumberUnit'
 import styles from './Stats.module.css'
 import { useProfile } from '@context/Profile'
 import { PoolShares_poolShares as PoolShare } from '../../../@types/subgraph/PoolShares'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
-import { calculateUserTVL } from '@utils/pool'
+import { calcSingleOutGivenPoolIn } from '@utils/pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
 
-async function getPoolSharesLiquidity(
-  poolShares: PoolShare[]
-): Promise<string> {
-  let tvl = new Decimal(0)
+function getPoolSharesLiquidity(poolShares: PoolShare[]): string {
+  let liquidity = new Decimal(0)
 
   for (const poolShare of poolShares) {
-    const poolUserTvl = calculateUserTVL(
-      poolShare.shares,
+    const poolUserLiquidity = calcSingleOutGivenPoolIn(
+      poolShare.pool.baseTokenLiquidity,
       poolShare.pool.totalShares,
-      poolShare.pool.baseTokenLiquidity
+      poolShare.shares
     )
-    tvl = tvl.add(new Decimal(poolUserTvl))
+    liquidity = liquidity.add(new Decimal(poolUserLiquidity))
   }
 
-  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
+  return liquidity.toDecimalPlaces(MAX_DECIMALS).toString()
 }
 
 export default function Stats({
@@ -61,7 +59,7 @@ export default function Stats({
             )
           }
         }
-        const userTvl = await getAccountTVLInOwnAssets(
+        const userTvl = await getAccountLiquidityInOwnAssets(
           accountId,
           chainIds,
           accountPoolAdresses
@@ -91,11 +89,11 @@ export default function Stats({
   return (
     <div className={styles.stats}>
       <NumberUnit
-        label="TVL in Own Assets"
+        label="Liquidity in Own Assets"
         value={<Conversion price={publisherTvl} hideApproximateSymbol />}
       />
       <NumberUnit
-        label="TVL"
+        label="Liquidity"
         value={<Conversion price={totalTvl} hideApproximateSymbol />}
       />
       <NumberUnit label={`Sale${sales === 1 ? '' : 's'}`} value={sales} />
