@@ -30,13 +30,15 @@ export default function Swap({
   balance,
   setMaximumDt,
   setMaximumBaseToken,
-  setCoin
+  setCoin,
+  isLoading
 }: {
   asset: AssetExtended
   balance: PoolBalance
   setMaximumDt: (value: string) => void
   setMaximumBaseToken: (value: string) => void
   setCoin: (value: string) => void
+  isLoading: boolean
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
   const { web3 } = useWeb3()
@@ -305,7 +307,7 @@ export default function Swap({
       <TradeInput
         name={values.type === 'sell' ? 'datatoken' : 'baseToken'}
         item={values.type === 'sell' ? dtItem : baseTokenItem}
-        disabled={!isAssetNetwork}
+        disabled={!isAssetNetwork || isLoading}
         handleValueChange={handleValueChange}
       />
 
@@ -313,7 +315,7 @@ export default function Swap({
         className={styles.swapButton}
         style="text"
         onClick={switchTokens}
-        disabled={!isAssetNetwork}
+        disabled={!isAssetNetwork || isLoading}
       >
         <Arrow />
       </Button>
@@ -321,7 +323,7 @@ export default function Swap({
       <TradeInput
         name={values.type === 'sell' ? 'baseToken' : 'datatoken'}
         item={values.type === 'sell' ? baseTokenItem : dtItem}
-        disabled={!isAssetNetwork}
+        disabled={!isAssetNetwork || isLoading}
         handleValueChange={handleValueChange}
       />
 
@@ -335,7 +337,7 @@ export default function Swap({
         tokenAmount={tokenAmount}
         spotPrice={spotPrice}
       />
-      <Slippage disabled={!isAssetNetwork} />
+      <Slippage disabled={!isAssetNetwork || isLoading} />
     </div>
   )
 }
