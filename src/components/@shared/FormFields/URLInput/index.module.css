@@ -9,6 +9,4 @@
 
 .error {
   composes: error from '@shared/FormInput/index.module.css';
-  position: absolute;
-  top: 44%;
 }
