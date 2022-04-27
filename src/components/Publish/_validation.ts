@@ -85,6 +85,7 @@ const validationPricing = {
   amountDataToken: Yup.number().required('Required'),
   amountOcean: Yup.number()
     .test('validator-min-amountOcean', '', function (value) {
+      if (this.parent.type === 'fixed') return true
       const minValue =
         this.parent.price > 0
           ? new Decimal(this.parent.price)
