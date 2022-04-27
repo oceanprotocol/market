@@ -72,9 +72,7 @@ export default function Download({
         tokenOutLiquidity: poolData?.datatokenLiquidity,
         tokenOutAmount: '1',
         opcFee: getOpcFeeForToken(
-          poolData?.baseToken?.address
-            ? poolData?.baseToken?.address
-            : asset?.accessDetails?.addressOrId,
+          poolData?.baseToken?.address || asset?.accessDetails?.addressOrId,
           asset?.chainId
         ),
         lpSwapFee: poolData?.liquidityProviderSwapFee,
@@ -89,7 +87,9 @@ export default function Download({
       )
 
       setOrderPriceAndFees(orderPriceAndFees)
-      setIsDisabled(false)
+      if (isAssetNetwork) {
+        setIsDisabled(false)
+      }
     }
 
     init()
@@ -104,7 +104,9 @@ export default function Download({
 
     const isDisabled =
       !asset?.accessDetails.isPurchasable ||
+      !isAssetNetwork ||
       ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
+
     setIsDisabled(isDisabled)
   }, [
     isMounted,
