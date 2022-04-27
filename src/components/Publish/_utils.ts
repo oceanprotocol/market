@@ -17,7 +17,6 @@ import {
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
-import { getSiteMetadata } from '@utils/siteConfig'
 import Decimal from 'decimal.js'
 import slugify from 'slugify'
 import Web3 from 'web3'
@@ -26,6 +25,12 @@ import {
   MetadataAlgorithmContainer
 } from './_constants'
 import { FormPublishData } from './_types'
+import {
+  marketFeeAddress,
+  publisherMarketOrderFee,
+  publisherMarketPoolSwapFee,
+  publisherMarketFixedSwapFee
+} from '../../../app.config'
 
 export function getFieldContent(
   fieldName: string,
@@ -201,7 +206,6 @@ export async function createTokensAndPricing(
     accountId,
     values.metadata.transferable
   )
-  const { appConfig } = getSiteMetadata()
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
@@ -209,9 +213,9 @@ export async function createTokensAndPricing(
     templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
     minter: accountId,
     paymentCollector: accountId,
-    mpFeeAddress: appConfig.marketFeeAddress,
+    mpFeeAddress: marketFeeAddress,
     feeToken: config.oceanTokenAddress,
-    feeAmount: appConfig.publisherMarketOrderFee,
+    feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
     name: values.services[0].dataTokenOptions.name,
@@ -234,7 +238,7 @@ export async function createTokensAndPricing(
         baseTokenAddress: config.oceanTokenAddress,
         baseTokenSender: config.erc721FactoryAddress,
         publisherAddress: accountId,
-        marketFeeCollector: appConfig.marketFeeAddress,
+        marketFeeCollector: marketFeeAddress,
         poolTemplateAddress: config.poolTemplateAddress,
         rate: new Decimal(1).div(values.pricing.price).toString(),
         baseTokenDecimals: 18,
@@ -242,7 +246,7 @@ export async function createTokensAndPricing(
         vestedBlocks: 2726000,
         initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
         swapFeeLiquidityProvider: (values.pricing.swapFee / 100).toString(),
-        swapFeeMarketRunner: appConfig.publisherMarketPoolSwapFee
+        swapFeeMarketRunner: publisherMarketPoolSwapFee
       }
 
       LoggerInstance.log(
@@ -286,11 +290,11 @@ export async function createTokensAndPricing(
         fixedRateAddress: config.fixedRateExchangeAddress,
         baseTokenAddress: config.oceanTokenAddress,
         owner: accountId,
-        marketFeeCollector: appConfig.marketFeeAddress,
+        marketFeeCollector: marketFeeAddress,
         baseTokenDecimals: 18,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
-        marketFee: appConfig.publisherMarketFixedSwapFee,
+        marketFee: publisherMarketFixedSwapFee,
         withMint: true
       }
 

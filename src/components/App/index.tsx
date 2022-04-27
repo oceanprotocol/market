@@ -3,7 +3,6 @@ import Alert from '@shared/atoms/Alert'
 import Footer from '../Footer/Footer'
 import Header from '../Header'
 import { useWeb3 } from '@context/Web3'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 import AnnouncementBanner from '@shared/AnnouncementBanner'
 import PrivacyPreferenceCenter from '../Privacy/PrivacyPreferenceCenter'
@@ -11,6 +10,7 @@ import styles from './index.module.css'
 import { ToastContainer } from 'react-toastify'
 import { useRouter } from 'next/router'
 import content from '../../../content/purgatory.json'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function App({
   children
@@ -19,14 +19,14 @@ export default function App({
 }): ReactElement {
   const router = useRouter()
 
-  const { warning, appConfig } = useSiteMetadata()
+  const { siteContent, appConfig } = useMarketMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
 
   return (
     <div className={styles.app}>
-      {router.pathname === '/' && warning.main !== '' && (
-        <AnnouncementBanner text={warning.main} />
+      {router.pathname === '/' && siteContent?.warning.main !== '' && (
+        <AnnouncementBanner text={siteContent?.warning.main} />
       )}
       <Header />
 
@@ -41,7 +41,7 @@ export default function App({
       <main className={styles.main}>{children}</main>
       <Footer />
 
-      {appConfig.privacyPreferenceCenter === 'true' && (
+      {appConfig?.privacyPreferenceCenter === 'true' && (
         <PrivacyPreferenceCenter style="small" />
       )}
 

@@ -6,11 +6,11 @@ import Price from '@shared/Price'
 import Tooltip from '@shared/atoms/Tooltip'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { retrieveDDOListByDIDs } from '@utils/aquarius'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 const columns = [
   {
@@ -43,7 +43,7 @@ const columns = [
 ]
 
 export default function Bookmarks(): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   const { accountId } = useWeb3()
   const { bookmarks } = useUserPreferences()
 

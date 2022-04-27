@@ -6,7 +6,6 @@ import { useUserPreferences } from '@context/UserPreferences'
 import { gql } from 'urql'
 import { TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions } from '../../../@types/subgraph/TransactionHistory'
 import { fetchDataForMultipleChains } from '@utils/subgraph'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import NetworkName from '@shared/NetworkName'
 import { getAssetsFromDtList } from '@utils/aquarius'
 import { getAsset } from '../../Profile/History/PoolShares/_utils'
@@ -15,6 +14,7 @@ import Title from './Title'
 import styles from './index.module.css'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { useCancelToken } from '@hooks/useCancelToken'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 const REFETCH_INTERVAL = 20000
 
@@ -135,7 +135,7 @@ export default function PoolTransactions({
   accountId: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   const cancelToken = useCancelToken()
 
   const [transactions, setTransactions] = useState<PoolTransaction[]>()
@@ -199,7 +199,7 @@ export default function PoolTransactions({
       setTransactions(sortedTransactions)
       setIsLoading(false)
     },
-    [data, chainIds, setIsLoading]
+    [data, minimal, chainIds, poolChainId]
   )
 
   //
