@@ -71,11 +71,17 @@ export default function Download({
         tokenInLiquidity: poolData?.baseTokenLiquidity,
         tokenOutLiquidity: poolData?.datatokenLiquidity,
         tokenOutAmount: '1',
-        opcFee: getOpcFeeForToken(poolData.baseToken.address, asset?.chainId),
+        opcFee: getOpcFeeForToken(
+          poolData?.baseToken?.address
+            ? poolData?.baseToken?.address
+            : asset?.accessDetails?.addressOrId,
+          asset?.chainId
+        ),
         lpSwapFee: poolData?.liquidityProviderSwapFee,
         publishMarketSwapFee: poolData?.publishMarketSwapFee,
         consumeMarketSwapFee: '0'
       }
+
       const orderPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
@@ -87,7 +93,7 @@ export default function Download({
     }
 
     init()
-  }, [asset, accountId, poolData, getOpcFeeForToken, isLoading])
+  }, [asset, accountId, poolData, getOpcFeeForToken])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
@@ -146,6 +152,7 @@ export default function Download({
         if (!orderTx) {
           throw new Error()
         }
+
         setIsOwned(true)
         setValidOrderTx(orderTx.transactionHash)
       }
