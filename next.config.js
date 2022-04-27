@@ -49,6 +49,15 @@ module.exports = (phase, { defaultConfig }) => {
       return typeof defaultConfig.webpack === 'function'
         ? defaultConfig.webpack(config, options)
         : config
+    },
+    async redirects() {
+      return [
+        {
+          source: '/publish',
+          destination: '/publish/1',
+          permanent: true
+        }
+      ]
     }
 
     // Prefer loading of ES Modules over CommonJS
