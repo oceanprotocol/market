@@ -38,6 +38,7 @@ export default function Download({
   const { accountId, web3 } = useWeb3()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
+  const { poolData } = usePool()
   const isMounted = useIsMounted()
 
   const [isDisabled, setIsDisabled] = useState(true)
@@ -46,25 +47,25 @@ export default function Download({
   const [isLoading, setIsLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-
-  const { poolData } = usePool()
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+
   useEffect(() => {
     if (!asset?.accessDetails) return
 
     setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
+
     // get full price and fees
     async function init() {
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
         asset?.accessDetails?.type === 'free' ||
-        (!poolData && asset?.accessDetails?.type === 'dynamic')
+        (!poolData && asset?.accessDetails?.type === 'dynamic') ||
+        // Stop refetching price and fees when asset is being accessed
+        isLoading
       )
         return
-      setIsLoading(true)
-      setStatusText('Calculating price including fees.')
 
       const params: CalcInGivenOutParams = {
         tokenInLiquidity: poolData?.baseTokenLiquidity,
@@ -82,12 +83,11 @@ export default function Download({
       )
 
       setOrderPriceAndFees(orderPriceAndFees)
-
-      setIsLoading(false)
+      setIsDisabled(false)
     }
 
     init()
-  }, [asset, accountId, poolData, getOpcFeeForToken])
+  }, [asset, accountId, poolData, getOpcFeeForToken, isLoading])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
@@ -112,6 +112,7 @@ export default function Download({
 
   async function handleOrderOrDownload() {
     setIsLoading(true)
+
     try {
       if (isOwned) {
         setStatusText(
@@ -171,7 +172,6 @@ export default function Download({
       assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
-      // isLoading={pricingIsLoading || isLoading}
       isLoading={isLoading}
       priceType={asset.accessDetails?.type}
       isConsumable={asset.accessDetails?.isPurchasable}
