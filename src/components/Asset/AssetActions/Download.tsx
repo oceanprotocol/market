@@ -153,7 +153,7 @@ export default function Download({
       LoggerInstance.error(error)
       const message = isOwned
         ? 'Failed to download file!'
-        : 'Failed to buy datatoken from pool!'
+        : 'An error occurred. Check console for more information.'
       toast.error(message)
     }
     setIsLoading(false)
