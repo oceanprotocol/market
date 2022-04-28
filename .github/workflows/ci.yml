@@ -37,23 +37,12 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
 
       - run: npm ci
+      - run: npm test
       - run: npm run build
 
-      - name: Code climate action
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
       - uses: paambaati/codeclimate-action@v2.7.1 # using 2.7.1 for issue: https://github.com/paambaati/codeclimate-action/issues/316
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        with:
-          coverageCommand: npm test
-#  coverage:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-node@v2
-#      - run: npm ci
-#      - run: npm run build
-#      - uses: paambaati/codeclimate-action@v2.7.1 # using 2.7.1 for issue: https://github.com/paambaati/codeclimate-action/issues/316
-#        env:
-#          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-#        with:
-#          coverageCommand: npm test
