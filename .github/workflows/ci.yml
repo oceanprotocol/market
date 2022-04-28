@@ -37,8 +37,8 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
 
       - run: npm ci
-      - run: npm test
       - run: npm run build
+      - run: npm test
 
       - name: Upload coverage
         uses: actions/upload-artifact@v2
