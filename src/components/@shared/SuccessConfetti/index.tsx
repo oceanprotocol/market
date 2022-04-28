@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode, useEffect } from 'react'
 import { confetti } from 'dom-confetti'
-import Alert from '@shared/atoms/Alert'
+import Alert from '@shared/atoms/Alert/index'
 import styles from './index.module.css'
 
 const confettiConfig = {

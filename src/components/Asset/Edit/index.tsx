@@ -8,7 +8,7 @@ import EditComputeDataset from './EditComputeDataset'
 import Page from '@shared/Page'
 import Loader from '@shared/atoms/Loader'
 import { useWeb3 } from '@context/Web3'
-import Alert from '@shared/atoms/Alert'
+import Alert from '@shared/atoms/Alert/index'
 
 export default function Edit({ uri }: { uri: string }): ReactElement {
   const { asset, error, isInPurgatory, owner, title } = useAsset()

@@ -8,7 +8,7 @@ import {
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
-import Alert from '@shared/atoms/Alert'
+import Alert from '@shared/atoms/Alert/index'
 import { useWeb3 } from '@context/Web3'
 import {
   generateBaseQuery,

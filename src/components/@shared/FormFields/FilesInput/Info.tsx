@@ -3,7 +3,7 @@ import { prettySize } from './utils'
 import cleanupContentType from '@utils/cleanupContentType'
 import styles from './Info.module.css'
 import { FileMetadata } from '@oceanprotocol/lib'
-import Alert from '@shared/atoms/Alert'
+import Alert from '@shared/atoms/Alert/index'
 
 export default function FileInfo({
   file,

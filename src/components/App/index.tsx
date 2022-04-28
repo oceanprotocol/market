@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import Alert from '@shared/atoms/Alert'
+import Alert from '@shared/atoms/Alert/index'
 import Footer from '../Footer/Footer'
 import Header from '../Header'
 import { useWeb3 } from '@context/Web3'

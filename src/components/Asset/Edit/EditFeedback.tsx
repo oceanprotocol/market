@@ -1,4 +1,4 @@
-import Alert from '@shared/atoms/Alert'
+import Alert from '@shared/atoms/Alert/index'
 import Button from '@shared/atoms/Button'
 import Loader from '@shared/atoms/Loader'
 import SuccessConfetti from '@shared/SuccessConfetti'

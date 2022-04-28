@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import Page from '@shared/Page'
-import Alert from '@shared/atoms/Alert'
+import Alert from '@shared/atoms/Alert/index'
 import Loader from '@shared/atoms/Loader'
 import { useAsset } from '@context/Asset'
 import AssetContent from './AssetContent'
