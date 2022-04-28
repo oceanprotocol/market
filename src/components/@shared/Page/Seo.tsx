@@ -64,6 +64,10 @@ export default function Seo({
           <meta name="twitter:creator" content="@oceanprotocol" />
         )}
       <meta name="twitter:card" content="summary_large_image" />
+      <meta
+        name="google-site-verification"
+        content="yojdUdO8IH8z5BF7LxIEXiT0lLJ_PMn0ps6o-WkaOq8"
+      />
     </Head>
   )
 }
