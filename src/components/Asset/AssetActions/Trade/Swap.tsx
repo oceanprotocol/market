@@ -75,8 +75,16 @@ export default function Swap({
     const poolInstance = new Pool(web3)
 
     async function calculateMaximum() {
+      const datatokenLiquidity = await poolInstance.getReserve(
+        poolData.id,
+        poolData.datatoken.address
+      )
+      const baseTokenLiquidity = await poolInstance.getReserve(
+        poolData.id,
+        poolData.baseToken.address
+      )
       if (values.type === 'buy') {
-        const maxBaseTokenFromPool = calcMaxExactIn(poolData.baseTokenLiquidity)
+        const maxBaseTokenFromPool = calcMaxExactIn(baseTokenLiquidity)
 
         const maxBaseTokens = maxBaseTokenFromPool.greaterThan(
           new Decimal(balance.baseToken)
@@ -105,11 +113,11 @@ export default function Swap({
 
         setDtItem((prevState) => ({
           ...prevState,
-          amount: poolData.datatokenLiquidity,
+          amount: datatokenLiquidity,
           maxAmount: maximumDt
         }))
       } else {
-        const maxDtFromPool = calcMaxExactIn(poolData.datatokenLiquidity)
+        const maxDtFromPool = calcMaxExactIn(datatokenLiquidity)
         const maxDatatokens = maxDtFromPool.greaterThan(
           new Decimal(balance.datatoken)
         )
@@ -136,7 +144,7 @@ export default function Swap({
         }))
         setBaseTokenItem((prevState) => ({
           ...prevState,
-          amount: poolData.baseTokenLiquidity,
+          amount: baseTokenLiquidity,
           maxAmount: maximumBasetokens
         }))
       }
