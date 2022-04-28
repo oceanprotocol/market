@@ -85,10 +85,13 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   const parsedFieldName =
     isFormikField && (isNestedField ? field?.name.split('.') : [field?.name])
   // const hasFormikError = !!meta?.touched && !!meta?.error
+
   const hasFormikError =
     form?.errors !== {} &&
-    form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
-    form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]
+    (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
+      form?.touched[field.name]) &&
+    (form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
+      form?.errors[field.name])
 
   const styleClasses = cx({
     field: true,
