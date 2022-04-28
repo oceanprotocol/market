@@ -40,6 +40,12 @@ jobs:
       - run: npm test
       - run: npm run build
 
+      - name: Upload coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: coverage/
+
   coverage:
     needs: [test]
     runs-on: ubuntu-latest
