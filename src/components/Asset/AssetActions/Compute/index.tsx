@@ -8,7 +8,9 @@ import {
   ComputeAsset,
   ZERO_ADDRESS,
   ComputeEnvironment,
-  LoggerInstance
+  LoggerInstance,
+  ComputeAlgorithm,
+  ComputeOutput
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
