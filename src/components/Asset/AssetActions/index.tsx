@@ -83,7 +83,7 @@ export default function AssetActions({
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
 
         // set the content type in the Dataset Schema
-        const datasetSchema = document.getElementById('DatasetSchema')
+        const datasetSchema = document.scripts?.namedItem('datasetSchema')
         if (datasetSchema) {
           const datasetSchemaJSON = JSON.parse(datasetSchema.innerText)
           if (datasetSchemaJSON?.distribution[0]['@type'] === 'DataDownload') {

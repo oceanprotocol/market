@@ -17,7 +17,6 @@ import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useWeb3 } from '@context/Web3'
 import Web3 from 'web3'
-import DatasetSchema from './DatasetSchema'
 
 export default function AssetContent({
   asset
@@ -78,7 +77,6 @@ export default function AssetContent({
             <MetaFull ddo={asset} />
             <EditHistory receipts={receipts} setReceipts={setReceipts} />
             {debug === true && <DebugOutput title="DDO" output={asset} />}
-            <DatasetSchema ddo={asset} />
           </div>
         </div>
 
