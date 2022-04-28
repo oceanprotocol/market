@@ -21,6 +21,7 @@ import useNetworkMetadata, {
   getNetworkType,
   NetworkType
 } from '../@hooks/useNetworkMetadata'
+import { useMarketMetadata } from './MarketMetadata'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -37,6 +38,7 @@ interface Web3ProviderValue {
   block: number
   isTestnet: boolean
   web3Loading: boolean
+  isSupportedOceanNetwork: boolean
   connect: () => Promise<void>
   logout: () => Promise<void>
 }
@@ -88,6 +90,7 @@ const Web3Context = createContext({} as Web3ProviderValue)
 
 function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const { networksList } = useNetworkMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const [web3, setWeb3] = useState<Web3>()
   const [web3Provider, setWeb3Provider] = useState<any>()
@@ -106,6 +109,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     eth: '0',
     ocean: '0'
   })
+  const [isSupportedOceanNetwork, setIsSupportedOceanNetwork] = useState(true)
 
   // -----------------------------------
   // Helper: connect to web3
@@ -304,6 +308,17 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     }
     await web3Modal.clearCachedProvider()
   }
+  // -----------------------------------
+  // Get valid Networks and set isSupportedOceanNetwork
+  // -----------------------------------
+
+  useEffect(() => {
+    if (appConfig.chainIdsSupported.includes(networkId)) {
+      setIsSupportedOceanNetwork(true)
+    } else {
+      setIsSupportedOceanNetwork(false)
+    }
+  }, [networkId, appConfig.chainIdsSupported])
 
   // -----------------------------------
   // Handle change events
@@ -358,6 +373,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         block,
         isTestnet,
         web3Loading,
+        isSupportedOceanNetwork,
         connect,
         logout
       }}

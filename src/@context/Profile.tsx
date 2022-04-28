@@ -16,11 +16,11 @@ import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/subgraph/PoolShares'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { accountTruncate } from '@utils/web3'
 import axios, { CancelToken } from 'axios'
 import get3BoxProfile from '@utils/profile'
 import web3 from 'web3'
+import { useMarketMetadata } from './MarketMetadata'
 
 interface ProfileProviderValue {
   profile: Profile
@@ -49,7 +49,7 @@ function ProfileProvider({
   children: ReactNode
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const [isEthAddress, setIsEthAddress] = useState<boolean>()
 

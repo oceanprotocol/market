@@ -43,8 +43,6 @@ export default function Remove({
   const [slippage, setSlippage] = useState<string>('5')
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
 
-  // TODO: precision needs to be set based on baseToken decimals
-  Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
   const poolInstance = new Pool(web3)
 
   async function handleRemoveLiquidity() {
@@ -79,10 +77,18 @@ export default function Remove({
     if (!accountId || !poolInfoUser?.poolShares || !poolInfo?.totalPoolTokens)
       return
 
-    getMax(poolInfoUser.poolShares, poolInfo.totalPoolTokens).then((max) =>
+    getMax(poolInstance, poolInfo, poolInfoUser, poolData).then((max) =>
       setAmountMaxPercent(max)
     )
-  }, [accountId, poolInfoUser?.poolShares, poolInfo?.totalPoolTokens])
+  }, [
+    accountId,
+    poolInfoUser?.poolShares,
+    poolInfo?.totalPoolTokens,
+    poolInfoUser,
+    poolInfo,
+    poolInstance,
+    poolData
+  ])
 
   const getValues = useRef(
     debounce(async (newAmountPoolShares) => {
@@ -91,7 +97,6 @@ export default function Remove({
         poolInfo?.baseTokenAddress,
         newAmountPoolShares
       )
-
       setAmountOcean(newAmountOcean)
     }, 150)
   )
@@ -137,20 +142,18 @@ export default function Remove({
       .dividedBy(100)
       .mul(new Decimal(poolInfoUser.poolShares))
       .toString()
-
-    setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
+    setAmountPoolShares(amountPoolShares)
   }
 
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
     setAmountPercent(amountMaxPercent)
-
     const amountPoolShares = new Decimal(amountMaxPercent)
       .dividedBy(100)
       .mul(new Decimal(poolInfoUser?.poolShares))
       .toString()
 
-    setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
+    setAmountPoolShares(amountPoolShares)
   }
 
   function handleSlippageChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -196,13 +199,17 @@ export default function Remove({
       </form>
       <div className={styles.output}>
         <div>
-          <p>{content.pool.remove.output.titleOut} minimum</p>
+          <p>{content.pool.remove.output.titleOutExpected}</p>
+          <Token
+            symbol={poolInfo?.baseTokenSymbol}
+            balance={amountOcean}
+            noIcon
+          />
+        </div>
+        <div>
+          <p>{content.pool.remove.output.titleOutMinimum}</p>
           <Token symbol={poolInfo?.baseTokenSymbol} balance={minOceanAmount} />
         </div>
-        {/* <div>
-          <p>{content.pool.remove.output.titleIn}</p>
-          <Token symbol="pool shares" balance={amountPoolShares} noIcon />
-        </div> */}
       </div>
       <div className={styles.slippage}>
         <strong>Slippage Tolerance</strong>

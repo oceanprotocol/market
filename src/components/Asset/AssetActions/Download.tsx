@@ -17,6 +17,8 @@ import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { usePool } from '@context/Pool'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function Download({
   asset,
@@ -34,7 +36,9 @@ export default function Download({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
+  const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
+  const { poolData } = usePool()
   const isMounted = useIsMounted()
 
   const [isDisabled, setIsDisabled] = useState(true)
@@ -43,31 +47,47 @@ export default function Download({
   const [isLoading, setIsLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+
   useEffect(() => {
     if (!asset?.accessDetails) return
 
     setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
+
     // get full price and fees
     async function init() {
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
-        asset?.accessDetails?.type === 'free'
+        asset?.accessDetails?.type === 'free' ||
+        (!poolData && asset?.accessDetails?.type === 'dynamic') ||
+        // Stop refetching price and fees when asset is being accessed
+        isLoading
       )
         return
-      setIsLoading(true)
-      setStatusText('Calculating price including fees.')
-      const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
-      setOrderPriceAndFees(orderPriceAndFees)
 
-      setIsLoading(false)
+      const params: CalcInGivenOutParams = {
+        tokenInLiquidity: poolData?.baseTokenLiquidity,
+        tokenOutLiquidity: poolData?.datatokenLiquidity,
+        tokenOutAmount: '1',
+        opcFee: getOpcFeeForToken(poolData.baseToken.address, asset?.chainId),
+        lpSwapFee: poolData?.liquidityProviderSwapFee,
+        publishMarketSwapFee: poolData?.publishMarketSwapFee,
+        consumeMarketSwapFee: '0'
+      }
+      const orderPriceAndFees = await getOrderPriceAndFees(
+        asset,
+        ZERO_ADDRESS,
+        params
+      )
+
+      setOrderPriceAndFees(orderPriceAndFees)
+      setIsDisabled(false)
     }
 
     init()
-  }, [asset, accountId])
+  }, [asset, accountId, poolData, getOpcFeeForToken, isLoading])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
@@ -92,6 +112,7 @@ export default function Download({
 
   async function handleOrderOrDownload() {
     setIsLoading(true)
+
     try {
       if (isOwned) {
         setStatusText(
@@ -151,7 +172,6 @@ export default function Download({
       assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
-      // isLoading={pricingIsLoading || isLoading}
       isLoading={isLoading}
       priceType={asset.accessDetails?.type}
       isConsumable={asset.accessDetails?.isPurchasable}

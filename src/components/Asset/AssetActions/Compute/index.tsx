@@ -1,8 +1,5 @@
 import React, { useState, ReactElement, useEffect, useCallback } from 'react'
 import {
-  LoggerInstance,
-  ComputeAlgorithm,
-  ComputeOutput,
   Asset,
   DDO,
   FileMetadata,
@@ -10,7 +7,8 @@ import {
   ProviderInstance,
   ComputeAsset,
   ZERO_ADDRESS,
-  ComputeEnvironment
+  ComputeEnvironment,
+  LoggerInstance
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -148,6 +146,7 @@ export default function Compute({
       const datasetPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
+        null,
         computeEnv?.id,
         validUntil
       )
@@ -175,6 +174,7 @@ export default function Compute({
       const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
         selectedAlgorithmAsset,
         ZERO_ADDRESS,
+        null,
         computeEnv?.id,
         validUntil
       )

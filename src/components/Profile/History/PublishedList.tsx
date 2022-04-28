@@ -2,18 +2,18 @@ import { LoggerInstance } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState, useCallback } from 'react'
 import AssetList from '@shared/AssetList'
 import { getPublishedAssets } from '@utils/aquarius'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useUserPreferences } from '@context/UserPreferences'
 import styles from './PublishedList.module.css'
 import { useCancelToken } from '@hooks/useCancelToken'
 import Filters from '../../Search/Filters'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function PublishedList({
   accountId
 }: {
   accountId: string
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   const { chainIds } = useUserPreferences()
 
   const [queryResult, setQueryResult] = useState<PagedAssets>()
@@ -56,7 +56,7 @@ export default function PublishedList({
   }, [
     accountId,
     page,
-    appConfig.metadataCacheUri,
+    appConfig?.metadataCacheUri,
     chainIds,
     newCancelToken,
     getPublished,

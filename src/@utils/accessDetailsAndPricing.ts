@@ -10,11 +10,11 @@ import {
 } from '../@types/subgraph/TokensPriceQuery'
 import { Asset, LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import { calculateBuyPrice } from './pool'
+import { calcInGivenOut } from './pool'
 import { getFixedBuyPrice } from './fixedRateExchange'
-import { getSiteMetadata } from './siteConfig'
 import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import Decimal from 'decimal.js'
+import { consumeMarketOrderFee } from '../../app.config'
 
 const TokensPriceQuery = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
@@ -230,18 +230,17 @@ function getAccessDetailsFromTokenPrice(
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
   accountId?: string,
+  paramsForPool?: CalcInGivenOutParams,
   computeEnv: string = null,
   computeValidUntil: number = null
 ): Promise<OrderPriceAndFees> {
-  const { appConfig } = getSiteMetadata()
-
   const orderPriceAndFee = {
     price: '0',
     publisherMarketOrderFee:
       asset?.accessDetails?.publisherMarketOrderFee || '0',
     publisherMarketPoolSwapFee: '0',
     publisherMarketFixedSwapFee: '0',
-    consumeMarketOrderFee: appConfig.consumeMarketOrderFee || '0',
+    consumeMarketOrderFee: consumeMarketOrderFee || '0',
     consumeMarketPoolSwapFee: '0',
     consumeMarketFixedSwapFee: '0',
     providerFee: {
@@ -268,10 +267,7 @@ export async function getOrderPriceAndFees(
   // fetch price and swap fees
   switch (asset?.accessDetails?.type) {
     case 'dynamic': {
-      const poolPrice = await calculateBuyPrice(
-        asset?.accessDetails,
-        asset?.chainId
-      )
+      const poolPrice = calcInGivenOut(paramsForPool)
       orderPriceAndFee.price = poolPrice.tokenAmount
       orderPriceAndFee.liquidityProviderSwapFee =
         poolPrice.liquidityProviderSwapFeeAmount
@@ -286,7 +282,6 @@ export async function getOrderPriceAndFees(
       orderPriceAndFee.price = fixed.baseTokenAmount
       orderPriceAndFee.opcFee = fixed.oceanFeeAmount
       orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount
-      // hack because we don't have it in contracts
       orderPriceAndFee.consumeMarketFixedSwapFee = fixed.consumeMarketFeeAmount
 
       break

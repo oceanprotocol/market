@@ -22,7 +22,7 @@ interface ButtonBuyProps {
   selectedComputeAssetLowPoolLiquidity?: boolean
   selectedComputeAssetType?: string
   isBalanceSufficient: boolean
-  isLoading: boolean
+  isLoading?: boolean
   onClick?: (e: FormEvent<HTMLButtonElement>) => void
   stepText?: string
   type?: 'submit'
