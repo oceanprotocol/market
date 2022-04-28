@@ -66,7 +66,7 @@ export default function Seo({
       <meta name="twitter:card" content="summary_large_image" />
       <meta
         name="google-site-verification"
-        content="yojdUdO8IH8z5BF7LxIEXiT0lLJ_PMn0ps6o-WkaOq8"
+        content="WY34AouBL8duxox4XrNwhA-Jk2S1T7NkKGDZ7JervfE"
       />
     </Head>
   )
