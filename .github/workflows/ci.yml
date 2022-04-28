@@ -58,5 +58,3 @@ jobs:
       - uses: paambaati/codeclimate-action@v2.7.1 # using 2.7.1 for issue: https://github.com/paambaati/codeclimate-action/issues/316
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        with:
-          coverageLocations: ${{ github.workspace }}/coverage/lcov.info:lcov
