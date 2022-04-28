@@ -61,9 +61,7 @@ export default function Download({
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
         asset?.accessDetails?.type === 'free' ||
-        (!poolData && asset?.accessDetails?.type === 'dynamic') ||
-        // Stop refetching price and fees when asset is being accessed
-        isLoading
+        (!poolData && asset?.accessDetails?.type === 'dynamic')
       )
         return
 
@@ -71,11 +69,15 @@ export default function Download({
         tokenInLiquidity: poolData?.baseTokenLiquidity,
         tokenOutLiquidity: poolData?.datatokenLiquidity,
         tokenOutAmount: '1',
-        opcFee: getOpcFeeForToken(poolData.baseToken.address, asset?.chainId),
+        opcFee: getOpcFeeForToken(
+          poolData?.baseToken?.address || asset?.accessDetails?.addressOrId,
+          asset?.chainId
+        ),
         lpSwapFee: poolData?.liquidityProviderSwapFee,
         publishMarketSwapFee: poolData?.publishMarketSwapFee,
         consumeMarketSwapFee: '0'
       }
+
       const orderPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
@@ -83,11 +85,14 @@ export default function Download({
       )
 
       setOrderPriceAndFees(orderPriceAndFees)
-      setIsDisabled(false)
     }
 
     init()
-  }, [asset, accountId, poolData, getOpcFeeForToken, isLoading])
+    /**
+     * we listen to the assets' changes to get the most updated price
+     * based on the asset and the poolData's information
+     */
+  }, [asset, accountId, poolData, getOpcFeeForToken])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
@@ -96,9 +101,18 @@ export default function Download({
   useEffect(() => {
     if (!isMounted || !accountId || !asset?.accessDetails) return
 
+    /**
+     * disabled in these cases:
+     * - if the asset is not purchasable
+     * - if the user is on the wrong network
+     * - if user balance is not sufficient
+     * - if user has no datatokens
+     */
     const isDisabled =
       !asset?.accessDetails.isPurchasable ||
+      !isAssetNetwork ||
       ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
+
     setIsDisabled(isDisabled)
   }, [
     isMounted,
@@ -146,6 +160,7 @@ export default function Download({
         if (!orderTx) {
           throw new Error()
         }
+
         setIsOwned(true)
         setValidOrderTx(orderTx.transactionHash)
       }

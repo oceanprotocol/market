@@ -263,6 +263,7 @@ export async function getOrderPriceAndFees(
     computeValidUntil
   )
   orderPriceAndFee.providerFee = initializeData.providerFee
+  if (!orderPriceAndFee.providerFee) return
 
   // fetch price and swap fees
   switch (asset?.accessDetails?.type) {
