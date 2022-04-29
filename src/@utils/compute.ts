@@ -287,6 +287,7 @@ export async function getComputeJobs(
     )
   })
   if (tokenOrders.length === 0) {
+    computeResult.isLoaded = true
     return computeResult
   }
 
