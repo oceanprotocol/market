@@ -94,33 +94,15 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     disclaimerValues
   } = props
 
+  const isFormikField = typeof field !== 'undefined'
+  const isNestedField = field?.name?.includes('.')
+
   // TODO: this feels hacky as it assumes nested `values` store. But we can't use the
   // `useField()` hook in here to get `meta.error` so we have to match against form?.errors?
   // handling flat and nested data at same time.
 
-  const isFormikField = typeof field !== 'undefined'
-  const isNestedField = field?.name?.includes('.')
-
   const parsedFieldName =
     isFormikField && (isNestedField ? field?.name.split('.') : [field?.name])
-
-  // const hasFormikError =
-  //   form?.errors !== {} &&
-  //   (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
-  //     form?.touched[field.name]) &&
-  //   (form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
-  //     form?.errors[field.name])
-  console.log('form?.errors', form?.errors)
-  console.log('form?.errors', form?.errors)
-  console.log(
-    'form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]',
-    form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]
-  )
-  console.log('test')
-  // const hasFormikError =
-  //   form?.errors === {} &&
-  //   form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
-  //   form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]
 
   const hasFormikError = checkError(form, parsedFieldName, field)
 
