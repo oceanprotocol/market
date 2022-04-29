@@ -64,17 +64,21 @@ export interface InputProps {
   disclaimerValues?: string[]
 }
 
-function checkFormikError(form: any, field: any, parsedFieldName: string[]) {
-  if (
-    form?.errors !== {} &&
-    (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
-      form?.touched[field.name]) &&
-    (form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
-      form?.errors[field.name])
+function checkError(
+  form: any,
+  parsedFieldName: string[],
+  field: FieldInputProps<any>
+) {
+  if (form?.errors === {}) {
+    return false
+  } else if (
+    (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
+      form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]) ||
+    (form?.touched[field.name] &&
+      form?.errors[field.name] &&
+      field.name !== 'links')
   ) {
     return true
-  } else {
-    return false
   }
 }
 
@@ -100,7 +104,25 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   const parsedFieldName =
     isFormikField && (isNestedField ? field?.name.split('.') : [field?.name])
 
-  const hasFormikError = checkFormikError(form, field, parsedFieldName)
+  // const hasFormikError =
+  //   form?.errors !== {} &&
+  //   (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
+  //     form?.touched[field.name]) &&
+  //   (form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
+  //     form?.errors[field.name])
+  console.log('form?.errors', form?.errors)
+  console.log('form?.errors', form?.errors)
+  console.log(
+    'form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]',
+    form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]
+  )
+  console.log('test')
+  // const hasFormikError =
+  //   form?.errors === {} &&
+  //   form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
+  //   form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]
+
+  const hasFormikError = checkError(form, parsedFieldName, field)
 
   const styleClasses = cx({
     field: true,
