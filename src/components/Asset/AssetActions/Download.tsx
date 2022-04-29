@@ -65,26 +65,28 @@ export default function Download({
       )
         return
 
-      const params: CalcInGivenOutParams = {
+      setIsLoading(true)
+      // this is needed just for pool
+      const paramsForPool: CalcInGivenOutParams = {
         tokenInLiquidity: poolData?.baseTokenLiquidity,
         tokenOutLiquidity: poolData?.datatokenLiquidity,
         tokenOutAmount: '1',
         opcFee: getOpcFeeForToken(
-          poolData?.baseToken?.address || asset?.accessDetails?.addressOrId,
+          asset?.accessDetails?.baseToken.address,
           asset?.chainId
         ),
         lpSwapFee: poolData?.liquidityProviderSwapFee,
-        publishMarketSwapFee: poolData?.publishMarketSwapFee,
+        publishMarketSwapFee: asset?.accessDetails?.publisherMarketOrderFee,
         consumeMarketSwapFee: '0'
       }
-
       const orderPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
-        params
+        paramsForPool
       )
 
       setOrderPriceAndFees(orderPriceAndFees)
+      setIsLoading(false)
     }
 
     init()

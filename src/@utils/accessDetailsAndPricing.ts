@@ -22,6 +22,9 @@ const TokensPriceQuery = gql`
       id
       symbol
       name
+      publishMarketFeeAddress
+      publishMarketFeeToken
+      publishMarketFeeAmmount
       orders(
         where: { consumer: $account }
         orderBy: createdTimestamp
@@ -139,7 +142,6 @@ const TokenPriceQuery = gql`
   }
 `
 
-// TODO: fill in fees after subgraph update
 function getAccessDetailsFromTokenPrice(
   tokenPrice: TokenPrice | TokensPrice,
   timeout?: number
@@ -195,6 +197,7 @@ function getAccessDetailsFromTokenPrice(
       name: fixed.datatoken.name,
       symbol: fixed.datatoken.symbol
     }
+    // accessDetails.publisherMarketOrderFee = fixed.
     return accessDetails
   }
 
@@ -256,7 +259,6 @@ export async function getOrderPriceAndFees(
     asset?.services[0].serviceEndpoint
   )
   orderPriceAndFee.providerFee = initializeData.providerFee
-  if (!orderPriceAndFee.providerFee) return
 
   // fetch price and swap fees
   switch (asset?.accessDetails?.type) {
