@@ -64,6 +64,20 @@ export interface InputProps {
   disclaimerValues?: string[]
 }
 
+function checkFormikError(form: any, field: any, parsedFieldName: string[]) {
+  if (
+    form?.errors !== {} &&
+    (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
+      form?.touched[field.name]) &&
+    (form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
+      form?.errors[field.name])
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
+
 export default function Input(props: Partial<InputProps>): ReactElement {
   const {
     label,
@@ -76,22 +90,17 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     disclaimerValues
   } = props
 
-  const isFormikField = typeof field !== 'undefined'
-  const isNestedField = field?.name?.includes('.')
-
   // TODO: this feels hacky as it assumes nested `values` store. But we can't use the
   // `useField()` hook in here to get `meta.error` so we have to match against form?.errors?
   // handling flat and nested data at same time.
+
+  const isFormikField = typeof field !== 'undefined'
+  const isNestedField = field?.name?.includes('.')
+
   const parsedFieldName =
     isFormikField && (isNestedField ? field?.name.split('.') : [field?.name])
-  // const hasFormikError = !!meta?.touched && !!meta?.error
 
-  const hasFormikError =
-    form?.errors !== {} &&
-    (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
-      form?.touched[field.name]) &&
-    (form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]] ||
-      form?.errors[field.name])
+  const hasFormikError = checkFormikError(form, field, parsedFieldName)
 
   const styleClasses = cx({
     field: true,
