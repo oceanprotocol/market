@@ -61,11 +61,13 @@ export default function Download({
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
         asset?.accessDetails?.type === 'free' ||
-        (!poolData && asset?.accessDetails?.type === 'dynamic')
+        (!poolData && asset?.accessDetails?.type === 'dynamic') ||
+        isLoading
       )
         return
 
-      setIsLoading(true)
+      !orderPriceAndFees && setIsLoading(true)
+      setStatusText('Refreshing price')
       // this is needed just for pool
       const paramsForPool: CalcInGivenOutParams = {
         tokenInLiquidity: poolData?.baseTokenLiquidity,
@@ -79,21 +81,23 @@ export default function Download({
         publishMarketSwapFee: asset?.accessDetails?.publisherMarketOrderFee,
         consumeMarketSwapFee: '0'
       }
-      const orderPriceAndFees = await getOrderPriceAndFees(
+      const _orderPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
         paramsForPool
       )
 
-      setOrderPriceAndFees(orderPriceAndFees)
-      setIsLoading(false)
+      setOrderPriceAndFees(_orderPriceAndFees)
+      !orderPriceAndFees && setIsLoading(false)
     }
 
     init()
     /**
      * we listen to the assets' changes to get the most updated price
-     * based on the asset and the poolData's information
+     * based on the asset and the poolData's information.
+     * Not adding isLoading and getOpcFeeForToken because we set these here. It is a compromise
      */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asset, accountId, poolData, getOpcFeeForToken])
 
   useEffect(() => {
