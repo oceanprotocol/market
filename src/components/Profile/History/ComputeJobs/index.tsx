@@ -70,9 +70,11 @@ const columns = [
 ]
 
 export default function ComputeJobs({
-  minimal
+  minimal,
+  assetChainId
 }: {
   minimal?: boolean
+  assetChainId?: number[]
 }): ReactElement {
   const { accountId, networkId } = useWeb3()
   const { asset } = useAsset()
@@ -93,7 +95,7 @@ export default function ComputeJobs({
     try {
       setIsLoading(true)
       const jobs = await getComputeJobs(
-        chainIds,
+        assetChainId || chainIds,
         accountId,
         asset,
         newCancelToken()

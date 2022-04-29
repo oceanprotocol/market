@@ -527,7 +527,7 @@ export default function Compute({
       </footer>
       {accountId && asset?.accessDetails?.datatoken && (
         <AssetActionHistoryTable title="Your Compute Jobs">
-          <ComputeJobs minimal />
+          <ComputeJobs minimal assetChainId={[asset?.chainId]} />
         </AssetActionHistoryTable>
       )}
     </>
