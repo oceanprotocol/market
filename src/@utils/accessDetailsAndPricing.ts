@@ -24,7 +24,7 @@ const TokensPriceQuery = gql`
       name
       publishMarketFeeAddress
       publishMarketFeeToken
-      publishMarketFeeAmmount
+      publishMarketFeeAmount
       orders(
         where: { consumer: $account }
         orderBy: createdTimestamp
@@ -49,6 +49,7 @@ const TokensPriceQuery = gql`
         id
         exchangeId
         price
+        publishMarketSwapFee
         baseToken {
           symbol
           name
@@ -86,6 +87,9 @@ const TokenPriceQuery = gql`
       id
       symbol
       name
+      publishMarketFeeAddress
+      publishMarketFeeToken
+      publishMarketFeeAmount
       orders(
         where: { consumer: $account }
         orderBy: createdTimestamp
@@ -110,6 +114,7 @@ const TokenPriceQuery = gql`
         id
         exchangeId
         price
+        publishMarketSwapFee
         baseToken {
           symbol
           name
@@ -159,7 +164,7 @@ function getAccessDetailsFromTokenPrice(
   }
 
   // TODO: fetch order fee from sub query
-  accessDetails.publisherMarketOrderFee = '0'
+  accessDetails.publisherMarketOrderFee = tokenPrice.publishMarketFeeAmount
 
   // free is always the best price
   if (tokenPrice.dispensers && tokenPrice.dispensers.length > 0) {
@@ -197,7 +202,6 @@ function getAccessDetailsFromTokenPrice(
       name: fixed.datatoken.name,
       symbol: fixed.datatoken.symbol
     }
-    // accessDetails.publisherMarketOrderFee = fixed.
     return accessDetails
   }
 
