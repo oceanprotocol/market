@@ -71,7 +71,7 @@ export default function Swap({
   const [lpSwapFee, setLpSwapFee] = useState<string>()
 
   useEffect(() => {
-    if (!asset || !balance || !values?.type || !web3 || !appConfig || poolInfo)
+    if (!asset || !balance || !values?.type || !web3 || !appConfig || !poolInfo)
       return
     const poolInstance = new Pool(web3)
 
