@@ -104,7 +104,8 @@
         "name": "files",
         "label": "File",
         "placeholder": "e.g. https://file.com/file.json",
-        "help": "Please enter the URL to your data set file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing. For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size.",
+        "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+        "prominentHelp": true,
         "type": "files",
         "required": true
       },
@@ -112,7 +113,8 @@
         "name": "links",
         "label": "Sample file",
         "placeholder": "e.g. https://file.com/samplefile.json",
-        "help": "Please enter the URL to a sample of your data set file and click \"ADD FILE\" to validate the data. This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing.",
+        "help": "This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+        "prominentHelp": true,
         "type": "files"
       },
       {
