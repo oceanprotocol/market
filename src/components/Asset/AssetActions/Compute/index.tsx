@@ -501,9 +501,9 @@ export default function Compute({
             }
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
             oceanSymbol={
-              asset?.accessDetails
-                ? asset?.accessDetails?.baseToken?.symbol
-                : ''
+              asset?.accessDetails?.baseToken?.symbol ||
+              selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol ||
+              'OCEAN'
             }
             dtSymbolSelectedComputeAsset={
               selectedAlgorithmAsset?.datatokens[0]?.symbol
