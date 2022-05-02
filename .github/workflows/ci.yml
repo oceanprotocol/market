@@ -37,12 +37,24 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
 
       - run: npm ci
-      - run: npm test
       - run: npm run build
+      - run: npm test
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: coverage/
 
   coverage:
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: coverage
+
       - uses: paambaati/codeclimate-action@v2.7.1 # using 2.7.1 for issue: https://github.com/paambaati/codeclimate-action/issues/316
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
