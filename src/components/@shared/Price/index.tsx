@@ -18,7 +18,6 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
-  console.log('accessDetails?.type', accessDetails?.type)
   return accessDetails?.price || accessDetails?.type === 'free' ? (
     <PriceUnit
       price={`${orderPriceAndFees?.price || accessDetails?.price}`}
