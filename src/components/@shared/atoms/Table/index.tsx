@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
 import DataTable, { IDataTableProps } from 'react-data-table-component'
-import Loader from './Loader'
+import Loader from '../Loader'
 import Pagination from '@shared/Pagination'
 import styles from './Table.module.css'
 import { useUserPreferences } from '@context/UserPreferences'
 
-interface TableProps extends IDataTableProps {
+export interface TableProps extends IDataTableProps {
   isLoading?: boolean
   emptyMessage?: string
   sortField?: string
