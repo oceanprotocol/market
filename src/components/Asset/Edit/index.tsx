@@ -39,7 +39,7 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
 
   return asset &&
     asset?.accessDetails &&
-    accountId.toLowerCase() === owner.toLowerCase() ? (
+    accountId?.toLowerCase() === owner?.toLowerCase() ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
       <div className={styles.container}>
         <Tabs items={tabs} defaultIndex={0} className={styles.edit} />
@@ -47,9 +47,7 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
     </Page>
   ) : asset &&
     asset?.accessDetails &&
-    accountId &&
-    owner &&
-    accountId.toLowerCase() !== owner.toLowerCase() ? (
+    accountId?.toLowerCase() !== owner?.toLowerCase() ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
       <Alert
         title="Edit action available only to asset owner"
