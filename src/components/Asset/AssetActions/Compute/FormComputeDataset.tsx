@@ -92,6 +92,10 @@ export default function FormStartCompute({
   }
 
   useEffect(() => {
+    console.log('values.algorithm', values.algorithm)
+    console.log('accountId', accountId)
+    console.log('isConsumable', isConsumable)
+
     if (!values.algorithm || !accountId || !isConsumable) return
     async function fetchAlgorithmAssetExtended() {
       const algorithmAsset = getAlgorithmAsset(values.algorithm)

@@ -152,6 +152,7 @@ export default function Compute({
         computeEnv?.id,
         validUntil
       )
+      console.log('datasetPriceAndFees price and fees', datasetPriceAndFees)
       if (!datasetPriceAndFees) {
         setError('Error setting dataset price and fees!')
         toast.error('Error setting dataset price and fees!')
@@ -185,6 +186,7 @@ export default function Compute({
         toast.error('Error setting algorithm price and fees!')
         return
       }
+      console.log('algo price and fees', algorithmOrderPriceAndFees)
       setAlgoOrderPriceAndFees(algorithmOrderPriceAndFees)
       setIsRequestingAlgoOrderPrice(false)
     }
@@ -199,6 +201,7 @@ export default function Compute({
   }, [asset?.accessDetails])
 
   useEffect(() => {
+    console.log('selcted algo', selectedAlgorithmAsset)
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
 
     setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
@@ -208,6 +211,7 @@ export default function Compute({
     )
 
     async function initSelectedAlgo() {
+      console.log('selcted algo', selectedAlgorithmAsset)
       await checkAssetDTBalance(selectedAlgorithmAsset)
       await initPriceAndFees()
     }
@@ -512,7 +516,7 @@ export default function Compute({
             )}
             // lazy comment when removing pricingStepText
             stepText={computeStatusText}
-            isConsumable={isConsumable}
+            isConsumable={isConsumablePrice}
             consumableFeedback={consumableFeedback}
             datasetOrderPriceAndFees={datasetOrderPriceAndFees}
             algoOrderPriceAndFees={algoOrderPriceAndFees}
