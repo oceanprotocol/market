@@ -10,11 +10,12 @@ import Token from '../../../../@shared/Token'
 import content from '../../../../../../content/price.json'
 import styles from './index.module.css'
 import Update from './Update'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function PoolSections() {
   const { asset } = useAsset()
   const { poolData, poolInfo, poolInfoUser, poolInfoOwner } = usePool()
-
+  const { getOpcFeeForToken } = useMarketMetadata()
   return (
     <>
       <PoolSection className={styles.dataToken}>
@@ -118,7 +119,10 @@ export default function PoolSections() {
         />
         <Token
           symbol="% OPC fee"
-          balance={poolInfo?.opcFee}
+          balance={getOpcFeeForToken(
+            poolInfo?.baseTokenAddress,
+            asset?.chainId
+          )}
           noIcon
           size="mini"
         />
