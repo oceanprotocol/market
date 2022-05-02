@@ -11,7 +11,6 @@ export const poolDataQuery = gql`
       id
       totalShares
       liquidityProviderSwapFee
-      opcFee
       publishMarketSwapFee
       spotPrice
       baseToken {

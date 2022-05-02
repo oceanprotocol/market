@@ -42,6 +42,7 @@ export default function InputElement({
   multiple,
   disabled,
   help,
+  prominentHelp,
   form,
   additionalComponent,
   disclaimer,
