@@ -71,7 +71,8 @@ export default function Swap({
   const [lpSwapFee, setLpSwapFee] = useState<string>()
 
   useEffect(() => {
-    if (!asset || !balance || !values?.type || !web3 || !appConfig) return
+    if (!asset || !balance || !values?.type || !web3 || !appConfig || poolInfo)
+      return
     const poolInstance = new Pool(web3)
 
     async function calculateMaximum() {
@@ -126,8 +127,8 @@ export default function Swap({
 
         const maxBaseTokens = await poolInstance.getAmountOutExactIn(
           asset.accessDetails?.addressOrId,
-          poolInfo.datatokenAddress,
-          poolInfo.baseTokenAddress,
+          poolInfo?.datatokenAddress,
+          poolInfo?.baseTokenAddress,
           maxDatatokens.toString(),
           appConfig.consumeMarketPoolSwapFee
         )
@@ -166,7 +167,8 @@ export default function Swap({
     poolInfo.datatokenAddress,
     poolInfo.baseTokenAddress,
     appConfig,
-    appConfig.consumeMarketPoolSwapFee
+    appConfig.consumeMarketPoolSwapFee,
+    poolInfo
   ])
 
   const switchTokens = () => {
