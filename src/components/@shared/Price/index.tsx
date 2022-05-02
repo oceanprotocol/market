@@ -18,6 +18,7 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
+  console.log('accessDetails?.type', accessDetails?.type)
   return accessDetails?.price || accessDetails?.type === 'free' ? (
     <PriceUnit
       price={`${orderPriceAndFees?.price || accessDetails?.price}`}
@@ -27,7 +28,7 @@ export default function Price({
       conversion={conversion}
       type={accessDetails.type}
     />
-  ) : !accessDetails || accessDetails?.type === '' ? (
+  ) : accessDetails && !accessDetails.type ? (
     <div className={styles.empty}>
       No price set{' '}
       <Tooltip content="No pricing mechanism has been set on this asset yet." />
