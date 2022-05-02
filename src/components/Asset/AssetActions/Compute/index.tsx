@@ -45,6 +45,8 @@ import { buyDtFromPool } from '@utils/pool'
 import { order, reuseOrder } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getComputeFeedback } from '@utils/feedback'
+import { usePool } from '@context/Pool'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function Compute({
   asset,
@@ -81,6 +83,8 @@ export default function Compute({
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isMounted = useIsMounted()
+  const { getOpcFeeForToken } = useMarketMetadata()
+  const { poolData } = usePool()
   const newCancelToken = useCancelToken()
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [isAlgoConsumablePrice, setIsAlgoConsumablePrice] = useState(true)
@@ -145,10 +149,26 @@ export default function Compute({
           asset.metadata.type
         )[0]
       )
+      const poolParams =
+        asset?.accessDetails?.type === 'dynamic'
+          ? {
+              tokenInLiquidity: poolData?.baseTokenLiquidity,
+              tokenOutLiquidity: poolData?.datatokenLiquidity,
+              tokenOutAmount: '1',
+              opcFee: getOpcFeeForToken(
+                asset?.accessDetails?.baseToken.address,
+                asset?.chainId
+              ),
+              lpSwapFee: poolData?.liquidityProviderSwapFee,
+              publishMarketSwapFee:
+                asset?.accessDetails?.publisherMarketOrderFee,
+              consumeMarketSwapFee: '0'
+            }
+          : null
       const datasetPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
-        null,
+        poolParams,
         computeEnv?.id,
         validUntil
       )

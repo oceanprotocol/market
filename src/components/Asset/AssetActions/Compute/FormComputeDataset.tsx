@@ -146,7 +146,6 @@ export default function FormStartCompute({
       .plus(priceAlgo)
       .toDecimalPlaces(MAX_DECIMALS)
       .toString()
-    console.log(totalPrice)
     setTotalPrice(totalPrice)
   }, [
     asset?.accessDetails,
