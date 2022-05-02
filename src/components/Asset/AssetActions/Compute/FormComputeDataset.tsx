@@ -16,6 +16,8 @@ import {
   getAccessDetails
 } from '@utils/accessDetailsAndPricing'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import Decimal from 'decimal.js'
+import { MAX_DECIMALS } from '@utils/constants'
 
 export default function FormStartCompute({
   algorithms,
@@ -129,17 +131,23 @@ export default function FormStartCompute({
     )
     const priceDataset =
       hasPreviousOrder || hasDatatoken
-        ? 0
-        : Number(datasetOrderPriceAndFees?.price || asset.accessDetails.price)
+        ? new Decimal(0)
+        : new Decimal(
+            datasetOrderPriceAndFees?.price || asset.accessDetails.price
+          ).toDecimalPlaces(MAX_DECIMALS)
     const priceAlgo =
       hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
-        ? 0
-        : Number(
+        ? new Decimal(0)
+        : new Decimal(
             algoOrderPriceAndFees?.price ||
-              selectedAlgorithmAsset?.accessDetails.price
-          )
-
-    setTotalPrice((priceDataset + priceAlgo).toString())
+              selectedAlgorithmAsset.accessDetails.price
+          ).toDecimalPlaces(MAX_DECIMALS)
+    const totalPrice = priceDataset
+      .plus(priceAlgo)
+      .toDecimalPlaces(MAX_DECIMALS)
+      .toString()
+    console.log(totalPrice)
+    setTotalPrice(totalPrice)
   }, [
     asset?.accessDetails,
     selectedAlgorithmAsset?.accessDetails,
