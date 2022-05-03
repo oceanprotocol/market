@@ -115,6 +115,7 @@ export default function Edit({
 
   return (
     <Formik
+      enableReinitialize
       initialValues={getInitialValues(
         asset?.metadata,
         asset?.services[0]?.timeout,
