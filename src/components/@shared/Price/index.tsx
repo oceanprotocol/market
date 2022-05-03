@@ -10,15 +10,19 @@ export default function Price({
   orderPriceAndFees,
   className,
   size,
-  conversion
+  conversion,
+  loading
 }: {
   accessDetails: AccessDetails
   orderPriceAndFees?: OrderPriceAndFees
   className?: string
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
+  loading?: boolean
 }): ReactElement {
-  return accessDetails?.price || accessDetails?.type === 'free' ? (
+  return loading ? (
+    <Loader message="Retrieving price..." />
+  ) : accessDetails?.price || accessDetails?.type === 'free' ? (
     <PriceUnit
       price={`${orderPriceAndFees?.price || accessDetails?.price}`}
       symbol={accessDetails.baseToken?.symbol}
@@ -27,18 +31,16 @@ export default function Price({
       conversion={conversion}
       type={accessDetails.type}
     />
-  ) : !accessDetails || !accessDetails?.price || accessDetails?.type === '' ? (
+  ) : (
     <div className={styles.empty}>
       No price set{' '}
       <Tooltip content="No pricing mechanism has been set on this asset yet." />
     </div>
-  ) : (
     // TODO: Hacky hack, put back some check for low liquidity
     // ) : price.isConsumable !== 'true' ? (
     //   <div className={styles.empty}>
     //     Low liquidity{' '}
     //     <Tooltip content="This pool does not have enough liquidity for using this data set." />
     //   </div>
-    <Loader message="Retrieving price..." />
   )
 }

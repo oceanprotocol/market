@@ -13,17 +13,20 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
+  loading?: boolean
 }
 
 export default function AssetTeaser({
   asset,
-  noPublisher
+  noPublisher,
+  loading
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
+
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`}>
@@ -51,7 +54,11 @@ export default function AssetTeaser({
           </div>
 
           <footer className={styles.foot}>
-            <Price accessDetails={asset.accessDetails} size="small" />
+            <Price
+              accessDetails={asset.accessDetails}
+              loading={loading}
+              size="small"
+            />
             <NetworkName networkId={asset.chainId} className={styles.network} />
           </footer>
         </a>

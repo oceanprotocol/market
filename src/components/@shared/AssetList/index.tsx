@@ -52,7 +52,7 @@ export default function AssetList({
   useEffect(() => {
     if (!assets) return
     setAssetsWithPrices(assets as AssetExtended[])
-    setLoading(false)
+    setLoading(true)
     async function fetchPrices() {
       const assetsWithPrices = await getAccessDetailsForAssets(
         assets,
@@ -60,6 +60,7 @@ export default function AssetList({
       )
       if (!isMounted()) return
       setAssetsWithPrices([...assetsWithPrices])
+      setLoading(false)
     }
     fetchPrices()
   }, [assets, isMounted, accountId])
@@ -87,6 +88,7 @@ export default function AssetList({
               asset={assetWithPrice}
               key={assetWithPrice.id}
               noPublisher={noPublisher}
+              loading={loading}
             />
           ))
         ) : (
