@@ -55,12 +55,12 @@ export default function Download({
 
     setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
-
     // get full price and fees
     async function init() {
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
         asset?.accessDetails?.type === 'free' ||
+        !asset?.accessDetails?.price ||
         (!poolData && asset?.accessDetails?.type === 'dynamic') ||
         isLoading
       )
@@ -68,6 +68,7 @@ export default function Download({
 
       !orderPriceAndFees && setIsLoading(true)
       setStatusText('Refreshing price')
+
       // this is needed just for pool
       const paramsForPool: CalcInGivenOutParams = {
         tokenInLiquidity: poolData?.baseTokenLiquidity,

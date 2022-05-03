@@ -27,7 +27,7 @@ export default function Price({
       conversion={conversion}
       type={accessDetails.type}
     />
-  ) : !accessDetails || accessDetails?.type === '' ? (
+  ) : !accessDetails || !accessDetails?.price || accessDetails?.type === '' ? (
     <div className={styles.empty}>
       No price set{' '}
       <Tooltip content="No pricing mechanism has been set on this asset yet." />
