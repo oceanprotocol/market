@@ -4,9 +4,11 @@ import PriceUnit from '@shared/Price/PriceUnit'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
 import { AccessDetails } from 'src/@types/Price'
+import { MAX_DECIMALS } from '@utils/constants'
+import Decimal from 'decimal.js'
 
 interface PriceOutputProps {
-  totalPrice: number
+  totalPrice: string
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   symbol: string
@@ -27,7 +29,7 @@ function Row({
   timeout,
   sign
 }: {
-  price: number
+  price: string
   hasPreviousOrder?: boolean
   hasDatatoken?: boolean
   symbol?: string
@@ -80,20 +82,22 @@ export default function PriceOutput({
             <Row
               hasPreviousOrder={hasPreviousOrder}
               hasDatatoken={hasDatatoken}
-              price={
-                datasetOrderPrice ||
-                Number.parseFloat(asset?.accessDetails?.price)
-              }
+              price={new Decimal(
+                datasetOrderPrice || asset?.accessDetails?.price || 0
+              )
+                .toDecimalPlaces(MAX_DECIMALS)
+                .toString()}
               timeout={assetTimeout}
               symbol={symbol}
             />
             <Row
               hasPreviousOrder={hasPreviousOrderSelectedComputeAsset}
               hasDatatoken={hasDatatokenSelectedComputeAsset}
-              price={
-                algoOrderPrice ||
-                Number.parseFloat(algorithmConsumeDetails?.price)
-              }
+              price={new Decimal(
+                algoOrderPrice || algorithmConsumeDetails?.price || 0
+              )
+                .toDecimalPlaces(MAX_DECIMALS)
+                .toString()}
               timeout={selectedComputeAssetTimeout}
               symbol={symbol}
               sign="+"

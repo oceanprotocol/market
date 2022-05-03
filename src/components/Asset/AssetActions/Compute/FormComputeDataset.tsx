@@ -187,7 +187,7 @@ export default function FormStartCompute({
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         algorithmConsumeDetails={selectedAlgorithmAsset?.accessDetails}
         symbol={oceanSymbol}
-        totalPrice={Number.parseFloat(totalPrice)}
+        totalPrice={totalPrice}
         datasetOrderPrice={datasetOrderPrice}
         algoOrderPrice={algoOrderPrice}
       />
