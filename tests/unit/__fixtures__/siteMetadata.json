@@ -1,7 +1,7 @@
 {
   "site": {
     "siteMetadata": {
-      "siteTitle": "Ocean Market",
+      "siteTitle": "Cannabis Data Market",
       "siteTagline": "A marketplace to find, publish and trade data sets in the Ocean Network.",
       "siteUrl": "https://market.oceanprotocol.com",
       "siteIcon": "node_modules/@oceanprotocol/art/logo/favicon-white.png",
@@ -21,7 +21,7 @@
         "polygonPublish": "Only republish data sets with a pool from ETH Mainnet into Polygon/Matic if the liquidity is **less than or equal to 1000 OCEAN in the original pool**. Doing otherwise will lead to [purgatory](https://github.com/oceanprotocol/list-purgatory) for the data set in Polygon/Matic."
       },
       "announcement": {
-        "main": "Ocean Market is [available on Polygon](https://blog.oceanprotocol.com/ocean-on-polygon-network-8abad19cbf47).",
+        "main": "Cannabis Data Market is [available on Polygon](https://blog.oceanprotocol.com/ocean-on-polygon-network-8abad19cbf47).",
         "polygon": "Polygon/Matic EVM support is in early stages. [Use the Polygon Bridge](https://docs.oceanprotocol.com/tutorials/polygon-bridge/) to get mOCEAN."
       },
       "appConfig": {

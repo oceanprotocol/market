@@ -12,7 +12,7 @@ import TokenApproval from './TokenApproval'
 
 export default function UserPreferences(): ReactElement {
   // Calling this here because <Style /> is not mounted on first load
-  const darkMode = useDarkMode(false, darkModeConfig)
+  const darkMode = useDarkMode(true, darkModeConfig)
 
   return (
     <Tooltip
