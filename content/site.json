@@ -3,7 +3,7 @@
     "siteTitle": "Cannabis Data Marketplace",
     "siteTagline": "A marketplace to find, publish, trade and earn from Cannabis data.",
     "siteUrl": "https://cannadata.market",
-    "siteIcon": "../src/images/logo.svg",
+    "siteIcon": "node_modules/@oceanprotocol/art/logo/favicon-white.png",
     "siteImage": "../src/images/share.png",
     "copyright": "All Rights Reserved. Powered by [Cannabis Genome DAO](https://cannabisgeno.me) and [Ocean Protocol](https://oceanprotocol.com)",
     "menu": [
