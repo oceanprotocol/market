@@ -6,7 +6,7 @@ import { useWeb3 } from '@context/Web3'
 import ButtonBuy from '@shared/ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
-import styles from './Download.module.css'
+import styles from './Consume.module.css'
 import { FileMetadata, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
@@ -20,7 +20,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { usePool } from '@context/Pool'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
-export default function Download({
+export default function Consume({
   asset,
   file,
   isBalanceSufficient,
@@ -52,15 +52,17 @@ export default function Download({
 
   useEffect(() => {
     if (!asset?.accessDetails) return
+    console.log(asset?.accessDetails)
 
-    setIsOwned(asset?.accessDetails?.isOwned)
+    // setIsOwned(asset?.accessDetails?.isOwned)
+    asset?.accessDetails?.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
     // get full price and fees
     async function init() {
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
         asset?.accessDetails?.type === 'free' ||
-        !asset?.accessDetails?.price ||
+        !asset?.accessDetails?.price || // this is needed to avoid crashing in lines below, use case: asset without price
         (!poolData && asset?.accessDetails?.type === 'dynamic') ||
         isLoading
       )
@@ -181,26 +183,29 @@ export default function Download({
     setIsLoading(false)
   }
 
-  const PurchaseButton = () => (
-    <ButtonBuy
-      action="download"
-      disabled={isDisabled}
-      hasPreviousOrder={isOwned}
-      hasDatatoken={hasDatatoken}
-      dtSymbol={asset?.datatokens[0]?.symbol}
-      dtBalance={dtBalance}
-      datasetLowPoolLiquidity={!asset.accessDetails?.isPurchasable}
-      onClick={handleOrderOrDownload}
-      assetTimeout={secondsToString(asset.services[0].timeout)}
-      assetType={asset?.metadata?.type}
-      stepText={statusText}
-      isLoading={isLoading}
-      priceType={asset.accessDetails?.type}
-      isConsumable={asset.accessDetails?.isPurchasable}
-      isBalanceSufficient={isBalanceSufficient}
-      consumableFeedback={consumableFeedback}
-    />
-  )
+  const PurchaseButton = () => {
+    const hasFinishLoading = !fileIsLoading && !isLoading
+    return (
+      <ButtonBuy
+        action="download"
+        disabled={isDisabled}
+        hasPreviousOrder={isOwned}
+        hasDatatoken={hasDatatoken}
+        dtSymbol={asset?.datatokens[0]?.symbol}
+        dtBalance={dtBalance}
+        datasetLowPoolLiquidity={!asset.accessDetails?.isPurchasable}
+        onClick={handleOrderOrDownload}
+        assetTimeout={secondsToString(asset.services[0].timeout)}
+        assetType={asset?.metadata?.type}
+        stepText={statusText}
+        isLoading={!hasFinishLoading}
+        priceType={asset.accessDetails?.type}
+        isConsumable={asset.accessDetails?.isPurchasable}
+        isBalanceSufficient={isBalanceSufficient}
+        consumableFeedback={consumableFeedback}
+      />
+    )
+  }
 
   return (
     <aside className={styles.consume}>
@@ -214,8 +219,9 @@ export default function Download({
             orderPriceAndFees={orderPriceAndFees}
             conversion
             size="large"
+            loading={fileIsLoading}
           />
-          {!isInPurgatory && <PurchaseButton />}
+          {!isInPurgatory && !fileIsLoading && <PurchaseButton />}
         </div>
       </div>
 
