@@ -48,6 +48,7 @@ import { getComputeFeedback } from '@utils/feedback'
 import { usePool } from '@context/Pool'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import { getPoolData } from '@context/Pool/_utils'
+import { getDummyWeb3 } from '@utils/web3'
 
 export default function Compute({
   asset,
@@ -109,6 +110,7 @@ export default function Compute({
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
+    const web3 = await getDummyWeb3(asset?.chainId)
     const datatokenInstance = new Datatoken(web3)
     const dtBalance = await datatokenInstance.balance(
       asset?.services[0].datatokenAddress,
