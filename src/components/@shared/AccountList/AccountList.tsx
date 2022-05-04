@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import styles from './AssetList.module.css'
 import classNames from 'classnames/bind'
-import Loader from '../atoms/Loader'
+import Loader from '../atoms/Loader/index'
 import { useUserPreferences } from '@context/UserPreferences'
 import AccountTeaser from '@shared/AccountTeaser/AccountTeaser'
 

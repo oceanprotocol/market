@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
-import Loader from '../atoms/Loader'
-import Tooltip from '../atoms/Tooltip'
+import Loader from '../atoms/Loader/index'
+import Tooltip from '../atoms/Tooltip/index'
 import PriceUnit from './PriceUnit'
 import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 

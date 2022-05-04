@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './Loader.module.css'
+import styles from './index.module.css'
 
 export default function Loader({
   message

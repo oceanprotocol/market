@@ -1,6 +1,6 @@
 import { toDataUrl } from 'myetherwallet-blockies'
 import React, { ReactElement } from 'react'
-import styles from './Blockies.module.css'
+import styles from './index.module.css'
 
 export default function Blockies({
   accountId,

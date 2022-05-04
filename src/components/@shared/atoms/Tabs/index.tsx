@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import InputElement from '@shared/FormInput/InputElement'
-import styles from './Tabs.module.css'
+import styles from './index.module.css'
 
 export interface TabsItem {
   title: string

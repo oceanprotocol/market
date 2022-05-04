@@ -1,16 +1,14 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Tabs, { TabsItem } from '@shared/atoms/Tabs/index'
+import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import styles from './index.module.css'
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: 'Component/@shared/atoms/Tabs',
   component: Tabs
 } as ComponentMeta<typeof Tabs>
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof Tabs> = (args) => <Tabs {...args} />
 
 interface Props {
@@ -24,7 +22,6 @@ interface Props {
 }
 
 export const Primary: Props = Template.bind({})
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
   items: {
     title: 'Tab',
@@ -35,6 +32,6 @@ Primary.args = {
   defaultIndex: 0,
   showRadio: true,
   handleTabChange: () => {
-    console.log('Tab pressed!')
+    console.log('Tab selected!')
   }
 }
