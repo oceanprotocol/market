@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
-import styles from './Status.module.css'
+import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
 
