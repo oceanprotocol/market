@@ -163,11 +163,7 @@ export default function Swap({
     dtItem.amount,
     baseTokenItem.token,
     baseTokenItem.amount,
-    poolInfo.liquidityProviderSwapFee,
-    poolInfo.datatokenAddress,
-    poolInfo.baseTokenAddress,
     appConfig,
-    appConfig.consumeMarketPoolSwapFee,
     poolInfo
   ])
 
