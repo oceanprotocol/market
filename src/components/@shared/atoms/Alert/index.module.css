@@ -1,5 +1,5 @@
 .alert {
-  composes: box from './Box.module.css';
+  composes: box from '../Box.module.css';
   max-width: 40rem;
   margin: auto;
   border-width: 0;
