@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import Button, { ButtonProps } from '@shared/atoms/Button'
@@ -16,7 +16,7 @@ const Template: ComponentStory<typeof Button> = (args: ButtonProps) => (
 
 interface Props {
   args: {
-    children: string
+    children: ReactNode
     style: string
     size: string
     onClick: any
@@ -26,7 +26,7 @@ interface Props {
 export const Primary: Props = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
-  children: 'Button',
+  children: <>Click me!</>,
   style: 'primary',
   size: 'small',
   onClick: () => {
