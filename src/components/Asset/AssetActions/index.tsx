@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
-import Consume from './Consume'
+import Download from './Download'
 import { FileMetadata, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
@@ -120,7 +120,7 @@ export default function AssetActions({
       fileIsLoading={fileIsLoading}
     />
   ) : (
-    <Consume
+    <Download
       asset={asset}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}

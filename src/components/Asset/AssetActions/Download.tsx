@@ -6,7 +6,7 @@ import { useWeb3 } from '@context/Web3'
 import ButtonBuy from '@shared/ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
-import styles from './Consume.module.css'
+import styles from './Download.module.css'
 import { FileMetadata, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
@@ -20,7 +20,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { usePool } from '@context/Pool'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
-export default function Consume({
+export default function Download({
   asset,
   file,
   isBalanceSufficient,
@@ -52,9 +52,7 @@ export default function Consume({
 
   useEffect(() => {
     if (!asset?.accessDetails) return
-    console.log(asset?.accessDetails)
 
-    // setIsOwned(asset?.accessDetails?.isOwned)
     asset?.accessDetails?.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
     // get full price and fees
