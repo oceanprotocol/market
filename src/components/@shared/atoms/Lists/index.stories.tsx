@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import { ListItem } from '@shared/atoms/Lists'
@@ -14,13 +14,19 @@ const Template: ComponentStory<typeof ListItem> = (args) => (
 
 interface Props {
   args: {
-    // children: any
+    children: ReactNode
     ol: boolean
   }
 }
 
 export const Primary: Props = Template.bind({})
 Primary.args = {
-  // children: 'Button',
+  children: (
+    <>
+      <a href="https://oceanprotocol.com/" target="_blank" rel="noreferrer">
+        List Item
+      </a>
+    </>
+  ),
   ol: true
 }
