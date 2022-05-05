@@ -1,10 +1,10 @@
 import React, { FormEvent } from 'react'
 import Caret from '@images/caret.svg'
 import { accountTruncate } from '@utils/web3'
-import Loader from '@shared/atoms/Loader/index'
+import Loader from '@shared/atoms/Loader'
 import styles from './Account.module.css'
 import { useWeb3 } from '@context/Web3'
-import Blockies from '@shared/atoms/Blockies/index'
+import Blockies from '@shared/atoms/Blockies'
 
 // Forward ref for Tippy.js
 // eslint-disable-next-line

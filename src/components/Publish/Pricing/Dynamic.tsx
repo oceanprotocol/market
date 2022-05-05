@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Alert from '@shared/atoms/Alert/index'
+import Alert from '@shared/atoms/Alert'
 import FormHelp from '@shared/FormInput/Help'
 import Tooltip from '@shared/atoms/Tooltip'
 import Coin from './Coin'

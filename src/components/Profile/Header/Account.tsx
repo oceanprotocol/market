@@ -4,7 +4,7 @@ import ExplorerLink from '@shared/ExplorerLink'
 import NetworkName from '@shared/NetworkName'
 import Jellyfish from '@oceanprotocol/art/creatures/jellyfish/jellyfish-grid.svg'
 import Copy from '@shared/atoms/Copy'
-import Blockies from '@shared/atoms/Blockies/index'
+import Blockies from '@shared/atoms/Blockies'
 import styles from './Account.module.css'
 import { useProfile } from '@context/Profile'
 

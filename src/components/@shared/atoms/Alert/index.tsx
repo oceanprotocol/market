@@ -1,9 +1,9 @@
 import React, { ReactElement, FormEvent } from 'react'
 import classNames from 'classnames/bind'
-import styles from './Alert.module.css'
-import Button from '../Button/index'
-import Markdown from '../../Markdown/index'
-import Badge from '../Badge/index'
+import styles from './index.module.css'
+import Button from '../Button'
+import Markdown from '../../Markdown'
+import Badge from '../Badge'
 
 const cx = classNames.bind(styles)
 
