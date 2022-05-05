@@ -76,15 +76,14 @@ export default function ComputeJobs({
   minimal?: boolean
   assetChainId?: number[]
 }): ReactElement {
-  const { accountId, networkId } = useWeb3()
+  const { accountId } = useWeb3()
   const { asset } = useAsset()
   const { chainIds } = useUserPreferences()
   const [isLoading, setIsLoading] = useState(false)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
-
-  const columnsMinimal = [columns[4], columns[5], columns[3]]
+  const [columnsMinimal] = useState([columns[4], columns[5], columns[3]])
 
   const fetchJobs = useCallback(async () => {
     if (!chainIds || chainIds.length === 0 || !accountId) {
