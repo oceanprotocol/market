@@ -36,11 +36,5 @@ export default function Price({
       No price set{' '}
       <Tooltip content="No pricing mechanism has been set on this asset yet." />
     </div>
-    // TODO: Hacky hack, put back some check for low liquidity
-    // ) : price.isConsumable !== 'true' ? (
-    //   <div className={styles.empty}>
-    //     Low liquidity{' '}
-    //     <Tooltip content="This pool does not have enough liquidity for using this data set." />
-    //   </div>
   )
 }

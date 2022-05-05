@@ -52,7 +52,7 @@ export default function AssetList({
   useEffect(() => {
     if (!assets) return
     setAssetsWithPrices(assets as AssetExtended[])
-    setLoading(true)
+    // setLoading(true)
     async function fetchPrices() {
       const assetsWithPrices = await getAccessDetailsForAssets(
         assets,
