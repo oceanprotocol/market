@@ -2,6 +2,8 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import Tooltip from '@shared/atoms/Tooltip'
+import Tippy from '@tippyjs/react'
+import { animated } from 'react-spring'
 import styles from './index.module.css'
 
 export default {
@@ -9,24 +11,33 @@ export default {
   component: Tooltip
 } as ComponentMeta<typeof Tooltip>
 
-const Template: ComponentStory<typeof Tooltip> = (args) => <Tooltip {...args} />
+// jest.setTimeout(300000)
 
+const Template: ComponentStory<typeof Tooltip> = (args) => (
+  <Tooltip {...args}>
+    <Tippy
+      render={(attrs: any) => (
+        <animated.div>
+          <div className={styles.content} {...attrs}>
+            {args.content}
+            <div className={styles.arrow} data-popper-arrow />
+          </div>
+        </animated.div>
+      )}
+    />
+  </Tooltip>
+)
 interface Props {
   args: {
-    content: any
-    // children: any
-    trigger: string
-    disabled: boolean
-    className: string
-    //   placement: Placement
+    content: string
+    trigger?: string
+    disabled?: boolean
   }
 }
 
 export const Primary: Props = Template.bind({})
 Primary.args = {
   content: 'Toltip test content',
-  // children: 'Button',
   trigger: 'tooltip trigger',
-  className: styles.tooltip || 'className',
   disabled: true
 }
