@@ -16,7 +16,7 @@ import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import Decimal from 'decimal.js'
 import { consumeMarketOrderFee } from '../../app.config'
 
-const TokensPriceQuery = gql`
+const TokensPriceQueryOp = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
     tokens(where: { id_in: $datatokenIds }) {
       id
@@ -77,7 +77,7 @@ const TokensPriceQuery = gql`
     }
   }
 `
-const TokenPriceQuery = gql`
+const TokenPriceQueryOp = gql`
   query TokenPriceQuery($datatokenId: ID!, $account: String) {
     token(id: $datatokenId) {
       id
@@ -310,7 +310,7 @@ export async function getAccessDetails(
       TokenPriceQuery,
       { datatokenId: string; account: string }
     > = await fetchData(
-      TokenPriceQuery,
+      TokenPriceQueryOp,
       {
         datatokenId: datatokenAddress.toLowerCase(),
         account: account?.toLowerCase()
@@ -353,7 +353,7 @@ export async function getAccessDetailsForAssets(
         TokensPriceQuery,
         { datatokenIds: [string]; account: string }
       > = await fetchData(
-        TokensPriceQuery,
+        TokensPriceQueryOp,
         {
           datatokenIds: chainAssetLists[chainKey],
           account: account?.toLowerCase()
