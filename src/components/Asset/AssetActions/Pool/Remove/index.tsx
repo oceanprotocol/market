@@ -42,8 +42,12 @@ export default function Remove({
   const [txId, setTxId] = useState<string>()
   const [slippage, setSlippage] = useState<string>('5')
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
+  const [poolInstance, setPoolInstance] = useState<Pool>()
 
-  const poolInstance = new Pool(web3)
+  useEffect(() => {
+    if (!web3) return
+    setPoolInstance(new Pool(web3))
+  }, [web3])
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
@@ -95,7 +99,9 @@ export default function Remove({
       const newAmountOcean = await poolInstance.calcSingleOutGivenPoolIn(
         poolData?.id,
         poolInfo?.baseTokenAddress,
-        newAmountPoolShares
+        newAmountPoolShares,
+        18,
+        poolInfo?.baseTokenDecimals
       )
       setAmountOcean(newAmountOcean)
     }, 150)

@@ -82,7 +82,15 @@ export default function FormTrade({
             values.type === 'sell'
               ? poolInfo.baseTokenAddress
               : poolInfo.datatokenAddress,
-          marketFeeAddress: appConfig.marketFeeAddress
+          marketFeeAddress: appConfig.marketFeeAddress,
+          tokenInDecimals:
+            values.type === 'sell'
+              ? poolInfo.datatokenDecimals
+              : poolInfo.baseTokenDecimals,
+          tokenOutDecimals:
+            values.type === 'sell'
+              ? poolInfo.baseTokenDecimals
+              : poolInfo.datatokenDecimals
         }
 
         const amountsInOutMaxFee: AmountsInMaxFee = {
@@ -120,7 +128,15 @@ export default function FormTrade({
             values.type === 'sell'
               ? poolInfo.baseTokenAddress
               : poolInfo.datatokenAddress,
-          marketFeeAddress: appConfig.marketFeeAddress
+          marketFeeAddress: appConfig.marketFeeAddress,
+          tokenInDecimals:
+            values.type === 'sell'
+              ? poolInfo.datatokenDecimals
+              : poolInfo.baseTokenDecimals,
+          tokenOutDecimals:
+            values.type === 'sell'
+              ? poolInfo.baseTokenDecimals
+              : poolInfo.datatokenDecimals
         }
 
         const amountsOutMaxFee: AmountsOutMaxFee = {

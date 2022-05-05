@@ -99,8 +99,10 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       weightDt: getWeight(poolData.datatokenWeight),
       datatokenSymbol: poolData.datatoken.symbol,
       datatokenAddress: poolData.datatoken.address,
+      datatokenDecimals: poolData.datatoken.decimals,
       baseTokenSymbol: poolData.baseToken.symbol,
       baseTokenAddress: poolData.baseToken.address,
+      baseTokenDecimals: poolData.baseToken.decimals,
       totalPoolTokens: poolData.totalShares
     }
 

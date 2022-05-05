@@ -32,7 +32,9 @@ export async function calculateBuyPrice(
     accessDetails.baseToken.address,
     accessDetails.datatoken.address,
     '1',
-    consumeMarketPoolSwapFee
+    consumeMarketPoolSwapFee,
+    accessDetails.baseToken.decimals,
+    accessDetails.datatoken.decimals
   )
 
   return estimatedPrice
@@ -52,7 +54,8 @@ export async function buyDtFromPool(
     accessDetails.baseToken.address,
     accessDetails.addressOrId,
     dtPrice.tokenAmount,
-    false
+    false,
+    accessDetails.baseToken.decimals
   )
   if (!approveTx) {
     return
@@ -63,7 +66,9 @@ export async function buyDtFromPool(
     {
       marketFeeAddress,
       tokenIn: accessDetails.baseToken.address,
-      tokenOut: accessDetails.datatoken.address
+      tokenOut: accessDetails.datatoken.address,
+      tokenInDecimals: accessDetails.baseToken.decimals,
+      tokenOutDecimals: accessDetails.datatoken.decimals
     },
     {
       // this is just to be safe
@@ -163,6 +168,7 @@ export function calcSingleOutGivenPoolIn(
 export async function getLiquidityByShares(
   pool: string,
   tokenAddress: string,
+  tokenDecimals: number,
   shares: string,
   chainId: number
 ): Promise<string> {
@@ -174,7 +180,9 @@ export async function getLiquidityByShares(
   const amountBaseToken = await poolInstance.calcSingleOutGivenPoolIn(
     pool,
     tokenAddress,
-    shares
+    shares,
+    18,
+    tokenDecimals
   )
 
   return amountBaseToken
