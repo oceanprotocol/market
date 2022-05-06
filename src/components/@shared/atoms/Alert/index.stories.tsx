@@ -12,19 +12,13 @@ const Template: ComponentStory<typeof Alert> = (args) => <Alert {...args} />
 
 interface Props {
   args: {
-    title: string
     text: string
     state: string
-    onDismiss: any
   }
 }
 
 export const Primary: Props = Template.bind({})
 Primary.args = {
-  title: 'An alert title',
-  text: 'An alert text',
-  state: 'error',
-  onDismiss: () => {
-    console.log('Alert dismissed')
-  }
+  text: 'Alert text',
+  state: 'info'
 }
