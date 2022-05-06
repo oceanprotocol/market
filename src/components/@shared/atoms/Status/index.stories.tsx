@@ -20,6 +20,6 @@ interface Props {
 
 export const Primary: Props = Template.bind({})
 Primary.args = {
-  state: 'state',
+  state: 'warning',
   className: styles.status || 'className'
 }

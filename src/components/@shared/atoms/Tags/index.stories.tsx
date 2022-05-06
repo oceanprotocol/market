@@ -23,7 +23,7 @@ interface Props {
 
 export const Primary: Props = Template.bind({})
 Primary.args = {
-  items: ['tag1', 'tag2', 'tag3'],
+  items: [' tag1 ', ' tag2 ', ' tag3 '],
   max: 3,
   showMore: true,
   className: styles.tags || 'className',
