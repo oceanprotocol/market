@@ -70,9 +70,9 @@ export function Steps({
     setTouched
   ])
 
-  const { component } = wizardSteps.filter(
-    (stepContent) => stepContent.step === values.user.stepCurrent
-  )[0]
+  const { component } = wizardSteps.filter((stepContent) => {
+    return stepContent.step === values.user.stepCurrent
+  })[0]
 
   return component
 }

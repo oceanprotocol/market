@@ -37,13 +37,17 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
     }
   ].filter((tab) => tab !== undefined)
 
-  return asset && asset?.accessDetails && accountId === owner ? (
+  return asset &&
+    asset?.accessDetails &&
+    accountId?.toLowerCase() === owner?.toLowerCase() ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
       <div className={styles.container}>
         <Tabs items={tabs} defaultIndex={0} className={styles.edit} />
       </div>
     </Page>
-  ) : asset && asset?.accessDetails && accountId !== owner ? (
+  ) : asset &&
+    asset?.accessDetails &&
+    accountId?.toLowerCase() !== owner?.toLowerCase() ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
       <Alert
         title="Edit action available only to asset owner"
