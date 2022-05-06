@@ -14,6 +14,7 @@ interface Props {
   args: {
     text: string
     state: string
+    onDismiss?: () => void
   }
 }
 
@@ -21,4 +22,13 @@ export const Primary: Props = Template.bind({})
 Primary.args = {
   text: 'Alert text',
   state: 'info'
+}
+
+export const Secondary: Props = Template.bind({})
+Secondary.args = {
+  text: 'Alert text',
+  state: 'success',
+  onDismiss: () => {
+    console.log('Alert closed!')
+  }
 }

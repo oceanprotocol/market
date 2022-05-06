@@ -12,11 +12,11 @@ const Template: ComponentStory<typeof Loader> = (args) => <Loader {...args} />
 
 interface Props {
   args: {
-    noWordmark: boolean
+    message: string
   }
 }
 
 export const Primary: Props = Template.bind({})
 Primary.args = {
-  noWordmark: true
+  message: 'Loading...'
 }
