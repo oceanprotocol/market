@@ -35,10 +35,10 @@ export default function FormTrade({
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const { appConfig } = useMarketMetadata()
-  const { poolInfo } = usePool()
+  const { poolInfo, fetchAllData } = usePool()
+
   const [txId, setTxId] = useState<string>()
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
-
   const [maximumBaseToken, setMaximumBaseToken] = useState('0')
   const [maximumDt, setMaximumDt] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
@@ -105,6 +105,10 @@ export default function FormTrade({
           tokenInOutMarket,
           amountsInOutMaxFee
         )
+
+        if (!tx) {
+          throw new Error('Failed to swap tokens!')
+        }
       }
       if (values.output === 'exactOut') {
         const tokenOutMarket: TokenInOutMarket = {
@@ -139,8 +143,11 @@ export default function FormTrade({
           tokenOutMarket,
           amountsOutMaxFee
         )
+        if (!tx) {
+          throw new Error('Failed to swap tokens!')
+        }
       }
-
+      await fetchAllData()
       setTxId(tx?.transactionHash)
     } catch (error) {
       LoggerInstance.error(error.message)
@@ -152,8 +159,10 @@ export default function FormTrade({
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={async (values, { setSubmitting, resetForm }) => {
+      onSubmit={async (values, { setFieldValue, setSubmitting, resetForm }) => {
         await handleTrade(values)
+        await setFieldValue('baseToken', '')
+        await setFieldValue('datatoken', '')
         resetForm()
         setSubmitting(false)
       }}
@@ -167,6 +176,7 @@ export default function FormTrade({
               setCoin={setCoinFrom}
               setMaximumBaseToken={setMaximumBaseToken}
               setMaximumDt={setMaximumDt}
+              isLoading={isSubmitting}
             />
           ) : (
             <div className={styles.alertWrap}>

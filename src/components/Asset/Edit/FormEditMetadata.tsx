@@ -105,7 +105,7 @@ export default function FormEditMetadata({
               }
               {...field}
               component={Input}
-              prefix={field.name === 'price' && oceanConfig.oceanTokenSymbol}
+              prefix={field.name === 'price' && oceanConfig?.oceanTokenSymbol}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleFieldChange(e, field)
               }

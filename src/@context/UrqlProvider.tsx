@@ -2,7 +2,6 @@ import {
   createClient,
   Provider,
   Client,
-  cacheExchange,
   dedupExchange,
   fetchExchange
 } from 'urql'
@@ -16,7 +15,7 @@ let urqlClient: Client
 function createUrqlClient(subgraphUri: string) {
   const client = createClient({
     url: `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    exchanges: [dedupExchange, refocusExchange(), cacheExchange, fetchExchange]
+    exchanges: [dedupExchange, refocusExchange(), fetchExchange]
   })
   return client
 }
