@@ -16,5 +16,5 @@ test('test against args', () => {
   render(<Primary />)
   const buttonElement = screen.getByRole('button')
   // Testing against values coming from the story itself! No need for duplication
-  expect(buttonElement.textContent).toEqual(Primary.args.children)
+  expect(<>{buttonElement.textContent}</>).toEqual(Primary.args.children)
 })
