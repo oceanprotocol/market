@@ -41,8 +41,8 @@ export default function Tags({
 
   return (
     <div className={classes}>
-      {tags?.map((tag) => (
-        <Tag tag={tag} noLinks={noLinks} key={tag} />
+      {tags?.map((tag, i) => (
+        <Tag tag={tag} noLinks={noLinks} key={tag + i} />
       ))}
       {shouldShowMore && (
         <span className={styles.more}>{`+ ${items.length - max} more`}</span>

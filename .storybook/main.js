@@ -15,6 +15,7 @@ module.exports = {
         extensions: config.resolve.extensions
       })
     ]
+
     return config
   }
 }

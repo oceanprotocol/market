@@ -26,6 +26,8 @@ export default function AssetActions({
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
+  const newCancelToken = useCancelToken()
+  const isMounted = useIsMounted()
 
   // TODO: using this for the publish preview works fine, but produces a console warning
   // on asset details page as there is no formik context there:
@@ -41,27 +43,7 @@ export default function AssetActions({
     asset?.services.filter((service) => service.type === 'compute')[0]
   )
 
-  const [isConsumable, setIsConsumable] = useState<boolean>(true)
-  const [consumableFeedback, setConsumableFeedback] = useState<string>('')
-  const newCancelToken = useCancelToken()
-  const isMounted = useIsMounted()
-
-  // useEffect(() => {
-  //   if (!ddo || !accountId || !ocean || !isAssetNetwork) return
-
-  //   async function checkIsConsumable() {
-  //     const consumable = await ocean.assets.isConsumable(
-  //       ddo,
-  //       accountId.toLowerCase()
-  //     )
-  //     if (consumable) {
-  //       setIsConsumable(consumable.result)
-  //       setConsumableFeedback(consumable.message)
-  //     }
-  //   }
-  //   checkIsConsumable()
-  // }, [accountId, isAssetNetwork, ddo, ocean])
-
+  // Get and set file info
   useEffect(() => {
     const oceanConfig = getOceanConfig(asset?.chainId)
     if (!oceanConfig) return
@@ -136,8 +118,6 @@ export default function AssetActions({
       dtBalance={dtBalance}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
-      isConsumable={isConsumable}
-      consumableFeedback={consumableFeedback}
     />
   ) : (
     <Consume
@@ -146,7 +126,6 @@ export default function AssetActions({
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
-      consumableFeedback={consumableFeedback}
     />
   )
 

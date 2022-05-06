@@ -6,6 +6,7 @@ import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
 import SuccessConfetti from '@shared/SuccessConfetti'
 import { useWeb3 } from '@context/Web3'
+import { useRouter } from 'next/router'
 import Tooltip from '@shared/atoms/Tooltip'
 import AvailableNetworks from 'src/components/Publish/AvailableNetworks'
 import Info from '@images/info.svg'
@@ -17,6 +18,7 @@ export default function Actions({
   scrollToRef: RefObject<any>
   did: string
 }): ReactElement {
+  const router = useRouter()
   const { isSupportedOceanNetwork } = useWeb3()
   const {
     values,
@@ -34,16 +36,23 @@ export default function Actions({
     await connect()
   }
 
+  function handleAction(action: string) {
+    const currentStep: string = router.query.step as string
+    router.push({
+      pathname: `${router.pathname}`,
+      query: { step: parseInt(currentStep) + (action === 'next' ? +1 : -1) }
+    })
+    scrollToRef.current.scrollIntoView()
+  }
+
   function handleNext(e: FormEvent) {
     e.preventDefault()
-    setFieldValue('user.stepCurrent', values.user.stepCurrent + 1)
-    scrollToRef.current.scrollIntoView()
+    handleAction('next')
   }
 
   function handlePrevious(e: FormEvent) {
     e.preventDefault()
-    setFieldValue('user.stepCurrent', values.user.stepCurrent - 1)
-    scrollToRef.current.scrollIntoView()
+    handleAction('prev')
   }
 
   const isContinueDisabled =
