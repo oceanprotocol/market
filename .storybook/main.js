@@ -1,4 +1,5 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+const path = require('path')
 
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.tsx'],
@@ -15,6 +16,22 @@ module.exports = {
         extensions: config.resolve.extensions
       })
     ]
+
+    const rules = config.module.rules
+    // modify storybook's file-loader rule to avoid conflicts with svgr
+    rules.push({
+      test: /\.svg$/,
+      issuer: /\.(tsx|ts)$/,
+      use: [
+        {
+          loader: '@svgr/webpack',
+          options: {
+            icon: true
+          }
+        }
+      ]
+    })
+
     return config
   }
 }

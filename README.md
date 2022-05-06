@@ -313,6 +313,12 @@ src
 
 You can also write a [test](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-testing-library) against your story by creating a `index.test.tsx` file.
 
+Starting up the Storybook server with this command will make it accessible under `http://localhost:6006`:
+
+```bash
+npm run storybook
+```
+
 ## 🤖 Testing
 
 Interaction tests are setup with Storybook's Addon for [Testing Library](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-testing-library), which utilizes [Jest](https://jestjs.io/) as test runner. A combined coverage report is sent to CodeClimate via the coverage GitHub Actions job.
