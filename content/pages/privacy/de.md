@@ -1,6 +1,6 @@
 ---
 title: Datenschutzerklärung
-description: Diese Datenschutzerklärung erläutert wie Ocean Protocol Foundation Ltd. (OPF) deine personenbezogenen Daten verarbeitet wenn du Ocean Market besuchst und wenn du eine unserer Ocean Market Funktionen nutzt. Darüberhinaus informiert dich diese Datenschutzerklärung über deine Rechte.
+description: Diese Datenschutzerklärung erläutert wie Ocean Protocol Foundation Ltd. (OPF) deine personenbezogenen Daten verarbeitet wenn du OpenLava besuchst und wenn du eine unserer OpenLava Funktionen nutzt. Darüberhinaus informiert dich diese Datenschutzerklärung über deine Rechte.
 ---
 
 # 1. Verantwortlicher
@@ -32,16 +32,16 @@ Detaillierte Informationen über unsere Verarbeitungsvorgänge, die Rechtmäßig
 
 # 3. Empfänger und Übermittlung von personenbezogenen Daten an Drittländer
 
-**Visiting Ocean Market**
+**Visiting OpenLava**
 
-Wenn du Ocean Market besuchst, wird deine IP-Adresse von Netlify verarbeitet, ein Auftragsverarbeiter, der unseren Markt hostet. Ocean Market wird von Netlify über ein Content Delivery Network (ein geografisch verteiltes Netzwerk) bereitgestellt, deren Server sich innerhalb und außerhalb des Europäischen Wirtschaftsraums befinden. Wir verwenden Standardvertragsklauseln (SCC), um angemessene Schutzmaßnahmen für die Verarbeitung deiner personenbezogenen Daten zu gewährleisten. Du hast das Recht, eine Kopie dieser SCC zu erhalten.
+Wenn du OpenLava besuchst, wird deine IP-Adresse von Netlify verarbeitet, ein Auftragsverarbeiter, der unseren Markt hostet. OpenLava wird von Netlify über ein Content Delivery Network (ein geografisch verteiltes Netzwerk) bereitgestellt, deren Server sich innerhalb und außerhalb des Europäischen Wirtschaftsraums befinden. Wir verwenden Standardvertragsklauseln (SCC), um angemessene Schutzmaßnahmen für die Verarbeitung deiner personenbezogenen Daten zu gewährleisten. Du hast das Recht, eine Kopie dieser SCC zu erhalten.
 
 - Hier findest du Netlify&#39;s [**SCC** &#8599;](https://www.netlify.com/v3/static/pdf/netlify-dpa.pdf).
 - Hier findest du Netlify&#39;s [**Datenschutzerklärung** &#8599;](https://www.netlify.com/gdpr-ccpa).
 
-**Nutzung von Ocean Market Funktionalitäten**
+**Nutzung von OpenLava Funktionalitäten**
 
-Wenn du Ocean Market Funktionalitäten nutzt, legen wir deine Wallet Addresse und deinen Autornamen (falls vorhanden) offen indem wir diese an einen Smart Contract übermitteln. Dieser Smart Contract wird in maschinenlesbarem Format auf einer öffentlichen Blockchain gespeichert, die redundant auf weltweit verteilten Knoten gespeichert ist. Aufgrund der weltweit verteilten Speicherung werden deine Wallet Adresse und gegebenenfalls dein Autorname in Ländern ohne Angemessenheitsbeschluss gemäß Art. 45 GDPR verarbeitet. Die der Blockchain zugrunde liegende Technologie gewährleistet die Sicherheit (Integrität, Verfügbarkeit, Authentizität und Nichtabstreitbarkeit) deiner personenbezogenen Daten by-design und by-default. Außerdem bleiben deine in Kapitel sieben beschriebenen Rechte durchsetzbar. Wenn du beispielsweise deinen Autornamen auf Ocean Market berichtigst, werden die Änderungen automatisch auch auf Knoten übernommen, die eine Kopie des Smart Contracts besitzen.
+Wenn du OpenLava Funktionalitäten nutzt, legen wir deine Wallet Addresse und deinen Autornamen (falls vorhanden) offen indem wir diese an einen Smart Contract übermitteln. Dieser Smart Contract wird in maschinenlesbarem Format auf einer öffentlichen Blockchain gespeichert, die redundant auf weltweit verteilten Knoten gespeichert ist. Aufgrund der weltweit verteilten Speicherung werden deine Wallet Adresse und gegebenenfalls dein Autorname in Ländern ohne Angemessenheitsbeschluss gemäß Art. 45 GDPR verarbeitet. Die der Blockchain zugrunde liegende Technologie gewährleistet die Sicherheit (Integrität, Verfügbarkeit, Authentizität und Nichtabstreitbarkeit) deiner personenbezogenen Daten by-design und by-default. Außerdem bleiben deine in Kapitel sieben beschriebenen Rechte durchsetzbar. Wenn du beispielsweise deinen Autornamen auf OpenLava berichtigst, werden die Änderungen automatisch auch auf Knoten übernommen, die eine Kopie des Smart Contracts besitzen.
 
 **Kontakt via E-mail**
 
@@ -56,13 +56,13 @@ Wir verarbeiten deine personenbezogene Daten zu folgenden Zwecken.
 
 ## 4.1 Bereitstellung der Website und Erstellung von Logfiles
 
-Wir erheben und verwenden deine IP-Adresse für die Bereitstellung von Ocean Market. Ocean Market wird von unserem Auftragsverarbeiter Netlify gehostet. Außerdem nutzt OPF Netlify Analytics, um deine IP-Adresse zu erfassen und zu speichern. Deine persönlichen Daten verlassen niemals unseren Service, und wir verfolgen dich nicht über verschiedene Websites hinweg.
+Wir erheben und verwenden deine IP-Adresse für die Bereitstellung von OpenLava. OpenLava wird von unserem Auftragsverarbeiter Netlify gehostet. Außerdem nutzt OPF Netlify Analytics, um deine IP-Adresse zu erfassen und zu speichern. Deine persönlichen Daten verlassen niemals unseren Service, und wir verfolgen dich nicht über verschiedene Websites hinweg.
 
 **Zwecke:**
 
-Die Erhebung und Nutzung deiner IP-Adresse ist für die Bereitstellung von Ocean Market notwendig, da dies eine technische Voraussetzung ist, um die Kommunikation zwischen deinem Gerät und unserem Markt zu gewährleisten.
+Die Erhebung und Nutzung deiner IP-Adresse ist für die Bereitstellung von OpenLava notwendig, da dies eine technische Voraussetzung ist, um die Kommunikation zwischen deinem Gerät und unserem Markt zu gewährleisten.
 
-OPF verwendet Netlify Analytics, um einzelne Besucher anhand von IP-Adressen zu unterscheiden. Dieser Prozess hilft uns, besser zu verstehen, wie viele Nutzer Ocean Market besuchen und in welchen Ländern sich die Nutzer befinden. Wir verwenden diese Informationen, indem wir den Netwerkverkehr und die Beliebtheitstrends messen, um unseren Service zu verbessern.
+OPF verwendet Netlify Analytics, um einzelne Besucher anhand von IP-Adressen zu unterscheiden. Dieser Prozess hilft uns, besser zu verstehen, wie viele Nutzer OpenLava besuchen und in welchen Ländern sich die Nutzer befinden. Wir verwenden diese Informationen, indem wir den Netwerkverkehr und die Beliebtheitstrends messen, um unseren Service zu verbessern.
 
 **Rechtsgrundlage:**
 
@@ -70,7 +70,7 @@ Die Rechtsgrundlage für diese Verarbeitung ist unser berechtigtes Interesse, ge
 
 **Berechtigtes Interesse:**
 
-Unser berechtigtes Interesse besteht darin, dir Ocean Market und seine Funktionalitäten zur Verfügung zu stellen und diese zu verbessern.
+Unser berechtigtes Interesse besteht darin, dir OpenLava und seine Funktionalitäten zur Verfügung zu stellen und diese zu verbessern.
 
 **Aufbewahrungsdauer:**
 
@@ -82,7 +82,7 @@ Wenn du die Consume- oder Stake-Funktionalität nutzt, erheben wir deine Wallet 
 
 **Zweck:**
 
-Ocean Market verarbeitet deine Wallet Addresse, um dir zu ermöglichen eine Blockchain-Transaktionen zu signieren. Die Transaktion, die deine Wallet Adresse enthält, wird dauerhaft auf der Blockchain gespeichert, damit du und der Asset-Publisher den Erwerb und Konsum des Assets nachweisen können.
+OpenLava verarbeitet deine Wallet Addresse, um dir zu ermöglichen eine Blockchain-Transaktionen zu signieren. Die Transaktion, die deine Wallet Adresse enthält, wird dauerhaft auf der Blockchain gespeichert, damit du und der Asset-Publisher den Erwerb und Konsum des Assets nachweisen können.
 
 **Rechtsgrundlage:**
 
@@ -98,7 +98,7 @@ Wenn du ein Data Asset veröffentlichst, erheben, wir deine Wallet Addresse und 
 
 **Zweck:**
 
-Wir verarbeiten deine Wallet Addresse, um dein Data Asset mit deiner Wallet Addresse zu verknüpfen. Wir verarbeiten deinen Autornamen, um Such- und Filterfunktionen auf Ocean Market zu ermöglichen. Die Transaktion, die deine Wallet Addresse und deinen Autorennamen enthält, wird dauerhaft auf der Blockchain gespeichert, damit du dein Eigentum und den Verkauf deines Assets nachweisen kannst.
+Wir verarbeiten deine Wallet Addresse, um dein Data Asset mit deiner Wallet Addresse zu verknüpfen. Wir verarbeiten deinen Autornamen, um Such- und Filterfunktionen auf OpenLava zu ermöglichen. Die Transaktion, die deine Wallet Addresse und deinen Autorennamen enthält, wird dauerhaft auf der Blockchain gespeichert, damit du dein Eigentum und den Verkauf deines Assets nachweisen kannst.
 
 **Rechtsgrundlage:**
 
@@ -110,11 +110,11 @@ OPF legt deine Wallet Addresse und deinen Autornamen offen, indem diese an einen
 
 ## 4.4 Anzeige deiner Data Assets
 
-Wenn du ein Data Asset veröffentlicht hast, erheben, organisieren und speichern wir deine Wallet Addresse und deinen Autornamen auf einem von OPF betriebenen Metadaten-Cache und zeigen dein Asset auf Ocean Market an.
+Wenn du ein Data Asset veröffentlicht hast, erheben, organisieren und speichern wir deine Wallet Addresse und deinen Autornamen auf einem von OPF betriebenen Metadaten-Cache und zeigen dein Asset auf OpenLava an.
 
 **Zweck:**
 
-Das Abrufen von Daten, die auf der Blockchain gepeichert sind, ist zeitaufwändig. Deshalb erheben, organisieren und speichern wir deine personenbezogenen Daten in einem Cache, um die Performance von Ocean Market zu verbessern.
+Das Abrufen von Daten, die auf der Blockchain gepeichert sind, ist zeitaufwändig. Deshalb erheben, organisieren und speichern wir deine personenbezogenen Daten in einem Cache, um die Performance von OpenLava zu verbessern.
 
 **Rechtsgrundlage:**
 
@@ -122,7 +122,7 @@ Die Rechtsgrundlage für diese Verarbeitung ist unser berechtigtes Interesse, ge
 
 **Berechtigtes Interesse:**
 
-Unser berechtigtes Interesse ist es, das Nutzererlebnis durch Verbesserung der Performance von Ocean Market zu erhöhen.
+Unser berechtigtes Interesse ist es, das Nutzererlebnis durch Verbesserung der Performance von OpenLava zu erhöhen.
 
 **Aufbewahrungsdauer:**
 
@@ -130,11 +130,11 @@ Deine Wallet Addresse und dein Autorname werden permanent in unserem Metadaten C
 
 ## 4.5 History Table
 
-Die History Table von Ocean Market ist ein Transparenz-Tool, mit dem du einen Überblick über deine auf Ocean Market getättigten Transaktion erhalten kannst. Wenn du die History Table nutzt, erheben wir deine Wallet Addresse. Danach rufen wir die relevanten und mit dir in Zusammenhang stehenden Transaktionen von der Blockchain ab (genauer gesagt, aus dem Metadaten Cache) und organisieren diese in der History Table.
+Die History Table von OpenLava ist ein Transparenz-Tool, mit dem du einen Überblick über deine auf OpenLava getättigten Transaktion erhalten kannst. Wenn du die History Table nutzt, erheben wir deine Wallet Addresse. Danach rufen wir die relevanten und mit dir in Zusammenhang stehenden Transaktionen von der Blockchain ab (genauer gesagt, aus dem Metadaten Cache) und organisieren diese in der History Table.
 
 **Zweck:**
 
-Wir erheben deine Wallet Addresse, um jede Transaktion, die du auf Ocean Market getätigt hast, abrufen zu können. Wir rufen deine öffentlichen Transaktionsdaten ab und organisieren diese, damit du einen schnellen Überblick über alle Aktionen erhätst, die du auf Ocean Market durchgeführt hast.
+Wir erheben deine Wallet Addresse, um jede Transaktion, die du auf OpenLava getätigt hast, abrufen zu können. Wir rufen deine öffentlichen Transaktionsdaten ab und organisieren diese, damit du einen schnellen Überblick über alle Aktionen erhätst, die du auf OpenLava durchgeführt hast.
 
 **Rechtsgrundlage:**
 
@@ -142,7 +142,7 @@ Die Rechtsgrundlage für diese Verarbeitung ist unser berechtigtes Interesse, ge
 
 **Berechtigtes Interesse:**
 
-Unser berechtigtes Interesse an der Bereitstellung der History Table besteht darin, dir die Möglichkeit zu bieten, einen Überblick über deine auf Ocean Market getätigten Transaktionen zu erhalten.
+Unser berechtigtes Interesse an der Bereitstellung der History Table besteht darin, dir die Möglichkeit zu bieten, einen Überblick über deine auf OpenLava getätigten Transaktionen zu erhalten.
 
 **Aufbewahrungsdauer:**
 
@@ -173,15 +173,15 @@ OPF löscht deine personenbezogenen Daten, sobald wir sie für die Bearbeitung d
 
 Ein Cookie ist eine kleine Datei, die Interneteinstellungen speichert. Dein Webbrowser lädt diese beim ersten Besuch einer Website herunter. Wenn du diese Website das nächste Mal mit demselben Gerät öffnest, werden das Cookie und die darin gespeicherten Informationen entweder an die Website zurückgeschickt, die es erstellt hat (First-Party-Cookie) oder an eine andere Website, zu der es gehört (Third-Party-Cookie). Dadurch kann die Website erkennen, dass du sie zuvor mit diesem Browser geöffnet hast, und in einigen Fällen den angezeigten Inhalt variieren.
 
-Ocean Market verwendet keine Cookies für Analyse- oder Marketingzwecke. Stattdessen verwenden wir ein funktionales First-Party-Cookie, das keine personenbezogenen Daten über dich übermittelt. Dieses Cookie wird verwendet, um dein Benutzererlebnis zu verbessern und wird entfernt, sobald du deinen Browser schließt.
+OpenLava verwendet keine Cookies für Analyse- oder Marketingzwecke. Stattdessen verwenden wir ein funktionales First-Party-Cookie, das keine personenbezogenen Daten über dich übermittelt. Dieses Cookie wird verwendet, um dein Benutzererlebnis zu verbessern und wird entfernt, sobald du deinen Browser schließt.
 
-Ocean Market verwendet auch lokalen Speicher und Sitzungsspeicher, die eine ähnliche Funktionalität wie Cookies haben. Wir verwenden den Webspeicher, um uns an deine Seitenpräferenzen zu erinnern und um dein Nutzererlebnis zu verbessern. Wir speichern im lokalen Speicher und im Sitzungsspeicher keine personenbezogenen Daten. Dein Browser entfernt den Sitzungsspeicher, sobald du deinen Browser schließt.
+OpenLava verwendet auch lokalen Speicher und Sitzungsspeicher, die eine ähnliche Funktionalität wie Cookies haben. Wir verwenden den Webspeicher, um uns an deine Seitenpräferenzen zu erinnern und um dein Nutzererlebnis zu verbessern. Wir speichern im lokalen Speicher und im Sitzungsspeicher keine personenbezogenen Daten. Dein Browser entfernt den Sitzungsspeicher, sobald du deinen Browser schließt.
 
 Du hast jederzeit die Möglichkeit, in den Einstellungen deines Browsers Cookies zu deaktivieren und Cookies und Webspeicher von der Festplatte deines Computers zu löschen.
 
 # 6. Externe Links
 
-Ocean Market enthält Links zu externen Webseiten, die außerhalb der Kontrolle und Verantwortung von OPF liegen. Wir kennzeichnen externe Links mit diesem Pfeil: &#8599;.
+OpenLava enthält Links zu externen Webseiten, die außerhalb der Kontrolle und Verantwortung von OPF liegen. Wir kennzeichnen externe Links mit diesem Pfeil: &#8599;.
 
 # 7. Deine Rechte
 
@@ -197,19 +197,19 @@ Du hast das Recht, die Berichtigung dich betreffender unrichtiger personenbezoge
 
 Wenn du ein Data Asset veröffentlicht hast, kannst du deine bereitgestellten Metadaten (wie dein Autorname) jederzeit bearbeiten. Folgende Schritte werden dafür benötigt.
 
-- Rufe dein dein Data Asset auf Ocean Market ([market.oceanprotocol.com/](https://market.oceanprotocol.com/)) auf.
+- Rufe dein dein Data Asset auf OpenLava ([market.oceanprotocol.com/](https://market.oceanprotocol.com/)) auf.
 - Validiere deine Identität mit deinem Private Key.
 - Klicke &quot;EDIT METADATA&quot; und nehme deine Änderungen vor.
 - Speichere deine Änderungen indem du &quot;SUBMIT&quot; klickst.
 - Bestätige deine Änderungen mit deinem Private Key.
 
-Bitte beachte, dass für deine Änderungen Gas Fees anfallen (da eine neue Transaktion initiiert wird). Nach der Änderung ist die vorherige Version der Metadaten deines Data Assets nicht mehr auf Ocean Market sichtbar. Außerdem kannst du den Inhalt deines Daten-Assets jederzeit ändern.
+Bitte beachte, dass für deine Änderungen Gas Fees anfallen (da eine neue Transaktion initiiert wird). Nach der Änderung ist die vorherige Version der Metadaten deines Data Assets nicht mehr auf OpenLava sichtbar. Außerdem kannst du den Inhalt deines Daten-Assets jederzeit ändern.
 
 ## 7.3 Recht auf Löschung (Art. 17 GDPR)
 
 Du hast das Recht, ohne unangemessene Verzögerung die Löschung der dich betreffenden personenbezogenen Daten zu verlangen, wenn die definierten Rechtsgründe in Art. 17 DSGVO zutreffen.
 
-Wenn du ein Daten-Asset veröffentlicht hast, kannst du deinen angegebenen Autorennamen mit einem Platzhalter überschreiben, indem du die in Kapitel 7.2 aufgeführten Schritte durchführst. Wenn du die Anzeige deines Data Assets auf Ocean Market deaktivieren möchten, kannst du die in Kapitel 7.4 geschilderten Schritte ausführen.
+Wenn du ein Daten-Asset veröffentlicht hast, kannst du deinen angegebenen Autorennamen mit einem Platzhalter überschreiben, indem du die in Kapitel 7.2 aufgeführten Schritte durchführst. Wenn du die Anzeige deines Data Assets auf OpenLava deaktivieren möchten, kannst du die in Kapitel 7.4 geschilderten Schritte ausführen.
 
 Beachten bitte, dass es aus technischen Gründen nicht möglich ist, die Transaktionshistorie der Blokchain, die den Smart Contract mit deinen Einträgen enthält, zu löschen. Der aktuelle Netzwerkstatus hingegen, wird die vorherigen Metadaten nicht mehr enthalten.
 
@@ -219,7 +219,7 @@ Außerdem kannst du aus technischen Gründen deine bereitgestellte Wallet Addres
 
 Du hast das Recht, die Einschränkung der Verarbeitung deiner personenbezogenen Daten zu erwirken, wenn die in Artikel 18 DSGVO genannten Rechtsgründe vorliegen.
 
-Wenn du ein Daten-Asset veröffentlicht hast und ein GitHub-Konto besitzt, kannst du „Purgatory&quot; nutzen, einen Mechanismus, um deine Data Assets auf Ocean Market zu verbergen, indem du die folgenden Schritte durchführst.
+Wenn du ein Daten-Asset veröffentlicht hast und ein GitHub-Konto besitzt, kannst du „Purgatory&quot; nutzen, einen Mechanismus, um deine Data Assets auf OpenLava zu verbergen, indem du die folgenden Schritte durchführst.
 
 - Besuche unser [**Purgatory** &#8599;](https://github.com/oceanprotocol/list-purgatory/blob/main/list-assets.json).
 - Melde dich bei deinem GitHub Account an.

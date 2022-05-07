@@ -70,7 +70,7 @@ export default function NftTooltip({
         </div>
         {!nft?.image_data && (
           <p className={styles.fallback}>
-            This Data NFT was not created on Ocean Market
+            This Data NFT was not created on OpenLava
           </p>
         )}
       </div>

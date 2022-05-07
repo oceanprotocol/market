@@ -1,6 +1,6 @@
 {
-  "siteTitle": "Ocean Market",
-  "siteTagline": "A marketplace to find, publish and trade data sets in the Ocean Network.",
+  "siteTitle": "OpenLava",
+  "siteTagline": "A decentralized marketplace to discover, publish and trade data assets",
   "siteUrl": "https://v4.market.oceanprotocol.com",
   "siteImage": "/share.png",
   "copyright": "All Rights Reserved. Powered by ",
@@ -19,7 +19,7 @@
     "polygonPublish": "Only republish data sets with a pool from ETH Mainnet into Polygon/Matic if the liquidity is **less than or equal to 1000 OCEAN in the original pool**. Doing otherwise will lead to [purgatory](https://github.com/oceanprotocol/list-purgatory) for the data set in Polygon/Matic."
   },
   "announcement": {
-    "main": "Ocean Market is [available on Polygon](https://blog.oceanprotocol.com/ocean-on-polygon-network-8abad19cbf47).",
+    "main": "OpenLava is [available on Polygon](https://blog.oceanprotocol.com/ocean-on-polygon-network-8abad19cbf47).",
     "polygon": "Polygon/Matic EVM support is in early stages. [Use the Polygon Bridge](https://docs.oceanprotocol.com/tutorials/polygon-bridge/) to get mOCEAN."
   }
 }
