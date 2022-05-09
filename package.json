@@ -44,7 +44,6 @@
     "gray-matter": "^4.0.3",
     "is-url-superb": "^6.1.0",
     "js-cookie": "^3.0.1",
-    "jwt-decode": "^3.1.2",
     "lodash.debounce": "^4.0.8",
     "lodash.omit": "^4.5.0",
     "myetherwallet-blockies": "^0.1.1",
