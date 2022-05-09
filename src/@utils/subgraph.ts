@@ -55,6 +55,15 @@ const UserTokenOrders = gql`
   }
 `
 
+const UserSalesQuery = gql`
+  query UserSalesQuery($user: ID!) {
+    users(where: { id: $user }) {
+      id
+      totalSales
+    }
+  }
+`
+
 const OpcFeesQuery = gql`
   query OpcFeesQuery($id: ID!) {
     opc(id: $id) {
@@ -217,8 +226,8 @@ export async function getUserSales(
 export async function getTopAssetsPublishers(
   chainIds: number[],
   nrItems = 9
-): Promise<AccountTeaserVM[]> {
-  const publishers: AccountTeaserVM[] = []
+): Promise<UserSales[]> {
+  const publishers: UserSales[] = []
 
   const result = await getTopPublishers(chainIds, null)
   const { topPublishers } = result.aggregations
