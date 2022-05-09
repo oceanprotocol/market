@@ -77,6 +77,12 @@ export async function getEnsAddress(ensName: string): Promise<string> {
   return address
 }
 
+export function getEnsAvatar(ensName: string): string {
+  return ensName
+    ? `https://metadata.ens.domains/mainnet/avatar/${ensName}`
+    : null
+}
+
 export async function getEnsProfile(accountId: string): Promise<Profile> {
   const name = await getEnsName(accountId)
   if (!name) return { name: null }
@@ -105,9 +111,7 @@ export async function getEnsProfile(accountId: string): Promise<Profile> {
 
   const profile: Profile = {
     name,
-    ...(avatar && {
-      avatar: `https://metadata.ens.domains/mainnet/avatar/${name}`
-    }),
+    ...(avatar && { avatar: getEnsAvatar(name) }),
     ...(description && { description }),
     ...(links.length > 0 && { links })
   }

@@ -24,20 +24,20 @@ export default function AccountList({
   isLoading
 }: AccountListProps): ReactElement {
   const { chainIds } = useUserPreferences()
+  const emptyText =
+    chainIds.length === 0 ? 'No network selected.' : 'No results found.'
 
-  return accounts && !isLoading ? (
+  return isLoading ? (
+    <LoaderArea />
+  ) : (
     <div className={styles.list}>
-      {accounts.length > 0 ? (
+      {accounts?.length > 0 ? (
         accounts.map((account, index) => (
           <Account account={account} key={index} place={index + 1} />
         ))
       ) : (
-        <div className={styles.empty}>
-          {chainIds.length === 0 ? 'No network selected.' : 'No results found.'}
-        </div>
+        <div className={styles.empty}>{emptyText}</div>
       )}
     </div>
-  ) : (
-    <LoaderArea />
   )
 }

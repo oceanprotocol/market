@@ -13,7 +13,7 @@ import { infuraProjectId as infuraId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
-import { getEnsProfile } from '@utils/ens'
+import { getEnsAvatar, getEnsName, getEnsProfile } from '@utils/ens'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName,
@@ -200,7 +200,8 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     if (!accountId) return
 
     try {
-      const { name, avatar } = await getEnsProfile(accountId)
+      const name = await getEnsName(accountId)
+      const avatar = getEnsAvatar(name)
 
       if (name) {
         setAccountEns(name)
