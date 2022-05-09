@@ -195,15 +195,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // Helper: Get user ENS name
   // -----------------------------------
   const getUserEnsName = useCallback(async () => {
-    if (!accountId) return
+    if (!accountId || !web3Provider) return
 
     try {
-      // const accountEns = await getEnsNameWithWeb3(
-      //   accountId,
-      //   web3Provider,
-      //   `${networkId}`
-      // )
-      const accountEns = await getEnsName(accountId)
+      const accountEns = await getEnsName(accountId, web3Provider)
       setAccountEns(accountEns)
       accountEns &&
         LoggerInstance.log(
@@ -213,7 +208,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
     }
-  }, [accountId])
+  }, [accountId, web3Provider])
 
   // -----------------------------------
   // Create initial Web3Modal instance

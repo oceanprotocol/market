@@ -1,5 +1,7 @@
 import { gql, OperationContext, OperationResult } from 'urql'
 import { fetchData } from './subgraph'
+import ENS, { getEnsAddress as getEnsAddressVendor } from '@ensdomains/ensjs'
+import { getDummyWeb3 } from './web3'
 
 // make sure to only query for domains owned by account, so domains
 // solely set by 3rd parties like *.gitcoin.eth won't show up
@@ -26,17 +28,22 @@ const ensSubgraphQueryContext: OperationContext = {
   requestPolicy: 'cache-and-network'
 }
 
-export async function getEnsName(accountId: string): Promise<string> {
-  const response: OperationResult<any> = await fetchData(
-    UserEnsNames,
-    { accountId: accountId.toLowerCase() },
-    ensSubgraphQueryContext
-  )
-  if (!response?.data?.domains?.length) return
+export async function getEnsName(
+  accountId: string,
+  provider?: any,
+  networkId = 1
+): Promise<string> {
+  const web3Provider = provider || (await getDummyWeb3(1)).currentProvider
 
-  // Default order of response.data.domains seems to be by creation time, from oldest to newest.
-  // Pick the last one as that is what direct web3 calls do.
-  const { name } = response.data.domains.slice(-1)[0]
+  const ens = new ENS({
+    provider: web3Provider,
+    ensAddress: getEnsAddressVendor(networkId)
+  })
+  let { name } = await ens.getName(accountId)
+  // Check to be sure the reverse record is correct.
+  const reverseAccountId = await ens.name(name).getAddress()
+  if (accountId.toLowerCase() !== reverseAccountId.toLowerCase()) name = null
+
   return name
 }
 

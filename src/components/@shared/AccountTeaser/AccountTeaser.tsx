@@ -4,7 +4,6 @@ import Link from 'next/link'
 import styles from './AccountTeaser.module.css'
 import Blockies from '../atoms/Blockies'
 import { useCancelToken } from '@hooks/useCancelToken'
-import get3BoxProfile from '@utils/profile'
 import { accountTruncate } from '@utils/web3'
 
 declare type AccountTeaserProps = {

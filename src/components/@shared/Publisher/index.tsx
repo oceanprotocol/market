@@ -2,11 +2,11 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import Link from 'next/link'
-import get3BoxProfile from '@utils/profile'
 import { accountTruncate } from '@utils/web3'
 import axios from 'axios'
 import { getEnsName } from '@utils/ens'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { useWeb3 } from '@context/Web3'
 
 const cx = classNames.bind(styles)
 
@@ -19,10 +19,9 @@ export default function Publisher({
   minimal?: boolean
   className?: string
 }): ReactElement {
+  const { web3Provider } = useWeb3()
   const isMounted = useIsMounted()
-  const [profile, setProfile] = useState<Profile>()
   const [name, setName] = useState('')
-  const [accountEns, setAccountEns] = useState<string>()
 
   useEffect(() => {
     if (!account) return
@@ -35,25 +34,17 @@ export default function Publisher({
 
     async function getExternalName() {
       // ENS
-      const accountEns = await getEnsName(account)
+      const accountEns = await getEnsName(account, web3Provider)
       if (accountEns && isMounted()) {
-        setAccountEns(accountEns)
         setName(accountEns)
       }
-
-      // 3box
-      const profile = await get3BoxProfile(account, source.token)
-      if (!profile) return
-      setProfile(profile)
-      const { name, emoji } = profile
-      name && setName(`${emoji || ''} ${name}`)
     }
     getExternalName()
 
     return () => {
       source.cancel()
     }
-  }, [account, isMounted])
+  }, [account, isMounted, web3Provider])
 
   const styleClasses = cx({
     publisher: true,
@@ -66,7 +57,7 @@ export default function Publisher({
         name
       ) : (
         <>
-          <Link href={`/profile/${accountEns || account}`}>
+          <Link href={`/profile/${name}`}>
             <a title="Show profile page.">{name}</a>
           </Link>
         </>
