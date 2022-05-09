@@ -8,7 +8,7 @@ export default function Status({
   state,
   className
 }: {
-  state?: string
+  state?: 'error' | 'warning' | 'success'
   className?: string
 }): ReactElement {
   const styleClasses = cx({
