@@ -4,7 +4,7 @@ import ExplorerLink from '@shared/ExplorerLink'
 import NetworkName from '@shared/NetworkName'
 import Jellyfish from '@oceanprotocol/art/creatures/jellyfish/jellyfish-grid.svg'
 import Copy from '@shared/atoms/Copy'
-import Blockies from '@shared/atoms/Blockies'
+import Avatar from '@shared/atoms/Avatar'
 import styles from './Account.module.css'
 import { useProfile } from '@context/Profile'
 
@@ -19,15 +19,12 @@ export default function Account({
   return (
     <div className={styles.account}>
       <figure className={styles.imageWrap}>
-        {profile?.image ? (
-          <img
-            src={profile?.image}
+        {accountId ? (
+          <Avatar
+            accountId={accountId}
+            ensAvatar={profile?.avatar}
             className={styles.image}
-            width="96"
-            height="96"
           />
-        ) : accountId ? (
-          <Blockies accountId={accountId} className={styles.image} />
         ) : (
           <Jellyfish className={styles.image} />
         )}
@@ -38,9 +35,9 @@ export default function Account({
         {accountId && (
           <code
             className={styles.accountId}
-            title={profile?.accountEns ? accountId : null}
+            title={profile?.name ? accountId : null}
           >
-            {profile?.accountEns || accountId} <Copy text={accountId} />
+            {accountId} <Copy text={accountId} />
           </code>
         )}
         <p>

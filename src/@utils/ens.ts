@@ -1,45 +1,29 @@
-import { gql, OperationContext, OperationResult } from 'urql'
-import { fetchData } from './subgraph'
 import ENS, { getEnsAddress as getEnsAddressVendor } from '@ensdomains/ensjs'
 import { getDummyWeb3 } from './web3'
 
-// make sure to only query for domains owned by account, so domains
-// solely set by 3rd parties like *.gitcoin.eth won't show up
-const UserEnsNames = gql<any>`
-  query UserEnsDomains($accountId: String!) {
-    domains(where: { resolvedAddress: $accountId, owner: $accountId }) {
-      name
-    }
-  }
-`
+let ens: any
 
-const UserEnsAddress = gql<any>`
-  query UserEnsDomainsAddress($name: String!) {
-    domains(where: { name: $name }) {
-      resolvedAddress {
-        id
-      }
-    }
-  }
-`
-
-const ensSubgraphQueryContext: OperationContext = {
-  url: `https://api.thegraph.com/subgraphs/name/ensdomains/ens`,
-  requestPolicy: 'cache-and-network'
+async function getWeb3Provider(): Promise<any> {
+  const provider = (await getDummyWeb3(1)).currentProvider
+  return provider
 }
 
-export async function getEnsName(
-  accountId: string,
-  provider?: any,
-  networkId = 1
-): Promise<string> {
-  const web3Provider = provider || (await getDummyWeb3(1)).currentProvider
+async function getEns(): Promise<any> {
+  const _ens =
+    ens ||
+    new ENS({
+      provider: await getWeb3Provider(),
+      ensAddress: getEnsAddressVendor(1)
+    })
+  ens = _ens
 
-  const ens = new ENS({
-    provider: web3Provider,
-    ensAddress: getEnsAddressVendor(networkId)
-  })
+  return _ens
+}
+
+export async function getEnsName(accountId: string): Promise<string> {
+  const ens = await getEns()
   let { name } = await ens.getName(accountId)
+
   // Check to be sure the reverse record is correct.
   const reverseAccountId = await ens.name(name).getAddress()
   if (accountId.toLowerCase() !== reverseAccountId.toLowerCase()) name = null
@@ -48,12 +32,41 @@ export async function getEnsName(
 }
 
 export async function getEnsAddress(ensName: string): Promise<string> {
-  const response: OperationResult<any> = await fetchData(
-    UserEnsAddress,
-    { name: ensName },
-    ensSubgraphQueryContext
-  )
-  if (!response?.data?.domains?.length) return
-  const { id } = response.data.domains[0].resolvedAddress
-  return id
+  const ens = await getEns()
+  const address = ens.name(ensName).getAddress()
+
+  return address
+}
+
+export async function getEnsProfile(accountId: string): Promise<Profile> {
+  const ens = await getEns()
+  const name = await getEnsName(accountId)
+
+  if (!name) return { name: null }
+
+  // TODO: fetch all set keys first, then fetch all values
+  // as this only catches the default ones.
+  // https://docs.ens.domains/dapp-developer-guide/resolving-names#listing-cryptocurrency-addresses-and-text-records
+  const avatar = await ens.name(name).getText('avatar')
+  const url = await ens.name(name).getText('url')
+  const description = await ens.name(name).getText('description')
+  const twitter = await ens.name(name).getText('com.twitter')
+  const github = await ens.name(name).getText('com.github')
+  const telegram = await ens.name(name).getText('org.telegram')
+
+  const links: ProfileLink[] = [
+    ...(twitter && [{ name: 'Twitter', value: twitter }]),
+    ...(github && [{ name: 'GitHub', value: github }]),
+    ...(telegram && [{ name: 'Telegram', value: telegram }])
+  ]
+
+  const profile: Profile = {
+    name,
+    url,
+    avatar: avatar && `https://metadata.ens.domains/mainnet/avatar/${name}`,
+    description,
+    links
+  }
+
+  return profile
 }

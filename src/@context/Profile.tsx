@@ -13,9 +13,9 @@ import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
 import { accountTruncate } from '@utils/web3'
 import axios, { CancelToken } from 'axios'
-import get3BoxProfile from '@utils/profile'
 import web3 from 'web3'
 import { useMarketMetadata } from './MarketMetadata'
+import { getEnsProfile } from '@utils/ens'
 
 interface ProfileProviderValue {
   profile: Profile
@@ -31,6 +31,14 @@ interface ProfileProviderValue {
 const ProfileContext = createContext({} as ProfileProviderValue)
 
 const refreshInterval = 10000 // 10 sec.
+
+const clearedProfile: Profile = {
+  name: null,
+  avatar: null,
+  url: null,
+  description: null,
+  links: null
+}
 
 function ProfileProvider({
   accountId,
@@ -56,9 +64,11 @@ function ProfileProvider({
   }, [accountId])
 
   //
-  // User profile: ENS + 3Box
+  // User profile: ENS
   //
-  const [profile, setProfile] = useState<Profile>()
+  const [profile, setProfile] = useState<Profile>({
+    name: accountEns || accountId
+  })
 
   useEffect(() => {
     if (!accountEns) return
@@ -66,52 +76,17 @@ function ProfileProvider({
   }, [accountId, accountEns])
 
   useEffect(() => {
-    const clearedProfile: Profile = {
-      name: null,
-      accountEns: null,
-      image: null,
-      description: null,
-      links: null
-    }
-
     if (!accountId || !isEthAddress) {
       setProfile(clearedProfile)
       return
     }
 
-    const cancelTokenSource = axios.CancelToken.source()
-
     async function getInfo() {
-      setProfile({ name: accountEns || accountTruncate(accountId), accountEns })
-
-      const profile3Box = await get3BoxProfile(
-        accountId,
-        cancelTokenSource.token
-      )
-      if (profile3Box) {
-        const { name, emoji, description, image, links } = profile3Box
-        const newName = `${emoji || ''} ${name || accountTruncate(accountId)}`
-        const newProfile = {
-          name: newName,
-          image,
-          description,
-          links
-        }
-        setProfile((prevState) => ({
-          ...prevState,
-          ...newProfile
-        }))
-        LoggerInstance.log('[profile] Found and set 3box profile.', newProfile)
-      } else {
-        // setProfile(clearedProfile)
-        LoggerInstance.log('[profile] No 3box profile found.')
-      }
+      const profile = await getEnsProfile(accountId)
+      setProfile(profile)
+      LoggerInstance.log(`[profile] ENS metadata for ${accountId}:`, profile)
     }
     getInfo()
-
-    return () => {
-      cancelTokenSource.cancel()
-    }
   }, [accountId, accountEns, isEthAddress])
 
   //

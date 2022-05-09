@@ -2,9 +2,9 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import Link from 'next/link'
 import styles from './AccountTeaser.module.css'
-import Blockies from '../atoms/Blockies'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { accountTruncate } from '@utils/web3'
+import Avatar from '../atoms/Avatar'
 
 declare type AccountTeaserProps = {
   accountTeaserVM: AccountTeaserVM
@@ -18,24 +18,24 @@ export default function AccountTeaser({
   const [profile, setProfile] = useState<Profile>()
   const newCancelToken = useCancelToken()
 
-  useEffect(() => {
-    if (!accountTeaserVM) return
-    async function getProfileData() {
-      const profile = await get3BoxProfile(
-        accountTeaserVM.address,
-        newCancelToken()
-      )
-      if (!profile) return
-      setProfile(profile)
-    }
-    getProfileData()
-  }, [accountTeaserVM, newCancelToken])
+  // useEffect(() => {
+  //   if (!accountTeaserVM) return
+  //   async function getProfileData() {
+  //     const profile = await get3BoxProfile(
+  //       accountTeaserVM.address,
+  //       newCancelToken()
+  //     )
+  //     if (!profile) return
+  //     setProfile(profile)
+  //   }
+  //   getProfileData()
+  // }, [accountTeaserVM, newCancelToken])
 
   return (
     <Link href={`/profile/${accountTeaserVM.address}`}>
       <a className={styles.teaser}>
         {place && <span className={styles.place}>{place}</span>}
-        <Blockies
+        <Avatar
           accountId={accountTeaserVM.address}
           className={styles.blockies}
           image={profile?.image}

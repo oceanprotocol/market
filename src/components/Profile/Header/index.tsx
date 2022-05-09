@@ -43,8 +43,8 @@ export default function AccountHeader({
         {isDescriptionTextClamped() ? (
           <span className={styles.more} onClick={toogleShowMore}>
             <LinkExternal
-              url={`https://www.3box.io/${accountId}`}
-              text="Read more on 3box"
+              url={`https://app.ens.domains/name/${profile?.name}`}
+              text="Read more on ENS"
             />
           </span>
         ) : (
@@ -56,18 +56,9 @@ export default function AccountHeader({
       </div>
       <div className={styles.meta}>
         Profile data from{' '}
-        {profile?.accountEns && (
-          <>
-            <LinkExternal
-              url={`https://app.ens.domains/name/${profile.accountEns}`}
-              text="ENS"
-            />{' '}
-            &{' '}
-          </>
-        )}
         <LinkExternal
-          url={`https://www.3box.io/${accountId}`}
-          text="3Box Hub"
+          url={`https://app.ens.domains/name/${profile?.name}`}
+          text="ENS"
         />
       </div>
     </div>
