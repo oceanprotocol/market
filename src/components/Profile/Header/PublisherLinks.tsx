@@ -6,28 +6,37 @@ import { useProfile } from '@context/Profile'
 
 const cx = classNames.bind(styles)
 
-function getLinkHref(link: ProfileLink): string {
-  let href
+function getLinkData(link: ProfileLink): { href: string; label: string } {
+  let href, label
 
-  switch (link.name) {
-    case 'Twitter':
+  switch (link.key) {
+    case 'url':
+      href = link.value
+      label = 'Website'
+      break
+    case 'com.twitter':
       href = `https://twitter.com/${link.value}`
+      label = 'Twitter'
       break
-    case 'GitHub':
+    case 'com.github':
       href = `https://github.com/${link.value}`
+      label = 'GitHub'
       break
-    case 'Telegram':
+    case 'org.telegram':
       href = `https://telegram.org/${link.value}`
+      label = 'Telegram'
       break
-    case 'Discord':
+    case 'com.discord':
       href = `https://discordapp.com/users/${link.value}`
+      label = 'Discord'
       break
-    case 'Reddit':
+    case 'com.reddit':
       href = `https://reddit.com/u/${link.value}`
+      label = 'Reddit'
       break
   }
 
-  return href
+  return { href, label }
 }
 
 export default function PublisherLinks({
@@ -45,23 +54,17 @@ export default function PublisherLinks({
   return (
     <div className={styleClasses}>
       {' — '}
-      {profile?.url && (
-        <a href={profile?.url} target="_blank" rel="noreferrer">
-          Website <External className={styles.linksExternal} />
+      {profile?.links?.map((link) => (
+        <a
+          href={getLinkData(link).href}
+          key={link.key}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {getLinkData(link).label}{' '}
+          <External className={styles.linksExternal} />
         </a>
-      )}
-      {profile?.links?.map((link) => {
-        return (
-          <a
-            href={getLinkHref(link)}
-            key={link.name}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {link.name} <External className={styles.linksExternal} />
-          </a>
-        )
-      })}
+      ))}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 interface ProfileLink {
-  name: string
+  key: string
   value: string
 }
 
