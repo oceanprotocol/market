@@ -44,8 +44,8 @@ export async function getEnsProfile(accountId: string): Promise<Profile> {
 
   if (!name) return { name: null }
 
-  // TODO: fetch all set keys first, then fetch all values
-  // as this only catches the default ones.
+  // TODO: fetch all set keys first, then fetch values
+  // as this does unneccessary calls otherwise.
   // https://docs.ens.domains/dapp-developer-guide/resolving-names#listing-cryptocurrency-addresses-and-text-records
   const avatar = await ens.name(name).getText('avatar')
   const url = await ens.name(name).getText('url')
@@ -53,11 +53,15 @@ export async function getEnsProfile(accountId: string): Promise<Profile> {
   const twitter = await ens.name(name).getText('com.twitter')
   const github = await ens.name(name).getText('com.github')
   const telegram = await ens.name(name).getText('org.telegram')
+  const discord = await ens.name(name).getText('com.discord')
+  const reddit = await ens.name(name).getText('com.reddit')
 
   const links: ProfileLink[] = [
     ...(twitter && [{ name: 'Twitter', value: twitter }]),
     ...(github && [{ name: 'GitHub', value: github }]),
-    ...(telegram && [{ name: 'Telegram', value: telegram }])
+    ...(telegram && [{ name: 'Telegram', value: telegram }]),
+    ...(discord && [{ name: 'Discord', value: discord }]),
+    ...(reddit && [{ name: 'Reddit', value: reddit }])
   ]
 
   const profile: Profile = {
