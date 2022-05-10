@@ -17,7 +17,7 @@
     "deploy:s3": "bash scripts/deploy-s3.sh",
     "postinstall": "husky install",
     "codegen:apollo": "apollo client:codegen --endpoint=https://v4.subgraph.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 --quiet",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
