@@ -1,7 +1,7 @@
 import React, { ReactNode, FormEvent, ReactElement } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames/bind'
-import styles from './Button.module.css'
+import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
 
