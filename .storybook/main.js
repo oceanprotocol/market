@@ -1,13 +1,9 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
-const nextConfig = require('../next.config')
 
-console.log(nextConfig.webpack)
 module.exports = {
-  core: {
-    builder: 'webpack5'
-  },
-  stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.tsx'],
-  addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
+  core: { builder: 'webpack5' },
+  stories: ['../src/**/*.stories.tsx'],
+  addons: ['@storybook/addon-essentials'],
   framework: '@storybook/react',
   webpackFinal: async (config) => {
     config.resolve.plugins = [
@@ -17,6 +13,7 @@ module.exports = {
       })
     ]
 
+    // Mimic next.config.js webpack config
     config.module.rules.push(
       {
         test: /\.svg$/,

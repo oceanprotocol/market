@@ -23,9 +23,9 @@ interface Props {
   }
 }
 
-export const Primary: Props = Template.bind({})
+export const Default: Props = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
+Default.args = {
   children: 'Button',
   style: 'primary',
   size: 'small',
