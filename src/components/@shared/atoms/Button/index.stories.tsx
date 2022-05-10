@@ -21,6 +21,15 @@ export const Default: Props = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Default.args = {
   children: 'Button',
+  onClick: () => {
+    console.log('Button pressed!')
+  }
+}
+
+export const Primary: Props = Template.bind({})
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Primary.args = {
+  children: 'Button',
   style: 'primary',
   onClick: () => {
     console.log('Button pressed!')
@@ -31,7 +40,6 @@ export const Small: Props = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Small.args = {
   children: 'Button',
-  style: 'primary',
   size: 'small',
   onClick: () => {
     console.log('Button pressed!')
