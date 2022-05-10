@@ -18,7 +18,7 @@ interface Props {
   args: {
     children: string
     style: string
-    size: string
+    size?: string
     onClick: any
   }
 }
@@ -26,6 +26,16 @@ interface Props {
 export const Default: Props = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Default.args = {
+  children: 'Button',
+  style: 'primary',
+  onClick: () => {
+    console.log('Button pressed!')
+  }
+}
+
+export const Small: Props = Template.bind({})
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Small.args = {
   children: 'Button',
   style: 'primary',
   size: 'small',
