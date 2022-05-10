@@ -47,7 +47,7 @@ export default function Table({
       noDataComponent={<Empty message={emptyMessage} />}
       progressPending={isLoading}
       progressComponent={<Loader />}
-      paginationComponent={Pagination}
+      paginationComponent={<Pagination />}
       defaultSortField={sortField}
       defaultSortAsc={sortAsc}
       {...props}
