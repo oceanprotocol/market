@@ -16,3 +16,4 @@ graphql.schema.json
 src/@types/graph.types.ts
 tsconfig.tsbuildinfo
 __snapshots__
+storybook-static
