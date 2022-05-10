@@ -31,6 +31,7 @@ import {
   publisherMarketPoolSwapFee,
   publisherMarketFixedSwapFee
 } from '../../../app.config'
+import { sanitizeUrl } from '@utils/url'
 
 export function getFieldContent(
   fieldName: string,
@@ -95,9 +96,9 @@ export async function transformPublishFormToDdo(
 
   // Transform from files[0].url to string[] assuming only 1 file
   const filesTransformed = files?.length &&
-    files[0].valid && [files[0].url.replace('javascript:', '')]
+    files[0].valid && [sanitizeUrl(files[0].url)]
   const linksTransformed = links?.length &&
-    links[0].valid && [links[0].url.replace('javascript:', '')]
+    links[0].valid && [sanitizeUrl(links[0].url)]
 
   const newMetadata: Metadata = {
     created: currentTime,
