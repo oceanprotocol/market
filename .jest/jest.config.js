@@ -22,7 +22,8 @@ const customJestConfig = {
     '@utils/(.*)$': '<rootDir>/src/@utils/$1',
     '@content/(.*)$': '<rootDir>/@content/$1'
   },
-  collectCoverage: true
+  collectCoverage: true,
+  collectCoverageFrom: ['src/**/*.{ts,tsx}']
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
