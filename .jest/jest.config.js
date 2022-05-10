@@ -26,7 +26,8 @@ const customJestConfig = {
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.{stories,test}.{ts,tsx}'
-  ]
+  ],
+  testPathIgnorePatterns: ['node_modules', '\\.cache', '.next', 'coverage']
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
