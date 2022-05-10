@@ -30,6 +30,7 @@ Full.args = {
     name: 'Action',
     handleAction: () => null as any
   },
+  badge: 'Hello',
   onDismiss: () => {
     console.log('Alert closed!')
   }
