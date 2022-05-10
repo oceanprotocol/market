@@ -1,6 +1,11 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+const nextConfig = require('../next.config')
 
+console.log(nextConfig.webpack)
 module.exports = {
+  core: {
+    builder: 'webpack5'
+  },
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.tsx'],
   addons: [
     '@storybook/addon-links',
@@ -16,17 +21,33 @@ module.exports = {
       })
     ]
 
-    // Default rule for images /\.(svg|ico|jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|cur|ani|pdf)(\?.*)?$/
-    const fileLoaderRule = config.module.rules.find(
-      (rule) => rule.test && rule.test.test('.svg')
+    config.module.rules.push(
+      {
+        test: /\.svg$/,
+        issuer: /\.(tsx|ts)$/,
+        use: [
+          { loader: require.resolve('@svgr/webpack'), options: { icon: true } }
+        ]
+      },
+      {
+        test: /\.gif$/,
+        // yay for webpack 5
+        // https://webpack.js.org/guides/asset-management/#loading-images
+        type: 'asset/resource'
+      }
     )
-    fileLoaderRule.exclude = /\.svg$/
 
-    config.module.rules.push({
-      test: /\.svg$/,
-      enforce: 'pre',
-      loader: require.resolve('@svgr/webpack')
+    const fallback = config.resolve.fallback || {}
+    Object.assign(fallback, {
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      fs: false,
+      crypto: false,
+      os: false,
+      stream: false,
+      assert: false
     })
+    config.resolve.fallback = fallback
 
     return config
   }
