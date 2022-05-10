@@ -1,21 +1,13 @@
 import React, { ReactElement, FormEvent } from 'react'
 import classNames from 'classnames/bind'
-import styles from './Alert.module.css'
-import Button from './Button'
-import Markdown from '../Markdown'
-import Badge from './Badge'
+import styles from './index.module.css'
+import Button from '../Button'
+import Markdown from '../../Markdown'
+import Badge from '../Badge'
 
 const cx = classNames.bind(styles)
 
-export default function Alert({
-  title,
-  badge,
-  text,
-  state,
-  action,
-  onDismiss,
-  className
-}: {
+export interface AlertProps {
   title?: string
   badge?: string
   text: string
@@ -28,7 +20,17 @@ export default function Alert({
   }
   onDismiss?: () => void
   className?: string
-}): ReactElement {
+}
+
+export default function Alert({
+  title,
+  badge,
+  text,
+  state,
+  action,
+  onDismiss,
+  className
+}: AlertProps): ReactElement {
   const styleClasses = cx({
     alert: true,
     [state]: state,
