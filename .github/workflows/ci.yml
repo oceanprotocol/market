@@ -85,3 +85,30 @@ jobs:
       - uses: paambaati/codeclimate-action@v2.7.1 # using 2.7.1 for issue: https://github.com/paambaati/codeclimate-action/issues/316
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+
+  storybook:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: ['16']
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-
+
+      - run: npm ci
+      - run: npm run storybook:build
