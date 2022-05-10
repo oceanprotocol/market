@@ -23,6 +23,7 @@ import { getOceanConfig } from '@utils/ocean'
 import EditFeedback from './EditFeedback'
 import { useAsset } from '@context/Asset'
 import { setNftMetadata } from '@utils/nft'
+import { sanitizeUrl } from '@utils/url'
 
 export default function Edit({
   asset
@@ -64,9 +65,7 @@ export default function Edit({
   ) {
     try {
       const linksTransformed = values.links?.length &&
-        values.links[0].valid && [
-          values.links[0].url.replace('javascript:', '')
-        ]
+        values.links[0].valid && [sanitizeUrl(values.links[0].url)]
       const updatedMetadata: Metadata = {
         ...asset.metadata,
         name: values.name,
