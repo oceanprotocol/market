@@ -77,7 +77,8 @@ export default function Add({
 
         const poolReserve = await poolInstance.getReserve(
           poolData.id,
-          poolInfo.baseTokenAddress
+          poolInfo.baseTokenAddress,
+          poolInfo.baseTokenDecimals
         )
 
         const amountMaxPool = calcMaxExactIn(poolReserve)
@@ -97,6 +98,7 @@ export default function Add({
     isAssetNetwork,
     poolData?.id,
     poolInfo?.baseTokenAddress,
+    poolInfo?.baseTokenDecimals,
     balance?.ocean
   ])
 

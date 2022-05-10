@@ -49,7 +49,9 @@ export default function FormAdd({
       const poolTokens = await poolInstance.calcPoolOutGivenSingleIn(
         poolData.id,
         poolInfo.baseTokenAddress,
-        values.amount.toString()
+        values.amount.toString(),
+        18,
+        poolInfo.baseTokenDecimals
       )
       setNewPoolTokens(poolTokens)
       const newPoolShareDecimal =
@@ -68,6 +70,7 @@ export default function FormAdd({
     calculatePoolShares()
   }, [
     poolInfo?.baseTokenAddress,
+    poolInfo?.baseTokenDecimals,
     web3,
     values.amount,
     poolInfo?.totalPoolTokens,

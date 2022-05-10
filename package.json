@@ -24,7 +24,7 @@
     "@coingecko/cryptoformat": "^0.4.4",
     "@loadable/component": "^5.15.2",
     "@oceanprotocol/art": "^3.2.0",
-    "@oceanprotocol/lib": "^1.0.0-next.37",
+    "@oceanprotocol/lib": "^1.0.0-next.42",
     "@oceanprotocol/typographies": "^0.1.0",
     "@portis/web3": "^4.0.7",
     "@storybook/addon-storyshots": "^6.4.22",

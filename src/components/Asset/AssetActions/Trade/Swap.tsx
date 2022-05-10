@@ -78,11 +78,13 @@ export default function Swap({
     async function calculateMaximum() {
       const datatokenLiquidity = await poolInstance.getReserve(
         poolData.id,
-        poolData.datatoken.address
+        poolData.datatoken.address,
+        poolData.datatoken.decimals
       )
       const baseTokenLiquidity = await poolInstance.getReserve(
         poolData.id,
-        poolData.baseToken.address
+        poolData.baseToken.address,
+        poolData.baseToken.decimals
       )
       if (values.type === 'buy') {
         const maxBaseTokenFromPool = calcMaxExactIn(baseTokenLiquidity)
@@ -98,7 +100,9 @@ export default function Swap({
           poolInfo.baseTokenAddress,
           poolInfo.datatokenAddress,
           maxBaseTokens.toString(),
-          appConfig.consumeMarketPoolSwapFee
+          appConfig.consumeMarketPoolSwapFee,
+          poolInfo.baseTokenDecimals,
+          poolInfo.datatokenDecimals
         )
         const maximumDt = new Decimal(maxDt.tokenAmount)
           .toDecimalPlaces(MAX_DECIMALS)
@@ -130,7 +134,9 @@ export default function Swap({
           poolInfo?.datatokenAddress,
           poolInfo?.baseTokenAddress,
           maxDatatokens.toString(),
-          appConfig.consumeMarketPoolSwapFee
+          appConfig.consumeMarketPoolSwapFee,
+          poolInfo.datatokenDecimals,
+          poolInfo.baseTokenDecimals
         )
         const maximumBasetokens = new Decimal(maxBaseTokens.tokenAmount)
           .toDecimalPlaces(MAX_DECIMALS)
