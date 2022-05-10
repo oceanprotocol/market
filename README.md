@@ -329,7 +329,13 @@ npm run type-check
 npm run jest
 ```
 
-Coverage report is autiomatically shown in console whenever `npm run jest` is called. Generated reports are sent to CodeClimate during CI runs.
+A coverage report is automatically shown in console whenever `npm run jest` is called. Generated reports are sent to CodeClimate during CI runs.
+
+During local development you can continously get coverage report feedback in your console by running Jest in watch mode:
+
+```bash
+npm run jest:watch
+```
 
 ## ✨ Code Style
 

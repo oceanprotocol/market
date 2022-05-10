@@ -11,6 +11,7 @@
     "pregenerate": "bash scripts/pregenerate.sh",
     "test": "npm run pregenerate && npm run lint && npm run type-check && npm run jest",
     "jest": "jest -c .jest/jest.config.js",
+    "jest:watch": "jest -c .jest/jest.config.js --watch",
     "lint": "eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx .",
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
     "type-check": "tsc --noEmit",
