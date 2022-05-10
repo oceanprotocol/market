@@ -8,6 +8,7 @@ import { getOpcFees } from '../../../@utils/subgraph'
 import { OpcFeesQuery_opc as OpcFeesData } from '../../../@types/subgraph/OpcFeesQuery'
 import { useWeb3 } from '@context/Web3'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import Decimal from 'decimal.js'
 
 const Default = ({
   title,
@@ -79,7 +80,7 @@ export default function Fees({
           title="Community Fee"
           name="communityFee"
           tooltip={tooltips.communityFee}
-          value={opcFees?.swapOceanFee || '0'}
+          value={new Decimal(opcFees?.swapOceanFee).mul(100).toString() || '0'}
         />
 
         <Default
