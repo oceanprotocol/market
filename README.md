@@ -313,7 +313,7 @@ Test runs utilize [Jest](https://jestjs.io/) as test runner and [Testing Library
 
 All created Storybook stories will automatically run as individual tests by using the [StoryShots Addon](https://storybook.js.org/addons/@storybook/addon-storyshots).
 
-Creating Storybook stories for a component will provide coverage of a component in many cases. Additionally, you can write more tests for dedicated component functionality which can't be done with Storybook.
+Creating Storybook stories for a component will provide good coverage of a component in many cases. Additional tests for dedicated component functionality which can't be done with Storybook are created as usual [Testing Library](https://testing-library.com/docs/react-testing-library/intro) tests, but you can also [import exisiting Storybook stories](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-testing-library) into those tests.
 
 Executing linting, type checking, and full test run:
 
