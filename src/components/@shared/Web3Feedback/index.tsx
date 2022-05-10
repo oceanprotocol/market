@@ -20,7 +20,7 @@ export default function Web3Feedback({
 }): ReactElement {
   const { accountId } = useWeb3()
   const { isGraphSynced, blockGraph, blockHead } = useGraphSyncStatus(networkId)
-  const [state, setState] = useState<string>()
+  const [state, setState] = useState<'error' | 'warning' | 'success'>()
   const [title, setTitle] = useState<string>()
   const [message, setMessage] = useState<string>()
   const [showFeedback, setShowFeedback] = useState<boolean>(false)
