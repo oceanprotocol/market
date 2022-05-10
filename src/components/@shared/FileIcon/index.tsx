@@ -29,7 +29,7 @@ export default function FileIcon({
 }): ReactElement {
   const styleClasses = cx({
     file: true,
-    small: small,
+    small,
     [className]: className
   })
 

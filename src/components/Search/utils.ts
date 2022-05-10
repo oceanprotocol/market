@@ -134,7 +134,7 @@ export function getSearchQuery(
       from: (Number(page) - 1 || 0) * (Number(offset) || 21),
       size: Number(offset) || 21
     },
-    sortOptions: { sortBy: sort, sortDirection: sortDirection },
+    sortOptions: { sortBy: sort, sortDirection },
     filters
   } as BaseQueryParams
 

@@ -41,6 +41,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
     cookies.optionalCookies?.map((cookie) => {
       deleteCookie(cookie.cookieName)
       resetCookieConsent[cookie.cookieName] = status
+      return status
     })
     setConsentStatus(resetCookieConsent)
   }
@@ -97,12 +98,15 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
           initialValues[cookie.cookieName] = CookieConsentStatus.NOT_AVAILABLE
           break
       }
+
+      return initialValues
     })
 
     setConsentStatus(initialValues)
   }, [cookies.optionalCookies, appConfig])
 
   useEffect(() => {
+    // eslint-disable-next-line array-callback-return
     Object.keys(consentStatus).map((cookieName) => {
       switch (consentStatus[cookieName]) {
         case CookieConsentStatus.APPROVED:

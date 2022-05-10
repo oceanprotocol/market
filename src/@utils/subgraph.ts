@@ -279,10 +279,7 @@ export async function getPreviousOrders(
   account: string,
   assetTimeout: string
 ): Promise<string> {
-  const variables = {
-    id: id,
-    account: account
-  }
+  const variables = { id, account }
   const fetchedPreviousOrders: OperationResult<AssetPreviousOrder> =
     await fetchData(PreviousOrderQuery, variables, null)
   if (fetchedPreviousOrders.data?.orders?.length === 0) return null
@@ -347,7 +344,7 @@ export async function getAccountLiquidityInOwnAssets(
 ): Promise<string> {
   const queryVariables = {
     user: accountId.toLowerCase(),
-    pools: pools
+    pools
   }
   const results: PoolSharesList[] = await fetchDataForMultipleChains(
     UserSharesQuery,
