@@ -40,7 +40,6 @@ export default function Add({
   const [amountMax, setAmountMax] = useState<string>()
   const [newPoolTokens, setNewPoolTokens] = useState('0')
   const [newPoolShare, setNewPoolShare] = useState('0')
-  const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
   // Live validation rules
   // https://github.com/jquense/yup#number
@@ -153,12 +152,7 @@ export default function Add({
             <Output newPoolTokens={newPoolTokens} newPoolShare={newPoolShare} />
 
             <Actions
-              isDisabled={
-                !isValid ||
-                !isWarningAccepted ||
-                !values.amount ||
-                values.amount === 0
-              }
+              isDisabled={!isValid || !values.amount || values.amount === 0}
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."

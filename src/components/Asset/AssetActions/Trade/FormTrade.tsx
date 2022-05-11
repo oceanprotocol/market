@@ -41,7 +41,6 @@ export default function FormTrade({
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
   const [maximumBaseToken, setMaximumBaseToken] = useState('0')
   const [maximumDt, setMaximumDt] = useState('0')
-  const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
     .shape({
@@ -196,7 +195,6 @@ export default function FormTrade({
           <Actions
             isDisabled={
               !isValid ||
-              !isWarningAccepted ||
               !isAssetNetwork ||
               values.datatoken === undefined ||
               values.baseToken === undefined
