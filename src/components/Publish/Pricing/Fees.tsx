@@ -44,13 +44,13 @@ export default function Fees({
   pricingType: 'dynamic' | 'fixed'
 }): ReactElement {
   const [field, meta] = useField('pricing.swapFee')
-  const [communityFee, setCommunityFee] = useState<string>('')
+  const [oceanCommunitySwapFee, setOceanCommunitySwapFee] = useState<string>('')
   const { chainId } = useWeb3()
   const { appConfig } = useMarketMetadata()
 
   useEffect(() => {
     getOpcFees(chainId || 1).then((response: OpcFeesData) => {
-      setCommunityFee(
+      setOceanCommunitySwapFee(
         response?.swapOceanFee
           ? new Decimal(response.swapOceanFee).mul(100).toString()
           : '0'
@@ -81,10 +81,10 @@ export default function Fees({
         )}
 
         <Default
-          title="Community Fee"
+          title="Community Swap Fee"
           name="communityFee"
           tooltip={tooltips.communityFee}
-          value={communityFee}
+          value={oceanCommunitySwapFee}
         />
 
         <Default
