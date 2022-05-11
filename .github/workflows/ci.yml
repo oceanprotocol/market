@@ -72,31 +72,21 @@ jobs:
           name: coverage-${{ runner.os }}
           path: coverage/
 
-      - name: Upload subgraph typings artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: subgraph-typings-${{ runner.os }}
-          path: src/@types/subgraph/
+  # coverage:
+  #   runs-on: ubuntu-latest
+  #   needs: [test]
+  #   if: ${{ success() && github.actor != 'dependabot[bot]' }}
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/download-artifact@v2
+  #       with:
+  #         name: coverage-${{ runner.os }}
 
-  coverage:
-    runs-on: ubuntu-latest
-    needs: [test]
-    if: ${{ success() && github.actor != 'dependabot[bot]' }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          name: coverage-${{ runner.os }}
-
-      - uses: actions/download-artifact@v2
-        with:
-          name: subgraph-typings-${{ runner.os }}
-
-      - uses: paambaati/codeclimate-action@v3.0.0
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        with:
-          debug: true
+  #     - uses: paambaati/codeclimate-action@v3.0.0
+  #       env:
+  #         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+  #       with:
+  #         debug: true
 
   storybook:
     runs-on: ${{ matrix.os }}
