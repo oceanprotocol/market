@@ -19,8 +19,6 @@ export default function Coin({
 }): ReactElement {
   const [field, meta] = useField(`pricing.${name}`)
 
-  console.log('ERROR: ', meta)
-
   return (
     <div className={styles.coin}>
       <div className={styles.token}>
