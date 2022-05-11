@@ -19,6 +19,8 @@ export default function Coin({
 }): ReactElement {
   const [field, meta] = useField(`pricing.${name}`)
 
+  console.log('ERROR: ', meta)
+
   return (
     <div className={styles.coin}>
       <div className={styles.token}>
@@ -49,7 +51,9 @@ export default function Coin({
         {datatokenOptions?.symbol === 'OCEAN' && (
           <Conversion price={field.value} />
         )}
-        <Error meta={meta} />
+        <div>
+          <Error meta={meta} />
+        </div>
       </div>
     </div>
   )
