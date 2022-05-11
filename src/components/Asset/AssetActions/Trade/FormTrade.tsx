@@ -185,28 +185,14 @@ export default function FormTrade({
     >
       {({ isSubmitting, setSubmitting, submitForm, values, isValid }) => (
         <>
-          {isWarningAccepted ? (
-            <Swap
-              asset={asset}
-              balance={balance}
-              setCoin={setCoinFrom}
-              setMaximumBaseToken={setMaximumBaseToken}
-              setMaximumDt={setMaximumDt}
-              isLoading={isSubmitting}
-            />
-          ) : (
-            <div className={styles.alertWrap}>
-              <Alert
-                text={content.trade.warning}
-                state="info"
-                action={{
-                  name: 'I understand',
-                  style: 'text',
-                  handleAction: () => setIsWarningAccepted(true)
-                }}
-              />
-            </div>
-          )}
+          <Swap
+            asset={asset}
+            balance={balance}
+            setCoin={setCoinFrom}
+            setMaximumBaseToken={setMaximumBaseToken}
+            setMaximumDt={setMaximumDt}
+            isLoading={isSubmitting}
+          />
           <Actions
             isDisabled={
               !isValid ||
