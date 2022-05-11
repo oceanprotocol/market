@@ -82,9 +82,11 @@ jobs:
         with:
           name: coverage
 
-      - uses: paambaati/codeclimate-action@v2.7.1 # using 2.7.1 for issue: https://github.com/paambaati/codeclimate-action/issues/316
+      - uses: paambaati/codeclimate-action@v2.7.3 # using 2.7.3 for issue: https://github.com/paambaati/codeclimate-action/issues/235
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          debug: true
 
   storybook:
     runs-on: ${{ matrix.os }}
