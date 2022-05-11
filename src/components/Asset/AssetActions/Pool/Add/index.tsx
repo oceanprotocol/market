@@ -143,26 +143,11 @@ export default function Add({
         {({ isSubmitting, setSubmitting, submitForm, values, isValid }) => (
           <>
             <div className={styles.addInput}>
-              {isWarningAccepted ? (
-                <FormAdd
-                  amountMax={amountMax}
-                  setNewPoolTokens={setNewPoolTokens}
-                  setNewPoolShare={setNewPoolShare}
-                />
-              ) : (
-                content.pool.add.warning && (
-                  <Alert
-                    className={styles.warning}
-                    text={content.pool.add.warning.toString()}
-                    state="info"
-                    action={{
-                      name: 'I understand',
-                      style: 'text',
-                      handleAction: () => setIsWarningAccepted(true)
-                    }}
-                  />
-                )
-              )}
+              <FormAdd
+                amountMax={amountMax}
+                setNewPoolTokens={setNewPoolTokens}
+                setNewPoolShare={setNewPoolShare}
+              />
             </div>
 
             <Output newPoolTokens={newPoolTokens} newPoolShare={newPoolShare} />
