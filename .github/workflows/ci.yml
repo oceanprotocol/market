@@ -66,11 +66,17 @@ jobs:
       - run: npm ci
       - run: npm test
 
-      - name: Upload coverage
+      - name: Upload coverage artifact
         uses: actions/upload-artifact@v2
         with:
           name: coverage-${{ runner.os }}
           path: coverage/
+
+      - name: Upload subgraph typings artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: subgraph-typings-${{ runner.os }}
+          path: src/@types/subgraph/
 
   coverage:
     runs-on: ubuntu-latest
@@ -81,6 +87,10 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: coverage-${{ runner.os }}
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: subgraph-typings-${{ runner.os }}
 
       - uses: paambaati/codeclimate-action@v3.0.0
         env:
