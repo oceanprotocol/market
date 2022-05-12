@@ -1,6 +1,5 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-
 import Button, { ButtonProps } from '@shared/atoms/Button'
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
@@ -15,11 +14,15 @@ const Template: ComponentStory<typeof Button> = (args: ButtonProps) => (
 )
 
 interface Props {
-  args: {
-    children: string
-    style: string
-    size: string
-    onClick: any
+  args: ButtonProps
+}
+
+export const Default: Props = Template.bind({})
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Default.args = {
+  children: 'Button',
+  onClick: () => {
+    console.log('Button pressed!')
   }
 }
 
@@ -28,6 +31,15 @@ export const Primary: Props = Template.bind({})
 Primary.args = {
   children: 'Button',
   style: 'primary',
+  onClick: () => {
+    console.log('Button pressed!')
+  }
+}
+
+export const Small: Props = Template.bind({})
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Small.args = {
+  children: 'Button',
   size: 'small',
   onClick: () => {
     console.log('Button pressed!')

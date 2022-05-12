@@ -15,7 +15,7 @@ export default function Container({
 }): ReactElement {
   const styleClasses = cx({
     container: true,
-    narrow: narrow,
+    narrow,
     [className]: className
   })
 

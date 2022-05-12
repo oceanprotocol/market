@@ -86,7 +86,8 @@ export default function Compute({
       !hasAlgoAssetDatatoken &&
       !isAlgoConsumablePrice)
 
-  const { timeout } = ddo?.services[0]
+  const service = ddo?.services[0]
+  const { timeout } = service
 
   async function checkPreviousOrders(ddo: DDO) {
     const { type } = ddo.metadata

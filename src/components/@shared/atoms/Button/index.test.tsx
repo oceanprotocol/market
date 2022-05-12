@@ -1,20 +1,25 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { composeStory } from '@storybook/testing-react'
-import Meta, { Primary as PrimaryStory } from './index.stories'
+import Button from './'
 
-// Returns a component that already contain all decorators from story level, meta level and global level.
-const Primary = composeStory(PrimaryStory, Meta)
+test('returns correct markup when href or to is passed', async () => {
+  const { rerender } = render(
+    <Button href="https://oceanprotocol.com">Hello Button</Button>
+  )
 
-test('onclick handler is called', () => {
-  render(<Primary />)
-  const buttonElement = screen.getByRole('button')
-  buttonElement.click()
+  let button = screen.getByText('Hello Button')
+  expect(button).toHaveAttribute('href', 'https://oceanprotocol.com')
+  expect(button).toContainHTML('<a')
+
+  rerender(<Button to="/publish">Hello Button</Button>)
+  button = screen.getByText('Hello Button')
+  expect(button).toHaveAttribute('href', '/publish')
+  expect(button).toContainHTML('<a')
 })
 
-test('test against args', () => {
-  render(<Primary />)
-  const buttonElement = screen.getByRole('button')
-  // Testing against values coming from the story itself! No need for duplication
-  expect(buttonElement.textContent).toEqual(Primary.args.children)
+test('returns correct markup when no href or to is passed', async () => {
+  render(<Button>Hello Button</Button>)
+
+  const button = screen.getByText('Hello Button')
+  expect(button).toContainHTML('<button')
 })
