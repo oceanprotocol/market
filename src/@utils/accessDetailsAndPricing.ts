@@ -8,7 +8,12 @@ import {
   TokensPriceQuery,
   TokensPriceQuery_tokens as TokensPrice
 } from '../@types/subgraph/TokensPriceQuery'
-import { Asset, LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
+import {
+  Asset,
+  LoggerInstance,
+  ProviderFees,
+  ProviderInstance
+} from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { calcInGivenOut } from './pool'
 import { getFixedBuyPrice } from './fixedRateExchange'
@@ -238,8 +243,7 @@ export async function getOrderPriceAndFees(
   asset: AssetExtended,
   accountId?: string,
   paramsForPool?: CalcInGivenOutParams,
-  computeEnv: string = null,
-  computeValidUntil: number = null
+  providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
     price: '0',
@@ -258,18 +262,16 @@ export async function getOrderPriceAndFees(
 
   // fetch provider fee
 
-  const initializeData = await ProviderInstance.initialize(
-    asset?.id,
-    asset.services[0].id,
-    0,
-    accountId,
-    asset.services[0].serviceEndpoint,
-    null,
-    null,
-    computeEnv,
-    computeValidUntil
-  )
-  orderPriceAndFee.providerFee = initializeData.providerFee
+  const initializeData =
+    !providerFees &&
+    (await ProviderInstance.initialize(
+      asset?.id,
+      asset.services[0].id,
+      0,
+      accountId,
+      asset.services[0].serviceEndpoint
+    ))
+  orderPriceAndFee.providerFee = providerFees || initializeData.providerFee
 
   // fetch price and swap fees
   switch (asset?.accessDetails?.type) {

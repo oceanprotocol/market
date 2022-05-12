@@ -2,7 +2,11 @@ import {
   approve,
   Datatoken,
   FreOrderParams,
+  LoggerInstance,
   OrderParams,
+  ProviderComputeInitialize,
+  ProviderComputeInitializeResults,
+  ProviderFees,
   ProviderInstance
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
@@ -15,6 +19,8 @@ import {
   consumeMarketOrderFee,
   consumeMarketFixedSwapFee
 } from '../../app.config'
+import { buyDtFromPool } from './pool'
+import { toast } from 'react-toastify'
 
 /**
  * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
@@ -31,29 +37,26 @@ export async function order(
   asset: AssetExtended,
   orderPriceAndFees: OrderPriceAndFees,
   accountId: string,
-  computeEnv: string = null,
-  computeValidUntil: number = null,
+  providerFees?: ProviderFees,
   computeConsumerAddress?: string
 ): Promise<TransactionReceipt> {
   const datatoken = new Datatoken(web3)
   const config = getOceanConfig(asset.chainId)
 
-  const initializeData = await ProviderInstance.initialize(
-    asset.id,
-    asset.services[0].id,
-    0,
-    accountId,
-    asset.services[0].serviceEndpoint,
-    null,
-    null,
-    computeEnv,
-    computeValidUntil
-  )
+  const initializeData =
+    !providerFees &&
+    (await ProviderInstance.initialize(
+      asset.id,
+      asset.services[0].id,
+      0,
+      accountId,
+      asset.services[0].serviceEndpoint
+    ))
 
   const orderParams = {
     consumer: computeConsumerAddress || accountId,
     serviceIndex: 0,
-    _providerFee: initializeData.providerFee,
+    _providerFee: providerFees || initializeData.providerFee,
     _consumeMarketFee: {
       consumeMarketFeeAddress: marketFeeAddress,
       consumeMarketFeeAmount: consumeMarketOrderFee,
@@ -99,7 +102,7 @@ export async function order(
         accountId,
         computeConsumerAddress || accountId,
         0,
-        initializeData.providerFee
+        providerFees || initializeData.providerFee
       )
       return tx
     }
@@ -121,10 +124,8 @@ export async function order(
  * @param web3
  * @param asset
  * @param accountId
- * @param accountId validOrderTx
- * @param computeEnv
- * @param computeValidUntil
- * @param computeConsumerAddress
+ * @param validOrderTx
+ * @param providerFees
  * @returns {TransactionReceipt} receipt of the order
  */
 export async function reuseOrder(
@@ -132,28 +133,27 @@ export async function reuseOrder(
   asset: AssetExtended,
   accountId: string,
   validOrderTx: string,
-  computeEnv: string = null,
-  computeValidUntil: number = null,
-  computeConsumerAddress?: string
-) {
+  providerFees?: ProviderFees
+): Promise<TransactionReceipt> {
   const datatoken = new Datatoken(web3)
-  const initializeData = await ProviderInstance.initialize(
-    asset.id,
-    asset.services[0].id,
-    0,
-    accountId,
-    asset.services[0].serviceEndpoint,
-    null,
-    null,
-    computeEnv,
-    computeValidUntil
-  )
+  const initializeData =
+    !providerFees &&
+    (await ProviderInstance.initialize(
+      asset.id,
+      asset.services[0].id,
+      0,
+      accountId,
+      asset.services[0].serviceEndpoint
+    ))
+
   const txApprove = await approve(
     web3,
     accountId,
-    initializeData.providerFee.providerFeeToken,
+    providerFees.providerFeeToken ||
+      initializeData.providerFee.providerFeeToken,
     asset.accessDetails.datatoken.address,
-    initializeData.providerFee.providerFeeAmount,
+    providerFees.providerFeeAmount ||
+      initializeData.providerFee.providerFeeAmount,
     false
   )
   if (!txApprove) {
@@ -164,8 +164,62 @@ export async function reuseOrder(
     asset.accessDetails.datatoken.address,
     accountId,
     validOrderTx,
-    initializeData.providerFee
+    providerFees || initializeData.providerFee
   )
 
   return tx
+}
+
+/**
+ * Handles order for compute assets for the following scenarios:
+ * - have validOrder and no providerFees -> then order is valid, providerFees are valid, it returns the valid order value
+ * - have validOrder and providerFees -> then order is valid but providerFees are not valid, we need to call reuseOrder and pay only providerFees
+ * - no validOrder -> we need to call order, to pay 1 DT & providerFees
+ * @param web3
+ * @param asset
+ * @param accountId
+ * @param computeEnv
+ * @param computeValidUntil
+ * @param computeConsumerAddress
+ * @returns {Promise<string>} tx id
+ */
+export async function handleComputeOrder(
+  web3: Web3,
+  asset: AssetExtended,
+  orderPriceAndFees: OrderPriceAndFees,
+  accountId: string,
+  hasDatatoken: boolean,
+  initializeData: ProviderComputeInitialize,
+  computeConsumerAddress?: string
+): Promise<string> {
+  if (initializeData.validOrder && !initializeData.providerFee) {
+    return initializeData.validOrder
+  } else if (initializeData.validOrder) {
+    const tx = await reuseOrder(
+      web3,
+      asset,
+      accountId,
+      initializeData.validOrder,
+      initializeData.providerFee
+    )
+    return tx.transactionHash
+  } else {
+    if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
+      const poolTx = await buyDtFromPool(asset?.accessDetails, accountId, web3)
+      LoggerInstance.log('[compute] Buy dt from pool: ', poolTx)
+      if (!poolTx) {
+        toast.error('Failed to buy datatoken from pool!')
+        return
+      }
+    }
+    const tx = await order(
+      web3,
+      asset,
+      orderPriceAndFees,
+      accountId,
+      initializeData.providerFee,
+      computeConsumerAddress
+    )
+    return tx.transactionHash
+  }
 }
