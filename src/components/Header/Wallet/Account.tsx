@@ -31,7 +31,7 @@ const Account = React.forwardRef((props, ref: any) => {
       ref={ref}
       onClick={(e) => e.preventDefault()}
     >
-      <Avatar accountId={accountId} ensAvatar={accountEnsAvatar} />
+      <Avatar accountId={accountId} src={accountEnsAvatar} />
       <span className={styles.address} title={accountId}>
         {accountTruncate(accountEns || accountId)}
       </span>

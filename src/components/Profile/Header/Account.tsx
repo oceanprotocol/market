@@ -23,7 +23,7 @@ export default function Account({
         {accountId ? (
           <Avatar
             accountId={accountId}
-            ensAvatar={profile?.avatar}
+            src={profile?.avatar}
             className={styles.image}
           />
         ) : (
