@@ -21,8 +21,10 @@ export default function NumberUnit({
   return (
     <div className={styles.unit}>
       <div className={`${styles.number} ${small && styles.small}`}>
-        {icon && icon}
-        {value}
+        <>
+          {icon && icon}
+          {value}
+        </>
       </div>
       <span className={styles.label}>
         {label}{' '}

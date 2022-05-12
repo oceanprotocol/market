@@ -33,7 +33,7 @@ export default function FormEditComputeDataset({
   const { publisherTrustedAlgorithms } = getServiceByName(
     asset,
     'compute'
-  )?.compute
+  ).compute
 
   async function getAlgorithmList(
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]

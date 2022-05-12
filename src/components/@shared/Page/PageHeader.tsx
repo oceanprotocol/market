@@ -16,7 +16,7 @@ export default function PageHeader({
 }): ReactElement {
   const styleClasses = cx({
     header: true,
-    center: center
+    center
   })
 
   return (

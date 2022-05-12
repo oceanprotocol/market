@@ -8,6 +8,7 @@ import { getOpcFees } from '../../../@utils/subgraph'
 import { OpcFeesQuery_opc as OpcFeesData } from '../../../@types/subgraph/OpcFeesQuery'
 import { useWeb3 } from '@context/Web3'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import Decimal from 'decimal.js'
 
 const Default = ({
   title,
@@ -43,13 +44,17 @@ export default function Fees({
   pricingType: 'dynamic' | 'fixed'
 }): ReactElement {
   const [field, meta] = useField('pricing.swapFee')
-  const [opcFees, setOpcFees] = useState<OpcFeesData>(undefined)
+  const [oceanCommunitySwapFee, setOceanCommunitySwapFee] = useState<string>('')
   const { chainId } = useWeb3()
   const { appConfig } = useMarketMetadata()
 
   useEffect(() => {
     getOpcFees(chainId || 1).then((response: OpcFeesData) => {
-      setOpcFees(response)
+      setOceanCommunitySwapFee(
+        response?.swapOceanFee
+          ? new Decimal(response.swapOceanFee).mul(100).toString()
+          : '0'
+      )
     })
   }, [chainId])
 
@@ -76,10 +81,10 @@ export default function Fees({
         )}
 
         <Default
-          title="Community Fee"
+          title="Community Swap Fee"
           name="communityFee"
           tooltip={tooltips.communityFee}
-          value={opcFees?.swapOceanFee || '0'}
+          value={oceanCommunitySwapFee}
         />
 
         <Default

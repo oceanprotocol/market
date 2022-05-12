@@ -117,7 +117,7 @@ export default function HomePage(): ReactElement {
     })
 
     const baseParams = {
-      chainIds: chainIds,
+      chainIds,
       esPaginationOptions: {
         size: 9
       },

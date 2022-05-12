@@ -7,6 +7,7 @@ import styles from './PublishedList.module.css'
 import { useCancelToken } from '@hooks/useCancelToken'
 import Filters from '../../Search/Filters'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import { CancelToken } from 'axios'
 
 export default function PublishedList({
   accountId
@@ -19,12 +20,19 @@ export default function PublishedList({
   const [queryResult, setQueryResult] = useState<PagedAssets>()
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
-  const [service, setServiceType] = useState()
-  const [access, setAccsesType] = useState()
+  const [service, setServiceType] = useState<string>()
+  const [access, setAccessType] = useState<string>()
   const newCancelToken = useCancelToken()
 
   const getPublished = useCallback(
-    async (accountId, chainIds, page, service, access, cancelToken) => {
+    async (
+      accountId: string,
+      chainIds: number[],
+      page: number,
+      service: string,
+      access: string,
+      cancelToken: CancelToken
+    ) => {
       try {
         setIsLoading(true)
         const result = await getPublishedAssets(
@@ -70,7 +78,7 @@ export default function PublishedList({
         serviceType={service}
         setServiceType={setServiceType}
         accessType={access}
-        setAccessType={setAccsesType}
+        setAccessType={setAccessType}
         className={styles.filters}
       />
       <AssetList
