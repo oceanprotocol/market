@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import LogoAssetFull from '@oceanprotocol/art/logo/logo.svg'
 import LogoAsset from '@images/logo.svg'
-import styles from './Logo.module.css'
+import styles from './index.module.css'
 
 export default function Logo({
   noWordmark

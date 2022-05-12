@@ -1,20 +1,22 @@
 import React, { ReactElement } from 'react'
-import styles from './Badge.module.css'
 import classNames from 'classnames/bind'
+import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
 
-export default function Badge({
-  label,
+export default function Status({
+  state,
   className
 }: {
-  label: string
+  state?: string
   className?: string
 }): ReactElement {
   const styleClasses = cx({
-    badge: true,
+    status: true,
+    warning: state === 'warning',
+    error: state === 'error',
     [className]: className
   })
 
-  return <span className={styleClasses}>{label}</span>
+  return <i className={styleClasses} />
 }
