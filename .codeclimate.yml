@@ -15,18 +15,9 @@ checks:
   method-complexity:
     config:
       threshold: 10
-  method-count:
-    config:
-      threshold: 20
   method-lines:
     config:
       threshold: 250
-  nested-control-flow:
-    config:
-      threshold: 4
-  return-statements:
-    config:
-      threshold: 4
   similar-code:
     config:
       threshold: 4
@@ -49,3 +40,4 @@ exclude_patterns:
   - '**/*_test.go'
   - '**/*.d.ts'
   - '**/*.stories.tsx'
+  - '**/*.test.tsx'
