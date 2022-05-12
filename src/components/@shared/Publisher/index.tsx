@@ -1,24 +1,23 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
-import classNames from 'classnames/bind'
 import Link from 'next/link'
 import { accountTruncate } from '@utils/web3'
 import { getEnsName } from '@utils/ens'
 import { useIsMounted } from '@hooks/useIsMounted'
 
-const cx = classNames.bind(styles)
+export interface PublisherProps {
+  account: string
+  minimal?: boolean
+  className?: string
+}
 
 export default function Publisher({
   account,
   minimal,
   className
-}: {
-  account: string
-  minimal?: boolean
-  className?: string
-}): ReactElement {
+}: PublisherProps): ReactElement {
   const isMounted = useIsMounted()
-  const [name, setName] = useState('')
+  const [name, setName] = useState(accountTruncate(account))
 
   useEffect(() => {
     if (!account) return
@@ -36,13 +35,8 @@ export default function Publisher({
     getExternalName()
   }, [account, isMounted])
 
-  const styleClasses = cx({
-    publisher: true,
-    [className]: className
-  })
-
   return (
-    <div className={styleClasses}>
+    <div className={`${styles.publisher} ${className || ''}`}>
       {minimal ? (
         name
       ) : (
