@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Logo from '@shared/atoms/Logo'
+import Logo, { LogoProps } from '@shared/atoms/Logo'
 
 export default {
   title: 'Component/@shared/atoms/Logo',
@@ -11,12 +11,18 @@ export default {
 const Template: ComponentStory<typeof Logo> = (args) => <Logo {...args} />
 
 interface Props {
-  args: {
-    noWordmark: boolean
-  }
+  args: LogoProps
 }
 
-export const Primary: Props = Template.bind({})
-Primary.args = {
+export const Default: Props = Template.bind({})
+Default.args = {}
+
+export const WithWordmark: Props = Template.bind({})
+WithWordmark.args = {
+  noWordmark: false
+}
+
+export const WithoutWordmark: Props = Template.bind({})
+WithoutWordmark.args = {
   noWordmark: true
 }

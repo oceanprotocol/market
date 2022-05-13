@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Status from '@shared/atoms/Status'
+import Status, { StatusProps } from '@shared/atoms/Status'
 
 export default {
   title: 'Component/@shared/atoms/Status',
@@ -11,13 +11,18 @@ export default {
 const Template: ComponentStory<typeof Status> = (args) => <Status {...args} />
 
 interface Props {
-  args: {
-    state: string
-    className?: string
-  }
+  args: StatusProps
 }
 
-export const Primary: Props = Template.bind({})
-Primary.args = {
-  state: 'warning'
+export const Default: Props = Template.bind({})
+Default.args = {}
+
+export const Warning: Props = Template.bind({})
+Warning.args = {
+  state: 'warining'
+}
+
+export const Error: Props = Template.bind({})
+Error.args = {
+  state: 'error'
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Loader from '@shared/atoms/Loader'
+import Loader, { LoaderProps } from '@shared/atoms/Loader'
 
 export default {
   title: 'Component/@shared/atoms/Loader',
@@ -11,12 +11,13 @@ export default {
 const Template: ComponentStory<typeof Loader> = (args) => <Loader {...args} />
 
 interface Props {
-  args: {
-    message: string
-  }
+  args: LoaderProps
 }
 
-export const Primary: Props = Template.bind({})
-Primary.args = {
+export const Default: Props = Template.bind({})
+Default.args = {}
+
+export const WithMessage: Props = Template.bind({})
+WithMessage.args = {
   message: 'Loading...'
 }

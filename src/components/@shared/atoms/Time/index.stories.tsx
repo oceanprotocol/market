@@ -1,7 +1,8 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Time from '@shared/atoms/Time'
+import Time, { TimeProps } from '@shared/atoms/Time'
+import { relative } from 'path'
 
 export default {
   title: 'Component/@shared/atoms/Time',
@@ -11,18 +12,22 @@ export default {
 const Template: ComponentStory<typeof Time> = (args) => <Time {...args} />
 
 interface Props {
-  args: {
-    date: string
-    relative: boolean
-    isUnix: boolean
-    displayFormat: string
-  }
+  args: TimeProps
 }
 
-export const Primary: Props = Template.bind({})
-Primary.args = {
+export const Default: Props = Template.bind({})
+Default.args = {
+  date: '2022-05-02T11:50:28.000Z'
+}
+
+export const Relative: Props = Template.bind({})
+Relative.args = {
   date: '2022-05-02T11:50:28.000Z',
-  relative: true,
-  isUnix: false,
-  displayFormat: 'PP'
+  relative: true
+}
+
+export const IsUnix: Props = Template.bind({})
+IsUnix.args = {
+  date: '1652448367',
+  isUnix: true
 }

@@ -1,19 +1,21 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { format, formatDistance } from 'date-fns'
 
+export interface TimeProps {
+  date: string
+  relative?: boolean
+  isUnix?: boolean
+  displayFormat?: string
+  className?: string
+}
+
 export default function Time({
   date,
   relative,
   isUnix,
   displayFormat,
   className
-}: {
-  date: string
-  relative?: boolean
-  isUnix?: boolean
-  displayFormat?: string
-  className?: string
-}): ReactElement {
+}: TimeProps): ReactElement {
   const [dateIso, setDateIso] = useState<string>()
   const [dateNew, setDateNew] = useState<Date>()
 
