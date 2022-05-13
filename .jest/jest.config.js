@@ -20,7 +20,8 @@ const customJestConfig = {
     '@context/(.*)$': '<rootDir>/src/@context/$1',
     '@images/(.*)$': '<rootDir>/src/@images/$1',
     '@utils/(.*)$': '<rootDir>/src/@utils/$1',
-    '@content/(.*)$': '<rootDir>/@content/$1'
+    '@content/(.*)$': '<rootDir>/@content/$1',
+    '\\.svg': '<rootDir>/.jest/__mocks__/svgrMock.tsx'
   },
   collectCoverage: true,
   collectCoverageFrom: [
