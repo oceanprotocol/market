@@ -17,11 +17,6 @@ interface Props {
 export const Default: Props = Template.bind({})
 Default.args = {}
 
-export const WithWordmark: Props = Template.bind({})
-WithWordmark.args = {
-  noWordmark: false
-}
-
 export const WithoutWordmark: Props = Template.bind({})
 WithoutWordmark.args = {
   noWordmark: true

@@ -19,7 +19,7 @@ Default.args = {}
 
 export const Warning: Props = Template.bind({})
 Warning.args = {
-  state: 'warining'
+  state: 'warning'
 }
 
 export const Error: Props = Template.bind({})
