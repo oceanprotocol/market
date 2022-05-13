@@ -144,8 +144,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       return
 
     // Pool share tokens.
-    console.log(poolData)
-
     const poolSharePercentage = new Decimal(poolData.shares[0]?.shares)
       .dividedBy(poolInfo.totalPoolTokens)
       .mul(100)
