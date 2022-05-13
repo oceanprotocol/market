@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import Link from 'next/link'
 import styles from './index.module.css'
 
-declare type TagsProps = {
+export interface TagsProps {
   items: string[]
   max?: number
   showMore?: boolean
