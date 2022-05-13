@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Badge from '@shared/atoms/Badge'
+import Badge, { BadgeProps } from '@shared/atoms/Badge'
 import styles from './index.module.css'
 
 export default {
@@ -12,14 +12,10 @@ export default {
 const Template: ComponentStory<typeof Badge> = (args) => <Badge {...args} />
 
 interface Props {
-  args: {
-    label: string
-    className: string
-  }
+  args: BadgeProps
 }
 
-export const Primary: Props = Template.bind({})
-Primary.args = {
-  label: 'Badge label',
-  className: styles.badge || 'className'
+export const Default: Props = Template.bind({})
+Default.args = {
+  label: 'Badge label'
 }

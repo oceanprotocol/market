@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Blockies from '@shared/atoms/Blockies'
+import Blockies, { BlockiesProps } from '@shared/atoms/Blockies'
 import styles from './index.module.css'
 
 export default {
@@ -14,14 +14,10 @@ const Template: ComponentStory<typeof Blockies> = (args) => (
 )
 
 interface Props {
-  args: {
-    accountId: string
-    className: string
-  }
+  args: BlockiesProps
 }
 
-export const Primary: Props = Template.bind({})
-Primary.args = {
-  accountId: '0x1xxxxxxxxxx3Exxxxxx7xxxxxxxxxxxxF1fd',
-  className: styles.blockies || 'className'
+export const Default: Props = Template.bind({})
+Default.args = {
+  accountId: '0x1xxxxxxxxxx3Exxxxxx7xxxxxxxxxxxxF1fd'
 }
