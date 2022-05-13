@@ -138,11 +138,14 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (
       !poolData ||
       !poolInfo?.totalPoolTokens ||
+      !poolData.shares[0]?.shares ||
       poolData.shares[0]?.shares === '0'
     )
       return
 
     // Pool share tokens.
+    console.log(poolData)
+
     const poolSharePercentage = new Decimal(poolData.shares[0]?.shares)
       .dividedBy(poolInfo.totalPoolTokens)
       .mul(100)
