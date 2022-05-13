@@ -4,15 +4,17 @@ import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
 
+export interface ContainerProps {
+  children: ReactNode
+  narrow?: boolean
+  className?: string
+}
+
 export default function Container({
   children,
   narrow,
   className
-}: {
-  children: ReactNode
-  narrow?: boolean
-  className?: string
-}): ReactElement {
+}: ContainerProps): ReactElement {
   const styleClasses = cx({
     container: true,
     narrow,
