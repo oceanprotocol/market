@@ -86,16 +86,18 @@ export default function ComputeJobs({
     if (!chainIds || chainIds.length === 0 || !accountId) {
       setJobs([])
       setIsLoading(false)
-      return
     }
+    /*
+    // TODO: restore after fixes on compute job
     try {
       setIsLoading(true)
-      // const jobs = await getComputeJobs(chainIds, accountId, ddo)
-      // isMounted() && setJobs(jobs.computeJobs)
-      // setIsLoading(jobs.isLoaded)
+      const jobs = await getComputeJobs(chainIds, accountId, ddo)
+      isMounted() && setJobs(jobs.computeJobs)
+      setIsLoading(jobs.isLoaded)
     } catch (error) {
       LoggerInstance.error(error.message)
     }
+    */
   }, [chainIds, accountId, asset, isMounted])
 
   useEffect(() => {
