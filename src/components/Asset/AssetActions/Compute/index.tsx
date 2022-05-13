@@ -133,6 +133,7 @@ export default function Compute({
       accountId,
       computeEnv
     )
+    console.log('initializedProvider == ', initializedProvider)
     setInitializedProviderResponse(initializedProvider)
     // setIsProviderFeeValid(
     //   await checkComputeResourcesValidity(
@@ -158,7 +159,9 @@ export default function Compute({
     // setComputeValidUntil(validUntil)
     if (
       asset?.accessDetails?.addressOrId !== ZERO_ADDRESS ||
-      asset?.accessDetails?.type !== 'free'
+      asset?.accessDetails?.type !== 'free' ||
+      (!initializedProvider.datasets[0].validOrder &&
+        initializedProvider.datasets[0].providerFee)
     ) {
       setIsRequestingDataseOrderPrice(true)
       setComputeStatusText(
@@ -190,6 +193,7 @@ export default function Compute({
         poolParams,
         initializedProvider.datasets[0].providerFee
       )
+      console.log('datasetPriceAndFees', datasetPriceAndFees)
       if (!datasetPriceAndFees) {
         setError('Error setting dataset price and fees!')
         toast.error('Error setting dataset price and fees!')
@@ -201,7 +205,9 @@ export default function Compute({
 
     if (
       selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS ||
-      selectedAlgorithmAsset?.accessDetails?.type !== 'free'
+      selectedAlgorithmAsset?.accessDetails?.type !== 'free' ||
+      (!initializedProvider.algorithm.validOrder &&
+        initializedProvider.algorithm.providerFee)
     ) {
       setIsRequestingAlgoOrderPrice(true)
       setComputeStatusText(
@@ -239,6 +245,7 @@ export default function Compute({
         algoPoolParams,
         initializedProvider.algorithm.providerFee
       )
+      console.log('algorithmOrderPriceAndFees', algorithmOrderPriceAndFees)
       if (!algorithmOrderPriceAndFees) {
         setError('Error setting algorithm price and fees!')
         toast.error('Error setting algorithm price and fees!')
@@ -331,6 +338,7 @@ export default function Compute({
         initializedProviderResponse.datasets[0],
         computeEnv.consumerAddress
       )
+      console.log('datasetOrderTx', datasetOrderTx)
       // if (isOwned) {
       //   datasetOrderTx = validOrderTx
       //   LoggerInstance.log('[compute] Dataset owned txId:', validOrderTx)
@@ -392,13 +400,13 @@ export default function Compute({
       const algorithmOrderTx = await handleComputeOrder(
         web3,
         selectedAlgorithmAsset,
-        datasetOrderPriceAndFees,
+        algoOrderPriceAndFees,
         accountId,
-        hasDatatoken,
+        hasAlgoAssetDatatoken,
         initializedProviderResponse.algorithm,
         computeEnv.consumerAddress
       )
-
+      console.log('algorithmOrderTx', algorithmOrderTx)
       // if (isAlgorithmOwned) {
       //   algorithmOrderTx = validAlgorithmOrderTx
       //   LoggerInstance.log(

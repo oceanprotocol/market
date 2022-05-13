@@ -135,6 +135,8 @@ export async function reuseOrder(
   validOrderTx: string,
   providerFees?: ProviderFees
 ): Promise<TransactionReceipt> {
+  LoggerInstance.log('[compute] reuseOrder', providerFees)
+
   const datatoken = new Datatoken(web3)
   const initializeData =
     !providerFees &&
@@ -145,19 +147,26 @@ export async function reuseOrder(
       accountId,
       asset.services[0].serviceEndpoint
     ))
+  LoggerInstance.log('[compute] initializeData', initializeData)
 
-  const txApprove = await approve(
-    web3,
-    accountId,
-    providerFees.providerFeeToken ||
-      initializeData.providerFee.providerFeeToken,
-    asset.accessDetails.datatoken.address,
-    providerFees.providerFeeAmount ||
-      initializeData.providerFee.providerFeeAmount,
-    false
-  )
-  if (!txApprove) {
-    return
+  if (
+    providerFees?.providerFeeAmount ||
+    initializeData.providerFee.providerFeeToken
+  ) {
+    const txApprove = await approve(
+      web3,
+      accountId,
+      providerFees.providerFeeToken ||
+        initializeData.providerFee.providerFeeToken,
+      asset.accessDetails.datatoken.address,
+      providerFees.providerFeeAmount,
+      false
+    )
+
+    LoggerInstance.log('[compute] txApprove', txApprove)
+    if (!txApprove) {
+      return
+    }
   }
 
   const tx = await datatoken.reuseOrder(
@@ -192,9 +201,16 @@ export async function handleComputeOrder(
   initializeData: ProviderComputeInitialize,
   computeConsumerAddress?: string
 ): Promise<string> {
+  LoggerInstance.log('[compute] handleComputeOrder asset: ', asset)
+  LoggerInstance.log(
+    '[compute] handleComputeOrder orderPriceAndFees: ',
+    orderPriceAndFees
+  )
   if (initializeData.validOrder && !initializeData.providerFee) {
+    LoggerInstance.log('[compute] Has valid order: ', initializeData.validOrder)
     return initializeData.validOrder
   } else if (initializeData.validOrder) {
+    LoggerInstance.log('[compute] Call reuse order', initializeData)
     const tx = await reuseOrder(
       web3,
       asset,
@@ -204,6 +220,7 @@ export async function handleComputeOrder(
     )
     return tx.transactionHash
   } else {
+    LoggerInstance.log('[compute] Call order', initializeData)
     if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
       const poolTx = await buyDtFromPool(asset?.accessDetails, accountId, web3)
       LoggerInstance.log('[compute] Buy dt from pool: ', poolTx)
