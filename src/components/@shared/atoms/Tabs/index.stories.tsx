@@ -21,7 +21,31 @@ Default.args = {
       title: 'First tab',
       content: (
         <>
-          <a>this is the content for the first tab</a>
+          <a href="https://oceanprotocol.com/" target="_blank" rel="noreferrer">
+            this is the content for the first tab
+          </a>
+        </>
+      )
+    },
+    {
+      title: 'Second tab',
+      content: (
+        <>
+          <a>this is the content for the second tab</a>
+        </>
+      )
+    },
+    {
+      title: 'Third tab',
+      content: (
+        <>
+          <a
+            href="https://docs.oceanprotocol.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            this is the content for the third tab
+          </a>
         </>
       )
     }
@@ -35,10 +59,59 @@ WithRadio.args = {
       title: 'First tab',
       content: (
         <>
-          <a>this is the content for the first tab</a>
+          <a href="https://oceanprotocol.com/" target="_blank" rel="noreferrer">
+            this is the content for the first tab
+          </a>
+        </>
+      )
+    },
+    {
+      title: 'Second tab',
+      content: (
+        <>
+          <a>this is the content for the second tab</a>
         </>
       )
     }
   ],
   showRadio: true
+}
+
+export const WithDefaultIndex: Props = Template.bind({})
+WithDefaultIndex.args = {
+  items: [
+    {
+      title: 'First tab',
+      content: (
+        <>
+          <a href="https://oceanprotocol.com/" target="_blank" rel="noreferrer">
+            this is the content for the first tab
+          </a>
+        </>
+      )
+    },
+    {
+      title: 'Second tab',
+      content: (
+        <>
+          <a>this is the content for the second tab</a>
+        </>
+      )
+    },
+    {
+      title: 'Third tab',
+      content: (
+        <>
+          <a
+            href="https://docs.oceanprotocol.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            this is the content for the third tab
+          </a>
+        </>
+      )
+    }
+  ],
+  defaultIndex: 1
 }
