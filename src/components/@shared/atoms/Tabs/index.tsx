@@ -1,12 +1,20 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import InputElement from '@shared/FormInput/InputElement'
-import styles from './Tabs.module.css'
+import styles from './index.module.css'
 
 export interface TabsItem {
   title: string
   content: ReactNode
   disabled?: boolean
+}
+
+export interface TabsProps {
+  items: TabsItem[]
+  className?: string
+  handleTabChange?: (tabName: string) => void
+  defaultIndex?: number
+  showRadio?: boolean
 }
 
 export default function Tabs({
@@ -15,13 +23,7 @@ export default function Tabs({
   handleTabChange,
   defaultIndex,
   showRadio
-}: {
-  items: TabsItem[]
-  className?: string
-  handleTabChange?: (tabName: string) => void
-  defaultIndex?: number
-  showRadio?: boolean
-}): ReactElement {
+}: TabsProps): ReactElement {
   return (
     <ReactTabs
       className={`${className && className}`}
