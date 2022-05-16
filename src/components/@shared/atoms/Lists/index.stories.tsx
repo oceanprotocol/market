@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { ListItem } from '@shared/atoms/Lists'
+import { ListItem, ListItemProps } from '@shared/atoms/Lists'
 
 export default {
   title: 'Component/@shared/atoms/Lists',
@@ -13,18 +13,28 @@ const Template: ComponentStory<typeof ListItem> = (args) => (
 )
 
 interface Props {
-  args: {
-    children: ReactNode
-    ol: boolean
-  }
+  args: ListItemProps
 }
 
-export const Primary: Props = Template.bind({})
-Primary.args = {
+export const Default: Props = Template.bind({})
+Default.args = {
   children: (
     <>
-      <a href="https://oceanprotocol.com/" target="_blank" rel="noreferrer">
-        List Item
+      <a>List Item</a>
+    </>
+  )
+}
+
+export const OrderedListItem: Props = Template.bind({})
+OrderedListItem.args = {
+  children: (
+    <>
+      <a
+        href="https://docs.oceanprotocol.com/"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Ordered list item
       </a>
     </>
   ),

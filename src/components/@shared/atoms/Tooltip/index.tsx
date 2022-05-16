@@ -2,7 +2,7 @@ import React, { ReactElement, ReactNode } from 'react'
 import classNames from 'classnames/bind'
 import loadable from '@loadable/component'
 import { useSpring, animated } from 'react-spring'
-import styles from './Tooltip.module.css'
+import styles from './index.module.css'
 import Info from '@images/info.svg'
 import { Placement } from 'tippy.js'
 
@@ -22,6 +22,15 @@ const DefaultTrigger = React.forwardRef((props, ref: any) => {
   return <Info className={styles.icon} ref={ref} />
 })
 
+export interface TooltipProps {
+  content: ReactNode
+  children?: ReactNode
+  trigger?: string
+  disabled?: boolean
+  className?: string
+  placement?: Placement
+}
+
 export default function Tooltip({
   content,
   children,
@@ -29,14 +38,7 @@ export default function Tooltip({
   disabled,
   className,
   placement
-}: {
-  content: ReactNode
-  children?: ReactNode
-  trigger?: string
-  disabled?: boolean
-  className?: string
-  placement?: Placement
-}): ReactElement {
+}: TooltipProps): ReactElement {
   const [props, setSpring] = useSpring(() => animation.from)
 
   function onMount() {
