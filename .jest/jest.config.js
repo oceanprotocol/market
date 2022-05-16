@@ -25,7 +25,8 @@ const customJestConfig = {
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
-    '!src/**/*.{stories,test}.{ts,tsx}'
+    '!src/**/*.{stories,test}.{ts,tsx}',
+    '!src/@types/**/*.{ts,tsx}'
   ],
   testPathIgnorePatterns: ['node_modules', '\\.cache', '.next', 'coverage']
 }
