@@ -366,6 +366,7 @@ export default function Compute({
       }
       LoggerInstance.log('[compute] Starting compute job response: ', response)
       setIsPublished(true)
+      initPriceAndFees()
     } catch (error) {
       setError('Failed to start job!')
       LoggerInstance.error('[compute] Failed to start job: ', error.message)
