@@ -35,13 +35,12 @@ import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { useIsMounted } from '@hooks/useIsMounted'
+// import { useIsMounted } from '@hooks/useIsMounted'
 import { Decimal } from 'decimal.js'
 import { useAbortController } from '@hooks/useAbortController'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
-import { buyDtFromPool } from '@utils/pool'
-import { handleComputeOrder, order, reuseOrder } from '@utils/order'
+import { handleComputeOrder } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getComputeFeedback } from '@utils/feedback'
 import { usePool } from '@context/Pool'
@@ -78,9 +77,9 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [algorithmDTBalance, setAlgorithmDTBalance] = useState<string>()
 
-  const [isOwned, setIsOwned] = useState(false)
+  // const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-  const [isAlgorithmOwned, setIsAlgorithmOwned] = useState(false)
+  // const [isAlgorithmOwned, setIsAlgorithmOwned] = useState(false)
   const [validAlgorithmOrderTx, setValidAlgorithmOrderTx] = useState('')
 
   const hasDatatoken = Number(dtBalance) >= 1
@@ -135,33 +134,10 @@ export default function Compute({
     )
     console.log('initializedProvider == ', initializedProvider)
     setInitializedProviderResponse(initializedProvider)
-    // setIsProviderFeeValid(
-    //   await checkComputeResourcesValidity(
-    //     asset,
-    //     accountId,
-    //     computeEnv?.maxJobDuration,
-    //     asset.services[0].timeout,
-    //     selectedAlgorithmAsset.services[0].timeout
-    //   )
-    // )
-    // let datasetOrderTx = await checkComputeResourcesValidity(
-    //   dataset,
-    //   accountId,
-    //   computeEnv?.maxJobDuration,
-    //   asset.services[0].timeout,
-    //   selectedAlgorithmAsset.services[0].timeout
-    // )
-    // const validUntil = getValidUntilTime(
-    //   computeEnv?.maxJobDuration,
-    //   asset.services[0].timeout,
-    //   selectedAlgorithmAsset.services[0].timeout
-    // )
-    // setComputeValidUntil(validUntil)
     if (
-      asset?.accessDetails?.addressOrId !== ZERO_ADDRESS ||
-      asset?.accessDetails?.type !== 'free' ||
-      (!initializedProvider.datasets[0].validOrder &&
-        initializedProvider.datasets[0].providerFee)
+      asset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
+      asset?.accessDetails?.type !== 'free' &&
+      initializedProvider.datasets[0].providerFee
     ) {
       setIsRequestingDataseOrderPrice(true)
       setComputeStatusText(
@@ -204,10 +180,9 @@ export default function Compute({
     }
 
     if (
-      selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS ||
-      selectedAlgorithmAsset?.accessDetails?.type !== 'free' ||
-      (!initializedProvider.algorithm.validOrder &&
-        initializedProvider.algorithm.providerFee)
+      selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
+      selectedAlgorithmAsset?.accessDetails?.type !== 'free' &&
+      initializedProvider.algorithm.providerFee
     ) {
       setIsRequestingAlgoOrderPrice(true)
       setComputeStatusText(
@@ -260,7 +235,7 @@ export default function Compute({
     if (!asset?.accessDetails || !accountId) return
 
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
-    setIsOwned(asset?.accessDetails?.isOwned)
+    // setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
   }, [asset?.accessDetails])
 
@@ -268,7 +243,7 @@ export default function Compute({
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
 
     setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
-    setIsAlgorithmOwned(selectedAlgorithmAsset?.accessDetails?.isOwned)
+    // setIsAlgorithmOwned(selectedAlgorithmAsset?.accessDetails?.isOwned)
     setValidAlgorithmOrderTx(
       selectedAlgorithmAsset?.accessDetails?.validOrderTx
     )
@@ -329,6 +304,13 @@ export default function Compute({
         return
       }
 
+      setComputeStatusText(
+        getComputeFeedback(
+          asset.accessDetails.baseToken?.symbol,
+          asset.accessDetails.datatoken?.symbol,
+          asset.metadata.type
+        )[asset.accessDetails?.type === 'fixed' ? 2 : 1]
+      )
       const datasetOrderTx = await handleComputeOrder(
         web3,
         asset,
@@ -338,65 +320,14 @@ export default function Compute({
         initializedProviderResponse.datasets[0],
         computeEnv.consumerAddress
       )
-      console.log('datasetOrderTx', datasetOrderTx)
-      // if (isOwned) {
-      //   datasetOrderTx = validOrderTx
-      //   LoggerInstance.log('[compute] Dataset owned txId:', validOrderTx)
-      // } else {
-      //   try {
-      //     if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
-      //       setComputeStatusText(
-      //         getComputeFeedback(
-      //           asset.accessDetails.baseToken?.symbol,
-      //           asset.accessDetails.datatoken?.symbol,
-      //           asset.metadata.type
-      //         )[1]
-      //       )
-      //       const tx = await buyDtFromPool(
-      //         asset?.accessDetails,
-      //         accountId,
-      //         web3
-      //       )
-      //       LoggerInstance.log('[compute] Buy dataset dt from pool: ', tx)
-      //       if (!tx) {
-      //         toast.error('Failed to buy datatoken from pool!')
-      //         return
-      //       }
-      //     }
-      //     LoggerInstance.log(
-      //       'dataset orderPriceAndFees: ',
-      //       datasetOrderPriceAndFees
-      //     )
-      //     setComputeStatusText(
-      //       getComputeFeedback(
-      //         asset.accessDetails.baseToken?.symbol,
-      //         asset.accessDetails.datatoken?.symbol,
-      //         asset.metadata.type
-      //       )[asset.accessDetails?.type === 'fixed' ? 3 : 2]
-      //     )
-      //     const orderTx = await order(
-      //       web3,
-      //       asset,
-      //       datasetOrderPriceAndFees,
-      //       accountId,          )
-      //     if (!orderTx) {
-      //       toast.error('Failed to order dataset asset!')
-      //       return
-      //     }
-      //     LoggerInstance.log(
-      //       '[compute] Order dataset: ',
-      //       orderTx.transactionHash
-      //     )
-      //     setIsOwned(true)
-      //     setValidOrderTx(orderTx.transactionHash)
-      //     datasetOrderTx = orderTx.transactionHash
-      //   } catch (e) {
-      //     LoggerInstance.log(e.message)
-      //     toast.error('Failed to order dataset asset!')
-      //     return
-      //   }
-      // }
 
+      setComputeStatusText(
+        getComputeFeedback(
+          asset.accessDetails.baseToken?.symbol,
+          asset.accessDetails.datatoken?.symbol,
+          asset.metadata.type
+        )[asset.accessDetails?.type === 'fixed' ? 2 : 1]
+      )
       const algorithmOrderTx = await handleComputeOrder(
         web3,
         selectedAlgorithmAsset,
@@ -406,91 +337,6 @@ export default function Compute({
         initializedProviderResponse.algorithm,
         computeEnv.consumerAddress
       )
-      console.log('algorithmOrderTx', algorithmOrderTx)
-      // if (isAlgorithmOwned) {
-      //   algorithmOrderTx = validAlgorithmOrderTx
-      //   LoggerInstance.log(
-      //     '[compute] Algorithm owned txId:',
-      //     validAlgorithmOrderTx
-      //   )
-      // } else {
-      //   try {
-      //     if (
-      //       !hasAlgoAssetDatatoken &&
-      //       selectedAlgorithmAsset?.accessDetails?.type === 'dynamic'
-      //     ) {
-      //       setComputeStatusText(
-      //         getComputeFeedback(
-      //           selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
-      //           selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
-      //           selectedAlgorithmAsset.metadata.type
-      //         )[1]
-      //       )
-      //       const tx = await buyDtFromPool(
-      //         selectedAlgorithmAsset?.accessDetails,
-      //         accountId,
-      //         web3
-      //       )
-      //       LoggerInstance.log('[compute] Buy algorithm dt from pool: ', tx)
-      //       if (!tx) {
-      //         toast.error('Failed to buy datatoken from pool!')
-      //         return
-      //       }
-      //     }
-      //     setComputeStatusText(
-      //       getComputeFeedback(
-      //         selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
-      //         selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
-      //         selectedAlgorithmAsset.metadata.type
-      //       )[selectedAlgorithmAsset.accessDetails?.type === 'fixed' ? 3 : 2]
-      //     )
-      //     const orderTx = await order(
-      //       web3,
-      //       selectedAlgorithmAsset,
-      //       algoOrderPriceAndFees,
-      //       accountId,
-      //       computeEnv?.id,
-      //       computeValidUntil,
-      //       computeEnv?.consumerAddress
-      //     )
-      //     if (!orderTx) {
-      //       toast.error('Failed to order algorithm asset!')
-      //       return
-      //     }
-      //     LoggerInstance.log(
-      //       '[compute] Order algorithm: ',
-      //       orderTx.transactionHash
-      //     )
-      //     setIsAlgorithmOwned(true)
-      //     setValidAlgorithmOrderTx(orderTx.transactionHash)
-      //     algorithmOrderTx = orderTx.transactionHash
-      //   } catch (e) {
-      //     LoggerInstance.log(e.message)
-      //     toast.error('Failed to order algorithm asset!')
-      //     return
-      //   }
-      // }
-
-      // if (isOwned && !isProviderFeeValid) {
-      //   const reuseOrderTx = await reuseOrder(
-      //     web3,
-      //     asset,
-      //     accountId,
-      //     validOrderTx,
-      //     computeEnv?.id,
-      //     computeValidUntil
-      //   )
-      //   if (!reuseOrderTx) {
-      //     toast.error('Failed to pay provider fees!')
-      //     return
-      //   }
-      //   LoggerInstance.log(
-      //     '[compute] Reused order: ',
-      //     reuseOrderTx.transactionHash
-      //   )
-      //   datasetOrderTx = reuseOrderTx.transactionHash
-      // }
-
       LoggerInstance.log('[compute] Starting compute job.')
       const computeAsset: ComputeAsset = {
         documentId: asset.id,
@@ -502,7 +348,7 @@ export default function Compute({
         publishAlgorithmLog: true,
         publishOutput: true
       }
-      setComputeStatusText(getComputeFeedback()[4])
+      setComputeStatusText(getComputeFeedback()[3])
       const response = await ProviderInstance.computeStart(
         asset.services[0].serviceEndpoint,
         web3,

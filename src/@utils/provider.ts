@@ -20,13 +20,13 @@ export async function initializeProviderForCompute(
 ): Promise<ProviderComputeInitializeResults> {
   const computeAsset: ComputeAsset = {
     documentId: dataset.id,
-    serviceId: dataset.services[0].id
-    // transferTxId: dataset.accessDetails.validOrderTx
+    serviceId: dataset.services[0].id,
+    transferTxId: dataset.accessDetails.validOrderTx
   }
   const computeAlgo: ComputeAlgorithm = {
     documentId: algorithm.id,
-    serviceId: algorithm.services[0].id
-    // transferTxId: algorithm.accessDetails.validOrderTx
+    serviceId: algorithm.services[0].id,
+    transferTxId: algorithm.accessDetails.validOrderTx
   }
 
   const validUntil = getValidUntilTime(

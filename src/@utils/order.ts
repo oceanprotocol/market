@@ -5,7 +5,6 @@ import {
   LoggerInstance,
   OrderParams,
   ProviderComputeInitialize,
-  ProviderComputeInitializeResults,
   ProviderFees,
   ProviderInstance
 } from '@oceanprotocol/lib'
@@ -135,8 +134,6 @@ export async function reuseOrder(
   validOrderTx: string,
   providerFees?: ProviderFees
 ): Promise<TransactionReceipt> {
-  LoggerInstance.log('[compute] reuseOrder', providerFees)
-
   const datatoken = new Datatoken(web3)
   const initializeData =
     !providerFees &&
@@ -147,23 +144,21 @@ export async function reuseOrder(
       accountId,
       asset.services[0].serviceEndpoint
     ))
-  LoggerInstance.log('[compute] initializeData', initializeData)
 
   if (
     providerFees?.providerFeeAmount ||
-    initializeData.providerFee.providerFeeToken
+    initializeData?.providerFee?.providerFeeAmount
   ) {
     const txApprove = await approve(
       web3,
       accountId,
       providerFees.providerFeeToken ||
-        initializeData.providerFee.providerFeeToken,
+        initializeData.providerFee.providerFeeAmount,
       asset.accessDetails.datatoken.address,
-      providerFees.providerFeeAmount,
+      providerFees.providerFeeAmount ||
+        initializeData.providerFee.providerFeeToken,
       false
     )
-
-    LoggerInstance.log('[compute] txApprove', txApprove)
     if (!txApprove) {
       return
     }
@@ -201,16 +196,15 @@ export async function handleComputeOrder(
   initializeData: ProviderComputeInitialize,
   computeConsumerAddress?: string
 ): Promise<string> {
-  LoggerInstance.log('[compute] handleComputeOrder asset: ', asset)
   LoggerInstance.log(
-    '[compute] handleComputeOrder orderPriceAndFees: ',
-    orderPriceAndFees
+    '[compute] Handle compute order for asset type: ',
+    asset.metadata.type
   )
   if (initializeData.validOrder && !initializeData.providerFee) {
     LoggerInstance.log('[compute] Has valid order: ', initializeData.validOrder)
     return initializeData.validOrder
   } else if (initializeData.validOrder) {
-    LoggerInstance.log('[compute] Call reuse order', initializeData)
+    LoggerInstance.log('[compute] Calling reuseOrder ...', initializeData)
     const tx = await reuseOrder(
       web3,
       asset,
@@ -218,12 +212,13 @@ export async function handleComputeOrder(
       initializeData.validOrder,
       initializeData.providerFee
     )
+    LoggerInstance.log('[compute] Reused order:', tx.transactionHash)
     return tx.transactionHash
   } else {
-    LoggerInstance.log('[compute] Call order', initializeData)
+    LoggerInstance.log('[compute] Calling order ...', initializeData)
     if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
       const poolTx = await buyDtFromPool(asset?.accessDetails, accountId, web3)
-      LoggerInstance.log('[compute] Buy dt from pool: ', poolTx)
+      LoggerInstance.log('[compute] Buoght dt from pool: ', poolTx)
       if (!poolTx) {
         toast.error('Failed to buy datatoken from pool!')
         return
@@ -237,6 +232,7 @@ export async function handleComputeOrder(
       initializeData.providerFee,
       computeConsumerAddress
     )
+    LoggerInstance.log('[compute] Asset ordered:', tx.transactionHash)
     return tx.transactionHash
   }
 }
