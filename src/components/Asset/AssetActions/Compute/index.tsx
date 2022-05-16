@@ -323,10 +323,10 @@ export default function Compute({
 
       setComputeStatusText(
         getComputeFeedback(
-          asset.accessDetails.baseToken?.symbol,
-          asset.accessDetails.datatoken?.symbol,
-          asset.metadata.type
-        )[asset.accessDetails?.type === 'fixed' ? 2 : 1]
+          selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
+          selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
+          selectedAlgorithmAsset.metadata.type
+        )[selectedAlgorithmAsset.accessDetails?.type === 'fixed' ? 2 : 1]
       )
       const algorithmOrderTx = await handleComputeOrder(
         web3,
