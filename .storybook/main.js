@@ -47,6 +47,14 @@ module.exports = {
     })
     config.resolve.fallback = fallback
 
+    config.plugins = (config.plugins || []).concat([
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+        Buffer: ['buffer', 'Buffer']
+      })
+    ])
+    return config
+
     return config
   }
 }
