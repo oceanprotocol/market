@@ -14,21 +14,26 @@ module.exports = {
     ]
 
     // Mimic next.config.js webpack config
-    config.module.rules.push(
-      {
-        test: /\.svg$/,
-        issuer: /\.(tsx|ts)$/,
-        use: [
-          { loader: require.resolve('@svgr/webpack'), options: { icon: true } }
-        ]
-      },
-      {
-        test: /\.gif$/,
-        // yay for webpack 5
-        // https://webpack.js.org/guides/asset-management/#loading-images
-        type: 'asset/resource'
-      }
+    config.module.rules.push({
+      test: /\.gif$/,
+      // yay for webpack 5
+      // https://webpack.js.org/guides/asset-management/#loading-images
+      type: 'asset/resource'
+    })
+
+    // Modify storybook's file-loader rule to avoid conflicts with svgr
+    const fileLoaderRule = config.module.rules.find(
+      (rule) => rule.test && rule.test.test('.svg')
     )
+    fileLoaderRule.exclude = /\.svg$/
+
+    config.module.rules.push({
+      test: /\.svg$/,
+      issuer: /\.(tsx|ts)$/,
+      use: [
+        { loader: require.resolve('@svgr/webpack'), options: { icon: true } }
+      ]
+    })
 
     const fallback = config.resolve.fallback || {}
     Object.assign(fallback, {
