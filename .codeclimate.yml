@@ -18,12 +18,13 @@ checks:
   method-lines:
     config:
       threshold: 250
+  # https://docs.codeclimate.com/docs/default-analysis-configuration#per-language-mass-threshold-defaults
   similar-code:
     config:
-      threshold: 4
+      threshold: 55
   identical-code:
     config:
-      threshold: 3
+      threshold: 55
 
 exclude_patterns:
   - 'config/'
