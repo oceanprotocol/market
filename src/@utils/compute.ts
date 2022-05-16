@@ -281,11 +281,11 @@ export async function getComputeJobs(
   )
 
   let tokenOrders: TokenOrder[] = []
-  results.map((result) => {
+  results.map((result) =>
     result.orders.forEach((tokenOrder: TokenOrder) =>
       tokenOrders.push(tokenOrder)
     )
-  })
+  )
   if (tokenOrders.length === 0) {
     computeResult.isLoaded = true
     return computeResult

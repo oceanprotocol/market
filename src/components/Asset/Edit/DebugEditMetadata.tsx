@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react'
 import DebugOutput from '@shared/DebugOutput'
 import { MetadataEditForm } from './_types'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
+import { sanitizeUrl } from '@utils/url'
 
 export default function DebugEditMetadata({
   values,
@@ -12,7 +13,8 @@ export default function DebugEditMetadata({
   asset: Asset
 }): ReactElement {
   const linksTransformed = values.links?.length &&
-    values.links[0].valid && [values.links[0].url.replace('javascript:', '')]
+    values.links[0].valid && [sanitizeUrl(values.links[0].url)]
+
   const newMetadata: Metadata = {
     ...asset?.metadata,
     name: values.name,

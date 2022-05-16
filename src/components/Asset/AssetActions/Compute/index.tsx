@@ -10,7 +10,8 @@ import {
   ComputeEnvironment,
   LoggerInstance,
   ComputeAlgorithm,
-  ComputeOutput
+  ComputeOutput,
+  ProviderComputeInitializeResults
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -27,28 +28,26 @@ import {
   isOrderable,
   getAlgorithmAssetSelectionList,
   getAlgorithmsForAsset,
-  getValidUntilTime,
-  getComputeEnviroment,
-  checkComputeResourcesValidity
+  getComputeEnviroment
 } from '@utils/compute'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { useIsMounted } from '@hooks/useIsMounted'
+// import { useIsMounted } from '@hooks/useIsMounted'
 import { Decimal } from 'decimal.js'
 import { useAbortController } from '@hooks/useAbortController'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
-import { buyDtFromPool } from '@utils/pool'
-import { order, reuseOrder } from '@utils/order'
+import { handleComputeOrder } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getComputeFeedback } from '@utils/feedback'
 import { usePool } from '@context/Pool'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import { getPoolData } from '@context/Pool/_utils'
 import { getDummyWeb3 } from '@utils/web3'
+import { initializeProviderForCompute } from '@utils/provider'
 
 export default function Compute({
   asset,
@@ -78,13 +77,13 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [algorithmDTBalance, setAlgorithmDTBalance] = useState<string>()
 
-  const [isOwned, setIsOwned] = useState(false)
+  // const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-  const [isAlgorithmOwned, setIsAlgorithmOwned] = useState(false)
+  // const [isAlgorithmOwned, setIsAlgorithmOwned] = useState(false)
   const [validAlgorithmOrderTx, setValidAlgorithmOrderTx] = useState('')
 
   const hasDatatoken = Number(dtBalance) >= 1
-  const isMounted = useIsMounted()
+  // const isMounted = useIsMounted()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { poolData } = usePool()
   const newCancelToken = useCancelToken()
@@ -92,7 +91,9 @@ export default function Compute({
   const [isAlgoConsumablePrice, setIsAlgoConsumablePrice] = useState(true)
   const [computeStatusText, setComputeStatusText] = useState('')
   const [computeEnv, setComputeEnv] = useState<ComputeEnvironment>()
-  const [computeValidUntil, setComputeValidUntil] = useState<number>()
+  const [initializedProviderResponse, setInitializedProviderResponse] =
+    useState<ProviderComputeInitializeResults>()
+  // const [computeValidUntil, setComputeValidUntil] = useState<number>()
   const [datasetOrderPriceAndFees, setDatasetOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   const [isRequestingDataseOrderPrice, setIsRequestingDataseOrderPrice] =
@@ -101,7 +102,7 @@ export default function Compute({
     useState<OrderPriceAndFees>()
   const [isRequestingAlgoOrderPrice, setIsRequestingAlgoOrderPrice] =
     useState(false)
-  const [isProviderFeeValid, setIsProviderFeeValid] = useState(false)
+  // const [isProviderFeeValid, setIsProviderFeeValid] = useState(false)
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
@@ -125,24 +126,18 @@ export default function Compute({
   async function initPriceAndFees() {
     const computeEnv = await getComputeEnviroment(asset)
     setComputeEnv(computeEnv)
-    setIsProviderFeeValid(
-      await checkComputeResourcesValidity(
-        asset,
-        accountId,
-        computeEnv?.maxJobDuration,
-        asset.services[0].timeout,
-        selectedAlgorithmAsset.services[0].timeout
-      )
+    const initializedProvider = await initializeProviderForCompute(
+      asset,
+      selectedAlgorithmAsset,
+      accountId,
+      computeEnv
     )
-    const validUntil = getValidUntilTime(
-      computeEnv?.maxJobDuration,
-      asset.services[0].timeout,
-      selectedAlgorithmAsset.services[0].timeout
-    )
-    setComputeValidUntil(validUntil)
+    console.log('initializedProvider == ', initializedProvider)
+    setInitializedProviderResponse(initializedProvider)
     if (
-      asset?.accessDetails?.addressOrId !== ZERO_ADDRESS ||
-      asset?.accessDetails?.type !== 'free'
+      asset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
+      asset?.accessDetails?.type !== 'free' &&
+      initializedProvider.datasets[0].providerFee
     ) {
       setIsRequestingDataseOrderPrice(true)
       setComputeStatusText(
@@ -172,10 +167,9 @@ export default function Compute({
         asset,
         ZERO_ADDRESS,
         poolParams,
-        computeEnv?.id,
-        validUntil
+        initializedProvider.datasets[0].providerFee
       )
-      console.log('datasetPriceAndFees price and fees', datasetPriceAndFees)
+      console.log('datasetPriceAndFees', datasetPriceAndFees)
       if (!datasetPriceAndFees) {
         setError('Error setting dataset price and fees!')
         toast.error('Error setting dataset price and fees!')
@@ -186,8 +180,9 @@ export default function Compute({
     }
 
     if (
-      selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS ||
-      selectedAlgorithmAsset?.accessDetails?.type !== 'free'
+      selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
+      selectedAlgorithmAsset?.accessDetails?.type !== 'free' &&
+      initializedProvider.algorithm.providerFee
     ) {
       setIsRequestingAlgoOrderPrice(true)
       setComputeStatusText(
@@ -223,15 +218,14 @@ export default function Compute({
         selectedAlgorithmAsset,
         ZERO_ADDRESS,
         algoPoolParams,
-        computeEnv?.id,
-        validUntil
+        initializedProvider.algorithm.providerFee
       )
+      console.log('algorithmOrderPriceAndFees', algorithmOrderPriceAndFees)
       if (!algorithmOrderPriceAndFees) {
         setError('Error setting algorithm price and fees!')
         toast.error('Error setting algorithm price and fees!')
         return
       }
-      console.log('algo price and fees', algorithmOrderPriceAndFees)
       setAlgoOrderPriceAndFees(algorithmOrderPriceAndFees)
       setIsRequestingAlgoOrderPrice(false)
     }
@@ -241,16 +235,15 @@ export default function Compute({
     if (!asset?.accessDetails || !accountId) return
 
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
-    setIsOwned(asset?.accessDetails?.isOwned)
+    // setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
   }, [asset?.accessDetails])
 
   useEffect(() => {
-    console.log('selcted algo', selectedAlgorithmAsset)
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
 
     setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
-    setIsAlgorithmOwned(selectedAlgorithmAsset?.accessDetails?.isOwned)
+    // setIsAlgorithmOwned(selectedAlgorithmAsset?.accessDetails?.isOwned)
     setValidAlgorithmOrderTx(
       selectedAlgorithmAsset?.accessDetails?.validOrderTx
     )
@@ -311,154 +304,39 @@ export default function Compute({
         return
       }
 
-      let datasetOrderTx
-      if (isOwned) {
-        datasetOrderTx = validOrderTx
-        LoggerInstance.log('[compute] Dataset owned txId:', validOrderTx)
-      } else {
-        try {
-          if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
-            setComputeStatusText(
-              getComputeFeedback(
-                asset.accessDetails.baseToken?.symbol,
-                asset.accessDetails.datatoken?.symbol,
-                asset.metadata.type
-              )[1]
-            )
-            const tx = await buyDtFromPool(
-              asset?.accessDetails,
-              accountId,
-              web3
-            )
-            LoggerInstance.log('[compute] Buy dataset dt from pool: ', tx)
-            if (!tx) {
-              toast.error('Failed to buy datatoken from pool!')
-              return
-            }
-          }
-          LoggerInstance.log(
-            'dataset orderPriceAndFees: ',
-            datasetOrderPriceAndFees
-          )
-          setComputeStatusText(
-            getComputeFeedback(
-              asset.accessDetails.baseToken?.symbol,
-              asset.accessDetails.datatoken?.symbol,
-              asset.metadata.type
-            )[asset.accessDetails?.type === 'fixed' ? 3 : 2]
-          )
-          const orderTx = await order(
-            web3,
-            asset,
-            datasetOrderPriceAndFees,
-            accountId,
-            computeEnv?.id,
-            computeValidUntil,
-            computeEnv?.consumerAddress
-          )
-          if (!orderTx) {
-            toast.error('Failed to order dataset asset!')
-            return
-          }
-          LoggerInstance.log(
-            '[compute] Order dataset: ',
-            orderTx.transactionHash
-          )
-          setIsOwned(true)
-          setValidOrderTx(orderTx.transactionHash)
-          datasetOrderTx = orderTx.transactionHash
-        } catch (e) {
-          LoggerInstance.log(e.message)
-          toast.error('Failed to order dataset asset!')
-          return
-        }
-      }
+      setComputeStatusText(
+        getComputeFeedback(
+          asset.accessDetails.baseToken?.symbol,
+          asset.accessDetails.datatoken?.symbol,
+          asset.metadata.type
+        )[asset.accessDetails?.type === 'fixed' ? 2 : 1]
+      )
+      const datasetOrderTx = await handleComputeOrder(
+        web3,
+        asset,
+        datasetOrderPriceAndFees,
+        accountId,
+        hasDatatoken,
+        initializedProviderResponse.datasets[0],
+        computeEnv.consumerAddress
+      )
 
-      let algorithmOrderTx
-      if (isAlgorithmOwned) {
-        algorithmOrderTx = validAlgorithmOrderTx
-        LoggerInstance.log(
-          '[compute] Algorithm owned txId:',
-          validAlgorithmOrderTx
-        )
-      } else {
-        try {
-          if (
-            !hasAlgoAssetDatatoken &&
-            selectedAlgorithmAsset?.accessDetails?.type === 'dynamic'
-          ) {
-            setComputeStatusText(
-              getComputeFeedback(
-                selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
-                selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
-                selectedAlgorithmAsset.metadata.type
-              )[1]
-            )
-            const tx = await buyDtFromPool(
-              selectedAlgorithmAsset?.accessDetails,
-              accountId,
-              web3
-            )
-            LoggerInstance.log('[compute] Buy algorithm dt from pool: ', tx)
-            if (!tx) {
-              toast.error('Failed to buy datatoken from pool!')
-              return
-            }
-          }
-          setComputeStatusText(
-            getComputeFeedback(
-              selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
-              selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
-              selectedAlgorithmAsset.metadata.type
-            )[selectedAlgorithmAsset.accessDetails?.type === 'fixed' ? 3 : 2]
-          )
-          const orderTx = await order(
-            web3,
-            selectedAlgorithmAsset,
-            algoOrderPriceAndFees,
-            accountId,
-            computeEnv?.id,
-            computeValidUntil,
-            computeEnv?.consumerAddress
-          )
-          if (!orderTx) {
-            toast.error('Failed to order algorithm asset!')
-            return
-          }
-          LoggerInstance.log(
-            '[compute] Order algorithm: ',
-            orderTx.transactionHash
-          )
-          setIsAlgorithmOwned(true)
-          setValidAlgorithmOrderTx(orderTx.transactionHash)
-          algorithmOrderTx = orderTx.transactionHash
-        } catch (e) {
-          LoggerInstance.log(e.message)
-          toast.error('Failed to order algorithm asset!')
-          return
-        }
-      }
-
-      if (isOwned && !isProviderFeeValid) {
-        const reuseOrderTx = await reuseOrder(
-          web3,
-          asset,
-          accountId,
-          validOrderTx,
-          computeEnv?.id,
-          computeValidUntil
-        )
-        if (!reuseOrderTx) {
-          toast.error('Failed to pay provider fees!')
-          return
-        }
-        LoggerInstance.log(
-          '[compute] Reused order: ',
-          reuseOrderTx.transactionHash
-        )
-        datasetOrderTx = reuseOrderTx.transactionHash
-      }
-
+      setComputeStatusText(
+        getComputeFeedback(
+          selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
+          selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
+          selectedAlgorithmAsset.metadata.type
+        )[selectedAlgorithmAsset.accessDetails?.type === 'fixed' ? 2 : 1]
+      )
+      const algorithmOrderTx = await handleComputeOrder(
+        web3,
+        selectedAlgorithmAsset,
+        algoOrderPriceAndFees,
+        accountId,
+        hasAlgoAssetDatatoken,
+        initializedProviderResponse.algorithm,
+        computeEnv.consumerAddress
+      )
       LoggerInstance.log('[compute] Starting compute job.')
       const computeAsset: ComputeAsset = {
         documentId: asset.id,
@@ -470,7 +348,7 @@ export default function Compute({
         publishAlgorithmLog: true,
         publishOutput: true
       }
-      setComputeStatusText(getComputeFeedback()[4])
+      setComputeStatusText(getComputeFeedback()[3])
       const response = await ProviderInstance.computeStart(
         asset.services[0].serviceEndpoint,
         web3,
@@ -488,6 +366,7 @@ export default function Compute({
       }
       LoggerInstance.log('[compute] Starting compute job response: ', response)
       setIsPublished(true)
+      initPriceAndFees()
     } catch (error) {
       setError('Failed to start job!')
       LoggerInstance.error('[compute] Failed to start job: ', error.message)

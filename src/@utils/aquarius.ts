@@ -163,7 +163,7 @@ export async function getAssetsFromDidList(
     if (!(didList.length > 0)) return
 
     const baseParams = {
-      chainIds: chainIds,
+      chainIds,
       filters: [getFilterTerm('_id', didList)],
       ignorePurgatory: true
     } as BaseQueryParams
@@ -185,7 +185,7 @@ export async function getAssetsFromDtList(
     if (!(dtList.length > 0)) return
 
     const baseParams = {
-      chainIds: chainIds,
+      chainIds,
       filters: [getFilterTerm('services.datatokenAddress', dtList)],
       ignorePurgatory: true
     } as BaseQueryParams

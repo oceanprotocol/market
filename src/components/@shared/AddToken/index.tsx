@@ -26,7 +26,7 @@ export default function AddToken({
 
   const styleClasses = cx({
     button: true,
-    minimal: minimal,
+    minimal,
     [className]: className
   })
 

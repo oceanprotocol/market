@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import DataTable, { IDataTableProps } from 'react-data-table-component'
 import Loader from './Loader'
 import Pagination from '@shared/Pagination'
@@ -47,7 +47,7 @@ export default function Table({
       noDataComponent={<Empty message={emptyMessage} />}
       progressPending={isLoading}
       progressComponent={<Loader />}
-      paginationComponent={Pagination}
+      paginationComponent={Pagination as unknown as ReactNode}
       defaultSortField={sortField}
       defaultSortAsc={sortAsc}
       {...props}
