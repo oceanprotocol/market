@@ -14,21 +14,22 @@ const customJestConfig = {
   moduleDirectories: ['node_modules', '<rootDir>/src'],
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
+    '\\.svg': '<rootDir>/.jest/__mocks__/svgrMock.tsx',
     // '^@/components/(.*)$': '<rootDir>/components/$1',
     '@shared(.*)$': '<rootDir>/src/components/@shared/$1',
     '@hooks/(.*)$': '<rootDir>/src/@hooks/$1',
     '@context/(.*)$': '<rootDir>/src/@context/$1',
     '@images/(.*)$': '<rootDir>/src/@images/$1',
     '@utils/(.*)$': '<rootDir>/src/@utils/$1',
-    '@content/(.*)$': '<rootDir>/@content/$1',
-    '\\.svg': '<rootDir>/.jest/__mocks__/svgrMock.tsx'
+    '@content/(.*)$': '<rootDir>/@content/$1'
   },
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.{stories,test}.{ts,tsx}'
   ],
-  testPathIgnorePatterns: ['node_modules', '\\.cache', '.next', 'coverage']
+  testPathIgnorePatterns: ['node_modules', '\\.cache', '.next', 'coverage'],
+  transformIgnorePatterns: ['/src/@images/']
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
