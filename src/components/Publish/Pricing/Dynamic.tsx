@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Alert from '@shared/atoms/Alert'
 import FormHelp from '@shared/FormInput/Help'
 import Tooltip from '@shared/atoms/Tooltip'
 import Coin from './Coin'
@@ -16,7 +15,7 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form
-  const { values, setFieldError }: FormikContextType<FormPublishData> =
+  const { values, setFieldError, errors }: FormikContextType<FormPublishData> =
     useFormikContext()
   const { dataTokenOptions } = values.services[0]
 
@@ -45,21 +44,23 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
     setFirstPrice(`${tokenAmountIn}`)
   }, [swapFee, weightOnOcean, weightOnDataToken, amountDataToken, amountOcean])
 
-  // Check: account, network & insufficient balance
+  // Check: account & insufficient balance
   useEffect(() => {
     if (!accountId) {
       setFieldError(
         'pricing.amountOcean',
         'No account connected. Please connect your Web3 wallet.'
       )
-    } else if (Number(balance.ocean) < Number(amountOcean)) {
+    }
+
+    if (accountId && Number(balance.ocean) < Number(amountOcean)) {
       setFieldError(
         'pricing.amountOcean',
         `Insufficient balance. You need at least ${amountOcean} OCEAN.`
       )
-    } else {
-      setFieldError('pricing.amountOcean', undefined)
     }
+
+    setFieldError('pricing.amountOcean', undefined)
   }, [amountOcean, networkId, accountId, balance, setFieldError])
 
   return (
