@@ -16,7 +16,8 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form
-  const { values }: FormikContextType<FormPublishData> = useFormikContext()
+  const { values, setFieldError }: FormikContextType<FormPublishData> =
+    useFormikContext()
   const { dataTokenOptions } = values.services[0]
 
   const {
@@ -26,8 +27,6 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
     amountDataToken,
     amountOcean
   } = values.pricing
-
-  const [error, setError] = useState<string>()
 
   // Calculate firstPrice whenever user values change
   useEffect(() => {
@@ -49,13 +48,19 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
   // Check: account, network & insufficient balance
   useEffect(() => {
     if (!accountId) {
-      setError(`No account connected. Please connect your Web3 wallet.`)
+      setFieldError(
+        'pricing.amountOcean',
+        'No account connected. Please connect your Web3 wallet.'
+      )
     } else if (Number(balance.ocean) < Number(amountOcean)) {
-      setError(`Insufficient balance. You need at least ${amountOcean} OCEAN.`)
+      setFieldError(
+        'pricing.amountOcean',
+        `Insufficient balance. You need at least ${amountOcean} OCEAN.`
+      )
     } else {
-      setError(undefined)
+      setFieldError('pricing.amountOcean', undefined)
     }
-  }, [amountOcean, networkId, accountId, balance])
+  }, [amountOcean, networkId, accountId, balance, setFieldError])
 
   return (
     <>
@@ -90,12 +95,6 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
       </div>
 
       <Fees tooltips={content.tooltips} pricingType="dynamic" />
-
-      {error && (
-        <div className={styles.alertArea}>
-          <Alert text={error} state="error" />
-        </div>
-      )}
     </>
   )
 }

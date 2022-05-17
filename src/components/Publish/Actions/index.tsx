@@ -69,21 +69,6 @@ export default function Actions({
     )
   }, [errors, values.user.stepCurrent])
 
-  useEffect(() => {
-    values.user.stepCurrent === 3 &&
-    (!accountId || // missing user's account
-      errors.pricing !== undefined || // recheck for errors on pricing. This to avoid having 0 as valid input
-      Number(balance.ocean) < Number(values.pricing.amountOcean)) // the user's balance is insufficient
-      ? setContinueDisabled(true)
-      : setContinueDisabled(false)
-  }, [
-    accountId,
-    balance,
-    errors.pricing,
-    values.pricing.amountOcean,
-    values.user.stepCurrent
-  ])
-
   return (
     <footer className={styles.actions}>
       {did ? (
