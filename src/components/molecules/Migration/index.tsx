@@ -93,7 +93,7 @@ export default function Migration(): ReactElement {
   ): { title: string; message: string; action: MigrationAction } {
     const poolShares = isNaN(Number(_poolShares)) ? 0 : Number(_poolShares)
     const liquidityProviderContent = content.liquidityProvider
-    console.log('## Migration Status', status)
+
     if (status === MigrationStatus.COMPLETED) {
       const { title, text } = liquidityProviderContent.migrationComplete
       return { title, message: text, action: MigrationAction.NONE }
