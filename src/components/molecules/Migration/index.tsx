@@ -93,13 +93,8 @@ export default function Migration(): ReactElement {
   ): { title: string; message: string; action: MigrationAction } {
     const poolShares = isNaN(Number(_poolShares)) ? 0 : Number(_poolShares)
     const liquidityProviderContent = content.liquidityProvider
-    console.log('## Migration Status', status, MigrationStatus.COMPLETED)
+    console.log('## Migration Status', status)
     if (status === MigrationStatus.COMPLETED) {
-      console.log(
-        'status === MigrationStatus.COMPLETED',
-        status,
-        MigrationStatus.COMPLETED
-      )
       const { title, text } = liquidityProviderContent.migrationComplete
       return { title, message: text, action: MigrationAction.NONE }
     }
@@ -117,7 +112,7 @@ export default function Migration(): ReactElement {
       return {
         title,
         message: text + getLockedSharesMessage() + getRemainingBlocksMessage(),
-        action: MigrationAction.LOCK_SHARES
+        action: MigrationAction.NONE
       }
     }
 
@@ -148,6 +143,7 @@ export default function Migration(): ReactElement {
           }
         }
       }
+      console.log('status before get title and text', status)
       const { title, message, action } =
         getMessageAndActionForLiquidityProvider(
           status,
