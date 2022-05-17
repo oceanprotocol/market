@@ -131,7 +131,8 @@ export const validationSchema: Yup.SchemaOf<any> = Yup.object().shape({
   user: Yup.object().shape({
     stepCurrent: Yup.number(),
     chainId: Yup.number().required('Required'),
-    accountId: Yup.string().required('Required')
+    accountId: Yup.string().required('Required'),
+    hasBalance: Yup.bool().isTrue('Insufficient balance.').required('Required')
   }),
   metadata: Yup.object().shape(validationMetadata),
   services: Yup.array().of(Yup.object().shape(validationService)),

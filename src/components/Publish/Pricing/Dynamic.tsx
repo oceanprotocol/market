@@ -50,10 +50,13 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
   useEffect(() => {
     if (!accountId) {
       setError(`No account connected. Please connect your Web3 wallet.`)
+      values.user.hasBalance = false
     } else if (Number(balance.ocean) < Number(amountOcean)) {
       setError(`Insufficient balance. You need at least ${amountOcean} OCEAN.`)
+      values.user.hasBalance = false
     } else {
       setError(undefined)
+      values.user.hasBalance = true
     }
   }, [amountOcean, networkId, accountId, balance])
 
