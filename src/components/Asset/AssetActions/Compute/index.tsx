@@ -132,14 +132,12 @@ export default function Compute({
       accountId,
       computeEnv
     )
-    console.log('initializedProvider == ', initializedProvider)
     setInitializedProviderResponse(initializedProvider)
     if (
       asset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
       asset?.accessDetails?.type !== 'free' &&
       initializedProvider.datasets[0].providerFee
     ) {
-      setIsRequestingDataseOrderPrice(true)
       setComputeStatusText(
         getComputeFeedback(
           asset.accessDetails.baseToken?.symbol,
@@ -169,14 +167,12 @@ export default function Compute({
         poolParams,
         initializedProvider.datasets[0].providerFee
       )
-      console.log('datasetPriceAndFees', datasetPriceAndFees)
       if (!datasetPriceAndFees) {
         setError('Error setting dataset price and fees!')
         toast.error('Error setting dataset price and fees!')
         return
       }
       setDatasetOrderPriceAndFees(datasetPriceAndFees)
-      setIsRequestingDataseOrderPrice(false)
     }
 
     if (
@@ -184,7 +180,6 @@ export default function Compute({
       selectedAlgorithmAsset?.accessDetails?.type !== 'free' &&
       initializedProvider.algorithm.providerFee
     ) {
-      setIsRequestingAlgoOrderPrice(true)
       setComputeStatusText(
         getComputeFeedback(
           selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol,
@@ -227,7 +222,6 @@ export default function Compute({
         return
       }
       setAlgoOrderPriceAndFees(algorithmOrderPriceAndFees)
-      setIsRequestingAlgoOrderPrice(false)
     }
   }
 
@@ -242,6 +236,7 @@ export default function Compute({
   useEffect(() => {
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
 
+    setIsRequestingAlgoOrderPrice(true)
     setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
     // setIsAlgorithmOwned(selectedAlgorithmAsset?.accessDetails?.isOwned)
     setValidAlgorithmOrderTx(
@@ -249,9 +244,9 @@ export default function Compute({
     )
 
     async function initSelectedAlgo() {
-      console.log('selcted algo', selectedAlgorithmAsset)
       await checkAssetDTBalance(selectedAlgorithmAsset)
       await initPriceAndFees()
+      setIsRequestingAlgoOrderPrice(false)
     }
 
     initSelectedAlgo()
