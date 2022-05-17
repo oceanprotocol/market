@@ -18,10 +18,6 @@ const query = graphql`
         node {
           childContentJson {
             liquidityProvider {
-              migrationNotStarted {
-                title
-                text
-              }
               migrationStarted {
                 title
                 text
@@ -97,20 +93,17 @@ export default function Migration(): ReactElement {
   ): { title: string; message: string; action: MigrationAction } {
     const poolShares = isNaN(Number(_poolShares)) ? 0 : Number(_poolShares)
     const liquidityProviderContent = content.liquidityProvider
+    console.log('## Migration Status', status, MigrationStatus.COMPLETED)
     if (status === MigrationStatus.COMPLETED) {
+      console.log(
+        'status === MigrationStatus.COMPLETED',
+        status,
+        MigrationStatus.COMPLETED
+      )
       const { title, text } = liquidityProviderContent.migrationComplete
       return { title, message: text, action: MigrationAction.NONE }
     }
-    if (status === MigrationStatus.NOT_STARTED) {
-      const { title, text } = liquidityProviderContent.migrationNotStarted
-      return { title, message: text, action: MigrationAction.NONE }
-    }
-    if (
-      status !== MigrationStatus.NOT_STARTED &&
-      !deadlinePassed &&
-      poolShares > 0 &&
-      canAddShares
-    ) {
+    if (!deadlinePassed && poolShares > 0 && canAddShares) {
       const { title, text } = liquidityProviderContent.migrationStarted
       return {
         title,
@@ -119,11 +112,7 @@ export default function Migration(): ReactElement {
       }
     }
 
-    if (
-      status !== MigrationStatus.NOT_STARTED &&
-      !deadlinePassed &&
-      poolShares <= 0
-    ) {
+    if (!deadlinePassed && poolShares <= 0) {
       const { title, text } = liquidityProviderContent.poolSharesLocked
       return {
         title,
@@ -132,11 +121,7 @@ export default function Migration(): ReactElement {
       }
     }
 
-    if (
-      status !== MigrationStatus.NOT_STARTED &&
-      (deadlinePassed || thresholdMet) &&
-      !canAddShares
-    ) {
+    if ((deadlinePassed || thresholdMet) && !canAddShares) {
       const { title, text } = liquidityProviderContent.deadlineMetThresholdMet
       return {
         title,
@@ -144,54 +129,36 @@ export default function Migration(): ReactElement {
         action: MigrationAction.NONE
       }
     }
-
-    return {
-      title: 'No migration information available',
-      message: '',
-      action: MigrationAction.NONE
-    }
-  }
-
-  function setTitleMessageAction(
-    title: string,
-    message: string,
-    action: MigrationAction
-  ) {
-    setTitle(title)
-    setMessage(message)
-    setAction(action)
-  }
-
-  function switchMessageAndAction(
-    status: string,
-    thresholdMet: boolean,
-    deadlinePassed: boolean,
-    poolShares: string
-  ) {
-    const { title, message, action } = getMessageAndActionForLiquidityProvider(
-      status,
-      thresholdMet,
-      deadlinePassed,
-      poolShares
-    )
-    return setTitleMessageAction(title, message, action)
   }
 
   useEffect(() => {
     if (!accountId) return
     const poolSharesNumber = isNaN(Number(poolShares)) ? 0 : Number(poolShares)
-    if (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0')) {
+    if (
+      (status === (MigrationStatus.ALLOWED || MigrationStatus.COMPLETED) &&
+        poolSharesNumber > 0) ||
+      (lockedSharesV3 && lockedSharesV3 !== '0')
+    ) {
       setShowMigration(true)
-    }
-    // Check if user has already locked liquidity
-    if (poolShareOwners) {
-      for (let i = 0; i < poolShareOwners.length; i++) {
-        if (accountId === poolShareOwners[i]) {
-          setSharesLocked(true)
+      // Check if user has already locked liquidity
+      if (poolShareOwners) {
+        for (let i = 0; i < poolShareOwners.length; i++) {
+          if (accountId === poolShareOwners[i]) {
+            setSharesLocked(true)
+          }
         }
       }
+      const { title, message, action } =
+        getMessageAndActionForLiquidityProvider(
+          status,
+          thresholdMet,
+          deadlinePassed,
+          poolShares
+        )
+      setTitle(title)
+      setMessage(message)
+      setAction(action)
     }
-    switchMessageAndAction(status, thresholdMet, deadlinePassed, poolShares)
   }, [
     accountId,
     poolShares,
