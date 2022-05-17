@@ -1,9 +1,5 @@
 {
   "liquidityProvider": {
-    "migrationNotStarted": {
-      "title": "This Pool May be Migrated to V4",
-      "text": "Nobody has started a pool migration from V3 to V4, but they may decide to do so soon. \n\nYou can check on this page to see if the migration has started."
-    },
     "migrationStarted": {
       "title": "Lock Your Pool Shares",
       "text": "**The migration of this pool from V3 to V4 is in progress** \n\nYou can now lock your liquidity pool tokens in the smart contract to ensure you will receive tokens from the new V4 pool when it is created.\n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
