@@ -1,6 +1,6 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import Button, { ButtonProps } from '@shared/atoms/Button'
+import Button from '@shared/atoms/Button'
 import Modal, { ModalProps } from '@shared/atoms/Modal'
 import { useArgs } from '@storybook/client-api'
 
