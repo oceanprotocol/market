@@ -26,7 +26,6 @@ export interface FormPublishData {
     stepCurrent: number
     accountId: string
     chainId: number
-    hasBalance: boolean
   }
   metadata: {
     nft: NftMetadata

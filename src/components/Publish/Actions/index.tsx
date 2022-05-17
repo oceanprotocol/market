@@ -1,4 +1,10 @@
-import React, { FormEvent, ReactElement, RefObject } from 'react'
+import React, {
+  FormEvent,
+  ReactElement,
+  RefObject,
+  useEffect,
+  useState
+} from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
 import { FormikContextType, useFormikContext } from 'formik'
@@ -24,10 +30,10 @@ export default function Actions({
     values,
     errors,
     isValid,
-    isSubmitting,
-    setFieldValue
+    isSubmitting
   }: FormikContextType<FormPublishData> = useFormikContext()
-  const { connect, accountId } = useWeb3()
+  const { connect, accountId, balance } = useWeb3()
+  const [isContinueDisabled, setContinueDisabled] = useState(false)
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in
@@ -55,11 +61,22 @@ export default function Actions({
     handleAction('prev')
   }
 
-  const isContinueDisabled =
-    (values.user.stepCurrent === 1 && errors.metadata !== undefined) ||
-    (values.user.stepCurrent === 2 && errors.services !== undefined) ||
-    (values.user.stepCurrent === 3 && errors.pricing !== undefined) ||
-    (values.user.stepCurrent === 3 && errors.user?.hasBalance !== undefined)
+  useEffect(() => {
+    setContinueDisabled(
+      (values.user.stepCurrent === 1 && errors.metadata !== undefined) ||
+        (values.user.stepCurrent === 2 && errors.services !== undefined) ||
+        (values.user.stepCurrent === 3 && errors.pricing !== undefined)
+    )
+  }, [errors, values.user.stepCurrent])
+
+  useEffect(() => {
+    if (
+      !accountId || // missing user's account
+      Number(balance.ocean) < Number(values.pricing.amountOcean) // the user's balance is insufficient
+    ) {
+      setContinueDisabled(true)
+    }
+  }, [accountId, balance, values.pricing.amountOcean])
 
   return (
     <footer className={styles.actions}>
