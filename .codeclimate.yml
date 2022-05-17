@@ -21,10 +21,10 @@ checks:
   # https://docs.codeclimate.com/docs/default-analysis-configuration#per-language-mass-threshold-defaults
   similar-code:
     config:
-      threshold: 50
+      threshold: 55
   identical-code:
     config:
-      threshold: 50
+      threshold: 55
 
 exclude_patterns:
   - 'config/'
