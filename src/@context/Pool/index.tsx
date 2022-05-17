@@ -138,6 +138,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (
       !poolData ||
       !poolInfo?.totalPoolTokens ||
+      !poolData.shares[0]?.shares ||
       poolData.shares[0]?.shares === '0'
     )
       return
