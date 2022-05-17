@@ -97,26 +97,21 @@ export default function Migration(): ReactElement {
     if (status === MigrationStatus.COMPLETED) {
       const { title, text } = liquidityProviderContent.migrationComplete
       return { title, message: text, action: MigrationAction.NONE }
-    }
-    if (!deadlinePassed && poolShares > 0 && canAddShares) {
+    } else if (!deadlinePassed && poolShares > 0 && canAddShares) {
       const { title, text } = liquidityProviderContent.migrationStarted
       return {
         title,
         message: text + getLockedSharesMessage() + getRemainingBlocksMessage(),
         action: MigrationAction.LOCK_SHARES
       }
-    }
-
-    if (!deadlinePassed && poolShares <= 0) {
+    } else if (!deadlinePassed && poolShares <= 0) {
       const { title, text } = liquidityProviderContent.poolSharesLocked
       return {
         title,
         message: text + getLockedSharesMessage() + getRemainingBlocksMessage(),
         action: MigrationAction.NONE
       }
-    }
-
-    if ((deadlinePassed || thresholdMet) && !canAddShares) {
+    } else {
       const { title, text } = liquidityProviderContent.deadlineMetThresholdMet
       return {
         title,
