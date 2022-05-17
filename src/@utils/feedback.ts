@@ -20,6 +20,7 @@ export function getComputeFeedback(
     0: `Setting price and fees for ${assetType}`,
     1: `Approving ${datatokenSymbol} and ordering ${assetType} `,
     2: `Approving ${baseTokenSymbol} and ordering ${assetType}`,
-    3: 'Generating signature. Starting compute job ...'
+    3: `Ordering ${assetType}`,
+    4: 'Generating signature. Starting compute job ...'
   }
 }

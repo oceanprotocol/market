@@ -215,7 +215,6 @@ export default function Compute({
         algoPoolParams,
         initializedProvider.algorithm.providerFee
       )
-      console.log('algorithmOrderPriceAndFees', algorithmOrderPriceAndFees)
       if (!algorithmOrderPriceAndFees) {
         setError('Error setting algorithm price and fees!')
         toast.error('Error setting algorithm price and fees!')
@@ -304,7 +303,13 @@ export default function Compute({
           asset.accessDetails.baseToken?.symbol,
           asset.accessDetails.datatoken?.symbol,
           asset.metadata.type
-        )[asset.accessDetails?.type === 'fixed' ? 2 : 1]
+        )[
+          asset.accessDetails?.type === 'fixed'
+            ? 2
+            : asset.accessDetails?.type === 'dynamic'
+            ? 1
+            : 3
+        ]
       )
       const datasetOrderTx = await handleComputeOrder(
         web3,
@@ -321,7 +326,13 @@ export default function Compute({
           selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
           selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
           selectedAlgorithmAsset.metadata.type
-        )[selectedAlgorithmAsset.accessDetails?.type === 'fixed' ? 2 : 1]
+        )[
+          selectedAlgorithmAsset.accessDetails?.type === 'fixed'
+            ? 2
+            : selectedAlgorithmAsset.accessDetails?.type === 'dynamic'
+            ? 1
+            : 3
+        ]
       )
       const algorithmOrderTx = await handleComputeOrder(
         web3,
@@ -343,7 +354,7 @@ export default function Compute({
         publishAlgorithmLog: true,
         publishOutput: true
       }
-      setComputeStatusText(getComputeFeedback()[3])
+      setComputeStatusText(getComputeFeedback()[4])
       const response = await ProviderInstance.computeStart(
         asset.services[0].serviceEndpoint,
         web3,
