@@ -144,17 +144,13 @@ export function calcSingleOutGivenPoolIn(
 ): string {
   const tokenLiquidityD = new Decimal(tokenLiquidity)
   const poolSupplyD = new Decimal(poolSupply)
-  const poolShareAmountD = new Decimal(poolShareAmount)
-
+  const poolShareAmountD = new Decimal(poolShareAmount).mul(2)
   const newPoolSupply = poolSupplyD.sub(poolShareAmountD)
   const poolRatio = newPoolSupply.div(poolSupplyD)
 
-  const tokenOutRatio = poolRatio.pow(2)
+  const tokenOutRatio = new Decimal(1).sub(poolRatio)
   const newTokenBalanceOut = tokenLiquidityD.mul(tokenOutRatio)
-
-  const tokensOut = tokenLiquidityD.sub(newTokenBalanceOut)
-
-  return tokensOut.toString()
+  return newTokenBalanceOut.toString()
 }
 
 /**

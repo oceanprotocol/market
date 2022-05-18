@@ -194,7 +194,7 @@ const OpcFeesQuery = gql`
     opc(id: $id) {
       swapOceanFee
       swapNonOceanFee
-      consumeFee
+      orderFee
       providerFee
     }
   }

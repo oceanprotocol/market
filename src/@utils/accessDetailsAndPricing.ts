@@ -21,7 +21,7 @@ import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import Decimal from 'decimal.js'
 import { consumeMarketOrderFee } from '../../app.config'
 
-const TokensPriceQuery = gql`
+const tokensPriceQuery = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
     tokens(where: { id_in: $datatokenIds }) {
       id
@@ -86,7 +86,7 @@ const TokensPriceQuery = gql`
     }
   }
 `
-const TokenPriceQuery = gql`
+const tokenPriceQuery = gql`
   query TokenPriceQuery($datatokenId: ID!, $account: String) {
     token(id: $datatokenId) {
       id
@@ -307,11 +307,10 @@ export async function getOrderPriceAndFees(
 }
 
 /**
- * @param {number} chain
+ * @param {number} chainId
  * @param {string} datatokenAddress
  * @param {number} timeout timout of the service, this is needed to return order details
  * @param {string} account account that wants to buy, is needed to return order details
- * @param {bool} includeOrderPriceAndFees if false price will be spot price (pool) and rate (fre), if true you will get the order price including fees !! fees not yet done
  * @returns {Promise<AccessDetails>}
  */
 export async function getAccessDetails(
@@ -326,7 +325,7 @@ export async function getAccessDetails(
       TokenPriceQuery,
       { datatokenId: string; account: string }
     > = await fetchData(
-      TokenPriceQuery,
+      tokenPriceQuery,
       {
         datatokenId: datatokenAddress.toLowerCase(),
         account: account?.toLowerCase()
@@ -369,7 +368,7 @@ export async function getAccessDetailsForAssets(
         TokensPriceQuery,
         { datatokenIds: [string]; account: string }
       > = await fetchData(
-        TokensPriceQuery,
+        tokensPriceQuery,
         {
           datatokenIds: chainAssetLists[chainKey],
           account: account?.toLowerCase()

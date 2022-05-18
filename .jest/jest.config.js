@@ -14,6 +14,7 @@ const customJestConfig = {
   moduleDirectories: ['node_modules', '<rootDir>/src'],
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
+    '\\.svg': '<rootDir>/.jest/__mocks__/svgrMock.tsx',
     // '^@/components/(.*)$': '<rootDir>/components/$1',
     '@shared(.*)$': '<rootDir>/src/components/@shared/$1',
     '@hooks/(.*)$': '<rootDir>/src/@hooks/$1',
@@ -25,7 +26,8 @@ const customJestConfig = {
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
-    '!src/**/*.{stories,test}.{ts,tsx}'
+    '!src/**/*.{stories,test}.{ts,tsx}',
+    '!src/@types/**/*.{ts,tsx}'
   ],
   testPathIgnorePatterns: ['node_modules', '\\.cache', '.next', 'coverage']
 }
