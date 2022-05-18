@@ -5,14 +5,7 @@ import { ListItem, ListItemProps } from '@shared/atoms/Lists'
 
 export default {
   title: 'Component/@shared/atoms/Lists',
-  component: ListItem,
-  decorators: [
-    (Story) => (
-      <div style={{ margin: '3em' }}>
-        <Story />
-      </div>
-    )
-  ]
+  component: ListItem
 } as ComponentMeta<typeof ListItem>
 
 const Template: ComponentStory<typeof ListItem> = (args) => (

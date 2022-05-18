@@ -10,6 +10,32 @@ export default {
 } as ComponentMeta<typeof Table>
 
 const Template: ComponentStory<typeof Table> = (args) => <Table {...args} />
+//   const { chainIds } = useUserPreferences()
+//   const columns = [
+//     {
+//       name: 'Column 1 ',
+//       maxWidth: '45rem',
+//       grow: 1
+//     },
+//     {
+//       name: 'Column 2',
+//       maxWidth: '10rem'
+//     },
+//     {
+//       name: 'Column 3',
+//       right: true
+//     }
+//   ]
+//   const data: any[] = []
+
+//   return (
+//     <DataTable
+//       {...args}
+//       columns={columns}
+//       data={data}
+//       noDataComponent={<Empty message={'empty table'} />}
+//     />
+//   )
 
 interface Props {
   args: TableProps
