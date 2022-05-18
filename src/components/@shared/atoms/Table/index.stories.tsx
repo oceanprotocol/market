@@ -60,6 +60,34 @@ Default.args = {
       accessDetails: {
         price: '1.011'
       }
+    },
+    {
+      datatokens: [
+        {
+          name: 'DataAsset Token',
+          symbol: 'DATA-71'
+        }
+      ],
+      metadata: {
+        name: 'Title asset'
+      },
+      accessDetails: {
+        price: '2.011'
+      }
+    },
+    {
+      datatokens: [
+        {
+          name: 'DataAsset Token',
+          symbol: 'DATA-80'
+        }
+      ],
+      metadata: {
+        name: 'Title asset'
+      },
+      accessDetails: {
+        price: '3.011'
+      }
     }
   ]
 }
