@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import { ListItem, ListItemProps } from '@shared/atoms/Lists'
@@ -8,9 +8,33 @@ export default {
   component: ListItem
 } as ComponentMeta<typeof ListItem>
 
-const Template: ComponentStory<typeof ListItem> = (args) => (
-  <ListItem {...args} />
-)
+const Template: ComponentStory<typeof ListItem> = () => {
+  const items = []
+  items.push(
+    <a href="https://docs.oceanprotocol.com/" target="_blank" rel="noreferrer">
+      List item short
+    </a>
+  )
+  items.push(
+    <a>
+      List item long ipsum dolor sit amet, consectetur adipiscing elit. Mauris
+      aliquam facilisis molestie
+    </a>
+  )
+  items.push(
+    <a href="https://docs.oceanprotocol.com/" target="_blank" rel="noreferrer">
+      List item long ipsum dolor sit amet, consectetur adipiscing elit.
+    </a>
+  )
+
+  return (
+    <>
+      {items.map((item, key) => (
+        <ListItem key={key}> {item} </ListItem>
+      ))}
+    </>
+  )
+}
 
 interface Props {
   args: ListItemProps
