@@ -3,7 +3,7 @@ import { usePool } from '@context/Pool'
 import Tooltip from '@shared/atoms/Tooltip'
 import ExplorerLink from '@shared/ExplorerLink'
 import PriceUnit from '@shared/Price/PriceUnit'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Graph from '../Graph'
 import PoolSection from '../Section'
 import Token from '../../../../@shared/Token'
@@ -11,11 +11,27 @@ import content from '../../../../../../content/price.json'
 import styles from './index.module.css'
 import Update from './Update'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import { OpcFeesQuery_opc as OpcFeesData } from '../../../../../@types/subgraph/OpcFeesQuery'
+import { getOpcFees } from '@utils/subgraph'
+import { useWeb3 } from '@context/Web3'
+import Decimal from 'decimal.js'
 
 export default function PoolSections() {
   const { asset } = useAsset()
   const { poolData, poolInfo, poolInfoUser, poolInfoOwner } = usePool()
   const { getOpcFeeForToken } = useMarketMetadata()
+  const { chainId } = useWeb3()
+  const [oceanCommunitySwapFee, setOceanCommunitySwapFee] = useState<string>('')
+  useEffect(() => {
+    getOpcFees(chainId || 1).then((response: OpcFeesData) => {
+      setOceanCommunitySwapFee(
+        response?.swapOceanFee
+          ? new Decimal(response.swapOceanFee).mul(100).toString()
+          : '0'
+      )
+    })
+  }, [chainId])
+
   return (
     <>
       <PoolSection className={styles.dataToken}>
@@ -119,10 +135,7 @@ export default function PoolSections() {
         />
         <Token
           symbol="% OPC fee"
-          balance={getOpcFeeForToken(
-            poolInfo?.baseTokenAddress,
-            asset?.chainId
-          )}
+          balance={oceanCommunitySwapFee}
           noIcon
           size="mini"
         />

@@ -38,7 +38,7 @@ function MarketMetadataProvider({
           chainId: appConfig.chainIdsSupported[i],
           approvedTokens: response.data?.opc.approvedTokens,
           swapApprovedFee: response.data?.opc.swapOceanFee,
-          swapNotApprovedFee: response.data.opc.swapNonOceanFee
+          swapNotApprovedFee: response.data?.opc.swapNonOceanFee
         } as OpcFee)
       }
       setOpcFees(opcData)
