@@ -29,7 +29,7 @@ const items = [
   }
 ]
 
-export const Default: Props = Template.bind({})
+export const Default = Template.bind({})
 Default.args = {
   items
 }
