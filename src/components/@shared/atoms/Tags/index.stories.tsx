@@ -17,7 +17,8 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  items: [' tag1 ', ' tag2 ', ' tag3 ']
+  items: [' tag1 ', ' tag2 ', ' tag3 '],
+  className: 'custom-class'
 }
 
 export const MaxNumberOfTags: Props = Template.bind({})

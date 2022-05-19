@@ -6,9 +6,7 @@ test('Tabs can be changed', async () => {
   render(<Default {...Default.args} />)
 
   fireEvent.click(screen.getByText('Second tab'))
-  const secondTab = await screen.findByText(
-    'this is the content for the second tab'
-  )
+  const secondTab = await screen.findByText(/content for the second tab/i)
   expect(secondTab).toBeInTheDocument()
 })
 
