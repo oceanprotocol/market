@@ -87,6 +87,10 @@ export default function Remove({
 
   const getValues = useRef(
     debounce(async (poolInstance, id, poolInfo, newAmountPoolShares) => {
+      if (newAmountPoolShares === '0') {
+        setAmountOcean('0')
+        return
+      }
       const newAmountOcean = await poolInstance.calcSingleOutGivenPoolIn(
         id,
         poolInfo.baseTokenAddress,
