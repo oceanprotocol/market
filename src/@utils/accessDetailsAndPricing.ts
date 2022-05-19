@@ -152,14 +152,11 @@ function getAccessDetailsFromTokenPrice(
   timeout?: number
 ): AccessDetails {
   const accessDetails = {} as AccessDetails
-  if (
-    tokenPrice &&
-    timeout &&
-    tokenPrice.orders &&
-    tokenPrice.orders.length > 0
-  ) {
+  if (tokenPrice && tokenPrice.orders && tokenPrice.orders.length > 0) {
     const order = tokenPrice.orders[0]
-    accessDetails.isOwned = Date.now() / 1000 - order.createdTimestamp < timeout
+    // asset is owned if there is an order and asset has timeout 0 (forever) or if the condition is valid
+    accessDetails.isOwned =
+      timeout === 0 || Date.now() / 1000 - order.createdTimestamp < timeout
     accessDetails.validOrderTx = order.tx
   }
 
