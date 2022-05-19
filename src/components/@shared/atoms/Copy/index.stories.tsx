@@ -1,6 +1,6 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import Copy, { CopyProps } from '@shared/atoms/Copy'
+import Copy from '@shared/atoms/Copy'
 
 export default {
   title: 'Component/@shared/atoms/Copy',
@@ -9,11 +9,7 @@ export default {
 
 const Template: ComponentStory<typeof Copy> = (args) => <Copy {...args} />
 
-interface Props {
-  args: CopyProps
-}
-
-export const Default: Props = Template.bind({})
+export const Default = Template.bind({})
 Default.args = {
   text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquam facilisis molestie.'
 }
