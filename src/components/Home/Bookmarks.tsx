@@ -27,7 +27,7 @@ const columns = [
     selector: function getAssetRow(row: AssetExtended) {
       return (
         <Tooltip content={row.datatokens[0].name}>
-          {row.datatokens[0].symbol}
+          <>{row.datatokens[0].symbol}</>
         </Tooltip>
       )
     },

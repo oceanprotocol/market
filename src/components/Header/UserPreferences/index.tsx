@@ -28,8 +28,10 @@ export default function UserPreferences(): ReactElement {
       trigger="click focus"
       className={styles.preferences}
     >
-      <Cog aria-label="Preferences" className={styles.icon} />
-      <Caret aria-hidden="true" className={styles.caret} />
+      <>
+        <Cog aria-label="Preferences" className={styles.icon} />
+        <Caret aria-hidden="true" className={styles.caret} />
+      </>
     </Tooltip>
   )
 }
