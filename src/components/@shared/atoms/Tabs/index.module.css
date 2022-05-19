@@ -8,7 +8,7 @@
 
 .tab {
   display: inline-block;
-  padding: calc(var(--spacer) / 12) var(--spacer);
+  padding: calc(var(--spacer) / 8) var(--spacer);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-small);
   text-transform: uppercase;
@@ -52,4 +52,8 @@
   .tabContent {
     padding: var(--spacer);
   }
+}
+
+.radio {
+  composes: radio from '../../FormInput/InputRadio.module.css';
 }

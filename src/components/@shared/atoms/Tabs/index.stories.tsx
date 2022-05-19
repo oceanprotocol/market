@@ -45,3 +45,8 @@ WithDefaultIndex.args = {
   items,
   defaultIndex: 1
 }
+
+export const LotsOfTabs: Props = Template.bind({})
+LotsOfTabs.args = {
+  items: items.flatMap((i) => [i, i, i])
+}
