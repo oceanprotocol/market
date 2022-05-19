@@ -30,3 +30,8 @@ IsUnix.args = {
   date: '1652448367',
   isUnix: true
 }
+
+export const Undefined: Props = Template.bind({})
+Undefined.args = {
+  date: null
+}
