@@ -103,10 +103,9 @@ Loading.args = {
   data: []
 }
 
-// TODO: refactor Table component so that Empty component does not use any hooks
-// export const Empty: Props = Template.bind({})
-// Empty.args = {
-//   emptyMessage: 'I am empty',
-//   columns: [],
-//   data: []
-// }
+export const Empty: Props = Template.bind({})
+Empty.args = {
+  emptyMessage: 'I am empty',
+  columns: [],
+  data: []
+}

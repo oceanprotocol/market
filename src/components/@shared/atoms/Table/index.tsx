@@ -14,14 +14,7 @@ export interface TableProps extends IDataTableProps {
 }
 
 function Empty({ message }: { message?: string }): ReactElement {
-  const { chainIds } = useUserPreferences()
-  return (
-    <div className={styles.empty}>
-      {chainIds.length === 0
-        ? 'No network selected'
-        : message || 'No results found'}
-    </div>
-  )
+  return <div className={styles.empty}>{message || 'No results found'}</div>
 }
 
 export default function Table({
