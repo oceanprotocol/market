@@ -3,7 +3,6 @@ import DataTable, { IDataTableProps } from 'react-data-table-component'
 import Loader from '../Loader'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
-import { useUserPreferences } from '@context/UserPreferences'
 
 export interface TableProps extends IDataTableProps {
   isLoading?: boolean
