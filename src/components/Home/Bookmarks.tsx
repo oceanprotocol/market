@@ -98,6 +98,7 @@ export default function Bookmarks(): ReactElement {
       isLoading={isLoading}
       emptyMessage="Your bookmarks will appear here."
       noTableHead
+      chainIds={chainIds}
     />
   )
 }

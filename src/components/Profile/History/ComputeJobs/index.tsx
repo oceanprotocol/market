@@ -123,6 +123,7 @@ export default function ComputeJobs({
         isLoading={isLoading}
         defaultSortField="row.dateCreated"
         defaultSortAsc={false}
+        chainIds={chainIds}
       />
     </>
   ) : (

@@ -3,6 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Table, { TableProps } from '@shared/atoms/Table'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Tooltip from '@shared/atoms/Tooltip'
+import { chainIds } from 'app.config'
 
 export default {
   title: 'Component/@shared/atoms/Table',
@@ -93,20 +94,22 @@ const data = [
 export const WithData: Props = Template.bind({})
 WithData.args = {
   columns,
-  data
+  data,
+  chainIds
 }
 
 export const Loading: Props = Template.bind({})
 Loading.args = {
   isLoading: true,
   columns: [],
-  data: []
+  data: [],
+  chainIds
 }
 
-// TODO: refactor Table component so that Empty component does not use any hooks
-// export const Empty: Props = Template.bind({})
-// Empty.args = {
-//   emptyMessage: 'I am empty',
-//   columns: [],
-//   data: []
-// }
+export const Empty: Props = Template.bind({})
+Empty.args = {
+  emptyMessage: 'I am empty',
+  columns: [],
+  data: [],
+  chainIds
+}

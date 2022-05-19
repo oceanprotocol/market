@@ -109,6 +109,7 @@ export default function PoolShares({
       isLoading={loading}
       sortField="userLiquidity"
       sortAsc={false}
+      chainIds={chainIds}
     />
   ) : (
     <div>Please connect your Web3 wallet.</div>

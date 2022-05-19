@@ -264,6 +264,7 @@ export default function PoolTransactions({
         minimal ? transactions?.length >= 4 : transactions?.length >= 9
       }
       paginationPerPage={minimal ? 5 : 10}
+      chainIds={chainIds}
     />
   ) : (
     <div>Please connect your Web3 wallet.</div>
