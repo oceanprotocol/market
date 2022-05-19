@@ -1,8 +1,6 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Table, { TableProps } from '@shared/atoms/Table'
-import { AssetExtended } from 'src/@types/AssetExtended'
-import Tooltip from '@shared/atoms/Tooltip'
 
 export default {
   title: 'Component/@shared/atoms/Table',
@@ -17,76 +15,43 @@ interface Props {
 
 const columns = [
   {
-    name: 'Data Set',
-    selector: function getAssetRow(row: AssetExtended) {
-      const { metadata } = row
-      return metadata.name
-    },
+    name: 'Name',
+    selector: (row: any) => row.name,
     maxWidth: '45rem',
     grow: 1
   },
   {
-    name: 'Datatoken Symbol',
-    selector: function getAssetRow(row: AssetExtended) {
-      return (
-        <Tooltip content={row.datatokens[0].name}>
-          <>{row.datatokens[0].symbol}</>
-        </Tooltip>
-      )
-    },
+    name: 'Symbol',
+    selector: (row: any) => row.symbol,
     maxWidth: '10rem'
   },
   {
     name: 'Price',
-    selector: function getAssetRow(row: AssetExtended) {
-      return row.accessDetails.price
-    },
+    selector: (row: any) => row.price,
     right: true
   }
 ]
 
 const data = [
   {
-    datatokens: [
-      {
-        name: 'DataAsset Token',
-        symbol: 'DATA-70'
-      }
-    ],
-    metadata: {
-      name: 'Title asset'
-    },
-    accessDetails: {
-      price: '1.011'
-    }
+    name: 'Title asset',
+    symbol: 'DATA-70',
+    price: '1.011'
   },
   {
-    datatokens: [
-      {
-        name: 'DataAsset Token',
-        symbol: 'DATA-71'
-      }
-    ],
-    metadata: {
-      name: 'Title asset'
-    },
-    accessDetails: {
-      price: '2.011'
-    }
+    name: 'Title asset Title asset Title asset Title asset Title asset',
+    symbol: 'DATA-71',
+    price: '1.011'
   },
   {
-    datatokens: [
-      {
-        name: 'DataAsset Token',
-        symbol: 'DATA-80'
-      }
-    ],
-    metadata: {
-      name: 'Title asset'
-    },
-    accessDetails: {
-      price: '3.011'
-    }
+    name: 'Title asset',
+    symbol: 'DATA-72',
+    price: '1.011'
+  },
+  {
+    name: 'Title asset Title asset Title asset Title asset Title asset Title asset Title asset Title asset Title asset Title asset',
+    symbol: 'DATA-71',
+    price: '1.011'
   }
 ]
 
@@ -94,6 +59,12 @@ export const WithData: Props = Template.bind({})
 WithData.args = {
   columns,
   data
+}
+
+export const WithPagination: Props = Template.bind({})
+WithPagination.args = {
+  columns,
+  data: data.flatMap((i) => [i, i, i])
 }
 
 export const Loading: Props = Template.bind({})
