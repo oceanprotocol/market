@@ -3,6 +3,7 @@ import DataTable, { IDataTableProps } from 'react-data-table-component'
 import Loader from '../Loader'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
+import { useUserPreferences } from '@context/UserPreferences'
 
 export interface TableProps extends IDataTableProps {
   isLoading?: boolean
@@ -10,16 +11,10 @@ export interface TableProps extends IDataTableProps {
   sortField?: string
   sortAsc?: boolean
   className?: string
-  chainIds: number[]
 }
 
-function Empty({
-  message,
-  chainIds
-}: {
-  message?: string
-  chainIds: number[]
-}): ReactElement {
+function Empty({ message }: { message?: string }): ReactElement {
+  const { chainIds } = useUserPreferences()
   return (
     <div className={styles.empty}>
       {chainIds.length === 0
@@ -39,7 +34,6 @@ export default function Table({
   sortField,
   sortAsc,
   className,
-  chainIds,
   ...props
 }: TableProps): ReactElement {
   return (
@@ -50,7 +44,7 @@ export default function Table({
       noHeader
       pagination={pagination || data?.length >= 9}
       paginationPerPage={paginationPerPage || 10}
-      noDataComponent={<Empty message={emptyMessage} chainIds={chainIds} />}
+      noDataComponent={<Empty message={emptyMessage} />}
       progressPending={isLoading}
       progressComponent={<Loader />}
       paginationComponent={Pagination as unknown as ReactNode}
