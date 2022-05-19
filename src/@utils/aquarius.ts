@@ -150,6 +150,7 @@ export async function checkV3Asset(
     } else {
       LoggerInstance.error(error.message)
     }
+    return false
   }
 }
 
