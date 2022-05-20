@@ -53,8 +53,9 @@ export default function Download({
   useEffect(() => {
     if (!asset?.accessDetails) return
 
-    setIsOwned(asset?.accessDetails?.isOwned)
-    setValidOrderTx(asset?.accessDetails?.validOrderTx)
+    asset?.accessDetails?.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
+    asset?.accessDetails?.validOrderTx &&
+      setValidOrderTx(asset?.accessDetails?.validOrderTx)
 
     // get full price and fees
     async function init() {
@@ -166,7 +167,6 @@ export default function Download({
         if (!orderTx) {
           throw new Error()
         }
-
         setIsOwned(true)
         setValidOrderTx(orderTx.transactionHash)
       }
