@@ -2,7 +2,6 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import Blockies, { BlockiesProps } from '@shared/atoms/Blockies'
-import styles from './index.module.css'
 
 export default {
   title: 'Component/@shared/atoms/Blockies',

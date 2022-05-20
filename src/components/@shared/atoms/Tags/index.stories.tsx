@@ -2,7 +2,6 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import Tags, { TagsProps } from '@shared/atoms/Tags'
-import styles from './index.module.css'
 
 export default {
   title: 'Component/@shared/atoms/Tags',

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Container, { ContainerProps } from '@shared/atoms/Container'
 
@@ -26,4 +26,18 @@ Default.args = {
       pellentesque enim orci ac sem.
     </>
   )
+}
+
+export const Narrow: Props = Template.bind({})
+Narrow.args = {
+  children: (
+    <>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquam
+      facilisis molestie. Integer eget congue turpis, in pharetra lectus. Sed
+      urna dolor, porttitor luctus mauris eget, lacinia consectetur eros. Duis
+      consequat, turpis et porttitor cursus, ante lacus placerat arcu, vel
+      pellentesque enim orci ac sem.
+    </>
+  ),
+  narrow: true
 }

@@ -2,7 +2,6 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import Badge, { BadgeProps } from '@shared/atoms/Badge'
-import styles from './index.module.css'
 
 export default {
   title: 'Component/@shared/atoms/Badge',
