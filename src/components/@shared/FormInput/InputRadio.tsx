@@ -21,9 +21,9 @@ export default function InputRadio({
         (options as string[]).map((option: string, index: number) => (
           <div className={styles.radioWrap} key={index}>
             <input
+              {...props}
               className={styles[props.type]}
               id={slugify(option)}
-              {...props}
             />
             <label
               className={cx({

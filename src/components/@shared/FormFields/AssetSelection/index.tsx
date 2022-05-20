@@ -77,8 +77,8 @@ export default function AssetSelection({
                 <input
                   id={slugify(asset.did)}
                   className={styleClassesInput}
-                  defaultChecked={asset.checked}
                   {...props}
+                  defaultChecked={asset.checked}
                   type={multiple ? 'checkbox' : 'radio'}
                   disabled={disabled}
                   value={asset.did}
