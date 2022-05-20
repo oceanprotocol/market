@@ -114,11 +114,6 @@ export async function retrieveAsset(
       `${metadataCacheUri}/api/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
-    axios
-      .get(`${metadataCacheUri}/api/aquarius/assets/ddo/${did}`, {
-        cancelToken
-      })
-      .then((e) => console.log(e))
     if (!response || response.status !== 200 || !response.data) return
 
     const data = { ...response.data }
