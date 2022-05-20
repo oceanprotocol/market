@@ -106,17 +106,16 @@ export default function InputElement({
         />
       )
     case 'files':
-      return <FilesInput name={props.name} {...field} {...props} />
+      return <FilesInput {...field} {...props} />
     case 'providerUrl':
-      return <CustomProvider name={props.name} {...field} {...props} />
+      return <CustomProvider {...field} {...props} />
     case 'nft':
-      return <Nft name={props.name} {...field} {...props} />
+      return <Nft {...field} {...props} />
     case 'datatoken':
-      return <Datatoken name={props.name} {...field} {...props} />
+      return <Datatoken {...field} {...props} />
     case 'boxSelection':
       return (
         <BoxSelection
-          name={props.name}
           options={options as unknown as BoxSelectionOption[]}
           {...field}
           {...props}
