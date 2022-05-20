@@ -23,9 +23,9 @@ export default function Tooltip(props: TippyProps): ReactElement {
   function onMount() {
     api.start({
       ...animation.to,
+      onRest: (): void => null,
       config: animation.config
     })
-    api.stop()
   }
 
   function onHide({ unmount }: { unmount: () => void }) {
@@ -34,7 +34,6 @@ export default function Tooltip(props: TippyProps): ReactElement {
       onRest: unmount,
       config: { ...animation.config, clamp: true }
     })
-    api.stop()
   }
 
   const styleClasses = `${stylesTooltip.tooltip} ${className || ''}`
@@ -60,6 +59,7 @@ export default function Tooltip(props: TippyProps): ReactElement {
       }
       onMount={onMount}
       onHide={onHide}
+      // animation
       {...props}
     >
       <div className={styleClasses}>{children || <DefaultTrigger />}</div>
