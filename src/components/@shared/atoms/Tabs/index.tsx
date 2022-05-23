@@ -24,15 +24,8 @@ export default function Tabs({
   defaultIndex,
   showRadio
 }: TabsProps): ReactElement {
-  const [tabIndex, setTabIndex] = useState(0)
-
   return (
-    <ReactTabs
-      className={`${className || ''}`}
-      defaultIndex={defaultIndex}
-      selectedIndex={tabIndex}
-      onSelect={(index) => setTabIndex(index)}
-    >
+    <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
       <TabList className={styles.tabList}>
         {items.map((item, index) => (
           <Tab
@@ -45,8 +38,7 @@ export default function Tabs({
               <InputRadio
                 name={item.title}
                 type="radio"
-                defaultChecked={defaultIndex === index}
-                checked={index === tabIndex}
+                checked={index === defaultIndex}
                 options={[item.title]}
                 readOnly
               />
