@@ -29,6 +29,7 @@ declare global {
 }
 
 interface MigrationProviderValue {
+  canAddShares: boolean
   deadlinePassed: boolean
   poolShares: string
   lockedSharesV3: string
@@ -58,6 +59,7 @@ function MigrationProvider({
   const [deadlinePassed, setDeadlinePassed] = useState<boolean>()
   const [poolShares, setpoolShares] = useState<string>()
   const [lockedSharesV3, setLockedSharesV3] = useState<string>()
+  const [canAddShares, setCanAddShares] = useState<boolean>(false)
 
   async function switchMigrationAddress(chainId: number): Promise<void> {
     switch (chainId) {
@@ -82,6 +84,14 @@ function MigrationProvider({
       default:
         break
     }
+  }
+
+  async function fetchCanAddShares(poolAddress: string): Promise<boolean> {
+    const migration = new web3.eth.Contract(
+      migrationAbi.abi as AbiItem[],
+      migrationAddress
+    )
+    return migration.methods.canAddShares(poolAddress).call()
   }
 
   interface PoolStatus {
@@ -224,7 +234,9 @@ function MigrationProvider({
     const poolStatus: PoolStatus = await migration.methods
       .getPoolStatus(price.address)
       .call()
+    const canAddShares = await fetchCanAddShares(price.address)
 
+    setCanAddShares(canAddShares)
     setPoolV3Address(poolStatus.poolV3Address)
     setDeadline(poolStatus.deadline)
   }
@@ -278,6 +290,7 @@ function MigrationProvider({
     <MigrationContext.Provider
       value={
         {
+          canAddShares,
           deadlinePassed,
           poolShares,
           lockedSharesV3,
