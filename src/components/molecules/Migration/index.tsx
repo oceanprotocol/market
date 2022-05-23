@@ -79,12 +79,6 @@ export default function Migration(): ReactElement {
     )} shares `
   }
 
-  function getRemainingBlocksMessage() {
-    return `\n\n${
-      parseInt(deadline) - block
-    } blocks left for migration deadline`
-  }
-
   function getMessageAndActionForLiquidityProvider(
     status: string,
     thresholdMet: boolean,
@@ -101,14 +95,14 @@ export default function Migration(): ReactElement {
       const { title, text } = liquidityProviderContent.migrationStarted
       return {
         title,
-        message: text + getLockedSharesMessage() + getRemainingBlocksMessage(),
+        message: text + getLockedSharesMessage(),
         action: MigrationAction.LOCK_SHARES
       }
     } else if (!deadlinePassed && poolShares <= 0) {
       const { title, text } = liquidityProviderContent.poolSharesLocked
       return {
         title,
-        message: text + getLockedSharesMessage() + getRemainingBlocksMessage(),
+        message: text + getLockedSharesMessage(),
         action: MigrationAction.NONE
       }
     } else {
