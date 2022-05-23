@@ -5,8 +5,8 @@ import { useMigrationStatus } from '../../../providers/Migration'
 import { useWeb3 } from '../../../providers/Web3'
 import Alert from '../../atoms/Alert'
 import Container from '../../atoms/Container'
-import LockShares from './lockPoolShares'
-import styles from './migration.module.css'
+import LockShares from './LockPoolShares'
+import styles from './index.module.css'
 
 const query = graphql`
   query {
@@ -56,7 +56,9 @@ export default function Migration(): ReactElement {
   const content = data.content.edges[0].node.childContentJson
 
   function getNoLockedSharesMessage() {
-    return `\n\nYou currently have ${poolShares} pool shares\n\nYou have locked 0 shares `
+    return `\n\nYou currently have ${parseInt(
+      poolShares
+    )} pool shares\n\nYou have locked 0 shares `
   }
   function getLockedSharesMessage(lockedShares: number) {
     return `\n\nYou have locked ${lockedShares} shares`
@@ -100,7 +102,9 @@ export default function Migration(): ReactElement {
   useEffect(() => {
     if (!accountId) return
     const poolSharesNumber = isNaN(Number(poolShares)) ? 0 : Number(poolShares)
-    const lockedSharesNumber = Number(Web3.utils.fromWei(lockedSharesV3 || '0'))
+    const lockedSharesNumber = parseInt(
+      Web3.utils.fromWei(lockedSharesV3 || '0')
+    )
     if (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0')) {
       setShowMigration(true)
     }

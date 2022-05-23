@@ -9,6 +9,8 @@ import Badge from '../atoms/Badge'
 import Logo from '../atoms/Logo'
 import Networks from './UserPreferences/Networks'
 import SearchBar from './SearchBar'
+import Tooltip from '../atoms/Tooltip'
+import { ReactComponent as Caret } from '../../images/caret.svg'
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -33,16 +35,38 @@ function MenuLink({ item }: { item: MenuItem }) {
 }
 
 export default function Menu(): ReactElement {
-  const { menu, siteTitle } = useSiteMetadata()
+  const { menu, siteTitle, appConfig } = useSiteMetadata()
 
   return (
     <nav className={styles.menu}>
       <Link to="/" className={styles.logo}>
         <Logo noWordmark />
-        <h1 className={styles.title}>
-          {siteTitle} <Badge label="v3" />
-        </h1>
+        <h1 className={styles.title}>{siteTitle}</h1>
       </Link>
+      <Tooltip
+        className={styles.tooltip}
+        content={
+          <div className={styles.versions}>
+            <a className={styles.link} href="" aria-disabled aria-current>
+              v3
+            </a>
+            <a className={styles.link} href={appConfig.marketUrlV4}>
+              v4
+            </a>
+          </div>
+        }
+        trigger="click focus"
+        placement="bottom"
+      >
+        <Badge
+          className={styles.badge}
+          label={
+            <>
+              v3 <Caret aria-hidden="true" className={styles.caret} />
+            </>
+          }
+        />
+      </Tooltip>
 
       <ul className={styles.navigation}>
         {menu.map((item: MenuItem) => (

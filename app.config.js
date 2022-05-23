@@ -90,13 +90,7 @@ module.exports = {
   rinkebyMigrationContractAddresss:
     process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_RINKEBY ||
     '0x0e4806e14bd02A809f49aD37F8C749f117D84239',
-  ropstenMigrationContractAddresss:
-    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_RINKEBY ||
-    '0x003323388790872320fbf0152a49E2de4046E0b3',
-  moonbaseMigrationContractAddresss:
-    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_RINKEBY ||
-    '0x7874E8bA0f96fA3cD883453a596BF97aEd5c7a32',
-  mumbaiMigrationContractAddresss:
-    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_RINKEBY ||
-    '0xbF49aaaEBa1C63D0fF9dE3886F6Afd4b9aDa3520'
+
+  marketUrlV4:
+    process.env.GATSBY_MARKET_URL_V4 || 'https://v4.market.oceanprotocol.com'
 }

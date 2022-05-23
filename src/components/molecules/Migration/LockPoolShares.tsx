@@ -9,7 +9,6 @@ import { fetchData, getQueryContext } from '../../../utils/subgraph'
 import Button from '../../atoms/Button'
 import Loader from '../../atoms/Loader'
 import { userPoolShareQuery } from '../../organisms/AssetActions/Pool'
-import styles from './startMigration.module.css'
 
 export default function LockPoolShares(): ReactElement {
   const { accountId } = useWeb3()
@@ -64,11 +63,7 @@ export default function LockPoolShares(): ReactElement {
       {loading ? (
         <Loader message="Locking pool shares" />
       ) : (
-        <Button
-          style="primary"
-          className={styles.button}
-          onClick={() => addShares(poolTokens)}
-        >
+        <Button style="primary" onClick={() => addShares(poolTokens)}>
           <span>Lock Pool Shares</span>
         </Button>
       )}

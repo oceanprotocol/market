@@ -79,15 +79,6 @@ function MigrationProvider({
       case 4:
         setMigrationAddress(appConfig.rinkebyMigrationContractAddresss)
         break
-      case 3:
-        setMigrationAddress(appConfig.ropstenMigrationContractAddresss)
-        break
-      case 1287:
-        setMigrationAddress(appConfig.moonbaseMigrationContractAddresss)
-        break
-      case 80001:
-        setMigrationAddress(appConfig.mumbaiMigrationContractAddresss)
-        break
       default:
         break
     }
@@ -183,12 +174,10 @@ function MigrationProvider({
         erc20Abi.abi as AbiItem[],
         poolV3Address
       )
-      console.log('erc20Contract', erc20Contract)
 
       const estGas = await erc20Contract.methods
         .approve(migrationAddress, web3.utils.toWei(amount))
         .estimateGas({ from: accountId })
-      console.log('estGas', estGas)
 
       const trxReceipt = await erc20Contract.methods
         .approve(migrationAddress, web3.utils.toWei(amount))
@@ -197,7 +186,6 @@ function MigrationProvider({
           gas: estGas + 100000,
           gasPrice: await getFairGasPrice(web3)
         })
-      console.log('trxReceipt', trxReceipt)
       return trxReceipt
     } catch (error) {
       console.log('error', error)
