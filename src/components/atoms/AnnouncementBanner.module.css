@@ -12,7 +12,6 @@
 
 .banner.warning {
   background-color: var(--brand-alert-yellow);
-  color: var(--brand-white);
 }
 
 .banner.success {
