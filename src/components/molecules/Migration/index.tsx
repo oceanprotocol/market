@@ -55,17 +55,23 @@ export default function Migration(): ReactElement {
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childContentJson
 
-  function getLockedSharesMessage() {
-    return `\n\nYou currently have ${poolShares} pool shares\n\nYou have locked ${Web3.utils.fromWei(
-      lockedSharesV3 || '0'
-    )} shares `
+  function getNoLockedSharesMessage() {
+    return `\n\nYou currently have ${parseInt(
+      poolShares
+    )} pool shares\n\nYou have locked 0 shares `
+  }
+  function getLockedSharesMessage(lockedShares: number) {
+    return `\n\nYou have locked ${lockedShares} shares`
   }
 
   function getMessageAndAction(
     deadlinePassed: boolean,
-    _poolShares: string
-  ): { title: string; message: string; action: MigrationAction } {
-    const poolShares = isNaN(Number(_poolShares)) ? 0 : Number(_poolShares)
+    lockedShares: number
+  ): {
+    title: string
+    message: string
+    action: MigrationAction
+  } {
     const liquidityProviderContent = content.liquidityProvider
     deadlinePassed = false // in place only for testing
 
@@ -73,21 +79,21 @@ export default function Migration(): ReactElement {
       const { title, text } = liquidityProviderContent.deadlineMet
       return {
         title,
-        message: text + getLockedSharesMessage(),
+        message: text + getLockedSharesMessage(lockedShares),
         action: MigrationAction.NONE
       }
-    } else if (!deadlinePassed && poolShares > 0) {
+    } else if (!deadlinePassed && lockedShares <= 0) {
       const { title, text } = liquidityProviderContent.migrationStarted
       return {
         title,
-        message: text + getLockedSharesMessage(),
+        message: text + getNoLockedSharesMessage(),
         action: MigrationAction.LOCK_SHARES
       }
-    } else if (!deadlinePassed && poolShares <= 0) {
+    } else if (!deadlinePassed && lockedShares > 0) {
       const { title, text } = liquidityProviderContent.poolSharesLocked
       return {
         title,
-        message: text + getLockedSharesMessage(),
+        message: text + getLockedSharesMessage(lockedShares),
         action: MigrationAction.NONE
       }
     }
@@ -96,12 +102,15 @@ export default function Migration(): ReactElement {
   useEffect(() => {
     if (!accountId) return
     const poolSharesNumber = isNaN(Number(poolShares)) ? 0 : Number(poolShares)
+    const lockedSharesNumber = parseInt(
+      Web3.utils.fromWei(lockedSharesV3 || '0')
+    )
     if (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0')) {
       setShowMigration(true)
     }
     const { title, message, action } = getMessageAndAction(
       deadlinePassed,
-      poolShares
+      lockedSharesNumber
     )
     setTitle(title)
     setMessage(message)
