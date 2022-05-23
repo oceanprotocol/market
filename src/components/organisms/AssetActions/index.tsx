@@ -7,13 +7,11 @@ import { Logger, File as FileMetadata, DID } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
-import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import Web3Feedback from '../../molecules/Web3Feedback'
-import { fileinfo, getFileInfo } from '../../../utils/provider'
-import axios from 'axios'
+import { getFileInfo } from '../../../utils/provider'
 import { getOceanConfig } from '../../../utils/ocean'
 import { useCancelToken } from '../../../hooks/useCancelToken'
 import { useIsMounted } from '../../../hooks/useIsMounted'
@@ -129,16 +127,10 @@ export default function AssetActions(): ReactElement {
   ]
 
   price?.type === 'pool' &&
-    tabs.push(
-      {
-        title: 'Pool',
-        content: <Pool />
-      },
-      {
-        title: 'Trade',
-        content: <Trade />
-      }
-    )
+    tabs.push({
+      title: 'Pool',
+      content: <Pool />
+    })
 
   return (
     <>
