@@ -50,7 +50,8 @@ export default function Migration(): ReactElement {
   const [showMigration, setShowMigration] = useState<boolean>(false)
   const [action, setAction] = useState<MigrationAction>()
   const { accountId } = useWeb3()
-  const { deadlinePassed, poolShares, lockedSharesV3 } = useMigrationStatus()
+  const { canAddShares, deadlinePassed, poolShares, lockedSharesV3 } =
+    useMigrationStatus()
   // Get content
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childContentJson
@@ -105,7 +106,10 @@ export default function Migration(): ReactElement {
     const lockedSharesNumber = parseInt(
       Web3.utils.fromWei(lockedSharesV3 || '0')
     )
-    if (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0')) {
+    if (
+      canAddShares &&
+      (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0'))
+    ) {
       setShowMigration(true)
     }
     const { title, message, action } = getMessageAndAction(
