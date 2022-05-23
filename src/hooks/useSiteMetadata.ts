@@ -35,6 +35,7 @@ interface UseSiteMetadata {
     defaultPrivacyPolicySlug: string
     privacyPreferenceCenter: string
     allowAdvancedPublishSettings: string
+    marketUrlV4: string
   }
 }
 
@@ -75,6 +76,7 @@ const query = graphql`
           credentialType
           defaultPrivacyPolicySlug
           privacyPreferenceCenter
+          marketUrlV4
         }
       }
     }

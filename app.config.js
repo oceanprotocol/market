@@ -74,5 +74,8 @@ module.exports = {
   // is used to create and show a privacy preference center / cookie banner
   // To learn more about how to configure and use this, please refer to the readme
   privacyPreferenceCenter:
-    process.env.GATSBY_PRIVACY_PREFERENCE_CENTER || 'false'
+    process.env.GATSBY_PRIVACY_PREFERENCE_CENTER || 'false',
+
+  marketUrlV4:
+    process.env.GATSBY_MARKET_URL_V4 || 'https://v4.market.oceanprotocol.com'
 }
