@@ -60,7 +60,6 @@ export default function Migration(): ReactElement {
     poolShares,
     poolShareOwners,
     lockedSharesV3,
-    deadline,
     canAddShares
   } = useMigrationStatus()
   // Get content
@@ -73,18 +72,23 @@ export default function Migration(): ReactElement {
     )} shares `
   }
 
-  function getMessageAndActionForLiquidityProvider(
+  function getMessageAndAction(
     status: string,
     deadlinePassed: boolean,
     _poolShares: string
   ): { title: string; message: string; action: MigrationAction } {
     const poolShares = isNaN(Number(_poolShares)) ? 0 : Number(_poolShares)
     const liquidityProviderContent = content.liquidityProvider
+    deadlinePassed = false // in place only for testing
 
-    if (status === MigrationStatus.COMPLETED) {
-      const { title, text } = liquidityProviderContent.migrationComplete
-      return { title, message: text, action: MigrationAction.NONE }
-    } else if (!deadlinePassed && poolShares > 0 && canAddShares) {
+    if (deadlinePassed) {
+      const { title, text } = liquidityProviderContent.deadlineMet
+      return {
+        title,
+        message: text + getLockedSharesMessage(),
+        action: MigrationAction.NONE
+      }
+    } else if (!deadlinePassed && poolShares > 0) {
       const { title, text } = liquidityProviderContent.migrationStarted
       return {
         title,
@@ -98,24 +102,13 @@ export default function Migration(): ReactElement {
         message: text + getLockedSharesMessage(),
         action: MigrationAction.NONE
       }
-    } else {
-      const { title, text } = liquidityProviderContent.deadlineMet
-      return {
-        title,
-        message: text + getLockedSharesMessage(),
-        action: MigrationAction.NONE
-      }
     }
   }
 
   useEffect(() => {
     if (!accountId) return
     const poolSharesNumber = isNaN(Number(poolShares)) ? 0 : Number(poolShares)
-    if (
-      (status === (MigrationStatus.ALLOWED || MigrationStatus.COMPLETED) &&
-        poolSharesNumber > 0) ||
-      (lockedSharesV3 && lockedSharesV3 !== '0')
-    ) {
+    if (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0')) {
       setShowMigration(true)
       // Check if user has already locked liquidity
       if (poolShareOwners) {
@@ -125,12 +118,11 @@ export default function Migration(): ReactElement {
           }
         }
       }
-      const { title, message, action } =
-        getMessageAndActionForLiquidityProvider(
-          status,
-          deadlinePassed,
-          poolShares
-        )
+      const { title, message, action } = getMessageAndAction(
+        status,
+        deadlinePassed,
+        poolShares
+      )
       setTitle(title)
       setMessage(message)
       setAction(action)
