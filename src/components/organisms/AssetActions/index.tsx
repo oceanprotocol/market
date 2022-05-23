@@ -1,22 +1,21 @@
 import { DID, File as FileMetadata, Logger } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useCancelToken } from '../../../hooks/useCancelToken'
-import { useIsMounted } from '../../../hooks/useIsMounted'
-import { useAsset } from '../../../providers/Asset'
-import { useOcean } from '../../../providers/Ocean'
-import { useWeb3 } from '../../../providers/Web3'
 import compareAsBN from '../../../utils/compareAsBN'
-import { getOceanConfig } from '../../../utils/ocean'
-import { getFileInfo } from '../../../utils/provider'
 import Tabs from '../../atoms/Tabs'
 import Migration from '../../molecules/Migration/index'
-import Web3Feedback from '../../molecules/Web3Feedback'
 import Permission from '../Permission'
 import Compute from './Compute'
 import Consume from './Consume'
 import styles from './index.module.css'
 import Pool from './Pool'
-import Trade from './Trade'
+import { useAsset } from '../../../providers/Asset'
+import { useOcean } from '../../../providers/Ocean'
+import { useWeb3 } from '../../../providers/Web3'
+import Web3Feedback from '../../molecules/Web3Feedback'
+import { getFileInfo } from '../../../utils/provider'
+import { getOceanConfig } from '../../../utils/ocean'
+import { useCancelToken } from '../../../hooks/useCancelToken'
+import { useIsMounted } from '../../../hooks/useIsMounted'
 
 export default function AssetActions(): ReactElement {
   const { accountId, balance } = useWeb3()
@@ -129,16 +128,10 @@ export default function AssetActions(): ReactElement {
   ]
 
   price?.type === 'pool' &&
-    tabs.push(
-      {
-        title: 'Pool',
-        content: <Pool />
-      },
-      {
-        title: 'Trade',
-        content: <Trade />
-      }
-    )
+    tabs.push({
+      title: 'Pool',
+      content: <Pool />
+    })
 
   return (
     <>
