@@ -73,7 +73,6 @@ export default function Migration(): ReactElement {
   }
 
   function getMessageAndAction(
-    status: string,
     deadlinePassed: boolean,
     _poolShares: string
   ): { title: string; message: string; action: MigrationAction } {
@@ -119,7 +118,6 @@ export default function Migration(): ReactElement {
         }
       }
       const { title, message, action } = getMessageAndAction(
-        status,
         deadlinePassed,
         poolShares
       )
