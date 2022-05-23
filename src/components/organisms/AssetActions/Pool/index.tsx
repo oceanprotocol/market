@@ -93,7 +93,6 @@ export default function Pool(): ReactElement {
   const [oceanSymbol, setOceanSymbol] = useState<string>()
   const { isInPurgatory, ddo, owner, price, refreshInterval, isAssetNetwork } =
     useAsset()
-  const { status } = useMigrationStatus()
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
@@ -459,69 +458,12 @@ export default function Pool(): ReactElement {
           >
             <Token symbol="% of pool" balance={creatorPoolShare} noIcon />
           </TokenList>
-
-          {status === '0' && (
-            <TokenList
-              title={
-                <>
-                  Pool Statistics
-                  {weightDt && (
-                    <span
-                      className={styles.titleInfo}
-                      title={`Weight of ${weightOcean}% OCEAN & ${weightDt}% ${dtSymbol}`}
-                    >
-                      {weightOcean}/{weightDt}
-                    </span>
-                  )}
-                  <Graph />
-                </>
-              }
-              ocean={`${price?.ocean}`}
-              oceanSymbol={oceanSymbol}
-              dt={`${price?.datatoken}`}
-              dtSymbol={dtSymbol}
-              poolShares={totalPoolTokens}
-              conversion={totalLiquidityInOcean}
-              showTVLLabel
-            >
-              <Token symbol="% swap fee" balance={swapFee} noIcon />
-            </TokenList>
-          )}
-
-          <div className={styles.update}>
-            Fetching every {refreshInterval / 1000} sec.
-          </div>
-
-          <div className={stylesActions.actions}>
-            {status === '0' && (
-              <Button
-                style="primary"
-                size="small"
-                onClick={() => setShowAdd(true)}
-                disabled={isInPurgatory}
-              >
-                Add Liquidity
-              </Button>
-            )}
-
-            {hasAddedLiquidity && !isRemoveDisabled && status === '0' && (
-              <Button
-                size="small"
-                onClick={() => setShowRemove(true)}
-                disabled={!isAssetNetwork}
-              >
-                Remove
-              </Button>
-            )}
-            {status !== '0' && (
-              <Alert
-                title="Pool Migration in Progress"
-                text="Adding and removing liquidity is disabled while the pool is in
+          <Alert
+            title="Pool Migration in Progress"
+            text="Adding and removing liquidity is disabled while the pool is in
               the process of being migrated from V3 to v4"
-                state="warning"
-              />
-            )}
-          </div>
+            state="warning"
+          />
 
           {accountId && (
             <AssetActionHistoryTable title="Your Pool Transactions">

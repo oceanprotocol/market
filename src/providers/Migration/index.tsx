@@ -22,27 +22,12 @@ import erc20Abi from './erc20.json'
 import migrationAbi from './migration.json'
 
 interface MigrationProviderValue {
-  migrationAddress: string
-  status: string
-  poolV3Address: string
-  poolV4Address: string
-  didV3: string
-  didV4: string
-  owner: string
-  poolShareOwners: string[]
-  dtV3Address: string
-  totalOcean: string
-  totalDTBurnt: string
-  newLPTAmount: string
-  lptRounding: string
-  deadline: string
-  refreshMigrationStatus: () => Promise<void>
   deadlinePassed: boolean
   poolShares: string
   lockedSharesV3: string
-  canAddShares: boolean
   addSharesToMigration: (amount: string) => Promise<TransactionReceipt>
   approveMigration: (amount: string) => Promise<TransactionReceipt>
+  refreshMigrationStatus: () => Promise<void>
 }
 
 export enum MigrationStatus {
@@ -59,16 +44,9 @@ function MigrationProvider({
   children: ReactNode
 }): ReactElement {
   const { chainId, accountId, web3 } = useWeb3()
-  const { price, ddo } = useAsset()
+  const { price } = useAsset()
   const [migrationAddress, setMigrationAddress] = useState<string>()
-  const [canAddShares, setCanAddShares] = useState<boolean>(false)
-
-  const [status, setStatus] = useState<string>()
   const [poolV3Address, setPoolV3Address] = useState<string>()
-  const [owner, setOwner] = useState<string>()
-  const [dtV3Address, setDtV3Address] = useState<string>()
-  const [totalOcean, setTotalOcean] = useState<string>()
-  const [totalDTBurnt, setTotalDTBurnt] = useState<string>()
   const [deadline, setDeadline] = useState<string>()
   const [deadlinePassed, setDeadlinePassed] = useState<boolean>()
   const [poolShares, setpoolShares] = useState<string>()
@@ -215,15 +193,7 @@ function MigrationProvider({
       .getPoolStatus(price.address)
       .call()
 
-    const canAddShares = await fetchCanAddShares(price.address)
-
-    setCanAddShares(canAddShares)
-    setStatus(poolStatus.status)
     setPoolV3Address(poolStatus.poolV3Address)
-    setOwner(poolStatus.owner)
-    setDtV3Address(poolStatus.dtV3Address)
-    setTotalOcean(poolStatus.totalOcean)
-    setTotalDTBurnt(poolStatus.totalDTBurnt)
     setDeadline(poolStatus.deadline)
   }
 
@@ -268,21 +238,12 @@ function MigrationProvider({
     <MigrationContext.Provider
       value={
         {
-          migrationAddress,
-          status,
-          poolV3Address,
-          owner,
-          dtV3Address,
-          totalOcean,
-          totalDTBurnt,
-          deadline,
-          refreshMigrationStatus,
           deadlinePassed,
           poolShares,
           lockedSharesV3,
-          canAddShares,
           addSharesToMigration,
-          approveMigration
+          approveMigration,
+          refreshMigrationStatus
         } as MigrationProviderValue
       }
     >
