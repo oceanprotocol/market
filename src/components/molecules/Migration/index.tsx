@@ -68,7 +68,7 @@ export default function Migration(): ReactElement {
   const content = data.content.edges[0].node.childContentJson
 
   function getLockedSharesMessage() {
-    return `\n\nYou have ${poolShares} pool shares\n\nYou have locked ${Web3.utils.fromWei(
+    return `\n\nYou currently have ${poolShares} pool shares\n\nYou have locked ${Web3.utils.fromWei(
       lockedSharesV3 || '0'
     )} shares `
   }
@@ -125,7 +125,6 @@ export default function Migration(): ReactElement {
           }
         }
       }
-      console.log('status before get title and text', status)
       const { title, message, action } =
         getMessageAndActionForLiquidityProvider(
           status,
