@@ -26,7 +26,7 @@ const query = graphql`
                 title
                 text
               }
-              deadlineMetThresholdMet {
+              deadlineMet {
                 title
                 text
               }
@@ -104,7 +104,7 @@ export default function Migration(): ReactElement {
         action: MigrationAction.NONE
       }
     } else {
-      const { title, text } = liquidityProviderContent.deadlineMetThresholdMet
+      const { title, text } = liquidityProviderContent.deadlineMet
       return {
         title,
         message: text + getLockedSharesMessage(),
