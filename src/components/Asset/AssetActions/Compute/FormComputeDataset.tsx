@@ -75,7 +75,7 @@ export default function FormStartCompute({
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
-  const [totalPrice, setTotalPrice] = useState(asset?.accessDetails?.price)
+  const [totalPrice, setTotalPrice] = useState('0')
   const [datasetOrderPrice, setDatasetOrderPrice] = useState(
     asset?.accessDetails?.price
   )
