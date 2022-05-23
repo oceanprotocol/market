@@ -1,13 +1,12 @@
 import React, { ReactElement, ReactNode } from 'react'
-import styles from './Lists.module.css'
+import styles from './index.module.css'
 
-export function ListItem({
-  children,
-  ol
-}: {
-  children: ReactNode
+export interface ListItemProps {
+  children?: ReactNode
   ol?: boolean
-}): ReactElement {
+}
+
+export function ListItem({ children, ol }: ListItemProps): ReactElement {
   const classes = ol
     ? `${styles.item} ${styles.olItem}`
     : `${styles.item} ${styles.ulItem}`

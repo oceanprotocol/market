@@ -127,4 +127,5 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-
 
       - run: npm ci
+      - run: npm run pregenerate
       - run: npm run storybook:build

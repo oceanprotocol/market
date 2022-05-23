@@ -4,7 +4,7 @@ import Time from '@shared/atoms/Time'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import NetworkName from '@shared/NetworkName'
 import { useProfile } from '@context/Profile'
-
+import { useUserPreferences } from '@context/UserPreferences'
 const columns = [
   {
     name: 'Data Set',
@@ -38,6 +38,7 @@ export default function ComputeDownloads({
   accountId: string
 }): ReactElement {
   const { downloads, isDownloadsLoading } = useProfile()
+  const { chainIds } = useUserPreferences()
 
   return accountId ? (
     <Table
@@ -45,6 +46,7 @@ export default function ComputeDownloads({
       data={downloads}
       paginationPerPage={10}
       isLoading={isDownloadsLoading}
+      emptyMessage={chainIds.length === 0 ? 'No network selected' : null}
     />
   ) : (
     <div>Please connect your Web3 wallet.</div>

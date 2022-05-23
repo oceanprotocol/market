@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react'
 import ReactModal from 'react-modal'
-import styles from './Modal.module.css'
+import styles from './index.module.css'
 
 if (process.env.NODE_ENV !== 'test') ReactModal.setAppElement('#__next')
 

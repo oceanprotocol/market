@@ -14,7 +14,7 @@
 }
 
 .modal {
-  composes: box from './Box.module.css';
+  composes: box from '../Box.module.css';
   padding: var(--spacer);
   margin: var(--spacer) auto;
   max-width: var(--break-point--small);

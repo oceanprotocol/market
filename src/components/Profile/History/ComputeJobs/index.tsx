@@ -131,6 +131,7 @@ export default function ComputeJobs({
         isLoading={isLoading}
         defaultSortField="row.dateCreated"
         defaultSortAsc={false}
+        emptyMessage={chainIds.length === 0 ? 'No network selected' : null}
       />
     </>
   ) : (

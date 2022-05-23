@@ -1,12 +1,20 @@
-import React, { ReactElement, ReactNode } from 'react'
+import React, { ReactElement, ReactNode, useState } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
-import InputElement from '@shared/FormInput/InputElement'
-import styles from './Tabs.module.css'
+import styles from './index.module.css'
+import InputRadio from '@shared/FormInput/InputRadio'
 
 export interface TabsItem {
   title: string
   content: ReactNode
   disabled?: boolean
+}
+
+export interface TabsProps {
+  items: TabsItem[]
+  className?: string
+  handleTabChange?: (tabName: string) => void
+  defaultIndex?: number
+  showRadio?: boolean
 }
 
 export default function Tabs({
@@ -15,31 +23,22 @@ export default function Tabs({
   handleTabChange,
   defaultIndex,
   showRadio
-}: {
-  items: TabsItem[]
-  className?: string
-  handleTabChange?: (tabName: string) => void
-  defaultIndex?: number
-  showRadio?: boolean
-}): ReactElement {
+}: TabsProps): ReactElement {
   return (
-    <ReactTabs
-      className={`${className && className}`}
-      defaultIndex={defaultIndex}
-    >
+    <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
       <TabList className={styles.tabList}>
         {items.map((item, index) => (
           <Tab
             className={styles.tab}
-            key={item.title}
+            key={index}
             onClick={handleTabChange ? () => handleTabChange(item.title) : null}
             disabled={item.disabled}
           >
             {showRadio ? (
-              <InputElement
+              <InputRadio
                 name={item.title}
                 type="radio"
-                checked={defaultIndex === index}
+                checked={index === defaultIndex}
                 options={[item.title]}
                 readOnly
               />
@@ -50,8 +49,8 @@ export default function Tabs({
         ))}
       </TabList>
       <div className={styles.tabContent}>
-        {items.map((item) => (
-          <TabPanel key={item.title}>{item.content}</TabPanel>
+        {items.map((item, index) => (
+          <TabPanel key={index}>{item.content}</TabPanel>
         ))}
       </div>
     </ReactTabs>

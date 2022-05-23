@@ -27,7 +27,7 @@ const columns = [
     selector: function getAssetRow(row: AssetExtended) {
       return (
         <Tooltip content={row.datatokens[0].name}>
-          {row.datatokens[0].symbol}
+          <>{row.datatokens[0].symbol}</>
         </Tooltip>
       )
     },
@@ -96,7 +96,11 @@ export default function Bookmarks(): ReactElement {
       columns={columns}
       data={pinned}
       isLoading={isLoading}
-      emptyMessage="Your bookmarks will appear here."
+      emptyMessage={
+        chainIds.length === 0
+          ? 'No network selected'
+          : 'Your bookmarks will appear here.'
+      }
       noTableHead
     />
   )

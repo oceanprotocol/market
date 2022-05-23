@@ -1,11 +1,10 @@
 import React, { ReactElement, ReactNode } from 'react'
 import DataTable, { IDataTableProps } from 'react-data-table-component'
-import Loader from './Loader'
+import Loader from '../Loader'
 import Pagination from '@shared/Pagination'
-import styles from './Table.module.css'
-import { useUserPreferences } from '@context/UserPreferences'
+import styles from './index.module.css'
 
-interface TableProps extends IDataTableProps {
+export interface TableProps extends IDataTableProps {
   isLoading?: boolean
   emptyMessage?: string
   sortField?: string
@@ -14,14 +13,7 @@ interface TableProps extends IDataTableProps {
 }
 
 function Empty({ message }: { message?: string }): ReactElement {
-  const { chainIds } = useUserPreferences()
-  return (
-    <div className={styles.empty}>
-      {chainIds.length === 0
-        ? 'No network selected'
-        : message || 'No results found'}
-    </div>
-  )
+  return <div className={styles.empty}>{message || 'No results found'}</div>
 }
 
 export default function Table({

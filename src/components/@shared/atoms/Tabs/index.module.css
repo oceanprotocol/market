@@ -8,16 +8,20 @@
 
 .tab {
   display: inline-block;
-  padding: calc(var(--spacer) / 12) var(--spacer);
+  padding: calc(var(--spacer) / 8) var(--spacer);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-small);
   text-transform: uppercase;
-  cursor: pointer;
   color: var(--color-secondary);
   background-color: var(--background-body);
   border: 1px solid var(--border-color);
   margin-right: -1px;
   min-width: 90px;
+}
+
+.tab,
+.tab label {
+  cursor: pointer;
 }
 
 .tab:first-child {
@@ -52,4 +56,8 @@
   .tabContent {
     padding: var(--spacer);
   }
+}
+
+.radio {
+  composes: radio from '../../FormInput/InputRadio.module.css';
 }
