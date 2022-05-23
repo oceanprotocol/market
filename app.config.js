@@ -99,4 +99,7 @@ module.exports = {
   mumbaiMigrationContractAddresss:
     process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_RINKEBY ||
     '0xbF49aaaEBa1C63D0fF9dE3886F6Afd4b9aDa3520'
+
+  marketUrlV4:
+    process.env.GATSBY_MARKET_URL_V4 || 'https://v4.market.oceanprotocol.com'
 }
