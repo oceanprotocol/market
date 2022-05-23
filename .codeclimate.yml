@@ -21,10 +21,10 @@ checks:
   # https://docs.codeclimate.com/docs/default-analysis-configuration#per-language-mass-threshold-defaults
   similar-code:
     config:
-      threshold: 50
+      threshold: 55
   identical-code:
     config:
-      threshold: 50
+      threshold: 55
 
 exclude_patterns:
   - 'config/'
@@ -40,5 +40,9 @@ exclude_patterns:
   - '**/vendor/'
   - '**/*_test.go'
   - '**/*.d.ts'
+  - '**/@types/'
+  - '**/_types.*'
   - '**/*.stories.tsx'
   - '**/*.test.tsx'
+  - '.storybook/'
+  - '.jest/'
