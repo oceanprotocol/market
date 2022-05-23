@@ -11,11 +11,6 @@ import Networks from './UserPreferences/Networks'
 import SearchBar from './SearchBar'
 import Tooltip from '../atoms/Tooltip'
 import { ReactComponent as Caret } from '../../images/caret.svg'
-import appConfig from '../../../app.config'
-
-const redirectToMarketV4 = (): void => {
-  window.location.href = appConfig.marketV4Url
-}
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -40,7 +35,7 @@ function MenuLink({ item }: { item: MenuItem }) {
 }
 
 export default function Menu(): ReactElement {
-  const { menu, siteTitle } = useSiteMetadata()
+  const { menu, siteTitle, appConfig } = useSiteMetadata()
 
   return (
     <nav className={styles.menu}>
@@ -49,30 +44,28 @@ export default function Menu(): ReactElement {
         <h1 className={styles.title}>{siteTitle}</h1>
       </Link>
       <Tooltip
+        className={styles.tooltip}
         content={
-          <ul className={styles.preferencesDetails}>
-            <li>
-              <button
-                className={styles.button}
-                onClick={(e) => e.preventDefault()}
-              >
-                <Badge label="v3" />
-              </button>
-            </li>
-            <li>
-              <button className={styles.button} onClick={redirectToMarketV4}>
-                <Badge label="v4" />
-              </button>
-            </li>
-          </ul>
+          <div className={styles.versions}>
+            <a className={styles.link} href="" aria-disabled aria-current>
+              v3
+            </a>
+            <a className={styles.link} href={appConfig.marketUrlV4}>
+              v4
+            </a>
+          </div>
         }
         trigger="click focus"
-        className={`${styles.preferences} `}
+        placement="bottom"
       >
-        <div className={styles.badge}>
-          <span className={styles.badgeText}>v3 </span>{' '}
-          <Caret aria-hidden="true" className={styles.caret} />
-        </div>
+        <Badge
+          className={styles.badge}
+          label={
+            <>
+              v3 <Caret aria-hidden="true" className={styles.caret} />
+            </>
+          }
+        />
       </Tooltip>
 
       <ul className={styles.navigation}>

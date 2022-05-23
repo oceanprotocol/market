@@ -76,6 +76,6 @@ module.exports = {
   privacyPreferenceCenter:
     process.env.GATSBY_PRIVACY_PREFERENCE_CENTER || 'false',
 
-  marketV4Url:
-    process.env.GATSBY_V4_MARKET_URL || 'https://market.oceanprotocol.com'
+  marketUrlV4:
+    process.env.GATSBY_MARKET_URL_V4 || 'https://v4.market.oceanprotocol.com'
 }
