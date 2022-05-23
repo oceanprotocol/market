@@ -21,6 +21,13 @@ import { useWeb3 } from '../Web3'
 import erc20Abi from './erc20.json'
 import migrationAbi from './migration.json'
 
+declare global {
+  interface Window {
+    startMigration: any
+    completeMigration: any
+  }
+}
+
 interface MigrationProviderValue {
   deadlinePassed: boolean
   poolShares: string
@@ -44,7 +51,7 @@ function MigrationProvider({
   children: ReactNode
 }): ReactElement {
   const { chainId, accountId, web3 } = useWeb3()
-  const { price } = useAsset()
+  const { price, ddo } = useAsset()
   const [migrationAddress, setMigrationAddress] = useState<string>()
   const [poolV3Address, setPoolV3Address] = useState<string>()
   const [deadline, setDeadline] = useState<string>()
@@ -86,14 +93,6 @@ function MigrationProvider({
     }
   }
 
-  async function fetchCanAddShares(poolAddress: string): Promise<boolean> {
-    const migration = new web3.eth.Contract(
-      migrationAbi.abi as AbiItem[],
-      migrationAddress
-    )
-    return migration.methods.canAddShares(poolAddress).call()
-  }
-
   interface PoolStatus {
     status: MigrationStatus
     poolV3Address: string
@@ -110,6 +109,44 @@ function MigrationProvider({
   async function getFairGasPrice(web3: Web3): Promise<string> {
     const x = new BigNumber(await web3.eth.getGasPrice())
     return x.multipliedBy(1.05).integerValue(BigNumber.ROUND_DOWN).toString(10)
+  }
+
+  const startMigration = async (): Promise<void> => {
+    if (migrationAddress && ddo?.dataToken && price?.address) {
+      const migration = new web3.eth.Contract(
+        migrationAbi.abi as AbiItem[],
+        migrationAddress
+      )
+      const estGas = await migration.methods
+        .startMigration(ddo.dataToken, price.address)
+        .estimateGas({ from: accountId })
+      const tx = await migration.methods
+        .startMigration(ddo.dataToken, price.address)
+        .send({
+          from: accountId,
+          gas: estGas + 100000,
+          gasPrice: await getFairGasPrice(web3)
+        })
+    }
+  }
+
+  const completeMigration = async (): Promise<void> => {
+    if (migrationAddress && price?.address) {
+      const migration = new web3.eth.Contract(
+        migrationAbi.abi as AbiItem[],
+        migrationAddress
+      )
+      const estGas = await migration.methods
+        .liquidate(price.address, ['1', '1'])
+        .estimateGas({ from: accountId })
+      const tx = await migration.methods
+        .liquidate(price.address, ['1', '1'])
+        .send({
+          from: accountId,
+          gas: estGas + 100000,
+          gasPrice: await getFairGasPrice(web3)
+        })
+    }
   }
 
   async function getUserPoolShareBalance() {
@@ -141,23 +178,30 @@ function MigrationProvider({
   }
 
   async function approveMigration(amount: string): Promise<TransactionReceipt> {
-    const erc20Contract = new web3.eth.Contract(
-      erc20Abi.abi as AbiItem[],
-      poolV3Address
-    )
+    try {
+      const erc20Contract = new web3.eth.Contract(
+        erc20Abi.abi as AbiItem[],
+        poolV3Address
+      )
+      console.log('erc20Contract', erc20Contract)
 
-    const estGas = await erc20Contract.methods
-      .approve(migrationAddress, web3.utils.toWei(amount))
-      .estimateGas({ from: accountId })
+      const estGas = await erc20Contract.methods
+        .approve(migrationAddress, web3.utils.toWei(amount))
+        .estimateGas({ from: accountId })
+      console.log('estGas', estGas)
 
-    const trxReceipt = await erc20Contract.methods
-      .approve(migrationAddress, web3.utils.toWei(amount))
-      .send({
-        from: accountId,
-        gas: estGas + 100000,
-        gasPrice: await getFairGasPrice(web3)
-      })
-    return trxReceipt
+      const trxReceipt = await erc20Contract.methods
+        .approve(migrationAddress, web3.utils.toWei(amount))
+        .send({
+          from: accountId,
+          gas: estGas + 100000,
+          gasPrice: await getFairGasPrice(web3)
+        })
+      console.log('trxReceipt', trxReceipt)
+      return trxReceipt
+    } catch (error) {
+      console.log('error', error)
+    }
   }
 
   async function addSharesToMigration(
@@ -199,6 +243,11 @@ function MigrationProvider({
 
   const refreshMigrationStatus = async () => {
     await loadMigrationInfo()
+    await fetchUserLockedSharesForMigration(
+      price.address,
+      migrationAddress
+    ).then(setLockedSharesV3)
+    await getUserPoolShareBalance().then(setpoolShares)
   }
 
   useEffect(() => {
@@ -225,6 +274,9 @@ function MigrationProvider({
     getUserPoolShareBalance()
       .then(setpoolShares)
       .catch((error) => Logger.error(error.message))
+
+    window.startMigration = () => startMigration() // Todo: remove this when we are done with testing
+    window.completeMigration = () => completeMigration() // Todo: remove this when we are done with testing
   }, [accountId, price, deadline])
 
   useEffect(() => {

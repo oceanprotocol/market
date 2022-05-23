@@ -55,8 +55,8 @@ export default function LockPoolShares(): ReactElement {
     setLoading(true)
     await approveMigration(lptV3Amount)
     await addSharesToMigration(lptV3Amount)
-    setLoading(false)
     await refreshMigrationStatus()
+    setLoading(false)
   }
 
   return (
