@@ -5,11 +5,11 @@
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
+
 .alert {
   margin-bottom: 2rem;
 }
-.button {
-}
+
 .header {
   padding-left: calc(var(--spacer) / 1.2);
   padding-right: calc(var(--spacer) / 1.2);
@@ -18,10 +18,6 @@
   border-bottom: none;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  color: var(--color-secondary);
-  font-weight: 600;
-}
-.success {
   color: var(--color-secondary);
   font-weight: 600;
 }

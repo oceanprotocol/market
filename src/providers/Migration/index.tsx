@@ -72,26 +72,9 @@ function MigrationProvider({
       case 4:
         setMigrationAddress(appConfig.rinkebyMigrationContractAddresss)
         break
-      case 3:
-        setMigrationAddress(appConfig.ropstenMigrationContractAddresss)
-        break
-      case 1287:
-        setMigrationAddress(appConfig.moonbaseMigrationContractAddresss)
-        break
-      case 80001:
-        setMigrationAddress(appConfig.mumbaiMigrationContractAddresss)
-        break
       default:
         break
     }
-  }
-
-  async function fetchCanAddShares(poolAddress: string): Promise<boolean> {
-    const migration = new web3.eth.Contract(
-      migrationAbi.abi as AbiItem[],
-      migrationAddress
-    )
-    return migration.methods.canAddShares(poolAddress).call()
   }
 
   interface PoolStatus {

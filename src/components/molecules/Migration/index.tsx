@@ -5,8 +5,8 @@ import { useMigrationStatus } from '../../../providers/Migration'
 import { useWeb3 } from '../../../providers/Web3'
 import Alert from '../../atoms/Alert'
 import Container from '../../atoms/Container'
-import LockShares from './lockPoolShares'
-import styles from './migration.module.css'
+import LockShares from './LockPoolShares'
+import styles from './index.module.css'
 
 const query = graphql`
   query {
