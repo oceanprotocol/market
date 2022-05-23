@@ -1,10 +1,7 @@
 import { graphql, useStaticQuery } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Web3 from 'web3'
-import {
-  MigrationStatus,
-  useMigrationStatus
-} from '../../../providers/Migration'
+import { useMigrationStatus } from '../../../providers/Migration'
 import { useWeb3 } from '../../../providers/Web3'
 import Alert from '../../atoms/Alert'
 import Container from '../../atoms/Container'
@@ -52,16 +49,8 @@ export default function Migration(): ReactElement {
   const [title, setTitle] = useState<string>()
   const [showMigration, setShowMigration] = useState<boolean>(false)
   const [action, setAction] = useState<MigrationAction>()
-  const [sharesLocked, setSharesLocked] = useState<boolean>()
   const { accountId } = useWeb3()
-  const {
-    status,
-    deadlinePassed,
-    poolShares,
-    poolShareOwners,
-    lockedSharesV3,
-    canAddShares
-  } = useMigrationStatus()
+  const { deadlinePassed, poolShares, lockedSharesV3 } = useMigrationStatus()
   // Get content
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childContentJson
@@ -109,32 +98,15 @@ export default function Migration(): ReactElement {
     const poolSharesNumber = isNaN(Number(poolShares)) ? 0 : Number(poolShares)
     if (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0')) {
       setShowMigration(true)
-      // Check if user has already locked liquidity
-      if (poolShareOwners) {
-        for (let i = 0; i < poolShareOwners.length; i++) {
-          if (accountId === poolShareOwners[i]) {
-            setSharesLocked(true)
-          }
-        }
-      }
-      const { title, message, action } = getMessageAndAction(
-        deadlinePassed,
-        poolShares
-      )
-      setTitle(title)
-      setMessage(message)
-      setAction(action)
     }
-  }, [
-    accountId,
-    poolShares,
-    status,
-    deadlinePassed,
-    sharesLocked,
-    poolShareOwners,
-    poolShares,
-    lockedSharesV3
-  ])
+    const { title, message, action } = getMessageAndAction(
+      deadlinePassed,
+      poolShares
+    )
+    setTitle(title)
+    setMessage(message)
+    setAction(action)
+  }, [accountId, poolShares, deadlinePassed, poolShares, lockedSharesV3])
 
   return (
     <>

@@ -6,7 +6,7 @@
     },
     "poolSharesLocked": {
       "title": "Your pool shares have been locked",
-      "text": "You have successfully locked your pool shares in the migration smart contract.\n\nThe migration won't be completed until 10:00 UTC 15th June 2022."
+      "text": "You have successfully locked your pool shares in the migration smart contract.\n\nThe migration period ends at 10:00 UTC 15th June 2022."
     },
     "deadlineMet": {
       "title": "V4 Migration Will be Completed Soon",
