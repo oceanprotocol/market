@@ -44,12 +44,7 @@ const query = graphql`
 
 enum MigrationAction {
   NONE = 'none',
-  START_MIGRATION = 'startMigration',
-  COMPLETE_MIGRATION = 'completeMigration',
-  CANCEL_MIGRATION = 'cancelMigration',
-  LOCK_SHARES = 'lockShares',
-  REMOVE_SHARES = 'removeShares',
-  VIEW_V4_ASSET = 'viewV4Asset'
+  LOCK_SHARES = 'lockShares'
 }
 
 export default function Migration(): ReactElement {
@@ -58,7 +53,7 @@ export default function Migration(): ReactElement {
   const [showMigration, setShowMigration] = useState<boolean>(false)
   const [action, setAction] = useState<MigrationAction>()
   const [sharesLocked, setSharesLocked] = useState<boolean>()
-  const { accountId, block } = useWeb3()
+  const { accountId } = useWeb3()
   const {
     status,
     deadlinePassed,
