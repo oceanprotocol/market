@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import slugify from 'slugify'
 import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../FormFields/FilesInput'
@@ -11,15 +10,20 @@ import AssetSelection, {
   AssetSelectionAsset
 } from '../FormFields/AssetSelection'
 import Nft from '../FormFields/Nft'
+import InputRadio from './InputRadio'
 
 const cx = classNames.bind(styles)
 
 const DefaultInput = ({
   size,
   className,
+  // We filter out all props which are not allowed
+  // to be passed to HTML input so these stay unused.
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   prefix,
   postfix,
   additionalComponent,
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   ...props
 }: InputProps) => (
   <input
@@ -30,27 +34,28 @@ const DefaultInput = ({
 )
 
 export default function InputElement({
-  type,
   options,
   sortOptions,
-  name,
   prefix,
   postfix,
   size,
   field,
-  label,
   multiple,
-  disabled,
+  // We filter out all props which are not allowed
+  // to be passed to HTML input so these stay unused.
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  label,
   help,
   prominentHelp,
   form,
   additionalComponent,
   disclaimer,
   disclaimerValues,
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   ...props
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
-  switch (type) {
+  switch (props.type) {
     case 'select': {
       const sortedOptions =
         !sortOptions && sortOptions === false
@@ -60,10 +65,9 @@ export default function InputElement({
             )
       return (
         <select
-          id={name}
+          id={props.name}
           className={styleClasses}
           {...props}
-          disabled={disabled}
           multiple={multiple}
         >
           {field !== undefined && field.value === '' && <option value="" />}
@@ -77,39 +81,12 @@ export default function InputElement({
       )
     }
     case 'textarea':
-      return (
-        <textarea
-          name={name}
-          id={name}
-          className={styles.textarea}
-          {...props}
-        />
-      )
+      return <textarea id={props.name} className={styles.textarea} {...props} />
+
     case 'radio':
     case 'checkbox':
-      return (
-        <div className={styles.radioGroup}>
-          {options &&
-            (options as string[]).map((option: string, index: number) => (
-              <div className={styles.radioWrap} key={index}>
-                <input
-                  className={styles[type]}
-                  id={slugify(option)}
-                  type={type}
-                  name={name}
-                  defaultChecked={props.defaultChecked}
-                  {...props}
-                />
-                <label
-                  className={cx({ [styles.radioLabel]: true, [size]: size })}
-                  htmlFor={slugify(option)}
-                >
-                  {option}
-                </label>
-              </div>
-            ))}
-        </div>
-      )
+      return <InputRadio options={options} inputSize={size} {...props} />
+
     case 'assetSelection':
       return (
         <AssetSelection
@@ -118,28 +95,27 @@ export default function InputElement({
           {...props}
         />
       )
+
     case 'assetSelectionMultiple':
       return (
         <AssetSelection
           assets={options as unknown as AssetSelectionAsset[]}
           multiple
-          disabled={disabled}
           {...field}
           {...props}
         />
       )
     case 'files':
-      return <FilesInput name={name} {...field} {...props} />
+      return <FilesInput {...field} {...props} />
     case 'providerUrl':
-      return <CustomProvider name={name} {...field} {...props} />
+      return <CustomProvider {...field} {...props} />
     case 'nft':
-      return <Nft name={name} {...field} {...props} />
+      return <Nft {...field} {...props} />
     case 'datatoken':
-      return <Datatoken name={name} {...field} {...props} />
+      return <Datatoken {...field} {...props} />
     case 'boxSelection':
       return (
         <BoxSelection
-          name={name}
           options={options as unknown as BoxSelectionOption[]}
           {...field}
           {...props}
@@ -152,10 +128,8 @@ export default function InputElement({
             <div className={cx({ prefix: true, [size]: size })}>{prefix}</div>
           )}
           <DefaultInput
-            name={name}
-            type={type || 'text'}
+            type={props.type || 'text'}
             size={size}
-            disabled={disabled}
             {...field}
             {...props}
           />
@@ -165,10 +139,8 @@ export default function InputElement({
         </div>
       ) : (
         <DefaultInput
-          name={name}
-          type={type || 'text'}
+          type={props.type || 'text'}
           size={size}
-          disabled={disabled}
           {...field}
           {...props}
         />

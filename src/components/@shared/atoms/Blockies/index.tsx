@@ -1,14 +1,16 @@
 import { toDataUrl } from 'myetherwallet-blockies'
 import React, { ReactElement } from 'react'
-import styles from './Blockies.module.css'
+import styles from './index.module.css'
+
+export interface BlockiesProps {
+  accountId: string
+  className?: string
+}
 
 export default function Blockies({
   accountId,
   className
-}: {
-  accountId: string
-  className?: string
-}): ReactElement {
+}: BlockiesProps): ReactElement {
   if (!accountId) return null
   const blockies = toDataUrl(accountId)
 

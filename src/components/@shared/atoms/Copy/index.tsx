@@ -1,9 +1,13 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import styles from './Copy.module.css'
+import styles from './index.module.css'
 import IconCopy from '@images/copy.svg'
 import Clipboard from 'react-clipboard.js'
 
-export default function Copy({ text }: { text: string }): ReactElement {
+export interface CopyProps {
+  text: string
+}
+
+export default function Copy({ text }: CopyProps): ReactElement {
   const [isCopied, setIsCopied] = useState(false)
 
   // Clear copy success style after 5 sec.

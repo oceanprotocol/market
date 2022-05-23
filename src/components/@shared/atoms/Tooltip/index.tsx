@@ -1,14 +1,8 @@
-import React, { ReactElement, ReactNode } from 'react'
-import classNames from 'classnames/bind'
-import loadable from '@loadable/component'
+import React, { ReactElement } from 'react'
 import { useSpring, animated } from 'react-spring'
-import styles from './Tooltip.module.css'
+import stylesTooltip from './index.module.css'
 import Info from '@images/info.svg'
-import { Placement } from 'tippy.js'
-
-const cx = classNames.bind(styles)
-
-const Tippy = loadable(() => import('@tippyjs/react/headless'))
+import Tippy, { TippyProps } from '@tippyjs/react/headless'
 
 const animation = {
   config: { tension: 400, friction: 20 },
@@ -19,28 +13,15 @@ const animation = {
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const DefaultTrigger = React.forwardRef((props, ref: any) => {
-  return <Info className={styles.icon} ref={ref} />
+  return <Info className={stylesTooltip.icon} ref={ref} />
 })
 
-export default function Tooltip({
-  content,
-  children,
-  trigger,
-  disabled,
-  className,
-  placement
-}: {
-  content: ReactNode
-  children?: ReactNode
-  trigger?: string
-  disabled?: boolean
-  className?: string
-  placement?: Placement
-}): ReactElement {
-  const [props, setSpring] = useSpring(() => animation.from)
+export default function Tooltip(props: TippyProps): ReactElement {
+  const { content, children, trigger, disabled, className, placement } = props
+  const [styles, api] = useSpring(() => animation.from)
 
   function onMount() {
-    setSpring({
+    api.start({
       ...animation.to,
       onRest: (): void => null,
       config: animation.config
@@ -48,17 +29,14 @@ export default function Tooltip({
   }
 
   function onHide({ unmount }: { unmount: () => void }) {
-    setSpring({
+    api.start({
       ...animation.from,
       onRest: unmount,
       config: { ...animation.config, clamp: true }
     })
   }
 
-  const styleClasses = cx({
-    tooltip: true,
-    [className]: className
-  })
+  const styleClasses = `${stylesTooltip.tooltip} ${className || ''}`
 
   return (
     <Tippy
@@ -68,23 +46,21 @@ export default function Tooltip({
       trigger={trigger || 'mouseenter focus'}
       disabled={disabled || null}
       placement={placement || 'auto'}
-      render={(attrs: any) => (
-        <animated.div style={props}>
-          <div className={styles.content} {...attrs}>
+      render={(attrs) => (
+        <animated.div style={styles}>
+          <div className={stylesTooltip.content} {...attrs}>
             {content}
-            <div className={styles.arrow} data-popper-arrow />
+            <div className={stylesTooltip.arrow} data-popper-arrow />
           </div>
         </animated.div>
       )}
       appendTo={
         typeof document !== 'undefined' && document.querySelector('body')
       }
-      animation
       onMount={onMount}
       onHide={onHide}
-      fallback={
-        <div className={styleClasses}>{children || <DefaultTrigger />}</div>
-      }
+      // animation
+      {...props}
     >
       <div className={styleClasses}>{children || <DefaultTrigger />}</div>
     </Tippy>

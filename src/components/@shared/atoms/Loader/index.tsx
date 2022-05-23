@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
-import styles from './Loader.module.css'
+import styles from './index.module.css'
 
-export default function Loader({
-  message
-}: {
+export interface LoaderProps {
   message?: string
-}): ReactElement {
+}
+
+export default function Loader({ message }: LoaderProps): ReactElement {
   return (
     <div className={styles.loaderWrap}>
       <span className={styles.loader} />

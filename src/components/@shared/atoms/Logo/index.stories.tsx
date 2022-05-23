@@ -14,7 +14,10 @@ interface Props {
   args: LogoProps
 }
 
-export const Primary: Props = Template.bind({})
-Primary.args = {
+export const Default: Props = Template.bind({})
+Default.args = {}
+
+export const WithoutWordmark: Props = Template.bind({})
+WithoutWordmark.args = {
   noWordmark: true
 }

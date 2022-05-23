@@ -1,16 +1,18 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
-import styles from './Status.module.css'
+import styles from './index.module.css'
+
+export interface StatusProps {
+  state?: string
+  className?: string
+}
 
 const cx = classNames.bind(styles)
 
 export default function Status({
   state,
   className
-}: {
-  state?: string
-  className?: string
-}): ReactElement {
+}: StatusProps): ReactElement {
   const styleClasses = cx({
     status: true,
     warning: state === 'warning',

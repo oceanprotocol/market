@@ -109,6 +109,7 @@ export default function PoolShares({
       isLoading={loading}
       sortField="userLiquidity"
       sortAsc={false}
+      emptyMessage={chainIds.length === 0 ? 'No network selected' : null}
     />
   ) : (
     <div>Please connect your Web3 wallet.</div>

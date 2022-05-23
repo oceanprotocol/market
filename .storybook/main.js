@@ -1,5 +1,5 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
-
+const webpack = require('webpack')
 module.exports = {
   core: { builder: 'webpack5' },
   stories: ['../src/**/*.stories.tsx'],
@@ -47,6 +47,12 @@ module.exports = {
     })
     config.resolve.fallback = fallback
 
+    config.plugins = (config.plugins || []).concat([
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+        Buffer: ['buffer', 'Buffer']
+      })
+    ])
     return config
   }
 }

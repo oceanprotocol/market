@@ -264,6 +264,7 @@ export default function PoolTransactions({
         minimal ? transactions?.length >= 4 : transactions?.length >= 9
       }
       paginationPerPage={minimal ? 5 : 10}
+      emptyMessage={chainIds.length === 0 ? 'No network selected' : null}
     />
   ) : (
     <div>Please connect your Web3 wallet.</div>
