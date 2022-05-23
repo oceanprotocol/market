@@ -76,6 +76,21 @@ module.exports = {
   privacyPreferenceCenter:
     process.env.GATSBY_PRIVACY_PREFERENCE_CENTER || 'false',
 
+  // Migration contract addresses
+  ethereumMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_ETHEREUM || '',
+  polygonMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_POLYGON || '',
+  bscMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_BSC || '',
+  moonriverMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_MOONRIVER || '',
+  ewcMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_EWC || '',
+  rinkebyMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_RINKEBY ||
+    '0x0e4806e14bd02A809f49aD37F8C749f117D84239',
+
   marketUrlV4:
     process.env.GATSBY_MARKET_URL_V4 || 'https://v4.market.oceanprotocol.com'
 }

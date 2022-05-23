@@ -153,6 +153,8 @@ function AssetProvider({
     setIsAssetNetwork(isAssetNetwork)
   }, [networkId, ddo])
 
+  Logger.log('Asset Provider Accessed')
+
   return (
     <AssetContext.Provider
       value={

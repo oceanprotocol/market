@@ -1,11 +1,12 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import { DID, File as FileMetadata, Logger } from '@oceanprotocol/lib'
+import React, { ReactElement, useEffect, useState } from 'react'
+import compareAsBN from '../../../utils/compareAsBN'
+import Tabs from '../../atoms/Tabs'
+import Migration from '../../molecules/Migration/index'
 import Permission from '../Permission'
-import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
-import { Logger, File as FileMetadata, DID } from '@oceanprotocol/lib'
-import Tabs from '../../atoms/Tabs'
-import compareAsBN from '../../../utils/compareAsBN'
+import styles from './index.module.css'
 import Pool from './Pool'
 import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
@@ -134,6 +135,7 @@ export default function AssetActions(): ReactElement {
 
   return (
     <>
+      {price?.type === 'pool' && <Migration />}
       <Permission eventType="consume">
         <Tabs items={tabs} className={styles.actions} />
       </Permission>
