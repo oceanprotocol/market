@@ -61,7 +61,6 @@ export default function Migration(): ReactElement {
   const { accountId, block } = useWeb3()
   const {
     status,
-    thresholdMet,
     deadlinePassed,
     poolShares,
     poolShareOwners,
@@ -81,7 +80,6 @@ export default function Migration(): ReactElement {
 
   function getMessageAndActionForLiquidityProvider(
     status: string,
-    thresholdMet: boolean,
     deadlinePassed: boolean,
     _poolShares: string
   ): { title: string; message: string; action: MigrationAction } {
@@ -136,7 +134,6 @@ export default function Migration(): ReactElement {
       const { title, message, action } =
         getMessageAndActionForLiquidityProvider(
           status,
-          thresholdMet,
           deadlinePassed,
           poolShares
         )
@@ -148,7 +145,6 @@ export default function Migration(): ReactElement {
     accountId,
     poolShares,
     status,
-    thresholdMet,
     deadlinePassed,
     sharesLocked,
     poolShareOwners,

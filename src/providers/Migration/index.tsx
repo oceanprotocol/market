@@ -44,7 +44,6 @@ interface MigrationProviderValue {
   lptRounding: string
   deadline: string
   refreshMigrationStatus: () => Promise<void>
-  thresholdMet: boolean
   deadlinePassed: boolean
   poolShares: string
   lockedSharesV3: string
@@ -78,7 +77,6 @@ function MigrationProvider({
   const [totalOcean, setTotalOcean] = useState<string>()
   const [totalDTBurnt, setTotalDTBurnt] = useState<string>()
   const [deadline, setDeadline] = useState<string>()
-  const [thresholdMet, setThresholdMet] = useState<boolean>()
   const [deadlinePassed, setDeadlinePassed] = useState<boolean>()
   const [poolShares, setpoolShares] = useState<string>()
   const [lockedSharesV3, setLockedSharesV3] = useState<string>()
@@ -268,10 +266,6 @@ function MigrationProvider({
       .getPoolStatus(price.address)
       .call()
 
-    const thresholdMet: boolean = await migration.methods
-      .thresholdMet(price.address)
-      .call()
-
     const canAddShares = await fetchCanAddShares(price.address)
 
     setCanAddShares(canAddShares)
@@ -282,7 +276,6 @@ function MigrationProvider({
     setTotalOcean(poolStatus.totalOcean)
     setTotalDTBurnt(poolStatus.totalDTBurnt)
     setDeadline(poolStatus.deadline)
-    setThresholdMet(thresholdMet)
   }
 
   const refreshMigrationStatus = async () => {
@@ -338,7 +331,6 @@ function MigrationProvider({
           totalDTBurnt,
           deadline,
           refreshMigrationStatus,
-          thresholdMet,
           deadlinePassed,
           poolShares,
           lockedSharesV3,
