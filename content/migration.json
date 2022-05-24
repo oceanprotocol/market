@@ -2,19 +2,15 @@
   "liquidityProvider": {
     "migrationStarted": {
       "title": "Lock Your Pool Shares",
-      "text": "**The migration of this pool is in progress** \n\nYou can now lock your liquidity pool tokens in the smart contract."
+      "text": "**The Data Pool Lock is in progress** \n\nYou can now lock your liquidity pool tokens in the smart contract. Please not that you can only lock pool shares once. At the end of the locking period there will be an airdrop."
     },
     "poolSharesLocked": {
       "title": "Your pool shares have been locked",
-      "text": "You have successfully locked your pool shares in the migration smart contract.\n\nThe migration period ends at 10:00 UTC 15th June 2022."
+      "text": "You have successfully locked your pool shares, you cannot lock anymore tokens.\n\nThe locking period ends at 10:00 UTC 15th June 2022 and there will be an airdrop shortly after."
     },
     "deadlineMet": {
-      "title": "V4 Migration Will be Completed Soon",
+      "title": "Ocean V3 Airdrop Will be Completed Soon",
       "text": "**You can no longer lock pool shares** The deadline for locking pool shares has passed."
-    },
-    "migrationComplete": {
-      "title": "This pool has been migrated to V4",
-      "text": "The migration of this pool from V3 to V4 has been completed."
     }
   }
 }
