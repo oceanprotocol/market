@@ -105,25 +105,6 @@ function MigrationProvider({
     return x.multipliedBy(1.05).integerValue(BigNumber.ROUND_DOWN).toString(10)
   }
 
-  const completeMigration = async (): Promise<void> => {
-    if (migrationAddress && price?.address) {
-      const migration = new web3.eth.Contract(
-        migrationAbi.abi as AbiItem[],
-        migrationAddress
-      )
-      const estGas = await migration.methods
-        .liquidate(price.address, ['1', '1'])
-        .estimateGas({ from: accountId })
-      const tx = await migration.methods
-        .liquidate(price.address, ['1', '1'])
-        .send({
-          from: accountId,
-          gas: estGas + 100000,
-          gasPrice: await getFairGasPrice(web3)
-        })
-    }
-  }
-
   async function getUserPoolShareBalance() {
     const queryContext = getQueryContext(chainId)
     const queryVariables = {
