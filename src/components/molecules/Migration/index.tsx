@@ -110,8 +110,6 @@ export default function Migration(): ReactElement {
       (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0'))
     ) {
       setShowMigration(true)
-    } else {
-      setShowMigration(true)
     }
     const { title, message, action } = getMessageAndAction(
       deadlinePassed,
