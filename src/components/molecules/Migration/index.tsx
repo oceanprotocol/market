@@ -119,7 +119,7 @@ export default function Migration(): ReactElement {
     <>
       {showMigration ? (
         <>
-          <header className={styles.header}>Pool Locking Status</header>
+          <header className={styles.header}>Pool Share Lock Status</header>
           <Container className={styles.container}>
             <Alert
               title={title}
