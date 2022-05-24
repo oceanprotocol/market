@@ -89,7 +89,7 @@ module.exports = {
     process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_EWC || '',
   rinkebyMigrationContractAddresss:
     process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_RINKEBY ||
-    '0x0e4806e14bd02A809f49aD37F8C749f117D84239',
+    '0xf2091811d6809A269e2B58D75ed5d4747f0BBfB1',
 
   marketUrlV4:
     process.env.GATSBY_MARKET_URL_V4 || 'https://v4.market.oceanprotocol.com'
