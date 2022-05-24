@@ -2,7 +2,7 @@
   "liquidityProvider": {
     "migrationStarted": {
       "title": "Lock Your Pool Shares",
-      "text": "**The Datatoken Pool Lock is in progress** \n\nYou can now lock your liquidity pool tokens in the smart contract. e that you can only lock pool shares once. At the end of the locking period there will be an airdrop."
+      "text": "**The Datatoken Pool Lock is in progress** \n\nYou can now lock your liquidity pool tokens in the smart contract. Please note that you can only lock pool shares once. At the end of the locking period there will be an airdrop."
     },
     "poolSharesLocked": {
       "title": "Your pool shares have been locked",
