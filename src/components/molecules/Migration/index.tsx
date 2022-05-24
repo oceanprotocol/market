@@ -57,8 +57,8 @@ export default function Migration(): ReactElement {
   const content = data.content.edges[0].node.childContentJson
 
   function getNoLockedSharesMessage() {
-    return `\n\nYou currently have ${parseInt(
-      poolShares
+    return `\n\nYou currently have ${Number(poolShares).toFixed(
+      3
     )} pool shares\n\nYou have locked 0 shares `
   }
   function getLockedSharesMessage(lockedShares: number) {
