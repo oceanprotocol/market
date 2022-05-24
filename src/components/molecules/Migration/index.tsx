@@ -74,7 +74,6 @@ export default function Migration(): ReactElement {
     action: MigrationAction
   } {
     const liquidityProviderContent = content.liquidityProvider
-    deadlinePassed = false // in place only for testing
 
     if (deadlinePassed) {
       const { title, text } = liquidityProviderContent.deadlineMet

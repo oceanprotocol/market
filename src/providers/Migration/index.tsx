@@ -21,13 +21,6 @@ import { useWeb3 } from '../Web3'
 import erc20Abi from './erc20.json'
 import migrationAbi from './migration.json'
 
-declare global {
-  interface Window {
-    startMigration: any
-    completeMigration: any
-  }
-}
-
 interface MigrationProviderValue {
   canAddShares: boolean
   deadlinePassed: boolean
@@ -110,44 +103,6 @@ function MigrationProvider({
   async function getFairGasPrice(web3: Web3): Promise<string> {
     const x = new BigNumber(await web3.eth.getGasPrice())
     return x.multipliedBy(1.05).integerValue(BigNumber.ROUND_DOWN).toString(10)
-  }
-
-  const startMigration = async (): Promise<void> => {
-    if (migrationAddress && ddo?.dataToken && price?.address) {
-      const migration = new web3.eth.Contract(
-        migrationAbi.abi as AbiItem[],
-        migrationAddress
-      )
-      const estGas = await migration.methods
-        .startMigration(ddo.dataToken, price.address)
-        .estimateGas({ from: accountId })
-      const tx = await migration.methods
-        .startMigration(ddo.dataToken, price.address)
-        .send({
-          from: accountId,
-          gas: estGas + 100000,
-          gasPrice: await getFairGasPrice(web3)
-        })
-    }
-  }
-
-  const completeMigration = async (): Promise<void> => {
-    if (migrationAddress && price?.address) {
-      const migration = new web3.eth.Contract(
-        migrationAbi.abi as AbiItem[],
-        migrationAddress
-      )
-      const estGas = await migration.methods
-        .liquidate(price.address, ['1', '1'])
-        .estimateGas({ from: accountId })
-      const tx = await migration.methods
-        .liquidate(price.address, ['1', '1'])
-        .send({
-          from: accountId,
-          gas: estGas + 100000,
-          gasPrice: await getFairGasPrice(web3)
-        })
-    }
   }
 
   async function getUserPoolShareBalance() {
@@ -274,9 +229,6 @@ function MigrationProvider({
     getUserPoolShareBalance()
       .then(setpoolShares)
       .catch((error) => Logger.error(error.message))
-
-    window.startMigration = () => startMigration() // Todo: remove this when we are done with testing
-    window.completeMigration = () => completeMigration() // Todo: remove this when we are done with testing
   }, [accountId, price, deadline])
 
   useEffect(() => {
