@@ -27,10 +27,6 @@ const query = graphql`
                 title
                 text
               }
-              migrationComplete {
-                title
-                text
-              }
             }
           }
         }
@@ -110,7 +106,10 @@ export default function Migration(): ReactElement {
       (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0'))
     ) {
       setShowMigration(true)
+    } else {
+      setShowMigration(false)
     }
+
     const { title, message, action } = getMessageAndAction(
       deadlinePassed,
       lockedSharesNumber
@@ -118,14 +117,7 @@ export default function Migration(): ReactElement {
     setTitle(title)
     setMessage(message)
     setAction(action)
-  }, [
-    accountId,
-    poolShares,
-    deadlinePassed,
-    poolShares,
-    lockedSharesV3,
-    canAddShares
-  ])
+  }, [accountId, poolShares, deadlinePassed, lockedSharesV3, canAddShares])
 
   return (
     <>
