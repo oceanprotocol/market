@@ -372,7 +372,7 @@ export default function Pool(): ReactElement {
         title="Pool Migration in Progress"
         text="Adding and removing liquidity is disabled while the pool is in
               the process of being migrated from V3 to v4"
-        state="warning"
+        state="info"
       />
 
       {accountId && (

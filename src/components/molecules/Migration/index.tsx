@@ -100,7 +100,8 @@ export default function Migration(): ReactElement {
   }
 
   useEffect(() => {
-    if (!accountId) return
+    if (!accountId || !poolShares || !lockedSharesV3) return
+
     const poolSharesNumber = isNaN(Number(poolShares)) ? 0 : Number(poolShares)
     const lockedSharesNumber = parseInt(
       Web3.utils.fromWei(lockedSharesV3 || '0')
@@ -118,7 +119,14 @@ export default function Migration(): ReactElement {
     setTitle(title)
     setMessage(message)
     setAction(action)
-  }, [accountId, poolShares, deadlinePassed, poolShares, lockedSharesV3])
+  }, [
+    accountId,
+    poolShares,
+    deadlinePassed,
+    poolShares,
+    lockedSharesV3,
+    canAddShares
+  ])
 
   return (
     <>
@@ -129,7 +137,7 @@ export default function Migration(): ReactElement {
             <Alert
               title={title}
               text={message}
-              state="info"
+              state={Number(lockedSharesV3) > 0 ? 'success' : 'info'}
               className={styles.alert}
             />
             {action === MigrationAction.LOCK_SHARES && <LockShares />}
