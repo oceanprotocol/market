@@ -337,3 +337,43 @@ export async function getDownloadAssets(
     }
   }
 }
+
+export async function getTagsList(
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<string[]> {
+  const baseQueryParams = {
+    chainIds,
+    esPaginationOptions: { from: 0, size: 0 }
+  } as BaseQueryParams
+  const query = {
+    ...generateBaseQuery(baseQueryParams),
+    aggs: {
+      tags: {
+        terms: {
+          field: 'metadata.tags.keyword'
+        }
+      }
+    }
+  }
+
+  try {
+    const response: AxiosResponse<SearchResponse> = await axios.post(
+      `${metadataCacheUri}/api/aquarius/assets/query`,
+      { ...query },
+      { cancelToken }
+    )
+    if (!response || response.status !== 200 || !response.data) return
+    const tagsList = response.data.aggregations.tags.buckets
+      .filter((agg: AggregatedTag) => agg.key !== '')
+      .map((tag: AggregatedTag) => tag.key)
+
+    return tagsList
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
