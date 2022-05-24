@@ -97,17 +97,13 @@ export default function Migration(): ReactElement {
   }
 
   useEffect(() => {
-    if (!accountId || !poolShares || !lockedSharesV3) return
-
     const poolSharesNumber = isNaN(Number(poolShares)) ? 0 : Number(poolShares)
     const lockedSharesNumber = Number(Web3.utils.fromWei(lockedSharesV3 || '0'))
-    if (
-      canAddShares &&
-      (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0'))
-    ) {
+    if (canAddShares && (poolSharesNumber > 0 || lockedSharesNumber !== 0)) {
       setShowMigration(true)
     } else {
       setShowMigration(false)
+      return
     }
 
     const { title, message, action } = getMessageAndAction(
@@ -123,7 +119,7 @@ export default function Migration(): ReactElement {
     <>
       {showMigration ? (
         <>
-          <header className={styles.header}>V4 Migration Status</header>
+          <header className={styles.header}>Pool Locking Status</header>
           <Container className={styles.container}>
             <Alert
               title={title}
