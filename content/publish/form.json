@@ -39,6 +39,7 @@
       {
         "name": "tags",
         "label": "Tags",
+        "type": "tags",
         "placeholder": "e.g. logistics, ai",
         "help": "Separate tags with comma."
       },
