@@ -63,7 +63,7 @@ export default function Migration(): ReactElement {
     return `\n\nYou currently have ${poolSharesRounded} pool shares\n\nYou have locked 0 shares`
   }
   function getLockedSharesMessage(lockedShares: number) {
-    return `\n\nYou have locked ${lockedShares} shares`
+    return `\n\nYou have locked ${lockedShares.toFixed(3)} shares`
   }
 
   function getMessageAndAction(
@@ -104,9 +104,7 @@ export default function Migration(): ReactElement {
     if (!accountId || !poolShares || !lockedSharesV3) return
 
     const poolSharesNumber = isNaN(Number(poolShares)) ? 0 : Number(poolShares)
-    const lockedSharesNumber = parseInt(
-      Web3.utils.fromWei(lockedSharesV3 || '0')
-    )
+    const lockedSharesNumber = Number(Web3.utils.fromWei(lockedSharesV3 || '0'))
     if (
       canAddShares &&
       (poolSharesNumber > 0 || (lockedSharesV3 && lockedSharesV3 !== '0'))
