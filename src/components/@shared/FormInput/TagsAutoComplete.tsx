@@ -1,66 +1,58 @@
-import React, { CSSProperties, ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import CreatableSelect from 'react-select/creatable'
-import { OnChangeValue } from 'react-select'
+import { OnChangeValue, StylesConfig } from 'react-select'
 import { useField } from 'formik'
 import { InputProps } from '.'
 import { getTagsList } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useCancelToken } from '@hooks/useCancelToken'
 
-const customStyles = {
-  control: (
-    styles: CSSProperties,
-    {
-      isFocused,
-      isSelected
-    }: {
-      isFocused: boolean
-      isSelected: boolean
-    }
-  ) => ({
+const customStyles: StylesConfig<AutoCompleteOption, true> = {
+  control: (styles, { isFocused }) => ({
     ...styles,
-    borderColor:
-      isFocused || isSelected
-        ? 'var(--font-color-text)'
-        : 'var(--border-color)',
+    borderColor: isFocused ? 'var(--font-color-text)' : 'var(--border-color)',
     borderRadius: 'var(--border-radius)',
     boxShadow: 'none',
     background: 'var(--background-content)',
     fontSize: 'var(--font-size-base)',
     fontFamily: 'var(--font-family-base)',
     fontWeight: 'var(--font-weight-bold)',
+    transition: '0.2s ease-in-out',
     '&:hover': {}
   }),
-  indicatorSeparator: (styles: CSSProperties) => ({
+  indicatorSeparator: (styles) => ({
     ...styles,
     backgroundColor: 'var(--border-color)'
   }),
-  menu: (styles: CSSProperties) => ({
+  menu: (styles) => ({
     ...styles,
     backgroundColor: 'var(--background-highlight)'
   }),
-  option: (styles: CSSProperties) => ({
+  option: (styles) => ({
     ...styles,
     backgroundColor: 'var(--background-highlight)',
     color: 'var(--font-color-heading)'
   }),
-  multiValue: (styles: CSSProperties) => ({
+  multiValue: (styles) => ({
     ...styles,
     backgroundColor: 'var(--background-highlight)'
   }),
-  multiValueLabel: (styles: CSSProperties) => ({
+  multiValueLabel: (styles) => ({
     ...styles,
-    color: 'var(--font-color-heading)'
+    color: 'var(--font-color-heading)',
+    fontSize: 'var(--font-size-base)',
+    fontFamily: 'var(--font-family-base)',
+    fontWeight: 'var(--font-weight-bold)'
   }),
-  multiValueRemove: (styles: CSSProperties) => ({
+  multiValueRemove: (styles) => ({
     ...styles,
     ':hover': {}
   }),
-  valueContainer: (styles: CSSProperties) => ({
+  valueContainer: (styles) => ({
     ...styles,
     color: 'var(--font-color-heading)'
   }),
-  placeholder: (styles: CSSProperties) => ({
+  placeholder: (styles) => ({
     ...styles,
     // margin: 0,
     color: 'var(--color-secondary)',

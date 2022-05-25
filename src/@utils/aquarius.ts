@@ -365,7 +365,7 @@ export async function getTagsList(
     )
     if (!response || response.status !== 200 || !response.data) return
     const tagsList = response.data.aggregations.tags.buckets
-      .filter((agg: AggregatedTag) => agg.key !== '')
+      .filter((tag: AggregatedTag) => tag.key !== '')
       .map((tag: AggregatedTag) => tag.key)
 
     return tagsList
