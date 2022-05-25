@@ -18,17 +18,31 @@ export default function TagsAutoComplete({
 }: InputProps): ReactElement {
   const { chainIds } = useUserPreferences()
   const { name, placeholder } = props
+  const [defaultTags, setDefaultTags] = useState<AutoCompleteOption[]>()
   const [tagsList, setTagsList] = useState<AutoCompleteOption[]>()
   const [field, meta, helpers] = useField(name)
   const newCancelToken = useCancelToken()
 
+  const generateAutocompleteOptions = (
+    options: string[]
+  ): AutoCompleteOption[] => {
+    return options?.map((tag) => ({
+      value: tag,
+      label: tag
+    }))
+  }
+
+  useEffect(() => {
+    if (defaultTags || field.value === '') return
+    const tags = field.value.split(', ')
+    const autocompleteOptions = generateAutocompleteOptions(tags)
+    setDefaultTags(autocompleteOptions)
+  }, [defaultTags, field.value])
+
   useEffect(() => {
     const generateTagsList = async () => {
       const tags = await getTagsList(chainIds, newCancelToken())
-      const autocompleteOptions = tags?.map((tag) => ({
-        value: tag,
-        label: tag
-      }))
+      const autocompleteOptions = generateAutocompleteOptions(tags)
       setTagsList(autocompleteOptions)
     }
     generateTagsList()
@@ -42,6 +56,7 @@ export default function TagsAutoComplete({
   return (
     <CreatableSelect
       className={styles.select}
+      defaultValue={defaultTags}
       isMulti
       onChange={(value: AutoCompleteOption[]) => handleChange(value)}
       options={tagsList}
