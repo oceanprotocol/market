@@ -52,6 +52,14 @@
         "placeholder": "e.g. Mrs McJellyfish",
         "help": "Give proper attribution for your data set.",
         "required": false
+      },
+      {
+        "name": "tags",
+        "label": "New Tags",
+        "type": "tags",
+        "placeholder": "e.g. logistics, ai",
+        "help": "Add or remove tags.",
+        "required": false
       }
     ]
   }

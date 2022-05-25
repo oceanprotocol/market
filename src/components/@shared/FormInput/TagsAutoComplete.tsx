@@ -18,7 +18,6 @@ export default function TagsAutoComplete({
 }: InputProps): ReactElement {
   const { chainIds } = useUserPreferences()
   const { name, placeholder } = props
-  const [defaultTags, setDefaultTags] = useState<AutoCompleteOption[]>()
   const [tagsList, setTagsList] = useState<AutoCompleteOption[]>()
   const [field, meta, helpers] = useField(name)
   const newCancelToken = useCancelToken()
@@ -32,12 +31,10 @@ export default function TagsAutoComplete({
     }))
   }
 
-  useEffect(() => {
-    if (defaultTags || field.value === '') return
-    const tags = field.value.split(', ')
-    const autocompleteOptions = generateAutocompleteOptions(tags)
-    setDefaultTags(autocompleteOptions)
-  }, [defaultTags, field.value])
+  const defaultTags =
+    !field.value || typeof field.value === 'string'
+      ? undefined
+      : generateAutocompleteOptions(field.value)
 
   useEffect(() => {
     const generateTagsList = async () => {
@@ -49,7 +46,7 @@ export default function TagsAutoComplete({
   }, [chainIds, newCancelToken])
 
   const handleChange = (userInput: OnChangeValue<AutoCompleteOption, true>) => {
-    const normalizedInput = userInput.map((input) => input.value).join(', ')
+    const normalizedInput = userInput.map((input) => input.value)
     helpers.setValue(normalizedInput)
   }
 

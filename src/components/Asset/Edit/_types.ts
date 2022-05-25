@@ -7,4 +7,5 @@ export interface MetadataEditForm {
   price?: string
   links?: string | any[]
   author?: string
+  tags?: string[]
 }

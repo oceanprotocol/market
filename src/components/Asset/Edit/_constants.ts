@@ -11,7 +11,8 @@ export const validationSchema = Yup.object().shape({
   price: Yup.number().required('Required'),
   links: Yup.array<any[]>().nullable(),
   timeout: Yup.string().required('Required'),
-  author: Yup.string().nullable()
+  author: Yup.string().nullable(),
+  tags: Yup.array<string[]>().nullable()
 })
 
 export function getInitialValues(
@@ -25,7 +26,8 @@ export function getInitialValues(
     price,
     links: metadata?.links,
     timeout: secondsToString(timeout),
-    author: metadata?.author
+    author: metadata?.author,
+    tags: metadata?.tags
   }
 }
 
