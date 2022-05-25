@@ -41,7 +41,7 @@
         "label": "Tags",
         "type": "tags",
         "placeholder": "e.g. logistics, ai",
-        "help": "Separate tags with comma."
+        "help": "Select existing values from the dropdown list or create your own."
       },
       {
         "name": "dockerImage",
