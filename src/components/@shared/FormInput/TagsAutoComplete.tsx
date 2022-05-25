@@ -31,10 +31,9 @@ export default function TagsAutoComplete({
     }))
   }
 
-  const defaultTags =
-    !field.value || typeof field.value === 'string'
-      ? undefined
-      : generateAutocompleteOptions(field.value)
+  const defaultTags = !field.value
+    ? undefined
+    : generateAutocompleteOptions(field.value)
 
   useEffect(() => {
     const generateTagsList = async () => {
