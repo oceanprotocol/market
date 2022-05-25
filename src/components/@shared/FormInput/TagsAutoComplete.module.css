@@ -1,0 +1,82 @@
+.select [class$='control'] {
+  border-color: var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: none;
+  background-color: var(--background-content);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  transition: 0.2s ease-in-out;
+}
+
+.select [class$='control']:hover {
+  border-color: var(--border-color);
+}
+
+.select [class$='control']:focus-within {
+  border-color: var(--font-color-text);
+}
+
+.select [class$='ValueContainer'] {
+  padding: calc(var(--spacer) / 3);
+}
+
+.select [class$='-Input'] {
+  margin: 0;
+  padding-bottom: 0;
+  padding-top: 0;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--font-color-heading);
+}
+
+.select [class$='-indicatorContainer'] > *,
+.select [class$='-indicatorContainer']:hover > * {
+  color: var(--border-color);
+}
+
+.select [class$='-indicatorSeparator'] {
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: var(--border-color);
+}
+
+.select [class$='menu'] {
+  background-color: var(--background-highlight);
+  border-radius: var(--border-radius);
+}
+
+.select [class$='option'] {
+  background-color: var(--background-highlight);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--font-color-heading);
+}
+
+.select [class$='option']:active,
+.select [class$='option']:focus,
+.select [class$='option']:hover {
+  background-color: var(--border-color);
+}
+
+.select [class$='multiValue'],
+.select [class$='multiValue'] > *,
+.select [class$='multiValue']:hover > * {
+  border-radius: var(--border-radius);
+  background-color: var(--background-highlight);
+  color: var(--font-color-heading);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+}
+
+.select [class$='placeholder'] {
+  margin-left: 0;
+  margin-right: 0;
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-base);
+  transition: 0.2s ease-out;
+  opacity: 0.7;
+}
