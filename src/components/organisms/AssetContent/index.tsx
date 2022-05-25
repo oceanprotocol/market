@@ -5,7 +5,6 @@ import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
 import AssetActions from '../AssetActions'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import Pricing from './Pricing'
 import Bookmark from './Bookmark'
 import { useAsset } from '../../../providers/Asset'
 import Alert from '../../atoms/Alert'
@@ -48,7 +47,6 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
   const { owner, isInPurgatory, purgatoryData, isAssetNetwork } = useAsset()
-  const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [isComputeType, setIsComputeType] = useState<boolean>(false)
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
@@ -63,7 +61,6 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
 
     const isOwner = accountId.toLowerCase() === owner.toLowerCase()
     setIsOwner(isOwner)
-    setShowPricing(isOwner && price.type === '')
     setIsComputeType(Boolean(ddo.findServiceByType('compute')))
   }, [accountId, price, owner, ddo])
 
@@ -97,7 +94,6 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
 
       <article className={styles.grid}>
         <div>
-          {showPricing && <Pricing ddo={ddo} />}
           <div className={styles.content}>
             <MetaMain />
             <Bookmark did={ddo.id} />

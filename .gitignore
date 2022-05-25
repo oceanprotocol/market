@@ -16,3 +16,6 @@ content/networks-metadata.json
 src/@types/apollo
 graphql.schema.json
 src/@types/graph.types.ts
+.next
+src/@types/subgraph
+tsconfig.tsbuildinfo

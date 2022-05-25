@@ -12,7 +12,7 @@
 
 .banner.warning {
   background-color: var(--brand-alert-yellow);
-  color: var(--brand-white);
+  color: var(--brand-black);
 }
 
 .banner.success {

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import styles from './Badge.module.css'
 import classNames from 'classnames/bind'
 
@@ -8,7 +8,7 @@ export default function Badge({
   label,
   className
 }: {
-  label: string
+  label: string | ReactNode
   className?: string
 }): ReactElement {
   const styleClasses = cx({

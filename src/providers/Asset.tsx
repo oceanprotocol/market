@@ -10,7 +10,7 @@ import React, {
 import { Logger, DDO, MetadataMain } from '@oceanprotocol/lib'
 import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/PurgatoryData'
 import getAssetPurgatoryData from '../utils/purgatory'
-import axios, { CancelToken } from 'axios'
+import { CancelToken } from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
 import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
@@ -152,6 +152,8 @@ function AssetProvider({
     const isAssetNetwork = networkId === ddo?.chainId
     setIsAssetNetwork(isAssetNetwork)
   }, [networkId, ddo])
+
+  Logger.log('Asset Provider Accessed')
 
   return (
     <AssetContext.Provider

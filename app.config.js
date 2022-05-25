@@ -74,5 +74,23 @@ module.exports = {
   // is used to create and show a privacy preference center / cookie banner
   // To learn more about how to configure and use this, please refer to the readme
   privacyPreferenceCenter:
-    process.env.GATSBY_PRIVACY_PREFERENCE_CENTER || 'false'
+    process.env.GATSBY_PRIVACY_PREFERENCE_CENTER || 'false',
+
+  // Migration contract addresses
+  ethereumMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_ETHEREUM || '0xc313e19146Fc9a04470689C9d41a4D3054693531',
+  polygonMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_POLYGON || '0x9b8aeEF3AB307623905E6813DADcbdA5D53f47ED',
+  bscMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_BSC || '0xe8c6Dc39602031A152440311e364818ba25C2Bc1',
+  moonriverMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_MOONRIVER || '',
+  ewcMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_EWC || '0x2720d405ef7cDC8a2E2e5AeBC8883C99611d893C',
+  rinkebyMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_RINKEBY ||
+    '0xf2091811d6809A269e2B58D75ed5d4747f0BBfB1',
+
+  marketUrlV4:
+    process.env.GATSBY_MARKET_URL_V4 || 'https://v4.market.oceanprotocol.com'
 }

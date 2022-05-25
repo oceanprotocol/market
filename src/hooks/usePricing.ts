@@ -2,13 +2,7 @@ import { DDO, Logger } from '@oceanprotocol/lib'
 import { useState } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import { Decimal } from 'decimal.js'
-import {
-  getCreatePricingPoolFeedback,
-  getCreatePricingExchangeFeedback,
-  getBuyDTFeedback,
-  getCreateFreePricingFeedback,
-  getDispenseFeedback
-} from '../utils/feedback'
+import { getBuyDTFeedback, getDispenseFeedback } from '../utils/feedback'
 import { sleep } from '../utils'
 
 import { useOcean } from '../providers/Ocean'
@@ -81,15 +75,6 @@ function usePricing(): UsePricing {
     let messages
 
     switch (type) {
-      case 'pool':
-        messages = getCreatePricingPoolFeedback(dtSymbol)
-        break
-      case 'exchange':
-        messages = getCreatePricingExchangeFeedback(dtSymbol)
-        break
-      case 'free':
-        messages = getCreateFreePricingFeedback(dtSymbol)
-        break
       case 'buy':
         messages = getBuyDTFeedback(dtSymbol)
         break
