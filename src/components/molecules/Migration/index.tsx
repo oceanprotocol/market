@@ -54,7 +54,7 @@ export default function Migration(): ReactElement {
 
   function getNoLockedSharesMessage() {
     const poolSharesRounded =
-      Number(poolShares) >= 0.001
+      Number(poolShares) <= 0.001
         ? 'less than 0.001'
         : Number(poolShares).toFixed(3)
     return `\n\nYou currently have ${poolSharesRounded} pool shares\n\nYou have locked 0 shares`
