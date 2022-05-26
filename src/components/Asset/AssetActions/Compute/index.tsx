@@ -373,7 +373,6 @@ export default function Compute({
       }
       LoggerInstance.log('[compute] Starting compute job response: ', response)
       setIsPublished(true)
-      console.log('setRefatchJobs true')
       setRefatchJobs(!refatchJobs)
       initPriceAndFees()
     } catch (error) {

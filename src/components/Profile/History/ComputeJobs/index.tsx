@@ -113,7 +113,6 @@ export default function ComputeJobs({
   }, [fetchJobs])
 
   useEffect(() => {
-    console.log('use effect ', refatchJobs)
     fetchJobs()
   }, [refatchJobs])
 

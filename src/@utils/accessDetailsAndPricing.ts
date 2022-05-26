@@ -176,8 +176,6 @@ function getAccessDetailsFromTokenPrice(
     const order = tokenPrice.orders[0]
     const reusedOrder =
       order && order.reuses && order.reuses.length > 0 ? order.reuses[0] : null
-    console.log('order', order)
-    console.log('reusedOrder', reusedOrder)
     // asset is owned if there is an order and asset has timeout 0 (forever) or if the condition is valid
     accessDetails.isOwned =
       timeout === 0 || Date.now() / 1000 - order.createdTimestamp < timeout
