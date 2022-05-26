@@ -57,6 +57,13 @@ export default function TagsAutoComplete({
       onChange={(value: AutoCompleteOption[]) => handleChange(value)}
       options={tagsList}
       placeholder={placeholder}
+      theme={(theme) => ({
+        ...theme,
+        colors: {
+          ...theme.colors,
+          primary25: 'var(--border-color)'
+        }
+      })}
     />
   )
 }
