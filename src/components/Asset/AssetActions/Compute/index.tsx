@@ -102,6 +102,7 @@ export default function Compute({
     useState<OrderPriceAndFees>()
   const [isRequestingAlgoOrderPrice, setIsRequestingAlgoOrderPrice] =
     useState(false)
+  const [refatchJobs, setRefatchJobs] = useState(false)
   // const [isProviderFeeValid, setIsProviderFeeValid] = useState(false)
   const isComputeButtonDisabled =
     isJobStarting === true ||
@@ -372,6 +373,8 @@ export default function Compute({
       }
       LoggerInstance.log('[compute] Starting compute job response: ', response)
       setIsPublished(true)
+      console.log('setRefatchJobs true')
+      setRefatchJobs(!refatchJobs)
       initPriceAndFees()
     } catch (error) {
       setError('Failed to start job!')
@@ -461,7 +464,11 @@ export default function Compute({
       </footer>
       {accountId && asset?.accessDetails?.datatoken && (
         <AssetActionHistoryTable title="Your Compute Jobs">
-          <ComputeJobs minimal assetChainId={[asset?.chainId]} />
+          <ComputeJobs
+            minimal
+            assetChainId={[asset?.chainId]}
+            refatchJobs={refatchJobs}
+          />
         </AssetActionHistoryTable>
       )}
     </>
