@@ -21,7 +21,13 @@ import { useWeb3 } from '../Web3'
 import erc20Abi from './erc20.json'
 import migrationAbi from './migration.json'
 
+export enum MigrationStatus {
+  NOT_STARTED = '0',
+  ALLOWED = '1',
+  COMPLETED = '2'
+}
 interface MigrationProviderValue {
+  status: MigrationStatus
   canAddShares: boolean
   deadlinePassed: boolean
   poolShares: string
@@ -29,12 +35,6 @@ interface MigrationProviderValue {
   addSharesToMigration: (amount: string) => Promise<TransactionReceipt>
   approveMigration: (amount: string) => Promise<TransactionReceipt>
   refreshMigrationStatus: () => Promise<void>
-}
-
-export enum MigrationStatus {
-  NOT_STARTED = '0',
-  ALLOWED = '1',
-  COMPLETED = '2'
 }
 
 const MigrationContext = createContext({} as MigrationProviderValue)
@@ -45,7 +45,7 @@ function MigrationProvider({
   children: ReactNode
 }): ReactElement {
   const { chainId, accountId, web3 } = useWeb3()
-  const { price, ddo } = useAsset()
+  const { price } = useAsset()
   const [migrationAddress, setMigrationAddress] = useState<string>()
   const [poolV3Address, setPoolV3Address] = useState<string>()
   const [deadline, setDeadline] = useState<string>()
@@ -53,6 +53,7 @@ function MigrationProvider({
   const [poolShares, setpoolShares] = useState<string>()
   const [lockedSharesV3, setLockedSharesV3] = useState<string>()
   const [canAddShares, setCanAddShares] = useState<boolean>(false)
+  const [status, setStatus] = useState<MigrationStatus>()
 
   async function switchMigrationAddress(chainId: number): Promise<void> {
     switch (chainId) {
@@ -190,7 +191,9 @@ function MigrationProvider({
       .getPoolStatus(price.address)
       .call()
     const canAddShares = await fetchCanAddShares(price.address)
+    const { status } = poolStatus
 
+    setStatus(status)
     setCanAddShares(canAddShares)
     setPoolV3Address(poolStatus.poolV3Address)
     setDeadline(poolStatus.deadline)
@@ -242,6 +245,7 @@ function MigrationProvider({
     <MigrationContext.Provider
       value={
         {
+          status,
           canAddShares,
           deadlinePassed,
           poolShares,
