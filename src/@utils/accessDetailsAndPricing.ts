@@ -179,6 +179,7 @@ function getAccessDetailsFromTokenPrice(
     // asset is owned if there is an order and asset has timeout 0 (forever) or if the condition is valid
     accessDetails.isOwned =
       timeout === 0 || Date.now() / 1000 - order.createdTimestamp < timeout
+    // the last valid order should be the last reuse order tx id if there is one
     accessDetails.validOrderTx = reusedOrder ? reusedOrder.tx : order.tx
   }
 
