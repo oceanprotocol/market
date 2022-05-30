@@ -15,7 +15,7 @@ export default function MetaAsset({
   isBlockscoutExplorer: boolean
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
-  const { web3ProviderInfo } = useWeb3()
+  const { web3Provider, web3ProviderInfo } = useWeb3()
 
   const dataTokenSymbol = asset?.datatokens[0]?.symbol
 
@@ -45,6 +45,7 @@ export default function MetaAsset({
               text={`Add ${(asset as Asset)?.datatokens[0]?.symbol} to wallet`}
               className={styles.add}
               minimal
+              web3Provider={web3Provider}
             />
           </span>
         )}

@@ -92,6 +92,7 @@ export default function Details(): ReactElement {
                 symbol={oceanTokenMetadata?.symbol}
                 logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png"
                 className={styles.addToken}
+                web3Provider={web3Provider}
               />
             )}
           </div>

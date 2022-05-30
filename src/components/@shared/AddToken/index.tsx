@@ -1,11 +1,21 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
 import { addTokenToWallet } from '@utils/web3'
-import { useWeb3 } from '@context/Web3'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
+import { IProviderInfo } from 'web3modal'
 
 const cx = classNames.bind(styles)
+
+export interface AddTokenProps {
+  address: string
+  symbol: string
+  logo: string // needs to be a remote image
+  text?: string
+  className?: string
+  minimal?: boolean
+  web3Provider: IProviderInfo
+}
 
 export default function AddToken({
   address,
@@ -13,17 +23,9 @@ export default function AddToken({
   logo,
   text,
   className,
-  minimal
-}: {
-  address: string
-  symbol: string
-  logo: string // needs to be a remote image
-  text?: string
-  className?: string
-  minimal?: boolean
-}): ReactElement {
-  const { web3Provider } = useWeb3()
-
+  minimal,
+  web3Provider
+}: AddTokenProps): ReactElement {
   const styleClasses = cx({
     button: true,
     minimal,
