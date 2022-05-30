@@ -18,6 +18,10 @@ import PoolTransactions from '../../../molecules/PoolTransactions'
 import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 import { isValidNumber } from './../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
+import {
+  MigrationStatus,
+  useMigrationStatus
+} from '../../../../providers/Migration'
 
 const REFETCH_INTERVAL = 5000
 
@@ -81,6 +85,8 @@ export default function Pool(): ReactElement {
   const content = data.content.edges[0].node.childContentJson.pool
 
   const { accountId } = useWeb3()
+  const { status } = useMigrationStatus()
+
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [oceanSymbol, setOceanSymbol] = useState<string>()
   const { ddo, owner, price } = useAsset()
@@ -369,8 +375,12 @@ export default function Pool(): ReactElement {
       </TokenList>
 
       <Alert
-        title="Pool Shares are currently being locked"
-        text="Adding and removing liquidity is disabled while the pool shares are being locked"
+        title="Adding and removing liquidity is disabled"
+        text={
+          status === MigrationStatus.ALLOWED
+            ? 'Pool Shares are currently being locked. Adding and removing liquidity is disabled while the pool shares are being locked.'
+            : 'Adding and removing liquidity is currently disabled for all pools.'
+        }
         state="info"
       />
 
