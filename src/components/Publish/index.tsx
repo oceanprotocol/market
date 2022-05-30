@@ -59,13 +59,7 @@ export default function PublishPage({
           ...prevState['1'],
           status: 'active',
           txCount: values.pricing.type === 'dynamic' ? 2 : 1,
-          description:
-            values.pricing.type === 'dynamic'
-              ? prevState['1'].description.replace(
-                  'a single transaction',
-                  'a single transaction, after an initial approve transaction'
-                )
-              : prevState['1'].description
+          description: prevState['1'].description
         }
       }))
 
