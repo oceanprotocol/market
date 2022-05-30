@@ -1,5 +1,5 @@
 import { useUserPreferences } from '@context/UserPreferences'
-import AccountList from '@shared/AccountList/AccountList'
+import AccountList from '@shared/AccountList'
 import { getTopAssetsPublishers } from '@utils/subgraph'
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './Home.module.css'
@@ -38,7 +38,7 @@ export default function PublishersWithMostSales({
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
-      <AccountList accounts={result} isLoading={loading} />
+      <AccountList accounts={result} isLoading={loading} chainIds={chainIds} />
       {action && action}
     </section>
   )

@@ -1,9 +1,8 @@
 import React, { ReactElement } from 'react'
-import styles from './AssetList.module.css'
+import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import Loader from '../atoms/Loader'
-import { useUserPreferences } from '@context/UserPreferences'
-import AccountTeaser from '@shared/AccountTeaser/AccountTeaser'
+import AccountTeaser from '@shared/AccountTeaser'
 
 const cx = classNames.bind(styles)
 
@@ -15,19 +14,19 @@ function LoaderArea() {
   )
 }
 
-declare type AccountListProps = {
+export interface AccountListProps {
   accounts: AccountTeaserVM[]
   isLoading: boolean
   className?: string
+  chainIds: number[]
 }
 
 export default function AccountList({
   accounts,
   isLoading,
-  className
+  className,
+  chainIds
 }: AccountListProps): ReactElement {
-  const { chainIds } = useUserPreferences()
-
   const styleClasses = cx({
     assetList: true,
     [className]: className
