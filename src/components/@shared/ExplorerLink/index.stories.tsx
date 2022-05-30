@@ -17,7 +17,7 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  networkId: 1008,
+  networkId: 1287,
   path: 'https://example.com',
   children: <p>Explorer link</p>
 }

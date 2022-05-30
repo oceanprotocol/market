@@ -8,6 +8,13 @@ import { FileMetadata } from '@oceanprotocol/lib'
 
 const cx = classNames.bind(styles)
 
+export interface FileIconProps {
+  file: FileMetadata
+  className?: string
+  small?: boolean
+  isLoading?: boolean
+}
+
 function LoaderArea() {
   return (
     <div className={styles.loaderWrap}>
@@ -21,12 +28,7 @@ export default function FileIcon({
   className,
   small,
   isLoading
-}: {
-  file: FileMetadata
-  className?: string
-  small?: boolean
-  isLoading?: boolean
-}): ReactElement {
+}: FileIconProps): ReactElement {
   const styleClasses = cx({
     file: true,
     small,
