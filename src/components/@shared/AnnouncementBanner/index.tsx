@@ -12,17 +12,19 @@ export interface AnnouncementAction {
   handleAction: () => void
 }
 
+export interface AnnouncementBannerProps {
+  text: string
+  action?: AnnouncementAction
+  state?: 'success' | 'warning' | 'error'
+  className?: string
+}
+
 export default function AnnouncementBanner({
   text,
   action,
   state,
   className
-}: {
-  text: string
-  action?: AnnouncementAction
-  state?: 'success' | 'warning' | 'error'
-  className?: string
-}): ReactElement {
+}: AnnouncementBannerProps): ReactElement {
   const styleClasses = cx({
     banner: true,
     error: state === 'error',
