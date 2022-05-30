@@ -14,7 +14,7 @@ export interface AddTokenProps {
   text?: string
   className?: string
   minimal?: boolean
-  web3Provider: IProviderInfo
+  web3Provider?: IProviderInfo
 }
 
 export default function AddToken({
