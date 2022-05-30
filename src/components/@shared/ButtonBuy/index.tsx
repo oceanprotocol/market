@@ -3,7 +3,7 @@ import Button from '../atoms/Button'
 import styles from './index.module.css'
 import Loader from '../atoms/Loader'
 
-interface ButtonBuyProps {
+export interface ButtonBuyProps {
   action: 'download' | 'compute'
   disabled: boolean
   hasPreviousOrder: boolean

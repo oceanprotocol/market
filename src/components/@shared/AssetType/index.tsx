@@ -7,15 +7,17 @@ import Lock from '@images/lock.svg'
 
 const cx = classNames.bind(styles)
 
+export interface AssetTypeProps {
+  type: string
+  accessType: string
+  className?: string
+}
+
 export default function AssetType({
   type,
   accessType,
   className
-}: {
-  type: string
-  accessType: string
-  className?: string
-}): ReactElement {
+}: AssetTypeProps): ReactElement {
   const styleClasses = cx({
     [className]: className
   })

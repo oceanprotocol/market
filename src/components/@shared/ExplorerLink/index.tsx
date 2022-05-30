@@ -7,17 +7,19 @@ import { getOceanConfig } from '@utils/ocean'
 
 const cx = classNames.bind(styles)
 
+export interface ExplorerLinkProps {
+  networkId: number
+  path: string
+  children: ReactNode
+  className?: string
+}
+
 export default function ExplorerLink({
   networkId,
   path,
   children,
   className
-}: {
-  networkId: number
-  path: string
-  children: ReactNode
-  className?: string
-}): ReactElement {
+}: ExplorerLinkProps): ReactElement {
   const [url, setUrl] = useState<string>()
   const [oceanConfig, setOceanConfig] = useState<Config>()
   const styleClasses = cx({
