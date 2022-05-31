@@ -16,8 +16,8 @@ interface Props {
   args: FileIconProps
 }
 
-const file = {
-  contentLength: '0',
+const textFile = {
+  contentLength: '750',
   contentType: 'text/html',
   index: 0,
   valid: true
@@ -25,5 +25,17 @@ const file = {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  file: file as FileMetadata
+  file: textFile as FileMetadata
+}
+
+export const Small: Props = Template.bind({})
+Small.args = {
+  file: textFile as FileMetadata,
+  small: true
+}
+
+export const IsLoading: Props = Template.bind({})
+IsLoading.args = {
+  file: textFile as FileMetadata,
+  isLoading: true
 }

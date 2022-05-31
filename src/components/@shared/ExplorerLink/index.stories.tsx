@@ -18,6 +18,6 @@ interface Props {
 export const Default: Props = Template.bind({})
 Default.args = {
   networkId: 1287,
-  path: 'https://example.com',
-  children: <p>Explorer link</p>
+  path: 'https://rinkeby.etherscan.io/token/0xfE5E734F529axxxxxxxxaD38Fce76A56B0d4347C',
+  children: 'Explorer link'
 }
