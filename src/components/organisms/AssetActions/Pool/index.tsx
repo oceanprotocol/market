@@ -14,6 +14,7 @@ import { useAsset } from '../../../../providers/Asset'
 import { gql, OperationResult } from 'urql'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useWeb3 } from '../../../../providers/Web3'
+import Graph from './Graph'
 import PoolTransactions from '../../../molecules/PoolTransactions'
 import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 import { isValidNumber } from './../../../../utils/numberValidations'
@@ -95,6 +96,11 @@ export default function Pool(): ReactElement {
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
   const [userLiquidity, setUserLiquidity] = useState<PoolBalance>()
   const [swapFee, setSwapFee] = useState<string>()
+  const [weightOcean, setWeightOcean] = useState<string>()
+  const [weightDt, setWeightDt] = useState<string>()
+  const [totalLiquidityInOcean, setTotalLiquidityInOcean] = useState(
+    new Decimal(0)
+  )
 
   const [poolShare, setPoolShare] = useState<string>()
   const [totalUserLiquidityInOcean, setTotalUserLiquidityInOcean] = useState(
@@ -180,6 +186,23 @@ export default function Pool(): ReactElement {
         : '0'
 
       setSwapFee(swapFee)
+
+      // Get weights
+      const weightDt = dataLiquidity.pool.tokens.filter(
+        (token: any) => token.address === ddo.dataToken.toLowerCase()
+      )[0].denormWeight
+
+      const weightDtDecimal = isValidNumber(weightDt)
+        ? new Decimal(weightDt).mul(10).toString()
+        : '0'
+
+      setWeightDt(weightDtDecimal)
+
+      const weightOceanDecimal = isValidNumber(weightDt)
+        ? new Decimal(100).minus(new Decimal(weightDt).mul(10)).toString()
+        : '0'
+
+      setWeightOcean(weightOceanDecimal)
 
       //
       // Get everything the creator put into the pool
@@ -270,6 +293,17 @@ export default function Pool(): ReactElement {
         : new Decimal(0)
 
     setTotalUserLiquidityInOcean(totalUserLiquidityInOcean)
+
+    const totalLiquidityInOcean =
+      isValidNumber(price?.ocean) &&
+      isValidNumber(price?.datatoken) &&
+      isValidNumber(dataLiquidity.pool.spotPrice)
+        ? new Decimal(price?.ocean).add(
+            new Decimal(price?.datatoken).mul(dataLiquidity.pool.spotPrice)
+          )
+        : new Decimal(0)
+
+    setTotalLiquidityInOcean(totalLiquidityInOcean)
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
 
   useEffect(() => {
@@ -374,6 +408,31 @@ export default function Pool(): ReactElement {
         <Token symbol="% of pool" balance={creatorPoolShare} noIcon />
       </TokenList>
 
+      <TokenList
+        title={
+          <>
+            Pool Statistics
+            {weightDt && (
+              <span
+                className={styles.titleInfo}
+                title={`Weight of ${weightOcean}% OCEAN & ${weightDt}% ${dtSymbol}`}
+              >
+                {weightOcean}/{weightDt}
+              </span>
+            )}
+            <Graph />
+          </>
+        }
+        ocean={`${price?.ocean}`}
+        oceanSymbol={oceanSymbol}
+        dt={`${price?.datatoken}`}
+        dtSymbol={dtSymbol}
+        poolShares={totalPoolTokens}
+        conversion={totalLiquidityInOcean}
+        showTVLLabel
+      >
+        <Token symbol="% swap fee" balance={swapFee} noIcon />
+      </TokenList>
       <Alert
         title="Adding and removing liquidity is disabled"
         text={
