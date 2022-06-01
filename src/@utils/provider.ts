@@ -46,7 +46,7 @@ export async function initializeProviderForCompute(
       accountId
     )
   } catch (error) {
-    toast(`Error initializing provider for the compute job!`)
+    LoggerInstance.error(`Error initializing provider for the compute job!`)
     return null
   }
 }
