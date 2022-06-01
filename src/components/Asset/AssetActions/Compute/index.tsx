@@ -138,8 +138,8 @@ export default function Compute({
     )
     if (
       !initializedProvider ||
-      !initializedProvider.datasets ||
-      !initializedProvider.algorithm
+      !initializedProvider?.datasets ||
+      !initializedProvider?.algorithm
     ) {
       setError(`Error initializing provider for the compute job!`)
       return
