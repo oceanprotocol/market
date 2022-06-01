@@ -124,7 +124,7 @@ export function getValidUntilTime(
   algorithmTimeout?: number
 ) {
   const inputValues = []
-  computeEnvMaxJobDuration && inputValues.push(computeEnvMaxJobDuration * 60)
+  computeEnvMaxJobDuration && inputValues.push(computeEnvMaxJobDuration)
   datasetTimeout && inputValues.push(datasetTimeout)
   algorithmTimeout && inputValues.push(algorithmTimeout)
 
