@@ -126,7 +126,6 @@ export default function Compute({
 
   async function initPriceAndFees() {
     const computeEnv = await getComputeEnviroment(asset)
-    console.log('computeEnv', computeEnv)
     if (!computeEnv || !computeEnv.id) {
       setError(`Error getting compute environments!`)
       return
@@ -137,7 +136,6 @@ export default function Compute({
       accountId,
       computeEnv
     )
-    console.log('initializedProvider', initializedProvider)
     if (
       !initializedProvider ||
       !initializedProvider.datasets ||
@@ -184,7 +182,6 @@ export default function Compute({
       )
       if (!datasetPriceAndFees) {
         setError('Error setting dataset price and fees!')
-        toast.error('Error setting dataset price and fees!')
         return
       }
       setDatasetOrderPriceAndFees(datasetPriceAndFees)
@@ -232,7 +229,6 @@ export default function Compute({
       )
       if (!algorithmOrderPriceAndFees) {
         setError('Error setting algorithm price and fees!')
-        toast.error('Error setting algorithm price and fees!')
         return
       }
       setAlgoOrderPriceAndFees(algorithmOrderPriceAndFees)

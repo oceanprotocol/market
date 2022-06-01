@@ -8,6 +8,7 @@ import {
   ProviderComputeInitializeResults,
   ProviderInstance
 } from '@oceanprotocol/lib'
+import { toast } from 'react-toastify'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
 import { getValidUntilTime } from './compute'
@@ -35,14 +36,19 @@ export async function initializeProviderForCompute(
     algorithm.services[0].timeout
   )
 
-  return await ProviderInstance.initializeCompute(
-    [computeAsset],
-    computeAlgo,
-    computeEnv?.id,
-    validUntil,
-    dataset.services[0].serviceEndpoint,
-    accountId
-  )
+  try {
+    return await ProviderInstance.initializeCompute(
+      [computeAsset],
+      computeAlgo,
+      computeEnv?.id,
+      validUntil,
+      dataset.services[0].serviceEndpoint,
+      accountId
+    )
+  } catch (error) {
+    toast(`Error initializing provider for the compute job!`)
+    return null
+  }
 }
 
 // TODO: Why do we have these one line functions ?!?!?!
