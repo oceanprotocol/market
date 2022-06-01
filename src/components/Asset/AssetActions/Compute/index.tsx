@@ -126,18 +126,32 @@ export default function Compute({
 
   async function initPriceAndFees() {
     const computeEnv = await getComputeEnviroment(asset)
-    setComputeEnv(computeEnv)
+    console.log('computeEnv', computeEnv)
+    if (!computeEnv || !computeEnv.id) {
+      setError(`Error getting compute environments!`)
+      return
+    }
     const initializedProvider = await initializeProviderForCompute(
       asset,
       selectedAlgorithmAsset,
       accountId,
       computeEnv
     )
+    console.log('initializedProvider', initializedProvider)
+    if (
+      !initializedProvider ||
+      !initializedProvider.datasets ||
+      !initializedProvider.algorithm
+    ) {
+      setError(`Error initializing provider for the compute job!`)
+      return
+    }
     setInitializedProviderResponse(initializedProvider)
+
     if (
       asset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
       asset?.accessDetails?.type !== 'free' &&
-      initializedProvider.datasets[0].providerFee
+      initializedProvider?.datasets?.[0]?.providerFee
     ) {
       setComputeStatusText(
         getComputeFeedback(
@@ -166,7 +180,7 @@ export default function Compute({
         asset,
         ZERO_ADDRESS,
         poolParams,
-        initializedProvider.datasets[0].providerFee
+        initializedProvider?.datasets?.[0]?.providerFee
       )
       if (!datasetPriceAndFees) {
         setError('Error setting dataset price and fees!')
@@ -179,7 +193,7 @@ export default function Compute({
     if (
       selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
       selectedAlgorithmAsset?.accessDetails?.type !== 'free' &&
-      initializedProvider.algorithm.providerFee
+      initializedProvider?.algorithm?.providerFee
     ) {
       setComputeStatusText(
         getComputeFeedback(
@@ -321,7 +335,11 @@ export default function Compute({
         initializedProviderResponse.datasets[0],
         computeEnv.consumerAddress
       )
-
+      if (!datasetOrderTx) {
+        setError('Failed to order dataset.')
+        LoggerInstance.error('[compute] Failed to order dataset.')
+        return
+      }
       setComputeStatusText(
         getComputeFeedback(
           selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
@@ -335,6 +353,7 @@ export default function Compute({
             : 3
         ]
       )
+
       const algorithmOrderTx = await handleComputeOrder(
         web3,
         selectedAlgorithmAsset,
@@ -344,6 +363,12 @@ export default function Compute({
         initializedProviderResponse.algorithm,
         computeEnv.consumerAddress
       )
+      if (!algorithmOrderTx) {
+        setError('Failed to order algorithm.')
+        LoggerInstance.error('[compute] Failed to order algorithm.')
+        return
+      }
+
       LoggerInstance.log('[compute] Starting compute job.')
       const computeAsset: ComputeAsset = {
         documentId: asset.id,
