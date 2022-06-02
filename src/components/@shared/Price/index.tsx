@@ -11,6 +11,7 @@ export interface PriceProps {
   className?: string
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
+  locale: string
 }
 
 export default function Price({
@@ -18,7 +19,8 @@ export default function Price({
   orderPriceAndFees,
   className,
   size,
-  conversion
+  conversion,
+  locale
 }: PriceProps): ReactElement {
   return accessDetails?.price || accessDetails?.type === 'free' ? (
     <PriceUnit
@@ -28,6 +30,7 @@ export default function Price({
       size={size}
       conversion={conversion}
       type={accessDetails.type}
+      locale={locale}
     />
   ) : !accessDetails || accessDetails?.type === '' ? (
     <div className={styles.empty}>

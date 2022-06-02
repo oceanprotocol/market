@@ -21,6 +21,7 @@ export interface PriceUnitProps {
   size?: 'small' | 'mini' | 'large'
   conversion?: boolean
   symbol?: string
+  locale: string
 }
 
 export default function PriceUnit({
@@ -29,10 +30,9 @@ export default function PriceUnit({
   size = 'small',
   conversion,
   symbol,
-  type
+  type,
+  locale
 }: PriceUnitProps): ReactElement {
-  const { locale } = useUserPreferences()
-
   return (
     <div className={`${styles.price} ${styles[size]} ${className}`}>
       {type && type === 'free' ? (

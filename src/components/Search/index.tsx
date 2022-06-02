@@ -8,6 +8,7 @@ import { useUserPreferences } from '@context/UserPreferences'
 import { useCancelToken } from '@hooks/useCancelToken'
 import styles from './index.module.css'
 import { useRouter } from 'next/router'
+import { useWeb3 } from '@context/Web3'
 
 export default function SearchPage({
   setTotalResults,
@@ -18,7 +19,8 @@ export default function SearchPage({
 }): ReactElement {
   const router = useRouter()
   const [parsed, setParsed] = useState<queryString.ParsedQuery<string>>()
-  const { chainIds } = useUserPreferences()
+  const { chainIds, locale } = useUserPreferences()
+  const { accountId } = useWeb3()
   const [queryResult, setQueryResult] = useState<PagedAssets>()
   const [loading, setLoading] = useState<boolean>()
   const [serviceType, setServiceType] = useState<string>()
@@ -106,6 +108,9 @@ export default function SearchPage({
           page={queryResult?.page}
           totalPages={queryResult?.totalPages}
           onPageChange={updatePage}
+          chainIds={chainIds}
+          accountId={accountId}
+          locale={locale}
         />
       </div>
     </>

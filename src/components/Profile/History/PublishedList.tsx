@@ -15,7 +15,7 @@ export default function PublishedList({
   accountId: string
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { chainIds } = useUserPreferences()
+  const { chainIds, locale } = useUserPreferences()
 
   const [queryResult, setQueryResult] = useState<PagedAssets>()
   const [isLoading, setIsLoading] = useState(false)
@@ -72,6 +72,8 @@ export default function PublishedList({
     access
   ])
 
+  console.log(queryResult?.results)
+
   return accountId ? (
     <>
       <Filters
@@ -92,6 +94,9 @@ export default function PublishedList({
         }}
         className={styles.assets}
         noPublisher
+        chainIds={chainIds}
+        accountId={accountId}
+        locale={locale}
       />
     </>
   ) : (

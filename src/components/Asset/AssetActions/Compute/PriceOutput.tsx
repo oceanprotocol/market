@@ -4,7 +4,7 @@ import PriceUnit from '@shared/Price/PriceUnit'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
 import { AccessDetails } from 'src/@types/Price'
-
+import { useUserPreferences } from '@context/UserPreferences'
 interface PriceOutputProps {
   totalPrice: number
   hasPreviousOrder: boolean
@@ -32,6 +32,7 @@ function Row({
   timeout?: string
   sign?: string
 }) {
+  const { locale } = useUserPreferences()
   return (
     <div className={styles.priceRow}>
       <div className={styles.sign}>{sign}</div>
@@ -41,6 +42,7 @@ function Row({
           symbol={symbol}
           size="small"
           className={styles.price}
+          locale={locale}
         />
         <span className={styles.timeout}>
           {timeout &&
@@ -65,11 +67,16 @@ export default function PriceOutput({
   selectedComputeAssetTimeout
 }: PriceOutputProps): ReactElement {
   const { asset } = useAsset()
-
+  const { locale } = useUserPreferences()
   return (
     <div className={styles.priceComponent}>
       You will pay{' '}
-      <PriceUnit price={`${totalPrice}`} symbol={symbol} size="small" />
+      <PriceUnit
+        price={`${totalPrice}`}
+        symbol={symbol}
+        size="small"
+        locale={locale}
+      />
       <Tooltip
         content={
           <div className={styles.calculation}>

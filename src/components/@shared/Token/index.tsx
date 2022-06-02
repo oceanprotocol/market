@@ -3,6 +3,7 @@ import styles from './index.module.css'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Logo from '@shared/atoms/Logo'
 import Conversion from '@shared/Price/Conversion'
+import { useUserPreferences } from '@context/UserPreferences'
 
 export default function Token({
   symbol,
@@ -17,6 +18,7 @@ export default function Token({
   noIcon?: boolean
   size?: 'small' | 'mini'
 }): ReactElement {
+  const { locale } = useUserPreferences()
   return (
     <>
       <div className={`${styles.token} ${size ? styles[size] : ''}`}>
@@ -25,7 +27,12 @@ export default function Token({
         >
           <Logo noWordmark />
         </figure>
-        <PriceUnit price={balance} symbol={symbol} size={size} />
+        <PriceUnit
+          price={balance}
+          symbol={symbol}
+          size={size}
+          locale={locale}
+        />
       </div>
       {conversion && (
         <Conversion price={balance} className={`${styles.conversion}`} />

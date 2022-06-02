@@ -6,18 +6,20 @@ import removeMarkdown from 'remove-markdown'
 import Publisher from '@shared/Publisher'
 import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
-import styles from './AssetTeaser.module.css'
+import styles from './index.module.css'
 import { getServiceByName } from '@utils/ddo'
 import { AssetExtended } from 'src/@types/AssetExtended'
 
-declare type AssetTeaserProps = {
+export interface AssetTeaserProps {
   asset: AssetExtended
   noPublisher?: boolean
+  locale: string
 }
 
 export default function AssetTeaser({
   asset,
-  noPublisher
+  noPublisher,
+  locale
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
@@ -51,7 +53,11 @@ export default function AssetTeaser({
           </div>
 
           <footer className={styles.foot}>
-            <Price accessDetails={asset.accessDetails} size="small" />
+            <Price
+              accessDetails={asset.accessDetails}
+              size="small"
+              locale={locale}
+            />
             <NetworkName networkId={asset.chainId} className={styles.network} />
           </footer>
         </a>

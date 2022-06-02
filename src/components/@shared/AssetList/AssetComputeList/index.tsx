@@ -3,18 +3,22 @@ import Dotdotdot from 'react-dotdotdot'
 import Link from 'next/link'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Loader from '@shared/atoms/Loader'
-import styles from './AssetComputeList.module.css'
+import styles from './index.module.css'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 
 function Empty() {
   return <div className={styles.empty}>No assets found.</div>
 }
 
-export default function AssetComputeSelection({
-  assets
-}: {
+export interface AssetComputeListProps {
   assets: AssetSelectionAsset[]
-}): JSX.Element {
+  locale: string
+}
+
+export default function AssetComputeSelection({
+  assets,
+  locale
+}: AssetComputeListProps): JSX.Element {
   return (
     <div className={styles.display}>
       <div className={styles.scroll}>
@@ -40,6 +44,7 @@ export default function AssetComputeSelection({
                   price={asset.price}
                   size="small"
                   className={styles.price}
+                  locale={locale}
                 />
               </a>
             </Link>

@@ -1,16 +1,14 @@
-import AssetTeaser from '@shared/AssetTeaser/AssetTeaser'
+import AssetTeaser from '@shared/AssetTeaser'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import Loader from '@shared/atoms/Loader'
-import { useUserPreferences } from '@context/UserPreferences'
 import { useIsMounted } from '@hooks/useIsMounted'
 // not sure why this import is required
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { Asset } from '@oceanprotocol/lib'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
-import { useWeb3 } from '@context/Web3'
 
 const cx = classNames.bind(styles)
 
@@ -22,7 +20,7 @@ function LoaderArea() {
   )
 }
 
-declare type AssetListProps = {
+export interface AssetListProps {
   assets: Asset[]
   showPagination: boolean
   page?: number
@@ -31,6 +29,9 @@ declare type AssetListProps = {
   onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
   noPublisher?: boolean
+  chainIds: number[]
+  accountId: string
+  locale: string
 }
 
 export default function AssetList({
@@ -41,10 +42,11 @@ export default function AssetList({
   isLoading,
   onPageChange,
   className,
-  noPublisher
+  noPublisher,
+  chainIds,
+  accountId,
+  locale
 }: AssetListProps): ReactElement {
-  const { chainIds } = useUserPreferences()
-  const { accountId } = useWeb3()
   const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
   const [loading, setLoading] = useState<boolean>(isLoading)
   const isMounted = useIsMounted()
@@ -58,7 +60,7 @@ export default function AssetList({
         assets,
         accountId || ''
       )
-      if (!isMounted()) return
+      if (!isMounted() || !assetsWithPrices) return
       setAssetsWithPrices([...assetsWithPrices])
     }
     fetchPrices()
@@ -82,11 +84,12 @@ export default function AssetList({
     <>
       <div className={styleClasses}>
         {assetsWithPrices.length > 0 ? (
-          assetsWithPrices.map((assetWithPrice) => (
+          assetsWithPrices.map((assetWithPrice, i) => (
             <AssetTeaser
               asset={assetWithPrice}
-              key={assetWithPrice.id}
+              key={`${assetWithPrice.id}_${i}`}
               noPublisher={noPublisher}
+              locale={locale}
             />
           ))
         ) : (

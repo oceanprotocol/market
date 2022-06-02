@@ -34,6 +34,7 @@ import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { AccessDetails } from 'src/@types/Price'
 import { transformAssetToAssetSelection } from '@utils/assetConvertor'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import { useUserPreferences } from '@context/UserPreferences'
 
 export default function Compute({
   ddo,
@@ -53,6 +54,7 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
+  const { locale } = useUserPreferences()
   const { accountId } = useWeb3()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -162,6 +164,7 @@ export default function Compute({
         []
       )
     }
+
     return algorithmSelectionList
   }
 
@@ -387,7 +390,12 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        <Price accessDetails={accessDetails} conversion size="large" />
+        <Price
+          accessDetails={accessDetails}
+          conversion
+          size="large"
+          locale={locale}
+        />
       </div>
 
       {ddo.metadata.type === 'algorithm' ? (

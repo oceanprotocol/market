@@ -12,6 +12,14 @@ import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
+export function PriceComponent(row: AssetExtended) {
+  const { locale } = useUserPreferences()
+
+  return (
+    <Price accessDetails={row.accessDetails} size="small" locale={locale} />
+  )
+}
+
 const columns = [
   {
     name: 'Data Set',
@@ -36,7 +44,7 @@ const columns = [
   {
     name: 'Price',
     selector: function getAssetRow(row: AssetExtended) {
-      return <Price accessDetails={row.accessDetails} size="small" />
+      return PriceComponent(row)
     },
     right: true
   }

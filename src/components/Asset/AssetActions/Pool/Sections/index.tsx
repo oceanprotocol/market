@@ -15,9 +15,11 @@ import { OpcFeesQuery_opc as OpcFeesData } from '../../../../../@types/subgraph/
 import { getOpcFees } from '@utils/subgraph'
 import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
+import { useUserPreferences } from '@context/UserPreferences'
 
 export default function PoolSections() {
   const { asset } = useAsset()
+  const { locale } = useUserPreferences()
   const { poolData, poolInfo, poolInfoUser, poolInfoOwner } = usePool()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { chainId } = useWeb3()
@@ -35,12 +37,18 @@ export default function PoolSections() {
   return (
     <>
       <PoolSection className={styles.dataToken}>
-        <PriceUnit price="1" symbol={poolInfo?.datatokenSymbol} size="large" />{' '}
+        <PriceUnit
+          price="1"
+          symbol={poolInfo?.datatokenSymbol}
+          size="large"
+          locale={locale}
+        />{' '}
         ={' '}
         <PriceUnit
           price={`${poolData?.spotPrice}`}
           symbol={poolInfo?.baseTokenSymbol}
           size="large"
+          locale={locale}
         />
         <Tooltip content={content.pool.tooltips.price} />
         <div className={styles.dataTokenLinks}>

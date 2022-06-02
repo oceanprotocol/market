@@ -2,12 +2,14 @@ import React, { ReactElement } from 'react'
 import Conversion from '@shared/Price/Conversion'
 import PriceUnit from '@shared/Price/PriceUnit'
 import { StatsTotal } from './_types'
+import { useUserPreferences } from '@context/UserPreferences'
 
 export default function MarketStatsTotal({
   total
 }: {
   total: StatsTotal
 }): ReactElement {
+  const { locale } = useUserPreferences()
   return (
     <>
       <p>
@@ -25,6 +27,7 @@ export default function MarketStatsTotal({
         price={`${total.totalOceanLiquidity}`}
         symbol="OCEAN"
         size="small"
+        locale={locale}
       />
       , plus datatokens for each pool.
     </>
