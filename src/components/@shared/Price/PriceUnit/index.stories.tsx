@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import PriceUnit, { PriceUnitProps } from '@shared/Price/PriceUnit'
-import { useUserPreferences } from '@context/UserPreferences'
+import { locale } from '.storybook/__mockdata__'
 
 export default {
   title: 'Component/@shared/Price/PriceUnit',
@@ -9,9 +9,6 @@ export default {
 } as ComponentMeta<typeof PriceUnit>
 
 const Template: ComponentStory<typeof PriceUnit> = (args: PriceUnitProps) => {
-  const { locale } = useUserPreferences()
-
-  if (!locale) return
   return <PriceUnit {...args} />
 }
 
@@ -21,5 +18,6 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  price: '11.12333'
+  price: '11.12333',
+  locale
 }

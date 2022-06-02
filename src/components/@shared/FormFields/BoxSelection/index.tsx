@@ -4,7 +4,6 @@ import Loader from '@shared/atoms/Loader'
 import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
-
 export interface BoxSelectionOption {
   name: string
   value?: string
@@ -14,18 +13,20 @@ export interface BoxSelectionOption {
   text?: JSX.Element | string
 }
 
+export interface BoxSelectionProps {
+  name: string
+  options: BoxSelectionOption[]
+  disabled?: boolean
+  handleChange?: (event: ChangeEvent<HTMLInputElement>) => void
+}
+
 export default function BoxSelection({
   name,
   options,
   disabled,
   handleChange,
   ...props
-}: {
-  name: string
-  options: BoxSelectionOption[]
-  disabled?: boolean
-  handleChange?: (event: ChangeEvent<HTMLInputElement>) => void
-}): JSX.Element {
+}: BoxSelectionProps): JSX.Element {
   const styleClassesWrapper = cx({
     boxSelectionsWrapper: true,
     [styles.disabled]: disabled
