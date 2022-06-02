@@ -5,19 +5,21 @@ import Tooltip from '../atoms/Tooltip'
 import PriceUnit from './PriceUnit'
 import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 
+export interface PriceProps {
+  accessDetails: AccessDetails
+  orderPriceAndFees?: OrderPriceAndFees
+  className?: string
+  conversion?: boolean
+  size?: 'small' | 'mini' | 'large'
+}
+
 export default function Price({
   accessDetails,
   orderPriceAndFees,
   className,
   size,
   conversion
-}: {
-  accessDetails: AccessDetails
-  orderPriceAndFees?: OrderPriceAndFees
-  className?: string
-  conversion?: boolean
-  size?: 'small' | 'mini' | 'large'
-}): ReactElement {
+}: PriceProps): ReactElement {
   return accessDetails?.price || accessDetails?.type === 'free' ? (
     <PriceUnit
       price={`${orderPriceAndFees?.price || accessDetails?.price}`}

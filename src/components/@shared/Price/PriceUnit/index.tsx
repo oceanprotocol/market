@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
-import Conversion from './Conversion'
-import styles from './PriceUnit.module.css'
+import Conversion from '../Conversion'
+import styles from './index.module.css'
 import { useUserPreferences } from '@context/UserPreferences'
 import Badge from '@shared/atoms/Badge'
 
@@ -14,6 +14,15 @@ export function formatPrice(price: string, locale: string): string {
   })
 }
 
+export interface PriceUnitProps {
+  price: string
+  type?: string
+  className?: string
+  size?: 'small' | 'mini' | 'large'
+  conversion?: boolean
+  symbol?: string
+}
+
 export default function PriceUnit({
   price,
   className,
@@ -21,14 +30,7 @@ export default function PriceUnit({
   conversion,
   symbol,
   type
-}: {
-  price: string
-  type?: string
-  className?: string
-  size?: 'small' | 'mini' | 'large'
-  conversion?: boolean
-  symbol?: string
-}): ReactElement {
+}: PriceUnitProps): ReactElement {
   const { locale } = useUserPreferences()
 
   return (

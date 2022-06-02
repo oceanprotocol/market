@@ -18,6 +18,12 @@ export interface AssetSelectionAsset {
   symbol: string
 }
 
+export interface AssetSelectionProps {
+  assets: AssetSelectionAsset[]
+  multiple?: boolean
+  disabled?: boolean
+}
+
 function Empty() {
   return <div className={styles.empty}>No assets found.</div>
 }
@@ -27,11 +33,7 @@ export default function AssetSelection({
   multiple,
   disabled,
   ...props
-}: {
-  assets: AssetSelectionAsset[]
-  multiple?: boolean
-  disabled?: boolean
-}): JSX.Element {
+}: AssetSelectionProps): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
 
   const styleClassesInput = cx({

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, ReactElement } from 'react'
-import styles from './Conversion.module.css'
+import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import { formatCurrency, isCrypto } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -7,15 +7,17 @@ import { usePrices } from '@context/Prices'
 
 const cx = classNames.bind(styles)
 
+export interface ConversionProps {
+  price: string // expects price in OCEAN, not wei
+  className?: string
+  hideApproximateSymbol?: boolean
+}
+
 export default function Conversion({
   price,
   className,
   hideApproximateSymbol
-}: {
-  price: string // expects price in OCEAN, not wei
-  className?: string
-  hideApproximateSymbol?: boolean
-}): ReactElement {
+}: ConversionProps): ReactElement {
   const { prices } = usePrices()
   const { currency, locale } = useUserPreferences()
 
