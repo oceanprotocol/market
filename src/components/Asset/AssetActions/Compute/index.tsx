@@ -130,6 +130,7 @@ export default function Compute({
       setError(`Error getting compute environments!`)
       return
     }
+    setComputeEnv(computeEnv)
     const initializedProvider = await initializeProviderForCompute(
       asset,
       selectedAlgorithmAsset,
