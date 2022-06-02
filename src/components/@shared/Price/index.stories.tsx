@@ -2,7 +2,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Price, { PriceProps } from '@shared/Price'
 import { AccessDetails } from 'src/@types/Price'
-import { locale } from '.storybook/__mockdata__'
+import { locale } from '../../../../.storybook/__mockdata__'
 
 export default {
   title: 'Component/@shared/Price',

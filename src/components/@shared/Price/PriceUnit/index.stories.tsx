@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import PriceUnit, { PriceUnitProps } from '@shared/Price/PriceUnit'
-import { locale } from '.storybook/__mockdata__'
+import { locale } from '../../../../../.storybook/__mockdata__'
 
 export default {
   title: 'Component/@shared/Price/PriceUnit',

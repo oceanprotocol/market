@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import Conversion from '../Conversion'
 import styles from './index.module.css'
-import { useUserPreferences } from '@context/UserPreferences'
 import Badge from '@shared/atoms/Badge'
 
 export function formatPrice(price: string, locale: string): string {
