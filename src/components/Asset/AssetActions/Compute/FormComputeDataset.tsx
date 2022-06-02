@@ -105,7 +105,7 @@ export default function FormStartCompute({
       )
       const extendedAlgoAsset: AssetExtended = {
         ...algorithmAsset,
-        accessDetails: accessDetails
+        accessDetails
       }
       setSelectedAlgorithm(extendedAlgoAsset)
     }
@@ -169,6 +169,7 @@ export default function FormStartCompute({
           {...field}
           options={algorithms}
           component={Input}
+          disabled={isLoading || !isAssetNetwork}
         />
       ))}
 
