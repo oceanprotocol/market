@@ -4,6 +4,8 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 
 export const locale: string = 'en-US'
 
+export const mockWallet: string = '0x02f28391AAECE3654F4ece783d777dde4300d5ef' // dummy account for stories
+
 export const asset: Asset = {
   '@context': ['https://w3id.org/did/v1'],
   purgatory: {
@@ -25,7 +27,7 @@ export const asset: Asset = {
     block: 10771807,
     contract: '0x58390B3527A3Ac42F92bF2A12a29fFBE832206bA',
     datetime: '2022-05-31T11:17:52',
-    from: '0x491AECC4b3d690a4D7027A385499fd04fE50b796',
+    from: mockWallet,
     tx: '0xa5abd03b5804918fe5e13145ab511e536da66b73fd8123fe2a6aff47ea2a221b'
   },
   id: 'did:op:72468f062a26f9eb668b6392a0bbdeebd33f889b2c31e2c91768eba35a31cd94',
@@ -46,7 +48,7 @@ export const asset: Asset = {
     address: '0x58390B3527A3Ac42F92bF2A12a29fFBE832206bA',
     created: '2022-05-30T13:52:09',
     name: 'Ocean Data NFT',
-    owner: '0x491AECC4b3d690a4D7027A385499fd04fE50b796',
+    owner: mockWallet,
     state: 0,
     symbol: 'OCEAN-NFT',
     tokenURI:
