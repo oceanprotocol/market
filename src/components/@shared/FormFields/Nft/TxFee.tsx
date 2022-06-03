@@ -6,6 +6,7 @@ import useNftFactory from '@hooks/contracts/useNftFactory'
 import { NftFactory } from '@oceanprotocol/lib'
 import Conversion from '@shared/Price/Conversion'
 import { generateNftCreateData, NftMetadata } from '@utils/nft'
+import { useUserPreferences } from '@context/UserPreferences'
 
 const getEstGasFee = async (
   address: string,
@@ -37,6 +38,8 @@ export default function TxFee({
   const { accountId } = useWeb3()
   const { prices } = usePrices()
   const nftFactory = useNftFactory()
+  const { locale } = useUserPreferences()
+
   const [gasFee, setGasFee] = useState('')
 
   useEffect(() => {
@@ -55,7 +58,7 @@ export default function TxFee({
   return gasFee ? (
     <p>
       Gas fee estimation for this artwork
-      <Conversion price={gasFee} />
+      <Conversion locale={locale} price={gasFee} />
     </p>
   ) : accountId ? (
     <p>

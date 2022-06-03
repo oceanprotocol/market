@@ -45,7 +45,7 @@ export default function PriceUnit({
               <Badge label="pool" className={styles.badge} />
             )}
           </div>
-          {conversion && <Conversion price={price} />}
+          {conversion && <Conversion price={price} locale={locale} />}
         </>
       )}
     </div>

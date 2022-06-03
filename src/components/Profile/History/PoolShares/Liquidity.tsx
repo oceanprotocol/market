@@ -5,6 +5,7 @@ import Token from '../../../@shared/Token'
 import Decimal from 'decimal.js'
 import { AssetPoolShare } from './index'
 import { calcSingleOutGivenPoolIn } from '@utils/pool'
+import { useUserPreferences } from '@context/UserPreferences'
 
 export function Liquidity({
   row,
@@ -14,6 +15,7 @@ export function Liquidity({
   type: string
 }) {
   const [liquidity, setLiquidity] = useState('0')
+  const { locale } = useUserPreferences()
 
   useEffect(() => {
     let calculatedLiquidity = '0'
@@ -43,6 +45,7 @@ export function Liquidity({
         price={liquidity}
         className={styles.totalLiquidity}
         hideApproximateSymbol
+        locale={locale}
       />
       <Token
         symbol={row.poolShare.pool.baseToken.symbol}

@@ -20,6 +20,7 @@ export default function MarketStatsTotal({
       <Conversion
         price={`${total.totalValueLockedInOcean}`}
         hideApproximateSymbol
+        locale={locale}
       />{' '}
       <abbr title="Total Value Locked">TVL</abbr> across{' '}
       <strong>{total.pools}</strong> asset pools that contain{' '}

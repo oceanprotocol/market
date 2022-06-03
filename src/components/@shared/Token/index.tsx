@@ -35,7 +35,11 @@ export default function Token({
         />
       </div>
       {conversion && (
-        <Conversion price={balance} className={`${styles.conversion}`} />
+        <Conversion
+          price={balance}
+          className={`${styles.conversion}`}
+          locale={locale}
+        />
       )}
     </>
   )

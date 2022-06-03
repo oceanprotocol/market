@@ -5,6 +5,7 @@ import Logo from '@images/logo.svg'
 import Conversion from '@shared/Price/Conversion'
 import { useField } from 'formik'
 import Error from '@shared/FormInput/Error'
+import { useUserPreferences } from '@context/UserPreferences'
 
 export default function Coin({
   datatokenOptions,
@@ -18,6 +19,7 @@ export default function Coin({
   readOnly?: boolean
 }): ReactElement {
   const [field, meta] = useField(`pricing.${name}`)
+  const { locale } = useUserPreferences()
 
   return (
     <div className={styles.coin}>
@@ -47,7 +49,7 @@ export default function Coin({
           {...field}
         />
         {datatokenOptions?.symbol === 'OCEAN' && (
-          <Conversion price={field.value} />
+          <Conversion price={field.value} locale={locale} />
         )}
         <div>
           <Error meta={meta} />

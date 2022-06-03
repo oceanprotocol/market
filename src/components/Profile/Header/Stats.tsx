@@ -34,6 +34,7 @@ export default function Stats({
 }): ReactElement {
   const { chainIds } = useUserPreferences()
   const { poolShares, assets, assetsTotal, sales } = useProfile()
+  const { locale } = useUserPreferences()
 
   const [publisherTvl, setPublisherTvl] = useState('0')
   const [totalTvl, setTotalTvl] = useState('0')
@@ -90,11 +91,19 @@ export default function Stats({
     <div className={styles.stats}>
       <NumberUnit
         label="Liquidity in Own Assets"
-        value={<Conversion price={publisherTvl} hideApproximateSymbol />}
+        value={
+          <Conversion
+            price={publisherTvl}
+            hideApproximateSymbol
+            locale={locale}
+          />
+        }
       />
       <NumberUnit
         label="Liquidity"
-        value={<Conversion price={totalTvl} hideApproximateSymbol />}
+        value={
+          <Conversion price={totalTvl} hideApproximateSymbol locale={locale} />
+        }
       />
       <NumberUnit label={`Sale${sales === 1 ? '' : 's'}`} value={sales} />
       <NumberUnit label="Published" value={assetsTotal} />

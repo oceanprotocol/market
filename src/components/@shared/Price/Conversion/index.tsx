@@ -11,15 +11,17 @@ export interface ConversionProps {
   price: string // expects price in OCEAN, not wei
   className?: string
   hideApproximateSymbol?: boolean
+  locale: string
 }
 
 export default function Conversion({
   price,
   className,
-  hideApproximateSymbol
+  hideApproximateSymbol,
+  locale
 }: ConversionProps): ReactElement {
   const { prices } = usePrices()
-  const { currency, locale } = useUserPreferences()
+  const { currency } = useUserPreferences()
 
   const [priceConverted, setPriceConverted] = useState('0.00')
   // detect fiat, only have those kick in full @coingecko/cryptoformat formatting
@@ -56,7 +58,7 @@ export default function Conversion({
       (match) => `<span>${match}</span>`
     )
     setPriceConverted(convertedFormattedHTMLstring)
-  }, [price, prices, currency, locale, isFiat])
+  }, [price, prices, currency, isFiat, locale])
 
   return (
     <span

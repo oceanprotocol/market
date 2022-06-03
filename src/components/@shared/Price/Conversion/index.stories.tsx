@@ -1,8 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Conversion, { ConversionProps } from '@shared/Price/Conversion'
-import { usePrices } from '@context/Prices'
-import { useUserPreferences } from '@context/UserPreferences'
+import { locale } from '../../../../../.storybook/__mockdata__'
 
 export default {
   title: 'Component/@shared/Price/Conversion',
@@ -10,12 +9,6 @@ export default {
 } as ComponentMeta<typeof Conversion>
 
 const Template: ComponentStory<typeof Conversion> = (args: ConversionProps) => {
-  const { prices } = usePrices()
-  const { currency, locale } = useUserPreferences()
-
-  console.log('PRICES: ', prices)
-  if (!prices || !currency || !locale) return
-
   return <Conversion {...args} />
 }
 
@@ -25,11 +18,13 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  price: '11.12333'
+  price: '11.12333',
+  locale
 }
 
 export const HideApproximateSymbol: Props = Template.bind({})
 HideApproximateSymbol.args = {
   price: '11.12333',
+  locale,
   hideApproximateSymbol: true
 }
