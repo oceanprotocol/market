@@ -135,7 +135,8 @@ export async function transformPublishFormToDdo(
                 : getAlgorithmContainerPreset(dockerImage).tag,
             checksum:
               dockerImage === 'custom'
-                ? dockerImageCustomChecksum
+                ? // ? dockerImageCustomChecksum
+                  ''
                 : getAlgorithmContainerPreset(dockerImage).checksum
           }
         }
