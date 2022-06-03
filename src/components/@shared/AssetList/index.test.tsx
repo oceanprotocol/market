@@ -13,6 +13,8 @@ test('render AssetList with arc', async () => {
     chainIds: config.chainIds,
     accountId: '0x491AECC4b3d690a4D7027A385499fd04fE50b796'
   }
+  // TODO: remove eslint rule (testing-library/no-unnecessary-act) and solve act issue
+  // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
     render(
       <UrqlClientProvider>
