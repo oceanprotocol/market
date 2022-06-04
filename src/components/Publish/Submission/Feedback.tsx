@@ -21,7 +21,9 @@ export function Feedback(): ReactElement {
       </div>
       <p className={styles.description}>{value.description}</p>
       {value.errorMessage && (
-        <span className={styles.errorMessage}>{value.errorMessage}</span>
+        <span title={value.errorMessage} className={styles.errorMessage}>
+          {value.errorMessage}
+        </span>
       )}
     </li>
   ))
