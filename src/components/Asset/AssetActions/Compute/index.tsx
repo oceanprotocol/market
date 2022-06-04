@@ -176,6 +176,7 @@ export default function Compute({
             }
           : null
       const datasetPriceAndFees = await getOrderPriceAndFees(
+        web3,
         asset,
         ZERO_ADDRESS,
         poolParams,
@@ -223,6 +224,7 @@ export default function Compute({
         }
       }
       const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
+        web3,
         selectedAlgorithmAsset,
         ZERO_ADDRESS,
         algoPoolParams,

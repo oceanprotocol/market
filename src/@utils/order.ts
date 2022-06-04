@@ -6,7 +6,8 @@ import {
   OrderParams,
   ProviderComputeInitialize,
   ProviderFees,
-  ProviderInstance
+  ProviderInstance,
+  unitsToAmount
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
@@ -52,10 +53,17 @@ export async function order(
       asset.services[0].serviceEndpoint
     ))
 
+  const providerFeesSanitized = providerFees || initializeData.providerFee
+  providerFeesSanitized.providerFeeAmount = await unitsToAmount(
+    web3,
+    providerFeesSanitized.providerFeeToken,
+    providerFeesSanitized.providerFeeAmount.toString()
+  )
+
   const orderParams = {
     consumer: computeConsumerAddress || accountId,
     serviceIndex: 0,
-    _providerFee: providerFees || initializeData.providerFee,
+    _providerFee: providerFeesSanitized,
     _consumeMarketFee: {
       consumeMarketFeeAddress: marketFeeAddress,
       consumeMarketFeeAmount: consumeMarketOrderFee,
@@ -86,6 +94,8 @@ export async function order(
         swapMarketFee: consumeMarketFixedSwapFee,
         marketFeeAddress
       } as FreOrderParams
+      console.log('freParams', freParams)
+      console.log('orderParams', orderParams)
       const tx = await datatoken.buyFromFreAndOrder(
         asset.accessDetails.datatoken.address,
         accountId,
@@ -153,10 +163,15 @@ export async function reuseOrder(
       web3,
       accountId,
       providerFees.providerFeeToken ||
-        initializeData.providerFee.providerFeeAmount,
-      asset.accessDetails.datatoken.address,
-      providerFees.providerFeeAmount ||
         initializeData.providerFee.providerFeeToken,
+      asset.accessDetails.datatoken.address,
+      await unitsToAmount(
+        web3,
+        providerFees.providerFeeToken ||
+          initializeData.providerFee.providerFeeToken,
+        providerFees.providerFeeAmount ||
+          initializeData.providerFee.providerFeeAmount
+      ),
       false
     )
     if (!txApprove) {

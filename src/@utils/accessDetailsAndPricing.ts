@@ -12,7 +12,8 @@ import {
   Asset,
   LoggerInstance,
   ProviderFees,
-  ProviderInstance
+  ProviderInstance,
+  unitsToAmount
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { calcInGivenOut } from './pool'
@@ -20,6 +21,7 @@ import { getFixedBuyPrice } from './fixedRateExchange'
 import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import Decimal from 'decimal.js'
 import { consumeMarketOrderFee } from '../../app.config'
+import Web3 from 'web3'
 
 const tokensPriceQuery = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
@@ -255,6 +257,7 @@ function getAccessDetailsFromTokenPrice(
  * @return {Promise<OrdePriceAndFee>}
  */
 export async function getOrderPriceAndFees(
+  web3: Web3,
   asset: AssetExtended,
   accountId?: string,
   paramsForPool?: CalcInGivenOutParams,
@@ -316,7 +319,15 @@ export async function getOrderPriceAndFees(
   orderPriceAndFee.price = new Decimal(+orderPriceAndFee.price || 0)
     .add(new Decimal(+orderPriceAndFee?.consumeMarketOrderFee || 0))
     .add(new Decimal(+orderPriceAndFee?.publisherMarketOrderFee || 0))
-    .add(new Decimal(+orderPriceAndFee?.providerFee?.providerFeeAmount || 0))
+    .add(
+      new Decimal(
+        (await unitsToAmount(
+          web3,
+          orderPriceAndFee?.providerFee?.providerFeeToken,
+          orderPriceAndFee?.providerFee?.providerFeeAmount.toString()
+        )) || 0
+      )
+    )
     .toString()
   return orderPriceAndFee
 }

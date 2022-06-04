@@ -83,6 +83,7 @@ export default function Download({
         consumeMarketSwapFee: '0'
       }
       const _orderPriceAndFees = await getOrderPriceAndFees(
+        web3,
         asset,
         ZERO_ADDRESS,
         paramsForPool
