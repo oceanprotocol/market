@@ -9,7 +9,8 @@ import SearchBar from './SearchBar'
 import styles from './Menu.module.css'
 import { useRouter } from 'next/router'
 import { useMarketMetadata } from '@context/MarketMetadata'
-
+import Tooltip from '@shared/atoms/Tooltip'
+import Caret from '@images/caret.svg'
 const Wallet = loadable(() => import('./Wallet'))
 
 declare type MenuItem = {
@@ -40,12 +41,37 @@ export default function Menu(): ReactElement {
       <Link href="/">
         <a className={styles.logo}>
           <Logo noWordmark />
-          <h1 className={styles.title}>
-            {siteContent?.siteTitle} <Badge label="v4" />
-          </h1>
+          <h1 className={styles.title}>{siteContent?.siteTitle}</h1>
         </a>
       </Link>
 
+      <Tooltip
+        className={styles.tooltip}
+        content={
+          <div className={styles.versions}>
+            <a
+              className={styles.link}
+              href="https://v3.market.oceanprotocol.com"
+            >
+              v3
+            </a>
+            <a className={styles.link} href="" aria-current aria-disabled>
+              v4
+            </a>
+          </div>
+        }
+        trigger="click focus"
+        placement="bottom"
+      >
+        <Badge
+          className={styles.badge}
+          label={
+            <>
+              v4 <Caret aria-hidden="true" className={styles.caret} />
+            </>
+          }
+        />
+      </Tooltip>
       <ul className={styles.navigation}>
         {siteContent?.menu.map((item: MenuItem) => (
           <li key={item.name}>
