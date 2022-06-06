@@ -1,6 +1,6 @@
 import React from 'react'
 import { act, render } from '@testing-library/react'
-import { assets, locale } from '../../../../.storybook/__mockdata__'
+import { assets, locale, mockWallet } from '../../../../.storybook/__mockdata__'
 import * as config from '../../../../app.config'
 import AssetList from './'
 import UrqlClientProvider from '@context/UrqlProvider'
@@ -11,7 +11,7 @@ test('render AssetList with arc', async () => {
     assets,
     showPagination: false,
     chainIds: config.chainIds,
-    accountId: '0x491AECC4b3d690a4D7027A385499fd04fE50b796'
+    accountId: mockWallet
   }
   // TODO: remove eslint rule (testing-library/no-unnecessary-act) and solve act issue
   // eslint-disable-next-line testing-library/no-unnecessary-act
