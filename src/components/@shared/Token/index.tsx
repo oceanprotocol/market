@@ -4,6 +4,7 @@ import PriceUnit from '@shared/Price/PriceUnit'
 import Logo from '@shared/atoms/Logo'
 import Conversion from '@shared/Price/Conversion'
 import { useUserPreferences } from '@context/UserPreferences'
+import { usePrices } from '@context/Prices'
 
 export default function Token({
   symbol,
@@ -18,7 +19,8 @@ export default function Token({
   noIcon?: boolean
   size?: 'small' | 'mini'
 }): ReactElement {
-  const { locale } = useUserPreferences()
+  const { locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   return (
     <>
       <div className={`${styles.token} ${size ? styles[size] : ''}`}>
@@ -32,6 +34,8 @@ export default function Token({
           symbol={symbol}
           size={size}
           locale={locale}
+          prices={prices}
+          currency={currency}
         />
       </div>
       {conversion && (
@@ -39,6 +43,8 @@ export default function Token({
           price={balance}
           className={`${styles.conversion}`}
           locale={locale}
+          prices={prices}
+          currency={currency}
         />
       )}
     </>

@@ -4,6 +4,7 @@ import Loader from '../atoms/Loader'
 import Tooltip from '../atoms/Tooltip'
 import PriceUnit from './PriceUnit'
 import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
+import { Prices } from '@context/Prices'
 
 export interface PriceProps {
   accessDetails: AccessDetails
@@ -12,6 +13,8 @@ export interface PriceProps {
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
   locale: string
+  currency: string
+  prices: Prices
 }
 
 export default function Price({
@@ -20,7 +23,9 @@ export default function Price({
   className,
   size,
   conversion,
-  locale
+  locale,
+  currency,
+  prices
 }: PriceProps): ReactElement {
   return accessDetails?.price || accessDetails?.type === 'free' ? (
     <PriceUnit
@@ -31,6 +36,8 @@ export default function Price({
       conversion={conversion}
       type={accessDetails.type}
       locale={locale}
+      currency={currency}
+      prices={prices}
     />
   ) : !accessDetails || accessDetails?.type === '' ? (
     <div className={styles.empty}>

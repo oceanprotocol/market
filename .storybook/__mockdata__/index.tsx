@@ -1,8 +1,18 @@
+import { Prices } from '@context/Prices'
 import { Asset } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { AssetExtended } from 'src/@types/AssetExtended'
 
 export const locale: string = 'en-US'
+
+export const currency: string = 'USD'
+
+export const prices: Prices = {
+  eur: 0.0,
+  usd: 0.0,
+  eth: 0.0,
+  btc: 0.0
+}
 
 export const mockWallet: string = '0x02f28391AAECE3654F4ece783d777dde4300d5ef' // dummy account for stories
 

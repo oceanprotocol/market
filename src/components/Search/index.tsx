@@ -9,6 +9,7 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import styles from './index.module.css'
 import { useRouter } from 'next/router'
 import { useWeb3 } from '@context/Web3'
+import { usePrices } from '@context/Prices'
 
 export default function SearchPage({
   setTotalResults,
@@ -19,7 +20,8 @@ export default function SearchPage({
 }): ReactElement {
   const router = useRouter()
   const [parsed, setParsed] = useState<queryString.ParsedQuery<string>>()
-  const { chainIds, locale } = useUserPreferences()
+  const { chainIds, locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   const { accountId } = useWeb3()
   const [queryResult, setQueryResult] = useState<PagedAssets>()
   const [loading, setLoading] = useState<boolean>()
@@ -111,6 +113,8 @@ export default function SearchPage({
           chainIds={chainIds}
           accountId={accountId}
           locale={locale}
+          currency={currency}
+          prices={prices}
         />
       </div>
     </>

@@ -1,7 +1,11 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import PriceUnit, { PriceUnitProps } from '@shared/Price/PriceUnit'
-import { locale } from '../../../../../.storybook/__mockdata__'
+import {
+  locale,
+  currency,
+  prices
+} from '../../../../../.storybook/__mockdata__'
 
 export default {
   title: 'Component/@shared/Price/PriceUnit',
@@ -19,5 +23,7 @@ interface Props {
 export const Default: Props = Template.bind({})
 Default.args = {
   price: '11.12333',
-  locale
+  locale,
+  currency,
+  prices
 }

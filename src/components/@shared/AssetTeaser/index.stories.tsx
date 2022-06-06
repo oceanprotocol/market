@@ -1,6 +1,11 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { assetExtended, locale } from '../../../../.storybook/__mockdata__'
+import {
+  assetExtended,
+  locale,
+  currency,
+  prices
+} from '../../../../.storybook/__mockdata__'
 import AssetTeaser, { AssetTeaserProps } from '@shared/AssetTeaser'
 
 export default {
@@ -21,5 +26,7 @@ interface Props {
 export const Default: Props = Template.bind({})
 Default.args = {
   locale,
+  currency,
+  prices,
   asset: assetExtended
 }

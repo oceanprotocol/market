@@ -15,6 +15,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
 import { useWeb3 } from '@context/Web3'
+import { usePrices } from '@context/Prices'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -52,7 +53,8 @@ function SectionQueryResult({
   action?: ReactElement
   queryData?: string[]
 }) {
-  const { chainIds, locale } = useUserPreferences()
+  const { chainIds, locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   const { accountId } = useWeb3()
   const [result, setResult] = useState<PagedAssets>()
   const [loading, setLoading] = useState<boolean>()
@@ -104,6 +106,8 @@ function SectionQueryResult({
         chainIds={chainIds}
         accountId={accountId}
         locale={locale}
+        currency={currency}
+        prices={prices}
       />
 
       {action && action}

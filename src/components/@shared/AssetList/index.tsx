@@ -9,6 +9,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { Asset } from '@oceanprotocol/lib'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
+import { Prices } from '@context/Prices'
 
 const cx = classNames.bind(styles)
 
@@ -32,6 +33,8 @@ export interface AssetListProps {
   chainIds: number[]
   accountId: string
   locale: string
+  currency: string
+  prices: Prices
 }
 
 export default function AssetList({
@@ -45,7 +48,9 @@ export default function AssetList({
   noPublisher,
   chainIds,
   accountId,
-  locale
+  locale,
+  currency,
+  prices
 }: AssetListProps): ReactElement {
   const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
   const [loading, setLoading] = useState<boolean>(isLoading)
@@ -90,6 +95,8 @@ export default function AssetList({
               key={`${assetWithPrice.id}_${i}`}
               noPublisher={noPublisher}
               locale={locale}
+              currency={currency}
+              prices={prices}
             />
           ))
         ) : (

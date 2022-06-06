@@ -7,7 +7,7 @@ import External from '@images/external.svg'
 import InputElement from '@shared/FormInput/InputElement'
 import Loader from '@shared/atoms/Loader'
 import styles from './index.module.css'
-import { useUserPreferences } from '@context/UserPreferences'
+import { Prices } from '@context/Prices'
 
 const cx = classNames.bind(styles)
 
@@ -21,6 +21,9 @@ export interface AssetSelectionAsset {
 
 export interface AssetSelectionProps {
   assets: AssetSelectionAsset[]
+  currency: string
+  locale: string
+  prices: Prices
   multiple?: boolean
   disabled?: boolean
 }
@@ -33,10 +36,13 @@ export default function AssetSelection({
   assets,
   multiple,
   disabled,
+  currency,
+  locale,
+  prices,
   ...props
 }: AssetSelectionProps): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
-  const { locale } = useUserPreferences()
+  // const { locale } = useUserPreferences()
 
   const styleClassesInput = cx({
     input: true,
@@ -117,6 +123,8 @@ export default function AssetSelection({
                   size="small"
                   className={styles.price}
                   locale={locale}
+                  prices={prices}
+                  currency={currency}
                 />
               </div>
             ))
