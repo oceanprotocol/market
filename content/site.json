@@ -15,7 +15,7 @@
     }
   ],
   "warning": {
-    "main": "",
+    "main": "Compute to data is still work in progress, please use it only on test networks",
     "polygonPublish": "Only republish data sets with a pool from ETH Mainnet into Polygon/Matic if the liquidity is **less than or equal to 1000 OCEAN in the original pool**. Doing otherwise will lead to [purgatory](https://github.com/oceanprotocol/list-purgatory) for the data set in Polygon/Matic."
   },
   "announcement": {
