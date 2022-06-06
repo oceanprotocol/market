@@ -11,11 +11,11 @@ import useSWR from 'swr'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useMarketMetadata } from './MarketMetadata'
 
-interface Prices {
+export interface Prices {
   [key: string]: number
 }
 
-interface PricesValue {
+export interface PricesValue {
   prices: Prices
 }
 

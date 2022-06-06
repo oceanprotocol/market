@@ -37,6 +37,7 @@ export default function TxFee({
 }): ReactElement {
   const { accountId } = useWeb3()
   const { prices } = usePrices()
+  const { currency } = useUserPreferences()
   const nftFactory = useNftFactory()
   const { locale } = useUserPreferences()
 
@@ -58,7 +59,12 @@ export default function TxFee({
   return gasFee ? (
     <p>
       Gas fee estimation for this artwork
-      <Conversion locale={locale} price={gasFee} />
+      <Conversion
+        locale={locale}
+        price={gasFee}
+        prices={prices}
+        currency={currency}
+      />
     </p>
   ) : accountId ? (
     <p>

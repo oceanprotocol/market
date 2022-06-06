@@ -11,6 +11,7 @@ import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { calcSingleOutGivenPoolIn } from '@utils/pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
+import { usePrices } from '@context/Prices'
 
 function getPoolSharesLiquidity(poolShares: PoolShare[]): string {
   let liquidity = new Decimal(0)
@@ -32,9 +33,9 @@ export default function Stats({
 }: {
   accountId: string
 }): ReactElement {
-  const { chainIds } = useUserPreferences()
+  const { chainIds, locale, currency } = useUserPreferences()
   const { poolShares, assets, assetsTotal, sales } = useProfile()
-  const { locale } = useUserPreferences()
+  const { prices } = usePrices()
 
   const [publisherTvl, setPublisherTvl] = useState('0')
   const [totalTvl, setTotalTvl] = useState('0')
@@ -96,13 +97,21 @@ export default function Stats({
             price={publisherTvl}
             hideApproximateSymbol
             locale={locale}
+            prices={prices}
+            currency={currency}
           />
         }
       />
       <NumberUnit
         label="Liquidity"
         value={
-          <Conversion price={totalTvl} hideApproximateSymbol locale={locale} />
+          <Conversion
+            price={totalTvl}
+            hideApproximateSymbol
+            locale={locale}
+            prices={prices}
+            currency={currency}
+          />
         }
       />
       <NumberUnit label={`Sale${sales === 1 ? '' : 's'}`} value={sales} />

@@ -3,13 +3,15 @@ import Conversion from '@shared/Price/Conversion'
 import PriceUnit from '@shared/Price/PriceUnit'
 import { StatsTotal } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
+import { usePrices } from '@context/Prices'
 
 export default function MarketStatsTotal({
   total
 }: {
   total: StatsTotal
 }): ReactElement {
-  const { locale } = useUserPreferences()
+  const { locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   return (
     <>
       <p>
@@ -21,6 +23,8 @@ export default function MarketStatsTotal({
         price={`${total.totalValueLockedInOcean}`}
         hideApproximateSymbol
         locale={locale}
+        currency={currency}
+        prices={prices}
       />{' '}
       <abbr title="Total Value Locked">TVL</abbr> across{' '}
       <strong>{total.pools}</strong> asset pools that contain{' '}
@@ -29,6 +33,8 @@ export default function MarketStatsTotal({
         symbol="OCEAN"
         size="small"
         locale={locale}
+        currency={currency}
+        prices={prices}
       />
       , plus datatokens for each pool.
     </>

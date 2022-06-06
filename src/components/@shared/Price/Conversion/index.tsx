@@ -2,8 +2,7 @@ import React, { useEffect, useState, ReactElement } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import { formatCurrency, isCrypto } from '@coingecko/cryptoformat'
-import { useUserPreferences } from '@context/UserPreferences'
-import { usePrices } from '@context/Prices'
+import { Prices } from '@context/Prices'
 
 const cx = classNames.bind(styles)
 
@@ -12,17 +11,18 @@ export interface ConversionProps {
   className?: string
   hideApproximateSymbol?: boolean
   locale: string
+  prices: Prices
+  currency: string
 }
 
 export default function Conversion({
   price,
   className,
   hideApproximateSymbol,
-  locale
+  locale,
+  prices,
+  currency
 }: ConversionProps): ReactElement {
-  const { prices } = usePrices()
-  const { currency } = useUserPreferences()
-
   const [priceConverted, setPriceConverted] = useState('0.00')
   // detect fiat, only have those kick in full @coingecko/cryptoformat formatting
   const isFiat = !isCrypto(currency)
