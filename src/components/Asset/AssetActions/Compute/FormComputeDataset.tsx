@@ -83,7 +83,7 @@ export default function FormStartCompute({
     selectedAlgorithmAsset?.accessDetails?.price
   )
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
-  const { accountId, balance } = useWeb3()
+  const { accountId, balance, isSupportedOceanNetwork } = useWeb3()
 
   function getAlgorithmAsset(algorithmId: string): Asset {
     let assetDdo = null
@@ -105,7 +105,7 @@ export default function FormStartCompute({
       )
       const extendedAlgoAsset: AssetExtended = {
         ...algorithmAsset,
-        accessDetails: accessDetails
+        accessDetails
       }
       setSelectedAlgorithm(extendedAlgoAsset)
     }
@@ -169,6 +169,7 @@ export default function FormStartCompute({
           {...field}
           options={algorithms}
           component={Input}
+          disabled={isLoading || !isSupportedOceanNetwork}
         />
       ))}
 
