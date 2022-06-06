@@ -8,7 +8,7 @@ import AnnouncementBanner from '@shared/AnnouncementBanner'
 import PrivacyPreferenceCenter from '../Privacy/PrivacyPreferenceCenter'
 import styles from './index.module.css'
 import { ToastContainer } from 'react-toastify'
-import content from '../../../content/purgatory.json'
+import contentPurgatory from '../../../content/purgatory.json'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function App({
@@ -22,16 +22,16 @@ export default function App({
 
   return (
     <div className={styles.app}>
-      {siteContent?.warning.main !== '' && (
-        <AnnouncementBanner text={siteContent?.warning.main} />
+      {siteContent?.announcement !== '' && (
+        <AnnouncementBanner text={siteContent?.announcement} />
       )}
       <Header />
 
       {isInPurgatory && (
         <Alert
-          title={content.account.title}
+          title={contentPurgatory.account.title}
           badge={`Reason: ${purgatoryData?.reason}`}
-          text={content.account.description}
+          text={contentPurgatory.account.description}
           state="error"
         />
       )}

@@ -40,13 +40,9 @@ export interface SiteContent {
     name: string
     link: string
   }[]
+  announcement: string
   warning: {
-    main: string
-    polygonPublish: string
-  }
-  announcement: {
-    main: string
-    polygon: string
+    ctd: string
   }
 }
 
