@@ -110,17 +110,9 @@ export default function PoolSections() {
         titlePostfixTitle={`Weight of ${poolInfo?.weightBaseToken}% ${poolInfo?.baseTokenSymbol} & ${poolInfo?.weightDt}% ${poolInfo?.datatokenSymbol}`}
       >
         <Graph />
-        <Token
-          symbol={poolInfo?.baseTokenSymbol}
-          balance={`${poolData?.baseTokenLiquidity}`}
-          size="mini"
-        />
-        <Token
-          symbol={poolInfo?.datatokenSymbol}
-          balance={`${poolData?.datatokenLiquidity}`}
-          size="mini"
-        />
+      </PoolSection>
 
+      <PoolSection className={styles.fees}>
         <Token
           symbol="% swap fee"
           balance={poolInfo?.liquidityProviderSwapFee}
