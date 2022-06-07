@@ -34,7 +34,7 @@ function MenuLink({ item }: { item: MenuItem }) {
 }
 
 export default function Menu(): ReactElement {
-  const { siteContent } = useMarketMetadata()
+  const { appConfig, siteContent } = useMarketMetadata()
 
   return (
     <nav className={styles.menu}>
@@ -49,10 +49,7 @@ export default function Menu(): ReactElement {
         className={styles.tooltip}
         content={
           <div className={styles.versions}>
-            <a
-              className={styles.link}
-              href="https://v3.market.oceanprotocol.com"
-            >
+            <a className={styles.link} href={appConfig.v3MarketUri}>
               v3
             </a>
             <a className={styles.link} href="" aria-current aria-disabled>
