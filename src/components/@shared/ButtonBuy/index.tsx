@@ -161,7 +161,7 @@ export default function ButtonBuy({
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className="center"
+            className={action === 'compute' ? 'center' : 'left'}
           >
             {buttonText}
           </Button>
