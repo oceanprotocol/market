@@ -187,7 +187,7 @@ export default function PoolTransactions({
         poolTransactions.push({
           ...data[i],
           networkId: !minimal
-            ? getAsset(ddoList, data[i].pool.datatoken.id).chainId
+            ? getAsset(ddoList, data[i].pool.datatoken.id)?.chainId
             : poolChainId,
           asset: !minimal ? getAsset(ddoList, data[i].pool.datatoken.id) : null
         })
