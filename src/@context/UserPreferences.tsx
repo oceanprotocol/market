@@ -31,7 +31,7 @@ interface UserPreferencesValue {
 
 const UserPreferencesContext = createContext(null)
 
-const localStorageKey = 'ocean-user-preferences'
+const localStorageKey = 'ocean-user-preferences-v4'
 
 function getLocalStorage(): UserPreferencesValue {
   const storageParsed =

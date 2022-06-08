@@ -22,3 +22,7 @@
   border-right: 0;
   padding: 0;
 }
+
+.warning {
+  margin-bottom: var(--spacer);
+}

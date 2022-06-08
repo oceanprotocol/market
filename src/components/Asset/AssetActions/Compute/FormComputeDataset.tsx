@@ -10,14 +10,13 @@ import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset } from '@oceanprotocol/lib'
-import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
-import {
-  getAccessDetailsForAssets,
-  getAccessDetails
-} from '@utils/accessDetailsAndPricing'
+import { OrderPriceAndFees } from 'src/@types/Price'
+import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
+import { useMarketMetadata } from '@context/MarketMetadata'
+import Alert from '@shared/atoms/Alert'
 
 export default function FormStartCompute({
   algorithms,
@@ -72,6 +71,7 @@ export default function FormStartCompute({
   datasetOrderPriceAndFees?: OrderPriceAndFees
   algoOrderPriceAndFees?: OrderPriceAndFees
 }): ReactElement {
+  const { siteContent } = useMarketMetadata()
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
@@ -163,6 +163,11 @@ export default function FormStartCompute({
 
   return (
     <Form className={styles.form}>
+      <Alert
+        className={styles.warning}
+        state="info"
+        text={siteContent.warning.ctd}
+      />
       {content.form.data.map((field: FormFieldContent) => (
         <Field
           key={field.name}

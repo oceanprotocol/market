@@ -39,7 +39,7 @@ export async function getAssetsFromPoolShares(
     assetList.push({
       poolShare: data[i],
       userLiquidity,
-      networkId: getAsset(ddoList, data[i].pool.datatoken.address).chainId,
+      networkId: getAsset(ddoList, data[i].pool.datatoken.address)?.chainId,
       createTime: data[i].pool.createdTimestamp,
       asset: getAsset(ddoList, data[i].pool.datatoken.address)
     })

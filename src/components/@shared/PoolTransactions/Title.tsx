@@ -39,15 +39,10 @@ function getTitle(row: PoolTransaction, locale: string) {
     case 'SETUP': {
       const firstToken = row.baseToken
       const firstTokenSymbol = firstToken?.symbol
-      const secondToken = row.datatoken
-      const secondTokenSymbol = secondToken?.symbol
       title += `Create pool with ${formatPrice(
         Math.abs(row.baseTokenValue).toString(),
         locale
-      )}${firstTokenSymbol} and ${formatPrice(
-        Math.abs(row.datatokenValue).toString(),
-        locale
-      )}${secondTokenSymbol}`
+      )}${firstTokenSymbol}`
       break
     }
     case 'JOIN':

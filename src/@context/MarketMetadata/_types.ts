@@ -29,6 +29,8 @@ export interface AppConfig {
     classNameLight: string
     storageKey: string
   }
+  v3MetadataCacheUri: string
+  v3MarketUri: string
 }
 export interface SiteContent {
   siteTitle: string
@@ -40,13 +42,9 @@ export interface SiteContent {
     name: string
     link: string
   }[]
+  announcement: string
   warning: {
-    main: string
-    polygonPublish: string
-  }
-  announcement: {
-    main: string
-    polygon: string
+    ctd: string
   }
 }
 
