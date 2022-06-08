@@ -149,7 +149,7 @@ export default function Add({
               />
             </div>
 
-            <Output newPoolTokens={newPoolTokens} newPoolShare={newPoolShare} />
+            {/* TODO: will be fixed in #1481 <Output newPoolTokens={newPoolTokens} newPoolShare={newPoolShare} /> */}
 
             <Actions
               isDisabled={!isValid || !values.amount || values.amount === 0}

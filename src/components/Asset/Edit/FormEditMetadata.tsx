@@ -17,40 +17,6 @@ export function checkIfTimeoutInPredefinedValues(
   return false
 }
 
-function handleTimeoutCustomOption(
-  data: FormFieldContent[],
-  values: Partial<FormPublishData>
-) {
-  const timeoutFieldContent = data.filter(
-    (field) => field.name === 'timeout'
-  )[0]
-  const timeoutInputIndex = data.findIndex(
-    (element) => element.name === 'timeout'
-  )
-  if (
-    data[timeoutInputIndex].options.length < 6 &&
-    !checkIfTimeoutInPredefinedValues(
-      values?.services[0]?.timeout,
-      timeoutFieldContent.options
-    )
-  ) {
-    data[timeoutInputIndex].options.push(values?.services[0]?.timeout)
-  } else if (
-    data[timeoutInputIndex].options.length === 6 &&
-    checkIfTimeoutInPredefinedValues(
-      values?.services[0]?.timeout,
-      timeoutFieldContent.options
-    )
-  ) {
-    data[timeoutInputIndex].options.pop()
-  } else if (
-    data[timeoutInputIndex].options.length === 6 &&
-    data[timeoutInputIndex].options[5] !== values?.services[0]?.timeout
-  ) {
-    data[timeoutInputIndex].options[5] = values?.services[0]?.timeout
-  }
-}
-
 export default function FormEditMetadata({
   data,
   showPrice,

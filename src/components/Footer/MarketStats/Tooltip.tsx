@@ -6,6 +6,8 @@ import styles from './Tooltip.module.css'
 import { StatsValue } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import { usePrices } from '@context/Prices'
+import content from '../../../../content/footer.json'
+import Markdown from '@shared/Markdown'
 
 export default function MarketStatsTooltip({
   totalValueLockedInOcean,
@@ -49,13 +51,7 @@ export default function MarketStatsTooltip({
           </li>
         ))}
       </ul>
-      <p className={styles.note}>
-        Counted on-chain from our NFT and pool factories. Does not filter out
-        assets in{' '}
-        <a href="https://github.com/oceanprotocol/list-purgatory">
-          list-purgatory
-        </a>
-      </p>
+      <Markdown className={styles.note} text={content.stats.note} />
     </>
   )
 }
