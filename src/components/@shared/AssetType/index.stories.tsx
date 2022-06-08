@@ -15,8 +15,14 @@ interface Props {
   args: AssetTypeProps
 }
 
-export const Default: Props = Template.bind({})
-Default.args = {
-  type: 'compute',
+export const Dataset: Props = Template.bind({})
+Dataset.args = {
+  type: 'dataset',
   accessType: 'access'
+}
+
+export const Algorithm: Props = Template.bind({})
+Algorithm.args = {
+  type: 'algorithm',
+  accessType: 'compute'
 }
