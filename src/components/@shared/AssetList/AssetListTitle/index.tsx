@@ -21,7 +21,7 @@ export default function AssetListTitle({
   const [assetTitle, setAssetTitle] = useState<string>(title)
 
   useEffect(() => {
-    if (title || !appConfig || !appConfig.metadataCacheUri) return
+    if (title || !appConfig?.metadataCacheUri) return
     if (asset) {
       setAssetTitle(asset.metadata.name)
       return

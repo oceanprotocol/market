@@ -3,7 +3,11 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import AssetSelection, {
   AssetSelectionProps
 } from '@shared/FormFields/AssetSelection'
-import { assetSelectionAsset } from '../../../../../.storybook/__mockdata__'
+import {
+  assetSelectionAsset,
+  locale,
+  prices
+} from '../../../../../.storybook/__mockdata__'
 
 export default {
   title: 'Component/@shared/FormFields/AssetSelection',
@@ -20,17 +24,26 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  assets: assetSelectionAsset
+  assets: assetSelectionAsset,
+  currency: 'OCEAN',
+  locale,
+  prices
 }
 
 export const Multiple: Props = Template.bind({})
 Multiple.args = {
   assets: assetSelectionAsset,
-  multiple: true
+  multiple: true,
+  currency: 'OCEAN',
+  locale,
+  prices
 }
 
 export const Disabled: Props = Template.bind({})
 Disabled.args = {
   assets: assetSelectionAsset,
-  disabled: true
+  disabled: true,
+  currency: 'OCEAN',
+  locale,
+  prices
 }

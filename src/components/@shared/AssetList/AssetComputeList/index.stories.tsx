@@ -5,7 +5,8 @@ import AssetComputeList, {
 } from '@shared/AssetList/AssetComputeList'
 import {
   assetSelectionAsset,
-  locale
+  locale,
+  prices
 } from '../../../../../.storybook/__mockdata__'
 
 export default {
@@ -24,5 +25,7 @@ interface Props {
 export const Default: Props = Template.bind({})
 Default.args = {
   assets: assetSelectionAsset,
-  locale: locale
+  locale,
+  currency: 'OCEAN',
+  prices
 }

@@ -2,7 +2,12 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import AssetList, { AssetListProps } from '@shared/AssetList'
 import * as config from '../../../../app.config'
-import { assets, locale, mockWallet } from '../../../../.storybook/__mockdata__'
+import {
+  assets,
+  locale,
+  mockWallet,
+  prices
+} from '../../../../.storybook/__mockdata__'
 import UrqlClientProvider from '@context/UrqlProvider'
 
 export default {
@@ -28,5 +33,7 @@ Default.args = {
   assets,
   showPagination: false,
   chainIds: config.chainIds,
-  accountId: mockWallet
+  accountId: mockWallet,
+  currency: 'OCEAN',
+  prices
 }

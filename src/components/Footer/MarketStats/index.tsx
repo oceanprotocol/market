@@ -46,7 +46,7 @@ export default function MarketStats(): ReactElement {
   // Set the main chain ids we want to display stats for
   //
   useEffect(() => {
-    if (!networksList || !appConfig || !appConfig?.chainIdsSupported) return
+    if (!networksList || !appConfig?.chainIdsSupported) return
 
     const mainChainIdsList = filterNetworksByType(
       'mainnet',
