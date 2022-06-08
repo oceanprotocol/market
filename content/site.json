@@ -13,7 +13,7 @@
       }
     ],
     "warning": {
-      "main": "OceanONDA V4 goes live on June 8. Remember to [lock your pool shares before 15.06.2022](https://blog.oceanprotocol.com/ocean-v3-airdrop-and-pool-share-lock-4d18a84e6e27)",
+      "main": "OceanONDA V4 is [live](https://market.oceanprotocol.com)",
       "polygonPublish": "Only republish data sets with a pool from ETH Mainnet into Polygon/Matic if the liquidity is **less than or equal to 1000 OCEAN in the original pool**. Doing otherwise will lead to [purgatory](https://github.com/oceanprotocol/list-purgatory) for the data set in Polygon/Matic."
     },
     "announcement": {
