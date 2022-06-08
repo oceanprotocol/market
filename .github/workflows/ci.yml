@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - v4
+      - v3
     tags:
       - '**'
   pull_request:
@@ -36,7 +37,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm run build
 
   test:
@@ -63,7 +64,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.node }}-test-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-test-${{ env.cache-name }}-
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm test
 
       - name: Upload coverage artifact
@@ -95,7 +96,7 @@ jobs:
         with:
           name: coverage-${{ runner.os }}
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm run codegen:apollo
 
       - uses: paambaati/codeclimate-action@v3.0.0
@@ -126,6 +127,6 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm run pregenerate
       - run: npm run storybook:build

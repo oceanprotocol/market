@@ -1,11 +1,11 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
 
 const cx = classNames.bind(styles)
 
 export interface BadgeProps {
-  label: string
+  label: string | ReactNode
   className?: string
 }
 
