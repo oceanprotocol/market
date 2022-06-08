@@ -16,3 +16,8 @@
     padding-right: calc(var(--spacer) * 4);
   }
 }
+
+.fieldWarning {
+  margin-top: -2rem;
+  margin-bottom: var(--spacer);
+}

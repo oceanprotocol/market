@@ -1,7 +1,7 @@
 {
   "siteTitle": "Ocean Market",
   "siteTagline": "A marketplace to find, publish and trade data sets in the Ocean Network.",
-  "siteUrl": "https://v4.market.oceanprotocol.com",
+  "siteUrl": "https://market.oceanprotocol.com",
   "siteImage": "/share.png",
   "copyright": "All Rights Reserved. Powered by ",
   "menu": [
@@ -14,12 +14,8 @@
       "link": "/profile"
     }
   ],
+  "announcement": "Data NFTs, One-Sided Staking and more. [Explore OceanONDA V4](https://blog.oceanprotocol.com).",
   "warning": {
-    "main": "",
-    "polygonPublish": "Only republish data sets with a pool from ETH Mainnet into Polygon/Matic if the liquidity is **less than or equal to 1000 OCEAN in the original pool**. Doing otherwise will lead to [purgatory](https://github.com/oceanprotocol/list-purgatory) for the data set in Polygon/Matic."
-  },
-  "announcement": {
-    "main": "Ocean Market is [available on Polygon](https://blog.oceanprotocol.com/ocean-on-polygon-network-8abad19cbf47).",
-    "polygon": "Polygon/Matic EVM support is in early stages. [Use the Polygon Bridge](https://docs.oceanprotocol.com/tutorials/polygon-bridge/) to get mOCEAN."
+    "ctd": "Compute-to-Data is still in a testing phase, please use it only on test networks."
   }
 }
