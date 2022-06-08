@@ -5,9 +5,9 @@ import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AssetComputeList from '@shared/AssetList/AssetComputeList'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getServiceByName } from '@utils/ddo'
-import { Asset } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useUserPreferences } from '@context/UserPreferences'
+import { usePrices } from '@context/Prices'
 
 export default function AlgorithmDatasetsListForCompute({
   asset,
@@ -19,7 +19,8 @@ export default function AlgorithmDatasetsListForCompute({
   const [datasetsForCompute, setDatasetsForCompute] =
     useState<AssetSelectionAsset[]>()
   const newCancelToken = useCancelToken()
-  const { locale } = useUserPreferences()
+  const { locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
 
   useEffect(() => {
     if (!asset) return
@@ -44,7 +45,12 @@ export default function AlgorithmDatasetsListForCompute({
   return (
     <div className={styles.datasetsContainer}>
       <h3 className={styles.text}>Datasets algorithm is allowed to run on</h3>
-      <AssetComputeList assets={datasetsForCompute} locale={locale} />
+      <AssetComputeList
+        assets={datasetsForCompute}
+        locale={locale}
+        currency={currency}
+        prices={prices}
+      />
     </div>
   )
 }

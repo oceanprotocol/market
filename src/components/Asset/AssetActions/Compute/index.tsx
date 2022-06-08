@@ -35,6 +35,7 @@ import { AccessDetails } from 'src/@types/Price'
 import { transformAssetToAssetSelection } from '@utils/assetConvertor'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import { useUserPreferences } from '@context/UserPreferences'
+import { usePrices } from '@context/Prices'
 
 export default function Compute({
   ddo,
@@ -54,7 +55,8 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { locale } = useUserPreferences()
+  const { locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   const { accountId } = useWeb3()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -395,6 +397,8 @@ export default function Compute({
           conversion
           size="large"
           locale={locale}
+          currency={currency}
+          prices={prices}
         />
       </div>
 

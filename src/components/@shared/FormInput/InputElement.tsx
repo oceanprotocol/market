@@ -11,6 +11,8 @@ import AssetSelection, {
 } from '../FormFields/AssetSelection'
 import Nft from '../FormFields/Nft'
 import InputRadio from './InputRadio'
+import { useUserPreferences } from '@context/UserPreferences'
+import { usePrices } from '@context/Prices'
 
 const cx = classNames.bind(styles)
 
@@ -55,6 +57,8 @@ export default function InputElement({
   ...props
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
+  const { locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   switch (props.type) {
     case 'select': {
       const sortedOptions =
@@ -91,6 +95,9 @@ export default function InputElement({
       return (
         <AssetSelection
           assets={options as unknown as AssetSelectionAsset[]}
+          locale={locale}
+          currency={currency}
+          prices={prices}
           {...field}
           {...props}
         />
@@ -100,6 +107,9 @@ export default function InputElement({
       return (
         <AssetSelection
           assets={options as unknown as AssetSelectionAsset[]}
+          locale={locale}
+          currency={currency}
+          prices={prices}
           multiple
           {...field}
           {...props}

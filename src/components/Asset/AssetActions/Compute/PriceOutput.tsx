@@ -5,6 +5,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
 import { AccessDetails } from 'src/@types/Price'
 import { useUserPreferences } from '@context/UserPreferences'
+import { usePrices } from '@context/Prices'
 interface PriceOutputProps {
   totalPrice: number
   hasPreviousOrder: boolean
@@ -32,7 +33,8 @@ function Row({
   timeout?: string
   sign?: string
 }) {
-  const { locale } = useUserPreferences()
+  const { locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   return (
     <div className={styles.priceRow}>
       <div className={styles.sign}>{sign}</div>
@@ -43,6 +45,8 @@ function Row({
           size="small"
           className={styles.price}
           locale={locale}
+          currency={currency}
+          prices={prices}
         />
         <span className={styles.timeout}>
           {timeout &&
@@ -67,7 +71,8 @@ export default function PriceOutput({
   selectedComputeAssetTimeout
 }: PriceOutputProps): ReactElement {
   const { asset } = useAsset()
-  const { locale } = useUserPreferences()
+  const { locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   return (
     <div className={styles.priceComponent}>
       You will pay{' '}
@@ -76,6 +81,8 @@ export default function PriceOutput({
         symbol={symbol}
         size="small"
         locale={locale}
+        currency={currency}
+        prices={prices}
       />
       <Tooltip
         content={
