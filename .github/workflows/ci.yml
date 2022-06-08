@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - v4
+      - v3
     tags:
       - '**'
   pull_request:
