@@ -61,7 +61,7 @@
     "react-tabs": "^5.1.0",
     "react-toastify": "^9.0.4",
     "remark": "^13.0.0",
-    "remark-gfm": "^1.0.0",
+    "remark-gfm": "^3.0.1",
     "remark-html": "^13.0.1",
     "remove-markdown": "^0.5.0",
     "slugify": "^1.6.5",
