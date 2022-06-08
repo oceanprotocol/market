@@ -12,5 +12,8 @@
       "name": "Discord",
       "url": "https://discord.gg/TnXjkR5"
     }
-  ]
+  ],
+  "stats": {
+    "note": "Counted on-chain from our NFT and pool factories. Includes assets in all Ocean Market forks and [purgatory](https://github.com/oceanprotocol/list-purgatory)."
+  }
 }

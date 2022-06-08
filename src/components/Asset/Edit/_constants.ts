@@ -1,5 +1,5 @@
 import { Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
-import { mapTimeoutStringToSeconds, secondsToString } from '@utils/ddo'
+import { secondsToString } from '@utils/ddo'
 import * as Yup from 'yup'
 import { MetadataEditForm } from './_types'
 
