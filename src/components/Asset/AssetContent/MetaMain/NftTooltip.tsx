@@ -35,9 +35,13 @@ export default function NftTooltip({
       : 'https://opensea.io'
     : undefined
 
+  const openSeaUrl = `${openSeaBaseUri}/assets/${
+    chainId === 137 ? 'matic' : ''
+  }/${address}/1`
+
   return (
     <div className={styles.wrapper}>
-      {nft && <img src={nft.image_data} alt={nft?.name} />}
+      {nft && <img src={nft.image_data || nft.image} alt={nft?.name} />}
       <div className={styles.info}>
         {nft && <h5>{nft.name}</h5>}
         {address && (
@@ -57,21 +61,19 @@ export default function NftTooltip({
             </ExplorerLink>
           )}
 
-          {openSeaSupported && nft && address && (
+          {openSeaSupported && address && (
             <a
-              href={`${openSeaBaseUri}/assets/${address}/1`}
+              href={openSeaUrl}
               target="_blank"
               rel="noreferrer"
               className={explorerLinkStyles.link}
             >
-              View on OpeanSea <External />
+              View on OpenSea <External />
             </a>
           )}
         </div>
-        {!nft?.image_data && (
-          <p className={styles.fallback}>
-            This Data NFT was not created on Ocean Market
-          </p>
+        {!nft?.image_data && !nft?.image && (
+          <p className={styles.fallback}>This Data NFT has no image set.</p>
         )}
       </div>
     </div>

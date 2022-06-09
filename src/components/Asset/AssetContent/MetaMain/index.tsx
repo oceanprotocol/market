@@ -18,7 +18,6 @@ export default function MetaMain({
   nftPublisher: string
 }): ReactElement {
   const nftMetadata = decodeTokenURI(asset?.nft?.tokenURI)
-
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
   const isBlockscoutExplorer = blockscoutNetworks.includes(asset?.chainId)
 
@@ -34,6 +33,8 @@ export default function MetaMain({
   // as this is where the NFT's SVG (during publish) is stored
   const nftImage = nftMetadata?.image_data
     ? nftMetadata.image_data
+    : nftMetadata?.image
+    ? nftMetadata.image
     : formikState?.values?.metadata?.nft?.image_data
     ? formikState.values.metadata.nft.image_data
     : null
