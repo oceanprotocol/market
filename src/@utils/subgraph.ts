@@ -200,6 +200,14 @@ const OpcFeesQuery = gql`
   }
 `
 
+const OpcsApprovedTokensQuery = gql`
+  query OpcsApprovedTokensQuery {
+    opcs {
+      approvedTokens
+    }
+  }
+`
+
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
@@ -471,4 +479,20 @@ export async function getTopAssetsPublishers(
   publisherSales.sort((a, b) => b.nrSales - a.nrSales)
 
   return publisherSales.slice(0, nrItems)
+}
+
+export async function getOpcsApprovedTokens(chainId: number) {
+  const context = getQueryContext(chainId)
+
+  try {
+    const response: any = await fetchData(
+      OpcsApprovedTokensQuery,
+      null,
+      context
+    )
+    return response?.data?.opcs[0].approvedTokens
+  } catch (error) {
+    LoggerInstance.error('Error getOpcsApprovedTokens: ', error.message)
+    throw Error(error.message)
+  }
 }
