@@ -126,8 +126,9 @@ export default function PublishPage({
         }
       }))
 
-      _datatokenAddress = '0xf807ca842d8fb217fcf0a0df8e84e447358c6e86'
-      _erc721Address = '0x5c60aebc6d440498b232f0ba42e0aae4e1cbe4b8'
+      _datatokenAddress = '0xF807cA842d8fB217FCF0a0DF8e84e447358C6e86'
+      _erc721Address = '0x5C60AEBc6D440498B232F0BA42e0AAe4e1CBE4b8'
+
       if (!_datatokenAddress || !_erc721Address)
         throw new Error('No NFT or Datatoken received.')
 
