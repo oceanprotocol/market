@@ -24,8 +24,7 @@ export default function Actions({
     values,
     errors,
     isValid,
-    isSubmitting,
-    setFieldValue
+    isSubmitting
   }: FormikContextType<FormPublishData> = useFormikContext()
   const { connect, accountId } = useWeb3()
 
