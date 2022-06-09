@@ -7,6 +7,11 @@ import styles from './NftTooltip.module.css'
 import explorerLinkStyles from '@shared/ExplorerLink/index.module.css'
 import { accountTruncate } from '@utils/web3'
 
+// Supported OpenSea networks:
+// https://support.opensea.io/hc/en-us/articles/4404027708051-Which-blockchains-does-OpenSea-support-
+const openSeaNetworks = [1, 137]
+const openSeaTestNetworks = [4]
+
 export default function NftTooltip({
   nft,
   address,
@@ -18,19 +23,12 @@ export default function NftTooltip({
   chainId: number
   isBlockscoutExplorer: boolean
 }): ReactElement {
-  // Currently Ocean NFTs are not displayed correctly on OpenSea
-  // Code prepared to easily integrate this feature once this is fixed
-  //
-  // Supported OpeanSea networks:
-  // https://support.opensea.io/hc/en-us/articles/4404027708051-Which-blockchains-does-OpenSea-support-
-  const openseaNetworks = [1, 137]
-  const openseaTestNetworks = [4]
-  const openSeaSupported = openseaNetworks
-    .concat(openseaTestNetworks)
+  const openSeaSupported = openSeaNetworks
+    .concat(openSeaTestNetworks)
     .includes(chainId)
 
   const openSeaBaseUri = openSeaSupported
-    ? openseaTestNetworks.includes(chainId)
+    ? openSeaTestNetworks.includes(chainId)
       ? 'https://testnets.opensea.io'
       : 'https://opensea.io'
     : undefined
@@ -57,7 +55,7 @@ export default function NftTooltip({
                 isBlockscoutExplorer ? `tokens/${address}` : `token/${address}`
               }
             >
-              View on explorer
+              View on Explorer
             </ExplorerLink>
           )}
 
