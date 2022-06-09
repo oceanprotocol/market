@@ -52,67 +52,67 @@ export default function PublishPage({
     // --------------------------------------------------
     // 1. Create NFT & datatokens & create pricing schema
     // --------------------------------------------------
-    try {
-      setFeedback((prevState) => ({
-        ...prevState,
-        '1': {
-          ...prevState['1'],
-          status: 'active',
-          txCount: values.pricing.type === 'dynamic' ? 2 : 1,
-          description: prevState['1'].description
-        }
-      }))
+    // try {
+    //   setFeedback((prevState) => ({
+    //     ...prevState,
+    //     '1': {
+    //       ...prevState['1'],
+    //       status: 'active',
+    //       txCount: values.pricing.type === 'dynamic' ? 2 : 1,
+    //       description: prevState['1'].description
+    //     }
+    //   }))
 
-      const config = getOceanConfig(chainId)
-      LoggerInstance.log('[publish] using config: ', config)
+    //   const config = getOceanConfig(chainId)
+    //   LoggerInstance.log('[publish] using config: ', config)
 
-      const { erc721Address, datatokenAddress, txHash } =
-        await createTokensAndPricing(
-          values,
-          accountId,
-          config,
-          nftFactory,
-          web3
-        )
+    //   const { erc721Address, datatokenAddress, txHash } =
+    //     await createTokensAndPricing(
+    //       values,
+    //       accountId,
+    //       config,
+    //       nftFactory,
+    //       web3
+    //     )
 
-      const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
-      _erc721Address = erc721Address
-      _datatokenAddress = datatokenAddress
+    //   const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
+    //   _erc721Address = erc721Address
+    //   _datatokenAddress = datatokenAddress
 
-      LoggerInstance.log('[publish] createTokensAndPricing tx', txHash)
-      LoggerInstance.log('[publish] erc721Address', erc721Address)
-      LoggerInstance.log('[publish] datatokenAddress', datatokenAddress)
+    //   LoggerInstance.log('[publish] createTokensAndPricing tx', txHash)
+    //   LoggerInstance.log('[publish] erc721Address', erc721Address)
+    //   LoggerInstance.log('[publish] datatokenAddress', datatokenAddress)
 
-      setFeedback((prevState) => ({
-        ...prevState,
-        '1': {
-          ...prevState['1'],
-          status: isSuccess ? 'success' : 'error',
-          txHash
-        }
-      }))
-    } catch (error) {
-      LoggerInstance.error('[publish] error', error.message)
-      if (error.message.length > 65) {
-        error.message = 'No Token created.'
-      }
+    //   setFeedback((prevState) => ({
+    //     ...prevState,
+    //     '1': {
+    //       ...prevState['1'],
+    //       status: isSuccess ? 'success' : 'error',
+    //       txHash
+    //     }
+    //   }))
+    // } catch (error) {
+    //   LoggerInstance.error('[publish] error', error.message)
+    //   if (error.message.length > 65) {
+    //     error.message = 'No Token created.'
+    //   }
 
-      setFeedback((prevState) => ({
-        ...prevState,
-        '1': {
-          ...prevState['1'],
-          status: 'error',
-          errorMessage: error.message,
-          description:
-            values.pricing.type === 'dynamic'
-              ? prevState['1'].description.replace(
-                  'a single transaction',
-                  'a single transaction, after an initial approve transaction'
-                )
-              : prevState['1'].description
-        }
-      }))
-    }
+    //   setFeedback((prevState) => ({
+    //     ...prevState,
+    //     '1': {
+    //       ...prevState['1'],
+    //       status: 'error',
+    //       errorMessage: error.message,
+    //       description:
+    //         values.pricing.type === 'dynamic'
+    //           ? prevState['1'].description.replace(
+    //               'a single transaction',
+    //               'a single transaction, after an initial approve transaction'
+    //             )
+    //           : prevState['1'].description
+    //     }
+    //   }))
+    // }
 
     // --------------------------------------------------
     // 2. Construct and encrypt DDO
@@ -126,6 +126,8 @@ export default function PublishPage({
         }
       }))
 
+      _datatokenAddress = '0xf807ca842d8fb217fcf0a0df8e84e447358c6e86'
+      _erc721Address = '0x5c60aebc6d440498b232f0ba42e0aae4e1cbe4b8'
       if (!_datatokenAddress || !_erc721Address)
         throw new Error('No NFT or Datatoken received.')
 
