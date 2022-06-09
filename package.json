@@ -22,7 +22,7 @@
     "storybook:build": "cross-env NODE_ENV=test build-storybook"
   },
   "dependencies": {
-    "@coingecko/cryptoformat": "^0.4.4",
+    "@coingecko/cryptoformat": "^0.5.4",
     "@loadable/component": "^5.15.2",
     "@oceanprotocol/art": "^3.2.0",
     "@oceanprotocol/lib": "^1.0.0",
