@@ -4,9 +4,13 @@ import PolygonIcon from '@images/polygon.svg'
 import MoonbeamIcon from '@images/moonbeam.svg'
 import BscIcon from '@images/bsc.svg'
 import EnergywebIcon from '@images/energyweb.svg'
-import styles from './index.module.css'
+import styles from '../index.module.css'
 
-export function NetworkIcon({ name }: { name: string }): ReactElement {
+export interface NetworkIconProps {
+  name: string
+}
+
+export function NetworkIcon({ name }: NetworkIconProps): ReactElement {
   const IconMapped = name.includes('ETH')
     ? EthIcon
     : name.includes('Polygon')

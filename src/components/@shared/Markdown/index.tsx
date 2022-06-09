@@ -2,13 +2,12 @@ import { markdownToHtml } from '@utils/markdown'
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 
-const Markdown = ({
-  text,
-  className
-}: {
+export interface MarkdownProps {
   text: string
   className?: string
-}): ReactElement => {
+}
+
+const Markdown = ({ text, className }: MarkdownProps): ReactElement => {
   const content = markdownToHtml(text)
 
   return (
