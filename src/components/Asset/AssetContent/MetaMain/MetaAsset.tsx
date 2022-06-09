@@ -8,13 +8,11 @@ import React, { ReactElement } from 'react'
 import styles from './MetaAsset.module.css'
 
 export default function MetaAsset({
-  asset,
   isBlockscoutExplorer
 }: {
-  asset: Asset
   isBlockscoutExplorer: boolean
 }): ReactElement {
-  const { isAssetNetwork } = useAsset()
+  const { asset, isAssetNetwork } = useAsset()
   const { web3ProviderInfo } = useWeb3()
 
   const dataTokenSymbol = asset?.datatokens[0]?.symbol
