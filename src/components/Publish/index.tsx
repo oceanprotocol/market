@@ -38,132 +38,139 @@ export default function PublishPage({
   const [feedback, setFeedback] = useState<PublishFeedback>(
     initialPublishFeedback
   )
+  const [erc721Address, setErc721Address] = useState<string>()
+  const [datatokenAddress, setDatatokenAddress] = useState<string>()
+  const [ddo, setDdo] = useState<DDO>()
+  const [ddoEncrypted, setDdoEncrypted] = useState<string>()
   const [did, setDid] = useState<string>()
 
   async function handleSubmit(values: FormPublishData) {
-    let _erc721Address: string,
-      _datatokenAddress: string,
-      _ddo: DDO,
-      _encryptedDdo: string
-
     // reset all feedback state
     setFeedback(initialPublishFeedback)
 
     // --------------------------------------------------
     // 1. Create NFT & datatokens & create pricing schema
+    //    Wrapped in conditional allowing method to run
+    //    multiple times.
     // --------------------------------------------------
-    try {
-      setFeedback((prevState) => ({
-        ...prevState,
-        '1': {
-          ...prevState['1'],
-          status: 'active',
-          txCount: values.pricing.type === 'dynamic' ? 2 : 1,
-          description: prevState['1'].description
+    if (!erc721Address && !datatokenAddress) {
+      try {
+        setFeedback((prevState) => ({
+          ...prevState,
+          '1': {
+            ...prevState['1'],
+            status: 'active',
+            txCount: values.pricing.type === 'dynamic' ? 2 : 1,
+            description: prevState['1'].description
+          }
+        }))
+
+        const config = getOceanConfig(chainId)
+        LoggerInstance.log('[publish] using config: ', config)
+
+        const { erc721Address, datatokenAddress, txHash } =
+          await createTokensAndPricing(
+            values,
+            accountId,
+            config,
+            nftFactory,
+            web3
+          )
+
+        const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
+        setErc721Address(erc721Address)
+        setDatatokenAddress(datatokenAddress)
+
+        LoggerInstance.log('[publish] createTokensAndPricing tx', txHash)
+        LoggerInstance.log('[publish] erc721Address', erc721Address)
+        LoggerInstance.log('[publish] datatokenAddress', datatokenAddress)
+
+        setFeedback((prevState) => ({
+          ...prevState,
+          '1': {
+            ...prevState['1'],
+            status: isSuccess ? 'success' : 'error',
+            txHash
+          }
+        }))
+      } catch (error) {
+        LoggerInstance.error('[publish] error', error.message)
+        if (error.message.length > 65) {
+          error.message = 'No Token created.'
         }
-      }))
 
-      const config = getOceanConfig(chainId)
-      LoggerInstance.log('[publish] using config: ', config)
-
-      const { erc721Address, datatokenAddress, txHash } =
-        await createTokensAndPricing(
-          values,
-          accountId,
-          config,
-          nftFactory,
-          web3
-        )
-
-      const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
-      _erc721Address = erc721Address
-      _datatokenAddress = datatokenAddress
-
-      LoggerInstance.log('[publish] createTokensAndPricing tx', txHash)
-      LoggerInstance.log('[publish] erc721Address', erc721Address)
-      LoggerInstance.log('[publish] datatokenAddress', datatokenAddress)
-
-      setFeedback((prevState) => ({
-        ...prevState,
-        '1': {
-          ...prevState['1'],
-          status: isSuccess ? 'success' : 'error',
-          txHash
-        }
-      }))
-    } catch (error) {
-      LoggerInstance.error('[publish] error', error.message)
-      if (error.message.length > 65) {
-        error.message = 'No Token created.'
+        setFeedback((prevState) => ({
+          ...prevState,
+          '1': {
+            ...prevState['1'],
+            status: 'error',
+            errorMessage: error.message,
+            description:
+              values.pricing.type === 'dynamic'
+                ? prevState['1'].description.replace(
+                    'a single transaction',
+                    'a single transaction, after an initial approve transaction'
+                  )
+                : prevState['1'].description
+          }
+        }))
       }
-
-      setFeedback((prevState) => ({
-        ...prevState,
-        '1': {
-          ...prevState['1'],
-          status: 'error',
-          errorMessage: error.message,
-          description:
-            values.pricing.type === 'dynamic'
-              ? prevState['1'].description.replace(
-                  'a single transaction',
-                  'a single transaction, after an initial approve transaction'
-                )
-              : prevState['1'].description
-        }
-      }))
     }
 
     // --------------------------------------------------
     // 2. Construct and encrypt DDO
+    //    Wrapped in conditional allowing method to run
+    //    multiple times.
     // --------------------------------------------------
-    try {
-      setFeedback((prevState) => ({
-        ...prevState,
-        '2': {
-          ...prevState['2'],
-          status: 'active'
-        }
-      }))
+    if (!ddoEncrypted) {
+      try {
+        setFeedback((prevState) => ({
+          ...prevState,
+          '2': {
+            ...prevState['2'],
+            status: 'active'
+          }
+        }))
 
-      if (!_datatokenAddress || !_erc721Address)
-        throw new Error('No NFT or Datatoken received.')
+        if (!datatokenAddress || !erc721Address)
+          throw new Error('No NFT or Datatoken received.')
 
-      const ddo = await transformPublishFormToDdo(
-        values,
-        _datatokenAddress,
-        _erc721Address
-      )
+        const ddo = await transformPublishFormToDdo(
+          values,
+          datatokenAddress,
+          erc721Address
+        )
 
-      _ddo = ddo
-      LoggerInstance.log('[publish] Got new DDO', ddo)
+        setDdo(ddo)
+        LoggerInstance.log('[publish] Got new DDO', ddo)
 
-      const encryptedResponse = await ProviderInstance.encrypt(
-        ddo,
-        values.services[0].providerUrl.url,
-        newAbortController()
-      )
-      const encryptedDdo = encryptedResponse
-      _encryptedDdo = encryptedDdo
-      LoggerInstance.log('[publish] Got encrypted DDO', encryptedDdo)
+        const encryptedResponse = await ProviderInstance.encrypt(
+          ddo,
+          values.services[0].providerUrl.url,
+          newAbortController()
+        )
+        const ddoEncrypted = encryptedResponse
+        setDdoEncrypted(ddoEncrypted)
+        LoggerInstance.log('[publish] Got encrypted DDO', ddoEncrypted)
 
-      setFeedback((prevState) => ({
-        ...prevState,
-        '2': {
-          ...prevState['2'],
-          status: encryptedDdo ? 'success' : 'error'
-        }
-      }))
-    } catch (error) {
-      LoggerInstance.error('[publish] error', error.message)
-      setFeedback((prevState) => ({
-        ...prevState,
-        '2': {
-          ...prevState['2'],
-          status: 'error',
-          errorMessage: error.message
-        }
-      }))
+        setFeedback((prevState) => ({
+          ...prevState,
+          '2': {
+            ...prevState['2'],
+            status: ddoEncrypted ? 'success' : 'error'
+          }
+        }))
+      } catch (error) {
+        LoggerInstance.error('[publish] error', error.message)
+        setFeedback((prevState) => ({
+          ...prevState,
+          '2': {
+            ...prevState['2'],
+            status: 'error',
+            errorMessage: error.message
+          }
+        }))
+      }
     }
 
     // --------------------------------------------------
@@ -178,30 +185,32 @@ export default function PublishPage({
         }
       }))
 
-      if (!_ddo || !_encryptedDdo) throw new Error('No DDO received.')
+      if (!ddo || !ddoEncrypted) throw new Error('No DDO received.')
 
       const res = await setNFTMetadataAndTokenURI(
-        _ddo,
+        ddo,
         accountId,
         web3,
         values.metadata.nft,
         newAbortController()
       )
+      if (!res?.transactionHash)
+        throw new Error(
+          'Metadata could not be written into the NFT. Please hit Submit again to retry.'
+        )
 
       LoggerInstance.log('[publish] setMetadata result', res)
-
-      const txHash = res.transactionHash
 
       setFeedback((prevState) => ({
         ...prevState,
         '3': {
           ...prevState['3'],
           status: res ? 'success' : 'error',
-          txHash
+          txHash: res?.transactionHash
         }
       }))
 
-      setDid(_ddo.id)
+      setDid(ddo.id)
     } catch (error) {
       LoggerInstance.error('[publish] error', error.message)
       setFeedback((prevState) => ({
