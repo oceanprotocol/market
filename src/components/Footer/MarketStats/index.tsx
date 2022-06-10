@@ -61,7 +61,9 @@ export default function MarketStats(): ReactElement {
   //
   const getMarketStats = useCallback(async () => {
     if (!mainChainIds?.length) return
-
+    const newData: {
+      [chainId: number]: FooterStatsValuesGlobalStatistics
+    } = {}
     for (const chainId of mainChainIds) {
       const context: OperationContext = {
         url: `${getSubgraphUri(
@@ -73,14 +75,11 @@ export default function MarketStats(): ReactElement {
       try {
         const response = await fetchData(queryGlobalStatistics, null, context)
         if (!response?.data?.globalStatistics) return
-
-        setData((prevState) => ({
-          ...prevState,
-          [chainId]: response.data.globalStatistics[0]
-        }))
+        newData[chainId] = response.data.globalStatistics[0]
       } catch (error) {
         LoggerInstance.error('Error fetching global stats: ', error.message)
       }
+      setData(newData)
     }
   }, [mainChainIds])
 
