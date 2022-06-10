@@ -44,6 +44,5 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  name: 'PARCOUR-73',
-  symbol: 'PARCOUR-73'
+  name: 'PARCOUR-73'
 }

@@ -6,15 +6,17 @@ import useNetworkMetadata, {
 } from '@hooks/useNetworkMetadata'
 import { NetworkIcon } from './NetworkIcon'
 
+export interface NetworkNameProps {
+  networkId: number
+  minimal?: boolean
+  className?: string
+}
+
 export default function NetworkName({
   networkId,
   minimal,
   className
-}: {
-  networkId: number
-  minimal?: boolean
-  className?: string
-}): ReactElement {
+}: NetworkNameProps): ReactElement {
   const { networksList } = useNetworkMetadata()
   const networkData = getNetworkDataById(networksList, networkId)
   const networkName = getNetworkDisplayName(networkData, networkId)

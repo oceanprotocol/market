@@ -4,15 +4,17 @@ import Head from 'next/head'
 import { isBrowser } from '@utils/index'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
+export interface SeoProps {
+  title?: string
+  description?: string
+  uri: string
+}
+
 export default function Seo({
   title,
   description,
   uri
-}: {
-  title?: string
-  description?: string
-  uri: string
-}): ReactElement {
+}: SeoProps): ReactElement {
   const { siteContent } = useMarketMetadata()
 
   // Remove trailing slash from all URLs
