@@ -17,7 +17,7 @@
     "type-check": "tsc --noEmit",
     "deploy:s3": "bash scripts/deploy-s3.sh",
     "postinstall": "husky install",
-    "codegen:apollo": "apollo client:codegen --endpoint=https://v4.subgraph.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/",
+    "codegen:apollo": "apollo client:codegen --endpoint=https://v4.subgraph.ropsten.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/",
     "storybook": "cross-env NODE_ENV=test start-storybook -p 6006 --quiet",
     "storybook:build": "cross-env NODE_ENV=test build-storybook"
   },
