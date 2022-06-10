@@ -1,9 +1,15 @@
+// Copyright Ocean Protocol contributors
+// SPDX-License-Identifier: Apache-2.0
 import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik } from 'formik'
 import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 import { useWeb3 } from '@context/Web3'
-import { createTokensAndPricing, transformPublishFormToDdo } from './_utils'
+import {
+  createTokensAndPricing,
+  transformPublishFormToDdo,
+  uploadFiles
+} from './_utils'
 import PageHeader from '@shared/Page/PageHeader'
 import Title from './Title'
 import styles from './index.module.css'
@@ -48,6 +54,45 @@ export default function PublishPage({
 
     // reset all feedback state
     setFeedback(initialPublishFeedback)
+
+    // --------------------------------------------------
+    // Optional: Upload file and get URL if user is
+    // uploading their file here
+    // --------------------------------------------------
+    if (values.services[0].files[0].file) {
+      try {
+        setFeedback((prevState) => ({
+          ...prevState,
+          '0': {
+            ...prevState['0'],
+            status: 'active',
+            txCount: 1,
+            description: prevState['0'].description
+          }
+        }))
+        const { txHash, cids } = await uploadFiles(values, accountId, web3)
+        if (cids.fileCids[0]) values.services[0].files[0].url = cids.fileCids[0]
+        if (cids.linkCids[0]) values.services[0].links[0].url = cids.linkCids[0]
+        setFeedback((prevState) => ({
+          ...prevState,
+          '0': {
+            ...prevState['0'],
+            status: 'success',
+            txHash
+          }
+        }))
+      } catch (error) {
+        setFeedback((prevState) => ({
+          ...prevState,
+          '0': {
+            ...prevState['0'],
+            status: 'error',
+            errorMessage: error.message,
+            description: prevState['0'].description
+          }
+        }))
+      }
+    }
 
     // --------------------------------------------------
     // 1. Create NFT & datatokens & create pricing schema

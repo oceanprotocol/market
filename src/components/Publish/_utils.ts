@@ -1,5 +1,8 @@
+// Copyright Ocean Protocol contributors
+// SPDX-License-Identifier: Apache-2.0
 import {
   approve,
+  transfer,
   Config,
   DDO,
   Erc20CreateParams,
@@ -353,4 +356,73 @@ export async function createTokensAndPricing(
   }
 
   return { erc721Address, datatokenAddress, txHash }
+}
+
+export async function uploadFiles(
+  values: FormPublishData,
+  accountId: string,
+  web3: Web3
+) {
+  const { files, links, providerUrl } = values.services[0]
+  async function initializeUpload() {
+    try {
+      LoggerInstance.log('[publish] Uploading file')
+      const resp = await fetch(
+        `${providerUrl.url}/api/services/initializeUpload`,
+        {
+          method: 'GET'
+        }
+      )
+      const providerFee = await resp.json()
+      if (providerFee) return providerFee
+      throw new Error('Failed to initialize upload')
+    } catch (error) {
+      throw new Error('Failed to initialize upload')
+    }
+  }
+  const providerFee = await initializeUpload()
+
+  const txReceipt = await transfer(
+    web3,
+    accountId,
+    providerFee.providerFeeToken,
+    providerFee.providerFeeAddress,
+    providerFee.providerFeeAmount
+  )
+  LoggerInstance.log('[publish] upload.approve tx', txReceipt)
+
+  const txHash =
+    typeof txReceipt === 'string' ? txReceipt : txReceipt.transactionHash
+  LoggerInstance.log('[publish] upload.approve tx', txReceipt)
+
+  if (!txReceipt) {
+    throw new Error(
+      'MetaMask Transfer TX Signature: User denied transaction signature'
+    )
+  }
+
+  async function upload() {
+    try {
+      const formData = new FormData()
+      formData.append(`file0`, files[0].file)
+      formData.append(`link0`, links[0].file)
+      const queryStr = `?consumerAddress=${accountId}&transferTxId=${txHash}`
+      const resp = await fetch(
+        `${providerUrl.url}/api/services/upload${queryStr}`,
+        {
+          method: 'POST',
+          body: formData
+        }
+      )
+      const data = await resp.json()
+      const fileCids = data?.cids?.fileCids
+      const linkCids = data?.cids?.linkCids
+      if (fileCids && linkCids) return data.cids
+      else throw new Error('Failed to upload file')
+    } catch (error) {
+      throw new Error('Failed to upload file')
+    }
+  }
+  const cids = await upload()
+  return { txHash, cids }
 }

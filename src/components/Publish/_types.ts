@@ -1,10 +1,13 @@
+// Copyright Ocean Protocol contributors
+// SPDX-License-Identifier: Apache-2.0
 import { ServiceComputeOptions } from '@oceanprotocol/lib'
 import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
 import { PriceOptions } from 'src/@types/Price'
 
 interface FileMetadata {
-  url: string
+  url?: string
+  file?: File
   valid?: boolean
   contentLength?: string
   contentType?: string

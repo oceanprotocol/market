@@ -1,3 +1,5 @@
+// Copyright Ocean Protocol contributors
+// SPDX-License-Identifier: Apache-2.0
 import { useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
 import { FormPublishData } from '../_types'
@@ -7,26 +9,33 @@ import TransactionCount from './TransactionCount'
 export function Feedback(): ReactElement {
   const { values } = useFormikContext<FormPublishData>()
 
-  const items = Object.entries(values.feedback).map(([key, value], index) => (
-    <li key={index} className={styles[value.status]}>
-      <h3 className={styles.title}>{value.name}</h3>
-      <div className={styles.txs}>
-        {value.txCount > 0 && (
-          <TransactionCount
-            txCount={value.txCount}
-            chainId={values.user.chainId}
-            txHash={value.txHash}
-          />
+  const items = Object.entries(values.feedback)
+    .filter(([key, value]) =>
+      // Don't display "Upload File" section unless user is uploading a file
+      values.services[0].files[0].file || values.services[0].links[0].file
+        ? true
+        : key !== '0'
+    )
+    .map(([key, value], index) => (
+      <li key={index} className={styles[value.status]}>
+        <h3 className={styles.title}>{value.name}</h3>
+        <div className={styles.txs}>
+          {value.txCount > 0 && (
+            <TransactionCount
+              txCount={value.txCount}
+              chainId={values.user.chainId}
+              txHash={value.txHash}
+            />
+          )}
+        </div>
+        <p className={styles.description}>{value.description}</p>
+        {value.errorMessage && (
+          <span title={value.errorMessage} className={styles.errorMessage}>
+            {value.errorMessage}
+          </span>
         )}
-      </div>
-      <p className={styles.description}>{value.description}</p>
-      {value.errorMessage && (
-        <span title={value.errorMessage} className={styles.errorMessage}>
-          {value.errorMessage}
-        </span>
-      )}
-    </li>
-  ))
+      </li>
+    ))
 
   return <ol className={styles.feedback}>{items}</ol>
 }

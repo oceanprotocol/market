@@ -1,3 +1,5 @@
+// Copyright Ocean Protocol contributors
+// SPDX-License-Identifier: Apache-2.0
 import { MAX_DECIMALS } from '@utils/constants'
 import { initialValues } from './_constants'
 import * as Yup from 'yup'
@@ -30,12 +32,31 @@ const validationMetadata = {
 }
 
 const validationService = {
-  files: Yup.array<{ url: string; valid: boolean }[]>()
+  files: Yup.array<{ url: string; file: File; valid: boolean }[]>()
     .of(
-      Yup.object().shape({
-        url: Yup.string().url('Must be a valid URL.').required('Required'),
-        valid: Yup.boolean().isTrue().required('File must be valid.')
-      })
+      Yup.object().shape(
+        {
+          url: Yup.string().when('file', {
+            is: (_file: File) => !_file,
+            then: Yup.string().url('Must be a valid URL.').required('Required')
+          }),
+          file: Yup.mixed()
+            .test('fileType', 'File must be of a known type.', (_file) => {
+              if (!_file) return true
+              return _file.type.length > 0
+            })
+            .test('fileSize', 'File must be smaller than 32GiB.', (_file) => {
+              if (!_file) return true
+              return _file.size < 2 ** 30 * 32
+            })
+            .when('url', {
+              is: (url: string) => url?.length === 0,
+              then: Yup.string().required('Required')
+            }),
+          valid: Yup.boolean().isTrue().required('File must be valid.')
+        },
+        [['url', 'file']]
+      )
     )
     .min(1, (param) => `At least one file is required.`)
     .required('Enter a valid URL and click ADD FILE.'),
