@@ -23,15 +23,17 @@ const confettiConfig = {
   ]
 }
 
+export interface SuccessConfettiProps {
+  success: string
+  action?: ReactNode
+  className?: string
+}
+
 export default function SuccessConfetti({
   success,
   action,
   className
-}: {
-  success: string
-  action?: ReactNode
-  className?: string
-}): ReactElement {
+}: SuccessConfettiProps): ReactElement {
   // Have some confetti upon success
   useEffect(() => {
     if (!success || typeof window === 'undefined') return

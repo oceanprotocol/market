@@ -7,6 +7,8 @@ import styles from './Output.module.css'
 import Decimal from 'decimal.js'
 import { FormTradeData } from './_types'
 import { usePool } from '@context/Pool'
+import { useUserPreferences } from '@context/UserPreferences'
+import { usePrices } from '@context/Prices'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -19,6 +21,8 @@ export default function Output({
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
   const { poolInfo } = usePool()
+  const { locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   const [outputWithSlippage, setOutputWithSlippage] = useState<string>('0')
   // Connect with form
   const { values }: FormikContextType<FormTradeData> = useFormikContext()
@@ -73,6 +77,9 @@ export default function Output({
               : poolInfo.datatokenSymbol
           }
           balance={outputWithSlippage}
+          locale={locale}
+          currency={currency}
+          prices={prices}
         />
       </div>
       <div>
@@ -88,6 +95,9 @@ export default function Output({
               : ''
           }`}
           balance={lpSwapFee}
+          locale={locale}
+          currency={currency}
+          prices={prices}
         />
       </div>
     </div>

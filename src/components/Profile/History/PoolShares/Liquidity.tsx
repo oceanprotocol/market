@@ -55,6 +55,9 @@ export function Liquidity({
         symbol={row.poolShare.pool.baseToken.symbol}
         balance={liquidity}
         noIcon
+        locale={locale}
+        currency={currency}
+        prices={prices}
       />
     </div>
   )

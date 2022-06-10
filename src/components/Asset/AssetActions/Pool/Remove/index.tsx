@@ -22,6 +22,8 @@ import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
 import { usePool } from '@context/Pool'
 import { getMax } from './_utils'
+import { useUserPreferences } from '@context/UserPreferences'
+import { usePrices } from '@context/Prices'
 
 const slippagePresets = ['5', '10', '15', '25', '50']
 
@@ -32,6 +34,8 @@ export default function Remove({
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
+  const { locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   const { poolData, poolInfo, poolInfoUser, fetchAllData } = usePool()
 
   const [amountPercent, setAmountPercent] = useState('0')
@@ -193,11 +197,20 @@ export default function Remove({
             symbol={poolInfo?.baseTokenSymbol}
             balance={amountOcean}
             noIcon
+            locale={locale}
+            currency={currency}
+            prices={prices}
           />
         </div>
         <div>
           <p>{content.pool.remove.output.titleOutMinimum}</p>
-          <Token symbol={poolInfo?.baseTokenSymbol} balance={minOceanAmount} />
+          <Token
+            symbol={poolInfo?.baseTokenSymbol}
+            balance={minOceanAmount}
+            locale={locale}
+            currency={currency}
+            prices={prices}
+          />
         </div>
       </div>
       <div className={styles.slippage}>
