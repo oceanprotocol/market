@@ -387,7 +387,7 @@ export async function uploadFiles(
     accountId,
     providerFee.providerFeeToken,
     providerFee.providerFeeAddress,
-    providerFee.providerFeeAmount
+    Web3.utils.fromWei(providerFee.providerFeeAmount)
   )
   LoggerInstance.log('[publish] upload.approve tx', txReceipt)
 
