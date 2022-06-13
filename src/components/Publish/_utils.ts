@@ -215,7 +215,7 @@ export async function createTokensAndPricing(
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
-    feeToken: values.pricing.baseTokenAddress,
+    feeToken: values.pricing.baseToken.address,
     feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
@@ -236,13 +236,13 @@ export async function createTokensAndPricing(
       // swapFeeMarketRunner is the swap fee of the market where the swap occurs
       const poolParams: PoolCreationParams = {
         ssContract: config.sideStakingAddress,
-        baseTokenAddress: values.pricing.baseTokenAddress,
+        baseTokenAddress: values.pricing.baseToken.address,
         baseTokenSender: config.erc721FactoryAddress,
         publisherAddress: accountId,
         marketFeeCollector: marketFeeAddress,
         poolTemplateAddress: config.poolTemplateAddress,
         rate: new Decimal(1).div(values.pricing.price).toString(),
-        baseTokenDecimals: 18,
+        baseTokenDecimals: values.pricing.baseToken.decimals,
         vestingAmount: '0',
         vestedBlocks: 2726000,
         initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
@@ -259,7 +259,7 @@ export async function createTokensAndPricing(
       const txApprove = await approve(
         web3,
         accountId,
-        values.pricing.baseTokenAddress,
+        values.pricing.baseToken.address,
         config.erc721FactoryAddress,
         values.pricing.amountOcean.toString(),
         false
@@ -289,11 +289,11 @@ export async function createTokensAndPricing(
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
-        baseTokenAddress: values.pricing.baseTokenAddress,
+        baseTokenAddress: values.pricing.baseToken.address,
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
-        baseTokenDecimals: 18,
-        datatokenDecimals: 18,
+        baseTokenDecimals: values.pricing.baseToken.decimals,
+        datatokenDecimals: values.pricing.baseToken.decimals,
         fixedRate: values.pricing.price.toString(),
         marketFee: publisherMarketFixedSwapFee,
         withMint: true

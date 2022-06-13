@@ -24,13 +24,20 @@ export default function PricingFields(): ReactElement {
   const { pricing } = values
   const { price, amountOcean, weightOnOcean, weightOnDataToken, type } = pricing
 
+  const baseToken: TokenInfo = {
+    address: oceanConfig?.oceanTokenAddress,
+    symbol: oceanConfig?.oceanTokenSymbol,
+    decimals: 18,
+    name: 'OceanToken'
+  }
+
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
     setFieldValue('pricing.type', type)
     setFieldValue('pricing.price', 0)
     setFieldValue('pricing.freeAgreement', false)
-    setFieldValue('pricing.baseTokenAddress', oceanConfig.oceanTokenAddress)
+    setFieldValue('pricing.baseToken', baseToken)
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 

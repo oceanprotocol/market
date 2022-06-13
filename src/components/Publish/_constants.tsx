@@ -81,7 +81,7 @@ export const initialValues: FormPublishData = {
     }
   ],
   pricing: {
-    baseTokenAddress: '',
+    baseToken: { address: '', name: '', symbol: 'OCEAN', decimals: 18 },
     price: 0,
     type:
       allowDynamicPricing === 'true'

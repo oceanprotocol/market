@@ -52,7 +52,7 @@ interface AccessDetails {
 }
 
 interface PriceOptions {
-  baseTokenAddress: string
+  baseToken: TokenInfo
   price: number
   amountDataToken: number
   amountOcean: number

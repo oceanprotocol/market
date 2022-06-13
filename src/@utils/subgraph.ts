@@ -203,7 +203,12 @@ const OpcFeesQuery = gql`
 const OpcsApprovedTokensQuery = gql`
   query OpcsApprovedTokensQuery {
     opcs {
-      approvedTokens
+      approvedTokens {
+        address: id
+        symbol
+        name
+        decimals
+      }
     }
   }
 `
@@ -483,7 +488,7 @@ export async function getTopAssetsPublishers(
 
 export async function getOpcsApprovedTokens(
   chainId: number
-): Promise<string[]> {
+): Promise<TokenInfo[]> {
   const context = getQueryContext(chainId)
 
   try {
