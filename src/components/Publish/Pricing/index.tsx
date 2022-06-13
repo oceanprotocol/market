@@ -24,7 +24,7 @@ export default function PricingFields(): ReactElement {
   const { pricing } = values
   const { price, amountOcean, weightOnOcean, weightOnDataToken, type } = pricing
 
-  const baseToken: TokenInfo = {
+  const defaultBaseToken: TokenInfo = {
     address: oceanConfig?.oceanTokenAddress,
     symbol: oceanConfig?.oceanTokenSymbol,
     decimals: 18,
@@ -37,7 +37,7 @@ export default function PricingFields(): ReactElement {
     setFieldValue('pricing.type', type)
     setFieldValue('pricing.price', 0)
     setFieldValue('pricing.freeAgreement', false)
-    setFieldValue('pricing.baseToken', baseToken)
+    setFieldValue('pricing.baseToken', defaultBaseToken)
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
@@ -76,13 +76,23 @@ export default function PricingFields(): ReactElement {
     appConfig.allowFixedPricing === 'true'
       ? {
           title: content.create.fixed.title,
-          content: <Fixed content={content.create.fixed} />
+          content: (
+            <Fixed
+              content={content.create.fixed}
+              defaultBaseToken={defaultBaseToken}
+            />
+          )
         }
       : undefined,
     appConfig.allowDynamicPricing === 'true'
       ? {
           title: content.create.dynamic.title,
-          content: <Dynamic content={content.create.dynamic} />
+          content: (
+            <Dynamic
+              content={content.create.dynamic}
+              defaultBaseToken={defaultBaseToken}
+            />
+          )
         }
       : undefined,
     appConfig.allowFreePricing === 'true'

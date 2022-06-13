@@ -6,7 +6,13 @@ import styles from './Dynamic.module.css'
 import BaseToken from './BaseToken'
 import Tooltip from '@shared/atoms/Tooltip'
 
-export default function Fixed({ content }: { content: any }): ReactElement {
+export default function Fixed({
+  content,
+  defaultBaseToken
+}: {
+  content: any
+  defaultBaseToken: TokenInfo
+}): ReactElement {
   return (
     <>
       <FormHelp>{content.info}</FormHelp>
@@ -14,7 +20,7 @@ export default function Fixed({ content }: { content: any }): ReactElement {
       <h4 className={styles.title}>
         Base Token <Tooltip content={content.tooltips.baseToken} />
       </h4>
-      <BaseToken />
+      <BaseToken defaultBaseToken={defaultBaseToken} />
 
       <h4 className={styles.title}>Price</h4>
       <Price />

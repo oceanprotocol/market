@@ -11,8 +11,15 @@ import Decimal from 'decimal.js'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData } from '../_types'
 import BaseToken from './BaseToken'
+import { transformTokenName } from '../_utils'
 
-export default function Dynamic({ content }: { content: any }): ReactElement {
+export default function Dynamic({
+  content,
+  defaultBaseToken
+}: {
+  content: any
+  defaultBaseToken: TokenInfo
+}): ReactElement {
   const { networkId, accountId, balance } = useWeb3()
   const [firstPrice, setFirstPrice] = useState<string>()
 
@@ -66,7 +73,7 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
         Base Token <Tooltip content={content.tooltips.baseToken} />
       </h4>
 
-      <BaseToken />
+      <BaseToken defaultBaseToken={defaultBaseToken} />
 
       <h4 className={styles.title}>
         Price <Tooltip content={content.tooltips.poolInfo} />
@@ -82,7 +89,12 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
       <div className={styles.tokens}>
         <Coin
           name="amountOcean"
-          datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
+          datatokenOptions={{
+            symbol: values.pricing?.baseToken?.symbol || 'OCEAN',
+            name:
+              transformTokenName(values.pricing?.baseToken?.name) ||
+              'Ocean Token'
+          }}
           weight={`${Number(weightOnOcean) * 10}%`}
         />
         <Coin

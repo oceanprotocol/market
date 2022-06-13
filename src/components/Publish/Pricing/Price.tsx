@@ -38,7 +38,7 @@ export default function Price({
                 type="number"
                 min="1"
                 placeholder="0"
-                prefix="OCEAN"
+                prefix={values.pricing?.baseToken?.symbol || 'OCEAN'}
                 {...field}
               />
               <Error meta={meta} />
