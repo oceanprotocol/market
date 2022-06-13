@@ -11,9 +11,13 @@ import Free from './Free'
 import content from '../../../../content/price.json'
 import styles from './index.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import { getOceanConfig } from '@utils/ocean'
+import { useWeb3 } from '@context/Web3'
 
 export default function PricingFields(): ReactElement {
   const { appConfig } = useMarketMetadata()
+  const { chainId } = useWeb3()
+  const oceanConfig = getOceanConfig(chainId)
 
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
@@ -26,6 +30,7 @@ export default function PricingFields(): ReactElement {
     setFieldValue('pricing.type', type)
     setFieldValue('pricing.price', 0)
     setFieldValue('pricing.freeAgreement', false)
+    setFieldValue('pricing.baseTokenAddress', oceanConfig.oceanTokenAddress)
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 

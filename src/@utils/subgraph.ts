@@ -481,7 +481,9 @@ export async function getTopAssetsPublishers(
   return publisherSales.slice(0, nrItems)
 }
 
-export async function getOpcsApprovedTokens(chainId: number) {
+export async function getOpcsApprovedTokens(
+  chainId: number
+): Promise<string[]> {
   const context = getQueryContext(chainId)
 
   try {

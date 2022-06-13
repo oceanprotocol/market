@@ -10,6 +10,7 @@ import Price from './Price'
 import Decimal from 'decimal.js'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData } from '../_types'
+import BaseToken from './BaseToken'
 
 export default function Dynamic({ content }: { content: any }): ReactElement {
   const { networkId, accountId, balance } = useWeb3()
@@ -60,6 +61,9 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
   return (
     <>
       <FormHelp>{content.info}</FormHelp>
+
+      <h4 className={styles.title}>Base Token</h4>
+      <BaseToken />
 
       <h4 className={styles.title}>
         Price <Tooltip content={content.tooltips.poolInfo} />
