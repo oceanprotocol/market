@@ -61,7 +61,9 @@ export default function MarketStats(): ReactElement {
   //
   const getMarketStats = useCallback(async () => {
     if (!mainChainIds?.length) return
-
+    const newData: {
+      [chainId: number]: FooterStatsValuesGlobalStatistics
+    } = {}
     for (const chainId of mainChainIds) {
       const context: OperationContext = {
         url: `${getSubgraphUri(
@@ -73,15 +75,12 @@ export default function MarketStats(): ReactElement {
       try {
         const response = await fetchData(queryGlobalStatistics, null, context)
         if (!response?.data?.globalStatistics) return
-
-        setData((prevState) => ({
-          ...prevState,
-          [chainId]: response.data.globalStatistics[0]
-        }))
+        newData[chainId] = response.data.globalStatistics[0]
       } catch (error) {
         LoggerInstance.error('Error fetching global stats: ', error.message)
       }
     }
+    setData(newData)
   }, [mainChainIds])
 
   //
@@ -96,10 +95,12 @@ export default function MarketStats(): ReactElement {
   //
   useEffect(() => {
     if (!data || !mainChainIds?.length) return
-
     const newTotal: StatsTotal = {
       ...initialTotal // always start calculating beginning from initial 0 values
     }
+    const newTVLInOcean: StatsValue = {}
+    const newTotalLiquidity: StatsValue = {}
+    const newPoolCount: StatsValue = {}
 
     for (const chainId of mainChainIds) {
       const baseTokenValue = data[chainId]?.totalLiquidity[0]?.value
@@ -109,25 +110,15 @@ export default function MarketStats(): ReactElement {
           ? new Decimal(baseTokenValue).mul(2)
           : new Decimal(0)
 
-        setTotalValueLockedInOcean((prevState) => ({
-          ...prevState,
-          [chainId]: `${totalValueLockedInOcean}`
-        }))
+        newTVLInOcean[chainId] = `${totalValueLockedInOcean}`
 
         const totalOceanLiquidity = Number(baseTokenValue) || 0
 
-        setTotalOceanLiquidity((prevState) => ({
-          ...prevState,
-          [chainId]: `${totalOceanLiquidity}`
-        }))
+        newTotalLiquidity[chainId] = `${totalOceanLiquidity}`
 
         const poolCount = data[chainId]?.poolCount || 0
 
-        setPoolCount((prevState) => ({
-          ...prevState,
-          [chainId]: `${poolCount}`
-        }))
-
+        newPoolCount[chainId] = `${poolCount}`
         const nftCount = data[chainId]?.nftCount || 0
         const datatokenCount = data[chainId]?.datatokenCount || 0
         const orderCount = data[chainId]?.orderCount || 0
@@ -142,7 +133,9 @@ export default function MarketStats(): ReactElement {
         LoggerInstance.error('Error data manipulation: ', error.message)
       }
     }
-
+    setTotalValueLockedInOcean(newTVLInOcean)
+    setTotalOceanLiquidity(newTotalLiquidity)
+    setPoolCount(newPoolCount)
     setTotal(newTotal)
   }, [data, mainChainIds, prices, currency])
 
