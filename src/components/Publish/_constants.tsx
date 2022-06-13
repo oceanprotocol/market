@@ -81,6 +81,7 @@ export const initialValues: FormPublishData = {
     }
   ],
   pricing: {
+    baseTokenAddress: '',
     price: 0,
     type:
       allowDynamicPricing === 'true'

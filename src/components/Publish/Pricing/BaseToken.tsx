@@ -1,8 +1,14 @@
+import React, {
+  ChangeEvent,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState
+} from 'react'
 import { useWeb3 } from '@context/Web3'
 import Input from '@shared/FormInput'
 import { getOpcsApprovedTokens } from '@utils/subgraph'
 import { useFormikContext } from 'formik'
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { FormPublishData } from '../_types'
 
 export default function BaseToken(): ReactElement {
@@ -11,14 +17,14 @@ export default function BaseToken(): ReactElement {
   const [approvedBaseTokens, setApprovedBaseTokens] = useState([
     values.pricing.baseTokenAddress
   ])
-  const init = async () => {
+  const init = useCallback(async () => {
     const baseTokens = await getOpcsApprovedTokens(chainId)
     setApprovedBaseTokens(baseTokens)
-  }
+  }, [chainId])
 
   useEffect(() => {
     init()
-  }, [chainId])
+  }, [init])
 
   const handleBaseTokenSelection = (e: ChangeEvent<HTMLSelectElement>) =>
     setFieldValue('pricing.baseTokenAddress', e.target.value)
