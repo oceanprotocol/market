@@ -215,7 +215,7 @@ export async function createTokensAndPricing(
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
-    feeToken: config.oceanTokenAddress,
+    feeToken: values.pricing.baseTokenAddress,
     feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
@@ -236,7 +236,7 @@ export async function createTokensAndPricing(
       // swapFeeMarketRunner is the swap fee of the market where the swap occurs
       const poolParams: PoolCreationParams = {
         ssContract: config.sideStakingAddress,
-        baseTokenAddress: config.oceanTokenAddress,
+        baseTokenAddress: values.pricing.baseTokenAddress,
         baseTokenSender: config.erc721FactoryAddress,
         publisherAddress: accountId,
         marketFeeCollector: marketFeeAddress,
@@ -259,7 +259,7 @@ export async function createTokensAndPricing(
       const txApprove = await approve(
         web3,
         accountId,
-        config.oceanTokenAddress,
+        values.pricing.baseTokenAddress,
         config.erc721FactoryAddress,
         values.pricing.amountOcean.toString(),
         false
@@ -289,7 +289,7 @@ export async function createTokensAndPricing(
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
-        baseTokenAddress: config.oceanTokenAddress,
+        baseTokenAddress: values.pricing.baseTokenAddress,
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
         baseTokenDecimals: 18,
