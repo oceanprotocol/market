@@ -5,14 +5,17 @@ import AddToken from '@shared/AddToken'
 import ExplorerLink from '@shared/ExplorerLink'
 import Publisher from '@shared/Publisher'
 import React, { ReactElement } from 'react'
+import { AssetExtended } from 'src/@types/AssetExtended'
 import styles from './MetaAsset.module.css'
 
 export default function MetaAsset({
+  asset,
   isBlockscoutExplorer
 }: {
+  asset: AssetExtended
   isBlockscoutExplorer: boolean
 }): ReactElement {
-  const { asset, isAssetNetwork } = useAsset()
+  const { isAssetNetwork } = useAsset()
   const { web3ProviderInfo } = useWeb3()
 
   const dataTokenSymbol = asset?.datatokens[0]?.symbol
