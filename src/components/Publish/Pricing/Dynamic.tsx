@@ -62,7 +62,10 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
     <>
       <FormHelp>{content.info}</FormHelp>
 
-      <h4 className={styles.title}>Base Token</h4>
+      <h4 className={styles.title}>
+        Base Token <Tooltip content={content.tooltips.baseToken} />
+      </h4>
+
       <BaseToken />
 
       <h4 className={styles.title}>
