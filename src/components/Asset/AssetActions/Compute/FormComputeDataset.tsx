@@ -155,11 +155,11 @@ export default function FormStartCompute({
   ])
 
   useEffect(() => {
-    if (!totalPrice) return
+    if (!totalPrice || !balance.ocean || !dtBalance) return
     setIsBalanceSufficient(
       compareAsBN(balance.ocean, `${totalPrice}`) || Number(dtBalance) >= 1
     )
-  }, [totalPrice])
+  }, [totalPrice, balance.ocean, dtBalance])
 
   return (
     <Form className={styles.form}>
@@ -169,7 +169,7 @@ export default function FormStartCompute({
           {...field}
           options={algorithms}
           component={Input}
-          disabled={isLoading || !isSupportedOceanNetwork}
+          disabled={isLoading}
         />
       ))}
 
@@ -226,6 +226,7 @@ export default function FormStartCompute({
         isAlgorithmConsumable={
           selectedAlgorithmAsset?.accessDetails?.isPurchasable
         }
+        isSupportedOceanNetwork={isSupportedOceanNetwork}
       />
     </Form>
   )

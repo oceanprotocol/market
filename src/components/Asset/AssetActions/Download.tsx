@@ -35,7 +35,7 @@ export default function Download({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3, isSupportedOceanNetwork } = useWeb3()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const { poolData } = usePool()
@@ -199,6 +199,7 @@ export default function Download({
       isConsumable={asset.accessDetails?.isPurchasable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
+      isSupportedOceanNetwork={isSupportedOceanNetwork}
     />
   )
 

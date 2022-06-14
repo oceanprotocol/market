@@ -29,10 +29,10 @@ interface ButtonBuyProps {
   priceType?: string
   algorithmPriceType?: string
   isAlgorithmConsumable?: boolean
+  isSupportedOceanNetwork?: boolean
 }
 
 // TODO: we need to take a look at these messages
-
 function getConsumeHelpText(
   dtBalance: string,
   dtSymbol: string,
@@ -42,7 +42,8 @@ function getConsumeHelpText(
   assetType: string,
   isConsumable: boolean,
   isBalanceSufficient: boolean,
-  consumableFeedback: string
+  consumableFeedback: string,
+  isSupportedOceanNetwork: boolean
 ) {
   const text =
     isConsumable === false
@@ -53,9 +54,38 @@ function getConsumeHelpText(
       ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
       : lowPoolLiquidity
       ? `There are not enought ${dtSymbol} available in the pool for the transaction to take place`
-      : isBalanceSufficient === false
+      : isBalanceSufficient === false && isSupportedOceanNetwork
       ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
       : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
+  return text
+}
+
+function getAlgoHelpText(
+  dtSymbolSelectedComputeAsset: string,
+  dtBalanceSelectedComputeAsset: string,
+  isConsumable: boolean,
+  isAlgorithmConsumable: boolean,
+  hasPreviousOrderSelectedComputeAsset: boolean,
+  selectedComputeAssetType: string,
+  hasDatatokenSelectedComputeAsset: boolean,
+  selectedComputeAssettLowPoolLiquidity: boolean,
+  isBalanceSufficient: boolean,
+  isSupportedOceanNetwork: boolean
+) {
+  const text =
+    (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
+    isConsumable === false ||
+    isAlgorithmConsumable === false
+      ? ''
+      : hasPreviousOrderSelectedComputeAsset
+      ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
+      : hasDatatokenSelectedComputeAsset
+      ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
+      : selectedComputeAssettLowPoolLiquidity
+      ? `There are not enought ${dtSymbolSelectedComputeAsset} available in the pool for the transaction to take place`
+      : isBalanceSufficient === false && isSupportedOceanNetwork
+      ? ''
+      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
   return text
 }
 
@@ -75,7 +105,8 @@ function getComputeAssetHelpText(
   dtBalanceSelectedComputeAsset?: string,
   selectedComputeAssettLowPoolLiquidity?: boolean,
   selectedComputeAssetType?: string,
-  isAlgorithmConsumable?: boolean
+  isAlgorithmConsumable?: boolean,
+  isSupportedOceanNetwork?: boolean
 ) {
   const computeAssetHelpText = getConsumeHelpText(
     dtBalance,
@@ -86,22 +117,23 @@ function getComputeAssetHelpText(
     assetType,
     isConsumable,
     isBalanceSufficient,
-    consumableFeedback
+    consumableFeedback,
+    isSupportedOceanNetwork
   )
-  const computeAlgoHelpText =
-    (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
-    isConsumable === false ||
-    isAlgorithmConsumable === false
-      ? ''
-      : hasPreviousOrderSelectedComputeAsset
-      ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
-      : hasDatatokenSelectedComputeAsset
-      ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
-      : selectedComputeAssettLowPoolLiquidity
-      ? `There are not enought ${dtSymbolSelectedComputeAsset} available in the pool for the transaction to take place`
-      : isBalanceSufficient === false
-      ? ''
-      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
+
+  const computeAlgoHelpText = getAlgoHelpText(
+    dtSymbolSelectedComputeAsset,
+    dtBalanceSelectedComputeAsset,
+    isConsumable,
+    isAlgorithmConsumable,
+    hasPreviousOrderSelectedComputeAsset,
+    selectedComputeAssetType,
+    hasDatatokenSelectedComputeAsset,
+    selectedComputeAssettLowPoolLiquidity,
+    isBalanceSufficient,
+    isSupportedOceanNetwork
+  )
+
   const computeHelpText = selectedComputeAssettLowPoolLiquidity
     ? computeAlgoHelpText
     : lowPoolLiquidity
@@ -135,7 +167,8 @@ export default function ButtonBuy({
   type,
   priceType,
   algorithmPriceType,
-  isAlgorithmConsumable
+  isAlgorithmConsumable,
+  isSupportedOceanNetwork
 }: ButtonBuyProps): ReactElement {
   const buttonText =
     action === 'download'
@@ -176,7 +209,8 @@ export default function ButtonBuy({
                   assetType,
                   isConsumable,
                   isBalanceSufficient,
-                  consumableFeedback
+                  consumableFeedback,
+                  isSupportedOceanNetwork
                 )
               : getComputeAssetHelpText(
                   hasPreviousOrder,
@@ -194,7 +228,8 @@ export default function ButtonBuy({
                   dtBalanceSelectedComputeAsset,
                   selectedComputeAssetLowPoolLiquidity,
                   selectedComputeAssetType,
-                  isAlgorithmConsumable
+                  isAlgorithmConsumable,
+                  isSupportedOceanNetwork
                 )}
           </div>
         </>
