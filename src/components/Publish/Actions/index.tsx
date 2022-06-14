@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import Tooltip from '@shared/atoms/Tooltip'
 import AvailableNetworks from 'src/components/Publish/AvailableNetworks'
 import Info from '@images/info.svg'
+import Loader from '@shared/atoms/Loader'
 
 export default function Actions({
   scrollToRef,
@@ -112,7 +113,13 @@ export default function Actions({
               style="primary"
               disabled={isSubmitting || !isValid}
             >
-              {hasSubmitError ? 'Retry' : 'Submit'}
+              {isSubmitting ? (
+                <Loader white />
+              ) : hasSubmitError ? (
+                'Retry'
+              ) : (
+                'Submit'
+              )}
             </Button>
           )}
         </>
