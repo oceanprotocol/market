@@ -35,7 +35,11 @@ export default function PublishPage({
   const nftFactory = useNftFactory()
   const newAbortController = useAbortController()
 
+  // This `feedback` state is auto-synced into Formik context under `values.feedback`
+  // for use in other components. Syncing defined in ./Steps.tsx child component.
   const [feedback, setFeedback] = useState(initialPublishFeedback)
+
+  // Collecting output of each publish step, enabling retry of failed steps
   const [erc721Address, setErc721Address] = useState<string>()
   const [datatokenAddress, setDatatokenAddress] = useState<string>()
   const [ddo, setDdo] = useState<DDO>()
@@ -233,6 +237,7 @@ export default function PublishPage({
   // Orchestrate publishing
   // --------------------------------------------------
   async function handleSubmit(values: FormPublishData) {
+    // Syncing variables with state, enabling retry of failed steps
     let _erc721Address = erc721Address
     let _datatokenAddress = datatokenAddress
     let _ddo = ddo
