@@ -60,9 +60,9 @@ export default function Actions({
     (values.user.stepCurrent === 3 && errors.pricing !== undefined)
 
   const hasSubmitError =
-    values.feedback[1].status === 'error' ||
-    values.feedback[2].status === 'error' ||
-    values.feedback[3].status === 'error'
+    values.feedback?.[1].status === 'error' ||
+    values.feedback?.[2].status === 'error' ||
+    values.feedback?.[3].status === 'error'
 
   return (
     <footer className={styles.actions}>

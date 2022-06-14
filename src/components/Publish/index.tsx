@@ -11,7 +11,7 @@ import Actions from './Actions'
 import Debug from './Debug'
 import Navigation from './Navigation'
 import { Steps } from './Steps'
-import { FormPublishData, PublishFeedback } from './_types'
+import { FormPublishData } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import useNftFactory from '@hooks/contracts/useNftFactory'
 import { ProviderInstance, LoggerInstance, DDO } from '@oceanprotocol/lib'
@@ -35,9 +35,7 @@ export default function PublishPage({
   const nftFactory = useNftFactory()
   const newAbortController = useAbortController()
 
-  const [feedback, setFeedback] = useState<PublishFeedback>(
-    initialPublishFeedback
-  )
+  const [feedback, setFeedback] = useState(initialPublishFeedback)
   const [erc721Address, setErc721Address] = useState<string>()
   const [datatokenAddress, setDatatokenAddress] = useState<string>()
   const [ddo, setDdo] = useState<DDO>()
