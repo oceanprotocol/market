@@ -72,8 +72,7 @@ export default function PublishPage({
         )
 
       const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
-      if (!isSuccess)
-        throw new Error('No Token created. Please hit Submit again to retry.')
+      if (!isSuccess) throw new Error('No Token created. Please try again.')
 
       LoggerInstance.log('[publish] createTokensAndPricing tx', txHash)
       LoggerInstance.log('[publish] erc721Address', erc721Address)
@@ -92,7 +91,7 @@ export default function PublishPage({
     } catch (error) {
       LoggerInstance.error('[publish] error', error.message)
       if (error.message.length > 65) {
-        error.message = 'No Token created. Please hit Submit again to retry.'
+        error.message = 'No Token created. Please try again.'
       }
 
       setFeedback((prevState) => ({
@@ -125,9 +124,7 @@ export default function PublishPage({
 
     try {
       if (!datatokenAddress || !erc721Address)
-        throw new Error(
-          'No NFT or Datatoken received. Please hit Submit again to retry.'
-        )
+        throw new Error('No NFT or Datatoken received. Please try again.')
 
       const ddo = await transformPublishFormToDdo(
         values,
@@ -135,7 +132,8 @@ export default function PublishPage({
         erc721Address
       )
 
-      if (!ddo) throw new Error('No DDO received.')
+      if (!ddo) throw new Error('No DDO received. Please try again.')
+
       setDdo(ddo)
       LoggerInstance.log('[publish] Got new DDO', ddo)
 
@@ -145,7 +143,9 @@ export default function PublishPage({
         newAbortController()
       )
 
-      if (!ddoEncrypted) throw new Error('No encrypted DDO received.')
+      if (!ddoEncrypted)
+        throw new Error('No encrypted DDO received. Please try again.')
+
       setDdoEncrypted(ddoEncrypted)
       LoggerInstance.log('[publish] Got encrypted DDO', ddoEncrypted)
 
@@ -189,7 +189,8 @@ export default function PublishPage({
     }))
 
     try {
-      if (!ddo || !ddoEncrypted) throw new Error('No DDO received.')
+      if (!ddo || !ddoEncrypted)
+        throw new Error('No DDO received. Please try again.')
 
       const res = await setNFTMetadataAndTokenURI(
         ddo,
@@ -200,7 +201,7 @@ export default function PublishPage({
       )
       if (!res?.transactionHash)
         throw new Error(
-          'Metadata could not be written into the NFT. Please hit Submit again to retry.'
+          'Metadata could not be written into the NFT. Please try again.'
         )
 
       LoggerInstance.log('[publish] setMetadata result', res)
