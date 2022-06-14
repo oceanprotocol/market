@@ -5,7 +5,9 @@ export const opcQuery = gql`
     opc(id: 1) {
       swapOceanFee
       swapNonOceanFee
-      approvedTokens
+      approvedTokens {
+        id
+      }
       id
     }
   }

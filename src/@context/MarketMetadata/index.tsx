@@ -39,7 +39,7 @@ function MarketMetadataProvider({
           approvedTokens: response.data?.opc.approvedTokens,
           swapApprovedFee: response.data?.opc.swapOceanFee,
           swapNotApprovedFee: response.data?.opc.swapNonOceanFee
-        } as OpcFee)
+        } as unknown as OpcFee)
       }
       setOpcFees(opcData)
     }
