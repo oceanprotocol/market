@@ -82,11 +82,6 @@
   min-width: auto;
 }
 
-.center {
-  margin: auto !important;
-  display: block;
-}
-
 /* Size Modifiers */
 .small {
   font-size: var(--font-size-small);
