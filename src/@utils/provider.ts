@@ -1,6 +1,6 @@
 import {
   downloadFileBrowser,
-  FileMetadata,
+  FileInfo,
   LoggerInstance,
   ProviderInstance
 } from '@oceanprotocol/lib'
@@ -25,7 +25,7 @@ export async function getFileDidInfo(
   did: string,
   serviceId: string,
   providerUrl: string
-): Promise<FileMetadata[]> {
+): Promise<FileInfo[]> {
   try {
     const response = await ProviderInstance.checkDidFiles(
       did,
@@ -41,7 +41,7 @@ export async function getFileDidInfo(
 export async function getFileUrlInfo(
   url: string,
   providerUrl: string
-): Promise<FileMetadata[]> {
+): Promise<FileInfo[]> {
   try {
     const response = await ProviderInstance.checkFileUrl(url, providerUrl)
     return response
