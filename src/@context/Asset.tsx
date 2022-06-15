@@ -18,7 +18,7 @@ import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
 
-interface AssetProviderValue {
+export interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: Purgatory
   asset: AssetExtended
