@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import Tooltip from '@shared/atoms/Tooltip'
 import AvailableNetworks from 'src/components/Publish/AvailableNetworks'
 import Info from '@images/info.svg'
+import Loader from '@shared/atoms/Loader'
 
 export default function Actions({
   scrollToRef,
@@ -24,8 +25,7 @@ export default function Actions({
     values,
     errors,
     isValid,
-    isSubmitting,
-    setFieldValue
+    isSubmitting
   }: FormikContextType<FormPublishData> = useFormikContext()
   const { connect, accountId } = useWeb3()
 
@@ -59,6 +59,11 @@ export default function Actions({
     (values.user.stepCurrent === 1 && errors.metadata !== undefined) ||
     (values.user.stepCurrent === 2 && errors.services !== undefined) ||
     (values.user.stepCurrent === 3 && errors.pricing !== undefined)
+
+  const hasSubmitError =
+    values.feedback?.[1].status === 'error' ||
+    values.feedback?.[2].status === 'error' ||
+    values.feedback?.[3].status === 'error'
 
   return (
     <footer className={styles.actions}>
@@ -108,7 +113,13 @@ export default function Actions({
               style="primary"
               disabled={isSubmitting || !isValid}
             >
-              Submit
+              {isSubmitting ? (
+                <Loader white />
+              ) : hasSubmitError ? (
+                'Retry'
+              ) : (
+                'Submit'
+              )}
             </Button>
           )}
         </>

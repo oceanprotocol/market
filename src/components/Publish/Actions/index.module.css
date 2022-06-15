@@ -7,6 +7,7 @@
 
 .actions button {
   margin: 0 calc(var(--spacer) / 2);
+  min-height: 40px;
 }
 
 .infoIcon {
