@@ -155,7 +155,6 @@ export async function transformPublishFormToDdo(
       }
     ]
   }
-
   const filesEncrypted =
     !isPreview &&
     files?.length &&
