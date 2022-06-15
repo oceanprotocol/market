@@ -107,12 +107,16 @@ export default function Edit({
 
       // TODO: remove version update at a later time
       const updatedAsset: Asset = {
-        ...asset,
+        ...(asset as Asset),
         version: '4.1.0',
         metadata: updatedMetadata,
         services: [updatedService]
       }
 
+      // delete custom helper properties injected in the market so we don't write them on chain
+      delete (updatedAsset as AssetExtended).accessDetails
+      delete (updatedAsset as AssetExtended).datatokens
+      delete (updatedAsset as AssetExtended).stats
       const setMetadataTx = await setNftMetadata(
         updatedAsset,
         accountId,
