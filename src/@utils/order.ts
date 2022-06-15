@@ -53,12 +53,13 @@ export async function order(
       asset.services[0].serviceEndpoint
     ))
 
-  const providerFeesSanitized = providerFees || initializeData.providerFee
-  providerFeesSanitized.providerFeeAmount = await unitsToAmount(
-    web3,
-    providerFeesSanitized.providerFeeToken,
-    providerFeesSanitized.providerFeeAmount.toString()
+  console.log(
+    'Initial providerFees == ',
+    providerFees || initializeData.providerFee
   )
+
+  const providerFeesSanitized = providerFees || initializeData.providerFee
+  providerFees.providerFeeAmount = providerFees.providerFeeAmount.toString()
 
   const orderParams = {
     consumer: computeConsumerAddress || accountId,
