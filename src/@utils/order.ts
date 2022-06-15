@@ -53,18 +53,10 @@ export async function order(
       asset.services[0].serviceEndpoint
     ))
 
-  console.log(
-    'Initial providerFees == ',
-    providerFees || initializeData.providerFee
-  )
-
-  const providerFeesSanitized = providerFees || initializeData.providerFee
-  providerFees.providerFeeAmount = providerFees.providerFeeAmount.toString()
-
   const orderParams = {
     consumer: computeConsumerAddress || accountId,
     serviceIndex: 0,
-    _providerFee: providerFeesSanitized,
+    _providerFee: providerFees || initializeData.providerFee,
     _consumeMarketFee: {
       consumeMarketFeeAddress: marketFeeAddress,
       consumeMarketFeeAmount: consumeMarketOrderFee,
