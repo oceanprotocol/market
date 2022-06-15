@@ -11,7 +11,8 @@ import {
   LoggerInstance,
   ComputeAlgorithm,
   ComputeOutput,
-  ProviderComputeInitializeResults
+  ProviderComputeInitializeResults,
+  unitsToAmount
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -93,7 +94,8 @@ export default function Compute({
   const [computeEnv, setComputeEnv] = useState<ComputeEnvironment>()
   const [initializedProviderResponse, setInitializedProviderResponse] =
     useState<ProviderComputeInitializeResults>()
-  // const [computeValidUntil, setComputeValidUntil] = useState<number>()
+  const [providerFeeAmount, setProviderFeeAmount] = useState<string>('0')
+  const [computeValidUntil, setComputeValidUntil] = useState<string>('0')
   const [datasetOrderPriceAndFees, setDatasetOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   const [isRequestingDataseOrderPrice, setIsRequestingDataseOrderPrice] =
@@ -146,7 +148,19 @@ export default function Compute({
       return
     }
     setInitializedProviderResponse(initializedProvider)
-
+    setProviderFeeAmount(
+      await unitsToAmount(
+        web3,
+        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
+        initializedProviderResponse?.datasets?.[0]?.providerFee
+          ?.providerFeeAmount
+      )
+    )
+    const computeDuration = (
+      parseInt(initializedProvider?.datasets?.[0]?.providerFee?.validUntil) -
+      Math.floor(Date.now() / 1000)
+    ).toString()
+    setComputeValidUntil(computeDuration)
     if (
       asset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
       asset?.accessDetails?.type !== 'free' &&
@@ -476,6 +490,8 @@ export default function Compute({
             consumableFeedback={consumableFeedback}
             datasetOrderPriceAndFees={datasetOrderPriceAndFees}
             algoOrderPriceAndFees={algoOrderPriceAndFees}
+            providerFeeAmount={providerFeeAmount}
+            validUntil={computeValidUntil}
           />
         </Formik>
       )}

@@ -43,7 +43,9 @@ export default function FormStartCompute({
   isConsumable,
   consumableFeedback,
   datasetOrderPriceAndFees,
-  algoOrderPriceAndFees
+  algoOrderPriceAndFees,
+  providerFeeAmount,
+  validUntil
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: Asset[]
@@ -70,6 +72,8 @@ export default function FormStartCompute({
   consumableFeedback: string
   datasetOrderPriceAndFees?: OrderPriceAndFees
   algoOrderPriceAndFees?: OrderPriceAndFees
+  providerFeeAmount?: string
+  validUntil?: string
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
@@ -138,8 +142,12 @@ export default function FormStartCompute({
             algoOrderPriceAndFees?.price ||
               selectedAlgorithmAsset.accessDetails.price
           ).toDecimalPlaces(MAX_DECIMALS)
+    const providerFees = providerFeeAmount
+      ? new Decimal(providerFeeAmount).toDecimalPlaces(MAX_DECIMALS)
+      : new Decimal(0)
     const totalPrice = priceDataset
       .plus(priceAlgo)
+      .plus(providerFees)
       .toDecimalPlaces(MAX_DECIMALS)
       .toString()
     setTotalPrice(totalPrice)
@@ -192,6 +200,8 @@ export default function FormStartCompute({
         totalPrice={totalPrice}
         datasetOrderPrice={datasetOrderPrice}
         algoOrderPrice={algoOrderPrice}
+        providerFeeAmount={providerFeeAmount}
+        validUntil={validUntil}
       />
 
       <ButtonBuy

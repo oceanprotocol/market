@@ -19,6 +19,8 @@ interface PriceOutputProps {
   selectedComputeAssetTimeout: string
   datasetOrderPrice?: number
   algoOrderPrice?: number
+  providerFeeAmount?: string
+  validUntil?: string
 }
 
 function Row({
@@ -27,7 +29,8 @@ function Row({
   hasDatatoken,
   symbol,
   timeout,
-  sign
+  sign,
+  type
 }: {
   price: string
   hasPreviousOrder?: boolean
@@ -35,10 +38,12 @@ function Row({
   symbol?: string
   timeout?: string
   sign?: string
+  type?: string
 }) {
   return (
     <div className={styles.priceRow}>
       <div className={styles.sign}>{sign}</div>
+      <div className={styles.type}>{type}</div>
       <div>
         <PriceUnit
           price={hasPreviousOrder || hasDatatoken ? '0' : `${price}`}
@@ -68,7 +73,9 @@ export default function PriceOutput({
   algorithmConsumeDetails,
   selectedComputeAssetTimeout,
   datasetOrderPrice,
-  algoOrderPrice
+  algoOrderPrice,
+  providerFeeAmount,
+  validUntil
 }: PriceOutputProps): ReactElement {
   const { asset } = useAsset()
 
@@ -89,6 +96,7 @@ export default function PriceOutput({
                 .toString()}
               timeout={assetTimeout}
               symbol={symbol}
+              type="DATASET"
             />
             <Row
               hasPreviousOrder={hasPreviousOrderSelectedComputeAsset}
@@ -101,6 +109,14 @@ export default function PriceOutput({
               timeout={selectedComputeAssetTimeout}
               symbol={symbol}
               sign="+"
+              type="ALGORITHM"
+            />
+            <Row
+              price={providerFeeAmount} // initializeCompute.provider fee amount
+              timeout={`${validUntil} seconds`} // valid until value
+              symbol={symbol}
+              sign="+"
+              type="C2D RESOURCES"
             />
             <Row price={totalPrice} symbol={symbol} sign="=" />
           </div>
