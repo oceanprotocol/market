@@ -64,7 +64,7 @@ export async function order(
     }
   } as OrderParams
 
-  // TODO: we need to approve provider fee
+  // TODO: we need to approve provider fee separately using aproveWei
   switch (asset.accessDetails?.type) {
     case 'fixed': {
       // this assumes all fees are in ocean
@@ -87,8 +87,6 @@ export async function order(
         swapMarketFee: consumeMarketFixedSwapFee,
         marketFeeAddress
       } as FreOrderParams
-      console.log('freParams', freParams)
-      console.log('orderParams', orderParams)
       const tx = await datatoken.buyFromFreAndOrder(
         asset.accessDetails.datatoken.address,
         accountId,
@@ -152,6 +150,7 @@ export async function reuseOrder(
     providerFees?.providerFeeAmount ||
     initializeData?.providerFee?.providerFeeAmount
   ) {
+    // need to use approveWei here
     const txApprove = await approve(
       web3,
       accountId,
