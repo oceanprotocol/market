@@ -14,7 +14,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
 import { getEnsName } from '@utils/ens'
-import { getOceanBalance } from '@utils/ocean'
+import { getOceanBalance, getOceanConfig } from '@utils/ocean'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName,
@@ -22,6 +22,8 @@ import useNetworkMetadata, {
   NetworkType
 } from '../@hooks/useNetworkMetadata'
 import { useMarketMetadata } from './MarketMetadata'
+import { getTokenBalance } from '@utils/web3'
+import { getOpcsApprovedTokens } from '@utils/subgraph'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -155,16 +157,33 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     if (!accountId || !networkId || !web3) return
 
     try {
+      const { oceanTokenAddress } = getOceanConfig(networkId)
+      const approvedTokensBalance: { [key: string]: string } = {}
+      const approvedTokens = (await getOpcsApprovedTokens(chainId)).filter(
+        (token) => token.address !== oceanTokenAddress
+      )
+      approvedTokens.forEach(async (token) => {
+        const { address, decimals, symbol } = token
+        const tokenBalance = await getTokenBalance(
+          accountId,
+          decimals,
+          address,
+          web3
+        )
+        approvedTokensBalance[symbol.toLocaleLowerCase()] = tokenBalance
+      })
+
       const balance = {
         eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest')),
-        ocean: await getOceanBalance(accountId, networkId, web3)
+        ocean: await getOceanBalance(accountId, networkId, web3),
+        ...approvedTokensBalance
       }
       setBalance(balance)
       LoggerInstance.log('[web3] Balance: ', balance)
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
     }
-  }, [accountId, networkId, web3])
+  }, [accountId, chainId, networkId, web3])
 
   // -----------------------------------
   // Helper: Get user ENS name
