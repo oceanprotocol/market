@@ -3,7 +3,7 @@ import {
   Asset,
   DDO,
   PublisherTrustedAlgorithm,
-  FileMetadata
+  FileInfo
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -47,7 +47,7 @@ export default function Compute({
   ddo: Asset
   accessDetails: AccessDetails
   dtBalance: string
-  file: FileMetadata
+  file: FileInfo
   fileIsLoading?: boolean
   isConsumable?: boolean
   consumableFeedback?: string

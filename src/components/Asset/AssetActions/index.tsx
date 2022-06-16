@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Download'
-import { FileMetadata, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
+import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
@@ -37,7 +37,7 @@ export default function AssetActions({
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
-  const [fileMetadata, setFileMetadata] = useState<FileMetadata>()
+  const [fileMetadata, setFileMetadata] = useState<FileInfo>()
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
   const isCompute = Boolean(
     asset?.services.filter((service) => service.type === 'compute')[0]

@@ -1,4 +1,4 @@
-import { Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
+import { FileInfo, Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { secondsToString } from '@utils/ddo'
 import * as Yup from 'yup'
 import { MetadataEditForm } from './_types'
@@ -10,6 +10,7 @@ export const validationSchema = Yup.object().shape({
   description: Yup.string().required('Required').min(10),
   price: Yup.number().required('Required'),
   links: Yup.array<any[]>().nullable(),
+  files: Yup.array<FileInfo[]>().nullable(),
   timeout: Yup.string().required('Required'),
   author: Yup.string().nullable()
 })
@@ -24,6 +25,7 @@ export function getInitialValues(
     description: metadata?.description,
     price,
     links: metadata?.links,
+    files: '',
     timeout: secondsToString(timeout),
     author: metadata?.author
   }
