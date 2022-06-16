@@ -22,7 +22,8 @@ export default function PricingFields(): ReactElement {
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { pricing } = values
-  const { price, amountOcean, weightOnOcean, weightOnDataToken, type } = pricing
+  const { price, amountBaseToken, weightOnBaseToken, weightOnDataToken, type } =
+    pricing
 
   const defaultBaseToken: TokenInfo = {
     address: oceanConfig?.oceanTokenAddress,
@@ -45,32 +46,38 @@ export default function PricingFields(): ReactElement {
   useEffect(() => {
     if (type === 'fixed' || type === 'free') return
 
-    const amountOcean =
-      isValidNumber(weightOnOcean) && isValidNumber(price) && price > 0
-        ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10)).mul(2)
-        : new Decimal(initialValues.pricing.amountOcean)
+    const amountBaseToken =
+      isValidNumber(weightOnBaseToken) && isValidNumber(price) && price > 0
+        ? new Decimal(price).mul(new Decimal(weightOnBaseToken).mul(10)).mul(2)
+        : new Decimal(initialValues.pricing.amountBaseToken)
 
-    setFieldValue('pricing.amountOcean', amountOcean)
-  }, [price, weightOnOcean, type, setFieldValue])
+    setFieldValue('pricing.amountBaseToken', amountBaseToken)
+  }, [price, weightOnBaseToken, type, setFieldValue])
 
   // Update dataToken value when ocean amount is changed
   useEffect(() => {
     if (type === 'fixed' || type === 'free') return
 
     const amountDataToken =
-      isValidNumber(amountOcean) &&
-      isValidNumber(weightOnOcean) &&
+      isValidNumber(amountBaseToken) &&
+      isValidNumber(weightOnBaseToken) &&
       isValidNumber(price) &&
       isValidNumber(weightOnDataToken) &&
       price > 0
-        ? new Decimal(amountOcean)
-            .dividedBy(new Decimal(weightOnOcean))
+        ? new Decimal(amountBaseToken)
+            .dividedBy(new Decimal(weightOnBaseToken))
             .dividedBy(new Decimal(price))
             .mul(new Decimal(weightOnDataToken))
         : new Decimal(initialValues.pricing.amountDataToken)
 
     setFieldValue('pricing.amountDataToken', amountDataToken)
-  }, [amountOcean, weightOnOcean, weightOnDataToken, type, setFieldValue])
+  }, [
+    amountBaseToken,
+    weightOnBaseToken,
+    weightOnDataToken,
+    type,
+    setFieldValue
+  ])
 
   const tabs = [
     appConfig.allowFixedPricing === 'true'

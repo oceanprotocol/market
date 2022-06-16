@@ -37,11 +37,11 @@ export default function Remove({
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
   const [amountPoolShares, setAmountPoolShares] = useState('0')
-  const [amountOcean, setAmountOcean] = useState('0')
+  const [amountBaseToken, setAmountBaseToken] = useState('0')
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>()
   const [slippage, setSlippage] = useState(slippagePresets[0])
-  const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
+  const [minBaseTokenAmount, setMinBaseTokenAmount] = useState<string>('0')
   const [poolInstance, setPoolInstance] = useState<Pool>()
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function Remove({
         accountId,
         poolData?.id,
         amountPoolShares,
-        minOceanAmount
+        minBaseTokenAmount
       )
       setTxId(result?.transactionHash)
       // fetch new data
@@ -68,8 +68,8 @@ export default function Remove({
     } finally {
       // reset slider after transaction
       setAmountPercent('0')
-      setAmountOcean('0')
-      setMinOceanAmount('0')
+      setAmountBaseToken('0')
+      setMinBaseTokenAmount('0')
       setIsLoading(false)
     }
   }
@@ -88,17 +88,17 @@ export default function Remove({
   const getValues = useRef(
     debounce(async (poolInstance, id, poolInfo, newAmountPoolShares) => {
       if (newAmountPoolShares === '0') {
-        setAmountOcean('0')
+        setAmountBaseToken('0')
         return
       }
-      const newAmountOcean = await poolInstance.calcSingleOutGivenPoolIn(
+      const newAmountBaseToken = await poolInstance.calcSingleOutGivenPoolIn(
         id,
         poolInfo.baseTokenAddress,
         newAmountPoolShares,
         18,
         poolInfo.baseTokenDecimals
       )
-      setAmountOcean(newAmountOcean)
+      setAmountBaseToken(newAmountBaseToken)
     }, 150)
   )
 
@@ -109,18 +109,18 @@ export default function Remove({
   }, [amountPoolShares, accountId, poolInfo, poolData?.id, poolInstance])
 
   useEffect(() => {
-    if (!amountOcean || amountPercent === '0') {
-      setMinOceanAmount('0')
+    if (!amountBaseToken || amountPercent === '0') {
+      setMinBaseTokenAmount('0')
       return
     }
 
-    const minOceanAmount = new Decimal(amountOcean)
+    const minBaseTokenAmount = new Decimal(amountBaseToken)
       .mul(new Decimal(100).minus(new Decimal(slippage)))
       .dividedBy(100)
       .toString()
 
-    setMinOceanAmount(minOceanAmount.slice(0, 18))
-  }, [slippage, amountOcean, amountPercent])
+    setMinBaseTokenAmount(minBaseTokenAmount.slice(0, 18))
+  }, [slippage, amountBaseToken, amountPercent])
 
   // Set amountPoolShares based on set slider value
   function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
@@ -191,13 +191,16 @@ export default function Remove({
           <p>{content.pool.remove.output.titleOutExpected}</p>
           <Token
             symbol={poolInfo?.baseTokenSymbol}
-            balance={amountOcean}
+            balance={amountBaseToken}
             noIcon
           />
         </div>
         <div>
           <p>{content.pool.remove.output.titleOutMinimum}</p>
-          <Token symbol={poolInfo?.baseTokenSymbol} balance={minOceanAmount} />
+          <Token
+            symbol={poolInfo?.baseTokenSymbol}
+            balance={minBaseTokenAmount}
+          />
         </div>
       </div>
       <div className={styles.slippage}>
@@ -223,7 +226,7 @@ export default function Remove({
         isDisabled={
           !isAssetNetwork ||
           amountPercent === '0' ||
-          amountOcean === '0' ||
+          amountBaseToken === '0' ||
           poolInfo?.totalPoolTokens === '0'
         }
         txId={txId}

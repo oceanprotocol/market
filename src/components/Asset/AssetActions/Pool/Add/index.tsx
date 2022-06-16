@@ -48,7 +48,9 @@ export default function Add({
       .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
       .max(
         Number(amountMax),
-        `Maximum you can add is ${Number(amountMax).toFixed(2)} OCEAN`
+        `Maximum you can add is ${Number(amountMax).toFixed(2)} ${
+          poolInfo?.baseTokenSymbol
+        }`
       )
       .test(
         'maxDigitsAfterDecimal',

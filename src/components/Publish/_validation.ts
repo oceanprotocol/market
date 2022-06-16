@@ -83,18 +83,18 @@ const validationPricing = {
     )
     .required('Required'),
   amountDataToken: Yup.number().required('Required'),
-  amountOcean: Yup.number()
-    .test('validator-min-amountOcean', '', function (value) {
+  amountBaseToken: Yup.number()
+    .test('validator-min-amountBaseToken', '', function (value) {
       if (this.parent.type === 'fixed') return true
       const minValue =
         this.parent.price > 0
           ? new Decimal(this.parent.price)
-              .mul(this.parent.weightOnOcean)
+              .mul(this.parent.weightOnBaseToken)
               .mul(10)
               .mul(2)
               .toDecimalPlaces(MAX_DECIMALS)
               .toString()
-          : initialValues.pricing.amountOcean.toString()
+          : initialValues.pricing.amountBaseToken.toString()
       return value < parseInt(minValue)
         ? this.createError({
             message: `Must be more or equal to ${minValue}, as at least ${initialValues.pricing.amountDataToken} datatokens are required for this pool to work properly`
@@ -112,7 +112,7 @@ const validationPricing = {
     )
     .required('Required'),
   weightOnDataToken: Yup.string().required('Required'),
-  weightOnOcean: Yup.string().required('Required'),
+  weightOnBaseToken: Yup.string().required('Required'),
   swapFee: Yup.number()
     .min(0.1, (param) => `Must be more or equal to ${param.min}`)
     .max(10, 'Maximum is 10%')

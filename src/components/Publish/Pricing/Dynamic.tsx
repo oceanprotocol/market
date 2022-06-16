@@ -29,41 +29,51 @@ export default function Dynamic({
 
   const {
     weightOnDataToken,
-    weightOnOcean,
+    weightOnBaseToken,
     swapFee,
     amountDataToken,
-    amountOcean
+    amountBaseToken,
+    baseToken
   } = values.pricing
+  const baseTokenKey = baseToken?.symbol?.toLocaleLowerCase()
 
   const [error, setError] = useState<string>()
 
   // Calculate firstPrice whenever user values change
   useEffect(() => {
-    if (`${amountOcean}` === '') return
+    if (`${amountBaseToken}` === '') return
 
     const tokenAmountOut = 1
     const weightRatio = new Decimal(weightOnDataToken).div(
-      new Decimal(weightOnOcean)
+      new Decimal(weightOnBaseToken)
     )
     const diff = new Decimal(amountDataToken).minus(tokenAmountOut)
     const y = new Decimal(amountDataToken).div(diff)
     const foo = y.pow(weightRatio).minus(new Decimal(1))
-    const tokenAmountIn = new Decimal(amountOcean)
+    const tokenAmountIn = new Decimal(amountBaseToken)
       .times(foo)
       .div(new Decimal(1).minus(new Decimal(swapFee / 100)))
     setFirstPrice(`${tokenAmountIn}`)
-  }, [swapFee, weightOnOcean, weightOnDataToken, amountDataToken, amountOcean])
+  }, [
+    swapFee,
+    weightOnBaseToken,
+    weightOnDataToken,
+    amountDataToken,
+    amountBaseToken
+  ])
 
   // Check: account, network & insufficient balance
   useEffect(() => {
     if (!accountId) {
       setError(`No account connected. Please connect your Web3 wallet.`)
-    } else if (Number(balance.ocean) < Number(amountOcean)) {
-      setError(`Insufficient balance. You need at least ${amountOcean} OCEAN.`)
+    } else if (Number(balance[baseTokenKey]) < Number(amountBaseToken)) {
+      setError(
+        `Insufficient balance. You need at least ${amountBaseToken} ${baseToken.symbol}.`
+      )
     } else {
       setError(undefined)
     }
-  }, [amountOcean, networkId, accountId, balance])
+  }, [amountBaseToken, networkId, accountId, balance, baseToken, baseTokenKey])
 
   return (
     <>
@@ -88,14 +98,12 @@ export default function Dynamic({
 
       <div className={styles.tokens}>
         <Coin
-          name="amountOcean"
+          name="amountBaseToken"
           datatokenOptions={{
-            symbol: values.pricing?.baseToken?.symbol || 'OCEAN',
-            name:
-              transformTokenName(values.pricing?.baseToken?.name) ||
-              'Ocean Token'
+            symbol: baseToken?.symbol,
+            name: transformTokenName(baseToken?.name)
           }}
-          weight={`${Number(weightOnOcean) * 10}%`}
+          weight={`${Number(weightOnBaseToken) * 10}%`}
         />
         <Coin
           name="amountDataToken"

@@ -90,8 +90,8 @@ export const initialValues: FormPublishData = {
         ? 'fixed'
         : 'free',
     amountDataToken: allowDynamicPricing === 'true' ? 100 : 1000,
-    amountOcean: 100,
-    weightOnOcean: '5', // 50% on OCEAN
+    amountBaseToken: 100,
+    weightOnBaseToken: '5', // 50% on OCEAN
     weightOnDataToken: '5', // 50% on datatoken
     swapFee: 0.1, // in %
     freeAgreement: false

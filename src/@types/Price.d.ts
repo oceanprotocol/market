@@ -55,10 +55,10 @@ interface PriceOptions {
   baseToken: TokenInfo
   price: number
   amountDataToken: number
-  amountOcean: number
+  amountBaseToken: number
   type: 'dynamic' | 'fixed' | 'free' | ''
   weightOnDataToken: string
-  weightOnOcean: string
+  weightOnBaseToken: string
   // easier to keep this as number for Yup input validation
   swapFee: number
   freeAgreement: boolean

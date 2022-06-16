@@ -249,7 +249,7 @@ export async function createTokensAndPricing(
         baseTokenDecimals: values.pricing.baseToken.decimals,
         vestingAmount: '0',
         vestedBlocks: 2726000,
-        initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
+        initialBaseTokenLiquidity: values.pricing.amountBaseToken.toString(),
         swapFeeLiquidityProvider: (values.pricing.swapFee / 100).toString(),
         swapFeeMarketRunner: publisherMarketPoolSwapFee
       }
@@ -265,7 +265,7 @@ export async function createTokensAndPricing(
         accountId,
         values.pricing.baseToken.address,
         config.erc721FactoryAddress,
-        values.pricing.amountOcean.toString(),
+        values.pricing.amountBaseToken.toString(),
         false
       )
       LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
