@@ -148,14 +148,16 @@ export default function Compute({
       return
     }
     setInitializedProviderResponse(initializedProvider)
-    setProviderFeeAmount(
-      await unitsToAmount(
-        web3,
-        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
-        initializedProviderResponse?.datasets?.[0]?.providerFee
-          ?.providerFeeAmount
+    if (initializedProviderResponse?.datasets?.[0]?.providerFee) {
+      setProviderFeeAmount(
+        await unitsToAmount(
+          web3,
+          initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
+          initializedProviderResponse?.datasets?.[0]?.providerFee
+            ?.providerFeeAmount
+        )
       )
-    )
+    }
     const computeDuration = (
       parseInt(initializedProvider?.datasets?.[0]?.providerFee?.validUntil) -
       Math.floor(Date.now() / 1000)
