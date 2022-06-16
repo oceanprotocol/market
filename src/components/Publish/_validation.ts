@@ -146,7 +146,7 @@ export const validationSchema: Yup.SchemaOf<any> = Yup.object().shape({
 //         .min(4, (param) => `Title must be at least ${param.min} characters`)
 //         .required('Required'),
 //       description: Yup.string().min(10).required('Required'),
-//       files: Yup.array<FileMetadata>().required('Required').nullable(),
+//       files: Yup.array<FileInfo>().required('Required').nullable(),
 //       timeout: Yup.string().required('Required'),
 //       dataTokenOptions: Yup.object()
 //         .shape({
@@ -167,6 +167,6 @@ export const validationSchema: Yup.SchemaOf<any> = Yup.object().shape({
 //       // ---- optional fields ----
 //       algorithmPrivacy: Yup.boolean().nullable(),
 //       tags: Yup.string().nullable(),
-//       links: Yup.array<FileMetadata[]>().nullable()
+//       links: Yup.array<FileInfo[]>().nullable()
 //     })
 //     .defined()
