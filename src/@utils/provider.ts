@@ -53,7 +53,7 @@ export async function initializeProviderForCompute(
 
 // TODO: Why do we have these one line functions ?!?!?!
 export async function getEncryptedFiles(
-  files: FileMetadata[],
+  files: any,
   providerUrl: string
 ): Promise<string> {
   try {
