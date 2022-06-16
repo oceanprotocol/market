@@ -1,12 +1,14 @@
 import React, { ReactElement } from 'react'
 
+export interface DebugOutputProps {
+  title?: string
+  output: any
+}
+
 export default function DebugOutput({
   title,
   output
-}: {
-  title?: string
-  output: any
-}): ReactElement {
+}: DebugOutputProps): ReactElement {
   return (
     <div style={{ marginTop: 'var(--spacer)' }}>
       {title && <h5>{title}</h5>}
