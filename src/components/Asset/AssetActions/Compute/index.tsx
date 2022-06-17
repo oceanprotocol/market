@@ -271,6 +271,7 @@ export default function Compute({
     setValidAlgorithmOrderTx(
       selectedAlgorithmAsset?.accessDetails?.validOrderTx
     )
+    setAlgoOrderPriceAndFees(null)
 
     async function initSelectedAlgo() {
       await checkAssetDTBalance(selectedAlgorithmAsset)
