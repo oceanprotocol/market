@@ -30,13 +30,22 @@
         "required": true
       },
       {
-        "name": "links",
-        "label": "Sample file",
-        "placeholder": "e.g. https://file.com/samplefile.json",
-        "help": "Please provide a URL to a sample of your data set file. This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+        "name": "files",
+        "label": "New file",
+        "placeholder": "e.g. https://file.com/file.json",
+        "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. Leaving this field empty will not remove the current value.",
         "prominentHelp": true,
         "type": "files"
       },
+      {
+        "name": "links",
+        "label": "New sample file",
+        "placeholder": "e.g. https://file.com/samplefile.json",
+        "help": "Please provide a URL to a sample of your data set file. This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** Leaving this field empty will not remove the current value.",
+        "prominentHelp": true,
+        "type": "files"
+      },
+
       {
         "name": "timeout",
         "label": "Timeout",

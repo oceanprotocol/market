@@ -2,7 +2,7 @@ import React, { useState, ReactElement, useEffect, useCallback } from 'react'
 import {
   Asset,
   DDO,
-  FileInfo as FileInfoData,
+  FileInfo,
   Datatoken,
   ProviderInstance,
   ComputeAsset,
@@ -60,7 +60,7 @@ export default function Compute({
 }: {
   asset: AssetExtended
   dtBalance: string
-  file: FileInfoData
+  file: FileInfo
   fileIsLoading?: boolean
   isConsumable?: boolean
   consumableFeedback?: string
