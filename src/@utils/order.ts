@@ -1,13 +1,13 @@
 import {
   approve,
+  approveWei,
   Datatoken,
   FreOrderParams,
   LoggerInstance,
   OrderParams,
   ProviderComputeInitialize,
   ProviderFees,
-  ProviderInstance,
-  unitsToAmount
+  ProviderInstance
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
@@ -64,7 +64,6 @@ export async function order(
     }
   } as OrderParams
 
-  // TODO: we need to approve provider fee separately using aproveWei
   switch (asset.accessDetails?.type) {
     case 'fixed': {
       // this assumes all fees are in ocean
@@ -146,31 +145,6 @@ export async function reuseOrder(
       asset.services[0].serviceEndpoint
     ))
 
-  if (
-    providerFees?.providerFeeAmount ||
-    initializeData?.providerFee?.providerFeeAmount
-  ) {
-    // need to use approveWei here
-    const txApprove = await approve(
-      web3,
-      accountId,
-      providerFees.providerFeeToken ||
-        initializeData.providerFee.providerFeeToken,
-      asset.accessDetails.datatoken.address,
-      await unitsToAmount(
-        web3,
-        providerFees.providerFeeToken ||
-          initializeData.providerFee.providerFeeToken,
-        providerFees.providerFeeAmount ||
-          initializeData.providerFee.providerFeeAmount
-      ),
-      false
-    )
-    if (!txApprove) {
-      return
-    }
-  }
-
   const tx = await datatoken.reuseOrder(
     asset.accessDetails.datatoken.address,
     accountId,
@@ -207,6 +181,23 @@ export async function handleComputeOrder(
     '[compute] Handle compute order for asset type: ',
     asset.metadata.type
   )
+
+  if (
+    initializeData.providerFee &&
+    initializeData.providerFee.providerFeeAmount !== '0'
+  ) {
+    const txApproveWei = await approveWei(
+      web3,
+      accountId,
+      asset.accessDetails.baseToken.address,
+      asset.accessDetails.datatoken.address,
+      initializeData.providerFee.providerFeeAmount
+    )
+    if (!txApproveWei) {
+      toast.error('Failed to approve provider fees!')
+      return
+    }
+  }
   if (initializeData.validOrder && !initializeData.providerFee) {
     LoggerInstance.log('[compute] Has valid order: ', initializeData.validOrder)
     return initializeData.validOrder
