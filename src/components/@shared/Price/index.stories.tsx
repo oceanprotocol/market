@@ -40,8 +40,5 @@ const accessDetailsData = {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  accessDetails: accessDetailsData as AccessDetails,
-  locale,
-  currency,
-  prices
+  accessDetails: accessDetailsData as AccessDetails
 }

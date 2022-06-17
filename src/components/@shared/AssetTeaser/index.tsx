@@ -58,13 +58,7 @@ export default function AssetTeaser({
           </div>
 
           <footer className={styles.foot}>
-            <Price
-              accessDetails={asset.accessDetails}
-              size="small"
-              locale={locale}
-              prices={prices}
-              currency={currency}
-            />
+            <Price accessDetails={asset.accessDetails} size="small" />
             <NetworkName networkId={asset.chainId} className={styles.network} />
           </footer>
         </a>

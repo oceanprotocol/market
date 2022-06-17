@@ -3,7 +3,6 @@ import styles from './index.module.css'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Logo from '@shared/atoms/Logo'
 import Conversion from '@shared/Price/Conversion'
-import { Prices } from '@context/Prices'
 
 export interface TokenProps {
   symbol: string
@@ -11,9 +10,6 @@ export interface TokenProps {
   conversion?: boolean
   noIcon?: boolean
   size?: 'small' | 'mini'
-  locale: string
-  currency: string
-  prices: Prices
 }
 
 export default function Token({

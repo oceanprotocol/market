@@ -8,7 +8,6 @@ import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
 import styles from './Details.module.css'
 import InputElement from '@shared/FormInput/InputElement'
-import { usePrices } from '@context/Prices'
 
 export default function Details(): ReactElement {
   const {
@@ -21,8 +20,7 @@ export default function Details(): ReactElement {
     networkId,
     balance
   } = useWeb3()
-  const { locale, currency } = useUserPreferences()
-  const { prices } = usePrices()
+  const { locale } = useUserPreferences()
 
   const [mainCurrency, setMainCurrency] = useState<string>()
   const [oceanTokenMetadata, setOceanTokenMetadata] = useState<{
@@ -68,14 +66,7 @@ export default function Details(): ReactElement {
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
             })}
-            {key === 'ocean' && (
-              <Conversion
-                price={value}
-                locale={locale}
-                currency={currency}
-                prices={prices}
-              />
-            )}
+            {key === 'ocean' && <Conversion price={value} />}
           </li>
         ))}
 

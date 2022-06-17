@@ -22,17 +22,11 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  price: '11.12333',
-  locale,
-  currency,
-  prices
+  price: '11.12333'
 }
 
 export const HideApproximateSymbol: Props = Template.bind({})
 HideApproximateSymbol.args = {
   price: '11.12333',
-  locale,
-  currency,
-  prices,
   hideApproximateSymbol: true
 }

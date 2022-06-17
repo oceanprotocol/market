@@ -54,9 +54,6 @@ export default function Compute({
   isConsumable?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { appConfig } = useMarketMetadata()
-  const { locale, currency } = useUserPreferences()
-  const { prices } = usePrices()
   const { accountId } = useWeb3()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -392,14 +389,7 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        <Price
-          accessDetails={accessDetails}
-          conversion
-          size="large"
-          locale={locale}
-          currency={currency}
-          prices={prices}
-        />
+        <Price accessDetails={accessDetails} conversion size="large" />
       </div>
 
       {ddo.metadata.type === 'algorithm' ? (

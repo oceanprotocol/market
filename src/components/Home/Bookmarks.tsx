@@ -11,21 +11,9 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import { usePrices } from '@context/Prices'
 
 export function PriceComponent(row: AssetExtended) {
-  const { locale, currency } = useUserPreferences()
-  const { prices } = usePrices()
-
-  return (
-    <Price
-      accessDetails={row.accessDetails}
-      size="small"
-      locale={locale}
-      currency={currency}
-      prices={prices}
-    />
-  )
+  return <Price accessDetails={row.accessDetails} size="small" />
 }
 
 const columns = [

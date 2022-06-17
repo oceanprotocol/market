@@ -20,8 +20,6 @@ export default function Coin({
   readOnly?: boolean
 }): ReactElement {
   const [field, meta] = useField(`pricing.${name}`)
-  const { locale, currency } = useUserPreferences()
-  const { prices } = usePrices()
 
   return (
     <div className={styles.coin}>
@@ -51,12 +49,7 @@ export default function Coin({
           {...field}
         />
         {datatokenOptions?.symbol === 'OCEAN' && (
-          <Conversion
-            price={field.value}
-            locale={locale}
-            currency={currency}
-            prices={prices}
-          />
+          <Conversion price={field.value} />
         )}
         <div>
           <Error meta={meta} />

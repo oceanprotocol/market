@@ -217,9 +217,6 @@ export default function Download({
             orderPriceAndFees={orderPriceAndFees}
             conversion
             size="large"
-            locale={locale}
-            currency={currency}
-            prices={prices}
           />
           {!isInPurgatory && <PurchaseButton />}
         </div>

@@ -83,9 +83,6 @@ export default function PoolSections() {
           symbol={poolInfo?.baseTokenSymbol}
           balance={poolInfoUser?.liquidity}
           conversion
-          locale={locale}
-          currency={currency}
-          prices={prices}
         />
       </PoolSection>
 
@@ -97,9 +94,6 @@ export default function PoolSections() {
           symbol={poolInfo?.baseTokenSymbol}
           balance={poolInfoOwner?.liquidity}
           conversion
-          locale={locale}
-          currency={currency}
-          prices={prices}
         />
       </PoolSection>
 
@@ -108,9 +102,6 @@ export default function PoolSections() {
           symbol={poolInfo?.baseTokenSymbol}
           balance={poolData?.baseTokenLiquidity.toString()}
           conversion
-          locale={locale}
-          currency={currency}
-          prices={prices}
         />
       </PoolSection>
 
@@ -131,27 +122,18 @@ export default function PoolSections() {
           balance={poolInfo?.liquidityProviderSwapFee}
           noIcon
           size="mini"
-          locale={locale}
-          currency={currency}
-          prices={prices}
         />
         <Token
           symbol="% market fee"
           balance={poolInfo?.publishMarketSwapFee}
           noIcon
           size="mini"
-          locale={locale}
-          currency={currency}
-          prices={prices}
         />
         <Token
           symbol="% OPC fee"
           balance={oceanCommunitySwapFee}
           noIcon
           size="mini"
-          locale={locale}
-          currency={currency}
-          prices={prices}
         />
       </PoolSection>
 
