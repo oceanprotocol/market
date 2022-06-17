@@ -22,7 +22,6 @@ export interface AssetSelectionAsset {
 export interface AssetSelectionProps {
   assets: AssetSelectionAsset[]
   currency: string
-  locale: string
   prices: Prices
   multiple?: boolean
   disabled?: boolean
@@ -36,13 +35,9 @@ export default function AssetSelection({
   assets,
   multiple,
   disabled,
-  currency,
-  locale,
-  prices,
   ...props
 }: AssetSelectionProps): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
-  // const { locale } = useUserPreferences()
 
   const styleClassesInput = cx({
     input: true,
@@ -122,9 +117,6 @@ export default function AssetSelection({
                   type={asset.price === '0' ? 'free' : undefined}
                   size="small"
                   className={styles.price}
-                  locale={locale}
-                  prices={prices}
-                  currency={currency}
                 />
               </div>
             ))

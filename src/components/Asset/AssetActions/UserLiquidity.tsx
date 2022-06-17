@@ -1,8 +1,6 @@
 import React, { ReactElement } from 'react'
 import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './UserLiquidity.module.css'
-import { useUserPreferences } from '@context/UserPreferences'
-import { usePrices } from '@context/Prices'
 
 function UserLiquidityLine({
   title,
@@ -13,20 +11,10 @@ function UserLiquidityLine({
   amount: string
   symbol: string
 }) {
-  const { locale, currency } = useUserPreferences()
-  const { prices } = usePrices()
-
   return (
     <div>
       <span>{title}</span>
-      <PriceUnit
-        price={amount}
-        symbol={symbol}
-        size="small"
-        locale={locale}
-        currency={currency}
-        prices={prices}
-      />
+      <PriceUnit price={amount} symbol={symbol} size="small" />
     </div>
   )
 }

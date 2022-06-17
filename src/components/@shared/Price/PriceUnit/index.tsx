@@ -3,7 +3,7 @@ import { formatCurrency } from '@coingecko/cryptoformat'
 import Conversion from '../Conversion'
 import styles from './index.module.css'
 import Badge from '@shared/atoms/Badge'
-import { Prices } from '@context/Prices'
+import { useUserPreferences } from '@context/UserPreferences'
 
 export function formatPrice(price: string, locale: string): string {
   return formatCurrency(Number(price), '', locale, false, {
@@ -21,9 +21,6 @@ export interface PriceUnitProps {
   size?: 'small' | 'mini' | 'large'
   conversion?: boolean
   symbol?: string
-  locale: string
-  prices: Prices
-  currency: string
 }
 
 export default function PriceUnit({
@@ -32,11 +29,10 @@ export default function PriceUnit({
   size = 'small',
   conversion,
   symbol,
-  type,
-  locale,
-  prices,
-  currency
+  type
 }: PriceUnitProps): ReactElement {
+  const { locale } = useUserPreferences()
+
   return (
     <div className={`${styles.price} ${styles[size]} ${className}`}>
       {type && type === 'free' ? (
@@ -50,14 +46,7 @@ export default function PriceUnit({
               <Badge label="pool" className={styles.badge} />
             )}
           </div>
-          {conversion && (
-            <Conversion
-              price={price}
-              locale={locale}
-              prices={prices}
-              currency={currency}
-            />
-          )}
+          {conversion && <Conversion price={price} />}
         </>
       )}
     </div>

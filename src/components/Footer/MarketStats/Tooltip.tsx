@@ -4,8 +4,6 @@ import PriceUnit from '@shared/Price/PriceUnit'
 import NetworkName from '@shared/NetworkName'
 import styles from './Tooltip.module.css'
 import { StatsValue } from './_types'
-import { useUserPreferences } from '@context/UserPreferences'
-import { usePrices } from '@context/Prices'
 import content from '../../../../content/footer.json'
 import Markdown from '@shared/Markdown'
 
@@ -20,8 +18,6 @@ export default function MarketStatsTooltip({
   totalOceanLiquidity: StatsValue
   mainChainIds: number[]
 }): ReactElement {
-  const { locale, currency } = useUserPreferences()
-  const { prices } = usePrices()
   return (
     <>
       <ul className={styles.statsList}>
@@ -32,9 +28,6 @@ export default function MarketStatsTooltip({
             <Conversion
               price={totalValueLockedInOcean?.[chainId] || '0'}
               hideApproximateSymbol
-              locale={locale}
-              currency={currency}
-              prices={prices}
             />{' '}
             <abbr title="Total Value Locked">TVL</abbr>
             {' | '}
@@ -44,9 +37,6 @@ export default function MarketStatsTooltip({
               price={totalOceanLiquidity?.[chainId] || '0'}
               symbol="OCEAN"
               size="small"
-              locale={locale}
-              currency={currency}
-              prices={prices}
             />
           </li>
         ))}

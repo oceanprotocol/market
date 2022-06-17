@@ -7,8 +7,6 @@ import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './Price.module.css'
 import { FormPublishData } from '../_types'
 import { getFieldContent } from '../_utils'
-import { useUserPreferences } from '@context/UserPreferences'
-import { usePrices } from '@context/Prices'
 
 export default function Price({
   firstPrice,
@@ -18,8 +16,6 @@ export default function Price({
   content?: any
 }): ReactElement {
   const [field, meta] = useField('pricing.price')
-  const { locale, currency } = useUserPreferences()
-  const { prices } = usePrices()
 
   const { values } = useFormikContext<FormPublishData>()
   const { dataTokenOptions } = values.services[0]
@@ -50,13 +46,7 @@ export default function Price({
             <div className={styles.datatoken}>
               <h4>
                 = <strong>1</strong> {dataTokenOptions.symbol}{' '}
-                <Conversion
-                  price={field.value}
-                  className={styles.conversion}
-                  locale={locale}
-                  currency={currency}
-                  prices={prices}
-                />
+                <Conversion price={field.value} className={styles.conversion} />
               </h4>
             </div>
           </div>
@@ -67,9 +57,6 @@ export default function Price({
                 price={Number(firstPrice) > 0 ? firstPrice : '-'}
                 size="small"
                 conversion
-                locale={locale}
-                currency={currency}
-                prices={prices}
               />
             </aside>
           )}

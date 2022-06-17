@@ -26,7 +26,6 @@ export const Default: Props = Template.bind({})
 Default.args = {
   assets: assetSelectionAsset,
   currency: 'OCEAN',
-  locale,
   prices
 }
 
@@ -35,7 +34,6 @@ Multiple.args = {
   assets: assetSelectionAsset,
   multiple: true,
   currency: 'OCEAN',
-  locale,
   prices
 }
 
@@ -44,6 +42,5 @@ Disabled.args = {
   assets: assetSelectionAsset,
   disabled: true,
   currency: 'OCEAN',
-  locale,
   prices
 }

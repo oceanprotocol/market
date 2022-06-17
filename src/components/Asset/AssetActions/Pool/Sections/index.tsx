@@ -39,22 +39,12 @@ export default function PoolSections() {
   return (
     <>
       <PoolSection className={styles.dataToken}>
-        <PriceUnit
-          price="1"
-          symbol={poolInfo?.datatokenSymbol}
-          size="large"
-          locale={locale}
-          currency={currency}
-          prices={prices}
-        />{' '}
+        <PriceUnit price="1" symbol={poolInfo?.datatokenSymbol} size="large" />{' '}
         ={' '}
         <PriceUnit
           price={`${poolData?.spotPrice}`}
           symbol={poolInfo?.baseTokenSymbol}
           size="large"
-          locale={locale}
-          currency={currency}
-          prices={prices}
         />
         <Tooltip content={content.pool.tooltips.price} />
         <div className={styles.dataTokenLinks}>

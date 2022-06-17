@@ -19,10 +19,7 @@ export interface AssetComputeListProps {
 }
 
 export default function AssetComputeSelection({
-  assets,
-  locale,
-  currency,
-  prices
+  assets
 }: AssetComputeListProps): JSX.Element {
   return (
     <div className={styles.display}>
@@ -49,9 +46,6 @@ export default function AssetComputeSelection({
                   price={asset.price}
                   size="small"
                   className={styles.price}
-                  locale={locale}
-                  currency={currency}
-                  prices={prices}
                 />
               </a>
             </Link>

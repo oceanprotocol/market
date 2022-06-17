@@ -21,10 +21,7 @@ export default function Token({
   balance,
   conversion,
   noIcon,
-  size,
-  locale,
-  currency,
-  prices
+  size
 }: TokenProps): ReactElement {
   return (
     <>
@@ -34,23 +31,10 @@ export default function Token({
         >
           <Logo noWordmark />
         </figure>
-        <PriceUnit
-          price={balance}
-          symbol={symbol}
-          size={size}
-          locale={locale}
-          prices={prices}
-          currency={currency}
-        />
+        <PriceUnit price={balance} symbol={symbol} size={size} />
       </div>
       {conversion && (
-        <Conversion
-          price={balance}
-          className={`${styles.conversion}`}
-          locale={locale}
-          prices={prices}
-          currency={currency}
-        />
+        <Conversion price={balance} className={`${styles.conversion}`} />
       )}
     </>
   )
