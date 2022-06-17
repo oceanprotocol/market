@@ -9,7 +9,7 @@ import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import {
   getAccessDetailsForAssets,
@@ -18,6 +18,7 @@ import {
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
+import { getDummyWeb3 } from '@utils/web3'
 
 export default function FormStartCompute({
   algorithms,
@@ -94,14 +95,14 @@ export default function FormStartCompute({
   }
 
   useEffect(() => {
-    if (!values.algorithm || !accountId || !isConsumable) return
+    if (!values.algorithm || !isConsumable) return
     async function fetchAlgorithmAssetExtended() {
       const algorithmAsset = getAlgorithmAsset(values.algorithm)
       const accessDetails = await getAccessDetails(
         algorithmAsset.chainId,
         algorithmAsset.services[0].datatokenAddress,
         algorithmAsset.services[0].timeout,
-        accountId
+        accountId || ZERO_ADDRESS // if user is not connected, use ZERO_ADDRESS as accountId
       )
       const extendedAlgoAsset: AssetExtended = {
         ...algorithmAsset,
@@ -121,6 +122,7 @@ export default function FormStartCompute({
     setDatasetOrderPrice(
       datasetOrderPriceAndFees?.price || asset.accessDetails.price
     )
+
     setAlgoOrderPrice(
       algoOrderPriceAndFees?.price ||
         selectedAlgorithmAsset?.accessDetails.price
@@ -142,16 +144,17 @@ export default function FormStartCompute({
       .plus(priceAlgo)
       .toDecimalPlaces(MAX_DECIMALS)
       .toString()
+
     setTotalPrice(totalPrice)
   }, [
-    asset?.accessDetails,
-    selectedAlgorithmAsset?.accessDetails,
+    asset,
     hasPreviousOrder,
     hasDatatoken,
     hasPreviousOrderSelectedComputeAsset,
     hasDatatokenSelectedComputeAsset,
     datasetOrderPriceAndFees,
-    algoOrderPriceAndFees
+    algoOrderPriceAndFees,
+    selectedAlgorithmAsset
   ])
 
   useEffect(() => {

@@ -16,9 +16,8 @@ export async function transformAssetToAssetSelection(
 
   for (const asset of extendedAssets) {
     const algoComputeService = getServiceByName(asset, 'compute')
-
     if (
-      asset?.accessDetails.price &&
+      asset?.accessDetails?.price &&
       algoComputeService?.serviceEndpoint === datasetProviderEndpoint
     ) {
       let selected = false

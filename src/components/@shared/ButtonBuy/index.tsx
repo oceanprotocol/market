@@ -2,6 +2,7 @@ import React, { FormEvent, ReactElement } from 'react'
 import Button from '../atoms/Button'
 import styles from './index.module.css'
 import Loader from '../atoms/Loader'
+import { useWeb3 } from '@context/Web3'
 
 interface ButtonBuyProps {
   action: 'download' | 'compute'
@@ -43,12 +44,13 @@ function getConsumeHelpText(
   isConsumable: boolean,
   isBalanceSufficient: boolean,
   consumableFeedback: string,
-  isSupportedOceanNetwork: boolean
+  isSupportedOceanNetwork: boolean,
+  web3: any
 ) {
   const text =
     isConsumable === false
       ? consumableFeedback
-      : hasPreviousOrder
+      : hasPreviousOrder && web3
       ? `You bought this ${assetType} already allowing you to use it without paying again.`
       : hasDatatoken
       ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
@@ -106,7 +108,8 @@ function getComputeAssetHelpText(
   selectedComputeAssettLowPoolLiquidity?: boolean,
   selectedComputeAssetType?: string,
   isAlgorithmConsumable?: boolean,
-  isSupportedOceanNetwork?: boolean
+  isSupportedOceanNetwork?: boolean,
+  web3?: any
 ) {
   const computeAssetHelpText = getConsumeHelpText(
     dtBalance,
@@ -118,7 +121,8 @@ function getComputeAssetHelpText(
     isConsumable,
     isBalanceSufficient,
     consumableFeedback,
-    isSupportedOceanNetwork
+    isSupportedOceanNetwork,
+    web3
   )
 
   const computeAlgoHelpText = getAlgoHelpText(
@@ -170,6 +174,7 @@ export default function ButtonBuy({
   isAlgorithmConsumable,
   isSupportedOceanNetwork
 }: ButtonBuyProps): ReactElement {
+  const { web3 } = useWeb3()
   const buttonText =
     action === 'download'
       ? hasPreviousOrder
@@ -210,7 +215,8 @@ export default function ButtonBuy({
                   isConsumable,
                   isBalanceSufficient,
                   consumableFeedback,
-                  isSupportedOceanNetwork
+                  isSupportedOceanNetwork,
+                  web3
                 )
               : getComputeAssetHelpText(
                   hasPreviousOrder,
@@ -229,7 +235,8 @@ export default function ButtonBuy({
                   selectedComputeAssetLowPoolLiquidity,
                   selectedComputeAssetType,
                   isAlgorithmConsumable,
-                  isSupportedOceanNetwork
+                  isSupportedOceanNetwork,
+                  web3
                 )}
           </div>
         </>

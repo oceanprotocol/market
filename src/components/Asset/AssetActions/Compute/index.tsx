@@ -65,6 +65,7 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
+
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
   const newAbortController = useAbortController()
@@ -116,7 +117,7 @@ export default function Compute({
     const datatokenInstance = new Datatoken(web3)
     const dtBalance = await datatokenInstance.balance(
       asset?.services[0].datatokenAddress,
-      accountId
+      accountId || ZERO_ADDRESS // if the user is not connected, we use ZERO_ADDRESS as accountId
     )
     setAlgorithmDTBalance(new Decimal(dtBalance).toString())
     const hasAlgoDt = Number(dtBalance) >= 1
@@ -134,7 +135,7 @@ export default function Compute({
     const initializedProvider = await initializeProviderForCompute(
       asset,
       selectedAlgorithmAsset,
-      accountId,
+      accountId || ZERO_ADDRESS, // if the user is not connected, we use ZERO_ADDRESS as accountId
       computeEnv
     )
     if (
@@ -176,12 +177,13 @@ export default function Compute({
             }
           : null
       const datasetPriceAndFees = await getOrderPriceAndFees(
-        web3,
+        web3 || (await getDummyWeb3(asset?.chainId)), // if the user is not connected, we need to use a dummy web3
         asset,
-        ZERO_ADDRESS,
+        accountId || ZERO_ADDRESS, // if the user is not connected, we need to use ZERO_ADDRESS as accountId
         poolParams,
         initializedProvider?.datasets?.[0]?.providerFee
       )
+
       if (!datasetPriceAndFees) {
         setError('Error setting dataset price and fees!')
         return
@@ -224,12 +226,13 @@ export default function Compute({
         }
       }
       const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
-        web3,
+        web3 || (await getDummyWeb3(asset?.chainId)),
         selectedAlgorithmAsset,
-        ZERO_ADDRESS,
+        accountId || ZERO_ADDRESS,
         algoPoolParams,
         initializedProvider.algorithm.providerFee
       )
+
       if (!algorithmOrderPriceAndFees) {
         setError('Error setting algorithm price and fees!')
         return
@@ -247,7 +250,7 @@ export default function Compute({
   }, [asset?.accessDetails])
 
   useEffect(() => {
-    if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
+    if (!selectedAlgorithmAsset?.accessDetails) return
 
     setIsRequestingAlgoOrderPrice(true)
     setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
