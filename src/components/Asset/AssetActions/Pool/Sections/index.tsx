@@ -10,20 +10,14 @@ import Token from '../../../../@shared/Token'
 import content from '../../../../../../content/price.json'
 import styles from './index.module.css'
 import Update from './Update'
-import { useMarketMetadata } from '@context/MarketMetadata'
 import { OpcFeesQuery_opc as OpcFeesData } from '../../../../../@types/subgraph/OpcFeesQuery'
 import { getOpcFees } from '@utils/subgraph'
 import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
-import { useUserPreferences } from '@context/UserPreferences'
-import { usePrices } from '@context/Prices'
 
 export default function PoolSections() {
   const { asset } = useAsset()
-  const { locale, currency } = useUserPreferences()
-  const { prices } = usePrices()
   const { poolData, poolInfo, poolInfoUser, poolInfoOwner } = usePool()
-  const { getOpcFeeForToken } = useMarketMetadata()
   const { chainId } = useWeb3()
   const [oceanCommunitySwapFee, setOceanCommunitySwapFee] = useState<string>('')
   useEffect(() => {

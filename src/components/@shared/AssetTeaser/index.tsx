@@ -9,22 +9,15 @@ import NetworkName from '@shared/NetworkName'
 import styles from './index.module.css'
 import { getServiceByName } from '@utils/ddo'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import { Prices } from '@context/Prices'
 
 export interface AssetTeaserProps {
   asset: AssetExtended
   noPublisher?: boolean
-  locale: string
-  prices: Prices
-  currency: string
 }
 
 export default function AssetTeaser({
   asset,
-  noPublisher,
-  locale,
-  prices,
-  currency
+  noPublisher
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = asset.metadata
   const { datatokens } = asset

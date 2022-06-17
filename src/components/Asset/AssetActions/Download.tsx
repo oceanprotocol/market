@@ -19,8 +19,6 @@ import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { usePool } from '@context/Pool'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import { useUserPreferences } from '@context/UserPreferences'
-import { usePrices } from '@context/Prices'
 
 export default function Download({
   asset,
@@ -38,8 +36,6 @@ export default function Download({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
-  const { locale, currency } = useUserPreferences()
-  const { prices } = usePrices()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const { poolData } = usePool()

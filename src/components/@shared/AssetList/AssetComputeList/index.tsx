@@ -5,7 +5,6 @@ import PriceUnit from '@shared/Price/PriceUnit'
 import Loader from '@shared/atoms/Loader'
 import styles from './index.module.css'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
-import { Prices } from '@context/Prices'
 
 function Empty() {
   return <div className={styles.empty}>No assets found.</div>
@@ -13,9 +12,6 @@ function Empty() {
 
 export interface AssetComputeListProps {
   assets: AssetSelectionAsset[]
-  locale: string
-  currency: string
-  prices: Prices
 }
 
 export default function AssetComputeSelection({

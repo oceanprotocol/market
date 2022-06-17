@@ -8,7 +8,6 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import Filters from '../../Search/Filters'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import { CancelToken } from 'axios'
-import { usePrices } from '@context/Prices'
 
 export default function PublishedList({
   accountId
@@ -16,8 +15,7 @@ export default function PublishedList({
   accountId: string
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { chainIds, locale, currency } = useUserPreferences()
-  const { prices } = usePrices()
+  const { chainIds } = useUserPreferences()
 
   const [queryResult, setQueryResult] = useState<PagedAssets>()
   const [isLoading, setIsLoading] = useState(false)
@@ -98,9 +96,6 @@ export default function PublishedList({
         noPublisher
         chainIds={chainIds}
         accountId={accountId}
-        locale={locale}
-        currency={currency}
-        prices={prices}
       />
     </>
   ) : (

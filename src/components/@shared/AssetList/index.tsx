@@ -32,9 +32,6 @@ export interface AssetListProps {
   noPublisher?: boolean
   chainIds: number[]
   accountId: string
-  locale: string
-  currency: string
-  prices: Prices
 }
 
 export default function AssetList({
@@ -47,10 +44,7 @@ export default function AssetList({
   className,
   noPublisher,
   chainIds,
-  accountId,
-  locale,
-  currency,
-  prices
+  accountId
 }: AssetListProps): ReactElement {
   const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
   const [loading, setLoading] = useState<boolean>(isLoading)
@@ -94,9 +88,6 @@ export default function AssetList({
               asset={assetWithPrice}
               key={`${assetWithPrice.id}_${i}`}
               noPublisher={noPublisher}
-              locale={locale}
-              currency={currency}
-              prices={prices}
             />
           ))
         ) : (

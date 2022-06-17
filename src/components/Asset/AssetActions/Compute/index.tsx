@@ -33,9 +33,6 @@ import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { AccessDetails } from 'src/@types/Price'
 import { transformAssetToAssetSelection } from '@utils/assetConvertor'
-import { useMarketMetadata } from '@context/MarketMetadata'
-import { useUserPreferences } from '@context/UserPreferences'
-import { usePrices } from '@context/Prices'
 
 export default function Compute({
   ddo,
