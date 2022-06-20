@@ -5,7 +5,7 @@ import { useUserPreferences } from '@context/UserPreferences'
 import Tooltip from '@shared/atoms/Tooltip'
 import content from '../../../../content/price.json'
 
-export function ButtonApprove({
+export function TokenApprove({
   amount,
   tokenSymbol,
   approveTokens,

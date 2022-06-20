@@ -1,11 +1,6 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Conversion, { ConversionProps } from '@shared/Price/Conversion'
-import {
-  locale,
-  currency,
-  prices
-} from '../../../../../.storybook/__mockdata__'
 
 export default {
   title: 'Component/@shared/Price/Conversion',

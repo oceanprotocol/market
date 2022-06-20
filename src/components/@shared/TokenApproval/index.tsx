@@ -2,8 +2,18 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
-import { ButtonApprove } from './ButtonApprove'
+import { TokenApprove } from './TokenApprove'
 import { allowance, approve, LoggerInstance } from '@oceanprotocol/lib'
+
+export interface TokenApprovalProps {
+  actionButton: JSX.Element
+  disabled: boolean
+  amount: string
+  tokenAddress: string
+  tokenSymbol: string
+  setSubmitting?: (isSubmitting: boolean) => void
+  setIsTokenApproved: (isApproved: boolean) => void
+}
 
 export default function TokenApproval({
   actionButton,
@@ -13,19 +23,11 @@ export default function TokenApproval({
   tokenSymbol,
   setSubmitting,
   setIsTokenApproved
-}: {
-  actionButton: JSX.Element
-  disabled: boolean
-  amount: string
-  tokenAddress: string
-  tokenSymbol: string
-  setSubmitting?: (isSubmitting: boolean) => void
-  setIsTokenApproved: (isApproved: boolean) => void
-}): ReactElement {
+}: TokenApprovalProps): ReactElement {
   const { asset, isAssetNetwork } = useAsset()
+  const { web3, accountId } = useWeb3()
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { web3, accountId } = useWeb3()
 
   const spender = asset?.accessDetails?.addressOrId
 
@@ -84,7 +86,7 @@ export default function TokenApproval({
       typeof amount === 'undefined' ? (
         actionButton
       ) : (
-        <ButtonApprove
+        <TokenApprove
           amount={amount}
           tokenSymbol={tokenSymbol}
           approveTokens={approveTokens}
