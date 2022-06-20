@@ -4,7 +4,9 @@ import { ReactElement } from 'react'
 import { PriceOptions } from 'src/@types/Price'
 
 interface FileInfo {
-  url: string
+  type: 'url' | 'arweave' | string
+  url?: string
+  transactionId?: string
   valid?: boolean
   contentLength?: string
   contentType?: string

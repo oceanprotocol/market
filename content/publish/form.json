@@ -145,6 +145,16 @@
         "disclaimerValues": ["Download"]
       },
       {
+        "name": "fileType",
+        "label": "File Type",
+        "help": "Specify how the underlying files must be accessed.",
+        "type": "boxSelection",
+        "options": ["URL", "Arweave"],
+        "required": true,
+        "disclaimer": "TODO",
+        "disclaimerValues": ["TODO"]
+      },
+      {
         "name": "timeout",
         "label": "Timeout",
         "help": "Define how long buyers should be able to download the data set again after the initial purchase.",

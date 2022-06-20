@@ -15,6 +15,11 @@ const accessTypeOptionsTitles = getFieldContent(
   content.services.fields
 ).options
 
+const fileTypeOptionsTitles = getFieldContent(
+  'fileType',
+  content.services.fields
+).options
+
 export default function ServicesFields(): ReactElement {
   const { siteContent } = useMarketMetadata()
 
@@ -40,6 +45,29 @@ export default function ServicesFields(): ReactElement {
       icon: <IconCompute />,
       checked:
         values.services[0].access === accessTypeOptionsTitles[1].toLowerCase()
+    }
+  ]
+
+  const fileTypeOptions = [
+    {
+      name: fileTypeOptionsTitles[0].toLowerCase(),
+      value: fileTypeOptionsTitles[0].toLowerCase(),
+      title: fileTypeOptionsTitles[0],
+      icon: <IconDownload />,
+      // BoxSelection component is not a Formik component
+      // so we need to handle checked state manually.
+      checked:
+        values.services[0].files[0].type ===
+        fileTypeOptionsTitles[0].toLowerCase()
+    },
+    {
+      name: fileTypeOptionsTitles[1].toLowerCase(),
+      value: fileTypeOptionsTitles[1].toLowerCase(),
+      title: fileTypeOptionsTitles[1],
+      icon: <IconCompute />,
+      checked:
+        values.services[0].files[0].type ===
+        fileTypeOptionsTitles[1].toLowerCase()
     }
   ]
 
@@ -94,15 +122,24 @@ export default function ServicesFields(): ReactElement {
         name="services[0].providerUrl"
       />
       <Field
-        {...getFieldContent('files', content.services.fields)}
+        {...getFieldContent('fileType', content.services.fields)}
         component={Input}
-        name="services[0].files"
+        name="services[0].files[0].type"
+        options={fileTypeOptions}
       />
-      <Field
-        {...getFieldContent('transactionId', content.services.fields)}
-        component={Input}
-        name="services[0].files"
-      />
+      {values.services[0].files[0].type === 'url' ? (
+        <Field
+          {...getFieldContent('files', content.services.fields)}
+          component={Input}
+          name="services[0].files"
+        />
+      ) : (
+        <Field
+          {...getFieldContent('transactionId', content.services.fields)}
+          component={Input}
+          name="services[0].files"
+        />
+      )}
       <Field
         {...getFieldContent('links', content.services.fields)}
         component={Input}
