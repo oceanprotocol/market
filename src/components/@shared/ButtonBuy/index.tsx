@@ -29,6 +29,7 @@ interface ButtonBuyProps {
   priceType?: string
   algorithmPriceType?: string
   isAlgorithmConsumable?: boolean
+  hasProviderFee?: boolean
 }
 
 // TODO: we need to take a look at these messages
@@ -75,7 +76,8 @@ function getComputeAssetHelpText(
   dtBalanceSelectedComputeAsset?: string,
   selectedComputeAssettLowPoolLiquidity?: boolean,
   selectedComputeAssetType?: string,
-  isAlgorithmConsumable?: boolean
+  isAlgorithmConsumable?: boolean,
+  hasProviderFee?: boolean
 ) {
   const computeAssetHelpText = getConsumeHelpText(
     dtBalance,
@@ -102,11 +104,14 @@ function getComputeAssetHelpText(
       : isBalanceSufficient === false
       ? ''
       : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
+  const providerFeeHelpText = hasProviderFee
+    ? 'In order to start the job you also need to pay the fees for renting the c2d resources.'
+    : 'C2D resources required to start the job are available, no payment required for those fees.'
   const computeHelpText = selectedComputeAssettLowPoolLiquidity
     ? computeAlgoHelpText
     : lowPoolLiquidity
     ? computeAssetHelpText
-    : `${computeAssetHelpText} ${computeAlgoHelpText}`
+    : `${computeAssetHelpText} ${computeAlgoHelpText} ${providerFeeHelpText}`
   return computeHelpText
 }
 
@@ -135,7 +140,8 @@ export default function ButtonBuy({
   type,
   priceType,
   algorithmPriceType,
-  isAlgorithmConsumable
+  isAlgorithmConsumable,
+  hasProviderFee
 }: ButtonBuyProps): ReactElement {
   const buttonText =
     action === 'download'
@@ -144,7 +150,9 @@ export default function ButtonBuy({
         : priceType === 'free'
         ? 'Get'
         : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
-      : hasPreviousOrder && hasPreviousOrderSelectedComputeAsset
+      : hasPreviousOrder &&
+        hasPreviousOrderSelectedComputeAsset &&
+        !hasProviderFee
       ? 'Start Compute Job'
       : priceType === 'free' && algorithmPriceType === 'free'
       ? 'Order Compute Job'
@@ -194,7 +202,8 @@ export default function ButtonBuy({
                   dtBalanceSelectedComputeAsset,
                   selectedComputeAssetLowPoolLiquidity,
                   selectedComputeAssetType,
-                  isAlgorithmConsumable
+                  isAlgorithmConsumable,
+                  hasProviderFee
                 )}
           </div>
         </>

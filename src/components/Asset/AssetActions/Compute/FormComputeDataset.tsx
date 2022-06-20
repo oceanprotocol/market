@@ -241,6 +241,7 @@ export default function FormStartCompute({
         isAlgorithmConsumable={
           selectedAlgorithmAsset?.accessDetails?.isPurchasable
         }
+        hasProviderFee={providerFeeAmount && providerFeeAmount !== '0'}
       />
     </Form>
   )
