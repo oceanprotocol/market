@@ -34,7 +34,7 @@ export default function App({
         <AnnouncementBanner
           text={siteContent?.announcement}
           action={{
-            name: 'Explore OceanONDA V4',
+            name: 'Explore OceanONDA V4.',
             style: 'link',
             handleAction: openInNewTab
           }}

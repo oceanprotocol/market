@@ -24,10 +24,6 @@
   display: inline-block;
 }
 
-.banner button {
-  font-size: calc(var(--font-size-small) / 1.1);
-}
-
 .text {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
@@ -45,6 +41,7 @@
   color: inherit;
   text-decoration: underline;
   text-transform: inherit;
+  font-size: var(--font-size-small);
 }
 
 .text p:last-child {
