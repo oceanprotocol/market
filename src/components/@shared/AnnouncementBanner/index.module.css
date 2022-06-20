@@ -43,8 +43,8 @@
 
 .link {
   color: inherit;
-  text-decoration: underline !important;
-  font-size: large !important;
+  text-decoration: underline;
+  text-transform: inherit;
 }
 
 .text p:last-child {
