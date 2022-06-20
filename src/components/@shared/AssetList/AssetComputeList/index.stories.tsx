@@ -24,8 +24,5 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  assets: assetSelectionAsset,
-  locale,
-  currency: 'OCEAN',
-  prices
+  assets: assetSelectionAsset
 }

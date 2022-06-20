@@ -24,23 +24,17 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  assets: assetSelectionAsset,
-  currency: 'OCEAN',
-  prices
+  assets: assetSelectionAsset
 }
 
 export const Multiple: Props = Template.bind({})
 Multiple.args = {
   assets: assetSelectionAsset,
-  multiple: true,
-  currency: 'OCEAN',
-  prices
+  multiple: true
 }
 
 export const Disabled: Props = Template.bind({})
 Disabled.args = {
   assets: assetSelectionAsset,
-  disabled: true,
-  currency: 'OCEAN',
-  prices
+  disabled: true
 }

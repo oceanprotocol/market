@@ -29,11 +29,8 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  locale,
   assets,
   showPagination: false,
   chainIds: config.chainIds,
-  accountId: mockWallet,
-  currency: 'OCEAN',
-  prices
+  accountId: mockWallet
 }

@@ -7,7 +7,6 @@ import External from '@images/external.svg'
 import InputElement from '@shared/FormInput/InputElement'
 import Loader from '@shared/atoms/Loader'
 import styles from './index.module.css'
-import { Prices } from '@context/Prices'
 
 const cx = classNames.bind(styles)
 
@@ -21,8 +20,6 @@ export interface AssetSelectionAsset {
 
 export interface AssetSelectionProps {
   assets: AssetSelectionAsset[]
-  currency: string
-  prices: Prices
   multiple?: boolean
   disabled?: boolean
 }

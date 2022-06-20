@@ -1,11 +1,8 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import PriceUnit, { PriceUnitProps } from '@shared/Price/PriceUnit'
-import {
-  locale,
-  currency,
-  prices
-} from '../../../../../.storybook/__mockdata__'
+import MarketMetadataProvider from '@context/MarketMetadata'
+import PricesProvider from '@context/Prices'
 
 export default {
   title: 'Component/@shared/Price/PriceUnit',
@@ -13,7 +10,13 @@ export default {
 } as ComponentMeta<typeof PriceUnit>
 
 const Template: ComponentStory<typeof PriceUnit> = (args: PriceUnitProps) => {
-  return <PriceUnit {...args} />
+  return (
+    <MarketMetadataProvider>
+      <PricesProvider>
+        <PriceUnit {...args} />
+      </PricesProvider>
+    </MarketMetadataProvider>
+  )
 }
 
 interface Props {
@@ -22,8 +25,5 @@ interface Props {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  price: '11.12333',
-  locale,
-  currency,
-  prices
+  price: '11.12333'
 }
