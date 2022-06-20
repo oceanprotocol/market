@@ -2,16 +2,23 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Price, { PriceProps } from '@shared/Price'
 import { AccessDetails } from 'src/@types/Price'
-import { locale, currency, prices } from '../../../../.storybook/__mockdata__'
+import { UserPreferencesProvider } from '@context/UserPreferences'
+import MarketMetadataProvider from '@context/MarketMetadata'
 
 export default {
   title: 'Component/@shared/Price',
   component: Price
 } as ComponentMeta<typeof Price>
 
-const Template: ComponentStory<typeof Price> = (args: PriceProps) => (
-  <Price {...args} />
-)
+const Template: ComponentStory<typeof Price> = (args: PriceProps) => {
+  return (
+    <MarketMetadataProvider>
+      <UserPreferencesProvider>
+        <Price {...args} />
+      </UserPreferencesProvider>
+    </MarketMetadataProvider>
+  )
+}
 
 interface Props {
   args: PriceProps

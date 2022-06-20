@@ -3,6 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import PriceUnit, { PriceUnitProps } from '@shared/Price/PriceUnit'
 import MarketMetadataProvider from '@context/MarketMetadata'
 import PricesProvider from '@context/Prices'
+import { UserPreferencesProvider } from '@context/UserPreferences'
 
 export default {
   title: 'Component/@shared/Price/PriceUnit',
@@ -12,9 +13,9 @@ export default {
 const Template: ComponentStory<typeof PriceUnit> = (args: PriceUnitProps) => {
   return (
     <MarketMetadataProvider>
-      <PricesProvider>
+      <UserPreferencesProvider>
         <PriceUnit {...args} />
-      </PricesProvider>
+      </UserPreferencesProvider>
     </MarketMetadataProvider>
   )
 }
