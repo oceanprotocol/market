@@ -41,6 +41,12 @@
   text-decoration: underline;
 }
 
+.link {
+  color: inherit;
+  text-decoration: underline !important;
+  font-size: large !important;
+}
+
 .text p:last-child {
   margin-bottom: 0;
 }
