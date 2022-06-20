@@ -99,6 +99,11 @@ export default function ServicesFields(): ReactElement {
         name="services[0].files"
       />
       <Field
+        {...getFieldContent('transactionId', content.services.fields)}
+        component={Input}
+        name="services[0].files"
+      />
+      <Field
         {...getFieldContent('links', content.services.fields)}
         component={Input}
         name="services[0].links"

@@ -110,6 +110,15 @@
         "required": true
       },
       {
+        "name": "transactionId",
+        "label": "Transaction ID",
+        "placeholder": "e.g. a4qJoQZa1poIv5guEzkfgZYSAD0uYm7Vw4zm_tCswVQ",
+        "help": "This transaction ID will be stored encrypted after publishing. For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+        "prominentHelp": true,
+        "type": "files",
+        "required": true
+      },
+      {
         "name": "links",
         "label": "Sample file",
         "placeholder": "e.g. https://file.com/samplefile.json",
