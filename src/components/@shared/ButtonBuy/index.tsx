@@ -31,6 +31,7 @@ interface ButtonBuyProps {
   algorithmPriceType?: string
   isAlgorithmConsumable?: boolean
   isSupportedOceanNetwork?: boolean
+  hasProviderFee?: boolean
 }
 
 // TODO: we need to take a look at these messages
@@ -109,7 +110,8 @@ function getComputeAssetHelpText(
   selectedComputeAssetType?: string,
   isAlgorithmConsumable?: boolean,
   isSupportedOceanNetwork?: boolean,
-  web3?: any
+  web3?: any,
+  hasProviderFee?: boolean
 ) {
   const computeAssetHelpText = getConsumeHelpText(
     dtBalance,
@@ -138,11 +140,15 @@ function getComputeAssetHelpText(
     isSupportedOceanNetwork
   )
 
+  const providerFeeHelpText = hasProviderFee
+    ? 'In order to start the job you also need to pay the fees for renting the c2d resources.'
+    : 'C2D resources required to start the job are available, no payment required for those fees.'
+
   const computeHelpText = selectedComputeAssettLowPoolLiquidity
     ? computeAlgoHelpText
     : lowPoolLiquidity
     ? computeAssetHelpText
-    : `${computeAssetHelpText} ${computeAlgoHelpText}`
+    : `${computeAssetHelpText} ${computeAlgoHelpText} ${providerFeeHelpText}`
   return computeHelpText
 }
 
@@ -172,7 +178,8 @@ export default function ButtonBuy({
   priceType,
   algorithmPriceType,
   isAlgorithmConsumable,
-  isSupportedOceanNetwork
+  isSupportedOceanNetwork,
+  hasProviderFee
 }: ButtonBuyProps): ReactElement {
   const { web3 } = useWeb3()
   const buttonText =
@@ -182,7 +189,9 @@ export default function ButtonBuy({
         : priceType === 'free'
         ? 'Get'
         : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
-      : hasPreviousOrder && hasPreviousOrderSelectedComputeAsset
+      : hasPreviousOrder &&
+        hasPreviousOrderSelectedComputeAsset &&
+        !hasProviderFee
       ? 'Start Compute Job'
       : priceType === 'free' && algorithmPriceType === 'free'
       ? 'Order Compute Job'
@@ -199,7 +208,7 @@ export default function ButtonBuy({
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className="center"
+            className={action === 'compute' ? styles.actionsCenter : ''}
           >
             {buttonText}
           </Button>
@@ -236,7 +245,8 @@ export default function ButtonBuy({
                   selectedComputeAssetType,
                   isAlgorithmConsumable,
                   isSupportedOceanNetwork,
-                  web3
+                  web3,
+                  hasProviderFee
                 )}
           </div>
         </>

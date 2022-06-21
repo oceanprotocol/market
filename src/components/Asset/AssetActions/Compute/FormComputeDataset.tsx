@@ -18,6 +18,8 @@ import {
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
+import { useMarketMetadata } from '@context/MarketMetadata'
+import Alert from '@shared/atoms/Alert'
 import { getDummyWeb3 } from '@utils/web3'
 
 export default function FormStartCompute({
@@ -45,7 +47,9 @@ export default function FormStartCompute({
   isConsumable,
   consumableFeedback,
   datasetOrderPriceAndFees,
-  algoOrderPriceAndFees
+  algoOrderPriceAndFees,
+  providerFeeAmount,
+  validUntil
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: Asset[]
@@ -72,7 +76,10 @@ export default function FormStartCompute({
   consumableFeedback: string
   datasetOrderPriceAndFees?: OrderPriceAndFees
   algoOrderPriceAndFees?: OrderPriceAndFees
+  providerFeeAmount?: string
+  validUntil?: string
 }): ReactElement {
+  const { siteContent } = useMarketMetadata()
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
@@ -140,8 +147,12 @@ export default function FormStartCompute({
             algoOrderPriceAndFees?.price ||
               selectedAlgorithmAsset.accessDetails.price
           ).toDecimalPlaces(MAX_DECIMALS)
+    const providerFees = providerFeeAmount
+      ? new Decimal(providerFeeAmount).toDecimalPlaces(MAX_DECIMALS)
+      : new Decimal(0)
     const totalPrice = priceDataset
       .plus(priceAlgo)
+      .plus(providerFees)
       .toDecimalPlaces(MAX_DECIMALS)
       .toString()
 
@@ -166,6 +177,11 @@ export default function FormStartCompute({
 
   return (
     <Form className={styles.form}>
+      <Alert
+        className={styles.warning}
+        state="info"
+        text={siteContent.warning.ctd}
+      />
       {content.form.data.map((field: FormFieldContent) => (
         <Field
           key={field.name}
@@ -190,6 +206,8 @@ export default function FormStartCompute({
         totalPrice={totalPrice}
         datasetOrderPrice={datasetOrderPrice}
         algoOrderPrice={algoOrderPrice}
+        providerFeeAmount={providerFeeAmount}
+        validUntil={validUntil}
       />
 
       <ButtonBuy
@@ -230,6 +248,7 @@ export default function FormStartCompute({
           selectedAlgorithmAsset?.accessDetails?.isPurchasable
         }
         isSupportedOceanNetwork={isSupportedOceanNetwork}
+        hasProviderFee={providerFeeAmount && providerFeeAmount !== '0'}
       />
     </Form>
   )

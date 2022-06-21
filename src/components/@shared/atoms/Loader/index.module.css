@@ -23,6 +23,11 @@
   margin-left: calc(var(--spacer) / 4);
 }
 
+.loader.white {
+  border-color: rgba(255 255 255 / 0.3);
+  border-top-color: var(--brand-white);
+}
+
 @keyframes loader {
   to {
     transform: rotate(360deg);

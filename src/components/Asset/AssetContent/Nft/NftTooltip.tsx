@@ -7,6 +7,11 @@ import styles from './NftTooltip.module.css'
 import explorerLinkStyles from '@shared/ExplorerLink/index.module.css'
 import { accountTruncate } from '@utils/web3'
 
+// Supported OpenSea networks:
+// https://support.opensea.io/hc/en-us/articles/4404027708051-Which-blockchains-does-OpenSea-support-
+const openSeaNetworks = [1, 137]
+const openSeaTestNetworks = [4]
+
 export default function NftTooltip({
   nft,
   address,
@@ -18,26 +23,23 @@ export default function NftTooltip({
   chainId: number
   isBlockscoutExplorer: boolean
 }): ReactElement {
-  // Currently Ocean NFTs are not displayed correctly on OpenSea
-  // Code prepared to easily integrate this feature once this is fixed
-  //
-  // Supported OpeanSea networks:
-  // https://support.opensea.io/hc/en-us/articles/4404027708051-Which-blockchains-does-OpenSea-support-
-  const openseaNetworks = [1, 137]
-  const openseaTestNetworks = [4]
-  const openSeaSupported = openseaNetworks
-    .concat(openseaTestNetworks)
+  const openSeaSupported = openSeaNetworks
+    .concat(openSeaTestNetworks)
     .includes(chainId)
 
   const openSeaBaseUri = openSeaSupported
-    ? openseaTestNetworks.includes(chainId)
+    ? openSeaTestNetworks.includes(chainId)
       ? 'https://testnets.opensea.io'
       : 'https://opensea.io'
     : undefined
 
+  const openSeaUrl = `${openSeaBaseUri}/assets/${
+    chainId === 137 ? 'matic' : ''
+  }/${address}/1`
+
   return (
     <div className={styles.wrapper}>
-      {nft && <img src={nft.image_data} alt={nft?.name} />}
+      {nft && <img src={nft.image_data || nft.image} alt={nft?.name} />}
       <div className={styles.info}>
         {nft && <h5>{nft.name}</h5>}
         {address && (
@@ -53,25 +55,23 @@ export default function NftTooltip({
                 isBlockscoutExplorer ? `tokens/${address}` : `token/${address}`
               }
             >
-              View on explorer
+              View on Explorer
             </ExplorerLink>
           )}
 
-          {openSeaSupported && nft && address && (
+          {openSeaSupported && address && (
             <a
-              href={`${openSeaBaseUri}/assets/${address}/1`}
+              href={openSeaUrl}
               target="_blank"
               rel="noreferrer"
               className={explorerLinkStyles.link}
             >
-              View on OpeanSea <External />
+              View on OpenSea <External />
             </a>
           )}
         </div>
-        {!nft?.image_data && (
-          <p className={styles.fallback}>
-            This Data NFT was not created on Ocean Market
-          </p>
+        {!nft?.image_data && !nft?.image && (
+          <p className={styles.fallback}>This Data NFT has no image set.</p>
         )}
       </div>
     </div>

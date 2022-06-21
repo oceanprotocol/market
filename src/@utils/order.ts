@@ -1,13 +1,13 @@
 import {
   approve,
+  approveWei,
   Datatoken,
   FreOrderParams,
   LoggerInstance,
   OrderParams,
   ProviderComputeInitialize,
   ProviderFees,
-  ProviderInstance,
-  unitsToAmount
+  ProviderInstance
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
@@ -53,17 +53,10 @@ export async function order(
       asset.services[0].serviceEndpoint
     ))
 
-  const providerFeesSanitized = providerFees || initializeData.providerFee
-  providerFeesSanitized.providerFeeAmount = await unitsToAmount(
-    web3,
-    providerFeesSanitized.providerFeeToken,
-    providerFeesSanitized.providerFeeAmount.toString()
-  )
-
   const orderParams = {
     consumer: computeConsumerAddress || accountId,
     serviceIndex: 0,
-    _providerFee: providerFeesSanitized,
+    _providerFee: providerFees || initializeData.providerFee,
     _consumeMarketFee: {
       consumeMarketFeeAddress: marketFeeAddress,
       consumeMarketFeeAmount: consumeMarketOrderFee,
@@ -71,7 +64,6 @@ export async function order(
     }
   } as OrderParams
 
-  // TODO: we need to approve provider fee
   switch (asset.accessDetails?.type) {
     case 'fixed': {
       // this assumes all fees are in ocean
@@ -94,8 +86,6 @@ export async function order(
         swapMarketFee: consumeMarketFixedSwapFee,
         marketFeeAddress
       } as FreOrderParams
-      console.log('freParams', freParams)
-      console.log('orderParams', orderParams)
       const tx = await datatoken.buyFromFreAndOrder(
         asset.accessDetails.datatoken.address,
         accountId,
@@ -155,30 +145,6 @@ export async function reuseOrder(
       asset.services[0].serviceEndpoint
     ))
 
-  if (
-    providerFees?.providerFeeAmount ||
-    initializeData?.providerFee?.providerFeeAmount
-  ) {
-    const txApprove = await approve(
-      web3,
-      accountId,
-      providerFees.providerFeeToken ||
-        initializeData.providerFee.providerFeeToken,
-      asset.accessDetails.datatoken.address,
-      await unitsToAmount(
-        web3,
-        providerFees.providerFeeToken ||
-          initializeData.providerFee.providerFeeToken,
-        providerFees.providerFeeAmount ||
-          initializeData.providerFee.providerFeeAmount
-      ),
-      false
-    )
-    if (!txApprove) {
-      return
-    }
-  }
-
   const tx = await datatoken.reuseOrder(
     asset.accessDetails.datatoken.address,
     accountId,
@@ -215,6 +181,23 @@ export async function handleComputeOrder(
     '[compute] Handle compute order for asset type: ',
     asset.metadata.type
   )
+
+  if (
+    initializeData.providerFee &&
+    initializeData.providerFee.providerFeeAmount !== '0'
+  ) {
+    const txApproveWei = await approveWei(
+      web3,
+      accountId,
+      asset.accessDetails.baseToken.address,
+      asset.accessDetails.datatoken.address,
+      initializeData.providerFee.providerFeeAmount
+    )
+    if (!txApproveWei) {
+      toast.error('Failed to approve provider fees!')
+      return
+    }
+  }
   if (initializeData.validOrder && !initializeData.providerFee) {
     LoggerInstance.log('[compute] Has valid order: ', initializeData.validOrder)
     return initializeData.validOrder

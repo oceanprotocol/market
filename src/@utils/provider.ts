@@ -3,7 +3,7 @@ import {
   ComputeAsset,
   ComputeEnvironment,
   downloadFileBrowser,
-  FileMetadata,
+  FileInfo,
   LoggerInstance,
   ProviderComputeInitializeResults,
   ProviderInstance
@@ -53,7 +53,7 @@ export async function initializeProviderForCompute(
 
 // TODO: Why do we have these one line functions ?!?!?!
 export async function getEncryptedFiles(
-  files: FileMetadata[],
+  files: any,
   providerUrl: string
 ): Promise<string> {
   try {
@@ -69,7 +69,7 @@ export async function getFileDidInfo(
   did: string,
   serviceId: string,
   providerUrl: string
-): Promise<FileMetadata[]> {
+): Promise<FileInfo[]> {
   try {
     const response = await ProviderInstance.checkDidFiles(
       did,
@@ -85,7 +85,7 @@ export async function getFileDidInfo(
 export async function getFileUrlInfo(
   url: string,
   providerUrl: string
-): Promise<FileMetadata[]> {
+): Promise<FileInfo[]> {
   try {
     const response = await ProviderInstance.checkFileUrl(url, providerUrl)
     return response

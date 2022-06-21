@@ -319,15 +319,6 @@ export async function getOrderPriceAndFees(
   orderPriceAndFee.price = new Decimal(+orderPriceAndFee.price || 0)
     .add(new Decimal(+orderPriceAndFee?.consumeMarketOrderFee || 0))
     .add(new Decimal(+orderPriceAndFee?.publisherMarketOrderFee || 0))
-    .add(
-      new Decimal(
-        (await unitsToAmount(
-          web3,
-          orderPriceAndFee?.providerFee?.providerFeeToken,
-          orderPriceAndFee?.providerFee?.providerFeeAmount.toString()
-        )) || 0
-      )
-    )
     .toString()
   return orderPriceAndFee
 }

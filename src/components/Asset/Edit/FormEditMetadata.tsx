@@ -1,9 +1,8 @@
-import React, { ChangeEvent, ReactElement, useState } from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
 import styles from './FormEdit.module.css'
-import { FormPublishData } from '../../Publish/_types'
 import { useAsset } from '@context/Asset'
 import { MetadataEditForm } from './_types'
 
