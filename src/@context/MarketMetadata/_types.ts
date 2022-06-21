@@ -18,7 +18,6 @@ export interface AppConfig {
   consumeMarketPoolSwapFee: string
   consumeMarketFixedSwapFee: string
   currencies: string[]
-  portisId: string
   allowFixedPricing: string
   allowDynamicPricing: string
   allowFreePricing: string

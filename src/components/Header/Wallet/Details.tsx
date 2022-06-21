@@ -27,7 +27,6 @@ export default function Details(): ReactElement {
     address: string
     symbol: string
   }>()
-  const [portisNetwork, setPortisNetwork] = useState<string>()
 
   useEffect(() => {
     if (!networkId) return
@@ -44,16 +43,6 @@ export default function Details(): ReactElement {
         symbol: oceanConfig.oceanTokenSymbol
       })
   }, [networkData, networkId])
-
-  // Handle network change for Portis
-  async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
-    setPortisNetwork(e.target.value)
-    const portisNetworkName = e.target.value.toLowerCase()
-    await web3Provider._portis.changeNetwork(portisNetworkName)
-    // TODO: using our connect initializes a new Portis instance,
-    // which then defaults back to initial network (Mainnet).
-    // await connect()
-  }
 
   return (
     <div className={styles.details}>
@@ -76,16 +65,6 @@ export default function Details(): ReactElement {
               <img className={styles.walletLogo} src={web3ProviderInfo?.logo} />
               {web3ProviderInfo?.name}
             </span>
-            {web3ProviderInfo?.name === 'Portis' && (
-              <InputElement
-                name="network"
-                type="select"
-                options={['Mainnet', 'Ropsten', 'Rinkeby']}
-                size="mini"
-                value={portisNetwork}
-                onChange={handlePortisNetworkChange}
-              />
-            )}
             {web3ProviderInfo?.name === 'MetaMask' && (
               <AddToken
                 address={oceanTokenMetadata?.address}
@@ -96,15 +75,6 @@ export default function Details(): ReactElement {
             )}
           </div>
           <p>
-            {web3ProviderInfo?.name === 'Portis' && (
-              <Button
-                style="text"
-                size="small"
-                onClick={() => web3Provider._portis.showPortis()}
-              >
-                Show Portis
-              </Button>
-            )}
             <Button
               style="text"
               size="small"
