@@ -27,7 +27,6 @@
     "@oceanprotocol/art": "^3.2.0",
     "@oceanprotocol/lib": "^1.1.2",
     "@oceanprotocol/typographies": "^0.1.0",
-    "@portis/web3": "^4.0.7",
     "@tippyjs/react": "^4.2.6",
     "@urql/exchange-refocus": "^0.2.5",
     "@walletconnect/web3-provider": "^1.7.8",
