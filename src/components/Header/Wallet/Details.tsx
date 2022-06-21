@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '@context/UserPreferences'
 import Button from '@shared/atoms/Button'
@@ -7,11 +7,9 @@ import Conversion from '@shared/Price/Conversion'
 import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
 import styles from './Details.module.css'
-import InputElement from '@shared/FormInput/InputElement'
 
 export default function Details(): ReactElement {
   const {
-    web3Provider,
     web3ProviderInfo,
     web3Modal,
     connect,
