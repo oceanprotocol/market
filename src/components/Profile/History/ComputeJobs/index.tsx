@@ -1,8 +1,6 @@
 import React, { ReactElement, useEffect, useState, useCallback } from 'react'
 import Time from '@shared/atoms/Time'
-import Link from 'next/link'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import Dotdotdot from 'react-dotdotdot'
 import Table from '@shared/atoms/Table'
 import Button from '@shared/atoms/Button'
 import { useWeb3 } from '@context/Web3'
@@ -15,6 +13,7 @@ import styles from './index.module.css'
 import { useAsset } from '@context/Asset'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
+import AssetListTitle from '@shared/AssetList/AssetListTitle'
 
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
@@ -24,13 +23,7 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: ComputeJobMetaData) {
-      return (
-        <Dotdotdot clamp={2}>
-          <Link href={`/asset/${row.inputDID[0]}`}>
-            <a>{row.assetName}</a>
-          </Link>
-        </Dotdotdot>
-      )
+      return <AssetListTitle did={row.inputDID[0]} title={row.assetName} />
     }
   },
   {

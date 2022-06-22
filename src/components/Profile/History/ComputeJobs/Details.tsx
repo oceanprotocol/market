@@ -42,9 +42,11 @@ function Asset({
 
 function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
   const { appConfig } = useMarketMetadata()
+  const newCancelToken = useCancelToken()
+
   const [algoName, setAlgoName] = useState<string>()
   const [algoDtSymbol, setAlgoDtSymbol] = useState<string>()
-  const newCancelToken = useCancelToken()
+
   useEffect(() => {
     async function getAlgoMetadata() {
       const ddo = await retrieveAsset(job.algoDID, newCancelToken())
@@ -52,7 +54,7 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
       setAlgoName(ddo?.metadata.name)
     }
     getAlgoMetadata()
-  }, [appConfig.metadataCacheUri, job.algoDID])
+  }, [appConfig.metadataCacheUri, job.algoDID, newCancelToken])
 
   return (
     <>
