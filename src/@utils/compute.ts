@@ -21,7 +21,6 @@ import {
 } from './aquarius'
 import { fetchDataForMultipleChains } from './subgraph'
 import { getServiceById, getServiceByName } from './ddo'
-import { getOceanConfig } from './ocean'
 import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { transformAssetToAssetSelection } from './assetConvertor'
@@ -149,7 +148,7 @@ export async function getComputeEnviroment(
   }
 }
 
-export function getQuerryString(
+export function getQueryString(
   trustedAlgorithmList: PublisherTrustedAlgorithm[],
   chainId?: number
 ): SearchQuery {
@@ -182,7 +181,7 @@ export async function getAlgorithmsForAsset(
     algorithms = []
   } else {
     const gueryResults = await queryMetadata(
-      getQuerryString(publisherTrustedAlgorithms, asset.chainId),
+      getQueryString(publisherTrustedAlgorithms, asset.chainId),
       token
     )
     algorithms = gueryResults?.results

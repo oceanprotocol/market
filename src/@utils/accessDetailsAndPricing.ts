@@ -12,8 +12,7 @@ import {
   Asset,
   LoggerInstance,
   ProviderFees,
-  ProviderInstance,
-  unitsToAmount
+  ProviderInstance
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { calcInGivenOut } from './pool'

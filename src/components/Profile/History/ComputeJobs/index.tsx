@@ -72,11 +72,11 @@ const columns = [
 export default function ComputeJobs({
   minimal,
   assetChainId,
-  refatchJobs
+  refetchJobs
 }: {
   minimal?: boolean
   assetChainId?: number[]
-  refatchJobs?: boolean
+  refetchJobs?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
   const { asset } = useAsset()
@@ -114,7 +114,7 @@ export default function ComputeJobs({
 
   useEffect(() => {
     fetchJobs()
-  }, [refatchJobs])
+  }, [refetchJobs])
 
   return accountId ? (
     <>

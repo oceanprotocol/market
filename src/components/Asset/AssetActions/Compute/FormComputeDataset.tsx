@@ -211,7 +211,7 @@ export default function FormStartCompute({
           !isValid ||
           !isBalanceSufficient ||
           !isAssetNetwork ||
-          !selectedAlgorithmAsset?.accessDetails.isPurchasable
+          !selectedAlgorithmAsset?.accessDetails?.isPurchasable
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}

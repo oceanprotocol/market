@@ -98,12 +98,6 @@ export default function Details({
             />
           )}
           <MetaItem title="Job ID" content={<code>{job.jobId}</code>} />
-          {/* {job.results[0]. && (
-            <MetaItem
-              title="Published Results DID"
-              content={<code>{job.resultsDid}</code>}
-            />
-          )} */}
         </div>
       </Modal>
     </>

@@ -1,9 +1,4 @@
 import { Asset, DDO, Service } from '@oceanprotocol/lib'
-interface Consumable {
-  status: number
-  message: string
-  result: boolean
-}
 
 export function getServiceByName(
   ddo: Asset | DDO,

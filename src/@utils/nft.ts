@@ -112,17 +112,6 @@ export async function setNftMetadata(
   // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
   const flags = '0x2'
 
-  const estGasSetMetadata = await nft.estGasSetMetadata(
-    asset.nftAddress,
-    accountId,
-    0,
-    asset.services[0].serviceEndpoint,
-    '',
-    flags,
-    encryptedDdo,
-    '0x' + metadataHash,
-    []
-  )
   const setMetadataTx = await nft.setMetadata(
     asset.nftAddress,
     accountId,

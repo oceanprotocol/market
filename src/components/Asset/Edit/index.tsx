@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import styles from './index.module.css'
 import Tabs from '@shared/atoms/Tabs'

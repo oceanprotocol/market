@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, useEffect, useCallback } from 'react'
+import React, { useState, ReactElement, useEffect } from 'react'
 import {
   Asset,
   DDO,
@@ -36,7 +36,6 @@ import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
-// import { useIsMounted } from '@hooks/useIsMounted'
 import { Decimal } from 'decimal.js'
 import { useAbortController } from '@hooks/useAbortController'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
@@ -55,14 +54,12 @@ export default function Compute({
   dtBalance,
   file,
   fileIsLoading,
-  isConsumable,
   consumableFeedback
 }: {
   asset: AssetExtended
   dtBalance: string
   file: FileInfo
   fileIsLoading?: boolean
-  isConsumable?: boolean
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
@@ -78,18 +75,14 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [algorithmDTBalance, setAlgorithmDTBalance] = useState<string>()
 
-  // const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-  // const [isAlgorithmOwned, setIsAlgorithmOwned] = useState(false)
   const [validAlgorithmOrderTx, setValidAlgorithmOrderTx] = useState('')
 
   const hasDatatoken = Number(dtBalance) >= 1
-  // const isMounted = useIsMounted()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { poolData } = usePool()
   const newCancelToken = useCancelToken()
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
-  const [isAlgoConsumablePrice, setIsAlgoConsumablePrice] = useState(true)
   const [computeStatusText, setComputeStatusText] = useState('')
   const [computeEnv, setComputeEnv] = useState<ComputeEnvironment>()
   const [initializedProviderResponse, setInitializedProviderResponse] =
@@ -98,19 +91,16 @@ export default function Compute({
   const [computeValidUntil, setComputeValidUntil] = useState<string>('0')
   const [datasetOrderPriceAndFees, setDatasetOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
-  const [isRequestingDataseOrderPrice, setIsRequestingDataseOrderPrice] =
-    useState(false)
   const [algoOrderPriceAndFees, setAlgoOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   const [isRequestingAlgoOrderPrice, setIsRequestingAlgoOrderPrice] =
     useState(false)
-  const [refatchJobs, setRefatchJobs] = useState(false)
-  // const [isProviderFeeValid, setIsProviderFeeValid] = useState(false)
+  const [refetchJobs, setRefatchJobs] = useState(false)
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
     (!validOrderTx && !hasDatatoken && !isConsumablePrice) ||
-    (!validAlgorithmOrderTx && !hasAlgoAssetDatatoken && !isAlgoConsumablePrice)
+    (!validAlgorithmOrderTx && !hasAlgoAssetDatatoken)
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
@@ -411,7 +401,7 @@ export default function Compute({
       }
       LoggerInstance.log('[compute] Starting compute job response: ', response)
       setIsPublished(true)
-      setRefatchJobs(!refatchJobs)
+      setRefatchJobs(!refetchJobs)
       initPriceAndFees()
     } catch (error) {
       setError('Failed to start job!')
@@ -454,11 +444,7 @@ export default function Compute({
             ddoListAlgorithms={ddoAlgorithmList}
             selectedAlgorithmAsset={selectedAlgorithmAsset}
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
-            isLoading={
-              isJobStarting ||
-              isRequestingDataseOrderPrice ||
-              isRequestingAlgoOrderPrice
-            }
+            isLoading={isJobStarting || isRequestingAlgoOrderPrice}
             isComputeButtonDisabled={isComputeButtonDisabled}
             hasPreviousOrder={validOrderTx !== undefined}
             hasDatatoken={hasDatatoken}
@@ -479,7 +465,6 @@ export default function Compute({
               selectedAlgorithmAsset?.datatokens[0]?.symbol
             }
             dtBalanceSelectedComputeAsset={algorithmDTBalance}
-            selectedComputeAssetLowPoolLiquidity={!isAlgoConsumablePrice}
             selectedComputeAssetType="algorithm"
             selectedComputeAssetTimeout={secondsToString(
               selectedAlgorithmAsset?.services[0]?.timeout
@@ -506,7 +491,7 @@ export default function Compute({
           <ComputeJobs
             minimal
             assetChainId={[asset?.chainId]}
-            refatchJobs={refatchJobs}
+            refetchJobs={refetchJobs}
           />
         </AssetActionHistoryTable>
       )}

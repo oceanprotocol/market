@@ -26,9 +26,9 @@ import { toast } from 'react-toastify'
  * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
  * @param web3
  * @param asset
+ * @param orderPriceAndFees
  * @param accountId
- * @param computeEnv
- * @param computeValidUntil
+ * @param providerFees
  * @param computeConsumerAddress
  * @returns {TransactionReceipt} receipt of the order
  */
@@ -162,9 +162,10 @@ export async function reuseOrder(
  * - no validOrder -> we need to call order, to pay 1 DT & providerFees
  * @param web3
  * @param asset
+ * @param orderPriceAndFees
  * @param accountId
- * @param computeEnv
- * @param computeValidUntil
+ * @param hasDatatoken
+ * @param initializeData
  * @param computeConsumerAddress
  * @returns {Promise<string>} tx id
  */
