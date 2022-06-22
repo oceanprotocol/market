@@ -1,29 +1,30 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import PriceUnit, { PriceUnitProps } from '@shared/Price/PriceUnit'
+import Pagination from '@shared/Pagination'
+import { PaginationProps } from './_types'
 import { UserPreferencesProvider } from '@context/UserPreferences'
 import MarketMetadataProvider from '@context/MarketMetadata'
 
 export default {
-  title: 'Component/@shared/Price/PriceUnit',
-  component: PriceUnit
-} as ComponentMeta<typeof PriceUnit>
+  title: 'Component/@shared/Pagination',
+  component: Pagination
+} as ComponentMeta<typeof Pagination>
 
-const Template: ComponentStory<typeof PriceUnit> = (args: PriceUnitProps) => {
+const Template: ComponentStory<typeof Pagination> = (args: PaginationProps) => {
   return (
     <MarketMetadataProvider>
-      <UserPreferencesProvider>
-        <PriceUnit {...args} />
-      </UserPreferencesProvider>
+      <Pagination {...args} />
     </MarketMetadataProvider>
   )
 }
 
 interface Props {
-  args: PriceUnitProps
+  args: PaginationProps
 }
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  price: '11.12333'
+  totalPages: 10,
+  currentPage: 1,
+  rowsPerPage: 3
 }

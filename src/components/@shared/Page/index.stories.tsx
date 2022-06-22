@@ -24,3 +24,16 @@ Default.args = {
     </a>
   )
 }
+
+export const WithDescription: Props = Template.bind({})
+WithDescription.args = {
+  ...Default.args,
+  description:
+    'Data owners and consumers use Ocean Market app to publish, discover, and consume data in a secure, privacy-preserving fashion. OCEAN holders stake liquidity to data pools.'
+}
+
+export const WithTitle: Props = Template.bind({})
+WithTitle.args = {
+  ...WithDescription.args,
+  title: 'Ocean Market'
+}

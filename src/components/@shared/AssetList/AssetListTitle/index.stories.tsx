@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import AssetListTitle, {
   AssetListTitleProps
 } from '@shared/AssetList/AssetListTitle'
-import { asset } from '../../../../../.storybook/__mockdata__'
+import MarketMetadataProvider from '@context/MarketMetadata'
 
 export default {
   title: 'Component/@shared/AssetList/AssetListTitle',
@@ -12,7 +12,13 @@ export default {
 
 const Template: ComponentStory<typeof AssetListTitle> = (
   args: AssetListTitleProps
-) => <AssetListTitle {...args} />
+) => {
+  return (
+    <MarketMetadataProvider>
+      <AssetListTitle {...args} />
+    </MarketMetadataProvider>
+  )
+}
 
 interface Props {
   args: AssetListTitleProps

@@ -3,11 +3,8 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import AssetComputeList, {
   AssetComputeListProps
 } from '@shared/AssetList/AssetComputeList'
-import {
-  assetSelectionAsset,
-  locale,
-  prices
-} from '../../../../../.storybook/__mockdata__'
+import { assetSelectionAsset } from '../../../../../.storybook/__mockdata__'
+import MarketMetadataProvider from '@context/MarketMetadata'
 
 export default {
   title: 'Component/@shared/AssetList/AssetComputeList',
@@ -16,7 +13,13 @@ export default {
 
 const Template: ComponentStory<typeof AssetComputeList> = (
   args: AssetComputeListProps
-) => <AssetComputeList {...args} />
+) => {
+  return (
+    <MarketMetadataProvider>
+      <AssetComputeList {...args} />
+    </MarketMetadataProvider>
+  )
+}
 
 interface Props {
   args: AssetComputeListProps

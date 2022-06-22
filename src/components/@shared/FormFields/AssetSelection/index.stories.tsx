@@ -4,6 +4,8 @@ import AssetSelection, {
   AssetSelectionProps
 } from '@shared/FormFields/AssetSelection'
 import { assetSelectionAsset } from '../../../../../.storybook/__mockdata__'
+import MarketMetadataProvider from '@context/MarketMetadata'
+import { UserPreferencesProvider } from '@context/UserPreferences'
 
 export default {
   title: 'Component/@shared/FormFields/AssetSelection',
@@ -12,8 +14,15 @@ export default {
 
 const Template: ComponentStory<typeof AssetSelection> = (
   args: AssetSelectionProps
-) => <AssetSelection {...args} />
-
+) => {
+  return (
+    <MarketMetadataProvider>
+      <UserPreferencesProvider>
+        <AssetSelection {...args} />
+      </UserPreferencesProvider>
+    </MarketMetadataProvider>
+  )
+}
 interface Props {
   args: AssetSelectionProps
 }

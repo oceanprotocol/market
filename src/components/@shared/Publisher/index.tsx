@@ -10,15 +10,17 @@ import { useIsMounted } from '@hooks/useIsMounted'
 
 const cx = classNames.bind(styles)
 
+export interface PublisherProps {
+  account: string
+  minimal?: boolean
+  className?: string
+}
+
 export default function Publisher({
   account,
   minimal,
   className
-}: {
-  account: string
-  minimal?: boolean
-  className?: string
-}): ReactElement {
+}: PublisherProps): ReactElement {
   const isMounted = useIsMounted()
   const [profile, setProfile] = useState<Profile>()
   const [name, setName] = useState('')
