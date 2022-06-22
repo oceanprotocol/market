@@ -92,6 +92,7 @@ export async function isOrderable(
 ): Promise<boolean> {
   const datasetService: Service = getServiceById(asset, serviceId)
   if (!datasetService) return false
+
   if (datasetService.type === 'compute') {
     if (algorithm.meta) {
       // check if raw algo is allowed

@@ -63,9 +63,11 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
+  const { getOpcFeeForToken } = useMarketMetadata()
+  const newAbortController = useAbortController()
+
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
-  const newAbortController = useAbortController()
 
   const [algorithmList, setAlgorithmList] = useState<AssetSelectionAsset[]>()
   const [ddoAlgorithmList, setDdoAlgorithmList] = useState<Asset[]>()
@@ -78,8 +80,6 @@ export default function Compute({
   const [validOrderTx, setValidOrderTx] = useState('')
   const [validAlgorithmOrderTx, setValidAlgorithmOrderTx] = useState('')
 
-  const hasDatatoken = Number(dtBalance) >= 1
-  const { getOpcFeeForToken } = useMarketMetadata()
   const { poolData } = usePool()
   const newCancelToken = useCancelToken()
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
@@ -95,7 +95,9 @@ export default function Compute({
     useState<OrderPriceAndFees>()
   const [isRequestingAlgoOrderPrice, setIsRequestingAlgoOrderPrice] =
     useState(false)
-  const [refetchJobs, setRefatchJobs] = useState(false)
+  const [refetchJobs, setRefetchJobs] = useState(false)
+
+  const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
@@ -157,8 +159,8 @@ export default function Compute({
     ) {
       setComputeStatusText(
         getComputeFeedback(
-          asset.accessDetails.baseToken?.symbol,
-          asset.accessDetails.datatoken?.symbol,
+          asset.accessDetails?.baseToken?.symbol,
+          asset.accessDetails?.datatoken?.symbol,
           asset.metadata.type
         )[0]
       )
@@ -208,7 +210,7 @@ export default function Compute({
       if (selectedAlgorithmAsset?.accessDetails?.type === 'dynamic') {
         const response = await getPoolData(
           selectedAlgorithmAsset.chainId,
-          selectedAlgorithmAsset.accessDetails.addressOrId,
+          selectedAlgorithmAsset.accessDetails?.addressOrId,
           selectedAlgorithmAsset?.nft.owner,
           accountId || ''
         )
@@ -401,7 +403,7 @@ export default function Compute({
       }
       LoggerInstance.log('[compute] Starting compute job response: ', response)
       setIsPublished(true)
-      setRefatchJobs(!refetchJobs)
+      setRefetchJobs(!refetchJobs)
       initPriceAndFees()
     } catch (error) {
       setError('Failed to start job!')
