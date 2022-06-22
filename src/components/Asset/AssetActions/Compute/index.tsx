@@ -490,7 +490,7 @@ export default function Compute({
         <AssetActionHistoryTable title="Your Compute Jobs">
           <ComputeJobs
             minimal
-            assetChainId={[asset?.chainId]}
+            assetChainIds={[asset?.chainId]}
             refetchJobs={refetchJobs}
           />
         </AssetActionHistoryTable>

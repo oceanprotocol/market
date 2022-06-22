@@ -71,20 +71,21 @@ const columns = [
 
 export default function ComputeJobs({
   minimal,
-  assetChainId,
+  assetChainIds,
   refetchJobs
 }: {
   minimal?: boolean
-  assetChainId?: number[]
+  assetChainIds?: number[]
   refetchJobs?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
   const { asset } = useAsset()
   const { chainIds } = useUserPreferences()
-  const [isLoading, setIsLoading] = useState(false)
-  const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const [columnsMinimal] = useState([columns[4], columns[5], columns[3]])
 
   const fetchJobs = useCallback(async () => {
@@ -96,7 +97,7 @@ export default function ComputeJobs({
     try {
       setIsLoading(true)
       const jobs = await getComputeJobs(
-        assetChainId || chainIds,
+        assetChainIds || chainIds,
         accountId,
         asset,
         newCancelToken()
@@ -106,15 +107,11 @@ export default function ComputeJobs({
     } catch (error) {
       LoggerInstance.error(error.message)
     }
-  }, [chainIds, accountId, asset, isMounted])
+  }, [chainIds, accountId, asset, isMounted, assetChainIds, newCancelToken])
 
   useEffect(() => {
     fetchJobs()
-  }, [fetchJobs])
-
-  useEffect(() => {
-    fetchJobs()
-  }, [refetchJobs])
+  }, [fetchJobs, refetchJobs])
 
   return accountId ? (
     <>
