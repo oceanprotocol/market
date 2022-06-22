@@ -245,7 +245,6 @@ export default function Compute({
     if (!asset?.accessDetails || !accountId) return
 
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
-    // setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
   }, [asset?.accessDetails])
 
@@ -254,7 +253,6 @@ export default function Compute({
 
     setIsRequestingAlgoOrderPrice(true)
     setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
-    // setIsAlgorithmOwned(selectedAlgorithmAsset?.accessDetails?.isOwned)
     setValidAlgorithmOrderTx(
       selectedAlgorithmAsset?.accessDetails?.validOrderTx
     )
@@ -292,7 +290,7 @@ export default function Compute({
   async function startJob(): Promise<string> {
     try {
       setIsOrdering(true)
-      setIsOrdered(false) // would be nice to rename this
+      setIsOrdered(false)
       setError(undefined)
       const computeService = getServiceByName(asset, 'compute')
       const computeAlgorithm: ComputeAlgorithm = {
