@@ -180,7 +180,7 @@ export async function getAssetsFromDidList(
   didList: string[],
   chainIds: number[],
   cancelToken: CancelToken
-): Promise<any> {
+): Promise<PagedAssets> {
   try {
     if (!(didList.length > 0)) return
 

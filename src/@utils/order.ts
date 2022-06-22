@@ -26,9 +26,9 @@ import { toast } from 'react-toastify'
  * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
  * @param web3
  * @param asset
+ * @param orderPriceAndFees
  * @param accountId
- * @param computeEnv
- * @param computeValidUntil
+ * @param providerFees
  * @param computeConsumerAddress
  * @returns {TransactionReceipt} receipt of the order
  */
@@ -162,9 +162,10 @@ export async function reuseOrder(
  * - no validOrder -> we need to call order, to pay 1 DT & providerFees
  * @param web3
  * @param asset
+ * @param orderPriceAndFees
  * @param accountId
- * @param computeEnv
- * @param computeValidUntil
+ * @param hasDatatoken
+ * @param initializeData
  * @param computeConsumerAddress
  * @returns {Promise<string>} tx id
  */
@@ -186,12 +187,16 @@ export async function handleComputeOrder(
     initializeData.providerFee &&
     initializeData.providerFee.providerFeeAmount !== '0'
   ) {
+    const baseToken =
+      asset?.accessDetails?.type === 'free'
+        ? getOceanConfig(asset.chainId).oceanTokenAddress
+        : asset?.accessDetails?.baseToken?.address
     const txApproveWei = await approveWei(
       web3,
       accountId,
-      asset.accessDetails.baseToken.address,
-      asset.accessDetails.datatoken.address,
-      initializeData.providerFee.providerFeeAmount
+      baseToken,
+      asset?.accessDetails?.datatoken?.address,
+      initializeData?.providerFee?.providerFeeAmount
     )
     if (!txApproveWei) {
       toast.error('Failed to approve provider fees!')

@@ -12,8 +12,7 @@ import {
   Asset,
   LoggerInstance,
   ProviderFees,
-  ProviderInstance,
-  unitsToAmount
+  ProviderInstance
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { calcInGivenOut } from './pool'
@@ -174,22 +173,21 @@ function getAccessDetailsFromTokenPrice(
 ): AccessDetails {
   const accessDetails = {} as AccessDetails
 
-  if (tokenPrice && tokenPrice.orders && tokenPrice.orders.length > 0) {
+  if (tokenPrice?.orders?.length > 0) {
     const order = tokenPrice.orders[0]
-    const reusedOrder =
-      order && order.reuses && order.reuses.length > 0 ? order.reuses[0] : null
+    const reusedOrder = order?.reuses?.length > 0 ? order.reuses[0] : null
     // asset is owned if there is an order and asset has timeout 0 (forever) or if the condition is valid
     accessDetails.isOwned =
-      timeout === 0 || Date.now() / 1000 - order.createdTimestamp < timeout
+      timeout === 0 || Date.now() / 1000 - order?.createdTimestamp < timeout
     // the last valid order should be the last reuse order tx id if there is one
-    accessDetails.validOrderTx = reusedOrder ? reusedOrder.tx : order.tx
+    accessDetails.validOrderTx = reusedOrder?.tx || order?.tx
   }
 
   // TODO: fetch order fee from sub query
-  accessDetails.publisherMarketOrderFee = tokenPrice.publishMarketFeeAmount
+  accessDetails.publisherMarketOrderFee = tokenPrice?.publishMarketFeeAmount
 
   // free is always the best price
-  if (tokenPrice.dispensers && tokenPrice.dispensers.length > 0) {
+  if (tokenPrice?.dispensers?.length > 0) {
     const dispenser = tokenPrice.dispensers[0]
     accessDetails.type = 'free'
     accessDetails.addressOrId = dispenser.token.id
@@ -204,10 +202,7 @@ function getAccessDetailsFromTokenPrice(
   }
 
   // checking for fixed price
-  if (
-    tokenPrice.fixedRateExchanges &&
-    tokenPrice.fixedRateExchanges.length > 0
-  ) {
+  if (tokenPrice?.fixedRateExchanges?.length > 0) {
     const fixed = tokenPrice.fixedRateExchanges[0]
     accessDetails.type = 'fixed'
     accessDetails.addressOrId = fixed.exchangeId
@@ -228,7 +223,7 @@ function getAccessDetailsFromTokenPrice(
   }
 
   // checking for pools
-  if (tokenPrice.pools && tokenPrice.pools.length > 0) {
+  if (tokenPrice?.pools?.length > 0) {
     const pool = tokenPrice.pools[0]
     accessDetails.type = 'dynamic'
     accessDetails.addressOrId = pool.id
@@ -257,7 +252,6 @@ function getAccessDetailsFromTokenPrice(
  * @return {Promise<OrdePriceAndFee>}
  */
 export async function getOrderPriceAndFees(
-  web3: Web3,
   asset: AssetExtended,
   accountId?: string,
   paramsForPool?: CalcInGivenOutParams,
@@ -284,10 +278,10 @@ export async function getOrderPriceAndFees(
     !providerFees &&
     (await ProviderInstance.initialize(
       asset?.id,
-      asset.services[0].id,
+      asset?.services[0].id,
       0,
       accountId,
-      asset.services[0].serviceEndpoint
+      asset?.services[0].serviceEndpoint
     ))
   orderPriceAndFee.providerFee = providerFees || initializeData.providerFee
 

@@ -80,9 +80,11 @@ export default function FormStartCompute({
   validUntil?: string
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
+  const { accountId, balance } = useWeb3()
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
+
   const [totalPrice, setTotalPrice] = useState('0')
   const [datasetOrderPrice, setDatasetOrderPrice] = useState(
     asset?.accessDetails?.price
@@ -91,7 +93,6 @@ export default function FormStartCompute({
     selectedAlgorithmAsset?.accessDetails?.price
   )
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
-  const { accountId, balance, isSupportedOceanNetwork } = useWeb3()
 
   function getAlgorithmAsset(algorithmId: string): Asset {
     let assetDdo = null
@@ -102,7 +103,8 @@ export default function FormStartCompute({
   }
 
   useEffect(() => {
-    if (!values.algorithm || !isConsumable) return
+    if (!values.algorithm || !accountId || !isConsumable) return
+
     async function fetchAlgorithmAssetExtended() {
       const algorithmAsset = getAlgorithmAsset(values.algorithm)
       const accessDetails = await getAccessDetails(
@@ -165,15 +167,16 @@ export default function FormStartCompute({
     hasDatatokenSelectedComputeAsset,
     datasetOrderPriceAndFees,
     algoOrderPriceAndFees,
-    selectedAlgorithmAsset
+    providerFeeAmount
   ])
 
   useEffect(() => {
-    if (!totalPrice || !balance.ocean || !dtBalance) return
+    if (!totalPrice || !balance?.ocean || !dtBalance) return
+
     setIsBalanceSufficient(
       compareAsBN(balance.ocean, `${totalPrice}`) || Number(dtBalance) >= 1
     )
-  }, [totalPrice, balance.ocean, dtBalance])
+  }, [totalPrice, balance?.ocean, dtBalance])
 
   return (
     <Form className={styles.form}>
@@ -217,7 +220,7 @@ export default function FormStartCompute({
           !isValid ||
           !isBalanceSufficient ||
           !isAssetNetwork ||
-          !selectedAlgorithmAsset?.accessDetails.isPurchasable
+          !selectedAlgorithmAsset?.accessDetails?.isPurchasable
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}

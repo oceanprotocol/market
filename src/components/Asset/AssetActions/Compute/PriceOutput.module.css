@@ -39,7 +39,6 @@
   display: grid;
   grid-template-columns: 5% 1fr auto;
   column-gap: calc(var(--spacer) / 10);
-  /* justify-content: space-between; */
 }
 
 .priceRow:last-child {

@@ -3,7 +3,6 @@ import { AccessDetails } from 'src/@types/Price'
 import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 import { consumeMarketPoolSwapFee } from '../../app.config'
-
 import { getDummyWeb3 } from './web3'
 
 /**
