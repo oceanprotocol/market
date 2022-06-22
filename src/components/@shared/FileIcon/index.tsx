@@ -9,7 +9,7 @@ import { FileInfo } from '@oceanprotocol/lib'
 const cx = classNames.bind(styles)
 
 export interface FileIconProps {
-  file: FileMetadata
+  file: FileInfo
   className?: string
   small?: boolean
   isLoading?: boolean

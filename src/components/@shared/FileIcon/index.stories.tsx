@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import FileIcon, { FileIconProps } from '@shared/FileIcon'
-import { FileMetadata } from '@oceanprotocol/lib'
+import { FileInfo } from '@oceanprotocol/lib'
 
 export default {
   title: 'Component/@shared/FileIcon',
@@ -25,17 +25,17 @@ const textFile = {
 
 export const Default: Props = Template.bind({})
 Default.args = {
-  file: textFile as FileMetadata
+  file: textFile as FileInfo
 }
 
 export const Small: Props = Template.bind({})
 Small.args = {
-  file: textFile as FileMetadata,
+  file: textFile as FileInfo,
   small: true
 }
 
 export const IsLoading: Props = Template.bind({})
 IsLoading.args = {
-  file: textFile as FileMetadata,
+  file: textFile as FileInfo,
   isLoading: true
 }

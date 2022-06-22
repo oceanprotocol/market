@@ -10,6 +10,7 @@ import styles from './Details.module.css'
 
 export default function Details(): ReactElement {
   const {
+    web3Provider,
     web3ProviderInfo,
     web3Modal,
     connect,
