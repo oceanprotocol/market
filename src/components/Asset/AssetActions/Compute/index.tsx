@@ -64,7 +64,9 @@ export default function Compute({
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
   const { getOpcFeeForToken } = useMarketMetadata()
+  const { poolData } = usePool()
   const newAbortController = useAbortController()
+  const newCancelToken = useCancelToken()
 
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -80,8 +82,6 @@ export default function Compute({
   const [validOrderTx, setValidOrderTx] = useState('')
   const [validAlgorithmOrderTx, setValidAlgorithmOrderTx] = useState('')
 
-  const { poolData } = usePool()
-  const newCancelToken = useCancelToken()
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [computeStatusText, setComputeStatusText] = useState('')
   const [computeEnv, setComputeEnv] = useState<ComputeEnvironment>()
