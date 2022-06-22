@@ -2,12 +2,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import AssetList, { AssetListProps } from '@shared/AssetList'
 import * as config from '../../../../app.config'
-import {
-  assets,
-  locale,
-  mockWallet,
-  prices
-} from '../../../../.storybook/__mockdata__'
+import { assets, mockWallet } from '../../../../.storybook/__mockdata__'
 import UrqlClientProvider from '@context/UrqlProvider'
 
 export default {

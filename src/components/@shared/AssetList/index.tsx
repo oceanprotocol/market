@@ -9,7 +9,6 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { Asset } from '@oceanprotocol/lib'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
-import { Prices } from '@context/Prices'
 
 const cx = classNames.bind(styles)
 

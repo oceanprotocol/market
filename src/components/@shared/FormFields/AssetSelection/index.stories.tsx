@@ -3,11 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import AssetSelection, {
   AssetSelectionProps
 } from '@shared/FormFields/AssetSelection'
-import {
-  assetSelectionAsset,
-  locale,
-  prices
-} from '../../../../../.storybook/__mockdata__'
+import { assetSelectionAsset } from '../../../../../.storybook/__mockdata__'
 
 export default {
   title: 'Component/@shared/FormFields/AssetSelection',
