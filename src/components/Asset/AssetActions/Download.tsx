@@ -7,7 +7,7 @@ import ButtonBuy from '@shared/ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
-import { FileMetadata, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import { FileInfo, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { buyDtFromPool } from '@utils/pool'
@@ -29,7 +29,7 @@ export default function Download({
   consumableFeedback
 }: {
   asset: AssetExtended
-  file: FileMetadata
+  file: FileInfo
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
