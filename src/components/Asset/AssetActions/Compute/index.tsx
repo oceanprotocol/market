@@ -68,7 +68,8 @@ export default function Compute({
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
 
-  const [isJobStarting, setIsJobStarting] = useState(false)
+  const [isOrdering, setIsOrdering] = useState(false)
+  const [isOrdered, setIsOrdered] = useState(false)
   const [error, setError] = useState<string>()
 
   const [algorithmList, setAlgorithmList] = useState<AssetSelectionAsset[]>()
@@ -76,7 +77,6 @@ export default function Compute({
   const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] =
     useState<AssetExtended>()
   const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
-  const [isPublished, setIsPublished] = useState(false)
   const [algorithmDTBalance, setAlgorithmDTBalance] = useState<string>()
 
   const [validOrderTx, setValidOrderTx] = useState('')
@@ -99,7 +99,7 @@ export default function Compute({
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
-    isJobStarting === true ||
+    isOrdering === true ||
     file === null ||
     (!validOrderTx && !hasDatatoken && !isConsumablePrice) ||
     (!validAlgorithmOrderTx && !hasAlgoAssetDatatoken)
@@ -291,8 +291,8 @@ export default function Compute({
 
   async function startJob(): Promise<string> {
     try {
-      setIsJobStarting(true)
-      setIsPublished(false) // would be nice to rename this
+      setIsOrdering(true)
+      setIsOrdered(false) // would be nice to rename this
       setError(undefined)
       const computeService = getServiceByName(asset, 'compute')
       const computeAlgorithm: ComputeAlgorithm = {
@@ -400,14 +400,14 @@ export default function Compute({
         return
       }
       LoggerInstance.log('[compute] Starting compute job response: ', response)
-      setIsPublished(true)
+      setIsOrdered(true)
       setRefetchJobs(!refetchJobs)
       initPriceAndFees()
     } catch (error) {
       setError('Failed to start job!')
       LoggerInstance.error('[compute] Failed to start job: ', error.message)
     } finally {
-      setIsJobStarting(false)
+      setIsOrdering(false)
     }
   }
 
@@ -444,7 +444,7 @@ export default function Compute({
             ddoListAlgorithms={ddoAlgorithmList}
             selectedAlgorithmAsset={selectedAlgorithmAsset}
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
-            isLoading={isJobStarting || isRequestingAlgoOrderPrice}
+            isLoading={isOrdering || isRequestingAlgoOrderPrice}
             isComputeButtonDisabled={isComputeButtonDisabled}
             hasPreviousOrder={validOrderTx !== undefined}
             hasDatatoken={hasDatatoken}
@@ -482,7 +482,7 @@ export default function Compute({
       )}
 
       <footer className={styles.feedback}>
-        {isPublished && (
+        {isOrdered && (
           <SuccessConfetti success="Your job started successfully! Watch the progress below or on your profile." />
         )}
       </footer>
