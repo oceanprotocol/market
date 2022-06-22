@@ -186,12 +186,16 @@ export async function handleComputeOrder(
     initializeData.providerFee &&
     initializeData.providerFee.providerFeeAmount !== '0'
   ) {
+    const baseToken =
+      asset?.accessDetails?.type === 'free'
+        ? getOceanConfig(asset.chainId).oceanTokenAddress
+        : asset?.accessDetails?.baseToken?.address
     const txApproveWei = await approveWei(
       web3,
       accountId,
-      asset.accessDetails.baseToken.address,
-      asset.accessDetails.datatoken.address,
-      initializeData.providerFee.providerFeeAmount
+      baseToken,
+      asset?.accessDetails?.datatoken?.address,
+      initializeData?.providerFee?.providerFeeAmount
     )
     if (!txApproveWei) {
       toast.error('Failed to approve provider fees!')
