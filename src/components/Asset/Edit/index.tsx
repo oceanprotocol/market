@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import styles from './index.module.css'
 import Tabs from '@shared/atoms/Tabs'
@@ -33,7 +32,7 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
     {
       title: 'Edit Compute Settings',
       content: <EditComputeDataset asset={asset} />,
-      disabled: !isCompute
+      disabled: !isCompute || asset?.metadata?.type === 'algorithm'
     }
   ].filter((tab) => tab !== undefined)
 

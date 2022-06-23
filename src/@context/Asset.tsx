@@ -27,6 +27,7 @@ export interface AssetProviderValue {
   error?: string
   isAssetNetwork: boolean
   isV3Asset: boolean
+  isOwner: boolean
   oceanConfig: Config
   loading: boolean
   fetchAsset: (token?: CancelToken) => Promise<void>
@@ -49,6 +50,7 @@ function AssetProvider({
   const [asset, setAsset] = useState<AssetExtended>()
   const [title, setTitle] = useState<string>()
   const [owner, setOwner] = useState<string>()
+  const [isOwner, setIsOwner] = useState<boolean>()
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
@@ -141,6 +143,16 @@ function AssetProvider({
   }, [chainId, asset?.chainId])
 
   // -----------------------------------
+  // Asset owner check against wallet user
+  // -----------------------------------
+  useEffect(() => {
+    if (!accountId || !owner) return
+
+    const isOwner = accountId?.toLowerCase() === owner.toLowerCase()
+    setIsOwner(isOwner)
+  }, [accountId, owner])
+
+  // -----------------------------------
   // Load ocean config based on asset network
   // -----------------------------------
   useEffect(() => {
@@ -172,6 +184,7 @@ function AssetProvider({
           fetchAsset,
           isAssetNetwork,
           isV3Asset,
+          isOwner,
           oceanConfig
         } as AssetProviderValue
       }

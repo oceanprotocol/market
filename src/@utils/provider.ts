@@ -1,11 +1,54 @@
 import {
+  ComputeAlgorithm,
+  ComputeAsset,
+  ComputeEnvironment,
   downloadFileBrowser,
   FileInfo,
   LoggerInstance,
+  ProviderComputeInitializeResults,
   ProviderInstance
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
+import { getValidUntilTime } from './compute'
+
+export async function initializeProviderForCompute(
+  dataset: AssetExtended,
+  algorithm: AssetExtended,
+  accountId: string,
+  computeEnv: ComputeEnvironment = null
+): Promise<ProviderComputeInitializeResults> {
+  const computeAsset: ComputeAsset = {
+    documentId: dataset.id,
+    serviceId: dataset.services[0].id,
+    transferTxId: dataset.accessDetails.validOrderTx
+  }
+  const computeAlgo: ComputeAlgorithm = {
+    documentId: algorithm.id,
+    serviceId: algorithm.services[0].id,
+    transferTxId: algorithm.accessDetails.validOrderTx
+  }
+
+  const validUntil = getValidUntilTime(
+    computeEnv?.maxJobDuration,
+    dataset.services[0].timeout,
+    algorithm.services[0].timeout
+  )
+
+  try {
+    return await ProviderInstance.initializeCompute(
+      [computeAsset],
+      computeAlgo,
+      computeEnv?.id,
+      validUntil,
+      dataset.services[0].serviceEndpoint,
+      accountId
+    )
+  } catch (error) {
+    LoggerInstance.error(`Error initializing provider for the compute job!`)
+    return null
+  }
+}
 
 // TODO: Why do we have these one line functions ?!?!?!
 export async function getEncryptedFiles(

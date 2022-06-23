@@ -15,7 +15,7 @@ import {
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import { calcSingleOutGivenPoolIn, getLiquidityByShares } from './pool'
+import { calcSingleOutGivenPoolIn } from './pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from './constants'
 
