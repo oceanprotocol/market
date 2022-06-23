@@ -236,11 +236,7 @@ export async function handleComputeOrder(
   try {
     // Return early when valid order is found, and no provider fees
     // are to be paid
-    if (
-      initializeData?.validOrder &&
-      (!initializeData.providerFee ||
-        initializeData?.providerFee?.providerFeeAmount === '0')
-    ) {
+    if (initializeData?.validOrder && !initializeData.providerFee) {
       LoggerInstance.log(
         '[compute] Has valid order: ',
         initializeData.validOrder
