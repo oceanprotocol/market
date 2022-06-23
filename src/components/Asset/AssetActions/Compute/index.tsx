@@ -119,125 +119,127 @@ export default function Compute({
   }
 
   async function initPriceAndFees() {
-    const computeEnv = await getComputeEnviroment(asset)
-    if (!computeEnv || !computeEnv.id) {
-      setError(`Error getting compute environments!`)
-      return
-    }
-    setComputeEnv(computeEnv)
-    const initializedProvider = await initializeProviderForCompute(
-      asset,
-      selectedAlgorithmAsset,
-      accountId,
-      computeEnv
-    )
-    if (
-      !initializedProvider ||
-      !initializedProvider?.datasets ||
-      !initializedProvider?.algorithm
-    ) {
-      setError(`Error initializing provider for the compute job!`)
-      return
-    }
-    setInitializedProviderResponse(initializedProvider)
-    setProviderFeeAmount(
-      await unitsToAmount(
-        web3,
-        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
-        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
-      )
-    )
-    const computeDuration = (
-      parseInt(initializedProvider?.datasets?.[0]?.providerFee?.validUntil) -
-      Math.floor(Date.now() / 1000)
-    ).toString()
-    setComputeValidUntil(computeDuration)
-    if (
-      asset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
-      asset?.accessDetails?.type !== 'free' &&
-      initializedProvider?.datasets?.[0]?.providerFee
-    ) {
-      setComputeStatusText(
-        getComputeFeedback(
-          asset.accessDetails?.baseToken?.symbol,
-          asset.accessDetails?.datatoken?.symbol,
-          asset.metadata.type
-        )[0]
-      )
-      const poolParams =
-        asset?.accessDetails?.type === 'dynamic'
-          ? {
-              tokenInLiquidity: poolData?.baseTokenLiquidity,
-              tokenOutLiquidity: poolData?.datatokenLiquidity,
-              tokenOutAmount: '1',
-              opcFee: getOpcFeeForToken(
-                asset?.accessDetails?.baseToken.address,
-                asset?.chainId
-              ),
-              lpSwapFee: poolData?.liquidityProviderSwapFee,
-              publishMarketSwapFee:
-                asset?.accessDetails?.publisherMarketOrderFee,
-              consumeMarketSwapFee: '0'
-            }
-          : null
-      const datasetPriceAndFees = await getOrderPriceAndFees(
-        asset,
-        ZERO_ADDRESS,
-        poolParams,
-        initializedProvider?.datasets?.[0]?.providerFee
-      )
-      if (!datasetPriceAndFees) {
-        setError('Error setting dataset price and fees!')
-        return
-      }
-      setDatasetOrderPriceAndFees(datasetPriceAndFees)
-    }
+    try {
+      const computeEnv = await getComputeEnviroment(asset)
+      if (!computeEnv || !computeEnv.id)
+        throw new Error(`Error getting compute environments!`)
 
-    if (
-      selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
-      selectedAlgorithmAsset?.accessDetails?.type !== 'free' &&
-      initializedProvider?.algorithm?.providerFee
-    ) {
-      setComputeStatusText(
-        getComputeFeedback(
-          selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol,
-          selectedAlgorithmAsset?.accessDetails?.datatoken?.symbol,
-          selectedAlgorithmAsset?.metadata?.type
-        )[0]
-      )
-      let algoPoolParams = null
-      if (selectedAlgorithmAsset?.accessDetails?.type === 'dynamic') {
-        const response = await getPoolData(
-          selectedAlgorithmAsset.chainId,
-          selectedAlgorithmAsset.accessDetails?.addressOrId,
-          selectedAlgorithmAsset?.nft.owner,
-          accountId || ''
-        )
-        algoPoolParams = {
-          tokenInLiquidity: response?.poolData?.baseTokenLiquidity,
-          tokenOutLiquidity: response?.poolData?.datatokenLiquidity,
-          tokenOutAmount: '1',
-          opcFee: getOpcFeeForToken(
-            selectedAlgorithmAsset?.accessDetails?.baseToken.address,
-            selectedAlgorithmAsset?.chainId
-          ),
-          lpSwapFee: response?.poolData?.liquidityProviderSwapFee,
-          publishMarketSwapFee:
-            selectedAlgorithmAsset?.accessDetails?.publisherMarketOrderFee,
-          consumeMarketSwapFee: '0'
-        }
-      }
-      const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
+      setComputeEnv(computeEnv)
+      const initializedProvider = await initializeProviderForCompute(
+        asset,
         selectedAlgorithmAsset,
-        ZERO_ADDRESS,
-        algoPoolParams,
-        initializedProvider.algorithm.providerFee
+        accountId,
+        computeEnv
       )
-      if (!algorithmOrderPriceAndFees) {
-        setError('Error setting algorithm price and fees!')
-        return
+      if (
+        !initializedProvider ||
+        !initializedProvider?.datasets ||
+        !initializedProvider?.algorithm
+      )
+        throw new Error(`Error initializing provider for the compute job!`)
+
+      setInitializedProviderResponse(initializedProvider)
+      setProviderFeeAmount(
+        await unitsToAmount(
+          web3,
+          initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
+          initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
+        )
+      )
+      const computeDuration = (
+        parseInt(initializedProvider?.datasets?.[0]?.providerFee?.validUntil) -
+        Math.floor(Date.now() / 1000)
+      ).toString()
+      setComputeValidUntil(computeDuration)
+
+      if (
+        asset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
+        asset?.accessDetails?.type !== 'free' &&
+        initializedProvider?.datasets?.[0]?.providerFee
+      ) {
+        setComputeStatusText(
+          getComputeFeedback(
+            asset.accessDetails?.baseToken?.symbol,
+            asset.accessDetails?.datatoken?.symbol,
+            asset.metadata.type
+          )[0]
+        )
+        const poolParams =
+          asset?.accessDetails?.type === 'dynamic'
+            ? {
+                tokenInLiquidity: poolData?.baseTokenLiquidity,
+                tokenOutLiquidity: poolData?.datatokenLiquidity,
+                tokenOutAmount: '1',
+                opcFee: getOpcFeeForToken(
+                  asset?.accessDetails?.baseToken.address,
+                  asset?.chainId
+                ),
+                lpSwapFee: poolData?.liquidityProviderSwapFee,
+                publishMarketSwapFee:
+                  asset?.accessDetails?.publisherMarketOrderFee,
+                consumeMarketSwapFee: '0'
+              }
+            : null
+        const datasetPriceAndFees = await getOrderPriceAndFees(
+          asset,
+          ZERO_ADDRESS,
+          poolParams,
+          initializedProvider?.datasets?.[0]?.providerFee
+        )
+        if (!datasetPriceAndFees)
+          throw new Error('Error setting dataset price and fees!')
+
+        setDatasetOrderPriceAndFees(datasetPriceAndFees)
       }
-      setAlgoOrderPriceAndFees(algorithmOrderPriceAndFees)
+
+      if (
+        selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
+        selectedAlgorithmAsset?.accessDetails?.type !== 'free' &&
+        initializedProvider?.algorithm?.providerFee
+      ) {
+        setComputeStatusText(
+          getComputeFeedback(
+            selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol,
+            selectedAlgorithmAsset?.accessDetails?.datatoken?.symbol,
+            selectedAlgorithmAsset?.metadata?.type
+          )[0]
+        )
+        let algoPoolParams = null
+        if (selectedAlgorithmAsset?.accessDetails?.type === 'dynamic') {
+          const response = await getPoolData(
+            selectedAlgorithmAsset.chainId,
+            selectedAlgorithmAsset.accessDetails?.addressOrId,
+            selectedAlgorithmAsset?.nft.owner,
+            accountId || ''
+          )
+          algoPoolParams = {
+            tokenInLiquidity: response?.poolData?.baseTokenLiquidity,
+            tokenOutLiquidity: response?.poolData?.datatokenLiquidity,
+            tokenOutAmount: '1',
+            opcFee: getOpcFeeForToken(
+              selectedAlgorithmAsset?.accessDetails?.baseToken.address,
+              selectedAlgorithmAsset?.chainId
+            ),
+            lpSwapFee: response?.poolData?.liquidityProviderSwapFee,
+            publishMarketSwapFee:
+              selectedAlgorithmAsset?.accessDetails?.publisherMarketOrderFee,
+            consumeMarketSwapFee: '0'
+          }
+        }
+        const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
+          selectedAlgorithmAsset,
+          ZERO_ADDRESS,
+          algoPoolParams,
+          initializedProvider.algorithm.providerFee
+        )
+        if (!algorithmOrderPriceAndFees)
+          throw new Error('Error setting algorithm price and fees!')
+
+        setAlgoOrderPriceAndFees(algorithmOrderPriceAndFees)
+      }
+    } catch (error) {
+      setError(error.message)
+      LoggerInstance.error(`[compute] ${error.message} `)
     }
   }
 
@@ -287,7 +289,7 @@ export default function Compute({
     toast.error(newError)
   }, [error])
 
-  async function startJob(): Promise<string> {
+  async function startJob(): Promise<void> {
     try {
       setIsOrdering(true)
       setIsOrdered(false)
@@ -304,15 +306,10 @@ export default function Compute({
         selectedAlgorithmAsset
       )
       LoggerInstance.log('[compute] Is data set orderable?', allowed)
-      if (!allowed) {
-        setError(
+      if (!allowed)
+        throw new Error(
           'Data set is not orderable in combination with selected algorithm.'
         )
-        LoggerInstance.error(
-          '[compute] Error starting compute job. Dataset is not orderable in combination with selected algorithm.'
-        )
-        return
-      }
 
       setComputeStatusText(
         getComputeFeedback(
@@ -336,11 +333,8 @@ export default function Compute({
         initializedProviderResponse.datasets[0],
         computeEnv.consumerAddress
       )
-      if (!datasetOrderTx) {
-        setError('Failed to order dataset.')
-        LoggerInstance.error('[compute] Failed to order dataset.')
-        return
-      }
+      if (!datasetOrderTx) throw new Error('Failed to order dataset.')
+
       setComputeStatusText(
         getComputeFeedback(
           selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
@@ -364,11 +358,7 @@ export default function Compute({
         initializedProviderResponse.algorithm,
         computeEnv.consumerAddress
       )
-      if (!algorithmOrderTx) {
-        setError('Failed to order algorithm.')
-        LoggerInstance.error('[compute] Failed to order algorithm.')
-        return
-      }
+      if (!algorithmOrderTx) throw new Error('Failed to order algorithm.')
 
       LoggerInstance.log('[compute] Starting compute job.')
       const computeAsset: ComputeAsset = {
@@ -393,17 +383,15 @@ export default function Compute({
         null,
         output
       )
-      if (!response) {
-        setError('Error starting compute job.')
-        return
-      }
+      if (!response) throw new Error('Error starting compute job.')
+
       LoggerInstance.log('[compute] Starting compute job response: ', response)
       setIsOrdered(true)
       setRefetchJobs(!refetchJobs)
       initPriceAndFees()
     } catch (error) {
-      setError('Failed to start job!')
-      LoggerInstance.error('[compute] Failed to start job: ', error.message)
+      setError(error.message)
+      LoggerInstance.error(`[compute] ${error.message} `)
     } finally {
       setIsOrdering(false)
     }
