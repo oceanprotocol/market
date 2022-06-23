@@ -15,7 +15,6 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
 import PublishersWithMostSales from './PublishersWithMostSales'
-import { useWeb3 } from '@context/Web3'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -54,7 +53,6 @@ function SectionQueryResult({
   queryData?: string[]
 }) {
   const { chainIds } = useUserPreferences()
-  const { accountId } = useWeb3()
   const [result, setResult] = useState<PagedAssets>()
   const [loading, setLoading] = useState<boolean>()
   const isMounted = useIsMounted()
@@ -102,8 +100,6 @@ function SectionQueryResult({
         assets={result?.results}
         showPagination={false}
         isLoading={loading || !query}
-        chainIds={chainIds}
-        accountId={accountId}
       />
 
       {action && action}
