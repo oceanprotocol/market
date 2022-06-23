@@ -246,7 +246,7 @@ export default function Compute({
 
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
-  }, [asset?.accessDetails])
+  }, [asset?.accessDetails, accountId])
 
   useEffect(() => {
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
@@ -265,7 +265,7 @@ export default function Compute({
     }
 
     initSelectedAlgo()
-  }, [selectedAlgorithmAsset])
+  }, [selectedAlgorithmAsset, accountId])
 
   useEffect(() => {
     if (!asset) return
