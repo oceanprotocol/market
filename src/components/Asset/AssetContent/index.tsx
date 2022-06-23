@@ -16,6 +16,7 @@ import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
+import Button from '@shared/atoms/Button'
 
 export default function AssetContent({
   asset
@@ -74,9 +75,9 @@ export default function AssetContent({
           <AssetActions asset={asset} />
           {isOwner && isAssetNetwork && (
             <div className={styles.ownerActions}>
-              <Link href={`/asset/${asset?.id}/edit`}>
-                <a>Edit</a>
-              </Link>
+              <Button style="text" size="small" to={`/asset/${asset?.id}/edit`}>
+                Edit Asset
+              </Button>
             </div>
           )}
         </div>
