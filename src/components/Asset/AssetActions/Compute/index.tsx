@@ -277,7 +277,6 @@ export default function Compute({
 
   useEffect(() => {
     if (!asset) return
-
     getAlgorithmsForAsset(asset, newCancelToken()).then((algorithmsAssets) => {
       setDdoAlgorithmList(algorithmsAssets)
       getAlgorithmAssetSelectionList(asset, algorithmsAssets).then(
