@@ -27,6 +27,7 @@ export interface AssetProviderValue {
   error?: string
   isAssetNetwork: boolean
   isV3Asset: boolean
+  isOwner: boolean
   oceanConfig: Config
   loading: boolean
   fetchAsset: (token?: CancelToken) => Promise<void>
@@ -49,6 +50,7 @@ function AssetProvider({
   const [asset, setAsset] = useState<AssetExtended>()
   const [title, setTitle] = useState<string>()
   const [owner, setOwner] = useState<string>()
+  const [isOwner, setIsOwner] = useState<boolean>()
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
@@ -84,6 +86,7 @@ function AssetProvider({
         }))
         setTitle(asset.metadata?.name)
         setOwner(asset.nft?.owner)
+        setIsOwner(accountId?.toLowerCase() === asset?.nft?.owner.toLowerCase())
         setIsInPurgatory(asset.purgatory?.state)
         setPurgatoryData(asset.purgatory)
         LoggerInstance.log('[asset] Got asset', asset)
@@ -127,6 +130,7 @@ function AssetProvider({
   useEffect(() => {
     if (!isMounted) return
 
+    setIsOwner(accountId?.toLowerCase() === asset?.nft?.owner.toLowerCase())
     fetchAccessDetails()
   }, [accountId, fetchAccessDetails, isMounted])
 
@@ -172,6 +176,7 @@ function AssetProvider({
           fetchAsset,
           isAssetNetwork,
           isV3Asset,
+          isOwner,
           oceanConfig
         } as AssetProviderValue
       }

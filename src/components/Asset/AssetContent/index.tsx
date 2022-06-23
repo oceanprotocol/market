@@ -15,7 +15,6 @@ import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import { useWeb3 } from '@context/Web3'
 import Web3 from 'web3'
 
 export default function AssetContent({
@@ -23,9 +22,7 @@ export default function AssetContent({
 }: {
   asset: AssetExtended
 }): ReactElement {
-  const [isOwner, setIsOwner] = useState(false)
-  const { accountId } = useWeb3()
-  const { isInPurgatory, purgatoryData, owner, isAssetNetwork } = useAsset()
+  const { isInPurgatory, purgatoryData, isOwner, isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [receipts, setReceipts] = useState([])
   const [nftPublisher, setNftPublisher] = useState<string>()
@@ -37,20 +34,6 @@ export default function AssetContent({
       )
     )
   }, [receipts])
-
-  useEffect(() => {
-    if (!accountId || !owner) return
-
-    const isOwner = accountId.toLowerCase() === owner.toLowerCase()
-    setIsOwner(isOwner)
-  }, [accountId, owner, asset])
-
-  useEffect(() => {
-    if (!accountId || !owner) return
-
-    const isOwner = accountId.toLowerCase() === owner.toLowerCase()
-    setIsOwner(isOwner)
-  }, [accountId, asset?.accessDetails, owner, asset])
 
   return (
     <>
