@@ -4,6 +4,8 @@ import AssetList, { AssetListProps } from '@shared/AssetList'
 import * as config from '../../../../app.config'
 import { assets, mockWallet } from '../../../../.storybook/__mockdata__'
 import UrqlClientProvider from '@context/UrqlProvider'
+import { UserPreferencesProvider } from '@context/UserPreferences'
+import MarketMetadataProvider from '@context/MarketMetadata'
 
 export default {
   title: 'Component/@shared/AssetList',
@@ -12,9 +14,13 @@ export default {
 
 const Template: ComponentStory<typeof AssetList> = (args: AssetListProps) => {
   return (
-    <UrqlClientProvider>
-      <AssetList {...args} />
-    </UrqlClientProvider>
+    <MarketMetadataProvider>
+      <UrqlClientProvider>
+        <UserPreferencesProvider>
+          <AssetList {...args} />
+        </UserPreferencesProvider>
+      </UrqlClientProvider>
+    </MarketMetadataProvider>
   )
 }
 

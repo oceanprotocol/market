@@ -1,7 +1,6 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Publisher, { PublisherProps } from '@shared/Publisher'
-import MarketMetadataProvider from '@context/MarketMetadata'
 
 export default {
   title: 'Component/@shared/Publisher',

@@ -5,6 +5,7 @@ import AssetComputeList, {
 } from '@shared/AssetList/AssetComputeList'
 import { assetSelectionAsset } from '../../../../../.storybook/__mockdata__'
 import MarketMetadataProvider from '@context/MarketMetadata'
+import { UserPreferencesProvider } from '@context/UserPreferences'
 
 export default {
   title: 'Component/@shared/AssetList/AssetComputeList',
@@ -16,7 +17,9 @@ const Template: ComponentStory<typeof AssetComputeList> = (
 ) => {
   return (
     <MarketMetadataProvider>
-      <AssetComputeList {...args} />
+      <UserPreferencesProvider>
+        <AssetComputeList {...args} />
+      </UserPreferencesProvider>
     </MarketMetadataProvider>
   )
 }

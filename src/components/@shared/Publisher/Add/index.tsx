@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import External from '@images/external.svg'
-import styles from './Add.module.css'
+import styles from './index.module.css'
 
 export default function Add(): ReactElement {
   return (

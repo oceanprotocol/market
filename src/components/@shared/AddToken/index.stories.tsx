@@ -1,15 +1,16 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import AddToken, { AddTokenProps } from '@shared/AddToken'
+import Web3Provider from '@context/Web3'
 
 export default {
   title: 'Component/@shared/AddToken',
   component: AddToken
 } as ComponentMeta<typeof AddToken>
 
-const Template: ComponentStory<typeof AddToken> = (args: AddTokenProps) => (
-  <AddToken {...args} />
-)
+const Template: ComponentStory<typeof AddToken> = (args: AddTokenProps) => {
+  return <AddToken {...args} />
+}
 
 interface Props {
   args: AddTokenProps

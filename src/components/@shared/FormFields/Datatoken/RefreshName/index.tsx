@@ -1,13 +1,15 @@
 import React, { ReactElement } from 'react'
-import styles from './RefreshName.module.css'
+import styles from './index.module.css'
 import Button from '@shared/atoms/Button'
 import Refresh from '@images/refresh.svg'
 
+export interface RefreshNameProps {
+  generateName: () => void
+}
+
 export default function RefreshName({
   generateName
-}: {
-  generateName: () => void
-}): ReactElement {
+}: RefreshNameProps): ReactElement {
   return (
     <Button
       style="text"

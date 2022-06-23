@@ -3,5 +3,5 @@
 }
 
 .linksExternal {
-  composes: linksExternal from './index.module.css';
+  composes: linksExternal from '../index.module.css';
 }

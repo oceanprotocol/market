@@ -7,6 +7,8 @@ import {
   prices
 } from '../../../../.storybook/__mockdata__'
 import AssetTeaser, { AssetTeaserProps } from '@shared/AssetTeaser'
+import { UserPreferencesProvider } from '@context/UserPreferences'
+import MarketMetadataProvider from '@context/MarketMetadata'
 
 export default {
   title: 'Component/@shared/AssetTeaser',
@@ -16,7 +18,13 @@ export default {
 const Template: ComponentStory<typeof AssetTeaser> = (
   args: AssetTeaserProps
 ) => {
-  return <AssetTeaser {...args} />
+  return (
+    <MarketMetadataProvider>
+      <UserPreferencesProvider>
+        <AssetTeaser {...args} />
+      </UserPreferencesProvider>
+    </MarketMetadataProvider>
+  )
 }
 
 interface Props {

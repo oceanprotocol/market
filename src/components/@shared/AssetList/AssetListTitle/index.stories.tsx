@@ -4,6 +4,7 @@ import AssetListTitle, {
   AssetListTitleProps
 } from '@shared/AssetList/AssetListTitle'
 import MarketMetadataProvider from '@context/MarketMetadata'
+import { UserPreferencesProvider } from '@context/UserPreferences'
 
 export default {
   title: 'Component/@shared/AssetList/AssetListTitle',
@@ -15,7 +16,9 @@ const Template: ComponentStory<typeof AssetListTitle> = (
 ) => {
   return (
     <MarketMetadataProvider>
-      <AssetListTitle {...args} />
+      <UserPreferencesProvider>
+        <AssetListTitle {...args} />
+      </UserPreferencesProvider>
     </MarketMetadataProvider>
   )
 }

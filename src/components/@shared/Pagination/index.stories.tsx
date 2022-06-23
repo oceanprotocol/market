@@ -2,7 +2,6 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Pagination from '@shared/Pagination'
 import { PaginationProps } from './_types'
-import { UserPreferencesProvider } from '@context/UserPreferences'
 import MarketMetadataProvider from '@context/MarketMetadata'
 
 export default {
