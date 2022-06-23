@@ -5,11 +5,13 @@ import styles from './index.module.css'
 export interface BlockiesProps {
   accountId: string
   className?: string
+  image?: string
 }
 
 export default function Blockies({
   accountId,
-  className
+  className,
+  image
 }: BlockiesProps): ReactElement {
   if (!accountId) return null
   const blockies = toDataUrl(accountId)
@@ -17,7 +19,7 @@ export default function Blockies({
   return (
     <img
       className={`${className || ''} ${styles.blockies} `}
-      src={blockies}
+      src={image || blockies}
       alt="Blockies"
       aria-hidden="true"
     />

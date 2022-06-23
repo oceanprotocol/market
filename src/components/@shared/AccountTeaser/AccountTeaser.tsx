@@ -38,14 +38,11 @@ export default function AccountTeaser({
         <a className={styles.link}>
           <header className={styles.header}>
             {place && <span>{place}</span>}
-            {profile?.image ? (
-              <img src={profile.image} className={styles.blockies} />
-            ) : (
-              <Blockies
-                accountId={accountTeaserVM.address}
-                className={styles.blockies}
-              />
-            )}
+            <Blockies
+              accountId={accountTeaserVM.address}
+              className={styles.blockies}
+              image={profile?.image}
+            />
             <div>
               <Dotdotdot clamp={3}>
                 <h3 className={styles.name}>
