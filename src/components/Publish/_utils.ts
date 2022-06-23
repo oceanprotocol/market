@@ -67,7 +67,7 @@ function transformTags(value: string): string[] {
 }
 
 export function transformTokenName(name: string): string {
-  return name.replace(/([A-Z])/g, ' $1')
+  return name?.replace(/([A-Z])/g, ' $1')
 }
 
 export async function transformPublishFormToDdo(

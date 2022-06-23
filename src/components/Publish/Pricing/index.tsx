@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useFormikContext } from 'formik'
 import Tabs from '@shared/atoms/Tabs'
 import { isValidNumber } from '@utils/numbers'
@@ -17,7 +17,7 @@ import { useWeb3 } from '@context/Web3'
 export default function PricingFields(): ReactElement {
   const { appConfig } = useMarketMetadata()
   const { chainId } = useWeb3()
-  const oceanConfig = getOceanConfig(chainId)
+  const [defaultBaseToken, setDefaultBaseToken] = useState<TokenInfo>()
 
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
@@ -25,12 +25,17 @@ export default function PricingFields(): ReactElement {
   const { price, amountBaseToken, weightOnBaseToken, weightOnDataToken, type } =
     pricing
 
-  const defaultBaseToken: TokenInfo = {
-    address: oceanConfig?.oceanTokenAddress,
-    symbol: oceanConfig?.oceanTokenSymbol,
-    decimals: 18,
-    name: 'OceanToken'
-  }
+  useEffect(() => {
+    if (!chainId) return
+
+    const oceanConfig = getOceanConfig(chainId)
+    setDefaultBaseToken({
+      address: oceanConfig?.oceanTokenAddress,
+      symbol: oceanConfig?.oceanTokenSymbol,
+      decimals: 18,
+      name: 'OceanToken'
+    })
+  }, [chainId])
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {

@@ -19,6 +19,7 @@ export default function BaseToken({
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { chainId } = useWeb3()
   const [approvedBaseTokens, setApprovedBaseTokens] = useState<TokenInfo[]>([])
+
   const init = useCallback(async () => {
     if (!chainId) return
     setApprovedBaseTokens(await getOpcsApprovedTokens(chainId))
