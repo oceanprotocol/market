@@ -86,7 +86,6 @@ function AssetProvider({
         }))
         setTitle(asset.metadata?.name)
         setOwner(asset.nft?.owner)
-        setIsOwner(accountId?.toLowerCase() === asset?.nft?.owner.toLowerCase())
         setIsInPurgatory(asset.purgatory?.state)
         setPurgatoryData(asset.purgatory)
         LoggerInstance.log('[asset] Got asset', asset)
@@ -130,7 +129,6 @@ function AssetProvider({
   useEffect(() => {
     if (!isMounted) return
 
-    setIsOwner(accountId?.toLowerCase() === asset?.nft?.owner.toLowerCase())
     fetchAccessDetails()
   }, [accountId, fetchAccessDetails, isMounted])
 
@@ -143,6 +141,16 @@ function AssetProvider({
     const isAssetNetwork = chainId === asset?.chainId
     setIsAssetNetwork(isAssetNetwork)
   }, [chainId, asset?.chainId])
+
+  // -----------------------------------
+  // Asset owner check against wallet user
+  // -----------------------------------
+  useEffect(() => {
+    if (!accountId || !owner) return
+
+    const isOwner = accountId?.toLowerCase() === owner.toLowerCase()
+    setIsOwner(isOwner)
+  }, [accountId, owner])
 
   // -----------------------------------
   // Load ocean config based on asset network
