@@ -172,19 +172,11 @@ const UserSalesQuery = gql`
   }
 `
 
-// TODO: figure out some way to get this
 const TopSalesQuery = gql`
   query TopSalesQuery {
-    users(
-      first: 20
-      orderBy: sharesOwned
-      orderDirection: desc
-      where: { tokenBalancesOwned_not: "0" }
-    ) {
+    users(first: 20, orderBy: totalSales, orderDirection: desc) {
       id
-      tokenBalancesOwned {
-        value
-      }
+      totalSales
     }
   }
 `
@@ -451,6 +443,7 @@ export async function getTopAssetsPublishers(
       null,
       queryContext
     )
+
     for (let i = 0; i < fetchedUsers.data.users.length; i++) {
       const publishersIndex = publisherSales.findIndex(
         (user) => fetchedUsers.data.users[i].id === user.address
