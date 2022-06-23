@@ -151,19 +151,20 @@ export async function getComputeEnviroment(
 
 export function getQueryString(
   trustedAlgorithmList: PublisherTrustedAlgorithm[],
+  trustedPublishersList: string[],
   chainId?: number
 ): SearchQuery {
-  const algorithmDidList = trustedAlgorithmList.map((x) => x.did)
+  const algorithmDidList = trustedAlgorithmList?.map((x) => x.did)
 
   const baseParams = {
     chainIds: [chainId],
     sort: { sortBy: SortTermOptions.Created },
-    filters: [
-      getFilterTerm('metadata.type', 'algorithm'),
-      algorithmDidList.length > 0 && getFilterTerm('_id', algorithmDidList)
-    ]
+    filters: [getFilterTerm('metadata.type', 'algorithm')]
   } as BaseQueryParams
-
+  algorithmDidList?.length > 0 &&
+    baseParams.filters.push(getFilterTerm('_id', algorithmDidList))
+  trustedPublishersList?.length > 0 &&
+    baseParams.filters.push(getFilterTerm('nft.owner', trustedPublishersList))
   const query = generateBaseQuery(baseParams)
 
   return query
@@ -174,15 +175,23 @@ export async function getAlgorithmsForAsset(
   token: CancelToken
 ): Promise<Asset[]> {
   const computeService: Service = getServiceByName(asset, 'compute')
-  const publisherTrustedAlgorithms =
-    computeService.compute.publisherTrustedAlgorithms || []
 
   let algorithms: Asset[]
   if (!computeService.compute) {
     algorithms = []
   } else {
+    if (
+      computeService.compute.publisherTrustedAlgorithms?.length === 0 &&
+      computeService.compute.publisherTrustedAlgorithmPublishers?.length === 0
+    )
+      return []
+
     const gueryResults = await queryMetadata(
-      getQueryString(publisherTrustedAlgorithms, asset.chainId),
+      getQueryString(
+        computeService.compute.publisherTrustedAlgorithms,
+        computeService.compute.publisherTrustedAlgorithmPublishers,
+        asset.chainId
+      ),
       token
     )
     algorithms = gueryResults?.results
