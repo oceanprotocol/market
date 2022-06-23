@@ -17,6 +17,7 @@ import { calcMaxExactIn, LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { usePool } from '@context/Pool'
 import { MAX_DECIMALS } from '@utils/constants'
 import { getMaxDecimalsValidation } from '@utils/numbers'
+import { getTokenBalanceFromSymbol } from '@utils/web3'
 
 export interface FormAddLiquidity {
   amount: number
@@ -61,14 +62,15 @@ export default function Add({
       .required('Required')
   })
 
-  // Get maximum amount for OCEAN
+  // Get maximum amount for baseToken
   useEffect(() => {
     if (
       !web3 ||
       !accountId ||
       !isAssetNetwork ||
       !poolData?.id ||
-      !poolInfo?.baseTokenAddress
+      !poolInfo?.baseTokenAddress ||
+      !poolInfo?.baseTokenSymbol
     )
       return
 
@@ -82,11 +84,15 @@ export default function Add({
           poolInfo.baseTokenDecimals
         )
 
+        const baseTokenBalance = getTokenBalanceFromSymbol(
+          balance,
+          poolInfo.baseTokenSymbol
+        )
         const amountMaxPool = calcMaxExactIn(poolReserve)
         const amountMax =
-          Number(balance.ocean) > Number(amountMaxPool)
+          Number(baseTokenBalance) > Number(amountMaxPool)
             ? amountMaxPool
-            : balance.ocean
+            : baseTokenBalance
         setAmountMax(Number(amountMax).toFixed(3))
       } catch (error) {
         LoggerInstance.error(error.message)
@@ -100,7 +106,8 @@ export default function Add({
     poolData?.id,
     poolInfo?.baseTokenAddress,
     poolInfo?.baseTokenDecimals,
-    balance?.ocean
+    poolInfo?.baseTokenSymbol,
+    balance
   ])
 
   // Submit

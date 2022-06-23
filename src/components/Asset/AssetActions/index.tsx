@@ -18,6 +18,7 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import PoolProvider from '@context/Pool'
+import { getTokenBalanceFromSymbol } from '@utils/web3'
 
 export default function AssetActions({
   asset
@@ -95,14 +96,19 @@ export default function AssetActions({
     if (asset?.accessDetails?.type === 'free') setIsBalanceSufficient(true)
     if (
       !asset?.accessDetails?.price ||
+      !asset?.accessDetails?.baseToken?.symbol ||
       !accountId ||
-      !balance?.ocean ||
+      !balance ||
       !dtBalance
     )
       return
 
+    const baseTokenBalance = getTokenBalanceFromSymbol(
+      balance,
+      asset?.accessDetails?.baseToken?.symbol
+    )
     setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${asset?.accessDetails.price}`) ||
+      compareAsBN(baseTokenBalance, `${asset?.accessDetails.price}`) ||
         Number(dtBalance) >= 1
     )
 

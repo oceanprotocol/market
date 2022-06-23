@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './FormAdd.module.css'
 import Input from '@shared/FormInput'
 import Error from '@shared/FormInput/Error'
@@ -12,6 +12,7 @@ import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
 import { Pool } from '@oceanprotocol/lib'
 import { usePool } from '@context/Pool'
+import { getTokenBalanceFromSymbol } from '@utils/web3'
 
 export default function FormAdd({
   amountMax,
@@ -25,6 +26,7 @@ export default function FormAdd({
   const { balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const { poolData, poolInfo } = usePool()
+  const [baseTokenBalance, setBaseTokenBalance] = useState('0')
 
   // Connect with form
   const {
@@ -80,10 +82,18 @@ export default function FormAdd({
     setNewPoolShare
   ])
 
+  useEffect(() => {
+    const baseTokenBalance = getTokenBalanceFromSymbol(
+      balance,
+      poolInfo.baseTokenSymbol
+    )
+    setBaseTokenBalance(baseTokenBalance)
+  }, [balance, poolInfo?.baseTokenSymbol])
+
   return (
     <>
       <UserLiquidity
-        amount={balance.ocean}
+        amount={baseTokenBalance}
         amountMax={amountMax}
         symbol={poolInfo?.baseTokenSymbol}
       />
@@ -98,7 +108,7 @@ export default function FormAdd({
         additionalComponent={<Error meta={meta} />}
       />
 
-      {Number(balance.ocean) > 0 && (
+      {Number(baseTokenBalance) > 0 && (
         <Button
           className={styles.buttonMax}
           style="text"

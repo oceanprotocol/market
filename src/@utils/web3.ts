@@ -151,3 +151,12 @@ export async function getTokenBalance(
     LoggerInstance.error(`ERROR: Failed to get the balance: ${e.message}`)
   }
 }
+
+export function getTokenBalanceFromSymbol(
+  balance: UserBalance,
+  symbol: string
+): string {
+  if (!symbol) return
+  const baseTokenBalance = balance?.[symbol.toLocaleLowerCase()]
+  return baseTokenBalance || '0'
+}

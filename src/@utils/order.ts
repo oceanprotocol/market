@@ -47,7 +47,7 @@ export async function order(
     _consumeMarketFee: {
       consumeMarketFeeAddress: marketFeeAddress,
       consumeMarketFeeAmount: consumeMarketOrderFee,
-      consumeMarketFeeToken: config.oceanTokenAddress
+      consumeMarketFeeToken: asset.accessDetails.baseToken.address
     }
   } as OrderParams
 

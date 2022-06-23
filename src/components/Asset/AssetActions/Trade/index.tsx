@@ -6,6 +6,7 @@ import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { Datatoken, LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { usePool } from '@context/Pool'
+import { getTokenBalanceFromSymbol } from '@utils/web3'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -16,15 +17,16 @@ export default function Trade(): ReactElement {
   const { asset } = useAsset()
   const { poolInfo } = usePool()
 
-  // Get datatoken balance, and combine with OCEAN balance from hooks into one object
+  // Get datatoken balance, and combine with baseToken balance from hooks into one object
   useEffect(() => {
     if (
       !web3 ||
       !accountId ||
       !isAssetNetwork ||
-      !balance?.ocean ||
+      !balance ||
       !accountId ||
-      !poolInfo?.datatokenAddress
+      !poolInfo?.datatokenAddress ||
+      !poolInfo?.baseTokenSymbol
     )
       return
 
@@ -34,17 +36,22 @@ export default function Trade(): ReactElement {
         poolInfo.datatokenAddress,
         accountId
       )
+      const baseTokenBalance = getTokenBalanceFromSymbol(
+        balance,
+        poolInfo.baseTokenSymbol
+      )
       setTokenBalance({
-        baseToken: new Decimal(balance.ocean).toString(),
+        baseToken: new Decimal(baseTokenBalance).toString(),
         datatoken: new Decimal(dtBalance).toString()
       })
     }
     getTokenBalance()
   }, [
     web3,
-    balance.ocean,
+    balance,
     accountId,
     poolInfo?.datatokenAddress,
+    poolInfo?.baseTokenSymbol,
     isAssetNetwork
   ])
 

@@ -13,6 +13,7 @@ import { Asset } from '@oceanprotocol/lib'
 import { AccessDetails } from 'src/@types/Price'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
+import { getTokenBalanceFromSymbol } from '@utils/web3'
 
 export default function FormStartCompute({
   algorithms,
@@ -122,8 +123,12 @@ export default function FormStartCompute({
 
   useEffect(() => {
     if (!totalPrice) return
+    const baseTokenBalance = getTokenBalanceFromSymbol(
+      balance,
+      asset?.accessDetails?.baseToken?.symbol
+    )
     setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${totalPrice}`) || Number(dtBalance) >= 1
+      compareAsBN(baseTokenBalance, `${totalPrice}`) || Number(dtBalance) >= 1
     )
   }, [totalPrice])
 
