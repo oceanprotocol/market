@@ -155,6 +155,55 @@ export async function reuseOrder(
   return tx
 }
 
+async function approveProviderFee(
+  asset: AssetExtended,
+  accountId: string,
+  web3: Web3,
+  providerFeeAmount: string
+): Promise<string> {
+  const baseToken =
+    asset?.accessDetails?.type === 'free'
+      ? getOceanConfig(asset.chainId).oceanTokenAddress
+      : asset?.accessDetails?.baseToken?.address
+  const txApproveWei = await approveWei(
+    web3,
+    accountId,
+    baseToken,
+    asset?.accessDetails?.datatoken?.address,
+    providerFeeAmount
+  )
+  return txApproveWei as string // thanks ocean.js
+}
+
+async function startOrder(
+  web3: Web3,
+  asset: AssetExtended,
+  orderPriceAndFees: OrderPriceAndFees,
+  accountId: string,
+  hasDatatoken: boolean,
+  initializeData: ProviderComputeInitialize,
+  computeConsumerAddress?: string
+): Promise<TransactionReceipt> {
+  if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
+    const poolTx = await buyDtFromPool(asset?.accessDetails, accountId, web3)
+    LoggerInstance.log('[compute] Bought datatoken from pool: ', poolTx)
+    if (!poolTx) {
+      toast.error('Failed to buy datatoken from pool!')
+      return
+    }
+  }
+  const tx = await order(
+    web3,
+    asset,
+    orderPriceAndFees,
+    accountId,
+    initializeData.providerFee,
+    computeConsumerAddress
+  )
+  LoggerInstance.log('[compute] Asset ordered:', tx)
+  return tx
+}
+
 /**
  * Handles order for compute assets for the following scenarios:
  * - have validOrder and no providerFees -> then order is valid, providerFees are valid, it returns the valid order value
@@ -182,60 +231,66 @@ export async function handleComputeOrder(
     '[compute] Handle compute order for asset type: ',
     asset.metadata.type
   )
+  LoggerInstance.log('[compute] Using initializeData: ', initializeData)
 
-  if (
-    initializeData.providerFee &&
-    initializeData.providerFee.providerFeeAmount !== '0'
-  ) {
-    const baseToken =
-      asset?.accessDetails?.type === 'free'
-        ? getOceanConfig(asset.chainId).oceanTokenAddress
-        : asset?.accessDetails?.baseToken?.address
-    const txApproveWei = await approveWei(
-      web3,
-      accountId,
-      baseToken,
-      asset?.accessDetails?.datatoken?.address,
-      initializeData?.providerFee?.providerFeeAmount
-    )
-    if (!txApproveWei) {
-      toast.error('Failed to approve provider fees!')
-      return
+  try {
+    // Return early when valid order is found, and no provider fees
+    // are to be paid
+    if (
+      initializeData?.validOrder &&
+      (!initializeData.providerFee ||
+        initializeData?.providerFee?.providerFeeAmount === '0')
+    ) {
+      LoggerInstance.log(
+        '[compute] Has valid order: ',
+        initializeData.validOrder
+      )
+      return initializeData.validOrder
     }
-  }
-  if (initializeData.validOrder && !initializeData.providerFee) {
-    LoggerInstance.log('[compute] Has valid order: ', initializeData.validOrder)
-    return initializeData.validOrder
-  } else if (initializeData.validOrder) {
-    LoggerInstance.log('[compute] Calling reuseOrder ...', initializeData)
-    const tx = await reuseOrder(
-      web3,
-      asset,
-      accountId,
-      initializeData.validOrder,
-      initializeData.providerFee
-    )
-    LoggerInstance.log('[compute] Reused order:', tx.transactionHash)
-    return tx.transactionHash
-  } else {
+
+    // Approve potential Provider fee amount first
+    if (initializeData?.providerFee?.providerFeeAmount !== '0') {
+      const txApproveProvider = await approveProviderFee(
+        asset,
+        accountId,
+        web3,
+        initializeData.providerFee.providerFeeAmount
+      )
+
+      if (!txApproveProvider)
+        throw new Error('Failed to approve provider fees!')
+
+      LoggerInstance.log('[compute] Approved provider fees:', txApproveProvider)
+    }
+
+    if (initializeData?.validOrder) {
+      LoggerInstance.log('[compute] Calling reuseOrder ...', initializeData)
+      const txReuseOrder = await reuseOrder(
+        web3,
+        asset,
+        accountId,
+        initializeData.validOrder,
+        initializeData.providerFee
+      )
+      if (!txReuseOrder) throw new Error('Failed to reuse order!')
+      LoggerInstance.log('[compute] Reused order:', txReuseOrder)
+      return txReuseOrder?.transactionHash
+    }
+
     LoggerInstance.log('[compute] Calling order ...', initializeData)
-    if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
-      const poolTx = await buyDtFromPool(asset?.accessDetails, accountId, web3)
-      LoggerInstance.log('[compute] Buoght dt from pool: ', poolTx)
-      if (!poolTx) {
-        toast.error('Failed to buy datatoken from pool!')
-        return
-      }
-    }
-    const tx = await order(
+    const txStartOrder = await startOrder(
       web3,
       asset,
       orderPriceAndFees,
       accountId,
-      initializeData.providerFee,
+      hasDatatoken,
+      initializeData,
       computeConsumerAddress
     )
-    LoggerInstance.log('[compute] Asset ordered:', tx.transactionHash)
-    return tx.transactionHash
+    LoggerInstance.log('[compute] Order succeeded', txStartOrder)
+    return txStartOrder?.transactionHash
+  } catch (error) {
+    toast.error(error.message)
+    LoggerInstance.error(`[compute] ${error.message}`)
   }
 }
