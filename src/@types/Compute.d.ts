@@ -1,5 +1,5 @@
 import { ComputeJob } from '@oceanprotocol/lib'
-import { OrdersData_tokenOrders_datatokenId as OrdersDatatoken } from './apollo/OrdersData'
+import { OrdersData_orders_datatoken as OrdersDatatoken } from '../@types/subgraph/OrdersData'
 
 // declaring into global scope to be able to use this as
 // ambiant types despite the above imports
@@ -22,10 +22,10 @@ declare global {
 
   interface TokenOrder {
     id: string
-    serviceId: number
-    datatokenId: OrdersDatatoken
+    serviceIndex: number
+    datatoken: OrdersDatatoken
     tx: any
-    timestamp: number
+    createdTimestamp: number
   }
 
   interface ComputeResults {

@@ -4,9 +4,11 @@ import PriceUnit from '@shared/Price/PriceUnit'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
 import { AccessDetails } from 'src/@types/Price'
+import { MAX_DECIMALS } from '@utils/constants'
+import Decimal from 'decimal.js'
 
 interface PriceOutputProps {
-  totalPrice: number
+  totalPrice: string
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   symbol: string
@@ -15,6 +17,10 @@ interface PriceOutputProps {
   hasDatatokenSelectedComputeAsset: boolean
   algorithmConsumeDetails: AccessDetails
   selectedComputeAssetTimeout: string
+  datasetOrderPrice?: number
+  algoOrderPrice?: number
+  providerFeeAmount?: string
+  validUntil?: string
 }
 
 function Row({
@@ -23,18 +29,21 @@ function Row({
   hasDatatoken,
   symbol,
   timeout,
-  sign
+  sign,
+  type
 }: {
-  price: number
+  price: string
   hasPreviousOrder?: boolean
   hasDatatoken?: boolean
   symbol?: string
   timeout?: string
   sign?: string
+  type?: string
 }) {
   return (
     <div className={styles.priceRow}>
       <div className={styles.sign}>{sign}</div>
+      <div className={styles.type}>{type}</div>
       <div>
         <PriceUnit
           price={hasPreviousOrder || hasDatatoken ? '0' : `${price}`}
@@ -62,7 +71,11 @@ export default function PriceOutput({
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
   algorithmConsumeDetails,
-  selectedComputeAssetTimeout
+  selectedComputeAssetTimeout,
+  datasetOrderPrice,
+  algoOrderPrice,
+  providerFeeAmount,
+  validUntil
 }: PriceOutputProps): ReactElement {
   const { asset } = useAsset()
 
@@ -76,17 +89,34 @@ export default function PriceOutput({
             <Row
               hasPreviousOrder={hasPreviousOrder}
               hasDatatoken={hasDatatoken}
-              price={Number.parseFloat(asset?.accessDetails?.price)}
+              price={new Decimal(
+                datasetOrderPrice || asset?.accessDetails?.price || 0
+              )
+                .toDecimalPlaces(MAX_DECIMALS)
+                .toString()}
               timeout={assetTimeout}
               symbol={symbol}
+              type="DATASET"
             />
             <Row
               hasPreviousOrder={hasPreviousOrderSelectedComputeAsset}
               hasDatatoken={hasDatatokenSelectedComputeAsset}
-              price={Number.parseFloat(algorithmConsumeDetails?.price)}
+              price={new Decimal(
+                algoOrderPrice || algorithmConsumeDetails?.price || 0
+              )
+                .toDecimalPlaces(MAX_DECIMALS)
+                .toString()}
               timeout={selectedComputeAssetTimeout}
               symbol={symbol}
               sign="+"
+              type="ALGORITHM"
+            />
+            <Row
+              price={providerFeeAmount} // initializeCompute.provider fee amount
+              timeout={`${validUntil} seconds`} // valid until value
+              symbol={symbol}
+              sign="+"
+              type="C2D RESOURCES"
             />
             <Row price={totalPrice} symbol={symbol} sign="=" />
           </div>
