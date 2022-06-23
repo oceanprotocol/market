@@ -177,16 +177,15 @@ export async function getAlgorithmsForAsset(
   const publisherTrustedAlgorithms =
     computeService.compute.publisherTrustedAlgorithms || []
 
-  let algorithms: Asset[]
-  if (!computeService.compute) {
-    algorithms = []
-  } else {
-    const gueryResults = await queryMetadata(
-      getQueryString(publisherTrustedAlgorithms, asset.chainId),
-      token
-    )
-    algorithms = gueryResults?.results
+  if (!computeService.compute || publisherTrustedAlgorithms.length === 0) {
+    return []
   }
+
+  const gueryResults = await queryMetadata(
+    getQueryString(publisherTrustedAlgorithms, asset.chainId),
+    token
+  )
+  const algorithms: Asset[] = gueryResults?.results
   return algorithms
 }
 
