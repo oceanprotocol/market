@@ -176,26 +176,24 @@ export async function getAlgorithmsForAsset(
 ): Promise<Asset[]> {
   const computeService: Service = getServiceByName(asset, 'compute')
 
-  let algorithms: Asset[]
-  if (!computeService.compute) {
-    algorithms = []
-  } else {
-    if (
-      computeService.compute.publisherTrustedAlgorithms?.length === 0 &&
-      computeService.compute.publisherTrustedAlgorithmPublishers?.length === 0
-    )
-      return []
-
-    const gueryResults = await queryMetadata(
-      getQueryString(
-        computeService.compute.publisherTrustedAlgorithms,
-        computeService.compute.publisherTrustedAlgorithmPublishers,
-        asset.chainId
-      ),
-      token
-    )
-    algorithms = gueryResults?.results
+  if (
+    !computeService.compute ||
+    (computeService.compute.publisherTrustedAlgorithms?.length === 0 &&
+      computeService.compute.publisherTrustedAlgorithmPublishers?.length === 0)
+  ) {
+    return []
   }
+
+  const gueryResults = await queryMetadata(
+    getQueryString(
+      computeService.compute.publisherTrustedAlgorithms,
+      computeService.compute.publisherTrustedAlgorithmPublishers,
+      asset.chainId
+    ),
+    token
+  )
+
+  const algorithms: Asset[] = gueryResults?.results
   return algorithms
 }
 
@@ -365,7 +363,7 @@ export async function transformComputeFormToServiceComputeOptions(
   cancelToken: CancelToken
 ): Promise<ServiceComputeOptions> {
   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
-    ? null
+    ? []
     : await createTrustedAlgorithmList(
         values.publisherTrustedAlgorithms,
         assetChainId,

@@ -83,6 +83,8 @@ export default function Compute({
   const [validAlgorithmOrderTx, setValidAlgorithmOrderTx] = useState('')
 
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
+  const [isConsumableaAlgorithmPrice, setIsConsumableAlgorithmPrice] =
+    useState(true)
   const [computeStatusText, setComputeStatusText] = useState('')
   const [computeEnv, setComputeEnv] = useState<ComputeEnvironment>()
   const [initializedProviderResponse, setInitializedProviderResponse] =
@@ -102,7 +104,9 @@ export default function Compute({
     isOrdering === true ||
     file === null ||
     (!validOrderTx && !hasDatatoken && !isConsumablePrice) ||
-    (!validAlgorithmOrderTx && !hasAlgoAssetDatatoken)
+    (!validAlgorithmOrderTx &&
+      !hasAlgoAssetDatatoken &&
+      !isConsumableaAlgorithmPrice)
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
@@ -254,7 +258,9 @@ export default function Compute({
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
 
     setIsRequestingAlgoOrderPrice(true)
-    setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
+    setIsConsumableAlgorithmPrice(
+      selectedAlgorithmAsset?.accessDetails?.isPurchasable
+    )
     setValidAlgorithmOrderTx(
       selectedAlgorithmAsset?.accessDetails?.validOrderTx
     )

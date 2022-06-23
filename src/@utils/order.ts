@@ -241,7 +241,7 @@ export async function handleComputeOrder(
         '[compute] Has valid order: ',
         initializeData.validOrder
       )
-      return initializeData.validOrder
+      return asset?.accessDetails?.validOrderTx
     }
 
     // Approve potential Provider fee amount first
