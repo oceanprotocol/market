@@ -436,30 +436,37 @@ export async function getTopAssetsPublishers(
 ): Promise<AccountTeaserVM[]> {
   const publisherSales: AccountTeaserVM[] = []
 
-  for (const chain of chainIds) {
-    const queryContext = getQueryContext(Number(chain))
-    const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
-      TopSalesQuery,
-      null,
-      queryContext
-    )
-
-    for (let i = 0; i < fetchedUsers.data.users.length; i++) {
-      const publishersIndex = publisherSales.findIndex(
-        (user) => fetchedUsers.data.users[i].id === user.address
+  async function getPublishersSales() {
+    for (const chain of chainIds) {
+      const queryContext = getQueryContext(Number(chain))
+      const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
+        TopSalesQuery,
+        null,
+        queryContext
       )
-      if (publishersIndex === -1) {
-        const publisher: AccountTeaserVM = {
-          address: fetchedUsers.data.users[i].id,
-          nrSales: fetchedUsers.data.users[i].totalSales
+      for (let i = 0; i < fetchedUsers.data.users.length; i++) {
+        const publishersIndex = publisherSales.findIndex(
+          (user) => fetchedUsers.data.users[i].id === user.address
+        )
+        if (publishersIndex === -1) {
+          const publisher: AccountTeaserVM = {
+            address: fetchedUsers.data.users[i].id,
+            nrSales: fetchedUsers.data.users[i].totalSales
+          }
+          publisherSales.push(publisher)
+        } else {
+          await getUserSales(
+            publisherSales[publishersIndex].address,
+            chainIds
+          ).then((sales) => {
+            publisherSales[publishersIndex].nrSales = sales
+          })
         }
-        publisherSales.push(publisher)
-      } else {
-        publisherSales[publishersIndex].nrSales +=
-          publisherSales[publishersIndex].nrSales
       }
     }
   }
+
+  await getPublishersSales()
 
   publisherSales.sort((a, b) => b.nrSales - a.nrSales)
 
