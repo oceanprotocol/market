@@ -1,9 +1,8 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Input, { InputProps } from '@shared/FormInput'
+import Input from '@shared/FormInput'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import stylesIndex from './index.module.css'
-import styles from './FormEdit.module.css'
 import {
   generateBaseQuery,
   getFilterTerm,
@@ -16,71 +15,77 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
 import { getServiceByName } from '@utils/ddo'
 import { transformAssetToAssetSelection } from '@utils/assetConvertor'
-import { useMarketMetadata } from '@context/MarketMetadata'
+import { ComputeEditForm } from './_types'
+import content from '../../../../content/pages/editComputeDataset.json'
+import { getFieldContent } from '@utils/form'
 
-export default function FormEditComputeDataset({
-  data,
-  title
-}: {
-  data: InputProps[]
-  title: string
-}): ReactElement {
-  const { appConfig } = useMarketMetadata()
+export default function FormEditComputeDataset(): ReactElement {
   const { asset } = useAsset()
-  const { values }: FormikContextType<ComputePrivacyForm> = useFormikContext()
-  const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
+  const { values }: FormikContextType<ComputeEditForm> = useFormikContext()
   const newCancelToken = useCancelToken()
+
+  const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
+
   const { publisherTrustedAlgorithms } = getServiceByName(
     asset,
     'compute'
   ).compute
 
-  async function getAlgorithmList(
-    publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
-  ): Promise<AssetSelectionAsset[]> {
-    const baseParams = {
-      chainIds: [asset.chainId],
-      sort: { sortBy: SortTermOptions.Created },
-      filters: [getFilterTerm('metadata.type', 'algorithm')]
-    } as BaseQueryParams
+  const getAlgorithmList = useCallback(
+    async (
+      publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
+    ): Promise<AssetSelectionAsset[]> => {
+      const baseParams = {
+        chainIds: [asset.chainId],
+        sort: { sortBy: SortTermOptions.Created },
+        filters: [getFilterTerm('metadata.type', 'algorithm')]
+      } as BaseQueryParams
 
-    const query = generateBaseQuery(baseParams)
-    const querryResult = await queryMetadata(query, newCancelToken())
-    const datasetComputeService = getServiceByName(asset, 'compute')
-    const algorithmSelectionList = await transformAssetToAssetSelection(
-      datasetComputeService?.serviceEndpoint,
-      querryResult?.results,
-      publisherTrustedAlgorithms
-    )
-    return algorithmSelectionList
-  }
+      const query = generateBaseQuery(baseParams)
+      const querryResult = await queryMetadata(query, newCancelToken())
+      const datasetComputeService = getServiceByName(asset, 'compute')
+      const algorithmSelectionList = await transformAssetToAssetSelection(
+        datasetComputeService?.serviceEndpoint,
+        querryResult?.results,
+        publisherTrustedAlgorithms
+      )
+      return algorithmSelectionList
+    },
+    [asset, newCancelToken]
+  )
 
   useEffect(() => {
     getAlgorithmList(publisherTrustedAlgorithms).then((algorithms) => {
       setAllAlgorithms(algorithms)
     })
-  }, [appConfig, appConfig.metadataCacheUri, publisherTrustedAlgorithms])
+  }, [getAlgorithmList, publisherTrustedAlgorithms])
 
   return (
-    <Form className={styles.form}>
-      <h3 className={stylesIndex.title}>{title}</h3>
-      {data.map((field: InputProps) => (
-        <Field
-          key={field.name}
-          {...field}
-          options={
-            field.name === 'publisherTrustedAlgorithms'
-              ? allAlgorithms
-              : field.options
-          }
-          disabled={
-            field.name === 'publisherTrustedAlgorithms'
-              ? values.allowAllPublishedAlgorithms
-              : false
-          }
-          component={Input}
-        />
-      ))}
+    <Form>
+      <header className={stylesIndex.headerForm}>
+        <h3 className={stylesIndex.titleForm}>{content.form.title}</h3>
+        <p className={stylesIndex.descriptionForm}>
+          {content.form.description}
+        </p>
+      </header>
+
+      <Field
+        {...getFieldContent('publisherTrustedAlgorithms', content.form.data)}
+        component={Input}
+        name="publisherTrustedAlgorithms"
+        options={allAlgorithms}
+        disabled={values.allowAllPublishedAlgorithms}
+      />
+
+      <Field
+        {...getFieldContent('allowAllPublishedAlgorithms', content.form.data)}
+        component={Input}
+        name="allowAllPublishedAlgorithms"
+        options={
+          getFieldContent('allowAllPublishedAlgorithms', content.form.data)
+            .options
+        }
+      />
 
       <FormActions />
     </Form>

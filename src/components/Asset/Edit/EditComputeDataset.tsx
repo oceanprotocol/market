@@ -6,9 +6,6 @@ import {
   LoggerInstance,
   ServiceComputeOptions,
   Service,
-  ProviderInstance,
-  getHash,
-  Nft,
   Asset
 } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -29,6 +26,7 @@ import DebugEditCompute from './DebugEditCompute'
 import { useAsset } from '@context/Asset'
 import EditFeedback from './EditFeedback'
 import { setNftMetadata } from '@utils/nft'
+import { ComputeEditForm } from './_types'
 
 export default function EditComputeDataset({
   asset
@@ -44,10 +42,7 @@ export default function EditComputeDataset({
   const newCancelToken = useCancelToken()
   const hasFeedback = error || success
 
-  async function handleSubmit(
-    values: ComputePrivacyForm,
-    resetForm: () => void
-  ) {
+  async function handleSubmit(values: ComputeEditForm, resetForm: () => void) {
     try {
       if (asset?.accessDetails?.type === 'free') {
         const tx = await setMinterToPublisher(
@@ -136,12 +131,12 @@ export default function EditComputeDataset({
       {({ values, isSubmitting }) =>
         isSubmitting || hasFeedback ? (
           <EditFeedback
-            title="Updating Data Set"
+            loading="Updating data set with new compute settings..."
             error={error}
             success={success}
             setError={setError}
             successAction={{
-              name: 'View Asset',
+              name: 'Back to Asset',
               onClick: async () => {
                 await fetchAsset()
               },
@@ -150,13 +145,7 @@ export default function EditComputeDataset({
           />
         ) : (
           <>
-            <p className={styles.description}>{content.description}</p>
-            <article>
-              <FormEditComputeDataset
-                title={content.form.title}
-                data={content.form.data}
-              />
-            </article>
+            <FormEditComputeDataset />
             <Web3Feedback
               networkId={asset?.chainId}
               isAssetNetwork={isAssetNetwork}

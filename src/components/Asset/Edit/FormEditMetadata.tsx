@@ -2,7 +2,6 @@ import React, { ChangeEvent, ReactElement } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
-import styles from './FormEdit.module.css'
 import { useAsset } from '@context/Asset'
 import { MetadataEditForm } from './_types'
 
@@ -57,7 +56,7 @@ export default function FormEditMetadata({
   }
 
   return (
-    <Form className={styles.form}>
+    <Form>
       {data.map(
         (field: InputProps) =>
           (!showPrice && field.name === 'price') || (

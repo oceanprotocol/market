@@ -33,13 +33,6 @@ import {
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
 
-export function getFieldContent(
-  fieldName: string,
-  fields: FormFieldContent[]
-): FormFieldContent {
-  return fields.filter((field: FormFieldContent) => field.name === fieldName)[0]
-}
-
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
   return splittedFileUrl[splittedFileUrl.length - 1]

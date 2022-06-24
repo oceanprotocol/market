@@ -33,7 +33,8 @@ export function getInitialValues(
 
 export const computeSettingsValidationSchema = Yup.object().shape({
   allowAllPublishedAlgorithms: Yup.boolean().nullable(),
-  publisherTrustedAlgorithms: Yup.array().nullable()
+  publisherTrustedAlgorithms: Yup.array(),
+  publisherTrustedAlgorithmPublishers: Yup.array()
 })
 
 export function getComputeSettingsInitialValues(
