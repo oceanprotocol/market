@@ -1,7 +1,7 @@
 {
   "form": {
     "title": "Set allowed algorithms",
-    "description": "Only the algorithms selected here will be allowed to run on your data set.",
+    "description": "Only the algorithms selected here will be allowed to run on your data set. Uncheck all to remove any access to your data set.",
     "success": "🎉 Successfully updated. 🎉\n\nUpdates might not show up right away on your asset. In this case, wait some seconds and reload your asset details page in your browser.",
     "error": "Updating DDO failed.",
     "data": [

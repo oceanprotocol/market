@@ -42,11 +42,11 @@ export default function FormEditComputeDataset(): ReactElement {
       } as BaseQueryParams
 
       const query = generateBaseQuery(baseParams)
-      const querryResult = await queryMetadata(query, newCancelToken())
+      const queryResult = await queryMetadata(query, newCancelToken())
       const datasetComputeService = getServiceByName(asset, 'compute')
       const algorithmSelectionList = await transformAssetToAssetSelection(
         datasetComputeService?.serviceEndpoint,
-        querryResult?.results,
+        queryResult?.results,
         publisherTrustedAlgorithms
       )
       return algorithmSelectionList
