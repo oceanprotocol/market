@@ -27,18 +27,22 @@ export default function FormEditMetadata({
   const { oceanConfig } = useAsset()
   const {
     validateField,
-    setFieldValue
+    setFieldValue,
+    setFieldTouched
   }: FormikContextType<Partial<MetadataEditForm>> = useFormikContext()
 
   // Manually handle change events instead of using `handleChange` from Formik.
-  // Workaround for default `validateOnChange` not kicking in
+  // Workaround for default `validateOnChange` not kicking in unless user
+  // clicks outside of form field.
   function handleFieldChange(
     e: ChangeEvent<HTMLInputElement>,
     field: InputProps
   ) {
     validateField(field.name)
+    setFieldTouched(field.name, true)
     setFieldValue(field.name, e.target.value)
   }
+
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
   // https://github.com/oceanprotocol/market/pull/324#discussion_r561132310

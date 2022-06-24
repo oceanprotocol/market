@@ -339,6 +339,8 @@ export async function createTrustedAlgorithmList(
     cancelToken
   )
 
+  if (!selectedAssets || selectedAssets.length === 0) return []
+
   for (const selectedAlgorithm of selectedAssets) {
     const sanitizedAlgorithmContainer = {
       entrypoint: selectedAlgorithm.metadata.algorithm.container.entrypoint,

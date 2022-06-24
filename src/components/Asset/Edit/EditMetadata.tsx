@@ -159,7 +159,7 @@ export default function Edit({
       {({ isSubmitting, values }) =>
         isSubmitting || hasFeedback ? (
           <EditFeedback
-            loading="Updating data set with new metadata..."
+            loading="Updating asset with new metadata..."
             error={error}
             success={success}
             setError={setError}

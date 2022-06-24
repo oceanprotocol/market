@@ -4,6 +4,7 @@ import { useAsset } from '@context/Asset'
 import Button from '@shared/atoms/Button'
 import styles from './FormActions.module.css'
 import Link from 'next/link'
+import { ComputeEditForm, MetadataEditForm } from './_types'
 
 export default function FormActions({
   handleClick
@@ -11,15 +12,17 @@ export default function FormActions({
   handleClick?: () => void
 }): ReactElement {
   const { isAssetNetwork, asset } = useAsset()
-  const { isValid }: FormikContextType<Partial<any>> = useFormikContext()
+  const {
+    isValid,
+    touched
+  }: FormikContextType<MetadataEditForm | ComputeEditForm> = useFormikContext()
+
+  const isSubmitDisabled =
+    !isValid || !isAssetNetwork || Object.keys(touched).length === 0
 
   return (
     <footer className={styles.actions}>
-      <Button
-        style="primary"
-        disabled={!isValid || !isAssetNetwork}
-        onClick={handleClick}
-      >
+      <Button style="primary" disabled={isSubmitDisabled} onClick={handleClick}>
         Submit
       </Button>
       <Link href={`/asset/${asset?.id}`} key={asset?.id}>

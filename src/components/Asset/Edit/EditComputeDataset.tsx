@@ -127,6 +127,7 @@ export default function EditComputeDataset({
         // kick off editing
         await handleSubmit(values, resetForm)
       }}
+      enableReinitialize
     >
       {({ values, isSubmitting }) =>
         isSubmitting || hasFeedback ? (
