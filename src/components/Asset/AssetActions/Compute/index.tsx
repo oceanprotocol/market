@@ -152,6 +152,7 @@ export default function Compute({
           initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
         )
       )
+
       const computeDuration = (
         parseInt(initializedProvider?.datasets?.[0]?.providerFee?.validUntil) -
         Math.floor(Date.now() / 1000)
