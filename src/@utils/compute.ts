@@ -330,6 +330,7 @@ export async function createTrustedAlgorithmList(
   assetChainId: number,
   cancelToken: CancelToken
 ): Promise<PublisherTrustedAlgorithm[]> {
+  if (!selectedAlgorithms || selectedAlgorithms.length === 0) return []
   const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
 
   const selectedAssets = await retrieveDDOListByDIDs(
@@ -371,9 +372,15 @@ export async function transformComputeFormToServiceComputeOptions(
         cancelToken
       )
 
+  // TODO: add support for selecting trusted publishers and transforming here.
+  // This only deals with basics so we don't accidentially allow all accounts
+  // to be trusted.
+  const publisherTrustedAlgorithmPublishers: string[] = []
+
   const privacy: ServiceComputeOptions = {
     ...currentOptions,
-    publisherTrustedAlgorithms
+    publisherTrustedAlgorithms,
+    publisherTrustedAlgorithmPublishers
   }
 
   return privacy

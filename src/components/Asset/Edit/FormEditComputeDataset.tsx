@@ -85,7 +85,6 @@ export default function FormEditComputeDataset(): ReactElement {
           getFieldContent('allowAllPublishedAlgorithms', content.form.data)
             .options
         }
-        /// defaultChecked={publisherTrustedAlgorithms === null}
       />
 
       <FormActions />

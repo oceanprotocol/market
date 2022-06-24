@@ -11,4 +11,5 @@ export interface MetadataEditForm {
 export interface ComputeEditForm {
   allowAllPublishedAlgorithms: boolean
   publisherTrustedAlgorithms: string[]
+  publisherTrustedAlgorithmPublishers: string[]
 }

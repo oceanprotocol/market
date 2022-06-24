@@ -33,19 +33,22 @@ export function getInitialValues(
 
 export const computeSettingsValidationSchema = Yup.object().shape({
   allowAllPublishedAlgorithms: Yup.boolean().nullable(),
-  publisherTrustedAlgorithms: Yup.array()
+  publisherTrustedAlgorithms: Yup.array().nullable(),
+  publisherTrustedAlgorithmPublishers: Yup.array().nullable()
 })
 
 export function getComputeSettingsInitialValues({
-  publisherTrustedAlgorithms
+  publisherTrustedAlgorithms,
+  publisherTrustedAlgorithmPublishers
 }: ServiceComputeOptions): ComputeEditForm {
   const allowAllPublishedAlgorithms = publisherTrustedAlgorithms === null
-  const publisherTrustedAlgorithmsForForm = publisherTrustedAlgorithms.map(
-    (algo) => algo.did
-  )
+  const publisherTrustedAlgorithmsForForm = allowAllPublishedAlgorithms
+    ? null
+    : publisherTrustedAlgorithms.map((algo) => algo.did)
 
   return {
     allowAllPublishedAlgorithms,
-    publisherTrustedAlgorithms: publisherTrustedAlgorithmsForForm
+    publisherTrustedAlgorithms: publisherTrustedAlgorithmsForForm,
+    publisherTrustedAlgorithmPublishers
   }
 }
