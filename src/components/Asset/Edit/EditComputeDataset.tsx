@@ -125,7 +125,7 @@ export default function EditComputeDataset({
         // move user's focus to top of screen
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         // kick off editing
-        await handleSubmit(values as any, resetForm)
+        await handleSubmit(values, resetForm)
       }}
     >
       {({ values, isSubmitting }) =>

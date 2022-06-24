@@ -25,6 +25,7 @@ import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { transformAssetToAssetSelection } from './assetConvertor'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { ComputeEditForm } from 'src/components/Asset/Edit/_types'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -357,13 +358,13 @@ export async function createTrustedAlgorithmList(
 }
 
 export async function transformComputeFormToServiceComputeOptions(
-  values: ComputePrivacyForm,
+  values: ComputeEditForm,
   currentOptions: ServiceComputeOptions,
   assetChainId: number,
   cancelToken: CancelToken
 ): Promise<ServiceComputeOptions> {
   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
-    ? []
+    ? null
     : await createTrustedAlgorithmList(
         values.publisherTrustedAlgorithms,
         assetChainId,
