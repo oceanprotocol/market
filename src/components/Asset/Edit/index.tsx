@@ -33,11 +33,14 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
       title: 'Edit Metadata',
       content: <EditMetadata asset={asset} />
     },
-    {
-      title: 'Edit Compute Settings',
-      content: <EditComputeDataset asset={asset} />,
-      disabled: !isCompute || asset?.metadata?.type === 'algorithm'
-    }
+    ...[
+      isCompute && asset?.metadata.type !== 'algorithm'
+        ? {
+            title: 'Edit Compute Settings',
+            content: <EditComputeDataset asset={asset} />
+          }
+        : undefined
+    ]
   ].filter((tab) => tab !== undefined)
 
   return (
