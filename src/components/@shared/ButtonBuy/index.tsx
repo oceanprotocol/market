@@ -51,13 +51,15 @@ function getConsumeHelpText(
   const text =
     isConsumable === false
       ? consumableFeedback
-      : hasPreviousOrder && web3
+      : hasPreviousOrder && web3 && isSupportedOceanNetwork
       ? `You bought this ${assetType} already allowing you to use it without paying again.`
       : hasDatatoken
       ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
       : lowPoolLiquidity
       ? `There are not enought ${dtSymbol} available in the pool for the transaction to take place`
-      : isBalanceSufficient === false && isSupportedOceanNetwork
+      : web3 && !isSupportedOceanNetwork
+      ? `You are connected to an unsupported network.`
+      : isBalanceSufficient === false
       ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
       : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
   return text
@@ -73,20 +75,23 @@ function getAlgoHelpText(
   hasDatatokenSelectedComputeAsset: boolean,
   selectedComputeAssettLowPoolLiquidity: boolean,
   isBalanceSufficient: boolean,
-  isSupportedOceanNetwork: boolean
+  isSupportedOceanNetwork: boolean,
+  web3: any
 ) {
   const text =
     (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
     isConsumable === false ||
     isAlgorithmConsumable === false
       ? ''
-      : hasPreviousOrderSelectedComputeAsset
+      : hasPreviousOrderSelectedComputeAsset && web3 && isSupportedOceanNetwork
       ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
       : hasDatatokenSelectedComputeAsset
       ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
       : selectedComputeAssettLowPoolLiquidity
       ? `There are not enought ${dtSymbolSelectedComputeAsset} available in the pool for the transaction to take place`
-      : isBalanceSufficient === false && isSupportedOceanNetwork
+      : web3 && !isSupportedOceanNetwork
+      ? `Connect to the correct network to interact with this asset.`
+      : isBalanceSufficient === false
       ? ''
       : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
   return text
@@ -137,10 +142,13 @@ function getComputeAssetHelpText(
     hasDatatokenSelectedComputeAsset,
     selectedComputeAssettLowPoolLiquidity,
     isBalanceSufficient,
-    isSupportedOceanNetwork
+    isSupportedOceanNetwork,
+    web3
   )
 
-  const providerFeeHelpText = hasProviderFee
+  const providerFeeHelpText = !isSupportedOceanNetwork
+    ? ''
+    : hasProviderFee
     ? 'In order to start the job you also need to pay the fees for renting the c2d resources.'
     : 'C2D resources required to start the job are available, no payment required for those fees.'
 

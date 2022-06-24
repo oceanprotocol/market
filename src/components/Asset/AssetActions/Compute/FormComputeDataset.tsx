@@ -80,7 +80,7 @@ export default function FormStartCompute({
   validUntil?: string
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
-  const { accountId, balance } = useWeb3()
+  const { accountId, balance, isSupportedOceanNetwork } = useWeb3()
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
@@ -103,7 +103,7 @@ export default function FormStartCompute({
   }
 
   useEffect(() => {
-    if (!values.algorithm || !accountId || !isConsumable) return
+    if (!values.algorithm || !isConsumable) return
 
     async function fetchAlgorithmAssetExtended() {
       const algorithmAsset = getAlgorithmAsset(values.algorithm)
@@ -136,12 +136,10 @@ export default function FormStartCompute({
       algoOrderPriceAndFees?.price ||
         selectedAlgorithmAsset?.accessDetails.price
     )
-    const priceDataset =
-      hasPreviousOrder || hasDatatoken
-        ? new Decimal(0)
-        : new Decimal(
-            datasetOrderPriceAndFees?.price || asset.accessDetails.price
-          ).toDecimalPlaces(MAX_DECIMALS)
+    const priceDataset = new Decimal(
+      datasetOrderPriceAndFees?.price || asset.accessDetails.price
+    ).toDecimalPlaces(MAX_DECIMALS)
+
     const priceAlgo =
       hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
         ? new Decimal(0)

@@ -132,9 +132,10 @@ export default function Compute({
       const initializedProvider = await initializeProviderForCompute(
         asset,
         selectedAlgorithmAsset,
-        accountId,
+        accountId || ZERO_ADDRESS, // if the user is not connected, we use ZERO_ADDRESS as accountId
         computeEnv
       )
+
       if (
         !initializedProvider ||
         !initializedProvider?.datasets ||
@@ -143,9 +144,10 @@ export default function Compute({
         throw new Error(`Error initializing provider for the compute job!`)
 
       setInitializedProviderResponse(initializedProvider)
+
       setProviderFeeAmount(
         await unitsToAmount(
-          web3,
+          web3 || (await getDummyWeb3(asset?.chainId)),
           initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
           initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
         )
@@ -304,6 +306,7 @@ export default function Compute({
         documentId: selectedAlgorithmAsset.id,
         serviceId: selectedAlgorithmAsset.services[0].id
       }
+
       const allowed = await isOrderable(
         asset,
         computeService.id,
@@ -329,6 +332,7 @@ export default function Compute({
             : 3
         ]
       )
+
       const datasetOrderTx = await handleComputeOrder(
         web3,
         asset,
