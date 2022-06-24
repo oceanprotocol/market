@@ -26,31 +26,32 @@ export default function Results({
 
   const [datasetProvider, setDatasetProvider] = useState<string>()
   const newCancelToken = useCancelToken()
+
   useEffect(() => {
     async function getAssetMetadata() {
       const ddo = await retrieveAsset(job.inputDID[0], newCancelToken())
       setDatasetProvider(ddo.services[0].serviceEndpoint)
     }
     getAssetMetadata()
-  }, [job.inputDID[0]])
+  }, [job.inputDID, newCancelToken])
 
   function getDownloadButtonValue(type: ComputeResultType): string {
     let buttonName
     switch (type) {
       case 'output':
-        buttonName = 'Download results'
+        buttonName = 'results'
         break
       case 'algorithmLog':
-        buttonName = 'Download algorithm logs'
+        buttonName = 'algorithm logs'
         break
       case 'configrationLog':
-        buttonName = 'Download configuration logs'
+        buttonName = 'configuration logs'
         break
       case 'publishLog':
-        buttonName = 'Download publish logs'
+        buttonName = 'publish logs'
         break
       default:
-        buttonName = 'Download results'
+        buttonName = 'results'
         break
     }
     return buttonName
@@ -78,6 +79,7 @@ export default function Results({
 
   return (
     <div className={styles.results}>
+      <h4 className={styles.title}>Results</h4>
       {isFinished ? (
         <ul>
           {job.results &&
@@ -86,10 +88,10 @@ export default function Results({
               jobResult.filename ? (
                 <ListItem key={i}>
                   <Button
-                    style="primary"
+                    style="text"
                     size="small"
                     onClick={() => downloadResults(i)}
-                    disabled={isLoading || !isFinished}
+                    download
                   >
                     {getDownloadButtonValue(jobResult.type)}
                   </Button>
