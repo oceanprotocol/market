@@ -59,7 +59,12 @@ const providerOptions = isBrowser
   ? {
       walletconnect: {
         package: WalletConnectProvider,
-        options: { infuraId }
+        options: {
+          infuraId,
+          rpc: {
+            137: 'https://polygon-rpc.com'
+          }
+        }
       }
       // torus: {
       //   package: require('@toruslabs/torus-embed')
