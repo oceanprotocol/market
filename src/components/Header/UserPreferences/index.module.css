@@ -1,5 +1,5 @@
 .preferences {
-  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2.5);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 3);
   cursor: pointer;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);

@@ -1,6 +1,6 @@
 .menu {
   width: 100%;
-  padding: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 2) calc(var(--spacer) / 3);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -45,6 +45,10 @@
 }
 
 @media screen and (min-width: 42rem) {
+  .menu {
+    padding: calc(var(--spacer) / 2);
+  }
+
   .navigation {
     order: 2;
     width: auto;
