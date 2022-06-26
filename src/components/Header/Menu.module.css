@@ -137,30 +137,33 @@
   text-transform: none;
 }
 
-.badgeWrap {
-  justify-self: flex-start;
-}
-
-.badgeWrap[aria-expanded='true'] svg {
-  transform: rotate(180deg);
-}
-
 .caret,
 svg.caret {
   display: none;
+  width: var(--font-size-small);
+  height: var(--font-size-small);
+  fill: var(--border-color);
+  transition: transform 0.2s ease-out;
+  vertical-align: middle;
+  margin-left: calc(var(--spacer) / 4);
+}
+
+[aria-expanded='true'] .caret {
+  transform: rotate(180deg);
+}
+
+.badge .caret {
+  fill: var(--brand-white);
+  opacity: 0.7;
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
+  margin-left: calc(var(--spacer) / 12);
 }
 
 @media screen and (min-width: 42rem) {
   .caret,
   svg.caret {
     display: inline-block;
-    width: var(--font-size-mini);
-    height: var(--font-size-mini);
-    fill: var(--brand-white);
-    opacity: 0.7;
-    transition: transform 0.2s ease-out;
-    vertical-align: middle;
-    margin-left: calc(var(--spacer) / 12);
   }
 
   .navigation {
