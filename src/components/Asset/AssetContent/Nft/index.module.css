@@ -1,0 +1,28 @@
+.nftImage {
+  position: relative;
+  margin: 0;
+  border-right: 1px solid var(--border-color);
+  width: calc(var(--spacer) * 2);
+  height: calc(var(--spacer) * 2);
+}
+
+.nftImage img,
+.nftImage > svg:first-of-type {
+  width: 100%;
+  height: 100%;
+}
+
+.nftImage > svg:first-of-type {
+  transform: scale(0.7);
+}
+
+.nftImage .tooltip {
+  position: absolute;
+  padding: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.nftImage .tooltip svg {
+  fill: var(--font-color-text);
+}

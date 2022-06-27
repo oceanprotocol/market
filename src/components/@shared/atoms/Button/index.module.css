@@ -20,15 +20,6 @@
   text-align: center;
 }
 
-.button:first-child {
-  margin-left: 0;
-}
-
-.button:last-child {
-  margin-right: 0;
-  min-width: auto;
-}
-
 .button:hover,
 .button:focus {
   color: var(--brand-white);

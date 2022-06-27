@@ -3,12 +3,12 @@ import { useAsset } from '@context/Asset'
 import ExplorerLink from '@shared/ExplorerLink'
 import Time from '@shared/atoms/Time'
 import { gql, OperationContext, useQuery } from 'urql'
-import { ReceiptData_nftUpdates as ReceiptData } from '../../../@types/subgraph/ReceiptData'
+import { NftUpdate_nftUpdates as NftUpdate } from '../../../@types/subgraph/NftUpdate'
 import { getQueryContext } from '@utils/subgraph'
 import styles from './EditHistory.module.css'
 
 const getReceipts = gql`
-  query ReceiptData($address: String!) {
+  query NftUpdate($address: String!) {
     nftUpdates(
       where: { nft: $address }
       orderBy: timestamp
@@ -30,8 +30,8 @@ export default function EditHistory({
   receipts,
   setReceipts
 }: {
-  receipts: ReceiptData[]
-  setReceipts: (receipts: ReceiptData[]) => void
+  receipts: NftUpdate[]
+  setReceipts: (receipts: NftUpdate[]) => void
 }): ReactElement {
   const { asset } = useAsset()
 

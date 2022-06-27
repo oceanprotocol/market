@@ -41,17 +41,15 @@ function ActionError({ setError }: { setError: (error: string) => void }) {
 }
 
 export default function EditFeedback({
-  title,
   error,
   success,
   loading,
   successAction,
   setError
 }: {
-  title: string
   error: string
   success: string
-  loading?: string
+  loading: string
   successAction: Action
   setError: (error: string) => void
 }): ReactElement {
@@ -64,31 +62,28 @@ export default function EditFeedback({
 
   return (
     <div className={styles.feedback}>
-      <div className={styles.box}>
-        <h3>{title}</h3>
-        {error ? (
-          <>
-            <p>Sorry, something went wrong. Please try again.</p>
-            {moreInfo && <Alert text={error} state="error" />}
-            <Button
-              style="text"
-              size="small"
-              onClick={toggleMoreInfo}
-              className={styles.moreInfo}
-            >
-              {moreInfo === false ? 'More Info' : 'Hide error'}
-            </Button>
-            <ActionError setError={setError} />
-          </>
-        ) : success ? (
-          <SuccessConfetti
-            success={success}
-            action={<ActionSuccess action={successAction} />}
-          />
-        ) : (
-          <Loader message={loading} />
-        )}
-      </div>
+      {error ? (
+        <>
+          <p>Sorry, something went wrong. Please try again.</p>
+          {moreInfo && <Alert text={error} state="error" />}
+          <Button
+            style="text"
+            size="small"
+            onClick={toggleMoreInfo}
+            className={styles.moreInfo}
+          >
+            {moreInfo === false ? 'More Info' : 'Hide error'}
+          </Button>
+          <ActionError setError={setError} />
+        </>
+      ) : success ? (
+        <SuccessConfetti
+          success={success}
+          action={<ActionSuccess action={successAction} />}
+        />
+      ) : (
+        <Loader message={loading} />
+      )}
     </div>
   )
 }

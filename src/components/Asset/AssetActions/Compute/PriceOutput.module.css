@@ -36,8 +36,9 @@
   border-bottom: 1px solid var(--border-color);
   padding-top: calc(var(--spacer) / 7);
   padding-bottom: calc(var(--spacer) / 7);
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 5% 1fr auto;
+  column-gap: calc(var(--spacer) / 10);
 }
 
 .priceRow:last-child {
@@ -47,8 +48,14 @@
 
 .sign {
   display: inline-block;
-  width: 5%;
   text-align: left;
   color: var(--color-secondary);
   font-size: var(--font-size-base);
+}
+
+.type {
+  display: inline-block;
+  text-align: left;
+  color: var(--color-secondary);
+  font-size: var(--font-size-mini);
 }

@@ -11,6 +11,12 @@ import { transformAssetToAssetSelection } from './assetConvertor'
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 
+export function escapeEsReservedCharacters(value: string): string {
+  // eslint-disable-next-line no-useless-escape
+  const pattern = /([\!\*\+\-\=\<\>\&\|\(\)\[\]\{\}\^\~\?\:\\/"])/g
+  return value.replace(pattern, '\\$1')
+}
+
 /**
  * @param filterField the name of the actual field from the ddo schema e.g. 'id','service.attributes.main.type'
  * @param value the value of the filter
@@ -174,7 +180,7 @@ export async function getAssetsFromDidList(
   didList: string[],
   chainIds: number[],
   cancelToken: CancelToken
-): Promise<any> {
+): Promise<PagedAssets> {
   try {
     if (!(didList.length > 0)) return
 
@@ -249,12 +255,15 @@ export async function getAlgorithmDatasetsForCompute(
 ): Promise<AssetSelectionAsset[]> {
   const baseQueryParams = {
     chainIds: [datasetChainId],
-    filters: [
-      getFilterTerm(
-        'service.compite.publisherTrustedAlgorithms.did',
-        algorithmId
-      )
-    ],
+    nestedQuery: {
+      must: {
+        match: {
+          'services.compute.publisherTrustedAlgorithms.did': {
+            query: escapeEsReservedCharacters(algorithmId)
+          }
+        }
+      }
+    },
     sortOptions: {
       sortBy: SortTermOptions.Created,
       sortDirection: SortDirectionOptions.Descending
