@@ -395,12 +395,15 @@ export async function getTagsList(
       { ...query },
       { cancelToken }
     )
-    if (!response || response.status !== 200 || !response.data) return
-    const tagsList = response.data.aggregations.tags.buckets
-      .filter((tag: AggregatedTag) => tag.key !== '')
-      .map((tag: AggregatedTag) => tag.key)
+    if (response?.status !== 200 || !response?.data) return
+    const { buckets }: { buckets: AggregatedTag[] } =
+      response.data.aggregations.tags
 
-    return tagsList
+    const tagsList = buckets
+      .filter((tag) => tag.key !== '')
+      .map((tag) => tag.key)
+
+    return tagsList.sort()
   } catch (error) {
     if (axios.isCancel(error)) {
       LoggerInstance.log(error.message)
