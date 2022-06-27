@@ -1,7 +1,7 @@
 import { FileInfo, Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { secondsToString } from '@utils/ddo'
 import * as Yup from 'yup'
-import { MetadataEditForm } from './_types'
+import { ComputeEditForm, MetadataEditForm } from './_types'
 
 export const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -33,27 +33,22 @@ export function getInitialValues(
 
 export const computeSettingsValidationSchema = Yup.object().shape({
   allowAllPublishedAlgorithms: Yup.boolean().nullable(),
-  publisherTrustedAlgorithms: Yup.array().nullable()
+  publisherTrustedAlgorithms: Yup.array().nullable(),
+  publisherTrustedAlgorithmPublishers: Yup.array().nullable()
 })
 
-export function getComputeSettingsInitialValues(
-  compute: ServiceComputeOptions
-): ComputePrivacyForm {
-  const { publisherTrustedAlgorithmPublishers, publisherTrustedAlgorithms } =
-    compute
-  const allowAllPublishedAlgorithms = !(
-    publisherTrustedAlgorithms?.length > 0 ||
-    publisherTrustedAlgorithmPublishers?.length > 0
-  )
-
-  const publisherTrustedAlgorithmsForForm = (
-    publisherTrustedAlgorithms || []
-  ).map((algo) => algo.did)
-
-  // TODO: should we add publisherTrustedAlgorithmPublishers to the form?
+export function getComputeSettingsInitialValues({
+  publisherTrustedAlgorithms,
+  publisherTrustedAlgorithmPublishers
+}: ServiceComputeOptions): ComputeEditForm {
+  const allowAllPublishedAlgorithms = publisherTrustedAlgorithms === null
+  const publisherTrustedAlgorithmsForForm = allowAllPublishedAlgorithms
+    ? null
+    : publisherTrustedAlgorithms.map((algo) => algo.did)
 
   return {
     allowAllPublishedAlgorithms,
-    publisherTrustedAlgorithms: publisherTrustedAlgorithmsForForm
+    publisherTrustedAlgorithms: publisherTrustedAlgorithmsForForm,
+    publisherTrustedAlgorithmPublishers
   }
 }

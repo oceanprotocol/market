@@ -25,6 +25,7 @@ import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { transformAssetToAssetSelection } from './assetConvertor'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { ComputeEditForm } from 'src/components/Asset/Edit/_types'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -329,6 +330,7 @@ export async function createTrustedAlgorithmList(
   assetChainId: number,
   cancelToken: CancelToken
 ): Promise<PublisherTrustedAlgorithm[]> {
+  if (!selectedAlgorithms || selectedAlgorithms.length === 0) return []
   const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
 
   const selectedAssets = await retrieveDDOListByDIDs(
@@ -336,6 +338,8 @@ export async function createTrustedAlgorithmList(
     [assetChainId],
     cancelToken
   )
+
+  if (!selectedAssets || selectedAssets.length === 0) return []
 
   for (const selectedAlgorithm of selectedAssets) {
     const sanitizedAlgorithmContainer = {
@@ -357,22 +361,28 @@ export async function createTrustedAlgorithmList(
 }
 
 export async function transformComputeFormToServiceComputeOptions(
-  values: ComputePrivacyForm,
+  values: ComputeEditForm,
   currentOptions: ServiceComputeOptions,
   assetChainId: number,
   cancelToken: CancelToken
 ): Promise<ServiceComputeOptions> {
   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
-    ? []
+    ? null
     : await createTrustedAlgorithmList(
         values.publisherTrustedAlgorithms,
         assetChainId,
         cancelToken
       )
 
+  // TODO: add support for selecting trusted publishers and transforming here.
+  // This only deals with basics so we don't accidentially allow all accounts
+  // to be trusted.
+  const publisherTrustedAlgorithmPublishers: string[] = []
+
   const privacy: ServiceComputeOptions = {
     ...currentOptions,
-    publisherTrustedAlgorithms
+    publisherTrustedAlgorithms,
+    publisherTrustedAlgorithmPublishers
   }
 
   return privacy
