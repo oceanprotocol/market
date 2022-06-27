@@ -24,10 +24,6 @@
   display: inline-block;
 }
 
-.banner button {
-  font-size: calc(var(--font-size-small) / 1.1);
-}
-
 .text {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
@@ -39,6 +35,13 @@
 .text a {
   color: inherit;
   text-decoration: underline;
+}
+
+.link {
+  color: inherit;
+  text-decoration: underline;
+  text-transform: inherit;
+  font-size: var(--font-size-small);
 }
 
 .text p:last-child {

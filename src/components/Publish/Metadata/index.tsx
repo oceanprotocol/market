@@ -4,11 +4,13 @@ import { Field, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
 import content from '../../../../content/publish/form.json'
 import { FormPublishData } from '../_types'
-import { getFieldContent } from '../_utils'
 import IconDataset from '@images/dataset.svg'
 import IconAlgorithm from '@images/algorithm.svg'
 import styles from './index.module.css'
 import { algorithmContainerPresets } from '../_constants'
+import Alert from '@shared/atoms/Alert'
+import { useMarketMetadata } from '@context/MarketMetadata'
+import { getFieldContent } from '@utils/form'
 
 const assetTypeOptionsTitles = getFieldContent(
   'type',
@@ -16,6 +18,8 @@ const assetTypeOptionsTitles = getFieldContent(
 ).options
 
 export default function MetadataFields(): ReactElement {
+  const { siteContent } = useMarketMetadata()
+
   // connect with Form state, use for conditional field rendering
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
 
@@ -71,6 +75,13 @@ export default function MetadataFields(): ReactElement {
         name="metadata.type"
         options={assetTypeOptions}
       />
+      {values.services[0].access === 'compute' && (
+        <Alert
+          className={styles.fieldWarning}
+          state="info"
+          text={siteContent.warning.ctd}
+        />
+      )}
       <Field
         {...getFieldContent('name', content.metadata.fields)}
         component={Input}

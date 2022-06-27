@@ -1,9 +1,8 @@
 {
-  "description": "Only selected algorithms are allowed to run on this data set. Updating these settings will create an on-chain transaction you have to approve in your wallet.",
   "form": {
     "title": "Set allowed algorithms",
-    "success": "🎉 Successfully updated. 🎉",
-    "successAction": "Close",
+    "description": "Only the algorithms selected here will be allowed to run on your data set. Uncheck all to remove any access to your data set.",
+    "success": "🎉 Successfully updated. 🎉\n\nUpdates might not show up right away on your asset. In this case, wait some seconds and reload your asset details page in your browser.",
     "error": "Updating DDO failed.",
     "data": [
       {

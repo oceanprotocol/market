@@ -2,7 +2,7 @@ import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
-import { metadataCacheUri } from '../../app.config'
+import { metadataCacheUri, v3MetadataCacheUri } from '../../app.config'
 import {
   SortDirectionOptions,
   SortTermOptions
@@ -10,6 +10,12 @@ import {
 import { transformAssetToAssetSelection } from './assetConvertor'
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
+
+export function escapeEsReservedCharacters(value: string): string {
+  // eslint-disable-next-line no-useless-escape
+  const pattern = /([\!\*\+\-\=\<\>\&\|\(\)\[\]\{\}\^\~\?\:\\/"])/g
+  return value.replace(pattern, '\\$1')
+}
 
 /**
  * @param filterField the name of the actual field from the ddo schema e.g. 'id','service.attributes.main.type'
@@ -127,6 +133,28 @@ export async function retrieveAsset(
   }
 }
 
+export async function checkV3Asset(
+  did: string,
+  cancelToken: CancelToken
+): Promise<boolean> {
+  try {
+    const response: AxiosResponse<Asset> = await axios.get(
+      `${v3MetadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
+      { cancelToken }
+    )
+    if (!response || response.status !== 200 || !response.data) return false
+
+    return true
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+    return false
+  }
+}
+
 export async function getAssetsNames(
   didList: string[],
   cancelToken: CancelToken
@@ -152,7 +180,7 @@ export async function getAssetsFromDidList(
   didList: string[],
   chainIds: number[],
   cancelToken: CancelToken
-): Promise<any> {
+): Promise<PagedAssets> {
   try {
     if (!(didList.length > 0)) return
 
@@ -227,12 +255,15 @@ export async function getAlgorithmDatasetsForCompute(
 ): Promise<AssetSelectionAsset[]> {
   const baseQueryParams = {
     chainIds: [datasetChainId],
-    filters: [
-      getFilterTerm(
-        'service.compite.publisherTrustedAlgorithms.did',
-        algorithmId
-      )
-    ],
+    nestedQuery: {
+      must: {
+        match: {
+          'services.compute.publisherTrustedAlgorithms.did': {
+            query: escapeEsReservedCharacters(algorithmId)
+          }
+        }
+      }
+    },
     sortOptions: {
       sortBy: SortTermOptions.Created,
       sortDirection: SortDirectionOptions.Descending
