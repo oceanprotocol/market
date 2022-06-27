@@ -26,9 +26,7 @@
 }
 
 .input {
-  font-size: var(
-    --font-size-large
-  ); /* prevent zoom in on input focus on mobile devices  */
+  font-size: 16px; /* prevent zoom in on input focus on mobile devices  */
   background-color: transparent;
   height: 36px;
   margin: 0;
