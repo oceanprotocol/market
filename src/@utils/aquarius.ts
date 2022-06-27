@@ -382,7 +382,8 @@ export async function getTagsList(
     aggs: {
       tags: {
         terms: {
-          field: 'metadata.tags.keyword'
+          field: 'metadata.tags.keyword',
+          size: 1000
         }
       }
     }
