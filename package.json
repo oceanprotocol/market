@@ -40,7 +40,6 @@
     "filesize": "^9.0.1",
     "formik": "^2.2.9",
     "gray-matter": "^4.0.3",
-    "is-url-superb": "^6.1.0",
     "js-cookie": "^3.0.1",
     "jwt-decode": "^3.1.2",
     "lodash.debounce": "^4.0.8",

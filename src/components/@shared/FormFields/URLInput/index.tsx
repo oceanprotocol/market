@@ -5,7 +5,7 @@ import Loader from '@shared/atoms/Loader'
 import styles from './index.module.css'
 import InputGroup from '@shared/FormInput/InputGroup'
 import InputElement from '@shared/FormInput/InputElement'
-import isUrl from 'is-url-superb'
+import { isUrl } from '@utils/url'
 
 export default function URLInput({
   submitText,

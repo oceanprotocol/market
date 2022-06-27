@@ -1,6 +1,6 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import axios from 'axios'
-import isUrl from 'is-url-superb'
+import { isUrl } from '@utils/url'
 import { toast } from 'react-toastify'
 
 async function isDockerHubImageValid(

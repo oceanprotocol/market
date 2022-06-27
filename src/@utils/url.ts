@@ -8,3 +8,15 @@ export function sanitizeUrl(url: string) {
     return 'about:blank'
   return url
 }
+
+export function isUrl(string: string) {
+  let url
+
+  try {
+    url = new URL(string)
+  } catch (_) {
+    return false
+  }
+
+  return url.protocol === 'http:' || url.protocol === 'https:'
+}
