@@ -47,6 +47,7 @@ export default function TagsAutoComplete({
   const handleChange = (userInput: OnChangeValue<AutoCompleteOption, true>) => {
     const normalizedInput = userInput.map((input) => input.value)
     helpers.setValue(normalizedInput)
+    helpers.setTouched(true)
   }
 
   return (
