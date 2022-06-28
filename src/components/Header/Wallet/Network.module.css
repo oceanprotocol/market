@@ -3,11 +3,17 @@
   border-right: none;
   border-top-left-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
-  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 3);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 8);
   white-space: nowrap;
   margin-right: -3px;
   display: inline-flex;
   align-items: center;
+}
+
+@media screen and (min-width: 42rem) {
+  .network {
+    padding: calc(var(--spacer) / 4);
+  }
 }
 
 .name {
@@ -15,9 +21,10 @@
 }
 
 .badge {
-  margin-left: calc(var(--spacer) / 8);
+  margin-left: -0.25rem;
   background-color: var(--border-color);
   color: var(--font-color-text);
+  font-size: calc(var(--font-size-mini) * 0.8);
 }
 
 .warning {
