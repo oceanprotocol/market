@@ -135,7 +135,6 @@ export default function AssetActions(): ReactElement {
 
   return (
     <>
-      {price?.type === 'pool' && <Migration />}
       <Permission eventType="consume">
         <Tabs items={tabs} className={styles.actions} />
       </Permission>

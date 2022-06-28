@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
+import stylesActions from './Actions.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
-import Alert from '../../../atoms/Alert'
 import Tooltip from '../../../atoms/Tooltip'
 import ExplorerLink from '../../../atoms/ExplorerLink'
 import Token from './Token'
@@ -19,10 +19,8 @@ import PoolTransactions from '../../../molecules/PoolTransactions'
 import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 import { isValidNumber } from './../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
-import {
-  MigrationStatus,
-  useMigrationStatus
-} from '../../../../providers/Migration'
+import Remove from './Remove'
+import Button from '../../../atoms/Button'
 
 const REFETCH_INTERVAL = 5000
 
@@ -86,11 +84,10 @@ export default function Pool(): ReactElement {
   const content = data.content.edges[0].node.childContentJson.pool
 
   const { accountId } = useWeb3()
-  const { status } = useMigrationStatus()
 
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [oceanSymbol, setOceanSymbol] = useState<string>()
-  const { ddo, owner, price } = useAsset()
+  const { ddo, owner, price, isInPurgatory, isAssetNetwork } = useAsset()
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
@@ -115,6 +112,13 @@ export default function Pool(): ReactElement {
   const [dataLiquidity, setdataLiquidity] = useState<PoolLiquidity>()
   const [liquidityFetchInterval, setLiquidityFetchInterval] =
     useState<NodeJS.Timeout>()
+
+  const [showRemove, setShowRemove] = useState(false)
+  const [isRemoveDisabled, setIsRemoveDisabled] = useState(false)
+
+  const [hasAddedLiquidity, setHasAddedLiquidity] = useState(false)
+  // the purpose of the value is just to trigger the effect
+  const [refreshPool, setRefreshPool] = useState(false)
 
   async function getPoolLiquidity() {
     const queryContext = getQueryContext(ddo.chainId)
@@ -268,6 +272,10 @@ export default function Pool(): ReactElement {
   }, [dataLiquidity, ddo.dataToken, price.datatoken, price.ocean, price?.value])
 
   useEffect(() => {
+    setIsRemoveDisabled(isInPurgatory && owner === accountId)
+  }, [isInPurgatory, owner, accountId])
+
+  useEffect(() => {
     if (!dataLiquidity) return
     const poolShare =
       isValidNumber(poolTokens) &&
@@ -280,6 +288,7 @@ export default function Pool(): ReactElement {
         .toFixed(5)
 
     setPoolShare(poolShare)
+    setHasAddedLiquidity(Number(poolShare) > 0)
 
     const totalUserLiquidityInOcean =
       isValidNumber(userLiquidity?.ocean) &&
@@ -350,7 +359,23 @@ export default function Pool(): ReactElement {
     init()
   }, [accountId, price, ddo, owner, totalPoolTokens])
 
-  return (
+  const refreshInfo = async () => {
+    setRefreshPool(!refreshPool)
+
+    // need some form of replacement or something.
+    // await refreshPrice()
+  }
+
+  return showRemove ? (
+    <Remove
+      setShowRemove={setShowRemove}
+      refreshInfo={refreshInfo}
+      poolAddress={price.address}
+      poolTokens={poolTokens}
+      totalPoolTokens={totalPoolTokens}
+      dtSymbol={dtSymbol}
+    />
+  ) : (
     <>
       <div className={styles.dataToken}>
         <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
@@ -433,15 +458,16 @@ export default function Pool(): ReactElement {
       >
         <Token symbol="% swap fee" balance={swapFee} noIcon />
       </TokenList>
-      <Alert
-        title="Adding and removing liquidity is disabled"
-        text={
-          status === MigrationStatus.ALLOWED
-            ? 'Pool Shares are currently being locked. Adding and removing liquidity is disabled while the pool shares are being locked.'
-            : 'Adding and removing liquidity is currently disabled for all pools.'
-        }
-        state="info"
-      />
+
+      <div className={stylesActions.actions}>
+        <Button
+          size="small"
+          onClick={() => setShowRemove(true)}
+          disabled={!isAssetNetwork || !hasAddedLiquidity || isRemoveDisabled}
+        >
+          Remove Liquidity
+        </Button>
+      </div>
 
       {accountId && (
         <AssetActionHistoryTable title="Your Pool Transactions">
