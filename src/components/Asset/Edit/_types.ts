@@ -1,5 +1,3 @@
-// import { EditableMetadataLinks } from '@oceanprotocol/lib'
-
 export interface MetadataEditForm {
   name: string
   description: string
@@ -8,4 +6,10 @@ export interface MetadataEditForm {
   links?: string | any[]
   files: string | any[]
   author?: string
+}
+
+export interface ComputeEditForm {
+  allowAllPublishedAlgorithms: boolean
+  publisherTrustedAlgorithms: string[]
+  publisherTrustedAlgorithmPublishers: string[]
 }
