@@ -1,12 +1,12 @@
 import Conversion from '@shared/Price/Conversion'
 import { Field, useField, useFormikContext } from 'formik'
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import Input from '@shared/FormInput'
 import Error from '@shared/FormInput/Error'
 import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './Price.module.css'
 import { FormPublishData } from '../_types'
-import { getFieldContent } from '../_utils'
+import { getFieldContent } from '@utils/form'
 
 export default function Price({
   firstPrice,

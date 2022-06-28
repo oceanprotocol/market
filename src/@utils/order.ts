@@ -1,4 +1,5 @@
 import {
+  amountToUnits,
   approve,
   approveWei,
   Datatoken,
@@ -72,7 +73,11 @@ export async function order(
         accountId,
         asset.accessDetails.baseToken.address,
         asset.accessDetails.datatoken.address,
-        orderPriceAndFees.price,
+        await amountToUnits(
+          web3,
+          asset?.accessDetails?.baseToken?.address,
+          orderPriceAndFees.price
+        ),
         false
       )
       if (!txApprove) {
@@ -83,6 +88,8 @@ export async function order(
         exchangeContract: config.fixedRateExchangeAddress,
         exchangeId: asset.accessDetails.addressOrId,
         maxBaseTokenAmount: orderPriceAndFees.price,
+        baseTokenAddress: asset?.accessDetails?.baseToken?.address,
+        baseTokenDecimals: asset?.accessDetails?.baseToken?.decimals || 18,
         swapMarketFee: consumeMarketFixedSwapFee,
         marketFeeAddress
       } as FreOrderParams
