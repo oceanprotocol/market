@@ -296,7 +296,7 @@ export async function createTokensAndPricing(
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
         baseTokenDecimals: values.pricing.baseToken.decimals,
-        datatokenDecimals: values.pricing.baseToken.decimals,
+        datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
         marketFee: publisherMarketFixedSwapFee,
         withMint: true
