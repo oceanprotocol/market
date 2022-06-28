@@ -1,14 +1,12 @@
 .filterList,
 div.filterList {
   white-space: normal;
+  margin-top: 0;
   margin-bottom: 0;
   display: flex;
-  flex-direction: row;
+  gap: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
+  flex-direction: column;
   align-items: baseline;
-}
-
-.separator {
-  width: calc(var(--spacer) / 2);
 }
 
 .filter {
@@ -64,4 +62,11 @@ button.filter,
 
 .hideClear {
   display: none !important;
+}
+
+@media screen and (min-width: 35rem) {
+  .filterList,
+  div.filterList {
+    flex-direction: row;
+  }
 }
