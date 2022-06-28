@@ -26,8 +26,8 @@ export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
     fixedRateExchangeAddress: contractAddresses.development?.FixedRateExchange,
     metadataContractAddress: contractAddresses.development?.Metadata,
     oceanTokenAddress: contractAddresses.development?.Ocean,
-    // There is no subgraph in barge so we hardcode the Rinkeby one for now
-    subgraphUri: 'https://subgraph.rinkeby.oceanprotocol.com'
+    // There is no subgraph in barge so we hardcode the Polygon one for now
+    subgraphUri: 'https://subgraph.polygon.oceanprotocol.com'
   }
 }
 
