@@ -67,6 +67,7 @@ const tokensPriceQuery = gql`
           symbol
           name
           address
+          decimals
         }
         datatoken {
           symbol
@@ -84,6 +85,7 @@ const tokensPriceQuery = gql`
           symbol
           name
           address
+          decimals
         }
         datatoken {
           symbol
@@ -139,6 +141,7 @@ const tokenPriceQuery = gql`
           symbol
           name
           address
+          decimals
         }
         datatoken {
           symbol
@@ -156,6 +159,7 @@ const tokenPriceQuery = gql`
           symbol
           name
           address
+          decimals
         }
         datatoken {
           symbol
@@ -212,7 +216,8 @@ function getAccessDetailsFromTokenPrice(
     accessDetails.baseToken = {
       address: fixed.baseToken.address,
       name: fixed.baseToken.name,
-      symbol: fixed.baseToken.symbol
+      symbol: fixed.baseToken.symbol,
+      decimals: fixed.baseToken.decimals
     }
     accessDetails.datatoken = {
       address: fixed.datatoken.address,
@@ -234,7 +239,8 @@ function getAccessDetailsFromTokenPrice(
     accessDetails.baseToken = {
       address: pool.baseToken.address,
       name: pool.baseToken.name,
-      symbol: pool.baseToken.symbol
+      symbol: pool.baseToken.symbol,
+      decimals: pool.baseToken.decimals
     }
     accessDetails.datatoken = {
       address: pool.datatoken.address,

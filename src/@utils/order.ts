@@ -83,6 +83,8 @@ export async function order(
         exchangeContract: config.fixedRateExchangeAddress,
         exchangeId: asset.accessDetails.addressOrId,
         maxBaseTokenAmount: orderPriceAndFees.price,
+        baseTokenAddress: asset.accessDetails.baseToken.address,
+        baseTokenDecimals: asset.accessDetails.baseToken.decimals,
         swapMarketFee: consumeMarketFixedSwapFee,
         marketFeeAddress
       } as FreOrderParams
