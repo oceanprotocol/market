@@ -332,6 +332,11 @@ export async function createTrustedAlgorithmList(
 ): Promise<PublisherTrustedAlgorithm[]> {
   const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
 
+  // Condition to prevent app from hitting Aquarius with empty DID list
+  // when nothing is selected in the UI.
+  if (!selectedAlgorithms || selectedAlgorithms.length === 0)
+    return trustedAlgorithms
+
   const selectedAssets = await retrieveDDOListByDIDs(
     selectedAlgorithms,
     [assetChainId],
@@ -367,9 +372,6 @@ export async function transformComputeFormToServiceComputeOptions(
 ): Promise<ServiceComputeOptions> {
   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
     ? null
-    : !values.allowAllPublishedAlgorithms &&
-      values.publisherTrustedAlgorithms?.length === 0
-    ? []
     : await createTrustedAlgorithmList(
         values.publisherTrustedAlgorithms,
         assetChainId,
