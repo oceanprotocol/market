@@ -330,8 +330,12 @@ export async function createTrustedAlgorithmList(
   assetChainId: number,
   cancelToken: CancelToken
 ): Promise<PublisherTrustedAlgorithm[]> {
-  if (!selectedAlgorithms || selectedAlgorithms.length === 0) return []
   const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
+
+  // Condition to prevent app from hitting Aquarius with empty DID list
+  // when nothing is selected in the UI.
+  if (!selectedAlgorithms || selectedAlgorithms.length === 0)
+    return trustedAlgorithms
 
   const selectedAssets = await retrieveDDOListByDIDs(
     selectedAlgorithms,
