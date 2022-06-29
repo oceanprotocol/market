@@ -330,7 +330,6 @@ export async function createTrustedAlgorithmList(
   assetChainId: number,
   cancelToken: CancelToken
 ): Promise<PublisherTrustedAlgorithm[]> {
-  if (!selectedAlgorithms || selectedAlgorithms.length === 0) return []
   const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
 
   const selectedAssets = await retrieveDDOListByDIDs(
@@ -368,6 +367,9 @@ export async function transformComputeFormToServiceComputeOptions(
 ): Promise<ServiceComputeOptions> {
   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
     ? null
+    : !values.allowAllPublishedAlgorithms &&
+      values.publisherTrustedAlgorithms?.length === 0
+    ? []
     : await createTrustedAlgorithmList(
         values.publisherTrustedAlgorithms,
         assetChainId,
