@@ -2,8 +2,12 @@ import React, { createContext, useContext } from 'react'
 import { SignalOriginItem } from '@context/Signals/_types'
 
 export interface SignalsProviderValue {
-  title: string
+  origins: string[]
   signalOriginList: SignalOriginItem[]
+  usDetailSignal: () => void
+  useListSignals: () => void
+  useAddSignal: () => void
+  useRemoveSignal: () => void
   error?: string
   loading: boolean
 }
