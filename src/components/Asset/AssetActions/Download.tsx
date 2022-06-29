@@ -206,6 +206,10 @@ export default function Download({
       <div className={styles.info}>
         <div className={styles.filewrapper}>
           <FileIcon file={file} isLoading={fileIsLoading} />
+          <div className={styles.totalOrders}>
+            Total Orders:{' '}
+            <span className={styles.totalAmount}>{asset.stats.orders}</span>
+          </div>
         </div>
         <div className={styles.pricewrapper}>
           <Price
