@@ -7,11 +7,14 @@ export default function AssetStats() {
 
   return (
     <footer className={styles.stats}>
-      <span className={styles.number}>
-        {asset.stats.orders === 0 ? 'No' : asset.stats.orders}
-      </span>{' '}
-      sale
-      {asset.stats.orders === 1 ? '' : 's'}
+      {asset.stats.orders === 0 ? (
+        'No sales yet'
+      ) : (
+        <>
+          <span className={styles.number}>{asset.stats.orders}</span> sale
+          {asset.stats.orders === 1 ? '' : 's'}
+        </>
+      )}
     </footer>
   )
 }
