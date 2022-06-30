@@ -8,16 +8,6 @@
   width: auto;
 }
 
-.totalOrders {
-  margin-top: calc(var(--spacer) / 4);
-  font-size: var(--font-size-mini);
-}
-
-.totalOrders .totalAmount {
-  font-weight: var(--font-weight-base);
-  color: var(--color-secondary);
-}
-
 .filewrapper {
   flex-shrink: 0;
 }
