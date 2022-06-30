@@ -18,6 +18,7 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import PoolProvider from '@context/Pool'
+import AssetStats from './AssetStats'
 
 export default function AssetActions({
   asset
@@ -129,12 +130,7 @@ export default function AssetActions({
           fileIsLoading={fileIsLoading}
         />
       )}
-      <footer className={styles.stats}>
-        <span className={styles.number}>
-          {asset.stats.orders === 0 ? 'No' : asset.stats.orders}
-        </span>{' '}
-        sale{asset.stats.orders === 1 ? '' : 's'}
-      </footer>
+      <AssetStats />
     </>
   )
 
