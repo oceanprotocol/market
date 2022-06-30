@@ -14,6 +14,7 @@ import styles from './index.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
+import useSignalOrigin from '../../@hooks/useSignals'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -76,6 +77,8 @@ function SectionQueryResult({
           const result = await queryMetadata(query, newCancelToken())
           if (!isMounted()) return
           if (queryData && result?.totalResults > 0) {
+            // TODO add logic for the fetching of signals after assets have loaded.
+            // This is where all home page assests are available so we make the signals request here
             const sortedAssets = sortElements(result.results, queryData)
             const overflow = sortedAssets.length - 9
             sortedAssets.splice(sortedAssets.length - overflow, overflow)
@@ -110,6 +113,8 @@ export default function HomePage(): ReactElement {
   const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string[]]>()
   const [queryLatest, setQueryLatest] = useState<SearchQuery>()
   const { chainIds } = useUserPreferences()
+  const { signalOriginsList, loading } = useSignalOrigin('testsignalurl.com')
+  console.log('signalOriginList', signalOriginsList)
 
   useEffect(() => {
     getQueryHighest(chainIds).then((results) => {

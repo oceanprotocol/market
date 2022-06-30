@@ -37,6 +37,24 @@ export interface SignalItem {
  */
 export interface SignalOriginItem {
   /**
+   * a string describing the title for this specific signal type instance
+   * @type {string}
+   * @memberof SignalOriginItem
+   */
+  title: string
+  /**
+   * a string describing the type of signal e.g account signal vs asset signal
+   * @type {string}
+   * @memberof SignalOriginItem
+   */
+  urlParams?: string
+  /**
+   * a string describing the type of signal e.g account signal vs asset signal
+   * @type {string}
+   * @memberof SignalOriginItem
+   */
+  type: string
+  /**
    * a unique origin of the signal
    * @type {string}
    * @memberof SignalOriginItem
@@ -48,6 +66,18 @@ export interface SignalOriginItem {
    * @memberof SignalOriginItem
    */
   signals: Array<SignalItem>
+  /**
+   * a boolean representing when the signal should be displayed on the list page
+   * @type {Boolean}
+   * @memberof SignalSettingsItem
+   */
+  listView?: boolean
+  /**
+   * a boolean representing when the signal should be displayed on the list page
+   * @type {Boolean}
+   * @memberof SignalSettingsItem
+   */
+  detailView?: boolean
 }
 
 export interface SignalSettingsItem {
@@ -63,18 +93,6 @@ export interface SignalSettingsItem {
    * @memberof SignalSettingsItem
    */
   origin: string
-  /**
-   * a boolean representing when the signal should be displayed on the list page
-   * @type {Boolean}
-   * @memberof SignalSettingsItem
-   */
-  listView: boolean
-  /**
-   * a boolean representing when the signal should be displayed on the list page
-   * @type {Boolean}
-   * @memberof SignalSettingsItem
-   */
-  detailView: boolean
 }
 
 export interface SignalParams {
