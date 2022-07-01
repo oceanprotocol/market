@@ -17,6 +17,7 @@ import { calcMaxExactIn, LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { usePool } from '@context/Pool'
 import { MAX_DECIMALS } from '@utils/constants'
 import { getMaxDecimalsValidation } from '@utils/numbers'
+import Decimal from 'decimal.js'
 
 export interface FormAddLiquidity {
   amount: number
@@ -81,11 +82,11 @@ export default function Add({
         )
 
         const amountMaxPool = calcMaxExactIn(poolReserve)
-        const amountMax =
-          Number(balance.ocean) > Number(amountMaxPool)
-            ? amountMaxPool
-            : balance.ocean
-        setAmountMax(Number(amountMax).toFixed(3))
+        const oceanDecimal = new Decimal(balance.ocean)
+        const amountMax = oceanDecimal.greaterThan(amountMaxPool)
+          ? amountMaxPool
+          : oceanDecimal
+        setAmountMax(amountMax.toFixed(3, Decimal.ROUND_DOWN))
       } catch (error) {
         LoggerInstance.error(error.message)
       }
