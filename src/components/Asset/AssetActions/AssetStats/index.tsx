@@ -7,7 +7,7 @@ export default function AssetStats() {
 
   return (
     <footer className={styles.stats}>
-      {asset.stats.orders === 0 ? (
+      {!asset || !asset?.stats || asset?.stats?.orders === 0 ? (
         'No sales yet'
       ) : (
         <>
