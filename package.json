@@ -109,7 +109,7 @@
     "file-loader": "^6.2.0",
     "https-browserify": "^1.0.0",
     "husky": "^8.0.1",
-    "jest": "^28.1.1",
+    "jest": "^28.1.2",
     "jest-environment-jsdom": "^28.1.2",
     "prettier": "^2.6.2",
     "pretty-quick": "^3.1.3",
