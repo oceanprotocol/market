@@ -73,7 +73,7 @@
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^6.5.7",
-    "@storybook/addon-storyshots": "^6.5.7",
+    "@storybook/addon-storyshots": "^6.5.9",
     "@storybook/builder-webpack5": "^6.5.7",
     "@storybook/manager-webpack5": "^6.5.7",
     "@storybook/react": "^6.5.7",
