@@ -1,34 +1,27 @@
 import React, { ReactElement } from 'react'
-import Table from '@shared/atoms/Table'
+import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import Time from '@shared/atoms/Time'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import NetworkName from '@shared/NetworkName'
 import { useProfile } from '@context/Profile'
 import { useUserPreferences } from '@context/UserPreferences'
-const columns = [
+
+const columns: TableOceanColumn<DownloadedAsset>[] = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: DownloadedAsset) {
-      return <AssetTitle asset={row.asset} />
-    }
+    selector: (row) => <AssetTitle asset={row.asset} />
   },
   {
     name: 'Network',
-    selector: function getNetwork(row: DownloadedAsset) {
-      return <NetworkName networkId={row.networkId} />
-    }
+    selector: (row) => <NetworkName networkId={row.networkId} />
   },
   {
     name: 'Datatoken',
-    selector: function getTitleRow(row: DownloadedAsset) {
-      return row.dtSymbol
-    }
+    selector: (row) => row.dtSymbol
   },
   {
     name: 'Time',
-    selector: function getTimeRow(row: DownloadedAsset) {
-      return <Time date={row.timestamp.toString()} relative isUnix />
-    }
+    selector: (row) => <Time date={row.timestamp.toString()} relative isUnix />
   }
 ]
 
