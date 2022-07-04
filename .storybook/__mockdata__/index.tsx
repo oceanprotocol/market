@@ -22,7 +22,7 @@ export const asset: Asset = {
     state: true,
     reason: ''
   },
-  stats: { consume: -1 },
+  stats: { orders: -1 },
   chainId: 4,
   datatokens: [
     {
