@@ -1,6 +1,6 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import Table, { TableProps } from '@shared/atoms/Table'
+import Table, { TableOceanProps } from '@shared/atoms/Table'
 
 export default {
   title: 'Component/@shared/atoms/Table',
@@ -10,7 +10,7 @@ export default {
 const Template: ComponentStory<typeof Table> = (args) => <Table {...args} />
 
 interface Props {
-  args: TableProps
+  args: TableOceanProps<any>
 }
 
 const columns = [
