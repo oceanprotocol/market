@@ -14,9 +14,9 @@ export default function AlgorithmDatasetsListForCompute({
   asset: AssetExtended
   algorithmDid: string
 }): ReactElement {
+  const newCancelToken = useCancelToken()
   const [datasetsForCompute, setDatasetsForCompute] =
     useState<AssetSelectionAsset[]>()
-  const newCancelToken = useCancelToken()
 
   useEffect(() => {
     if (!asset) return
@@ -36,7 +36,7 @@ export default function AlgorithmDatasetsListForCompute({
       setDatasetsForCompute(datasets)
     }
     asset.metadata.type === 'algorithm' && getDatasetsAllowedForCompute()
-  }, [asset?.metadata?.type])
+  }, [asset, algorithmDid, newCancelToken])
 
   return (
     <div className={styles.datasetsContainer}>

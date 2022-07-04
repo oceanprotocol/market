@@ -1,0 +1,26 @@
+.stats {
+  border-top: 1px solid var(--border-color);
+  margin: calc(var(--spacer) / 2) calc(var(--spacer) / -2)
+    calc(var(--spacer) / -5) calc(var(--spacer) / -2);
+  margin-top: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 3);
+  padding-bottom: 0;
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  text-align: center;
+}
+
+@media (min-width: 40rem) {
+  .stats {
+    margin-bottom: calc(var(--spacer) / -1.5);
+    margin-left: calc(var(--spacer) / -1);
+    margin-right: calc(var(--spacer) / -1);
+    padding-left: var(--spacer);
+    padding-right: var(--spacer);
+  }
+}
+
+.number {
+  font-weight: var(--font-weight-bold);
+  color: var(--font-color-heading);
+}

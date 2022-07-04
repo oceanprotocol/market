@@ -1,9 +1,8 @@
 .menu {
   width: 100%;
-  padding: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 2) calc(var(--spacer) / 3);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
 }
 
@@ -21,7 +20,6 @@
 .badge {
   cursor: pointer;
   margin-top: -0.25rem;
-  position: relative;
   padding: calc(var(--spacer) / 5) calc(var(--spacer) / 4);
 }
 
@@ -39,6 +37,7 @@
 .actions {
   order: 2;
   display: flex;
+  margin-left: auto;
 }
 
 .title {
@@ -47,7 +46,7 @@
 
 @media screen and (min-width: 42rem) {
   .menu {
-    justify-content: start;
+    padding: calc(var(--spacer) / 2);
   }
 
   .navigation {
@@ -138,18 +137,26 @@
   text-transform: none;
 }
 
-.tooltip[aria-expanded='true'] svg {
+.caret,
+svg.caret {
+  display: none;
+  width: var(--font-size-small);
+  height: var(--font-size-small);
+  fill: var(--border-color);
+  transition: transform 0.2s ease-out;
+  vertical-align: middle;
+  margin-left: calc(var(--spacer) / 4);
+}
+
+[aria-expanded='true'] .caret {
   transform: rotate(180deg);
 }
 
-.caret,
-svg.caret {
-  width: var(--font-size-mini);
-  height: var(--font-size-mini);
+.badge .caret {
   fill: var(--brand-white);
   opacity: 0.7;
-  transition: transform 0.2s ease-out;
-  vertical-align: middle;
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
   margin-left: calc(var(--spacer) / 12);
 }
 
@@ -157,6 +164,10 @@ svg.caret {
   .caret,
   svg.caret {
     display: inline-block;
+  }
+
+  .navigation {
+    margin-left: calc(var(--spacer) / 2);
   }
 }
 
