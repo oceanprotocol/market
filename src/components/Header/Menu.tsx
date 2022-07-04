@@ -46,7 +46,7 @@ export default function Menu(): ReactElement {
       </Link>
 
       <Tooltip
-        className={styles.tooltip}
+        className={styles.badgeWrap}
         content={
           <div className={styles.versions}>
             <a className={styles.link} href={appConfig.v3MarketUri}>
@@ -69,6 +69,7 @@ export default function Menu(): ReactElement {
           }
         />
       </Tooltip>
+
       <ul className={styles.navigation}>
         {siteContent?.menu.map((item: MenuItem) => (
           <li key={item.name}>

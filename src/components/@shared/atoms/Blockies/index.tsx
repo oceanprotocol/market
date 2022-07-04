@@ -14,6 +14,7 @@ export default function Blockies({
   image
 }: BlockiesProps): ReactElement {
   if (!accountId) return null
+
   const blockies = toDataUrl(accountId)
 
   return (

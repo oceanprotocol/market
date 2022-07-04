@@ -15,7 +15,7 @@ import Web3Feedback from '@shared/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
-import content from '../../../../content/pages/edit.json'
+import content from '../../../../content/pages/editMetadata.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useAbortController } from '@hooks/useAbortController'
 import DebugEditMetadata from './DebugEditMetadata'
@@ -159,12 +159,12 @@ export default function Edit({
       {({ isSubmitting, values }) =>
         isSubmitting || hasFeedback ? (
           <EditFeedback
-            title="Updating Data Set"
+            loading="Updating asset with new metadata..."
             error={error}
             success={success}
             setError={setError}
             successAction={{
-              name: 'View Asset',
+              name: 'Back to Asset',
               onClick: async () => {
                 await fetchAsset()
               },
@@ -173,27 +173,22 @@ export default function Edit({
           />
         ) : (
           <>
-            <p className={styles.description}>{content.description}</p>
-            <article>
-              <FormEditMetadata
-                data={content.form.data}
-                showPrice={asset?.accessDetails?.type === 'fixed'}
-                isComputeDataset={isComputeType}
-              />
+            <FormEditMetadata
+              data={content.form.data}
+              showPrice={asset?.accessDetails?.type === 'fixed'}
+              isComputeDataset={isComputeType}
+            />
 
-              <aside>
-                <Web3Feedback
-                  networkId={asset?.chainId}
-                  isAssetNetwork={isAssetNetwork}
-                />
-              </aside>
+            <Web3Feedback
+              networkId={asset?.chainId}
+              isAssetNetwork={isAssetNetwork}
+            />
 
-              {debug === true && (
-                <div className={styles.grid}>
-                  <DebugEditMetadata values={values} asset={asset} />
-                </div>
-              )}
-            </article>
+            {debug === true && (
+              <div className={styles.grid}>
+                <DebugEditMetadata values={values} asset={asset} />
+              </div>
+            )}
           </>
         )
       }

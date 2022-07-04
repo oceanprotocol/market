@@ -41,8 +41,8 @@ export const wizardSteps: StepContent[] = [
 const computeOptions: ServiceComputeOptions = {
   allowRawAlgorithm: false,
   allowNetworkAccess: true,
-  publisherTrustedAlgorithmPublishers: null,
-  publisherTrustedAlgorithms: null
+  publisherTrustedAlgorithmPublishers: [],
+  publisherTrustedAlgorithms: []
 }
 
 export const initialValues: FormPublishData = {
