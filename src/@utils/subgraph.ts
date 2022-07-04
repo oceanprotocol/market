@@ -411,20 +411,10 @@ export async function getUserSales(
   accountId: string,
   chainIds: number[]
 ): Promise<number> {
-  const variables = { user: accountId?.toLowerCase() }
   try {
-    const userSales = await fetchDataForMultipleChains(
-      UserSalesQuery,
-      variables,
-      chainIds
-    )
-    let salesSum = 0
-    for (let i = 0; i < userSales.length; i++) {
-      if (userSales[i].users.length > 0) {
-        salesSum += parseInt(userSales[i].users[0].totalSales)
-      }
-    }
-    return salesSum
+    const result = await getPublishedAssets(accountId, chainIds, null)
+    const { sumOrders } = result.aggregations
+    return sumOrders.value
   } catch (error) {
     LoggerInstance.error('Error getUserSales', error.message)
   }
@@ -434,9 +424,9 @@ export async function getTopAssetsPublishers(
   chainIds: number[],
   nrItems = 9
 ): Promise<AccountTeaserVM[]> {
-  const publisherSales: AccountTeaserVM[] = []
+  const publishers: AccountTeaserVM[] = []
 
-  async function getPublishersSales() {
+  async function getTopPublishers() {
     for (const chain of chainIds) {
       const queryContext = getQueryContext(Number(chain))
       const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
@@ -446,25 +436,43 @@ export async function getTopAssetsPublishers(
       )
 
       for (let i = 0; i < fetchedUsers.data.users.length; i++) {
-        const result = await getPublishedAssets(
-          fetchedUsers.data.users[i].id,
-          chainIds,
-          null
+        const publishersIndex = publishers.findIndex(
+          (user) => fetchedUsers.data.users[i].id === user.address
         )
-        const { sumOrders } = result.aggregations
 
-        const publisher: AccountTeaserVM = {
-          address: fetchedUsers.data.users[i].id,
-          nrSales: sumOrders.value
+        if (publishersIndex === -1) {
+          const publisher: AccountTeaserVM = {
+            address: fetchedUsers.data.users[i].id,
+            nrSales: parseInt(fetchedUsers.data.users[i].totalSales)
+          }
+          publishers.push(publisher)
+        } else {
+          publishers[publishersIndex].nrSales += parseInt(
+            fetchedUsers.data.users[i].totalSales
+          )
         }
-        publisherSales.push(publisher)
       }
+    }
+    return publishers
+  }
+
+  await getTopPublishers()
+
+  async function getPublishersSales() {
+    for (let i = 0; i < publishers.length; i++) {
+      const result = await getPublishedAssets(
+        publishers[i].address,
+        chainIds,
+        null
+      )
+      const { sumOrders } = result.aggregations
+      publishers[i].nrSales = sumOrders.value
     }
   }
 
   await getPublishersSales()
 
-  publisherSales.sort((a, b) => b.nrSales - a.nrSales)
+  publishers.sort((a, b) => b.nrSales - a.nrSales)
 
-  return publisherSales.slice(0, nrItems)
+  return publishers.slice(0, nrItems)
 }

@@ -288,6 +288,8 @@ function ProfileProvider({
       try {
         const result = await getUserSales(accountId, chainIds)
         setSales(result)
+        console.log(result)
+
         LoggerInstance.log(`[profile] Fetched sales number: ${result}.`, result)
       } catch (error) {
         LoggerInstance.error(error.message)
