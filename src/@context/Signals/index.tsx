@@ -3,7 +3,8 @@ import { SignalOriginItem } from '@context/Signals/_types'
 
 export interface SignalsProviderValue {
   origins: string[]
-  settings: {}
+  // TODO define settings type
+  settings: any
   signalOriginList: SignalOriginItem[]
   usDetailSignal: () => void
   useListSignals: () => void
