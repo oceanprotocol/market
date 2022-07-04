@@ -1,9 +1,11 @@
-import { createTheme } from 'react-data-table-component'
+import { createTheme, TableStyles, Theme } from 'react-data-table-component'
 
-createTheme('ocean', {
+// https://github.com/jbetancur/react-data-table-component/blob/master/src/DataTable/themes.ts
+const theme: Partial<Theme> = {
   text: {
     primary: 'var(--font-color-text)',
-    secondary: 'var(--color-secondary)'
+    secondary: 'var(--color-secondary)',
+    disabled: 'var(--color-secondary)'
   },
   background: {
     default: 'transparent'
@@ -11,14 +13,18 @@ createTheme('ocean', {
   divider: {
     default: 'var(--border-color)'
   },
-  action: {
-    button: 'var(--font-color-text)',
+  button: {
+    default: 'var(--font-color-text)',
+    focus: 'var(--color-primary)',
     hover: 'var(--color-primary)',
     disabled: 'var(--color-secondary)'
   }
-})
+}
 
-export const customStyles = {
+createTheme('ocean', theme)
+
+// https://github.com/jbetancur/react-data-table-component/blob/master/src/DataTable/styles.ts
+export const customStyles: TableStyles = {
   table: {
     style: {
       scrollbarWidth: 'thin'
