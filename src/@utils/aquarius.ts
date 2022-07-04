@@ -49,6 +49,10 @@ export function generateBaseQuery(
     }
   } as SearchQuery
 
+  if (baseQueryParams.aggs !== undefined) {
+    generatedQuery.aggs = baseQueryParams.aggs
+  }
+
   if (baseQueryParams.sortOptions !== undefined)
     generatedQuery.sort = {
       [baseQueryParams.sortOptions.sortBy]:
@@ -68,12 +72,15 @@ export function transformQueryResult(
     results: [],
     page: 0,
     totalPages: 0,
-    totalResults: 0
+    totalResults: 0,
+    aggregations: []
   }
 
   result.results = (queryResult.hits.hits || []).map(
     (hit) => hit._source as Asset
   )
+
+  result.aggregations = queryResult.aggregations
   result.totalResults = queryResult.hits.total.value
   result.totalPages =
     result.totalResults / size < 1
@@ -297,6 +304,13 @@ export async function getPublishedAssets(
     sortOptions: {
       sortBy: SortTermOptions.Created,
       sortDirection: SortDirectionOptions.Descending
+    },
+    aggs: {
+      sumOrders: {
+        sum: {
+          field: SortTermOptions.Stats
+        }
+      }
     },
     esPaginationOptions: {
       from: (Number(page) - 1 || 0) * 9,

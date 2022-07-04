@@ -18,7 +18,7 @@ import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
 import { calcSingleOutGivenPoolIn, getLiquidityByShares } from './pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from './constants'
-
+import { getPublishedAssets } from '@utils/aquarius'
 export interface UserLiquidity {
   price: string
   oceanBalance: string
@@ -444,24 +444,20 @@ export async function getTopAssetsPublishers(
         null,
         queryContext
       )
+
       for (let i = 0; i < fetchedUsers.data.users.length; i++) {
-        const publishersIndex = publisherSales.findIndex(
-          (user) => fetchedUsers.data.users[i].id === user.address
+        const result = await getPublishedAssets(
+          fetchedUsers.data.users[i].id,
+          chainIds,
+          null
         )
-        if (publishersIndex === -1) {
-          const publisher: AccountTeaserVM = {
-            address: fetchedUsers.data.users[i].id,
-            nrSales: fetchedUsers.data.users[i].totalSales
-          }
-          publisherSales.push(publisher)
-        } else {
-          await getUserSales(
-            publisherSales[publishersIndex].address,
-            chainIds
-          ).then((sales) => {
-            publisherSales[publishersIndex].nrSales = sales
-          })
+        const { sumOrders } = result.aggregations
+
+        const publisher: AccountTeaserVM = {
+          address: fetchedUsers.data.users[i].id,
+          nrSales: sumOrders.value
         }
+        publisherSales.push(publisher)
       }
     }
   }
