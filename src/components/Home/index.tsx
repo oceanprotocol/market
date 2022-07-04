@@ -67,7 +67,8 @@ function SectionQueryResult({
           results: [],
           page: 0,
           totalPages: 0,
-          totalResults: 0
+          totalResults: 0,
+          aggregations: undefined
         }
         setResult(result)
         setLoading(false)
