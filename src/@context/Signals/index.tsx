@@ -8,8 +8,6 @@ export interface SignalsProviderValue {
   signalOriginList: SignalOriginItem[]
   usDetailSignal: () => void
   useListSignals: () => void
-  useAddSignal: () => void
-  useRemoveSignal: () => void
   error?: string
   loading: boolean
 }
