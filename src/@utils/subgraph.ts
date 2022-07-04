@@ -18,7 +18,7 @@ import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
 import { calcSingleOutGivenPoolIn } from './pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from './constants'
-import { getPublishedAssets } from '@utils/aquarius'
+import { getPublishedAssets, getTopPublishers } from '@utils/aquarius'
 export interface UserLiquidity {
   price: string
   oceanBalance: string
@@ -413,8 +413,8 @@ export async function getUserSales(
 ): Promise<number> {
   try {
     const result = await getPublishedAssets(accountId, chainIds, null)
-    const { sumOrders } = result.aggregations
-    return sumOrders.value
+    const { totalOrders } = result.aggregations
+    return totalOrders.value
   } catch (error) {
     LoggerInstance.error('Error getUserSales', error.message)
   }
@@ -426,51 +426,15 @@ export async function getTopAssetsPublishers(
 ): Promise<AccountTeaserVM[]> {
   const publishers: AccountTeaserVM[] = []
 
-  async function getTopPublishers() {
-    for (const chain of chainIds) {
-      const queryContext = getQueryContext(Number(chain))
-      const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
-        TopSalesQuery,
-        null,
-        queryContext
-      )
+  const result = await getTopPublishers(chainIds, null)
+  const { topPublishers } = result.aggregations
 
-      for (let i = 0; i < fetchedUsers.data.users.length; i++) {
-        const publishersIndex = publishers.findIndex(
-          (user) => fetchedUsers.data.users[i].id === user.address
-        )
-
-        if (publishersIndex === -1) {
-          const publisher: AccountTeaserVM = {
-            address: fetchedUsers.data.users[i].id,
-            nrSales: parseInt(fetchedUsers.data.users[i].totalSales)
-          }
-          publishers.push(publisher)
-        } else {
-          publishers[publishersIndex].nrSales += parseInt(
-            fetchedUsers.data.users[i].totalSales
-          )
-        }
-      }
-    }
-    return publishers
+  for (let i = 0; i < topPublishers.buckets.length; i++) {
+    publishers.push({
+      address: topPublishers.buckets[i].key,
+      nrSales: parseInt(topPublishers.buckets[i].totalSales.value)
+    })
   }
-
-  await getTopPublishers()
-
-  async function getPublishersSales() {
-    for (let i = 0; i < publishers.length; i++) {
-      const result = await getPublishedAssets(
-        publishers[i].address,
-        chainIds,
-        null
-      )
-      const { sumOrders } = result.aggregations
-      publishers[i].nrSales = sumOrders.value
-    }
-  }
-
-  await getPublishersSales()
 
   publishers.sort((a, b) => b.nrSales - a.nrSales)
 

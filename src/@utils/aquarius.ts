@@ -315,7 +315,7 @@ export async function getPublishedAssets(
       sortDirection: SortDirectionOptions.Descending
     },
     aggs: {
-      sumOrders: {
+      totalOrders: {
         sum: {
           field: SortTermOptions.Stats
         }
@@ -328,6 +328,62 @@ export async function getPublishedAssets(
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseQueryParams)
+
+  try {
+    const result = await queryMetadata(query, cancelToken)
+    return result
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
+
+export async function getTopPublishers(
+  chainIds: number[],
+  cancelToken: CancelToken,
+  page?: number,
+  type?: string,
+  accesType?: string
+): Promise<PagedAssets> {
+  const filters: FilterTerm[] = []
+
+  accesType !== undefined &&
+    filters.push(getFilterTerm('services.type', accesType))
+  type !== undefined && filters.push(getFilterTerm('metadata.type', type))
+
+  const baseQueryParams = {
+    chainIds,
+    filters,
+    sortOptions: {
+      sortBy: SortTermOptions.Created,
+      sortDirection: SortDirectionOptions.Descending
+    },
+    aggs: {
+      topPublishers: {
+        terms: {
+          field: 'nft.owner.keyword',
+          order: { totalSales: 'desc' }
+        },
+        aggs: {
+          totalSales: {
+            sum: {
+              field: SortTermOptions.Stats
+            }
+          }
+        }
+      }
+    },
+    esPaginationOptions: {
+      from: (Number(page) - 1 || 0) * 9,
+      size: 9
+    }
+  } as BaseQueryParams
+
+  const query = generateBaseQuery(baseQueryParams)
+
   try {
     const result = await queryMetadata(query, cancelToken)
     return result
