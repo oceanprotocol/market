@@ -45,7 +45,7 @@ export default function Price({
                   approvedBaseTokens?.length > 1 ? (
                     <CoinSelect approvedBaseTokens={approvedBaseTokens} />
                   ) : (
-                    values.pricing?.baseToken?.symbol || 'OCEAN'
+                    values.pricing?.baseToken?.symbol
                   )
                 }
                 {...field}
