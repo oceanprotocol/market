@@ -33,33 +33,26 @@ export default function AccountTeaser({
   }, [accountTeaserVM, newCancelToken])
 
   return (
-    <article className={styles.teaser}>
-      <Link href={`/profile/${accountTeaserVM.address}`}>
-        <a className={styles.link}>
-          <header className={styles.header}>
-            {place && <span>{place}</span>}
-            <Blockies
-              accountId={accountTeaserVM.address}
-              className={styles.blockies}
-              image={profile?.image}
-            />
-            <div>
-              <Dotdotdot clamp={3}>
-                <h3 className={styles.name}>
-                  {profile?.name
-                    ? profile?.name
-                    : accountTruncate(accountTeaserVM.address)}
-                </h3>
-              </Dotdotdot>
-              <p className={styles.sales}>
-                {`${accountTeaserVM.nrSales} ${
-                  accountTeaserVM.nrSales === 1 ? 'sale' : 'sales'
-                }`}
-              </p>
-            </div>
-          </header>
-        </a>
-      </Link>
-    </article>
+    <Link href={`/profile/${accountTeaserVM.address}`}>
+      <a className={styles.teaser}>
+        {place && <span className={styles.place}>{place}</span>}
+        <Blockies
+          accountId={accountTeaserVM.address}
+          className={styles.blockies}
+          image={profile?.image}
+        />
+        <div>
+          <Dotdotdot tagName="h4" clamp={2} className={styles.name}>
+            {profile?.name
+              ? profile?.name
+              : accountTruncate(accountTeaserVM.address)}
+          </Dotdotdot>
+          <p className={styles.sales}>
+            <span>{accountTeaserVM.nrSales}</span>
+            {`${accountTeaserVM.nrSales === 1 ? ' sale' : ' sales'}`}
+          </p>
+        </div>
+      </a>
+    </Link>
   )
 }

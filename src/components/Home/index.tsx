@@ -156,7 +156,7 @@ export default function HomePage(): ReactElement {
         }
       />
 
-      <PublishersWithMostSales title="Publishers with most sales" />
+      <PublishersWithMostSales title="Publishers With Most Sales" />
     </>
   )
 }
