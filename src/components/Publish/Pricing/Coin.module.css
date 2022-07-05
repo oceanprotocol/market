@@ -73,6 +73,16 @@
   color: var(--font-color-text);
 }
 
+.error {
+  position: relative;
+  width: 100%;
+}
+
+.error:first-child {
+  position: absolute;
+  top: 0;
+}
+
 @media screen and (min-width: 41rem) {
   .token {
     justify-content: center;

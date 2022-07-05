@@ -46,12 +46,12 @@ export default function Coin({
           value={field.value}
           {...field}
         />
+        <div className={styles.error}>
+          <Error meta={meta} />
+        </div>
         {datatokenOptions?.symbol === 'OCEAN' && (
           <Conversion price={field.value} />
         )}
-        <div>
-          <Error meta={meta} />
-        </div>
       </div>
     </div>
   )
