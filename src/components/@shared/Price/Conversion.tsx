@@ -9,10 +9,12 @@ const cx = classNames.bind(styles)
 
 export default function Conversion({
   price,
+  priceTokenId,
   className,
   hideApproximateSymbol
 }: {
   price: string // expects price in OCEAN, not wei
+  priceTokenId: string // referring to Coingecko tokenId in Prices context provider
   className?: string
   hideApproximateSymbol?: boolean
 }): ReactElement {
@@ -31,12 +33,17 @@ export default function Conversion({
   })
 
   useEffect(() => {
-    if (!prices || !price || price === '0') {
-      setPriceConverted('0.00')
+    if (
+      !prices ||
+      !price ||
+      price === '0' ||
+      !priceTokenId ||
+      !prices[priceTokenId]
+    ) {
       return
     }
 
-    const conversionValue = prices[currency.toLowerCase()]
+    const conversionValue = prices[priceTokenId][currency.toLowerCase()]
     const converted = conversionValue * Number(price)
     const convertedFormatted = formatCurrency(
       converted,
@@ -54,7 +61,7 @@ export default function Conversion({
       (match) => `<span>${match}</span>`
     )
     setPriceConverted(convertedFormattedHTMLstring)
-  }, [price, prices, currency, locale, isFiat])
+  }, [price, prices, currency, locale, isFiat, priceTokenId])
 
   return (
     <span

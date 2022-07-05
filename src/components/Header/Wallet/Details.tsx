@@ -53,7 +53,9 @@ export default function Details(): ReactElement {
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
             })}
-            {key === 'ocean' && <Conversion price={value} />}
+            {key === 'ocean' && (
+              <Conversion price={value} priceTokenId="ocean-protocol" />
+            )}
           </li>
         ))}
 
