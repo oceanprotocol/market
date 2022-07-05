@@ -4,6 +4,7 @@ import { addTokenToWallet } from '@utils/web3'
 import { useWeb3 } from '@context/Web3'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
+import TokenLogo from '@shared/atoms/TokenLogo'
 
 const cx = classNames.bind(styles)
 

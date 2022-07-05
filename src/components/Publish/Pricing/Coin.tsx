@@ -9,15 +9,15 @@ import TokenLogo from '@shared/atoms/TokenLogo'
 export default function Coin({
   datatokenOptions,
   name,
-  tokenLogoKey,
   weight,
-  readOnly
+  readOnly,
+  tokenLogoKey
 }: {
   datatokenOptions: { name: string; symbol: string }
   name: string
   weight: string
-  tokenLogoKey: string
   readOnly?: boolean
+  tokenLogoKey?: string
 }): ReactElement {
   const [field, meta] = useField(`pricing.${name}`)
 
