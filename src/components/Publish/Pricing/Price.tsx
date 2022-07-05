@@ -14,7 +14,7 @@ export default function Price({
   firstPrice,
   content
 }: {
-  approvedBaseTokens: TokenInfo[]
+  approvedBaseTokens?: TokenInfo[]
   firstPrice?: string
   content?: any
 }): ReactElement {
