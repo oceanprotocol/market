@@ -19,6 +19,7 @@ import { FormPublishData } from 'src/components/Publish/_types'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import PoolProvider from '@context/Pool'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
+import AssetStats from './AssetStats'
 
 export default function AssetActions({
   asset
@@ -117,21 +118,26 @@ export default function AssetActions({
     }
   }, [balance, accountId, asset?.accessDetails, dtBalance])
 
-  const UseContent = isCompute ? (
-    <Compute
-      asset={asset}
-      dtBalance={dtBalance}
-      file={fileMetadata}
-      fileIsLoading={fileIsLoading}
-    />
-  ) : (
-    <Consume
-      asset={asset}
-      dtBalance={dtBalance}
-      isBalanceSufficient={isBalanceSufficient}
-      file={fileMetadata}
-      fileIsLoading={fileIsLoading}
-    />
+  const UseContent = (
+    <>
+      {isCompute ? (
+        <Compute
+          asset={asset}
+          dtBalance={dtBalance}
+          file={fileMetadata}
+          fileIsLoading={fileIsLoading}
+        />
+      ) : (
+        <Consume
+          asset={asset}
+          dtBalance={dtBalance}
+          isBalanceSufficient={isBalanceSufficient}
+          file={fileMetadata}
+          fileIsLoading={fileIsLoading}
+        />
+      )}
+      <AssetStats />
+    </>
   )
 
   const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]

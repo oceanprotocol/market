@@ -1,12 +1,6 @@
-import React, {
-  ChangeEvent,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState
-} from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Input, { InputProps } from '@shared/FormInput'
+import Input from '@shared/FormInput'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import stylesIndex from './index.module.css'
 import {
@@ -31,21 +25,6 @@ export default function FormEditComputeDataset(): ReactElement {
   const newCancelToken = useCancelToken()
 
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
-
-  const {
-    validateField,
-    setFieldValue,
-    setFieldTouched
-  }: FormikContextType<Partial<ComputeEditForm>> = useFormikContext()
-
-  // Manually handle change events instead of using `handleChange` from Formik.
-  // Workaround for default `validateOnChange` not kicking in unless user
-  // clicks outside of form field.
-  function handleFieldChange(e: ChangeEvent<HTMLInputElement>, name: string) {
-    validateField(name)
-    setFieldTouched(name, true)
-    setFieldValue(name, e.target.value)
-  }
 
   const getAlgorithmList = useCallback(
     async (
@@ -98,9 +77,6 @@ export default function FormEditComputeDataset(): ReactElement {
         name="publisherTrustedAlgorithms"
         options={allAlgorithms}
         disabled={values.allowAllPublishedAlgorithms}
-        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          handleFieldChange(e, 'publisherTrustedAlgorithms')
-        }
       />
 
       <Field
@@ -110,9 +86,6 @@ export default function FormEditComputeDataset(): ReactElement {
         options={
           getFieldContent('allowAllPublishedAlgorithms', content.form.data)
             .options
-        }
-        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          handleFieldChange(e, 'allowAllPublishedAlgorithms')
         }
       />
 

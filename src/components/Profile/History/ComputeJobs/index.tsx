@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState, useCallback } from 'react'
 import Time from '@shared/atoms/Time'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import Table from '@shared/atoms/Table'
+import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import Button from '@shared/atoms/Button'
 import { useWeb3 } from '@context/Web3'
 import Details from './Details'
@@ -19,46 +19,33 @@ export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
 }
 
-const columns = [
+const columns: TableOceanColumn<ComputeJobMetaData>[] = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: ComputeJobMetaData) {
-      return <AssetListTitle did={row.inputDID[0]} title={row.assetName} />
-    }
+    selector: (row) => (
+      <AssetListTitle did={row.inputDID[0]} title={row.assetName} />
+    )
   },
   {
     name: 'Network',
-    selector: function getNetwork(row: ComputeJobMetaData) {
-      return <NetworkName networkId={row.networkId} />
-    }
+    selector: (row) => <NetworkName networkId={row.networkId} />
   },
   {
     name: 'Created',
-    selector: function getTimeRow(row: ComputeJobMetaData) {
-      return <Time date={row.dateCreated} isUnix relative />
-    }
+    selector: (row) => <Time date={row.dateCreated} isUnix relative />
   },
   {
     name: 'Finished',
-    selector: function getTimeRow(row: ComputeJobMetaData) {
-      return row.dateFinished ? (
-        <Time date={row.dateFinished} isUnix relative />
-      ) : (
-        ''
-      )
-    }
+    selector: (row) =>
+      row.dateFinished ? <Time date={row.dateFinished} isUnix relative /> : ''
   },
   {
     name: 'Status',
-    selector: function getStatus(row: ComputeJobMetaData) {
-      return <Status>{row.statusText}</Status>
-    }
+    selector: (row) => <Status>{row.statusText}</Status>
   },
   {
     name: 'Actions',
-    selector: function getActions(row: ComputeJobMetaData) {
-      return <Details job={row} />
-    }
+    selector: (row) => <Details job={row} />
   }
 ]
 
@@ -125,7 +112,7 @@ export default function ComputeJobs({
         columns={minimal ? columnsMinimal : columns}
         data={jobs}
         isLoading={isLoading}
-        defaultSortField="row.dateCreated"
+        defaultSortFieldId="row.dateCreated"
         defaultSortAsc={false}
         emptyMessage={chainIds.length === 0 ? 'No network selected' : null}
       />
