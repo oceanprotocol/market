@@ -95,6 +95,7 @@ export default function Dynamic({
             symbol: baseToken?.symbol,
             name: baseToken?.name
           }}
+          tokenLogoKey={baseToken?.symbol?.toLowerCase()}
           weight={`${Number(weightOnBaseToken) * 10}%`}
         />
         <Coin
@@ -103,6 +104,7 @@ export default function Dynamic({
             symbol: dataTokenOptions.symbol,
             name: dataTokenOptions.name
           }}
+          tokenLogoKey={baseToken?.symbol?.toLowerCase()}
           weight={`${Number(weightOnDataToken) * 10}%`}
           readOnly
         />

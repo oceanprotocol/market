@@ -27,7 +27,6 @@
   background-color: var(--background-body);
   margin: 0;
   margin-right: calc(var(--spacer) / 4);
-  fill: var(--font-color-text);
 }
 
 .icon svg {
@@ -35,7 +34,11 @@
   height: 100%;
 }
 
-.coin:last-child .icon {
+.icon svg path {
+  fill: var(--font-color-text);
+}
+
+.coin:last-child .icon svg path {
   fill: var(--brand-violet);
 }
 
