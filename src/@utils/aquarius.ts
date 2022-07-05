@@ -55,6 +55,10 @@ export function generateBaseQuery(
     }
   } as SearchQuery
 
+  if (baseQueryParams.aggs !== undefined) {
+    generatedQuery.aggs = baseQueryParams.aggs
+  }
+
   if (baseQueryParams.sortOptions !== undefined)
     generatedQuery.sort = {
       [baseQueryParams.sortOptions.sortBy]:
@@ -74,12 +78,15 @@ export function transformQueryResult(
     results: [],
     page: 0,
     totalPages: 0,
-    totalResults: 0
+    totalResults: 0,
+    aggregations: []
   }
 
   result.results = (queryResult.hits.hits || []).map(
     (hit) => hit._source as Asset
   )
+
+  result.aggregations = queryResult.aggregations
   result.totalResults = queryResult.hits.total.value
   result.totalPages =
     result.totalResults / size < 1
@@ -307,6 +314,13 @@ export async function getPublishedAssets(
       sortBy: SortTermOptions.Created,
       sortDirection: SortDirectionOptions.Descending
     },
+    aggs: {
+      totalOrders: {
+        sum: {
+          field: SortTermOptions.Stats
+        }
+      }
+    },
     esPaginationOptions: {
       from: (Number(page) - 1 || 0) * 9,
       size: 9
@@ -314,6 +328,62 @@ export async function getPublishedAssets(
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseQueryParams)
+
+  try {
+    const result = await queryMetadata(query, cancelToken)
+    return result
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
+
+export async function getTopPublishers(
+  chainIds: number[],
+  cancelToken: CancelToken,
+  page?: number,
+  type?: string,
+  accesType?: string
+): Promise<PagedAssets> {
+  const filters: FilterTerm[] = []
+
+  accesType !== undefined &&
+    filters.push(getFilterTerm('services.type', accesType))
+  type !== undefined && filters.push(getFilterTerm('metadata.type', type))
+
+  const baseQueryParams = {
+    chainIds,
+    filters,
+    sortOptions: {
+      sortBy: SortTermOptions.Created,
+      sortDirection: SortDirectionOptions.Descending
+    },
+    aggs: {
+      topPublishers: {
+        terms: {
+          field: 'nft.owner.keyword',
+          order: { totalSales: 'desc' }
+        },
+        aggs: {
+          totalSales: {
+            sum: {
+              field: SortTermOptions.Stats
+            }
+          }
+        }
+      }
+    },
+    esPaginationOptions: {
+      from: (Number(page) - 1 || 0) * 9,
+      size: 9
+    }
+  } as BaseQueryParams
+
+  const query = generateBaseQuery(baseQueryParams)
+
   try {
     const result = await queryMetadata(query, cancelToken)
     return result

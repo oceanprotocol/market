@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './AssetList.module.css'
+import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import Loader from '../atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -29,7 +29,7 @@ export default function AccountList({
   const { chainIds } = useUserPreferences()
 
   const styleClasses = cx({
-    assetList: true,
+    accountList: true,
     [className]: className
   })
 
