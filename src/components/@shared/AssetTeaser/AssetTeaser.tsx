@@ -24,6 +24,8 @@ export default function AssetTeaser({
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
+  const { orders } = asset.stats
+
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`}>
@@ -42,6 +44,7 @@ export default function AssetTeaser({
             type={type}
             accessType={accessType}
             className={styles.typeDetails}
+            totalSales={orders}
           />
 
           <div className={styles.content}>
