@@ -10,7 +10,6 @@ import Price from './Price'
 import Decimal from 'decimal.js'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData } from '../_types'
-import { transformTokenName } from '../_utils'
 
 export default function Dynamic({
   approvedBaseTokens,
@@ -94,7 +93,7 @@ export default function Dynamic({
           name="amountBaseToken"
           datatokenOptions={{
             symbol: baseToken?.symbol,
-            name: transformTokenName(baseToken?.name)
+            name: baseToken?.name
           }}
           weight={`${Number(weightOnBaseToken) * 10}%`}
         />
