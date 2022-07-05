@@ -18,12 +18,6 @@ export default function TopSales({
   const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
-    if (chainIds.length === 0) {
-      setResult([])
-      setLoading(false)
-      return
-    }
-
     async function init() {
       setLoading(true)
       if (chainIds.length === 0) {

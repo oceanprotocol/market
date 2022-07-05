@@ -1,4 +1,4 @@
-.blockies {
+.avatar {
   aspect-ratio: 1/1;
   width: calc(var(--font-size-large) * 2) !important;
   height: calc(var(--font-size-large) * 2) !important;

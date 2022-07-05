@@ -234,12 +234,13 @@ export async function getTopAssetsPublishers(
 
   for (let i = 0; i < topPublishers.buckets.length; i++) {
     publishers.push({
-      address: topPublishers.buckets[i].key,
-      nrSales: parseInt(topPublishers.buckets[i].totalSales.value)
+      __typename: 'User',
+      id: topPublishers.buckets[i].key,
+      totalSales: parseInt(topPublishers.buckets[i].totalSales.value)
     })
   }
 
-  publishers.sort((a, b) => b.nrSales - a.nrSales)
+  publishers.sort((a, b) => b.totalSales - a.totalSales)
 
   return publishers.slice(0, nrItems)
 }

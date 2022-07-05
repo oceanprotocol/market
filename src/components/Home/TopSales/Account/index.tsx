@@ -19,7 +19,7 @@ export default function Account({
   const [profile, setProfile] = useState<Profile>()
 
   useEffect(() => {
-    if (!account) return
+    if (!account?.id) return
 
     async function getProfileData() {
       const profile = await getEnsProfile(account.id)
@@ -27,28 +27,27 @@ export default function Account({
       setProfile(profile)
     }
     getProfileData()
-  }, [account])
+  }, [account?.id])
 
   return (
-    <article className={styles.teaser}>
-      <Link href={`/profile/${profile?.name || account.id}`}>
-        <header className={styles.header}>
-          {place && <span>{place}</span>}
-          <Avatar accountId={account.id} className={styles.blockies} />
-          <div>
-            <Dotdotdot clamp={3}>
-              <h3 className={styles.name}>
-                {profile?.name ? profile?.name : accountTruncate(account.id)}
-              </h3>
-            </Dotdotdot>
-            <p className={styles.sales}>
-              {`${account.totalSales} ${
-                account.totalSales === 1 ? 'sale' : 'sales'
-              }`}
-            </p>
-          </div>
-        </header>
-      </Link>
-    </article>
+    <Link href={`/profile/${profile?.name || account.id}`}>
+      <a className={styles.teaser}>
+        {place && <span className={styles.place}>{place}</span>}
+        <Avatar
+          accountId={account.id}
+          className={styles.avatar}
+          src={profile?.avatar}
+        />
+        <div>
+          <Dotdotdot tagName="h4" clamp={2} className={styles.name}>
+            {profile?.name ? profile?.name : accountTruncate(account.id)}
+          </Dotdotdot>
+          <p className={styles.sales}>
+            <span>{account.totalSales}</span>
+            {`${account.totalSales === 1 ? ' sale' : ' sales'}`}
+          </p>
+        </div>
+      </a>
+    </Link>
   )
 }
