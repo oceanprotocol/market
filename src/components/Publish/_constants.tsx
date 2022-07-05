@@ -109,13 +109,15 @@ export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
     image: 'node',
     tag: 'latest',
     entrypoint: 'node $ALGO',
-    checksum: '7fc268f502935d11ff50c54e3776dda76477648d5d83c2e3c4fdab744390ecf2' // TODO: how to get? Most likely needs to be fetched from DockerHub.
+    checksum:
+      'sha256:c60692d492dda8a432e2bb423a700fd470768eb394d182e76b5fe5f058f98cbc' // TODO: how to get? Most likely needs to be fetched from DockerHub.
   },
   {
     image: 'python',
     tag: 'latest',
     entrypoint: 'python $ALGO',
-    checksum: ''
+    checksum:
+      'sha256:850b7f7626e5ca9822cc9ac36ce1f712930d8c87eb31b5937dba4037fe204034'
   }
 ]
 
