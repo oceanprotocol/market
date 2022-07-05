@@ -10,6 +10,7 @@
   padding: calc(var(--spacer) / 2);
   display: flex;
   overflow-x: auto;
+  scrollbar-width: none;
 }
 
 .tab {
