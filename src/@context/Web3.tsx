@@ -13,7 +13,7 @@ import { infuraProjectId as infuraId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
-import { getEnsAvatar, getEnsName, getEnsProfile } from '@utils/ens'
+import { getEnsAvatar, getEnsName } from '@utils/ens'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName,
@@ -55,8 +55,6 @@ const web3ModalTheme = {
   hover: 'var(--background-highlight)'
 }
 
-// HEADS UP! We inline-require some packages so the SSR build does not break.
-// We only need them client-side.
 const providerOptions = isBrowser
   ? {
       walletconnect: {
@@ -339,7 +337,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
   async function logout() {
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    if (web3 && web3.currentProvider && (web3.currentProvider as any).close) {
+    if ((web3?.currentProvider as any)?.close) {
       await (web3.currentProvider as any).close()
     }
     /* eslint-enable @typescript-eslint/no-explicit-any */
