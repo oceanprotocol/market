@@ -40,3 +40,8 @@
 .tabs div[class*='tab-panel--selected'] {
   margin-bottom: var(--spacer);
 }
+
+.generalDetails {
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
+  max-width: 40rem;
+}

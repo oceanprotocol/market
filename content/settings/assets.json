@@ -1,0 +1,26 @@
+{
+  "1": {
+    "name": "",
+    "description": "Customize the interface by choosing which signals to display in the view and in the detail view",
+    "source": "Source",
+    "display": "Display all signal in"
+  },
+  "2": {
+    "name": "Rag pull index - Rating",
+    "description": "Rating (0-100%) is calculated by finding the best ever 'inequality' (low is better) and the highest ever 'Liquidity'.",
+    "source": "Source",
+    "display": "Display in"
+  },
+  "3": {
+    "name": "Rag pull index - Inequality",
+    "description": "",
+    "status": "Source",
+    "display": "Display in"
+  },
+  "4": {
+    "name": "UTU - usage in your network",
+    "description": "",
+    "status": "Source",
+    "display": "Display in"
+  }
+}
