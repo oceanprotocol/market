@@ -1,37 +1,34 @@
 import Input from '@shared/FormInput'
-import React, { ReactElement } from 'react'
+import { useFormikContext } from 'formik'
+import React, { ChangeEvent, ReactElement } from 'react'
+import { FormPublishData } from '../_types'
 import styles from './CoinSelect.module.css'
 
 export default function CoinSelect({
-  approvedBaseTokens,
-  dtSymbol,
-  disabled
-}: //   setCoin
-{
+  approvedBaseTokens
+}: {
   approvedBaseTokens: TokenInfo[]
-  dtSymbol: string
-  disabled: boolean
-  //   setCoin: (coin: string) => void
 }): ReactElement {
-  const options = approvedBaseTokens?.map((token) => token.symbol)
+  const { values, setFieldValue } = useFormikContext<FormPublishData>()
+
+  const handleBaseTokenSelection = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedBaseToken = approvedBaseTokens.find(
+      (token) => token.symbol === e.target.value
+    )
+    setFieldValue('pricing.baseToken', selectedBaseToken)
+  }
 
   return (
     approvedBaseTokens?.length > 0 && (
       <div className={styles.container}>
-        <Input className={styles.coinSelect} type="select" options={options} />
+        <Input
+          className={styles.coinSelect}
+          type="select"
+          options={approvedBaseTokens?.map((token) => token.symbol)}
+          value={values.pricing?.baseToken?.symbol}
+          onChange={handleBaseTokenSelection}
+        />
       </div>
     )
-    // <select
-    //   className={styles.coinSelect}
-    //   //   onChange={(e) => setCoin(e.target.value)}
-    //   disabled={disabled}
-    // >
-    //   <option className={styles.option} value="OCEAN">
-    //     OCEAN
-    //   </option>
-    //   <option className={styles.option} value={dtSymbol}>
-    //     {dtSymbol}
-    //   </option>
-    // </select>
   )
 }

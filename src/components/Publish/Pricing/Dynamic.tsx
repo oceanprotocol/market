@@ -10,15 +10,14 @@ import Price from './Price'
 import Decimal from 'decimal.js'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData } from '../_types'
-import BaseToken from './BaseToken'
 import { transformTokenName } from '../_utils'
 
 export default function Dynamic({
-  content,
-  defaultBaseToken
+  approvedBaseTokens,
+  content
 }: {
+  approvedBaseTokens: TokenInfo[]
   content: any
-  defaultBaseToken: TokenInfo
 }): ReactElement {
   const { networkId, accountId, balance } = useWeb3()
   const [firstPrice, setFirstPrice] = useState<string>()
@@ -80,16 +79,10 @@ export default function Dynamic({
       <FormHelp>{content.info}</FormHelp>
 
       <h4 className={styles.title}>
-        Base Token <Tooltip content={content.tooltips.baseToken} />
-      </h4>
-
-      <BaseToken defaultBaseToken={defaultBaseToken} />
-
-      <h4 className={styles.title}>
         Price <Tooltip content={content.tooltips.poolInfo} />
       </h4>
 
-      <Price firstPrice={firstPrice} />
+      <Price firstPrice={firstPrice} approvedBaseTokens={approvedBaseTokens} />
 
       <h4 className={styles.title}>
         Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />{' '}

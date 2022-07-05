@@ -20,10 +20,6 @@
   background-position: calc(100% - 14px) 1.2rem, calc(100% - 9px) 1.2rem, 100% 0;
 }
 
-.option {
-  color: var(--font-color-heading);
-}
-
 .container > div {
   margin-bottom: 0 !important;
 }

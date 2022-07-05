@@ -22,7 +22,7 @@ export default function Price({
 
   const { values } = useFormikContext<FormPublishData>()
   const { dataTokenOptions } = values.services[0]
-  console.log(approvedBaseTokens)
+
   return (
     <div className={styles.price}>
       {values.pricing.type === 'free' ? (
@@ -41,14 +41,9 @@ export default function Price({
                 type="number"
                 min="1"
                 placeholder="0"
-                // prefix={values.pricing?.baseToken?.symbol || 'OCEAN'}
                 prefix={
                   approvedBaseTokens?.length > 1 ? (
-                    <CoinSelect
-                      approvedBaseTokens={approvedBaseTokens}
-                      dtSymbol="OCEAN"
-                      disabled={false}
-                    />
+                    <CoinSelect approvedBaseTokens={approvedBaseTokens} />
                   ) : (
                     values.pricing?.baseToken?.symbol || 'OCEAN'
                   )

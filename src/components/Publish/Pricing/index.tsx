@@ -1,15 +1,9 @@
-import React, {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useFormikContext } from 'formik'
 import Tabs from '@shared/atoms/Tabs'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
-import { FormPublishData, TabsContent } from '../_types'
+import { FormPublishData } from '../_types'
 import { initialValues } from '../_constants'
 import Dynamic from './Dynamic'
 import Fixed from './Fixed'
@@ -17,7 +11,6 @@ import Free from './Free'
 import content from '../../../../content/price.json'
 import styles from './index.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import { getOceanConfig } from '@utils/ocean'
 import { useWeb3 } from '@context/Web3'
 import { getOpcsApprovedTokens } from '@utils/subgraph'
 
@@ -36,26 +29,22 @@ export default function PricingFields(): ReactElement {
   useEffect(() => {
     if (!chainId) return
 
-    const oceanConfig = getOceanConfig(chainId)
-    setDefaultBaseToken({
-      address: oceanConfig?.oceanTokenAddress,
-      symbol: oceanConfig?.oceanTokenSymbol,
-      decimals: 18,
-      name: 'OceanToken'
-    })
     const getApprovedBaseTokens = async () => {
       setApprovedBaseTokens(await getOpcsApprovedTokens(chainId))
     }
     getApprovedBaseTokens()
   }, [chainId])
-  console.log(approvedBaseTokens)
+
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
     setFieldValue('pricing.type', type)
     setFieldValue('pricing.price', 0)
     setFieldValue('pricing.freeAgreement', false)
-    setFieldValue('pricing.baseToken', defaultBaseToken)
+    setFieldValue(
+      'pricing.baseToken',
+      pricing?.baseToken || approvedBaseTokens[0]
+    )
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
@@ -105,7 +94,6 @@ export default function PricingFields(): ReactElement {
               <Fixed
                 approvedBaseTokens={approvedBaseTokens}
                 content={content.create.fixed}
-                defaultBaseToken={defaultBaseToken}
               />
             )
           }
@@ -117,7 +105,6 @@ export default function PricingFields(): ReactElement {
               <Dynamic
                 approvedBaseTokens={approvedBaseTokens}
                 content={content.create.dynamic}
-                defaultBaseToken={defaultBaseToken}
               />
             )
           }
@@ -133,8 +120,7 @@ export default function PricingFields(): ReactElement {
     appConfig.allowDynamicPricing,
     appConfig.allowFixedPricing,
     appConfig.allowFreePricing,
-    approvedBaseTokens,
-    defaultBaseToken
+    approvedBaseTokens
   ])
 
   const [tabs, setTabs] = useState(updateTabs())

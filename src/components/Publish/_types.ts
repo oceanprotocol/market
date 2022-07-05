@@ -53,11 +53,6 @@ export interface StepContent {
   component: ReactElement
 }
 
-export interface TabsContent {
-  title: string
-  content: ReactElement
-}
-
 export interface PublishFeedback {
   [key: string]: {
     name: string
