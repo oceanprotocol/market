@@ -1,9 +1,15 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { useFormikContext } from 'formik'
 import Tabs from '@shared/atoms/Tabs'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
-import { FormPublishData } from '../_types'
+import { FormPublishData, TabsContent } from '../_types'
 import { initialValues } from '../_constants'
 import Dynamic from './Dynamic'
 import Fixed from './Fixed'
@@ -13,11 +19,13 @@ import styles from './index.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import { getOceanConfig } from '@utils/ocean'
 import { useWeb3 } from '@context/Web3'
+import { getOpcsApprovedTokens } from '@utils/subgraph'
 
 export default function PricingFields(): ReactElement {
   const { appConfig } = useMarketMetadata()
   const { chainId } = useWeb3()
   const [defaultBaseToken, setDefaultBaseToken] = useState<TokenInfo>()
+  const [approvedBaseTokens, setApprovedBaseTokens] = useState<TokenInfo[]>()
 
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
@@ -35,8 +43,12 @@ export default function PricingFields(): ReactElement {
       decimals: 18,
       name: 'OceanToken'
     })
+    const getApprovedBaseTokens = async () => {
+      setApprovedBaseTokens(await getOpcsApprovedTokens(chainId))
+    }
+    getApprovedBaseTokens()
   }, [chainId])
-
+  console.log(approvedBaseTokens)
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
@@ -84,36 +96,52 @@ export default function PricingFields(): ReactElement {
     setFieldValue
   ])
 
-  const tabs = [
-    appConfig.allowFixedPricing === 'true'
-      ? {
-          title: content.create.fixed.title,
-          content: (
-            <Fixed
-              content={content.create.fixed}
-              defaultBaseToken={defaultBaseToken}
-            />
-          )
-        }
-      : undefined,
-    appConfig.allowDynamicPricing === 'true'
-      ? {
-          title: content.create.dynamic.title,
-          content: (
-            <Dynamic
-              content={content.create.dynamic}
-              defaultBaseToken={defaultBaseToken}
-            />
-          )
-        }
-      : undefined,
-    appConfig.allowFreePricing === 'true'
-      ? {
-          title: content.create.free.title,
-          content: <Free content={content.create.free} />
-        }
-      : undefined
-  ].filter((tab) => tab !== undefined)
+  const updateTabs = useCallback(() => {
+    return [
+      appConfig.allowFixedPricing === 'true'
+        ? {
+            title: content.create.fixed.title,
+            content: (
+              <Fixed
+                approvedBaseTokens={approvedBaseTokens}
+                content={content.create.fixed}
+                defaultBaseToken={defaultBaseToken}
+              />
+            )
+          }
+        : undefined,
+      appConfig.allowDynamicPricing === 'true'
+        ? {
+            title: content.create.dynamic.title,
+            content: (
+              <Dynamic
+                approvedBaseTokens={approvedBaseTokens}
+                content={content.create.dynamic}
+                defaultBaseToken={defaultBaseToken}
+              />
+            )
+          }
+        : undefined,
+      appConfig.allowFreePricing === 'true'
+        ? {
+            title: content.create.free.title,
+            content: <Free content={content.create.free} />
+          }
+        : undefined
+    ].filter((tab) => tab !== undefined)
+  }, [
+    appConfig.allowDynamicPricing,
+    appConfig.allowFixedPricing,
+    appConfig.allowFreePricing,
+    approvedBaseTokens,
+    defaultBaseToken
+  ])
+
+  const [tabs, setTabs] = useState(updateTabs())
+
+  useEffect(() => {
+    setTabs(updateTabs())
+  }, [updateTabs])
 
   return (
     <Tabs

@@ -7,9 +7,11 @@ import BaseToken from './BaseToken'
 import Tooltip from '@shared/atoms/Tooltip'
 
 export default function Fixed({
+  approvedBaseTokens,
   content,
   defaultBaseToken
 }: {
+  approvedBaseTokens: TokenInfo[]
   content: any
   defaultBaseToken: TokenInfo
 }): ReactElement {
@@ -23,7 +25,7 @@ export default function Fixed({
       <BaseToken defaultBaseToken={defaultBaseToken} />
 
       <h4 className={styles.title}>Price</h4>
-      <Price />
+      <Price approvedBaseTokens={approvedBaseTokens} />
       <Fees tooltips={content.tooltips} pricingType="fixed" />
     </>
   )
