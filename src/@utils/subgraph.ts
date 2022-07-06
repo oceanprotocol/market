@@ -5,8 +5,9 @@ import { getOceanConfig } from './ocean'
 import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-
+import { UserSalesQuery_users as UserSales } from 'src/@types/subgraph/UserSalesQuery'
 import { getPublishedAssets, getTopPublishers } from '@utils/aquarius'
+
 export interface UserLiquidity {
   price: string
   oceanBalance: string
@@ -51,15 +52,6 @@ const UserTokenOrders = gql`
       }
       createdTimestamp
       tx
-    }
-  }
-`
-
-const UserSalesQuery = gql`
-  query UserSalesQuery($user: ID!) {
-    users(where: { id: $user }) {
-      id
-      totalSales
     }
   }
 `

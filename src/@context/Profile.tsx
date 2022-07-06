@@ -73,7 +73,11 @@ function ProfileProvider({
   }, [accountId, accountEns])
 
   useEffect(() => {
-    if (!accountId || !isEthAddress) {
+    if (
+      !accountId ||
+      accountId === '0x0000000000000000000000000000000000000000' ||
+      !isEthAddress
+    ) {
       setProfile(clearedProfile)
       return
     }
