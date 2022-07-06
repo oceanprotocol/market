@@ -16,7 +16,7 @@ import { getOpcsApprovedTokens } from '@utils/subgraph'
 
 export default function PricingFields(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { chainId } = useWeb3()
+  const { chainId, isSupportedOceanNetwork, web3Loading } = useWeb3()
   const [approvedBaseTokens, setApprovedBaseTokens] = useState<TokenInfo[]>()
 
   // Connect with main publish form
@@ -33,14 +33,15 @@ export default function PricingFields(): ReactElement {
     },
     [setFieldValue]
   )
+
   useEffect(() => {
-    console.log(approvedBaseTokens)
-  }, [approvedBaseTokens])
-  useEffect(() => {
-    // if (!chainId) return
-    console.log(chainId || 1)
-    getApprovedBaseTokens(chainId || 1)
-  }, [chainId, getApprovedBaseTokens])
+    if (web3Loading) return
+    if (!isSupportedOceanNetwork || !chainId) {
+      getApprovedBaseTokens(1)
+      return
+    }
+    getApprovedBaseTokens(chainId)
+  }, [chainId, getApprovedBaseTokens, isSupportedOceanNetwork, web3Loading])
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
