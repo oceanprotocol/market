@@ -1,4 +1,5 @@
-import React, { ReactElement } from 'react'
+import { LoggerInstance } from '@oceanprotocol/lib'
+import React, { ReactElement, useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '@shared/Price'
@@ -9,11 +10,15 @@ import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { getPoolData } from '@context/Pool/_utils'
+import { PoolData_poolData as PoolDataPoolData } from 'src/@types/subgraph/PoolData'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
 }
+
+const refreshInterval = 10000 // 10 sec.
 
 export default function AssetTeaser({
   asset,
@@ -25,6 +30,32 @@ export default function AssetTeaser({
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
   const { orders } = asset.stats
+  const [poolData, setPoolData] = useState<PoolDataPoolData>()
+
+  const fetchPoolData = useCallback(async () => {
+    if (!asset.chainId || !asset?.accessDetails?.addressOrId || !owner) return
+
+    const response = await getPoolData(
+      asset.chainId,
+      asset.accessDetails.addressOrId,
+      owner,
+      ''
+    )
+
+    if (!response) return
+
+    setPoolData(response.poolData)
+
+    LoggerInstance.log('[pool] Fetched pool data:', response.poolData)
+  }, [asset.chainId, asset?.accessDetails?.addressOrId, owner])
+
+  useEffect(() => {
+    fetchPoolData()
+    const interval = setInterval(() => {
+      fetchPoolData()
+    }, refreshInterval)
+    return () => clearInterval(interval)
+  }, [fetchPoolData, asset])
 
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
@@ -45,6 +76,7 @@ export default function AssetTeaser({
             accessType={accessType}
             className={styles.typeDetails}
             totalSales={orders}
+            poolData={poolData}
           />
 
           <div className={styles.content}>

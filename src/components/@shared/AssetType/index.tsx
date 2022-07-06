@@ -4,6 +4,8 @@ import classNames from 'classnames/bind'
 import Compute from '@images/compute.svg'
 import Download from '@images/download.svg'
 import Lock from '@images/lock.svg'
+import { PoolData_poolData as PoolDataPoolData } from 'src/@types/subgraph/PoolData'
+import { numberShorter } from '@utils/numbers'
 
 const cx = classNames.bind(styles)
 
@@ -11,12 +13,14 @@ export default function AssetType({
   type,
   accessType,
   className,
-  totalSales
+  totalSales,
+  poolData
 }: {
   type: string
   accessType: string
   className?: string
   totalSales?: number
+  poolData?: PoolDataPoolData
 }): ReactElement {
   const styleClasses = cx({
     [className]: className
@@ -36,8 +40,16 @@ export default function AssetType({
       </div>
 
       <div className={styles.typeLabel}>
-        {totalSales + ' ' + (totalSales === 1 ? 'sale' : 'sales')}
+        {totalSales}
+        {` sale${totalSales === 1 ? '' : 's'}`}
       </div>
+
+      {poolData && (
+        <div className={styles.typeLabel}>
+          {numberShorter(poolData.baseTokenLiquidity)}
+          {' TVL'}
+        </div>
+      )}
     </div>
   )
 }
