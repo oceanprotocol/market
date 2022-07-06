@@ -4,6 +4,7 @@ import { addTokenToWallet } from '@utils/web3'
 import { useWeb3 } from '@context/Web3'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
+import TokenLogo from '@shared/atoms/TokenLogo'
 
 const cx = classNames.bind(styles)
 
@@ -17,7 +18,7 @@ export default function AddToken({
 }: {
   address: string
   symbol: string
-  logo: string // needs to be a remote image
+  logo: string
   text?: string
   className?: string
   minimal?: boolean
@@ -44,7 +45,9 @@ export default function AddToken({
       onClick={handleAddToken}
     >
       <span className={styles.logoWrap}>
-        <img src={logo} className={styles.logo} width="16" height="16" />
+        <div className={styles.logo}>
+          <TokenLogo tokenLogoKey={logo} />
+        </div>
       </span>
 
       <span className={styles.text}>{text || `Add ${symbol}`}</span>
