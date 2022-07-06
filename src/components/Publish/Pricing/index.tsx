@@ -25,15 +25,22 @@ export default function PricingFields(): ReactElement {
   const { price, amountBaseToken, weightOnBaseToken, weightOnDataToken, type } =
     pricing
 
-  useEffect(() => {
-    if (!chainId) return
-    const getApprovedBaseTokens = async () => {
+  const getApprovedBaseTokens = useCallback(
+    async (chainId: number) => {
       const approvedTokensList = await getOpcsApprovedTokens(chainId)
       setApprovedBaseTokens(approvedTokensList)
       setFieldValue('pricing.baseToken', approvedTokensList[0])
-    }
-    getApprovedBaseTokens()
-  }, [chainId, setFieldValue])
+    },
+    [setFieldValue]
+  )
+  useEffect(() => {
+    console.log(approvedBaseTokens)
+  }, [approvedBaseTokens])
+  useEffect(() => {
+    // if (!chainId) return
+    console.log(chainId || 1)
+    getApprovedBaseTokens(chainId || 1)
+  }, [chainId, getApprovedBaseTokens])
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
