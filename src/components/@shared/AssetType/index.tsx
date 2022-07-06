@@ -10,11 +10,13 @@ const cx = classNames.bind(styles)
 export default function AssetType({
   type,
   accessType,
-  className
+  className,
+  totalSales
 }: {
   type: string
   accessType: string
   className?: string
+  totalSales?: number
 }): ReactElement {
   const styleClasses = cx({
     [className]: className
@@ -31,6 +33,10 @@ export default function AssetType({
 
       <div className={styles.typeLabel}>
         {type === 'dataset' ? 'data set' : 'algorithm'}
+      </div>
+
+      <div className={styles.typeLabel}>
+        {totalSales + ' ' + (totalSales === 1 ? 'sale' : 'sales')}
       </div>
     </div>
   )

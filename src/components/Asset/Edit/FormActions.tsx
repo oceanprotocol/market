@@ -12,13 +12,10 @@ export default function FormActions({
   handleClick?: () => void
 }): ReactElement {
   const { isAssetNetwork, asset } = useAsset()
-  const {
-    isValid,
-    touched
-  }: FormikContextType<MetadataEditForm | ComputeEditForm> = useFormikContext()
+  const { isValid }: FormikContextType<MetadataEditForm | ComputeEditForm> =
+    useFormikContext()
 
-  const isSubmitDisabled =
-    !isValid || !isAssetNetwork || Object.keys(touched).length === 0
+  const isSubmitDisabled = !isValid || !isAssetNetwork
 
   return (
     <footer className={styles.actions}>

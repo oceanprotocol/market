@@ -1,19 +1,24 @@
-import React, { ReactElement, ReactNode } from 'react'
-import DataTable, { IDataTableProps } from 'react-data-table-component'
+import React, { ReactElement } from 'react'
+import DataTable, { TableProps, TableColumn } from 'react-data-table-component'
 import Loader from '../Loader'
 import Pagination from '@shared/Pagination'
-import styles from './index.module.css'
+import { PaginationComponent } from 'react-data-table-component/dist/src/DataTable/types'
+import Empty from './Empty'
+import { customStyles } from './_styles'
 
-export interface TableProps extends IDataTableProps {
+// Hack in support for returning components for each row, as this works,
+// but is not supported by the typings.
+export interface TableOceanColumn<T> extends TableColumn<T> {
+  selector?: (row: T) => any
+}
+
+export interface TableOceanProps<T> extends TableProps<T> {
+  columns: TableOceanColumn<T>[]
   isLoading?: boolean
   emptyMessage?: string
   sortField?: string
   sortAsc?: boolean
   className?: string
-}
-
-function Empty({ message }: { message?: string }): ReactElement {
-  return <div className={styles.empty}>{message || 'No results found'}</div>
 }
 
 export default function Table({
@@ -27,22 +32,24 @@ export default function Table({
   sortAsc,
   className,
   ...props
-}: TableProps): ReactElement {
+}: TableOceanProps<any>): ReactElement {
   return (
-    <DataTable
-      columns={columns}
-      data={data}
-      className={className ? styles.table + ` ${className}` : styles.table}
-      noHeader
-      pagination={pagination || data?.length >= 9}
-      paginationPerPage={paginationPerPage || 10}
-      noDataComponent={<Empty message={emptyMessage} />}
-      progressPending={isLoading}
-      progressComponent={<Loader />}
-      paginationComponent={Pagination as unknown as ReactNode}
-      defaultSortField={sortField}
-      defaultSortAsc={sortAsc}
-      {...props}
-    />
+    <div className={className}>
+      <DataTable
+        columns={columns}
+        data={data}
+        pagination={pagination || data?.length >= 9}
+        paginationPerPage={paginationPerPage || 10}
+        noDataComponent={<Empty message={emptyMessage} />}
+        progressPending={isLoading}
+        progressComponent={<Loader />}
+        paginationComponent={Pagination as unknown as PaginationComponent}
+        defaultSortFieldId={sortField}
+        defaultSortAsc={sortAsc}
+        theme="ocean"
+        customStyles={customStyles}
+        {...props}
+      />
+    </div>
   )
 }
