@@ -32,8 +32,8 @@ export default function AssetTeaser({
         <a className={styles.link}>
           <header className={styles.header}>
             <div className={styles.symbol}>{datatokens[0]?.symbol}</div>
-            <Dotdotdot clamp={3}>
-              <h1 className={styles.title}>{name}</h1>
+            <Dotdotdot tagName="h1" clamp={3} className={styles.title}>
+              {name}
             </Dotdotdot>
             {!noPublisher && (
               <Publisher account={owner} minimal className={styles.publisher} />
