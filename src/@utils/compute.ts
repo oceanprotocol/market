@@ -21,7 +21,7 @@ import {
 } from './aquarius'
 import { fetchDataForMultipleChains } from './subgraph'
 import { getServiceById, getServiceByName } from './ddo'
-import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
+import { SortTermOptions } from '../@types/aquarius/SearchQuery'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { transformAssetToAssetSelection } from './assetConvertor'
 import { AssetExtended } from 'src/@types/AssetExtended'
