@@ -28,7 +28,7 @@ export default function AccountList({
   chainIds
 }: AccountListProps): ReactElement {
   const styleClasses = cx({
-    assetList: true,
+    accountList: true,
     [className]: className
   })
 

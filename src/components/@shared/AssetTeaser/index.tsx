@@ -24,14 +24,16 @@ export default function AssetTeaser({
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
+  const { orders } = asset.stats
+
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`}>
         <a className={styles.link}>
           <header className={styles.header}>
             <div className={styles.symbol}>{datatokens[0]?.symbol}</div>
-            <Dotdotdot clamp={3}>
-              <h1 className={styles.title}>{name}</h1>
+            <Dotdotdot tagName="h1" clamp={3} className={styles.title}>
+              {name}
             </Dotdotdot>
             {!noPublisher && (
               <Publisher account={owner} minimal className={styles.publisher} />
@@ -42,6 +44,7 @@ export default function AssetTeaser({
             type={type}
             accessType={accessType}
             className={styles.typeDetails}
+            totalSales={orders}
           />
 
           <div className={styles.content}>

@@ -9,6 +9,7 @@ interface BaseQueryParams {
   nestedQuery?: any
   esPaginationOptions?: EsPaginationOptions
   sortOptions?: SortOptions
+  aggs?: any
   filters?: FilterTerm[]
   ignorePurgatory?: boolean
 }
