@@ -14,7 +14,6 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
 import { getEnsName } from '@utils/ens'
-import { getOceanBalance, getOceanConfig } from '@utils/ocean'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName,
@@ -41,6 +40,7 @@ interface Web3ProviderValue {
   isTestnet: boolean
   web3Loading: boolean
   isSupportedOceanNetwork: boolean
+  approvedBaseTokens: TokenInfo[]
   connect: () => Promise<void>
   logout: () => Promise<void>
 }
@@ -108,10 +108,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [accountEns, setAccountEns] = useState<string>()
   const [web3Loading, setWeb3Loading] = useState<boolean>(true)
   const [balance, setBalance] = useState<UserBalance>({
-    eth: '0',
-    ocean: '0'
+    eth: '0'
   })
   const [isSupportedOceanNetwork, setIsSupportedOceanNetwork] = useState(true)
+  const [approvedBaseTokens, setApprovedBaseTokens] = useState<TokenInfo[]>()
 
   // -----------------------------------
   // Helper: connect to web3
@@ -151,39 +151,49 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [web3Modal])
 
   // -----------------------------------
+  // Helper: Get approved base tokens list
+  // -----------------------------------
+  const getApprovedBaseTokens = useCallback(async (chainId: number) => {
+    try {
+      const approvedTokensList = await getOpcsApprovedTokens(chainId)
+      setApprovedBaseTokens(approvedTokensList)
+      LoggerInstance.log('[web3] Approved baseTokens', approvedTokensList)
+    } catch (error) {
+      LoggerInstance.error('[web3] Error: ', error.message)
+    }
+  }, [])
+
+  // -----------------------------------
   // Helper: Get user balance
   // -----------------------------------
   const getUserBalance = useCallback(async () => {
     if (!accountId || !networkId || !web3) return
 
     try {
-      const { oceanTokenAddress } = getOceanConfig(networkId)
-      const approvedTokensBalance: { [key: string]: string } = {}
-      const approvedTokens = (await getOpcsApprovedTokens(chainId)).filter(
-        (token) => token.address !== oceanTokenAddress
-      )
-      approvedTokens.forEach(async (token) => {
-        const { address, decimals, symbol } = token
-        const tokenBalance = await getTokenBalance(
-          accountId,
-          decimals,
-          address,
-          web3
-        )
-        approvedTokensBalance[symbol.toLocaleLowerCase()] = tokenBalance
-      })
-
-      const balance = {
-        eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest')),
-        ocean: await getOceanBalance(accountId, networkId, web3),
-        ...approvedTokensBalance
+      const balance: UserBalance = {
+        eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest'))
       }
+      if (approvedBaseTokens?.length > 0) {
+        await Promise.all(
+          approvedBaseTokens.map(async (token) => {
+            const { address, decimals, symbol } = token
+            const tokenBalance = await getTokenBalance(
+              accountId,
+              decimals,
+              address,
+              web3
+            )
+            balance[symbol.toLocaleLowerCase()] = tokenBalance
+          })
+        )
+      }
+
       setBalance(balance)
       LoggerInstance.log('[web3] Balance: ', balance)
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
     }
-  }, [accountId, chainId, networkId, web3])
+  }, [accountId, approvedBaseTokens, networkId, web3])
 
   // -----------------------------------
   // Helper: Get user ENS name
@@ -245,6 +255,14 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     }
     connectCached()
   }, [connect, web3Modal])
+
+  // -----------------------------------
+  // Get and set approved base tokens list
+  // -----------------------------------
+  useEffect(() => {
+    if (web3Loading) return
+    getApprovedBaseTokens(chainId || 1)
+  }, [chainId, getApprovedBaseTokens, web3Loading])
 
   // -----------------------------------
   // Get and set user balance
@@ -393,6 +411,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         isTestnet,
         web3Loading,
         isSupportedOceanNetwork,
+        approvedBaseTokens,
         connect,
         logout
       }}

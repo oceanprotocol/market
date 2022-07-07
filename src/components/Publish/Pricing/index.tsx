@@ -12,12 +12,10 @@ import content from '../../../../content/price.json'
 import styles from './index.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import { useWeb3 } from '@context/Web3'
-import { getOpcsApprovedTokens } from '@utils/subgraph'
 
 export default function PricingFields(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { chainId, isSupportedOceanNetwork, web3Loading } = useWeb3()
-  const [approvedBaseTokens, setApprovedBaseTokens] = useState<TokenInfo[]>()
+  const { approvedBaseTokens } = useWeb3()
 
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
@@ -25,23 +23,11 @@ export default function PricingFields(): ReactElement {
   const { price, amountBaseToken, weightOnBaseToken, weightOnDataToken, type } =
     pricing
 
-  const getApprovedBaseTokens = useCallback(
-    async (chainId: number) => {
-      const approvedTokensList = await getOpcsApprovedTokens(chainId)
-      setApprovedBaseTokens(approvedTokensList)
-      setFieldValue('pricing.baseToken', approvedTokensList[0])
-    },
-    [setFieldValue]
-  )
-
   useEffect(() => {
-    if (web3Loading) return
-    if (!isSupportedOceanNetwork || !chainId) {
-      getApprovedBaseTokens(1)
-      return
+    if (approvedBaseTokens?.length > 0) {
+      setFieldValue('pricing.baseToken', approvedBaseTokens[0])
     }
-    getApprovedBaseTokens(chainId)
-  }, [chainId, getApprovedBaseTokens, isSupportedOceanNetwork, web3Loading])
+  }, [approvedBaseTokens, setFieldValue])
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
