@@ -7,6 +7,7 @@
   "scripts": {
     "start": "npm run pregenerate && next dev -p 8000",
     "build": "npm run pregenerate && next build",
+    "build:static": "npm run build && next export",
     "serve": "serve -s public/",
     "pregenerate": "bash scripts/pregenerate.sh",
     "test": "npm run pregenerate && npm run lint && npm run type-check && npm run jest",

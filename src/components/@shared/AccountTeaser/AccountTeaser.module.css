@@ -1,46 +1,39 @@
 .blockies {
   aspect-ratio: 1/1;
-  width: 13%;
-  height: 13%;
+  width: calc(var(--font-size-large) * 2) !important;
+  height: calc(var(--font-size-large) * 2) !important;
   border-radius: 50%;
   margin-left: 0;
-  margin-right: calc(var(--spacer) / 4);
+  margin-right: calc(var(--spacer) / 3);
 }
 
 .teaser {
-  max-width: 40rem;
-  height: 100%;
-}
-
-.link {
   composes: box from '../atoms/Box.module.css';
-  padding: calc(var(--spacer) / 2) !important;
-  font-size: var(--font-size-mini);
-  height: 90%;
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2);
   color: var(--color-secondary);
   position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.link span {
-  font-size: var(--font-size-large);
-  margin-right: calc(var(--spacer) / 3);
-}
-.name {
-  margin-bottom: 0;
-  font-size: var(--font-size-base) !important;
-  padding-top: calc(var(--spacer) / 4);
-}
-
-.header {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
+.place {
+  font-size: var(--font-size-large);
+  margin-right: calc(var(--spacer) / 2);
+}
+
+.name {
+  margin-bottom: 0;
+  font-size: var(--font-size-base);
+  padding-top: calc(var(--spacer) / 5);
+  color: var(--font-color-text);
+}
+
 .sales {
-  font-size: small;
-  margin-top: -5px !important;
-  margin-bottom: clac(var(--spacer) / 2);
+  margin: 0;
+}
+
+.sales span {
+  font-weight: var(--font-weight-bold);
+  color: var(--font-color-text);
 }

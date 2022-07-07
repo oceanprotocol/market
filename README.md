@@ -50,6 +50,8 @@ cd market
 nvm use
 
 npm install
+# in case of dependency errors, rather use:
+# npm install --legacy-peer-deps
 npm start
 ```
 
