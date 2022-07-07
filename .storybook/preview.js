@@ -32,7 +32,8 @@ const withThemeProvider = (Story, context) => {
   const theme = context.globals.theme
 
   var storyBody = document.getElementById('story-body')
-  theme === 'dark'
+
+  storyBody && theme === 'dark'
     ? storyBody.classList.add('dark')
     : storyBody.classList.remove('dark')
 
