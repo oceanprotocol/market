@@ -104,7 +104,7 @@ export default function Dynamic({
             symbol: dataTokenOptions.symbol,
             name: dataTokenOptions.name
           }}
-          tokenLogoKey={baseToken?.symbol?.toLowerCase()}
+          tokenLogoKey="ocean"
           weight={`${Number(weightOnDataToken) * 10}%`}
           readOnly
         />
