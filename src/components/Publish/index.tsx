@@ -40,8 +40,12 @@ export default function PublishPage({
   const [feedback, setFeedback] = useState(initialPublishFeedback)
 
   // Collecting output of each publish step, enabling retry of failed steps
-  const [erc721Address, setErc721Address] = useState<string>()
-  const [datatokenAddress, setDatatokenAddress] = useState<string>()
+  const [erc721Address, setErc721Address] = useState<string>(
+    '0x6D45A5b38A122a6dBC042601236d6ecc5c8e343E'
+  )
+  const [datatokenAddress, setDatatokenAddress] = useState<string>(
+    '0x4E2e83d75a04ce241Ad67Cc72a28cCBFF3234828'
+  )
   const [ddo, setDdo] = useState<DDO>()
   const [ddoEncrypted, setDdoEncrypted] = useState<string>()
   const [did, setDid] = useState<string>()
