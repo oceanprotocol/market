@@ -54,7 +54,8 @@
         "titleIn": "You will receive",
         "titleOut": "Pool conversion"
       },
-      "action": "Supply"
+      "action": "Supply",
+      "warning": "Use at your own risk. Please do your own research and familiarize yourself with the risks."
     },
     "remove": {
       "title": "Remove Liquidity",
@@ -67,6 +68,7 @@
     }
   },
   "trade": {
-    "action": "Swap"
+    "action": "Swap",
+    "warning": "Use at your own risk. Please do your own research and familiarize yourself with the risks."
   }
 }
