@@ -41,6 +41,7 @@ export default function FormTrade({
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
   const [maximumBaseToken, setMaximumBaseToken] = useState('0')
   const [maximumDt, setMaximumDt] = useState('0')
+  const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
     .shape({
@@ -184,17 +185,32 @@ export default function FormTrade({
     >
       {({ isSubmitting, setSubmitting, submitForm, values, isValid }) => (
         <>
-          <Swap
-            asset={asset}
-            balance={balance}
-            setCoin={setCoinFrom}
-            setMaximumBaseToken={setMaximumBaseToken}
-            setMaximumDt={setMaximumDt}
-            isLoading={isSubmitting}
-          />
+          {isWarningAccepted ? (
+            <Swap
+              asset={asset}
+              balance={balance}
+              setCoin={setCoinFrom}
+              setMaximumBaseToken={setMaximumBaseToken}
+              setMaximumDt={setMaximumDt}
+              isLoading={isSubmitting}
+            />
+          ) : (
+            <div className={styles.alertWrap}>
+              <Alert
+                text={content.trade.warning}
+                state="info"
+                action={{
+                  name: 'I understand',
+                  style: 'text',
+                  handleAction: () => setIsWarningAccepted(true)
+                }}
+              />
+            </div>
+          )}
           <Actions
             isDisabled={
               !isValid ||
+              !isWarningAccepted ||
               !isAssetNetwork ||
               values.datatoken === undefined ||
               values.baseToken === undefined
