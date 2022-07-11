@@ -28,6 +28,7 @@
     "@oceanprotocol/art": "^3.2.0",
     "@oceanprotocol/lib": "^1.1.5",
     "@oceanprotocol/typographies": "^0.1.0",
+    "@storybook/theming": "^6.5.9",
     "@tippyjs/react": "^4.2.6",
     "@urql/exchange-refocus": "^0.2.5",
     "@walletconnect/web3-provider": "^1.7.8",
