@@ -18,7 +18,7 @@ export default function PricingFields(): ReactElement {
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { pricing } = values
-  const { price, amountOcean, weightOnOcean, weightOnDataToken, type } = pricing
+  const { price, type } = pricing
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
@@ -29,48 +29,17 @@ export default function PricingFields(): ReactElement {
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
-  // Update ocean amount when price is changed
+  // Update price when price is changed
   useEffect(() => {
-    if (type === 'fixed' || type === 'free') return
-
-    const amountOcean =
-      isValidNumber(weightOnOcean) && isValidNumber(price) && price > 0
-        ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10)).mul(2)
-        : new Decimal(initialValues.pricing.amountOcean)
-
-    setFieldValue('pricing.amountOcean', amountOcean)
-  }, [price, weightOnOcean, type, setFieldValue])
-
-  // Update dataToken value when ocean amount is changed
-  useEffect(() => {
-    if (type === 'fixed' || type === 'free') return
-
-    const amountDataToken =
-      isValidNumber(amountOcean) &&
-      isValidNumber(weightOnOcean) &&
-      isValidNumber(price) &&
-      isValidNumber(weightOnDataToken) &&
-      price > 0
-        ? new Decimal(amountOcean)
-            .dividedBy(new Decimal(weightOnOcean))
-            .dividedBy(new Decimal(price))
-            .mul(new Decimal(weightOnDataToken))
-        : new Decimal(initialValues.pricing.amountDataToken)
-
-    setFieldValue('pricing.amountDataToken', amountDataToken)
-  }, [amountOcean, weightOnOcean, weightOnDataToken, type, setFieldValue])
+    setFieldValue('pricing.price', price)
+    setFieldValue('pricing.type', type)
+  }, [price, setFieldValue, type])
 
   const tabs = [
     appConfig.allowFixedPricing === 'true'
       ? {
           title: content.create.fixed.title,
           content: <Fixed content={content.create.fixed} />
-        }
-      : undefined,
-    appConfig.allowDynamicPricing === 'true'
-      ? {
-          title: content.create.dynamic.title,
-          content: <Dynamic content={content.create.dynamic} />
         }
       : undefined,
     appConfig.allowFreePricing === 'true'
@@ -85,7 +54,7 @@ export default function PricingFields(): ReactElement {
     <Tabs
       items={tabs}
       handleTabChange={handleTabChange}
-      defaultIndex={type === 'dynamic' ? 1 : type === 'free' ? 2 : 0}
+      defaultIndex={type === 'free' ? 1 : 0}
       className={styles.pricing}
       showRadio
     />

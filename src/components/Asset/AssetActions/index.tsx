@@ -137,10 +137,7 @@ export default function AssetActions({
   const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
 
   asset?.accessDetails?.type === 'dynamic' &&
-    tabs.push(
-      { title: 'Pool', content: <Pool /> },
-      { title: 'Trade', content: <Trade /> }
-    )
+    tabs.push({ title: 'Pool', content: <Pool /> })
 
   return (
     <>

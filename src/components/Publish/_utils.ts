@@ -210,7 +210,7 @@ export async function createTokensAndPricing(
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
   const ercParams: Erc20CreateParams = {
-    templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
+    templateIndex: 2,
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
@@ -228,63 +228,6 @@ export async function createTokensAndPricing(
 
   // TODO: cleaner code for this huge switch !??!?
   switch (values.pricing.type) {
-    case 'dynamic': {
-      // no vesting in market by default, maybe at a later time , vestingAmount and vestedBlocks are hardcoded
-      // we use only ocean as basetoken
-      // swapFeeLiquidityProvider is the swap fee of the liquidity providers
-      // swapFeeMarketRunner is the swap fee of the market where the swap occurs
-      const poolParams: PoolCreationParams = {
-        ssContract: config.sideStakingAddress,
-        baseTokenAddress: config.oceanTokenAddress,
-        baseTokenSender: config.erc721FactoryAddress,
-        publisherAddress: accountId,
-        marketFeeCollector: marketFeeAddress,
-        poolTemplateAddress: config.poolTemplateAddress,
-        rate: new Decimal(1).div(values.pricing.price).toString(),
-        baseTokenDecimals: 18,
-        vestingAmount: '0',
-        vestedBlocks: 2726000,
-        initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
-        swapFeeLiquidityProvider: (values.pricing.swapFee / 100).toString(),
-        swapFeeMarketRunner: publisherMarketPoolSwapFee
-      }
-
-      LoggerInstance.log(
-        '[publish] Creating dynamic pricing with poolParams',
-        poolParams
-      )
-
-      // the spender in this case is the erc721Factory because we are delegating
-      const txApprove = await approve(
-        web3,
-        accountId,
-        config.oceanTokenAddress,
-        config.erc721FactoryAddress,
-        values.pricing.amountOcean.toString(),
-        false
-      )
-      LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
-
-      if (!txApprove) {
-        throw new Error(
-          'MetaMask Approve TX Signature: User denied transaction signature'
-        )
-      }
-
-      const result = await nftFactory.createNftErc20WithPool(
-        accountId,
-        nftCreateData,
-        ercParams,
-        poolParams
-      )
-
-      erc721Address = result.events.NFTCreated.returnValues[0]
-      datatokenAddress = result.events.TokenCreated.returnValues[0]
-      txHash = result.transactionHash
-
-      LoggerInstance.log('[publish] createNftErcWithPool tx', txHash)
-      break
-    }
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
