@@ -11,18 +11,19 @@ export const poolDataQuery = gql`
       id
       totalShares
       liquidityProviderSwapFee
-      opcFee
       publishMarketSwapFee
       spotPrice
       baseToken {
         address
         symbol
+        decimals
       }
       baseTokenWeight
       baseTokenLiquidity
       datatoken {
         address
         symbol
+        decimals
       }
       datatokenWeight
       datatokenLiquidity
@@ -44,10 +45,12 @@ export const poolDataQuery = gql`
       baseToken {
         address
         symbol
+        decimals
       }
       datatoken {
         address
         symbol
+        decimals
       }
     }
   }

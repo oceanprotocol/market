@@ -7,7 +7,7 @@ import ButtonBuy from '@shared/ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
-import { FileMetadata, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import { FileInfo, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { buyDtFromPool } from '@utils/pool'
@@ -29,7 +29,7 @@ export default function Download({
   consumableFeedback
 }: {
   asset: AssetExtended
-  file: FileMetadata
+  file: FileInfo
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
@@ -38,6 +38,7 @@ export default function Download({
   const { accountId, web3 } = useWeb3()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
+  const { poolData } = usePool()
   const isMounted = useIsMounted()
 
   const [isDisabled, setIsDisabled] = useState(true)
@@ -46,47 +47,58 @@ export default function Download({
   const [isLoading, setIsLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-
-  const { poolData } = usePool()
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+
   useEffect(() => {
     if (!asset?.accessDetails) return
 
-    setIsOwned(asset?.accessDetails?.isOwned)
-    setValidOrderTx(asset?.accessDetails?.validOrderTx)
+    asset?.accessDetails?.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
+    asset?.accessDetails?.validOrderTx &&
+      setValidOrderTx(asset?.accessDetails?.validOrderTx)
+
     // get full price and fees
     async function init() {
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
         asset?.accessDetails?.type === 'free' ||
-        (!poolData && asset?.accessDetails?.type === 'dynamic')
+        (!poolData && asset?.accessDetails?.type === 'dynamic') ||
+        isLoading
       )
         return
-      setIsLoading(true)
-      setStatusText('Calculating price including fees.')
 
-      const params: CalcInGivenOutParams = {
+      !orderPriceAndFees && setIsLoading(true)
+      setStatusText('Refreshing price')
+      // this is needed just for pool
+      const paramsForPool: CalcInGivenOutParams = {
         tokenInLiquidity: poolData?.baseTokenLiquidity,
         tokenOutLiquidity: poolData?.datatokenLiquidity,
         tokenOutAmount: '1',
-        opcFee: getOpcFeeForToken(poolData.baseToken.address, asset?.chainId),
+        opcFee: getOpcFeeForToken(
+          asset?.accessDetails?.baseToken.address,
+          asset?.chainId
+        ),
         lpSwapFee: poolData?.liquidityProviderSwapFee,
-        publishMarketSwapFee: poolData?.publishMarketSwapFee,
+        publishMarketSwapFee: asset?.accessDetails?.publisherMarketOrderFee,
         consumeMarketSwapFee: '0'
       }
-      const orderPriceAndFees = await getOrderPriceAndFees(
+      const _orderPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
-        params
+        paramsForPool
       )
 
-      setOrderPriceAndFees(orderPriceAndFees)
-
-      setIsLoading(false)
+      setOrderPriceAndFees(_orderPriceAndFees)
+      !orderPriceAndFees && setIsLoading(false)
     }
 
     init()
+    /**
+     * we listen to the assets' changes to get the most updated price
+     * based on the asset and the poolData's information.
+     * Not adding isLoading and getOpcFeeForToken because we set these here. It is a compromise
+     */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asset, accountId, poolData, getOpcFeeForToken])
 
   useEffect(() => {
@@ -96,9 +108,18 @@ export default function Download({
   useEffect(() => {
     if (!isMounted || !accountId || !asset?.accessDetails) return
 
+    /**
+     * disabled in these cases:
+     * - if the asset is not purchasable
+     * - if the user is on the wrong network
+     * - if user balance is not sufficient
+     * - if user has no datatokens
+     */
     const isDisabled =
       !asset?.accessDetails.isPurchasable ||
+      !isAssetNetwork ||
       ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
+
     setIsDisabled(isDisabled)
   }, [
     isMounted,
@@ -112,6 +133,7 @@ export default function Download({
 
   async function handleOrderOrDownload() {
     setIsLoading(true)
+
     try {
       if (isOwned) {
         setStatusText(
@@ -152,7 +174,7 @@ export default function Download({
       LoggerInstance.error(error)
       const message = isOwned
         ? 'Failed to download file!'
-        : 'Failed to buy datatoken from pool!'
+        : 'An error occurred. Check console for more information.'
       toast.error(message)
     }
     setIsLoading(false)
@@ -171,7 +193,6 @@ export default function Download({
       assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
-      // isLoading={pricingIsLoading || isLoading}
       isLoading={isLoading}
       priceType={asset.accessDetails?.type}
       isConsumable={asset.accessDetails?.isPurchasable}

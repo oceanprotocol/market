@@ -45,7 +45,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   )
   const [poolSnapshots, setPoolSnapshots] = useState<PoolDataPoolSnapshots[]>()
   const [hasUserAddedLiquidity, setUserHasAddedLiquidity] = useState(false)
-  // const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
 
   const fetchAllData = useCallback(async () => {
     if (!asset?.chainId || !asset?.accessDetails?.addressOrId || !owner) return
@@ -56,14 +55,36 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       owner,
       accountId || ''
     )
-
     if (!response) return
 
     setPoolData(response.poolData)
-    setPoolInfoUser((prevState) => ({
+
+    // calculate pool info user
+    const poolInfoShares = response.poolDataUser?.shares[0]?.shares || '0'
+    const userLiquidity = calcSingleOutGivenPoolIn(
+      response.poolData.baseTokenLiquidity,
+      response.poolData.totalShares,
+      poolInfoShares
+    )
+
+    // Pool share in %. We double it to compensate for ss bot
+    const poolSharePercentage = new Decimal(poolInfoShares)
+      .dividedBy(new Decimal(response.poolData.totalShares))
+      .mul(200)
+      .toFixed(2)
+
+    setUserHasAddedLiquidity(Number(poolSharePercentage) > 0)
+
+    const newPoolInfoUser: PoolInfoUser = {
+      liquidity: userLiquidity,
+      poolShares: poolInfoShares,
+      poolSharePercentage
+    }
+    setPoolInfoUser((prevState: PoolInfoUser) => ({
       ...prevState,
-      poolShares: response.poolDataUser?.shares[0]?.shares || '0'
+      ...newPoolInfoUser
     }))
+
     setPoolSnapshots(response.poolSnapshots)
     LoggerInstance.log('[pool] Fetched pool data:', response.poolData)
     LoggerInstance.log('[pool] Fetched user data:', response.poolDataUser)
@@ -99,8 +120,10 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       weightDt: getWeight(poolData.datatokenWeight),
       datatokenSymbol: poolData.datatoken.symbol,
       datatokenAddress: poolData.datatoken.address,
+      datatokenDecimals: poolData.datatoken.decimals,
       baseTokenSymbol: poolData.baseToken.symbol,
       baseTokenAddress: poolData.baseToken.address,
+      baseTokenDecimals: poolData.baseToken.decimals,
       totalPoolTokens: poolData.totalShares
     }
 
@@ -115,14 +138,15 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (
       !poolData ||
       !poolInfo?.totalPoolTokens ||
+      !poolData.shares[0]?.shares ||
       poolData.shares[0]?.shares === '0'
     )
       return
 
-    // Pool share tokens.
+    // Pool share tokens. We double it to compensate for ss bot
     const poolSharePercentage = new Decimal(poolData.shares[0]?.shares)
       .dividedBy(poolInfo.totalPoolTokens)
-      .mul(100)
+      .mul(200)
       .toFixed(2)
 
     const ownerLiquidity = calcSingleOutGivenPoolIn(
@@ -142,54 +166,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     asset?.chainId,
     poolData,
     poolInfo?.baseTokenAddress,
-    poolInfo?.totalPoolTokens
-  ])
-
-  //
-  // 3 User Pool Info
-  //
-  useEffect(() => {
-    if (
-      !poolData ||
-      !poolInfo?.totalPoolTokens ||
-      !poolInfoUser?.poolShares ||
-      !poolData?.baseTokenLiquidity ||
-      !asset?.chainId
-    )
-      return
-
-    const userLiquidity = calcSingleOutGivenPoolIn(
-      poolData.baseTokenLiquidity,
-      poolData.totalShares,
-      poolInfoUser.poolShares
-    )
-
-    // Pool share in %.
-    const poolSharePercentage = new Decimal(poolInfoUser.poolShares)
-      .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-      .mul(100)
-      .toFixed(2)
-
-    setUserHasAddedLiquidity(Number(poolSharePercentage) > 0)
-
-    const newPoolInfoUser: PoolInfoUser = {
-      liquidity: userLiquidity,
-      poolShares: poolInfoUser.poolShares,
-      poolSharePercentage
-    }
-    setPoolInfoUser((prevState: PoolInfoUser) => ({
-      ...prevState,
-      ...newPoolInfoUser
-    }))
-
-    LoggerInstance.log('[pool] Created new user pool info:', {
-      ...newPoolInfoUser
-    })
-  }, [
-    poolData,
-    poolInfoUser?.poolShares,
-    asset?.chainId,
-    owner,
     poolInfo?.totalPoolTokens
   ])
 

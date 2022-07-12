@@ -4,7 +4,7 @@ import classNames from 'classnames/bind'
 import cleanupContentType from '@utils/cleanupContentType'
 import styles from './index.module.css'
 import Loader from '@shared/atoms/Loader'
-import { FileMetadata } from '@oceanprotocol/lib'
+import { FileInfo } from '@oceanprotocol/lib'
 
 const cx = classNames.bind(styles)
 
@@ -22,14 +22,14 @@ export default function FileIcon({
   small,
   isLoading
 }: {
-  file: FileMetadata
+  file: FileInfo
   className?: string
   small?: boolean
   isLoading?: boolean
 }): ReactElement {
   const styleClasses = cx({
     file: true,
-    small: small,
+    small,
     [className]: className
   })
 

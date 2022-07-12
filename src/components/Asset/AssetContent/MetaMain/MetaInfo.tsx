@@ -1,16 +1,17 @@
-import { Asset } from '@oceanprotocol/lib'
+import { useAsset } from '@context/Asset'
 import AssetType from '@shared/AssetType'
 import Time from '@shared/atoms/Time'
 import Publisher from '@shared/Publisher'
 import { getServiceByName } from '@utils/ddo'
 import React, { ReactElement } from 'react'
+import { AssetExtended } from 'src/@types/AssetExtended'
 import styles from './MetaInfo.module.css'
 
 export default function MetaInfo({
   asset,
   nftPublisher
 }: {
-  asset: Asset
+  asset: AssetExtended
   nftPublisher: string
 }): ReactElement {
   const isCompute = Boolean(getServiceByName(asset, 'compute'))

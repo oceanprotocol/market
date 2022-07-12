@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import Time from '@shared/atoms/Time'
-import Table from '@shared/atoms/Table'
+import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { useUserPreferences } from '@context/UserPreferences'
 import { gql } from 'urql'
@@ -84,38 +84,30 @@ export interface PoolTransaction extends TransactionHistoryPoolTransactions {
   asset: Asset
 }
 
-const columns = [
+const columns: TableOceanColumn<PoolTransaction>[] = [
   {
     name: 'Title',
-    selector: function getTitleRow(row: PoolTransaction) {
-      return <Title row={row} />
-    }
+    selector: (row) => <Title row={row} />
   },
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: PoolTransaction) {
-      return <AssetTitle asset={row.asset} />
-    }
+    selector: (row) => <AssetTitle asset={row.asset} />
   },
   {
     name: 'Network',
-    selector: function getNetwork(row: PoolTransaction) {
-      return <NetworkName networkId={row.networkId} />
-    },
+    selector: (row) => <NetworkName networkId={row.networkId} />,
     maxWidth: '12rem'
   },
   {
     name: 'Time',
-    selector: function getTimeRow(row: PoolTransaction) {
-      return (
-        <Time
-          className={styles.time}
-          date={row.timestamp.toString()}
-          relative
-          isUnix
-        />
-      )
-    },
+    selector: (row) => (
+      <Time
+        className={styles.time}
+        date={row.timestamp.toString()}
+        relative
+        isUnix
+      />
+    ),
     maxWidth: '10rem'
   }
 ]
@@ -187,7 +179,7 @@ export default function PoolTransactions({
         poolTransactions.push({
           ...data[i],
           networkId: !minimal
-            ? getAsset(ddoList, data[i].pool.datatoken.id).chainId
+            ? getAsset(ddoList, data[i].pool.datatoken.id)?.chainId
             : poolChainId,
           asset: !minimal ? getAsset(ddoList, data[i].pool.datatoken.id) : null
         })
@@ -264,6 +256,7 @@ export default function PoolTransactions({
         minimal ? transactions?.length >= 4 : transactions?.length >= 9
       }
       paginationPerPage={minimal ? 5 : 10}
+      emptyMessage={chainIds.length === 0 ? 'No network selected' : null}
     />
   ) : (
     <div>Please connect your Web3 wallet.</div>

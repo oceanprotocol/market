@@ -1,17 +1,26 @@
 .menu {
   width: 100%;
-  padding: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 2) calc(var(--spacer) / 3);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
 }
 
-.logo {
-  order: 1;
+.logo,
+.badge {
   white-space: nowrap;
   display: flex;
+}
+
+.logo {
+  order: 0;
   align-items: center;
+}
+
+.badge {
+  cursor: pointer;
+  margin-top: -0.25rem;
+  padding: calc(var(--spacer) / 5) calc(var(--spacer) / 4);
 }
 
 .navigation {
@@ -28,6 +37,7 @@
 .actions {
   order: 2;
   display: flex;
+  margin-left: auto;
 }
 
 .title {
@@ -36,7 +46,7 @@
 
 @media screen and (min-width: 42rem) {
   .menu {
-    justify-content: start;
+    padding: calc(var(--spacer) / 2);
   }
 
   .navigation {
@@ -60,10 +70,10 @@
 
   .title {
     margin: 0;
-    margin-right: var(--spacer);
     display: block;
     color: var(--color-secondary);
     font-size: var(--font-size-h4);
+    margin-right: calc(var(--spacer) / 6);
   }
 }
 
@@ -115,10 +125,59 @@
   padding-right: 0;
 }
 
+.link[aria-disabled] {
+  pointer-events: none;
+}
+
 .logo svg {
   margin-right: calc(var(--spacer) / 3);
 }
 
 .actions button {
   text-transform: none;
+}
+
+.caret,
+svg.caret {
+  display: none;
+  width: var(--font-size-small);
+  height: var(--font-size-small);
+  fill: var(--border-color);
+  transition: transform 0.2s ease-out;
+  vertical-align: middle;
+  margin-left: calc(var(--spacer) / 4);
+}
+
+[aria-expanded='true'] .caret {
+  transform: rotate(180deg);
+}
+
+.badge .caret {
+  fill: var(--brand-white);
+  opacity: 0.7;
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
+  margin-left: calc(var(--spacer) / 12);
+}
+
+@media screen and (min-width: 42rem) {
+  .caret,
+  svg.caret {
+    display: inline-block;
+  }
+
+  .navigation {
+    margin-left: calc(var(--spacer) / 2);
+  }
+}
+
+.versions {
+  padding: calc(var(--spacer) / 4);
+}
+
+.versions .link {
+  display: inline-block;
+  margin: 0 calc(var(--spacer) / 4);
+  padding: 0;
+  font-size: var(--font-size-small);
 }

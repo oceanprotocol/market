@@ -32,7 +32,9 @@ export async function calculateBuyPrice(
     accessDetails.baseToken.address,
     accessDetails.datatoken.address,
     '1',
-    consumeMarketPoolSwapFee
+    consumeMarketPoolSwapFee,
+    accessDetails.baseToken.decimals,
+    accessDetails.datatoken.decimals
   )
 
   return estimatedPrice
@@ -52,7 +54,8 @@ export async function buyDtFromPool(
     accessDetails.baseToken.address,
     accessDetails.addressOrId,
     dtPrice.tokenAmount,
-    false
+    false,
+    accessDetails.baseToken.decimals
   )
   if (!approveTx) {
     return
@@ -63,7 +66,9 @@ export async function buyDtFromPool(
     {
       marketFeeAddress,
       tokenIn: accessDetails.baseToken.address,
-      tokenOut: accessDetails.datatoken.address
+      tokenOut: accessDetails.datatoken.address,
+      tokenInDecimals: accessDetails.baseToken.decimals,
+      tokenOutDecimals: accessDetails.datatoken.decimals
     },
     {
       // this is just to be safe
@@ -139,17 +144,13 @@ export function calcSingleOutGivenPoolIn(
 ): string {
   const tokenLiquidityD = new Decimal(tokenLiquidity)
   const poolSupplyD = new Decimal(poolSupply)
-  const poolShareAmountD = new Decimal(poolShareAmount)
-
+  const poolShareAmountD = new Decimal(poolShareAmount).mul(2)
   const newPoolSupply = poolSupplyD.sub(poolShareAmountD)
   const poolRatio = newPoolSupply.div(poolSupplyD)
 
-  const tokenOutRatio = poolRatio.pow(2)
+  const tokenOutRatio = new Decimal(1).sub(poolRatio)
   const newTokenBalanceOut = tokenLiquidityD.mul(tokenOutRatio)
-
-  const tokensOut = tokenLiquidityD.sub(newTokenBalanceOut)
-
-  return tokensOut.toString()
+  return newTokenBalanceOut.toString()
 }
 
 /**
@@ -163,6 +164,7 @@ export function calcSingleOutGivenPoolIn(
 export async function getLiquidityByShares(
   pool: string,
   tokenAddress: string,
+  tokenDecimals: number,
   shares: string,
   chainId: number
 ): Promise<string> {
@@ -174,7 +176,9 @@ export async function getLiquidityByShares(
   const amountBaseToken = await poolInstance.calcSingleOutGivenPoolIn(
     pool,
     tokenAddress,
-    shares
+    shares,
+    18,
+    tokenDecimals
   )
 
   return amountBaseToken

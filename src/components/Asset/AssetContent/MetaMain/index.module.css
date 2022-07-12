@@ -1,9 +1,16 @@
 .meta {
-  margin-left: calc(var(--spacer) * -1);
-  margin-right: calc(var(--spacer) * -1);
+  margin-left: calc(var(--spacer) * -0.75);
+  margin-right: calc(var(--spacer) * -0.75);
   margin-bottom: calc(var(--spacer) / 1.5);
   color: var(--color-secondary);
   font-size: var(--font-size-small);
+}
+
+@media (min-width: 40rem) {
+  .meta {
+    margin-left: calc(var(--spacer) * -1);
+    margin-right: calc(var(--spacer) * -1);
+  }
 }
 
 .asset {
@@ -12,33 +19,4 @@
   align-items: flex-start;
   height: calc(var(--spacer) * 2);
   border-bottom: 1px solid var(--border-color);
-}
-
-.nftImage {
-  position: relative;
-  margin: 0;
-  border-right: 1px solid var(--border-color);
-  width: calc(var(--spacer) * 2);
-  height: calc(var(--spacer) * 2);
-}
-
-.nftImage img,
-.nftImage > svg:first-of-type {
-  width: 100%;
-  height: 100%;
-}
-
-.nftImage > svg:first-of-type {
-  transform: scale(0.7);
-}
-
-.nftImage .tooltip {
-  position: absolute;
-  padding: 0;
-  left: 0;
-  bottom: 0;
-}
-
-.nftImage .tooltip svg {
-  fill: var(--font-color-text);
 }

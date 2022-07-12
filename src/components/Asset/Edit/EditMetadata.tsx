@@ -15,7 +15,7 @@ import Web3Feedback from '@shared/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
-import content from '../../../../content/pages/edit.json'
+import content from '../../../../content/pages/editMetadata.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useAbortController } from '@hooks/useAbortController'
 import DebugEditMetadata from './DebugEditMetadata'
@@ -23,6 +23,8 @@ import { getOceanConfig } from '@utils/ocean'
 import EditFeedback from './EditFeedback'
 import { useAsset } from '@context/Asset'
 import { setNftMetadata } from '@utils/nft'
+import { sanitizeUrl } from '@utils/url'
+import { getEncryptedFiles } from '@utils/provider'
 
 export default function Edit({
   asset
@@ -49,7 +51,7 @@ export default function Edit({
     const setPriceResp = await fixedRateInstance.setRate(
       accountId,
       asset.accessDetails.addressOrId,
-      newPrice
+      newPrice.toString()
     )
     LoggerInstance.log('[edit] setFixedRate result', setPriceResp)
     if (!setPriceResp) {
@@ -63,10 +65,9 @@ export default function Edit({
     resetForm: () => void
   ) {
     try {
+      let updatedFiles = asset.services[0].files
       const linksTransformed = values.links?.length &&
-        values.links[0].valid && [
-          values.links[0].url.replace('javascript:', '')
-        ]
+        values.links[0].valid && [sanitizeUrl(values.links[0].url)]
       const updatedMetadata: Metadata = {
         ...asset.metadata,
         name: values.name,
@@ -79,17 +80,43 @@ export default function Edit({
         values.price !== asset.accessDetails.price &&
         (await updateFixedPrice(values.price))
 
+      if (values.files[0]?.url) {
+        const file = {
+          nftAddress: asset.nftAddress,
+          datatokenAddress: asset.services[0].datatokenAddress,
+          files: [
+            {
+              type: 'url',
+              index: 0,
+              url: values.files[0].url,
+              method: 'GET'
+            }
+          ]
+        }
+        const filesEncrypted = await getEncryptedFiles(
+          file,
+          asset.services[0].serviceEndpoint
+        )
+        updatedFiles = filesEncrypted
+      }
       const updatedService: Service = {
         ...asset.services[0],
-        timeout: mapTimeoutStringToSeconds(values.timeout)
+        timeout: mapTimeoutStringToSeconds(values.timeout),
+        files: updatedFiles
       }
 
+      // TODO: remove version update at a later time
       const updatedAsset: Asset = {
-        ...asset,
+        ...(asset as Asset),
+        version: '4.1.0',
         metadata: updatedMetadata,
         services: [updatedService]
       }
 
+      // delete custom helper properties injected in the market so we don't write them on chain
+      delete (updatedAsset as AssetExtended).accessDetails
+      delete (updatedAsset as AssetExtended).datatokens
+      delete (updatedAsset as AssetExtended).stats
       const setMetadataTx = await setNftMetadata(
         updatedAsset,
         accountId,
@@ -115,6 +142,7 @@ export default function Edit({
 
   return (
     <Formik
+      enableReinitialize
       initialValues={getInitialValues(
         asset?.metadata,
         asset?.services[0]?.timeout,
@@ -131,12 +159,12 @@ export default function Edit({
       {({ isSubmitting, values }) =>
         isSubmitting || hasFeedback ? (
           <EditFeedback
-            title="Updating Data Set"
+            loading="Updating asset with new metadata..."
             error={error}
             success={success}
             setError={setError}
             successAction={{
-              name: 'View Asset',
+              name: 'Back to Asset',
               onClick: async () => {
                 await fetchAsset()
               },
@@ -145,27 +173,22 @@ export default function Edit({
           />
         ) : (
           <>
-            <p className={styles.description}>{content.description}</p>
-            <article>
-              <FormEditMetadata
-                data={content.form.data}
-                showPrice={asset?.accessDetails?.type === 'fixed'}
-                isComputeDataset={isComputeType}
-              />
+            <FormEditMetadata
+              data={content.form.data}
+              showPrice={asset?.accessDetails?.type === 'fixed'}
+              isComputeDataset={isComputeType}
+            />
 
-              <aside>
-                <Web3Feedback
-                  networkId={asset?.chainId}
-                  isAssetNetwork={isAssetNetwork}
-                />
-              </aside>
+            <Web3Feedback
+              networkId={asset?.chainId}
+              isAssetNetwork={isAssetNetwork}
+            />
 
-              {debug === true && (
-                <div className={styles.grid}>
-                  <DebugEditMetadata values={values} asset={asset} />
-                </div>
-              )}
-            </article>
+            {debug === true && (
+              <div className={styles.grid}>
+                <DebugEditMetadata values={values} asset={asset} />
+              </div>
+            )}
           </>
         )
       }

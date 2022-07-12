@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
-import Table from '@shared/atoms/Table'
+import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import styles from './index.module.css'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { PoolShares_poolShares as PoolShare } from '../../../../@types/subgraph/PoolShares'
@@ -23,32 +23,24 @@ export interface AssetPoolShare {
   asset: Asset
 }
 
-const columns = [
+const columns: TableOceanColumn<AssetPoolShare>[] = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: AssetPoolShare) {
-      return <AssetTitle asset={row.asset} />
-    },
+    selector: (row) => <AssetTitle asset={row.asset} />,
     grow: 2
   },
   {
     name: 'Network',
-    selector: function getNetwork(row: AssetPoolShare) {
-      return <NetworkName networkId={row.networkId} />
-    }
+    selector: (row) => <NetworkName networkId={row.networkId} />
   },
   {
     name: 'Your liquidity',
-    selector: function getAssetRow(row: AssetPoolShare) {
-      return <Liquidity row={row} type="user" />
-    },
+    selector: (row) => <Liquidity row={row} type="user" />,
     right: true
   },
   {
     name: 'Total Value Locked',
-    selector: function getAssetRow(row: AssetPoolShare) {
-      return <Liquidity row={row} type="pool" />
-    },
+    selector: (row) => <Liquidity row={row} type="pool" />,
     right: true
   }
 ]
@@ -109,6 +101,7 @@ export default function PoolShares({
       isLoading={loading}
       sortField="userLiquidity"
       sortAsc={false}
+      emptyMessage={chainIds.length === 0 ? 'No network selected' : null}
     />
   ) : (
     <div>Please connect your Web3 wallet.</div>

@@ -1,6 +1,6 @@
 .radioWrap {
-  composes: radioWrap from '@shared/FormInput/InputElement.module.css';
-  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 3);
+  composes: radioWrap from '@shared/FormInput/InputRadio.module.css';
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 3);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -9,14 +9,14 @@
 }
 
 .input {
-  composes: checkbox from '@shared/FormInput/InputElement.module.css';
+  composes: checkbox from '@shared/FormInput/InputRadio.module.css';
   vertical-align: baseline;
   margin-right: calc(var(--spacer) / 3);
   margin-top: 0;
 }
 
 .radioLabel {
-  composes: radioLabel from '@shared/FormInput/InputElement.module.css';
+  composes: radioLabel from '@shared/FormInput/InputRadio.module.css';
   font-weight: var(--font-weight-base);
   display: flex;
   align-items: center;

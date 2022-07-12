@@ -40,10 +40,14 @@ export default function Remove({
   const [amountOcean, setAmountOcean] = useState('0')
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>()
-  const [slippage, setSlippage] = useState<string>('5')
+  const [slippage, setSlippage] = useState(slippagePresets[0])
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
+  const [poolInstance, setPoolInstance] = useState<Pool>()
 
-  const poolInstance = new Pool(web3)
+  useEffect(() => {
+    if (!web3) return
+    setPoolInstance(new Pool(web3))
+  }, [web3])
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
@@ -74,28 +78,25 @@ export default function Remove({
   // Calculate and set maximum shares user is able to remove
   //
   useEffect(() => {
-    if (!accountId || !poolInfoUser?.poolShares || !poolInfo?.totalPoolTokens)
-      return
+    if (!accountId || !poolInfoUser || !poolInfo || !poolInstance) return
 
     getMax(poolInstance, poolInfo, poolInfoUser, poolData).then((max) =>
       setAmountMaxPercent(max)
     )
-  }, [
-    accountId,
-    poolInfoUser?.poolShares,
-    poolInfo?.totalPoolTokens,
-    poolInfoUser,
-    poolInfo,
-    poolInstance,
-    poolData
-  ])
+  }, [accountId, poolInfoUser, poolInfo, poolInstance, poolData])
 
   const getValues = useRef(
-    debounce(async (newAmountPoolShares) => {
+    debounce(async (poolInstance, id, poolInfo, newAmountPoolShares) => {
+      if (newAmountPoolShares === '0') {
+        setAmountOcean('0')
+        return
+      }
       const newAmountOcean = await poolInstance.calcSingleOutGivenPoolIn(
-        poolData?.id,
-        poolInfo?.baseTokenAddress,
-        newAmountPoolShares
+        id,
+        poolInfo.baseTokenAddress,
+        newAmountPoolShares,
+        18,
+        poolInfo.baseTokenDecimals
       )
       setAmountOcean(newAmountOcean)
     }, 150)
@@ -103,21 +104,9 @@ export default function Remove({
 
   // Check and set outputs when amountPoolShares changes
   useEffect(() => {
-    if (
-      !accountId ||
-      !poolInfoUser?.poolShares ||
-      !poolInfo?.totalPoolTokens ||
-      !poolData?.id
-    )
-      return
-    getValues.current(amountPoolShares)
-  }, [
-    amountPoolShares,
-    accountId,
-    poolInfoUser?.poolShares,
-    poolData?.id,
-    poolInfo?.totalPoolTokens
-  ])
+    if (!accountId || !poolInfo || !poolData?.id || !poolInstance) return
+    getValues.current(poolInstance, poolData?.id, poolInfo, amountPoolShares)
+  }, [amountPoolShares, accountId, poolInfo, poolData?.id, poolInstance])
 
   useEffect(() => {
     if (!amountOcean || amountPercent === '0') {

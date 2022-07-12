@@ -4,8 +4,11 @@ import React, { ReactElement, useEffect } from 'react'
 import IconDownload from '@images/download.svg'
 import IconCompute from '@images/compute.svg'
 import content from '../../../../content/publish/form.json'
-import { getFieldContent } from '../_utils'
+import { getFieldContent } from '@utils/form'
 import { FormPublishData } from '../_types'
+import Alert from '@shared/atoms/Alert'
+import { useMarketMetadata } from '@context/MarketMetadata'
+import styles from '../index.module.css'
 
 const accessTypeOptionsTitles = getFieldContent(
   'access',
@@ -13,6 +16,8 @@ const accessTypeOptionsTitles = getFieldContent(
 ).options
 
 export default function ServicesFields(): ReactElement {
+  const { siteContent } = useMarketMetadata()
+
   // connect with Form state, use for conditional field rendering
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
 
@@ -67,12 +72,21 @@ export default function ServicesFields(): ReactElement {
           name="services[0].algorithmPrivacy"
         />
       ) : (
-        <Field
-          {...getFieldContent('access', content.services.fields)}
-          component={Input}
-          name="services[0].access"
-          options={accessTypeOptions}
-        />
+        <>
+          <Field
+            {...getFieldContent('access', content.services.fields)}
+            component={Input}
+            name="services[0].access"
+            options={accessTypeOptions}
+          />
+          {values.services[0].access === 'compute' && (
+            <Alert
+              className={styles.fieldWarning}
+              state="info"
+              text={siteContent.warning.ctd}
+            />
+          )}
+        </>
       )}
       <Field
         {...getFieldContent('providerUrl', content.services.fields)}

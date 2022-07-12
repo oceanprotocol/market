@@ -3,4 +3,5 @@ interface PagedAssets {
   page: number
   totalPages: number
   totalResults: number
+  aggregations: any
 }

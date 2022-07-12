@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Download'
-import { FileMetadata, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
+import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
@@ -18,6 +18,7 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import PoolProvider from '@context/Pool'
+import AssetStats from './AssetStats'
 
 export default function AssetActions({
   asset
@@ -26,6 +27,8 @@ export default function AssetActions({
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
+  const newCancelToken = useCancelToken()
+  const isMounted = useIsMounted()
 
   // TODO: using this for the publish preview works fine, but produces a console warning
   // on asset details page as there is no formik context there:
@@ -35,33 +38,13 @@ export default function AssetActions({
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
-  const [fileMetadata, setFileMetadata] = useState<FileMetadata>()
+  const [fileMetadata, setFileMetadata] = useState<FileInfo>()
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
   const isCompute = Boolean(
     asset?.services.filter((service) => service.type === 'compute')[0]
   )
 
-  const [isConsumable, setIsConsumable] = useState<boolean>(true)
-  const [consumableFeedback, setConsumableFeedback] = useState<string>('')
-  const newCancelToken = useCancelToken()
-  const isMounted = useIsMounted()
-
-  // useEffect(() => {
-  //   if (!ddo || !accountId || !ocean || !isAssetNetwork) return
-
-  //   async function checkIsConsumable() {
-  //     const consumable = await ocean.assets.isConsumable(
-  //       ddo,
-  //       accountId.toLowerCase()
-  //     )
-  //     if (consumable) {
-  //       setIsConsumable(consumable.result)
-  //       setConsumableFeedback(consumable.message)
-  //     }
-  //   }
-  //   checkIsConsumable()
-  // }, [accountId, isAssetNetwork, ddo, ocean])
-
+  // Get and set file info
   useEffect(() => {
     const oceanConfig = getOceanConfig(asset?.chainId)
     if (!oceanConfig) return
@@ -141,25 +124,26 @@ export default function AssetActions({
     }
   }, [balance, accountId, asset?.accessDetails, dtBalance])
 
-  const UseContent = isCompute ? (
-    <Compute
-      ddo={asset}
-      accessDetails={asset?.accessDetails}
-      dtBalance={dtBalance}
-      file={fileMetadata}
-      fileIsLoading={fileIsLoading}
-      isConsumable={isConsumable}
-      consumableFeedback={consumableFeedback}
-    />
-  ) : (
-    <Consume
-      asset={asset}
-      dtBalance={dtBalance}
-      isBalanceSufficient={isBalanceSufficient}
-      file={fileMetadata}
-      fileIsLoading={fileIsLoading}
-      consumableFeedback={consumableFeedback}
-    />
+  const UseContent = (
+    <>
+      {isCompute ? (
+        <Compute
+          asset={asset}
+          dtBalance={dtBalance}
+          file={fileMetadata}
+          fileIsLoading={fileIsLoading}
+        />
+      ) : (
+        <Consume
+          asset={asset}
+          dtBalance={dtBalance}
+          isBalanceSufficient={isBalanceSufficient}
+          file={fileMetadata}
+          fileIsLoading={fileIsLoading}
+        />
+      )}
+      <AssetStats />
+    </>
   )
 
   const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]

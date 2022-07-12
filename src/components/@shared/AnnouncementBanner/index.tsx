@@ -35,7 +35,12 @@ export default function AnnouncementBanner({
     <div className={styleClasses}>
       {text && <Markdown className={styles.text} text={text} />}
       {action && (
-        <Button style="text" size="small" onClick={action.handleAction}>
+        <Button
+          style="text"
+          size="small"
+          className={styles.link}
+          onClick={action.handleAction}
+        >
           {action.name}
         </Button>
       )}
