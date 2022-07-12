@@ -1,11 +1,7 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import { useFormikContext } from 'formik'
 import Tabs from '@shared/atoms/Tabs'
-import { isValidNumber } from '@utils/numbers'
-import Decimal from 'decimal.js'
 import { FormPublishData } from '../_types'
-import { initialValues } from '../_constants'
-import Dynamic from './Dynamic'
 import Fixed from './Fixed'
 import Free from './Free'
 import content from '../../../../content/price.json'
@@ -18,7 +14,7 @@ export default function PricingFields(): ReactElement {
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { pricing } = values
-  const { price, amountOcean, weightOnOcean, weightOnDataToken, type } = pricing
+  const { type } = pricing
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
@@ -28,37 +24,6 @@ export default function PricingFields(): ReactElement {
     setFieldValue('pricing.freeAgreement', false)
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
-
-  // Update ocean amount when price is changed
-  useEffect(() => {
-    if (type === 'fixed' || type === 'free') return
-
-    const amountOcean =
-      isValidNumber(weightOnOcean) && isValidNumber(price) && price > 0
-        ? new Decimal(price).mul(new Decimal(weightOnOcean).mul(10)).mul(2)
-        : new Decimal(initialValues.pricing.amountOcean)
-
-    setFieldValue('pricing.amountOcean', amountOcean)
-  }, [price, weightOnOcean, type, setFieldValue])
-
-  // Update dataToken value when ocean amount is changed
-  useEffect(() => {
-    if (type === 'fixed' || type === 'free') return
-
-    const amountDataToken =
-      isValidNumber(amountOcean) &&
-      isValidNumber(weightOnOcean) &&
-      isValidNumber(price) &&
-      isValidNumber(weightOnDataToken) &&
-      price > 0
-        ? new Decimal(amountOcean)
-            .dividedBy(new Decimal(weightOnOcean))
-            .dividedBy(new Decimal(price))
-            .mul(new Decimal(weightOnDataToken))
-        : new Decimal(initialValues.pricing.amountDataToken)
-
-    setFieldValue('pricing.amountDataToken', amountDataToken)
-  }, [amountOcean, weightOnOcean, weightOnDataToken, type, setFieldValue])
 
   const tabs = [
     appConfig.allowFixedPricing === 'true'
