@@ -25,7 +25,7 @@ const DatasetSchema = (): object => {
 
   let isDownloadable = false
   if (asset?.services && Array.isArray(asset?.services)) {
-    for (const service of asset?.services) {
+    for (const service of asset.services) {
       if (service?.type === 'access') {
         isDownloadable = true
         break
