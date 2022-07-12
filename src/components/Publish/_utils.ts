@@ -31,13 +31,7 @@ import {
   publisherMarketPoolSwapFee,
   publisherMarketFixedSwapFee
 } from '../../../app.config'
-
-export function getFieldContent(
-  fieldName: string,
-  fields: FormFieldContent[]
-): FormFieldContent {
-  return fields.filter((field: FormFieldContent) => field.name === fieldName)[0]
-}
+import { sanitizeUrl } from '@utils/url'
 
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
@@ -95,9 +89,9 @@ export async function transformPublishFormToDdo(
 
   // Transform from files[0].url to string[] assuming only 1 file
   const filesTransformed = files?.length &&
-    files[0].valid && [files[0].url.replace('javascript:', '')]
+    files[0].valid && [sanitizeUrl(files[0].url)]
   const linksTransformed = links?.length &&
-    links[0].valid && [links[0].url.replace('javascript:', '')]
+    links[0].valid && [sanitizeUrl(links[0].url)]
 
   const newMetadata: Metadata = {
     created: currentTime,
@@ -134,7 +128,8 @@ export async function transformPublishFormToDdo(
                 : getAlgorithmContainerPreset(dockerImage).tag,
             checksum:
               dockerImage === 'custom'
-                ? dockerImageCustomChecksum
+                ? // ? dockerImageCustomChecksum
+                  ''
                 : getAlgorithmContainerPreset(dockerImage).checksum
           }
         }
@@ -142,13 +137,18 @@ export async function transformPublishFormToDdo(
   }
 
   // this is the default format hardcoded
-  const file = [
-    {
-      type: 'url',
-      url: files[0].url,
-      method: 'GET'
-    }
-  ]
+  const file = {
+    nftAddress,
+    datatokenAddress,
+    files: [
+      {
+        type: 'url',
+        index: 0,
+        url: files[0].url,
+        method: 'GET'
+      }
+    ]
+  }
   const filesEncrypted =
     !isPreview &&
     files?.length &&
@@ -171,7 +171,7 @@ export async function transformPublishFormToDdo(
     '@context': ['https://w3id.org/did/v1'],
     id: did,
     nftAddress,
-    version: '4.0.0',
+    version: '4.1.0',
     chainId,
     metadata: newMetadata,
     services: [newService],

@@ -17,6 +17,7 @@ import { calcMaxExactIn, LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { usePool } from '@context/Pool'
 import { MAX_DECIMALS } from '@utils/constants'
 import { getMaxDecimalsValidation } from '@utils/numbers'
+import Decimal from 'decimal.js'
 
 export interface FormAddLiquidity {
   amount: number
@@ -40,7 +41,6 @@ export default function Add({
   const [amountMax, setAmountMax] = useState<string>()
   const [newPoolTokens, setNewPoolTokens] = useState('0')
   const [newPoolShare, setNewPoolShare] = useState('0')
-  const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
   // Live validation rules
   // https://github.com/jquense/yup#number
@@ -77,15 +77,16 @@ export default function Add({
 
         const poolReserve = await poolInstance.getReserve(
           poolData.id,
-          poolInfo.baseTokenAddress
+          poolInfo.baseTokenAddress,
+          poolInfo.baseTokenDecimals
         )
 
         const amountMaxPool = calcMaxExactIn(poolReserve)
-        const amountMax =
-          Number(balance.ocean) > Number(amountMaxPool)
-            ? amountMaxPool
-            : balance.ocean
-        setAmountMax(Number(amountMax).toFixed(3))
+        const oceanDecimal = new Decimal(balance.ocean)
+        const amountMax = oceanDecimal.greaterThan(amountMaxPool)
+          ? amountMaxPool
+          : oceanDecimal
+        setAmountMax(amountMax.toFixed(3, Decimal.ROUND_DOWN))
       } catch (error) {
         LoggerInstance.error(error.message)
       }
@@ -97,6 +98,7 @@ export default function Add({
     isAssetNetwork,
     poolData?.id,
     poolInfo?.baseTokenAddress,
+    poolInfo?.baseTokenDecimals,
     balance?.ocean
   ])
 
@@ -141,37 +143,17 @@ export default function Add({
         {({ isSubmitting, setSubmitting, submitForm, values, isValid }) => (
           <>
             <div className={styles.addInput}>
-              {isWarningAccepted ? (
-                <FormAdd
-                  amountMax={amountMax}
-                  setNewPoolTokens={setNewPoolTokens}
-                  setNewPoolShare={setNewPoolShare}
-                />
-              ) : (
-                content.pool.add.warning && (
-                  <Alert
-                    className={styles.warning}
-                    text={content.pool.add.warning.toString()}
-                    state="info"
-                    action={{
-                      name: 'I understand',
-                      style: 'text',
-                      handleAction: () => setIsWarningAccepted(true)
-                    }}
-                  />
-                )
-              )}
+              <FormAdd
+                amountMax={amountMax}
+                setNewPoolTokens={setNewPoolTokens}
+                setNewPoolShare={setNewPoolShare}
+              />
             </div>
 
-            <Output newPoolTokens={newPoolTokens} newPoolShare={newPoolShare} />
+            {/* TODO: will be fixed in #1481 <Output newPoolTokens={newPoolTokens} newPoolShare={newPoolShare} /> */}
 
             <Actions
-              isDisabled={
-                !isValid ||
-                !isWarningAccepted ||
-                !values.amount ||
-                values.amount === 0
-              }
+              isDisabled={!isValid || !values.amount || values.amount === 0}
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."

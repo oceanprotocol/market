@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - v4
+      - v3
     tags:
       - '**'
   pull_request:
@@ -12,14 +13,14 @@ on:
       - '**'
 
 jobs:
-  test:
+  build:
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node: ['16', '14']
+        node: ['16']
 
     steps:
       - uses: actions/checkout@v2
@@ -36,20 +37,96 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
 
-      - run: npm ci
-      - run: npm run codegen:apollo
-      - run: npm run lint
-      # - run: npm test
+      - run: npm ci --legacy-peer-deps
       - run: npm run build
 
-  # coverage:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-node@v2
-  #     - run: npm ci
-  #     - uses: paambaati/codeclimate-action@v2.7.5
-  #       env:
-  #         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-  #       with:
-  #         coverageCommand: npm test
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: ['16']
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ matrix.node }}-test-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.node }}-test-${{ env.cache-name }}-
+
+      - run: npm ci --legacy-peer-deps
+      - run: npm test
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-${{ runner.os }}
+          path: coverage/
+
+  coverage:
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: ${{ success() && github.actor != 'dependabot[bot]' }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-coverage-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-coverage-${{ env.cache-name }}-
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: coverage-${{ runner.os }}
+
+      - run: npm ci --legacy-peer-deps
+      - run: npm run codegen:apollo
+
+      - uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+
+  storybook:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: ['16']
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-
+
+      - run: npm ci --legacy-peer-deps
+      - run: npm run pregenerate
+      - run: npm run storybook:build

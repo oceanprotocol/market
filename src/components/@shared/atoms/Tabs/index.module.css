@@ -1,0 +1,77 @@
+.tabListContainer {
+  margin-left: auto;
+  margin-right: auto;
+  border-bottom: 1px solid var(--border-color);
+  max-width: 100%;
+}
+
+.tabList {
+  text-align: center;
+  padding: calc(var(--spacer) / 2);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tab {
+  display: inline-block;
+  padding: calc(var(--spacer) / 8) calc(var(--spacer) / 2);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-small);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  background-color: var(--background-body);
+  border: 1px solid var(--border-color);
+  margin-right: -1px;
+}
+
+.tab,
+.tab label {
+  cursor: pointer;
+}
+
+.tab:first-child {
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+  margin-left: auto;
+}
+
+.tab:last-child {
+  border-top-right-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  margin-right: auto;
+}
+
+.tab[aria-selected='true'] {
+  background-color: var(--font-color-heading);
+  color: var(--background-body);
+  border-color: var(--font-color-heading);
+}
+
+.tab[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
+.tab > div {
+  margin: 0;
+}
+
+.tabContent {
+  padding: calc(var(--spacer) / 2);
+}
+
+@media (min-width: 40rem) {
+  .tabContent {
+    padding: var(--spacer);
+  }
+}
+
+@media (min-width: 60rem) {
+  .tab {
+    padding: calc(var(--spacer) / 8) var(--spacer);
+  }
+}
+
+.radio {
+  composes: radio from '../../FormInput/InputRadio.module.css';
+}

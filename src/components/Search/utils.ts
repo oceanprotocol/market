@@ -134,7 +134,7 @@ export function getSearchQuery(
       from: (Number(page) - 1 || 0) * (Number(offset) || 21),
       size: Number(offset) || 21
     },
-    sortOptions: { sortBy: sort, sortDirection: sortDirection },
+    sortOptions: { sortBy: sort, sortDirection },
     filters
   } as BaseQueryParams
 
@@ -195,13 +195,13 @@ export async function addExistingParamsToUrl(
   const parsed = queryString.parse(location.search)
   let urlLocation = '/search?'
   if (Object.keys(parsed).length > 0) {
-    for (const querryParam in parsed) {
-      if (!excludedParams.includes(querryParam)) {
-        if (querryParam === 'page' && excludedParams.includes('text')) {
+    for (const queryParam in parsed) {
+      if (!excludedParams.includes(queryParam)) {
+        if (queryParam === 'page' && excludedParams.includes('text')) {
           LoggerInstance.log('remove page when starting a new search')
         } else {
-          const value = parsed[querryParam]
-          urlLocation = `${urlLocation}${querryParam}=${value}&`
+          const value = parsed[queryParam]
+          urlLocation = `${urlLocation}${queryParam}=${value}&`
         }
       }
     }

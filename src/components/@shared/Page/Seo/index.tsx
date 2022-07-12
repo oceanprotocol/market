@@ -31,9 +31,10 @@ export default function Seo({
 
       <title>{pageTitle}</title>
 
-      {isBrowser && window?.location?.hostname !== 'oceanprotocol.com' && (
-        <meta name="robots" content="noindex,nofollow" />
-      )}
+      {isBrowser &&
+        window?.location?.hostname !== 'market.oceanprotocol.com' && (
+          <meta name="robots" content="noindex,nofollow" />
+        )}
 
       <link rel="canonical" href={canonical} />
       <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -61,7 +62,10 @@ export default function Seo({
       />
 
       <meta property="og:site_name" content={siteContent?.siteTitle} />
-      <meta name="twitter:creator" content="@oceanprotocol" />
+      {isBrowser &&
+        window?.location?.hostname === 'market.oceanprotocol.com' && (
+          <meta name="twitter:creator" content="@oceanprotocol" />
+        )}
       <meta name="twitter:card" content="summary_large_image" />
 
       {datasetSchema && (

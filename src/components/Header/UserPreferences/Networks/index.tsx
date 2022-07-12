@@ -46,14 +46,16 @@ export default function Networks(): ReactElement {
       trigger="click focus"
       className={`${stylesIndex.preferences} ${styles.networks}`}
     >
-      <Network aria-label="Networks" className={stylesIndex.icon} />
-      <Caret aria-hidden="true" className={stylesIndex.caret} />
+      <>
+        <Network aria-label="Networks" className={stylesIndex.icon} />
+        <Caret aria-hidden="true" className={stylesIndex.caret} />
 
-      <div className={styles.chainsSelected}>
-        {chainIds.map((chainId) => (
-          <span className={styles.chainsSelectedIndicator} key={chainId} />
-        ))}
-      </div>
+        <div className={styles.chainsSelected}>
+          {chainIds.map((chainId) => (
+            <span className={styles.chainsSelectedIndicator} key={chainId} />
+          ))}
+        </div>
+      </>
     </Tooltip>
   )
 }

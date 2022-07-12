@@ -129,7 +129,7 @@ function ProfileProvider({
   const [poolSharesInterval, setPoolSharesInterval] = useState<NodeJS.Timeout>()
 
   const fetchPoolShares = useCallback(
-    async (accountId, chainIds, isEthAddress) => {
+    async (accountId: string, chainIds: number[], isEthAddress: boolean) => {
       if (!accountId || !chainIds || !isEthAddress) return
 
       try {

@@ -1,15 +1,15 @@
 import { Asset, ServiceComputeOptions } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState } from 'react'
-// import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import DebugOutput from '@shared/DebugOutput'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { transformComputeFormToServiceComputeOptions } from '@utils/compute'
+import { ComputeEditForm } from './_types'
 
 export default function DebugEditCompute({
   values,
   asset
 }: {
-  values: ComputePrivacyForm
+  values: ComputeEditForm
   asset: Asset
 }): ReactElement {
   const [formTransformed, setFormTransformed] =

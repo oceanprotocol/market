@@ -1,0 +1,48 @@
+# https://docs.codeclimate.com/docs/default-analysis-configuration
+# https://docs.codeclimate.com/docs/advanced-configuration
+
+version: '2'
+checks:
+  argument-count:
+    config:
+      threshold: 6
+  complex-logic:
+    config:
+      threshold: 10
+  file-lines:
+    config:
+      threshold: 500
+  method-complexity:
+    config:
+      threshold: 10
+  method-lines:
+    config:
+      threshold: 250
+  # https://docs.codeclimate.com/docs/default-analysis-configuration#per-language-mass-threshold-defaults
+  similar-code:
+    config:
+      threshold: 55
+  identical-code:
+    config:
+      threshold: 55
+
+exclude_patterns:
+  - 'config/'
+  - 'db/'
+  - 'dist/'
+  - 'features/'
+  - '**/node_modules/'
+  - 'script/'
+  - '**/spec/'
+  - '**/test/'
+  - '**/tests/'
+  - 'Tests/'
+  - '**/vendor/'
+  - '**/*_test.go'
+  - '**/*.d.ts'
+  - '**/@types/'
+  - '**/_types.*'
+  - '**/*.stories.tsx'
+  - '**/*.test.tsx'
+  - '.storybook/'
+  - '.jest/'

@@ -1,11 +1,7 @@
-.edit ul > li[class*='Tabs_tab'] {
-  padding: calc(var(--spacer) / 4) var(--spacer);
-}
-
-.edit [class*='Tabs_tabContent'] {
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 0;
+.container {
+  composes: box from '@shared/atoms/Box.module.css';
+  padding: 0;
+  position: relative;
 }
 
 .grid {
@@ -19,30 +15,18 @@
   overflow: hidden;
 }
 
-.contianer {
-  composes: box from '@shared/atoms/Box.module.css';
-  position: relative;
-}
-
 @media (min-width: 60rem) {
   .grid {
     grid-template-columns: 1.5fr 1fr;
   }
 }
 
-.description {
-  font-size: var(--font-size-large);
-  margin: calc(var(--spacer) * 0.3 / var(--line-height)) 0
-    calc(var(--spacer) / var(--line-height)) 0;
+.headerForm {
+  margin-bottom: var(--spacer);
 }
 
-.title {
-  font-size: var(--font-size-large);
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: calc(var(--spacer) / 2);
-  margin-top: -1rem;
-  margin-left: -2rem;
-  margin-right: -2rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
+.titleForm {
+  font-size: var(--font-size-h4);
+  margin-bottom: calc(var(--spacer) / 8);
+  max-width: 50rem;
 }

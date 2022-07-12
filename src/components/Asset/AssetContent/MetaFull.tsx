@@ -9,7 +9,8 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
   const { isInPurgatory } = useAsset()
 
   function DockerImage() {
-    const { image, tag } = ddo?.metadata?.algorithm?.container
+    const containerInfo = ddo?.metadata?.algorithm?.container
+    const { image, tag } = containerInfo
     return <span>{`${image}:${tag}`}</span>
   }
 

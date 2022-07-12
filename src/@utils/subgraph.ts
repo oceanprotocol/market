@@ -15,10 +15,10 @@ import {
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import { calcSingleOutGivenPoolIn, getLiquidityByShares } from './pool'
+import { calcSingleOutGivenPoolIn } from './pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from './constants'
-
+import { getPublishedAssets, getTopPublishers } from '@utils/aquarius'
 export interface UserLiquidity {
   price: string
   oceanBalance: string
@@ -172,19 +172,11 @@ const UserSalesQuery = gql`
   }
 `
 
-// TODO: figure out some way to get this
 const TopSalesQuery = gql`
   query TopSalesQuery {
-    users(
-      first: 20
-      orderBy: sharesOwned
-      orderDirection: desc
-      where: { tokenBalancesOwned_not: "0" }
-    ) {
+    users(first: 20, orderBy: totalSales, orderDirection: desc) {
       id
-      tokenBalancesOwned {
-        value
-      }
+      totalSales
     }
   }
 `
@@ -194,7 +186,7 @@ const OpcFeesQuery = gql`
     opc(id: $id) {
       swapOceanFee
       swapNonOceanFee
-      consumeFee
+      orderFee
       providerFee
     }
   }
@@ -279,10 +271,7 @@ export async function getPreviousOrders(
   account: string,
   assetTimeout: string
 ): Promise<string> {
-  const variables = {
-    id: id,
-    account: account
-  }
+  const variables = { id, account }
   const fetchedPreviousOrders: OperationResult<AssetPreviousOrder> =
     await fetchData(PreviousOrderQuery, variables, null)
   if (fetchedPreviousOrders.data?.orders?.length === 0) return null
@@ -347,7 +336,7 @@ export async function getAccountLiquidityInOwnAssets(
 ): Promise<string> {
   const queryVariables = {
     user: accountId.toLowerCase(),
-    pools: pools
+    pools
   }
   const results: PoolSharesList[] = await fetchDataForMultipleChains(
     UserSharesQuery,
@@ -422,20 +411,10 @@ export async function getUserSales(
   accountId: string,
   chainIds: number[]
 ): Promise<number> {
-  const variables = { user: accountId?.toLowerCase() }
   try {
-    const userSales = await fetchDataForMultipleChains(
-      UserSalesQuery,
-      variables,
-      chainIds
-    )
-    let salesSum = 0
-    for (let i = 0; i < userSales.length; i++) {
-      if (userSales[i].users.length > 0) {
-        salesSum += parseInt(userSales[i].users[0].totalSales)
-      }
-    }
-    return salesSum
+    const result = await getPublishedAssets(accountId, chainIds, null)
+    const { totalOrders } = result.aggregations
+    return totalOrders.value
   } catch (error) {
     LoggerInstance.error('Error getUserSales', error.message)
   }
@@ -445,33 +424,19 @@ export async function getTopAssetsPublishers(
   chainIds: number[],
   nrItems = 9
 ): Promise<AccountTeaserVM[]> {
-  const publisherSales: AccountTeaserVM[] = []
+  const publishers: AccountTeaserVM[] = []
 
-  for (const chain of chainIds) {
-    const queryContext = getQueryContext(Number(chain))
-    const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
-      TopSalesQuery,
-      null,
-      queryContext
-    )
-    for (let i = 0; i < fetchedUsers.data.users.length; i++) {
-      const publishersIndex = publisherSales.findIndex(
-        (user) => fetchedUsers.data.users[i].id === user.address
-      )
-      if (publishersIndex === -1) {
-        const publisher: AccountTeaserVM = {
-          address: fetchedUsers.data.users[i].id,
-          nrSales: fetchedUsers.data.users[i].totalSales
-        }
-        publisherSales.push(publisher)
-      } else {
-        publisherSales[publishersIndex].nrSales +=
-          publisherSales[publishersIndex].nrSales
-      }
-    }
+  const result = await getTopPublishers(chainIds, null)
+  const { topPublishers } = result.aggregations
+
+  for (let i = 0; i < topPublishers.buckets.length; i++) {
+    publishers.push({
+      address: topPublishers.buckets[i].key,
+      nrSales: parseInt(topPublishers.buckets[i].totalSales.value)
+    })
   }
 
-  publisherSales.sort((a, b) => b.nrSales - a.nrSales)
+  publishers.sort((a, b) => b.nrSales - a.nrSales)
 
-  return publisherSales.slice(0, nrItems)
+  return publishers.slice(0, nrItems)
 }

@@ -8,8 +8,7 @@ import AnnouncementBanner from '@shared/AnnouncementBanner'
 import PrivacyPreferenceCenter from '../Privacy/PrivacyPreferenceCenter'
 import styles from './index.module.css'
 import { ToastContainer } from 'react-toastify'
-import { useRouter } from 'next/router'
-import content from '../../../content/purgatory.json'
+import contentPurgatory from '../../../content/purgatory.json'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function App({
@@ -17,24 +16,37 @@ export default function App({
 }: {
   children: ReactElement
 }): ReactElement {
-  const router = useRouter()
-
   const { siteContent, appConfig } = useMarketMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
+  function openInNewTab() {
+    window
+      .open(
+        'https://blog.oceanprotocol.com/how-to-publish-a-data-nft-f58ad2a622a9',
+        '_blank'
+      )
+      .focus()
+  }
 
   return (
     <div className={styles.app}>
-      {router.pathname === '/' && siteContent?.warning.main !== '' && (
-        <AnnouncementBanner text={siteContent?.warning.main} />
+      {siteContent?.announcement !== '' && (
+        <AnnouncementBanner
+          text={siteContent?.announcement}
+          action={{
+            name: 'Explore OceanONDA V4.',
+            style: 'link',
+            handleAction: openInNewTab
+          }}
+        />
       )}
       <Header />
 
       {isInPurgatory && (
         <Alert
-          title={content.account.title}
+          title={contentPurgatory.account.title}
           badge={`Reason: ${purgatoryData?.reason}`}
-          text={content.account.description}
+          text={contentPurgatory.account.description}
           state="error"
         />
       )}

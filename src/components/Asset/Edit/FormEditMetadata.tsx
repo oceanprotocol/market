@@ -1,11 +1,8 @@
-import React, { ChangeEvent, ReactElement, useState } from 'react'
-import { Field, Form, FormikContextType, useFormikContext } from 'formik'
+import React, { ReactElement } from 'react'
+import { Field, Form } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
-import styles from './FormEdit.module.css'
-import { FormPublishData } from '../../Publish/_types'
 import { useAsset } from '@context/Asset'
-import { MetadataEditForm } from './_types'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,
@@ -15,40 +12,6 @@ export function checkIfTimeoutInPredefinedValues(
     return true
   }
   return false
-}
-
-function handleTimeoutCustomOption(
-  data: FormFieldContent[],
-  values: Partial<FormPublishData>
-) {
-  const timeoutFieldContent = data.filter(
-    (field) => field.name === 'timeout'
-  )[0]
-  const timeoutInputIndex = data.findIndex(
-    (element) => element.name === 'timeout'
-  )
-  if (
-    data[timeoutInputIndex].options.length < 6 &&
-    !checkIfTimeoutInPredefinedValues(
-      values?.services[0]?.timeout,
-      timeoutFieldContent.options
-    )
-  ) {
-    data[timeoutInputIndex].options.push(values?.services[0]?.timeout)
-  } else if (
-    data[timeoutInputIndex].options.length === 6 &&
-    checkIfTimeoutInPredefinedValues(
-      values?.services[0]?.timeout,
-      timeoutFieldContent.options
-    )
-  ) {
-    data[timeoutInputIndex].options.pop()
-  } else if (
-    data[timeoutInputIndex].options.length === 6 &&
-    data[timeoutInputIndex].options[5] !== values?.services[0]?.timeout
-  ) {
-    data[timeoutInputIndex].options[5] = values?.services[0]?.timeout
-  }
 }
 
 export default function FormEditMetadata({
@@ -61,20 +24,7 @@ export default function FormEditMetadata({
   isComputeDataset: boolean
 }): ReactElement {
   const { oceanConfig } = useAsset()
-  const {
-    validateField,
-    setFieldValue
-  }: FormikContextType<Partial<MetadataEditForm>> = useFormikContext()
 
-  // Manually handle change events instead of using `handleChange` from Formik.
-  // Workaround for default `validateOnChange` not kicking in
-  function handleFieldChange(
-    e: ChangeEvent<HTMLInputElement>,
-    field: InputProps
-  ) {
-    validateField(field.name)
-    setFieldValue(field.name, e.target.value)
-  }
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
   // https://github.com/oceanprotocol/market/pull/324#discussion_r561132310
@@ -92,7 +42,7 @@ export default function FormEditMetadata({
   }
 
   return (
-    <Form className={styles.form}>
+    <Form>
       {data.map(
         (field: InputProps) =>
           (!showPrice && field.name === 'price') || (
@@ -105,10 +55,7 @@ export default function FormEditMetadata({
               }
               {...field}
               component={Input}
-              prefix={field.name === 'price' && oceanConfig.oceanTokenSymbol}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleFieldChange(e, field)
-              }
+              prefix={field.name === 'price' && oceanConfig?.oceanTokenSymbol}
             />
           )
       )}
