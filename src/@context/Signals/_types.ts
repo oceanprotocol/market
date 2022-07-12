@@ -28,6 +28,7 @@ export interface SignalItem {
    * @memberof SignalItem
    */
   description: string
+  [key: string]: any
 }
 
 /**
@@ -36,6 +37,7 @@ export interface SignalItem {
  * @interface SignalOriginItem
  */
 export interface SignalOriginItem {
+  id: string
   /**
    * a string describing the title for this specific signal type instance
    * @type {string}
@@ -55,7 +57,7 @@ export interface SignalOriginItem {
    */
   type: string
   /**
-   * a unique origin of the signal
+   * a unique origin/source of the signal
    * @type {string}
    * @memberof SignalOriginItem
    */
@@ -82,17 +84,19 @@ export interface SignalOriginItem {
 
 export interface SignalSettingsItem {
   /**
-   * a unique name of the signal
+   * a time stamp of the signal settings last update
    * @type {string}
    * @memberof SignalSettingsItem
    */
-  name: string
+  lastUpdated: string
   /**
-   * a unique origin of the signal
-   * @type {string}
+   * a list of SignalOriginItems
+   * @type {SignalOriginItem}
    * @memberof SignalSettingsItem
    */
-  origin: string
+  customSignals: SignalOriginItem[]
+  defaultSignals: SignalOriginItem[]
+  enabled: boolean
 }
 
 export interface SignalParams {

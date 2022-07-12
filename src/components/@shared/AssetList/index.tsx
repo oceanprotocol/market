@@ -11,6 +11,7 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import { Asset } from '@oceanprotocol/lib'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
+import { SignalItem } from '@context/Signals/_types'
 
 const cx = classNames.bind(styles)
 
@@ -31,6 +32,7 @@ declare type AssetListProps = {
   onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
   noPublisher?: boolean
+  signals?: SignalItem[]
 }
 
 export default function AssetList({

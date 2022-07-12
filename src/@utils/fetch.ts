@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 
 export async function fetchData(url: string): Promise<AxiosResponse['data']> {
+  console.log('fetchData axios', url)
   try {
     const response = await axios(url)
 

@@ -59,7 +59,7 @@ export function useMockFetch(
 ) {
   const [loading, setLoading] = useState(false)
 
-  function get(url = ''): Promise<SignalOriginItem[] | { message: string }> {
+  function get(url = ''): Promise<SignalOriginItem[]> {
     setLoading(true)
     console.log('fetching from mock signals api', baseUrl + url)
     return new Promise((resolve, reject) => {

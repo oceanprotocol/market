@@ -1,47 +1,51 @@
-import { SignalOriginItem } from '@context/Signals/_types'
-import { useEffect, useState } from 'react'
-import { useMockFetch } from '../useFetch'
-import { nftSignalItems } from '@hooks/useSignals/_constants'
+import { SignalItem, SignalOriginItem } from '@context/Signals/_types'
+import { useState } from 'react'
+import { fetchData } from '@utils/fetch'
 
 // Reusable state logic for loading signal data to the home page
 // A hook to fetch signals for all available assets
-export default function useSignalOrigin(baseUrl: string) {
-  // TODO initialize the baseUrl for a new signal
-  // TODO initialize the query for the said signal
-  // TODO initialize the urql client for all the signals
+export default function useSignalsLoader(baseUrl: string) {
   // TODO adapt the data from all signals with either enabled or disabled
-  const [signalOriginsList, setSignalsOriginsList] = useState([])
-  // Note we're using a mock fetch API for now
-  const { loading, get } = useMockFetch(baseUrl, true, 6000, [
-    {
-      type: 'asset',
-      title: 'Rug pull signal',
-      origin: baseUrl,
-      signals: nftSignalItems
-    }
-  ])
+
+  const [originUrl, setOriginUrl] = useState('api/rugs/v1/sample-signals')
+  const [signalItems, setSignalItems] = useState<SignalItem[]>([])
+  const [signalOriginsList, setSignalsOriginsList] = useState<
+    SignalOriginItem[]
+  >([])
+  const [assetIds, setAssetIds] = useState<string[]>([])
+  const [publisherIds, setPublisherIds] = useState<string[]>([])
+  const [userAddresses, setUserAddresses] = useState<string[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+
   /**
    * A method fetching signals from specified origin URL
    * @returns SignalOriginItem[]
-   * @memberOf useSignalOrigin
+   * @memberOf useSignalsLoader
    * */
-  function fetchSignals(url: string) {
-    return get(url)
-      .then((data: SignalOriginItem[]) => {
-        setSignalsOriginsList([...data])
-        console.log(data)
-      })
-      .catch((err) => console.error(err))
+  async function fetchSignals(url: string): Promise<SignalItem[]> {
+    console.log(baseUrl + url)
+    try {
+      return await fetchData(baseUrl + url)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  useEffect(() => {
-    ;(async () => {
-      await fetchSignals('')
-    })()
-  }, [])
   return {
+    originUrl,
+    setOriginUrl,
+    signalItems,
+    setSignalItems,
+    assetIds,
+    setAssetIds,
     signalOriginsList,
+    setSignalsOriginsList,
+    publisherIds,
+    setPublisherIds,
+    userAddresses,
+    setUserAddresses,
     fetchSignals,
-    loading
+    loading,
+    setLoading
   }
 }

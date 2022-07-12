@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import AssetList from '@shared/AssetList'
 import Button from '@shared/atoms/Button'
 import Bookmarks from './Bookmarks'
@@ -14,7 +14,9 @@ import styles from './index.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
-import useSignalOrigin from '../../@hooks/useSignals'
+import { SignalsContext } from '@context/Signals'
+
+// import useSignalsLoader from '../../@hooks/useSignals'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -57,6 +59,12 @@ function SectionQueryResult({
   const [loading, setLoading] = useState<boolean>()
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
+  const {
+    loading: loadingSignals,
+    assetIds,
+    signals,
+    setAssetIds
+  } = useContext(SignalsContext)
 
   useEffect(() => {
     if (!query) return
@@ -77,8 +85,6 @@ function SectionQueryResult({
           const result = await queryMetadata(query, newCancelToken())
           if (!isMounted()) return
           if (queryData && result?.totalResults > 0) {
-            // TODO add logic for the fetching of signals after assets have loaded.
-            // This is where all home page assests are available so we make the signals request here
             const sortedAssets = sortElements(result.results, queryData)
             const overflow = sortedAssets.length - 9
             sortedAssets.splice(sortedAssets.length - overflow, overflow)
@@ -94,6 +100,17 @@ function SectionQueryResult({
     init()
   }, [chainIds.length, isMounted, newCancelToken, query, queryData])
 
+  useEffect(() => {
+    if (!result || result == null) return
+    if (result?.results.length === 0) return
+    // TODO add logic for the fetching of signals after assets have loaded.
+    // This is where all home page assets are available so we make the signals request here
+    const resultIds = result.results.map((asset) => {
+      return asset.id
+    })
+    setAssetIds([...resultIds])
+  }, [result])
+
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
@@ -102,6 +119,7 @@ function SectionQueryResult({
         assets={result?.results}
         showPagination={false}
         isLoading={loading || !query}
+        signals={signals}
       />
 
       {action && action}
@@ -113,8 +131,6 @@ export default function HomePage(): ReactElement {
   const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string[]]>()
   const [queryLatest, setQueryLatest] = useState<SearchQuery>()
   const { chainIds } = useUserPreferences()
-  const { signalOriginsList, loading } = useSignalOrigin('testsignalurl.com')
-  console.log('signalOriginList', signalOriginsList)
 
   useEffect(() => {
     getQueryHighest(chainIds).then((results) => {
