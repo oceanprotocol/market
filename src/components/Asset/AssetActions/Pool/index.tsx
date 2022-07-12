@@ -33,7 +33,7 @@ export default function Pool(): ReactElement {
                 onClick={() => setShowRemove(true)}
                 disabled={!isAssetNetwork}
               >
-                Remove
+                Remove Liquidity
               </Button>
             </div>
           )}
