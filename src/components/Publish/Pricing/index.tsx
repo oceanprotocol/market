@@ -67,12 +67,6 @@ export default function PricingFields(): ReactElement {
           content: <Fixed content={content.create.fixed} />
         }
       : undefined,
-    appConfig.allowDynamicPricing === 'true'
-      ? {
-          title: content.create.dynamic.title,
-          content: <Dynamic content={content.create.dynamic} />
-        }
-      : undefined,
     appConfig.allowFreePricing === 'true'
       ? {
           title: content.create.free.title,
@@ -85,7 +79,7 @@ export default function PricingFields(): ReactElement {
     <Tabs
       items={tabs}
       handleTabChange={handleTabChange}
-      defaultIndex={type === 'dynamic' ? 1 : type === 'free' ? 2 : 0}
+      defaultIndex={type === 'free' ? 1 : 0}
       className={styles.pricing}
       showRadio
     />
