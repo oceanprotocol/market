@@ -46,7 +46,7 @@ export default function TxFee({
           accountId,
           nftFactory,
           nftMetadata,
-          (prices as any)?.eth
+          prices?.['ocean-protocol'].eth
         )
       )
     calculateGasFee()
