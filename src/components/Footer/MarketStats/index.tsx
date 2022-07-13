@@ -11,6 +11,9 @@ import MarketStatsTotal from './Total'
 import { queryGlobalStatistics } from './_queries'
 import { StatsTotal } from './_types'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import Tooltip from '@shared/atoms/Tooltip'
+import Markdown from '@shared/Markdown'
+import content from '../../../../content/footer.json'
 
 const initialTotal: StatsTotal = {
   nfts: 0,
@@ -105,6 +108,12 @@ export default function MarketStats(): ReactElement {
     <div className={styles.stats}>
       <>
         <MarketStatsTotal total={total} />
+        <Tooltip
+          className={styles.info}
+          content={
+            <Markdown className={styles.note} text={content.stats.note} />
+          }
+        />
       </>
     </div>
   )
