@@ -107,7 +107,7 @@ export default function MarketStats(): ReactElement {
   return (
     <div className={styles.stats}>
       <>
-        <MarketStatsTotal total={total} />
+        <MarketStatsTotal total={total} />{' '}
         <Tooltip
           className={styles.info}
           content={
