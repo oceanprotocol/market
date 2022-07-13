@@ -11,6 +11,7 @@ import AssetSelection, {
 } from '../FormFields/AssetSelection'
 import Nft from '../FormFields/Nft'
 import InputRadio from './InputRadio'
+import InputMarkdown from './InputMarkdown'
 
 const cx = classNames.bind(styles)
 
@@ -82,6 +83,9 @@ export default function InputElement({
     }
     case 'textarea':
       return <textarea id={props.name} className={styles.textarea} {...props} />
+
+    case 'markdown':
+      return <InputMarkdown className={styles.textarea} {...props} />
 
     case 'radio':
     case 'checkbox':

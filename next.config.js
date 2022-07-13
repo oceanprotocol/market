@@ -1,3 +1,5 @@
+const removeImports = require('next-remove-imports')()
+
 module.exports = (phase, { defaultConfig }) => {
   /**
    * @type {import('next').NextConfig}
@@ -65,5 +67,5 @@ module.exports = (phase, { defaultConfig }) => {
     // experimental: { esmExternals: true }
   }
 
-  return nextConfig
+  return removeImports(nextConfig)
 }

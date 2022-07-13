@@ -1,0 +1,51 @@
+.inputMarkdown input {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.inputMarkdown button {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-top: -1px;
+  width: 100%;
+}
+
+.inputMarkdown button:hover,
+.inputMarkdown button:focus,
+.inputMarkdown input:focus + button:hover,
+.inputMarkdown input:focus + button:focus {
+  background: var(--brand-gradient);
+  transform: none;
+  box-shadow: none;
+}
+
+@media screen and (min-width: 30rem) {
+  .inputMarkdown {
+    display: flex;
+  }
+
+  .inputMarkdown > div {
+    flex: 1;
+  }
+
+  .inputMarkdown input {
+    border-bottom-left-radius: var(--border-radius);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .inputMarkdown button {
+    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-top: 0;
+    margin-left: -1px;
+    width: fit-content;
+    white-space: nowrap;
+  }
+}
+
+.inputMarkdown > button:hover,
+.inputMarkdown > button:focus {
+  transform: none;
+}
