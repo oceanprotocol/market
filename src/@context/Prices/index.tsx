@@ -11,7 +11,7 @@ import useSWR from 'swr'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useMarketMetadata } from '../MarketMetadata'
 import { Prices, PricesValue } from './_types'
-import { initialData, tokenIds, refreshInterval } from './_constants'
+import { initialData, refreshInterval } from './_constants'
 
 const PricesContext = createContext(null)
 
@@ -29,6 +29,7 @@ export default function PricesProvider({
     if (!appConfig) return
 
     const currencies = appConfig.currencies.join(',')
+    const tokenIds = appConfig.coingeckoTokenIds.join(',')
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenIds}&vs_currencies=${currencies}`
     setUrl(url)
   }, [appConfig])

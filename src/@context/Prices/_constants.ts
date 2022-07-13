@@ -1,9 +1,7 @@
 import { Prices } from './_types'
+import { coingeckoTokenIds } from '../../../app.config'
 
-// Refers to Coingecko API tokenIds
-export const tokenIds = 'ocean-protocol,h2o'
-
-export const initialData: Prices = tokenIds.split(',').map((tokenId) => ({
+export const initialData: Prices = coingeckoTokenIds.map((tokenId) => ({
   [tokenId]: {
     eur: 0.0,
     usd: 0.0,
