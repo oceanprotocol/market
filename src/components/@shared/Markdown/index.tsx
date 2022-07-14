@@ -1,4 +1,4 @@
-import { markdownToHtml } from '@utils/markdown'
+import { markdownToHtml, isHtml } from '@utils/markdown'
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 
@@ -9,7 +9,12 @@ const Markdown = ({
   text: string
   className?: string
 }): ReactElement => {
-  const content = markdownToHtml(text)
+  let content
+  if (isHtml(text)) {
+    content = text
+  } else {
+    content = markdownToHtml(text)
+  }
 
   return (
     <div
