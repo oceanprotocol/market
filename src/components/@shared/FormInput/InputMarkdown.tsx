@@ -2,7 +2,7 @@ import React, { ReactElement, ReactNode } from 'react'
 import '@github/markdown-toolbar-element'
 import styles from './InputMarkdown.module.css'
 
-// Icons
+// Icons - provided by https://icons.getbootstrap.com/
 import IconB from '@images/markdown/bold.svg'
 import IconH from '@images/markdown/heading.svg'
 import IconI from '@images/markdown/italic.svg'
@@ -13,8 +13,6 @@ import IconImg from '@images/markdown/image.svg'
 import IconUL from '@images/markdown/list-unordered.svg'
 import IconOL from '@images/markdown/list-ordered.svg'
 import IconTL from '@images/markdown/task-list.svg'
-import IconM from '@images/markdown/mention.svg'
-import IconT from '@images/markdown/tag.svg'
 
 interface InputMarkdownProps {
   name: string
@@ -62,12 +60,6 @@ export default function InputMarkdown({
             <md-task-list>
               <IconTL className={styles.icon} />
             </md-task-list>
-            <md-mention>
-              <IconM className={styles.icon} />
-            </md-mention>
-            <md-ref>
-              <IconT className={styles.icon} />
-            </md-ref>
           </markdown-toolbar>
         </div>
       )}

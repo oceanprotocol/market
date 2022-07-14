@@ -15,6 +15,7 @@
         "label": "New Description",
         "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics).",
         "type": "textarea",
+        "markdownToolbar": true,
         "rows": 10,
         "required": true
       },
