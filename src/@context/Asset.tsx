@@ -78,6 +78,13 @@ function AssetProvider({
             '\n\nWe could not find an asset for this DID in the cache. If you just published a new asset, wait some seconds and refresh this page.'
         )
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
+      } else if (asset.nft.state === 3) {
+        setIsV3Asset(await checkV3Asset(did, token))
+        setError(
+          `\`${did}\`` +
+            '\n\nThis asset has been reboked. If you just published a new asset, please contact support.'
+        )
+        LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
       } else {
         setError(undefined)
         setAsset((prevState) => ({
