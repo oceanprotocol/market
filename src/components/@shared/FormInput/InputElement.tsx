@@ -11,6 +11,11 @@ import AssetSelection, {
 } from '../FormFields/AssetSelection'
 import Nft from '../FormFields/Nft'
 import InputRadio from './InputRadio'
+import dynamic from 'next/dynamic'
+
+const DynamicMarkedownToolbar = dynamic(() => import('./InputMarkdown'), {
+  ssr: false
+})
 
 const cx = classNames.bind(styles)
 
@@ -81,7 +86,13 @@ export default function InputElement({
       )
     }
     case 'textarea':
-      return <textarea id={props.name} className={styles.textarea} {...props} />
+      return (
+        <>
+          <DynamicMarkedownToolbar {...props}>
+            <textarea id={props.name} className={styles.textarea} {...props} />
+          </DynamicMarkedownToolbar>
+        </>
+      )
 
     case 'radio':
     case 'checkbox':

@@ -1,0 +1,19 @@
+.markdownToolbarContainer {
+  margin-bottom: calc(var(--spacer) / 2);
+  overflow: scroll;
+}
+
+.markdownToolbar {
+  white-space: nowrap;
+  display: flex;
+}
+
+.markdownToolbar > * {
+  padding: calc(var(--spacer) / 3);
+  color: var(--background-body);
+  border-color: var(--background-body);
+  background: var(--font-color-heading);
+  margin-right: calc(var(--spacer) / 3);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+}
