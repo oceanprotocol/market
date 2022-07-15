@@ -48,7 +48,7 @@ export default function Details(): ReactElement {
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
             <span className={styles.symbol}>
-              {key === 'eth' ? mainCurrency : oceanTokenMetadata?.symbol}
+              {key === 'eth' ? mainCurrency : key.toUpperCase()}
             </span>{' '}
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
