@@ -14,3 +14,17 @@ export async function fetchData(url: string): Promise<AxiosResponse['data']> {
     console.error('Error parsing json: ' + error.message)
   }
 }
+
+export async function fetchAllData(urls: string[]) {
+  const signalRequests = urls.map((url) => axios.get(url))
+  try {
+    return await Promise.all(signalRequests).then(
+      axios.spread((...allData) => {
+        console.log({ allData })
+        return allData
+      })
+    )
+  } catch (error) {
+    console.error('Error parsing json: ', error)
+  }
+}

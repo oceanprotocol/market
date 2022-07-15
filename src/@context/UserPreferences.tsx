@@ -1,14 +1,16 @@
 import React, {
   createContext,
-  useContext,
   ReactElement,
   ReactNode,
-  useState,
-  useEffect
+  useContext,
+  useEffect,
+  useState
 } from 'react'
 import { LoggerInstance, LogLevel } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
 import { useMarketMetadata } from './MarketMetadata'
+import { SignalOriginItem, SignalSettingsItem } from '@context/Signals/_types'
+import { defaultSignalSettings } from '@hooks/useSignals/_constants'
 
 interface UserPreferencesValue {
   debug: boolean
@@ -27,6 +29,12 @@ interface UserPreferencesValue {
   infiniteApproval: boolean
   setInfiniteApproval: (value: boolean) => void
   locale: string
+  signalSettings?: SignalSettingsItem
+  defaultSignals: SignalOriginItem[]
+  customSignals: SignalOriginItem[]
+  setSignalSettings(signalSettings: SignalSettingsItem): void
+  addCustomSignalSetting(signalSetting: SignalOriginItem): void
+  removeCustomSignalSetting(signalSettingId: string): void
 }
 
 const UserPreferencesContext = createContext(null)
@@ -76,6 +84,10 @@ function UserPreferencesProvider({
   const [infiniteApproval, setInfiniteApproval] = useState(
     localStorage?.infiniteApproval || false
   )
+  // Initialize signal settings
+  const [signalSettings, setSignalSettings] = useState<SignalSettingsItem>(
+    localStorage?.signalSettings || { ...defaultSignalSettings }
+  )
 
   // Write values to localStorage on change
   useEffect(() => {
@@ -86,7 +98,8 @@ function UserPreferencesProvider({
       bookmarks,
       privacyPolicySlug,
       showPPC,
-      infiniteApproval
+      infiniteApproval,
+      signalSettings
     })
   }, [
     chainIds,
@@ -95,9 +108,10 @@ function UserPreferencesProvider({
     bookmarks,
     privacyPolicySlug,
     showPPC,
-    infiniteApproval
+    infiniteApproval,
+    signalSettings
   ])
-
+  const { defaultSignals, customSignals } = signalSettings
   // Set ocean.js log levels, default: Error
   useEffect(() => {
     debug === true
@@ -110,6 +124,25 @@ function UserPreferencesProvider({
     if (!window) return
     setLocale(window.navigator.language)
   }, [])
+  function addCustomSignalSetting(signalOriginItem: SignalOriginItem) {
+    setSignalSettings((prevSignalSettings) => {
+      const newSignalSettings = { ...prevSignalSettings }
+      newSignalSettings.customSignals = [
+        ...newSignalSettings.customSignals,
+        signalOriginItem
+      ]
+      return { ...newSignalSettings }
+    })
+  }
+  function removeCustomSignalSetting(signalOriginItemId: string) {
+    const newSignalSettings = { ...signalSettings }
+    newSignalSettings.customSignals = newSignalSettings.customSignals.filter(
+      (signalOriginItem) => signalOriginItem.id !== signalOriginItemId
+    )
+    setSignalSettings((prevSignalSettings) => {
+      return { ...newSignalSettings }
+    })
+  }
 
   function addBookmark(didToAdd: string): void {
     const newPinned = [...bookmarks, didToAdd]
@@ -145,6 +178,10 @@ function UserPreferencesProvider({
           privacyPolicySlug,
           showPPC,
           infiniteApproval,
+          defaultSignals,
+          customSignals,
+          addCustomSignalSetting,
+          removeCustomSignalSetting,
           setInfiniteApproval,
           setChainIds,
           setDebug,

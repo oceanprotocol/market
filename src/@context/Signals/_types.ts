@@ -37,6 +37,11 @@ export interface SignalItem {
  * @interface SignalOriginItem
  */
 export interface SignalOriginItem {
+  /**
+   * an identifier for a signal instance
+   * @type {string}
+   * @memberof SignalOriginItem
+   */
   id: string
   /**
    * a string describing the title for this specific signal type instance
@@ -45,17 +50,16 @@ export interface SignalOriginItem {
    */
   title: string
   /**
-   * a string describing the type of signal e.g account signal vs asset signal
-   * @type {string}
+   * @type {SignalParams} object describing the type of signal e.g account signal vs asset signal
    * @memberof SignalOriginItem
    */
-  urlParams?: string
+  urlParams?: SignalParams
   /**
    * a string describing the type of signal e.g account signal vs asset signal
    * @type {string}
    * @memberof SignalOriginItem
    */
-  type: string
+  type?: string
   /**
    * a unique origin/source of the signal
    * @type {string}
@@ -80,6 +84,12 @@ export interface SignalOriginItem {
    * @memberof SignalSettingsItem
    */
   detailView?: boolean
+  /**
+   * a boolean representing when the signal should be defined as custom on the pages
+   * @type {Boolean}
+   * @memberof SignalSettingsItem
+   */
+  isCustom: boolean
 }
 
 export interface SignalSettingsItem {
@@ -105,17 +115,17 @@ export interface SignalParams {
    * @type {String}
    * @memberof SignalParams
    */
-  assetId: string
+  assetIds: string[]
   /**
    * a string for the publisher we are using as a filter signals
    * @type {String}
    * @memberof SignalParams
    */
-  publisherId?: string
+  publisherIds?: string[]
   /**
    * a string for the userAddress we want to use as a filter signals
    * @type {String}
    * @memberof SignalParams
    */
-  userAddress?: string
+  userAddresses?: string[]
 }

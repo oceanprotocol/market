@@ -1,4 +1,4 @@
-import { SignalItem } from '@context/Signals/_types'
+import { SignalItem, SignalSettingsItem } from '@context/Signals/_types'
 
 const nftSignalItems: SignalItem[] = [
   {
@@ -36,6 +36,27 @@ const nftSignalItems: SignalItem[] = [
     value: '45%'
   }
 ]
+
+const defaultSignalSettings: SignalSettingsItem = {
+  lastUpdated: new Date().toDateString(),
+  customSignals: [],
+  defaultSignals: [
+    {
+      id: 'sample_qualitative_signal',
+      title: 'Sample Qualitative Signal',
+      origin:
+        'https://62c5a9c8134fa108c2591da2.mockapi.io/api/rugs/v1/sample-signals/',
+      isCustom: false,
+      signals: [],
+      urlParams: {
+        assetIds: [],
+        publisherIds: [],
+        userAddresses: []
+      }
+    }
+  ],
+  enabled: true
+}
 const defiSignalItems: SignalItem[] = []
 
-export { nftSignalItems, defiSignalItems }
+export { nftSignalItems, defiSignalItems, defaultSignalSettings }

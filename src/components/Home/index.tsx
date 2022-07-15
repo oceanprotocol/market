@@ -59,12 +59,7 @@ function SectionQueryResult({
   const [loading, setLoading] = useState<boolean>()
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
-  const {
-    loading: loadingSignals,
-    assetIds,
-    signals,
-    setAssetIds
-  } = useContext(SignalsContext)
+  const { assetIds, setAssetIds, signals } = useContext(SignalsContext)
 
   useEffect(() => {
     if (!query) return
