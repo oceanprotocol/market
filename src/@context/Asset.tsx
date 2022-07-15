@@ -100,7 +100,7 @@ function AssetProvider({
             break
           case 4:
             message =
-              'This asset has been disabled. If you just published this asset, please contact support.'
+              'This asset has been temporary disabled. If you just published this asset, please contact support.'
             break
         }
 
