@@ -87,20 +87,16 @@ function AssetProvider({
         let message
         switch (asset.nft.state) {
           case 1:
-            message =
-              'This asset is in End-of-life. If you just published this asset, please contact support.'
+            message = 'This asset is in End-of-life.'
             break
           case 2:
-            message =
-              'This asset has been deprecated. If you just published this asset, please contact support.'
+            message = 'This asset has been deprecated.'
             break
           case 3:
-            message =
-              'This asset has been revoked. If you just published this asset, please contact support.'
+            message = 'This asset has been revoked.'
             break
           case 4:
-            message =
-              'This asset has been temporary disabled. If you just published this asset, please contact support.'
+            message = 'This asset has been temporary disabled.'
             break
         }
 
