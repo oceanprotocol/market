@@ -224,6 +224,7 @@ export default function FormStartCompute({
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
+        btSymbol={asset?.accessDetails?.baseToken?.symbol}
         dtSymbol={asset?.datatokens[0]?.symbol}
         dtBalance={dtBalance}
         datasetLowPoolLiquidity={datasetLowPoolLiquidity}

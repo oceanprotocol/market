@@ -7,11 +7,14 @@ import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './Price.module.css'
 import { FormPublishData } from '../_types'
 import { getFieldContent } from '@utils/form'
+import CoinSelect from './CoinSelect'
 
 export default function Price({
+  approvedBaseTokens,
   firstPrice,
   content
 }: {
+  approvedBaseTokens?: TokenInfo[]
   firstPrice?: string
   content?: any
 }): ReactElement {
@@ -38,7 +41,13 @@ export default function Price({
                 type="number"
                 min="1"
                 placeholder="0"
-                prefix={values.pricing?.baseToken?.symbol || 'OCEAN'}
+                prefix={
+                  approvedBaseTokens?.length > 1 ? (
+                    <CoinSelect approvedBaseTokens={approvedBaseTokens} />
+                  ) : (
+                    values.pricing?.baseToken?.symbol
+                  )
+                }
                 {...field}
               />
               <Error meta={meta} />

@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useFormikContext } from 'formik'
 import Tabs from '@shared/atoms/Tabs'
 import { FormPublishData } from '../_types'
@@ -7,30 +7,22 @@ import Free from './Free'
 import content from '../../../../content/price.json'
 import styles from './index.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import { getOceanConfig } from '@utils/ocean'
 import { useWeb3 } from '@context/Web3'
 
 export default function PricingFields(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { chainId } = useWeb3()
-  const [defaultBaseToken, setDefaultBaseToken] = useState<TokenInfo>()
+  const { approvedBaseTokens } = useWeb3()
 
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { pricing } = values
-  const { price, type } = pricing
+  const { type } = pricing
 
   useEffect(() => {
-    if (!chainId) return
-
-    const oceanConfig = getOceanConfig(chainId)
-    setDefaultBaseToken({
-      address: oceanConfig?.oceanTokenAddress,
-      symbol: oceanConfig?.oceanTokenSymbol,
-      decimals: 18,
-      name: 'OceanToken'
-    })
-  }, [chainId])
+    if (approvedBaseTokens?.length > 0) {
+      setFieldValue('pricing.baseToken', approvedBaseTokens[0])
+    }
+  }, [approvedBaseTokens, setFieldValue])
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
@@ -38,41 +30,51 @@ export default function PricingFields(): ReactElement {
     setFieldValue('pricing.type', type)
     setFieldValue('pricing.price', 0)
     setFieldValue('pricing.freeAgreement', false)
-    setFieldValue('pricing.baseToken', defaultBaseToken)
+    setFieldValue(
+      'pricing.baseToken',
+      pricing?.baseToken || approvedBaseTokens[0]
+    )
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
-  // Update price when price is changed
-  useEffect(() => {
-    setFieldValue('pricing.price', price)
-    setFieldValue('pricing.type', type)
-  }, [price, setFieldValue, type])
+  const updateTabs = useCallback(() => {
+    return [
+      appConfig.allowFixedPricing === 'true'
+        ? {
+            title: content.create.fixed.title,
+            content: (
+              <Fixed
+                approvedBaseTokens={approvedBaseTokens}
+                content={content.create.fixed}
+              />
+            )
+          }
+        : undefined,
 
-  const tabs = [
-    appConfig.allowFixedPricing === 'true'
-      ? {
-          title: content.create.fixed.title,
-          content: (
-            <Fixed
-              content={content.create.fixed}
-              defaultBaseToken={defaultBaseToken}
-            />
-          )
-        }
-      : undefined,
-    appConfig.allowFreePricing === 'true'
-      ? {
-          title: content.create.free.title,
-          content: <Free content={content.create.free} />
-        }
-      : undefined
-  ].filter((tab) => tab !== undefined)
+      appConfig.allowFreePricing === 'true'
+        ? {
+            title: content.create.free.title,
+            content: <Free content={content.create.free} />
+          }
+        : undefined
+    ].filter((tab) => tab !== undefined)
+  }, [
+    appConfig.allowFixedPricing,
+    appConfig.allowFreePricing,
+    approvedBaseTokens
+  ])
+
+  const [tabs, setTabs] = useState(updateTabs())
+
+  useEffect(() => {
+    setTabs(updateTabs())
+  }, [updateTabs])
 
   return (
     <Tabs
       items={tabs}
       handleTabChange={handleTabChange}
-      defaultIndex={type === 'free' ? 1 : 0}
+      defaultIndex={type === 'dynamic' ? 1 : type === 'free' ? 2 : 0}
       className={styles.pricing}
       showRadio
     />

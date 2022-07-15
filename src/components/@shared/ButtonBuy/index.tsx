@@ -8,6 +8,7 @@ interface ButtonBuyProps {
   disabled: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
+  btSymbol: string
   dtSymbol: string
   dtBalance: string
   datasetLowPoolLiquidity: boolean
@@ -35,6 +36,7 @@ interface ButtonBuyProps {
 // TODO: we need to take a look at these messages
 
 function getConsumeHelpText(
+  btSymbol: string,
   dtBalance: string,
   dtSymbol: string,
   hasDatatoken: boolean,
@@ -51,11 +53,11 @@ function getConsumeHelpText(
       : hasPreviousOrder
       ? `You bought this ${assetType} already allowing you to use it without paying again.`
       : hasDatatoken
-      ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
+      ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying ${btSymbol} again.`
       : lowPoolLiquidity
-      ? `There are not enought ${dtSymbol} available in the pool for the transaction to take place`
+      ? `There are not enough ${dtSymbol} available in the pool for the transaction to take place`
       : isBalanceSufficient === false
-      ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
+      ? `You do not have enough ${btSymbol} in your wallet to purchase this asset.`
       : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
   return text
 }
@@ -63,6 +65,7 @@ function getConsumeHelpText(
 function getComputeAssetHelpText(
   hasPreviousOrder: boolean,
   hasDatatoken: boolean,
+  btSymbol: string,
   dtSymbol: string,
   dtBalance: string,
   lowPoolLiquidity: boolean,
@@ -80,6 +83,7 @@ function getComputeAssetHelpText(
   hasProviderFee?: boolean
 ) {
   const computeAssetHelpText = getConsumeHelpText(
+    btSymbol,
     dtBalance,
     dtSymbol,
     hasDatatoken,
@@ -98,9 +102,9 @@ function getComputeAssetHelpText(
       : hasPreviousOrderSelectedComputeAsset
       ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
       : hasDatatokenSelectedComputeAsset
-      ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
+      ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying ${btSymbol} again.`
       : selectedComputeAssettLowPoolLiquidity
-      ? `There are not enought ${dtSymbolSelectedComputeAsset} available in the pool for the transaction to take place`
+      ? `There are not enough ${dtSymbolSelectedComputeAsset} available in the pool for the transaction to take place`
       : isBalanceSufficient === false
       ? ''
       : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
@@ -120,6 +124,7 @@ export default function ButtonBuy({
   disabled,
   hasPreviousOrder,
   hasDatatoken,
+  btSymbol,
   dtSymbol,
   dtBalance,
   datasetLowPoolLiquidity,
@@ -176,6 +181,7 @@ export default function ButtonBuy({
           <div className={styles.help}>
             {action === 'download'
               ? getConsumeHelpText(
+                  btSymbol,
                   dtBalance,
                   dtSymbol,
                   hasDatatoken,
@@ -189,6 +195,7 @@ export default function ButtonBuy({
               : getComputeAssetHelpText(
                   hasPreviousOrder,
                   hasDatatoken,
+                  btSymbol,
                   dtSymbol,
                   dtBalance,
                   datasetLowPoolLiquidity,

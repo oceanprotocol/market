@@ -460,11 +460,7 @@ export async function getOpcsApprovedTokens(
   const context = getQueryContext(chainId)
 
   try {
-    const response: any = await fetchData(
-      OpcsApprovedTokensQuery,
-      null,
-      context
-    )
+    const response = await fetchData(OpcsApprovedTokensQuery, null, context)
     return response?.data?.opcs[0].approvedTokens
   } catch (error) {
     LoggerInstance.error('Error getOpcsApprovedTokens: ', error.message)

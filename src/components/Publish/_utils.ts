@@ -55,10 +55,6 @@ function transformTags(value: string): string[] {
   return transformedTags
 }
 
-export function transformTokenName(name: string): string {
-  return name?.replace(/([A-Z])/g, ' $1')
-}
-
 export async function transformPublishFormToDdo(
   values: FormPublishData,
   // Those 2 are only passed during actual publishing process

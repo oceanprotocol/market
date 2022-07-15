@@ -5,6 +5,5 @@ interface PoolBalance {
 
 interface UserBalance {
   eth: string
-  ocean: string
   [key: string]: string
 }
