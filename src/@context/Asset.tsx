@@ -25,6 +25,7 @@ export interface AssetProviderValue {
   title: string
   owner: string
   error?: string
+  warning?: string
   isAssetNetwork: boolean
   isV3Asset: boolean
   isOwner: boolean
@@ -52,6 +53,7 @@ function AssetProvider({
   const [owner, setOwner] = useState<string>()
   const [isOwner, setIsOwner] = useState<boolean>()
   const [error, setError] = useState<string>()
+  const [warning, setWarning] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
   const [isV3Asset, setIsV3Asset] = useState<boolean>()
@@ -78,14 +80,37 @@ function AssetProvider({
             '\n\nWe could not find an asset for this DID in the cache. If you just published a new asset, wait some seconds and refresh this page.'
         )
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
-      } else if (asset.nft.state === 3) {
+        return
+      }
+
+      if (asset.nft.state) {
+        let message
+        switch (asset.nft.state) {
+          case 1:
+            message =
+              'This asset is in End-of-life. If you just published this asset, please contact support.'
+            break
+          case 2:
+            message =
+              'This asset has been deprecated. If you just published this asset, please contact support.'
+            break
+          case 3:
+            message =
+              'This asset has been revoked. If you just published this asset, please contact support.'
+            break
+          case 4:
+            message =
+              'This asset has been disabled. If you just published this asset, please contact support.'
+            break
+        }
+
         setIsV3Asset(await checkV3Asset(did, token))
-        setError(
-          `\`${did}\`` +
-            '\n\nThis asset has been reboked. If you just published a new asset, please contact support.'
-        )
+        setWarning(`\`${did}\`` + `\n\n${message}`)
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
-      } else {
+        return
+      }
+
+      if (asset) {
         setError(undefined)
         setAsset((prevState) => ({
           ...prevState,
@@ -185,6 +210,7 @@ function AssetProvider({
           title,
           owner,
           error,
+          warning,
           isInPurgatory,
           purgatoryData,
           loading,
