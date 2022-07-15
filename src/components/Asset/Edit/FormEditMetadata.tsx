@@ -1,9 +1,8 @@
-import React, { ChangeEvent, ReactElement } from 'react'
-import { Field, Form, FormikContextType, useFormikContext } from 'formik'
+import React, { ReactElement } from 'react'
+import { Field, Form } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
 import { useAsset } from '@context/Asset'
-import { MetadataEditForm } from './_types'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,
@@ -25,23 +24,6 @@ export default function FormEditMetadata({
   isComputeDataset: boolean
 }): ReactElement {
   const { oceanConfig } = useAsset()
-  const {
-    validateField,
-    setFieldValue,
-    setFieldTouched
-  }: FormikContextType<Partial<MetadataEditForm>> = useFormikContext()
-
-  // Manually handle change events instead of using `handleChange` from Formik.
-  // Workaround for default `validateOnChange` not kicking in unless user
-  // clicks outside of form field.
-  function handleFieldChange(
-    e: ChangeEvent<HTMLInputElement>,
-    field: InputProps
-  ) {
-    validateField(field.name)
-    setFieldTouched(field.name, true)
-    setFieldValue(field.name, e.target.value)
-  }
 
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
@@ -74,9 +56,6 @@ export default function FormEditMetadata({
               {...field}
               component={Input}
               prefix={field.name === 'price' && oceanConfig?.oceanTokenSymbol}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleFieldChange(e, field)
-              }
             />
           )
       )}

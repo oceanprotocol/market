@@ -1,11 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useFormikContext } from 'formik'
 import Tabs from '@shared/atoms/Tabs'
-import { isValidNumber } from '@utils/numbers'
-import Decimal from 'decimal.js'
 import { FormPublishData } from '../_types'
-import { initialValues } from '../_constants'
-import Dynamic from './Dynamic'
 import Fixed from './Fixed'
 import Free from './Free'
 import content from '../../../../content/price.json'
@@ -22,8 +18,7 @@ export default function PricingFields(): ReactElement {
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { pricing } = values
-  const { price, amountBaseToken, weightOnBaseToken, weightOnDataToken, type } =
-    pricing
+  const { price, type } = pricing
 
   useEffect(() => {
     if (!chainId) return
@@ -47,42 +42,11 @@ export default function PricingFields(): ReactElement {
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
-  // Update ocean amount when price is changed
+  // Update price when price is changed
   useEffect(() => {
-    if (type === 'fixed' || type === 'free') return
-
-    const amountBaseToken =
-      isValidNumber(weightOnBaseToken) && isValidNumber(price) && price > 0
-        ? new Decimal(price).mul(new Decimal(weightOnBaseToken).mul(10)).mul(2)
-        : new Decimal(initialValues.pricing.amountBaseToken)
-
-    setFieldValue('pricing.amountBaseToken', amountBaseToken)
-  }, [price, weightOnBaseToken, type, setFieldValue])
-
-  // Update dataToken value when ocean amount is changed
-  useEffect(() => {
-    if (type === 'fixed' || type === 'free') return
-
-    const amountDataToken =
-      isValidNumber(amountBaseToken) &&
-      isValidNumber(weightOnBaseToken) &&
-      isValidNumber(price) &&
-      isValidNumber(weightOnDataToken) &&
-      price > 0
-        ? new Decimal(amountBaseToken)
-            .dividedBy(new Decimal(weightOnBaseToken))
-            .dividedBy(new Decimal(price))
-            .mul(new Decimal(weightOnDataToken))
-        : new Decimal(initialValues.pricing.amountDataToken)
-
-    setFieldValue('pricing.amountDataToken', amountDataToken)
-  }, [
-    amountBaseToken,
-    weightOnBaseToken,
-    weightOnDataToken,
-    type,
-    setFieldValue
-  ])
+    setFieldValue('pricing.price', price)
+    setFieldValue('pricing.type', type)
+  }, [price, setFieldValue, type])
 
   const tabs = [
     appConfig.allowFixedPricing === 'true'
@@ -91,17 +55,6 @@ export default function PricingFields(): ReactElement {
           content: (
             <Fixed
               content={content.create.fixed}
-              defaultBaseToken={defaultBaseToken}
-            />
-          )
-        }
-      : undefined,
-    appConfig.allowDynamicPricing === 'true'
-      ? {
-          title: content.create.dynamic.title,
-          content: (
-            <Dynamic
-              content={content.create.dynamic}
               defaultBaseToken={defaultBaseToken}
             />
           )
@@ -119,7 +72,7 @@ export default function PricingFields(): ReactElement {
     <Tabs
       items={tabs}
       handleTabChange={handleTabChange}
-      defaultIndex={type === 'dynamic' ? 1 : type === 'free' ? 2 : 0}
+      defaultIndex={type === 'free' ? 1 : 0}
       className={styles.pricing}
       showRadio
     />

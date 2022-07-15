@@ -26,6 +26,7 @@ import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { transformAssetToAssetSelection } from './assetConvertor'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { ComputeEditForm } from 'src/components/Asset/Edit/_types'
+import { getFileDidInfo } from './provider'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -330,8 +331,12 @@ export async function createTrustedAlgorithmList(
   assetChainId: number,
   cancelToken: CancelToken
 ): Promise<PublisherTrustedAlgorithm[]> {
-  if (!selectedAlgorithms || selectedAlgorithms.length === 0) return []
   const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
+
+  // Condition to prevent app from hitting Aquarius with empty DID list
+  // when nothing is selected in the UI.
+  if (!selectedAlgorithms || selectedAlgorithms.length === 0)
+    return trustedAlgorithms
 
   const selectedAssets = await retrieveDDOListByDIDs(
     selectedAlgorithms,
@@ -348,12 +353,18 @@ export async function createTrustedAlgorithmList(
       tag: selectedAlgorithm.metadata.algorithm.container.tag,
       checksum: selectedAlgorithm.metadata.algorithm.container.checksum
     }
+    const filesChecksum = await getFileDidInfo(
+      selectedAlgorithm?.id,
+      selectedAlgorithm?.services?.[0].id,
+      selectedAlgorithm?.services?.[0]?.serviceEndpoint,
+      true
+    )
     const trustedAlgorithm = {
       did: selectedAlgorithm.id,
       containerSectionChecksum: getHash(
         JSON.stringify(sanitizedAlgorithmContainer)
       ),
-      filesChecksum: getHash(selectedAlgorithm.services[0].files)
+      filesChecksum: filesChecksum?.[0]?.checksum
     }
     trustedAlgorithms.push(trustedAlgorithm)
   }

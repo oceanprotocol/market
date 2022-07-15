@@ -1,5 +1,5 @@
 import React from 'react'
-import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
+import { allowFixedPricing } from '../../../app.config.js'
 import { FormPublishData, PublishFeedback, StepContent } from './_types'
 import content from '../../../content/publish/form.json'
 import PricingFields from './Pricing'
@@ -83,13 +83,8 @@ export const initialValues: FormPublishData = {
   pricing: {
     baseToken: { address: '', name: '', symbol: 'OCEAN', decimals: 18 },
     price: 0,
-    type:
-      allowDynamicPricing === 'true'
-        ? 'dynamic'
-        : allowFixedPricing === 'true'
-        ? 'fixed'
-        : 'free',
-    amountDataToken: allowDynamicPricing === 'true' ? 100 : 1000,
+    type: allowFixedPricing === 'true' ? 'fixed' : 'free',
+    amountDataToken: 1000,
     amountBaseToken: 100,
     weightOnBaseToken: '5', // 50% on OCEAN
     weightOnDataToken: '5', // 50% on datatoken
