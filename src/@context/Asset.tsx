@@ -95,9 +95,6 @@ function AssetProvider({
           case 3:
             message = 'This asset has been revoked.'
             break
-          case 4:
-            message = 'This asset has been temporary disabled.'
-            break
         }
 
         setIsV3Asset(await checkV3Asset(did, token))
