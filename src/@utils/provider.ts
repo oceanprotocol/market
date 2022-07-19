@@ -110,5 +110,22 @@ export async function downloadFile(
     asset.services[0].serviceEndpoint,
     web3
   )
-  await downloadFileBrowser(downloadUrl)
+
+  const xhr = new XMLHttpRequest()
+  xhr.responseType = 'blob'
+  xhr.open('GET', downloadUrl)
+  xhr.onload = () => {
+    const fileName = downloadUrl.substr(downloadUrl.lastIndexOf('/'))
+    const blobURL = window.URL.createObjectURL(xhr.response)
+    const a = document.createElement('a')
+    a.href = blobURL
+    a.setAttribute('download', fileName)
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(blobURL)
+  }
+  xhr.send(null)
+
+  // await downloadFileBrowser(downloadUrl)
 }
