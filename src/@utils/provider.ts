@@ -115,7 +115,7 @@ export async function downloadFile(
   xhr.responseType = 'blob'
   xhr.open('GET', downloadUrl)
   xhr.onload = () => {
-    const fileName = downloadUrl.substr(downloadUrl.lastIndexOf('/'))
+    const fileName = 'placeholder'
     const blobURL = window.URL.createObjectURL(xhr.response)
     const a = document.createElement('a')
     a.href = blobURL
