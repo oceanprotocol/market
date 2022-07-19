@@ -83,6 +83,12 @@ const validationPricing = {
     )
     .required('Required'),
   amountDataToken: Yup.number().required('Required'),
+  baseToken: Yup.object().shape({
+    address: Yup.string().required('Required'),
+    name: Yup.string().required('Required'),
+    symbol: Yup.string().required('Required'),
+    decimals: Yup.string()
+  }),
   amountBaseToken: Yup.number()
     .test('validator-min-amountBaseToken', '', function (value) {
       if (this.parent.type === 'fixed') return true
