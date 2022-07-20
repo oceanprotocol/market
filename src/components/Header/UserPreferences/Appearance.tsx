@@ -34,7 +34,7 @@ export default function Appearance({
   }
 
   return (
-    <li className={styles.appearances}>
+    <li className={styles.listItems}>
       <Label htmlFor="">Appearance</Label>
       <BoxSelection
         options={options}

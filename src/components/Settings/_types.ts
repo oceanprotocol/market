@@ -1,6 +1,5 @@
 import { ServiceComputeOptions } from '@oceanprotocol/lib'
 import { NftMetadata } from '@utils/nft'
-import { ReactElement } from 'react'
 import { PriceOptions } from 'src/@types/Price'
 
 interface FileInfo {
@@ -34,6 +33,7 @@ export interface FormSettingsData {
     name: string
     description: string
     author: string
+    status: string
     termsAndConditions: boolean
     tags?: string
     dockerImage?: string
@@ -47,19 +47,18 @@ export interface FormSettingsData {
   assets?: SettingsAssets
 }
 
-export interface StepContent {
-  step: number
-  title: string
-  component: ReactElement
-}
+// export interface StepContent {
+//   step: number
+//   title: string
+//   component: ReactElement
+// }
 
 export interface SettingsAssets {
   [key: string]: {
     name: string
     description: string
-    status: 'success' | 'error' | 'pending' | 'active' | string
-    txCount: number
-    errorMessage?: string
-    txHash?: string
+    status: string
+    display: string
+    options: []
   }
 }
