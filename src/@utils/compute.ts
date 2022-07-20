@@ -347,23 +347,34 @@ export async function createTrustedAlgorithmList(
   if (!selectedAssets || selectedAssets.length === 0) return []
 
   for (const selectedAlgorithm of selectedAssets) {
-    const sanitizedAlgorithmContainer = {
-      entrypoint: selectedAlgorithm.metadata.algorithm.container.entrypoint,
-      image: selectedAlgorithm.metadata.algorithm.container.image,
-      tag: selectedAlgorithm.metadata.algorithm.container.tag,
-      checksum: selectedAlgorithm.metadata.algorithm.container.checksum
-    }
+    // const sanitizedAlgorithmContainer = {
+    //   entrypoint: selectedAlgorithm.metadata.algorithm.container.entrypoint,
+    //   image: selectedAlgorithm.metadata.algorithm.container.image,
+    //   tag: selectedAlgorithm.metadata.algorithm.container.tag,
+    //   checksum: selectedAlgorithm.metadata.algorithm.container.checksum
+    // }
     const filesChecksum = await getFileDidInfo(
       selectedAlgorithm?.id,
       selectedAlgorithm?.services?.[0].id,
       selectedAlgorithm?.services?.[0]?.serviceEndpoint,
       true
     )
+    const containerChecksum =
+      selectedAlgorithm.metadata.algorithm.container.entrypoint +
+      selectedAlgorithm.metadata.algorithm.container.checksum
+    console.log('containerChecksum ==', containerChecksum)
+    console.log(
+      'containerChecksum stringify ==',
+      JSON.stringify(containerChecksum)
+    )
+    console.log('containerChecksum hash ==', getHash(containerChecksum))
+    console.log(
+      'containerChecksum stringify hash ==',
+      getHash(JSON.stringify(containerChecksum))
+    )
     const trustedAlgorithm = {
       did: selectedAlgorithm.id,
-      containerSectionChecksum: getHash(
-        JSON.stringify(sanitizedAlgorithmContainer)
-      ),
+      containerSectionChecksum: getHash(containerChecksum),
       filesChecksum: filesChecksum?.[0]?.checksum
     }
     trustedAlgorithms.push(trustedAlgorithm)
