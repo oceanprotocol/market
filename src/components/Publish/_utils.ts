@@ -1,5 +1,4 @@
 import {
-  approve,
   Config,
   DDO,
   Erc20CreateParams,
@@ -10,14 +9,12 @@ import {
   Metadata,
   NftCreateData,
   NftFactory,
-  PoolCreationParams,
   Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
-import Decimal from 'decimal.js'
 import slugify from 'slugify'
 import Web3 from 'web3'
 import {
@@ -28,7 +25,6 @@ import { FormPublishData } from './_types'
 import {
   marketFeeAddress,
   publisherMarketOrderFee,
-  publisherMarketPoolSwapFee,
   publisherMarketFixedSwapFee
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'

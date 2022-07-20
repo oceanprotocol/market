@@ -66,7 +66,7 @@ const validationService = {
 
 const validationPricing = {
   type: Yup.string()
-    .matches(/fixed|dynamic|free/g, { excludeEmptyString: true })
+    .matches(/fixed|free/g, { excludeEmptyString: true })
     .required('Required'),
   // https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
 
@@ -97,7 +97,7 @@ const validationPricing = {
           : initialValues.pricing.amountOcean.toString()
       return value < parseInt(minValue)
         ? this.createError({
-            message: `Must be more or equal to ${minValue}, as at least ${initialValues.pricing.amountDataToken} datatokens are required for this pool to work properly`
+            message: `Must be more or equal to ${minValue}, as at least ${initialValues.pricing.amountDataToken} datatokens are required to work properly`
           })
         : true
     })

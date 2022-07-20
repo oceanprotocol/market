@@ -37,13 +37,10 @@ const Default = ({
 )
 
 export default function Fees({
-  tooltips,
-  pricingType
+  tooltips
 }: {
   tooltips: { [key: string]: string }
-  pricingType: 'dynamic' | 'fixed'
 }): ReactElement {
-  const [field, meta] = useField('pricing.swapFee')
   const [oceanCommunitySwapFee, setOceanCommunitySwapFee] = useState<string>('')
   const { chainId } = useWeb3()
   const { appConfig } = useMarketMetadata()
@@ -61,25 +58,6 @@ export default function Fees({
   return (
     <>
       <div className={styles.fees}>
-        {pricingType === 'dynamic' && (
-          <Input
-            label={
-              <>
-                Swap Fee
-                <Tooltip content={tooltips.swapFee} />
-              </>
-            }
-            type="number"
-            postfix="%"
-            min="0.1"
-            max="10"
-            step="0.1"
-            size="small"
-            {...field}
-            additionalComponent={<Error meta={meta} />}
-          />
-        )}
-
         <Default
           title="Community Swap Fee"
           name="communityFee"
@@ -91,11 +69,7 @@ export default function Fees({
           title="Marketplace Fee"
           name="marketplaceFee"
           tooltip={tooltips.marketplaceFee}
-          value={
-            pricingType === 'dynamic'
-              ? appConfig?.publisherMarketPoolSwapFee
-              : appConfig?.publisherMarketFixedSwapFee
-          }
+          value={appConfig?.publisherMarketFixedSwapFee}
         />
       </div>
     </>

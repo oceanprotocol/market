@@ -1,5 +1,5 @@
 import React from 'react'
-import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
+import { allowFixedPricing } from '../../../app.config.js'
 import { FormPublishData, PublishFeedback, StepContent } from './_types'
 import content from '../../../content/publish/form.json'
 import PricingFields from './Pricing'
