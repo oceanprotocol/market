@@ -12,24 +12,26 @@ export function Assets({ assets }: { assets: any }): ReactElement {
   console.log('values', values)
   const items = Object.entries(contentAsset).map(([key, value], index) => (
     <>
-      <li key={index}>
-        <h3>{value.name}</h3>
-        <p>{value.description}</p>
-        <div className={styles.display}>
-          <p>{value.status}</p>
-          <div>
-            <p>{value.display}</p>
-            <Field
-              type="checkbox"
-              className={styles.display}
-              {...getFieldContent('type', [])}
-              component={Input}
-              name="Add custom signal"
-              options={Object.values(value.options)}
-            />
+      <>
+        <li key={index}>
+          <h3>{value.name}</h3>
+          <p>{value.description}</p>
+          <div className={styles.display}>
+            <p>{value.status}</p>
+            <div>
+              <p>{value.display}</p>
+              <Field
+                type="checkbox"
+                className={styles.display}
+                {...getFieldContent('type', [])}
+                component={Input}
+                name="Add custom signal"
+                options={Object.values(value.options)}
+              />
+            </div>
           </div>
-        </div>
-      </li>
+        </li>
+      </>
     </>
   ))
 

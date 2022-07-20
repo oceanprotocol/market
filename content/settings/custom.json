@@ -1,0 +1,9 @@
+{
+  "1": {
+    "name": "",
+    "description": "Customize the interface by choosing which signals to display in the view and in the detail view",
+    "source": "Source",
+    "display": "Display all signal in",
+    "options": ["List view", "Detail view"]
+  }
+}

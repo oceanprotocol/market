@@ -1,6 +1,8 @@
 import React, { ReactElement, useState } from 'react'
 import { Form, Formik } from 'formik'
 import { Assets } from './Assets'
+import { Custom } from './Custom'
+
 import styles from './index.module.css'
 import { initialSettingsAssets, initialValues } from '../_constants'
 import { validationSchema } from '../_validation'
@@ -24,6 +26,7 @@ export default function AssetSignalsTab(): ReactElement {
       >
         <Form>
           <Assets assets={assets} />
+          <Custom assets={assets} />
         </Form>
       </Formik>
     </div>
