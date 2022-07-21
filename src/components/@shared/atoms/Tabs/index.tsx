@@ -25,34 +25,47 @@ export default function Tabs({
   showRadio
 }: TabsProps): ReactElement {
   return (
-    <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
-      <TabList className={styles.tabList}>
-        {items.map((item, index) => (
-          <Tab
-            className={styles.tab}
-            key={index}
-            onClick={handleTabChange ? () => handleTabChange(item.title) : null}
-            disabled={item.disabled}
-          >
-            {showRadio ? (
-              <InputRadio
-                name={item.title}
-                type="radio"
-                checked={index === defaultIndex}
-                options={[item.title]}
-                readOnly
-              />
-            ) : (
-              item.title
-            )}
-          </Tab>
-        ))}
-      </TabList>
-      <div className={styles.tabContent}>
-        {items.map((item, index) => (
-          <TabPanel key={index}>{item.content}</TabPanel>
-        ))}
-      </div>
-    </ReactTabs>
+    <>
+      <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
+        <TabList className={styles.tabList}>
+          {items.map((item, index) => (
+            <Tab
+              className={styles.tab}
+              key={index}
+              onClick={
+                handleTabChange ? () => handleTabChange(item.title) : null
+              }
+              disabled={item.disabled}
+            >
+              {showRadio ? (
+                <InputRadio
+                  name={item.title}
+                  type="radio"
+                  checked={index === defaultIndex}
+                  options={[item.title]}
+                  readOnly
+                />
+              ) : (
+                item.title
+              )}
+            </Tab>
+          ))}
+        </TabList>
+        <div className={styles.tabContent}>
+          {items.map((item, index) => (
+            <>
+              <TabPanel key={index}>{item.content}</TabPanel>
+            </>
+          ))}
+        </div>
+        <div className={styles.tabContent}>HELLO</div>
+      </ReactTabs>
+      <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
+        <div className={styles.tab2Content}>
+          <p>asset signal</p>
+          <p>show details</p>
+        </div>
+      </ReactTabs>
+    </>
   )
 }

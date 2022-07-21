@@ -52,6 +52,12 @@
   padding: calc(var(--spacer) / 2);
 }
 
+.tab2Content {
+  padding: calc(var(--spacer) / 2);
+  display: flex;
+  justify-content: space-around;
+}
+
 @media (min-width: 40rem) {
   .tabContent {
     padding: var(--spacer);
