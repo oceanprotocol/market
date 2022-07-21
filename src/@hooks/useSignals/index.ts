@@ -2,7 +2,7 @@ import { AssetSignalItem } from '@context/Signals/_types'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { fetcher, onError, onSuccess } from '@hooks/useSignals/_util'
-// Reusable state and fetch logic for loading signal data to the any page, context or component
+// Reusable state and fetch logic for loading signal data to any page, context or component
 // A hook to fetch signals for all available in a particular signal type list e.g asset list or publisher list
 export default function useSignalsLoader(origin: string | string[]) {
   const [signalItems, setSignalItems] = useState<AssetSignalItem[]>([])
