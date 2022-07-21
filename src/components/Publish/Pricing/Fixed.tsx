@@ -12,7 +12,7 @@ export default function Fixed({ content }: { content: any }): ReactElement {
       <h4 className={styles.title}>Price</h4>
 
       <Price />
-      <Fees tooltips={content.tooltips} pricingType="fixed" />
+      <Fees tooltips={content.tooltips} />
     </>
   )
 }
