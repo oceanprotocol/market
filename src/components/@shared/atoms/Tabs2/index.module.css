@@ -1,3 +1,43 @@
+.assets {
+  padding: 0;
+  /* margin: 0 auto; */
+  max-width: 40rem;
+  padding-top: var(--spacer);
+}
+
+.assets li {
+  display: block;
+  padding-bottom: var(--spacer);
+  margin-bottom: var(--spacer);
+  counter-increment: list-number;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.assets li:last-child {
+  margin-bottom: 0;
+}
+
+.assets .active:before {
+  color: var(--background-content);
+  border-color: var(--brand-purple);
+  border-top-color: var(--brand-violet);
+  animation: loader 0.6s linear infinite;
+}
+
+.assets .success:before {
+  content: '✓';
+  color: var(--brand-white);
+  background: var(--brand-alert-green);
+  border-color: transparent;
+}
+
+.assets .error:before {
+  content: '✕';
+  color: var(--brand-white);
+  background: var(--brand-alert-red);
+  border-color: transparent;
+}
+
 .tabList {
   text-align: center;
   border-bottom: 1px solid var(--border-color);
@@ -52,7 +92,7 @@
   padding: calc(var(--spacer) / 2);
 }
 
-.tab2Content {
+.tab2Content > * {
   padding: calc(var(--spacer) / 2);
   display: flex;
   justify-content: space-around;

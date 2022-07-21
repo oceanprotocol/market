@@ -82,13 +82,13 @@ export default function AssetContent({
 
         <div className={styles.actions}>
           <AssetActions asset={asset} />
-          {/* {isOwner && isAssetNetwork && (
+          {isOwner && isAssetNetwork && (
             <div className={styles.ownerActions}>
               <Link href={`/asset/${asset?.id}/edit`}>
                 <a>Edit</a>
               </Link>
             </div>
-          )} */}
+          )}
         </div>
       </article>
     </>
