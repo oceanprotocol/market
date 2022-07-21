@@ -3,7 +3,7 @@
   margin-top: calc(var(--spacer) / 1.5);
   padding: calc(var(--spacer) / 1.5);
   background: var(--background-highlight);
-  margin-bottom: -2rem;
+  margin-bottom: -1rem;
 }
 
 .actions [class*='rdt_Pagination'] {
