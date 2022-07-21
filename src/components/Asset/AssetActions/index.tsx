@@ -1,8 +1,10 @@
+/* eslint-disable react/no-children-prop */
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
+import Tabs2 from '@shared/atoms/Tabs2'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
 import Trade from './Trade'
@@ -141,6 +143,7 @@ export default function AssetActions({
     <>
       <PoolProvider>
         <Tabs items={tabs} className={styles.actions} />
+        <Tabs2 items={tabs} className={styles.actions} />
         <Web3Feedback
           networkId={asset?.chainId}
           isAssetNetwork={isAssetNetwork}
