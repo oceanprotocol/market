@@ -40,9 +40,6 @@ export default function PriceUnit({
           <div>
             {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
             <span className={styles.symbol}>{symbol}</span>
-            {type && type === 'dynamic' && (
-              <Badge label="pool" className={styles.badge} />
-            )}
           </div>
           {conversion && <Conversion price={price} />}
         </>
