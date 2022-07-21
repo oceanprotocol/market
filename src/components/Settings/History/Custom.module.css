@@ -50,5 +50,19 @@
 
 .sectionElements {
   justify-content: start;
-  width: 50%;
+  width: 30%;
+}
+
+.sectionElementsRight {
+  width: 70%;
+}
+
+.sectionElementsBtn {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sectionElementsBtn:first-child {
+  justify-content: start;
+  margin-right: 9rem;
 }

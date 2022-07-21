@@ -1,7 +1,14 @@
-import { Field } from 'formik'
+import { Field, useFormikContext } from 'formik'
 import Input from '@shared/FormInput'
 import React, { ReactElement, useState } from 'react'
+import { FormSettingsData } from '../_types'
+import { getFieldContent } from '../_utils'
 import styles from './Custom.module.css'
+import contentAsset from '../../../../content/settings/custom.json'
+import Button from '@shared/atoms/Button'
+export function Custom({ assets }: { assets: any }): ReactElement {
+  const { values } = useFormikContext<FormSettingsData>()
+
 
 export function Custom(): ReactElement {
   const [open, setOpen] = useState(false)
@@ -20,42 +27,43 @@ export function Custom(): ReactElement {
 
   const itemsOpened = (index: any) => (
     <li key={index}>
-      <h3>Add Custom Signal</h3>
+      <h3>add custom signal</h3>
       <section className={styles.section}>
         <div className={styles.sectionElements}>
           <p>Signal Name</p>
         </div>
-        <div className={styles.sectionElements}>
-          <Field className={styles.display} component={Input} name="title" />
-          <p>
-            Enter a concise name, this name will be used to manege your signals
-            settings
-          </p>
+        <div className={styles.sectionElementsRight}>
+          <Field
+            className={styles.display}
+            {...getFieldContent('type', [])}
+            component={Input}
+            name="title"
+          />
+          <p>TEXT</p>
         </div>
       </section>
       <section className={styles.section}>
         <div className={styles.sectionElements}>
           <p>API URL</p>
         </div>
-        <div className={styles.sectionElements}>
-          <Field className={styles.display} component={Input} name="origin" />
-          <p>
-            Enter the URL of the API endpoint which you want to add. The URL
-            must contain the placeholder <b>$assetid</b> in order to pass to the
-            API the reference of the data asset. Optionally you can also use{' '}
-            <b>$usersaddress</b> if the API needs the address of the connected
-            user to compute the signal value and <b>$accountid</b> in order to
-            pass a reference of the publisher.
-          </p>
-          <div className={styles.sectionElements}>
-            <button type="submit">add signal</button>
-            <button
+        <div className={styles.sectionElementsRight}>
+          <Field
+            className={styles.display}
+            {...getFieldContent('type', [])}
+            component={Input}
+            name="origin"
+          />
+          <p>TEXT</p>
+          <div className={styles.sectionElementsBtn}>
+            <Button style="primary">add signal</Button>
+            <Button
+              style="primary"
               onClick={() => {
                 setOpen(!open)
               }}
             >
               cancel
-            </button>
+            </Button>
           </div>
         </div>
       </section>
