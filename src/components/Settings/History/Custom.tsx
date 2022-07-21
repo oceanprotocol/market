@@ -5,7 +5,7 @@ import { FormSettingsData } from '../_types'
 import { getFieldContent } from '../_utils'
 import styles from './Custom.module.css'
 import contentAsset from '../../../../content/settings/custom.json'
-
+import Button from '@shared/atoms/Button'
 export function Custom({ assets }: { assets: any }): ReactElement {
   const { values } = useFormikContext<FormSettingsData>()
 
@@ -30,7 +30,7 @@ export function Custom({ assets }: { assets: any }): ReactElement {
         <div className={styles.sectionElements}>
           <p>Signal Name</p>
         </div>
-        <div className={styles.sectionElements}>
+        <div className={styles.sectionElementsRight}>
           <Field
             className={styles.display}
             {...getFieldContent('type', [])}
@@ -44,7 +44,7 @@ export function Custom({ assets }: { assets: any }): ReactElement {
         <div className={styles.sectionElements}>
           <p>API URL</p>
         </div>
-        <div className={styles.sectionElements}>
+        <div className={styles.sectionElementsRight}>
           <Field
             className={styles.display}
             {...getFieldContent('type', [])}
@@ -52,15 +52,16 @@ export function Custom({ assets }: { assets: any }): ReactElement {
             name="Input Field"
           />
           <p>TEXT</p>
-          <div className={styles.sectionElements}>
-            <button>add signal</button>
-            <button
+          <div className={styles.sectionElementsBtn}>
+            <Button style="primary">add signal</Button>
+            <Button
+              style="primary"
               onClick={() => {
                 setOpen(!open)
               }}
             >
               cancel
-            </button>
+            </Button>
           </div>
         </div>
       </section>
