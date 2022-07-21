@@ -3,7 +3,7 @@ import {
   SignalOriginItem,
   SignalParams
 } from '@context/Signals/_types'
-import { fetchAllData, fetchData } from '@utils/fetch'
+import { fetchData } from '@utils/fetch'
 
 export function getURLParams(urlParams: SignalParams) {
   let paramString = ''
@@ -35,18 +35,6 @@ export async function fetchSignals(url: string): Promise<any[]> {
   } catch (error) {
     console.log(error)
     throw Error('Something went wrong with the signal fetch - ' + url)
-  }
-}
-export async function fetchMultipleSignals(urls: string[]): Promise<any[]> {
-  console.log(urls)
-  try {
-    console.log('isUrlArray', urls)
-    if (urls.length > 0 && Array.isArray(urls)) {
-      return await fetchAllData(urls)
-    }
-  } catch (error) {
-    console.log(error)
-    throw Error('Something went wrong with the signal fetch')
   }
 }
 

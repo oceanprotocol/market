@@ -63,8 +63,13 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
       const defaultSignalUrls: string[] = signals.map((signalOrigin) =>
         getSignalUrls(signalOrigin)
       )
+      const compareUrl = new Set()
+      refSignalUrls.current.forEach((signal, index) => {
+        compareUrl.add(signal)
+      })
       defaultSignalUrls.forEach((url) => {
         console.log(defaultSignalUrls)
+        if (compareUrl.has(url)) return
         setSignalUrls((signalUrlArray) => {
           console.log([...signalUrlArray, url])
           return [...signalUrlArray, url]
@@ -74,12 +79,17 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
   }, [refSignals.current])
   useEffect(() => {
     console.log('useEffect to set origin')
+    const compareUrl = new Set()
+    refSignalUrls.current.forEach((signal, index) => {
+      compareUrl.add(signal)
+    })
     if (signalUrls.length > 0) {
       console.table(signalUrls)
       setOrigin(signalUrls)
     }
   }, [refSignalUrls.current])
-
+  // we can use multiple useSignalsLoaders(origins) in the context based on the various queries that load assetIds
+  // publisher ids, and user addresses at different times
   const {
     assetIds,
     setAssetIds,
@@ -96,6 +106,7 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
           userAddresses,
           assetIds,
           setAssetIds,
+          signals,
           publisherIds,
           signalItems,
           signalUrls,
