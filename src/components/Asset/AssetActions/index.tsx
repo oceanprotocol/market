@@ -4,8 +4,6 @@ import Consume from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
-import Pool from './Pool'
-import Trade from './Trade'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import Web3Feedback from '@shared/Web3Feedback'
@@ -135,9 +133,6 @@ export default function AssetActions({
   )
 
   const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
-
-  asset?.accessDetails?.type === 'dynamic' &&
-    tabs.push({ title: 'Pool', content: <Pool /> })
 
   return (
     <>
