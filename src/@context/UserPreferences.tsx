@@ -10,7 +10,7 @@ import { LoggerInstance, LogLevel } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
 import { useMarketMetadata } from './MarketMetadata'
 import { SignalOriginItem, SignalSettingsItem } from '@context/Signals/_types'
-import { defaultSignalSettings } from '@hooks/useSignals/_constants'
+import { signalSettingsConfig } from '@hooks/useSignals/_constants'
 
 interface UserPreferencesValue {
   debug: boolean
@@ -30,11 +30,10 @@ interface UserPreferencesValue {
   setInfiniteApproval: (value: boolean) => void
   locale: string
   signalSettings?: SignalSettingsItem
-  defaultSignals: SignalOriginItem[]
-  customSignals: SignalOriginItem[]
+  signals: SignalOriginItem[]
   setSignalSettings(signalSettings: SignalSettingsItem): void
-  addCustomSignalSetting(signalSetting: SignalOriginItem): void
-  removeCustomSignalSetting(signalSettingId: string): void
+  addSignalSetting(signalSetting: SignalOriginItem): void
+  removeSignalSetting(signalSettingId: string): void
 }
 
 const UserPreferencesContext = createContext(null)
@@ -86,7 +85,7 @@ function UserPreferencesProvider({
   )
   // Initialize signal settings
   const [signalSettings, setSignalSettings] = useState<SignalSettingsItem>(
-    localStorage?.signalSettings || { ...defaultSignalSettings }
+    localStorage?.signalSettings || { ...signalSettingsConfig }
   )
 
   // Write values to localStorage on change
@@ -111,7 +110,7 @@ function UserPreferencesProvider({
     infiniteApproval,
     signalSettings
   ])
-  const { defaultSignals, customSignals } = signalSettings
+  const { signals } = signalSettings
   // Set ocean.js log levels, default: Error
   useEffect(() => {
     debug === true
@@ -124,19 +123,19 @@ function UserPreferencesProvider({
     if (!window) return
     setLocale(window.navigator.language)
   }, [])
-  function addCustomSignalSetting(signalOriginItem: SignalOriginItem) {
+  function addSignalSetting(signalOriginItem: SignalOriginItem) {
     setSignalSettings((prevSignalSettings) => {
       const newSignalSettings = { ...prevSignalSettings }
-      newSignalSettings.customSignals = [
-        ...newSignalSettings.customSignals,
+      newSignalSettings.signals = [
+        ...newSignalSettings.signals,
         signalOriginItem
       ]
       return { ...newSignalSettings }
     })
   }
-  function removeCustomSignalSetting(signalOriginItemId: string) {
+  function removeSignalSetting(signalOriginItemId: string) {
     const newSignalSettings = { ...signalSettings }
-    newSignalSettings.customSignals = newSignalSettings.customSignals.filter(
+    newSignalSettings.signals = newSignalSettings.signals.filter(
       (signalOriginItem) => signalOriginItem.id !== signalOriginItemId
     )
     setSignalSettings((prevSignalSettings) => {
@@ -178,10 +177,9 @@ function UserPreferencesProvider({
           privacyPolicySlug,
           showPPC,
           infiniteApproval,
-          defaultSignals,
-          customSignals,
-          addCustomSignalSetting,
-          removeCustomSignalSetting,
+          signals,
+          addSignalSetting,
+          removeSignalSetting,
           setInfiniteApproval,
           setChainIds,
           setDebug,

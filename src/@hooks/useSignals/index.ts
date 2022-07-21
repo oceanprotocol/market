@@ -1,17 +1,12 @@
-import { SignalItem, SignalOriginItem } from '@context/Signals/_types'
+import { AssetSignalItem, SignalOriginItem } from '@context/Signals/_types'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
-import {
-  fetchMultipleSignals,
-  fetchSignals,
-  onError,
-  onSuccess
-} from '@hooks/useSignals/_util'
+import { fetcher, onError, onSuccess } from '@hooks/useSignals/_util'
 // Reusable state logic for loading signal data to the home page
 // A hook to fetch signals for all available assets
 export default function useSignalsLoader(origin: string | string[]) {
   // TODO adapt the data from all signals with either enabled or disabled
-  const [signalItems, setSignalItems] = useState<SignalItem[]>([])
+  const [signalItems, setSignalItems] = useState<AssetSignalItem[]>([])
   const [signalOriginsList, setSignalsOriginsList] = useState<
     SignalOriginItem[]
   >([])
@@ -27,23 +22,23 @@ export default function useSignalsLoader(origin: string | string[]) {
    * @memberOf useSignalsLoader
    * */
   console.log('fetchSignalData', origin)
-  let fetcher: (urls: string[]) => Promise<any[]> = fetchSignals
-  if (Array.isArray(origin)) {
-    fetcher = fetchMultipleSignals
-  }
-  const { data, error, isValidating } = useSWR(origin, fetcher, {
-    refreshInterval: 120000,
-    onSuccess,
-    onError
-  })
+  const { data, error, isValidating } = useSWR(
+    origin[0].length > 0 ? origin : null,
+    fetcher,
+    {
+      refreshInterval: 120000,
+      onSuccess,
+      onError
+    }
+  )
   useEffect(() => {
     setLoading((!data && !error) || isValidating)
     if (data) {
       console.log('Signal data available', data)
-      setSignalItems(data)
+      setSignalItems([...data])
     }
     console.log(loading)
-  }, [data, error, isValidating])
+  }, [data, error, isValidating, loading])
   return {
     signalItems,
     assetIds,

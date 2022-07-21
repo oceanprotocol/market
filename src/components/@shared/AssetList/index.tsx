@@ -11,7 +11,7 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import { Asset } from '@oceanprotocol/lib'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
-import { SignalItem } from '@context/Signals/_types'
+import { AssetSignalItem } from '@context/Signals/_types'
 
 const cx = classNames.bind(styles)
 
@@ -32,7 +32,7 @@ declare type AssetListProps = {
   onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
   noPublisher?: boolean
-  signals?: SignalItem[]
+  signalItems?: AssetSignalItem[]
 }
 
 export default function AssetList({
@@ -43,14 +43,14 @@ export default function AssetList({
   isLoading,
   onPageChange,
   className,
-  noPublisher
+  noPublisher,
+  signalItems
 }: AssetListProps): ReactElement {
   const { chainIds } = useUserPreferences()
   const { accountId } = useWeb3()
   const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
   const [loading, setLoading] = useState<boolean>(isLoading)
   const isMounted = useIsMounted()
-
   useEffect(() => {
     if (!assets) return
     setAssetsWithPrices(assets as AssetExtended[])

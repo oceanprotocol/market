@@ -1,6 +1,6 @@
-import { SignalItem, SignalSettingsItem } from '@context/Signals/_types'
+import { AssetSignalItem, SignalSettingsItem } from '@context/Signals/_types'
 
-const nftSignalItems: SignalItem[] = [
+const nftSignalItems: AssetSignalItem[] = [
   {
     assetId: '0xtest',
     name: 'Rug Pull Index',
@@ -37,15 +37,27 @@ const nftSignalItems: SignalItem[] = [
   }
 ]
 
-const defaultSignalSettings: SignalSettingsItem = {
+const signalSettingsConfig: SignalSettingsItem = {
   lastUpdated: new Date().toDateString(),
-  customSignals: [],
-  defaultSignals: [
+  signals: [
     {
       id: 'sample_qualitative_signal',
       title: 'Sample Qualitative Signal',
       origin:
-        'https://62c5a9c8134fa108c2591da2.mockapi.io/api/rugs/v1/sample-signals/',
+        'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/',
+      isCustom: false,
+      signals: [],
+      urlParams: {
+        assetIds: [],
+        publisherIds: [],
+        userAddresses: []
+      }
+    },
+    {
+      id: 'sample_defi_signal',
+      title: 'Sushi Defi Signal',
+      origin:
+        'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi/',
       isCustom: false,
       signals: [],
       urlParams: {
@@ -57,6 +69,6 @@ const defaultSignalSettings: SignalSettingsItem = {
   ],
   enabled: true
 }
-const defiSignalItems: SignalItem[] = []
+const defiSignalItems: AssetSignalItem[] = []
 
-export { nftSignalItems, defiSignalItems, defaultSignalSettings }
+export { nftSignalItems, defiSignalItems, signalSettingsConfig }

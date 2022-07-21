@@ -1,9 +1,9 @@
 /**
  * an object that describes a signal for a given asset
  * @export
- * @interface SignalItem
+ * @interface AssetSignalItem
  */
-export interface SignalItem {
+export interface AssetSignalItem {
   /**
    * an identifier of the asset retrieved from the origin
    * @type {string}
@@ -68,10 +68,10 @@ export interface SignalOriginItem {
   origin: string
   /**
    * a list of signals retrieved from the given origin
-   * @type {Array<SignalItem>}
+   * @type {Array<AssetSignalItem>}
    * @memberof SignalOriginItem
    */
-  signals: Array<SignalItem>
+  signals: Array<AssetSignalItem>
   /**
    * a boolean representing when the signal should be displayed on the list page
    * @type {Boolean}
@@ -104,8 +104,7 @@ export interface SignalSettingsItem {
    * @type {SignalOriginItem}
    * @memberof SignalSettingsItem
    */
-  customSignals: SignalOriginItem[]
-  defaultSignals: SignalOriginItem[]
+  signals: SignalOriginItem[]
   enabled: boolean
 }
 

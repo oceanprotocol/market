@@ -1,5 +1,5 @@
 import {
-  SignalItem,
+  AssetSignalItem,
   SignalOriginItem,
   SignalParams
 } from '@context/Signals/_types'
@@ -27,11 +27,14 @@ export function getSignalUrls(signalOriginItem: SignalOriginItem) {
  * @returns SignalOriginItem[]
  * @memberOf useSignalsLoader
  * */
-export async function fetchSignals(url: string): Promise<SignalItem[]> {
+export async function fetchSignals(url: string): Promise<any[]> {
+  console.log('url', url)
+  if (url.length === 0) throw Error('empty url')
   try {
     return await fetchData(url)
   } catch (error) {
     console.log(error)
+    throw Error('Something went wrong with the signal fetch - ' + url)
   }
 }
 export async function fetchMultipleSignals(urls: string[]): Promise<any[]> {
@@ -43,10 +46,20 @@ export async function fetchMultipleSignals(urls: string[]): Promise<any[]> {
     }
   } catch (error) {
     console.log(error)
+    throw Error('Something went wrong with the signal fetch')
   }
 }
 
-export async function onSuccess(data: SignalItem[]) {
+export function fetcher(...urls: any[]) {
+  // create a closure method to use the fetch function to load data from an API
+  const fetchSignal = (u: string) => fetchSignals(u)
+  if (urls.length > 1) {
+    return Promise.all(urls.map(fetchSignal))
+  }
+  return fetchSignal(urls[0])
+}
+
+export async function onSuccess(data: AssetSignalItem[]) {
   if (!data) return
   console.log('[signals] Got new signal data.', data)
   return data

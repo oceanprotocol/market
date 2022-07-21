@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '@shared/AssetList'
 import Button from '@shared/atoms/Button'
 import Bookmarks from './Bookmarks'
@@ -14,9 +14,7 @@ import styles from './index.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
-import { SignalsContext } from '@context/Signals'
-
-// import useSignalsLoader from '../../@hooks/useSignals'
+import { useSignal } from '@context/Signals'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -59,7 +57,7 @@ function SectionQueryResult({
   const [loading, setLoading] = useState<boolean>()
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
-  const { assetIds, setAssetIds, signals } = useContext(SignalsContext)
+  const { setAssetIds, signalItems } = useSignal()
 
   useEffect(() => {
     if (!query) return
@@ -114,7 +112,7 @@ function SectionQueryResult({
         assets={result?.results}
         showPagination={false}
         isLoading={loading || !query}
-        signals={signals}
+        signalItems={signalItems}
       />
 
       {action && action}
