@@ -58,13 +58,6 @@ export default function Tabs({
             </>
           ))}
         </div>
-        <div className={styles.tabContent}>HELLO</div>
-      </ReactTabs>
-      <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
-        <div className={styles.tab2Content}>
-          <p>asset signal</p>
-          <p>show details</p>
-        </div>
       </ReactTabs>
     </>
   )
