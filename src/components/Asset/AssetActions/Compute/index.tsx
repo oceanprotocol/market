@@ -318,30 +318,6 @@ export default function Compute({
 
       setComputeStatusText(
         getComputeFeedback(
-          asset.accessDetails.baseToken?.symbol,
-          asset.accessDetails.datatoken?.symbol,
-          asset.metadata.type
-        )[
-          asset.accessDetails?.type === 'fixed'
-            ? 2
-            : asset.accessDetails?.type === 'dynamic'
-            ? 1
-            : 3
-        ]
-      )
-      const datasetOrderTx = await handleComputeOrder(
-        web3,
-        asset,
-        datasetOrderPriceAndFees,
-        accountId,
-        hasDatatoken,
-        initializedProviderResponse.datasets[0],
-        computeEnv.consumerAddress
-      )
-      if (!datasetOrderTx) throw new Error('Failed to order dataset.')
-
-      setComputeStatusText(
-        getComputeFeedback(
           selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
           selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
           selectedAlgorithmAsset.metadata.type
@@ -364,6 +340,30 @@ export default function Compute({
         computeEnv.consumerAddress
       )
       if (!algorithmOrderTx) throw new Error('Failed to order algorithm.')
+
+      setComputeStatusText(
+        getComputeFeedback(
+          asset.accessDetails.baseToken?.symbol,
+          asset.accessDetails.datatoken?.symbol,
+          asset.metadata.type
+        )[
+          asset.accessDetails?.type === 'fixed'
+            ? 2
+            : asset.accessDetails?.type === 'dynamic'
+            ? 1
+            : 3
+        ]
+      )
+      const datasetOrderTx = await handleComputeOrder(
+        web3,
+        asset,
+        datasetOrderPriceAndFees,
+        accountId,
+        hasDatatoken,
+        initializedProviderResponse.datasets[0],
+        computeEnv.consumerAddress
+      )
+      if (!datasetOrderTx) throw new Error('Failed to order dataset.')
 
       LoggerInstance.log('[compute] Starting compute job.')
       const computeAsset: ComputeAsset = {
