@@ -82,13 +82,8 @@ export const initialValues: FormPublishData = {
   ],
   pricing: {
     price: 0,
-    type:
-      allowDynamicPricing === 'true'
-        ? 'dynamic'
-        : allowFixedPricing === 'true'
-        ? 'fixed'
-        : 'free',
-    amountDataToken: allowDynamicPricing === 'true' ? 100 : 1000,
+    type: allowFixedPricing === 'true' ? 'fixed' : 'free',
+    amountDataToken: 1000,
     amountOcean: 100,
     weightOnOcean: '5', // 50% on OCEAN
     weightOnDataToken: '5', // 50% on datatoken

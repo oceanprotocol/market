@@ -14,6 +14,7 @@ import styles from './index.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
+import PublishersWithMostSales from './PublishersWithMostSales'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -66,7 +67,8 @@ function SectionQueryResult({
           results: [],
           page: 0,
           totalPages: 0,
-          totalResults: 0
+          totalResults: 0,
+          aggregations: undefined
         }
         setResult(result)
         setLoading(false)
@@ -153,6 +155,8 @@ export default function HomePage(): ReactElement {
           </Button>
         }
       />
+
+      <PublishersWithMostSales title="Publishers With Most Sales" />
     </>
   )
 }

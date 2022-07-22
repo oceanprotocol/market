@@ -7,6 +7,7 @@
   "scripts": {
     "start": "npm run pregenerate && next dev -p 8000",
     "build": "npm run pregenerate && next build",
+    "build:static": "npm run build && next export",
     "serve": "serve -s public/",
     "pregenerate": "bash scripts/pregenerate.sh",
     "test": "npm run pregenerate && npm run lint && npm run type-check && npm run jest",
@@ -25,7 +26,7 @@
     "@coingecko/cryptoformat": "^0.5.4",
     "@loadable/component": "^5.15.2",
     "@oceanprotocol/art": "^3.2.0",
-    "@oceanprotocol/lib": "^1.1.5",
+    "@oceanprotocol/lib": "^1.1.6",
     "@oceanprotocol/typographies": "^0.1.0",
     "@tippyjs/react": "^4.2.6",
     "@urql/exchange-refocus": "^0.2.5",
