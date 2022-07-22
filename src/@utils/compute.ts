@@ -347,12 +347,6 @@ export async function createTrustedAlgorithmList(
   if (!selectedAssets || selectedAssets.length === 0) return []
 
   for (const selectedAlgorithm of selectedAssets) {
-    // const sanitizedAlgorithmContainer = {
-    //   entrypoint: selectedAlgorithm.metadata.algorithm.container.entrypoint,
-    //   image: selectedAlgorithm.metadata.algorithm.container.image,
-    //   tag: selectedAlgorithm.metadata.algorithm.container.tag,
-    //   checksum: selectedAlgorithm.metadata.algorithm.container.checksum
-    // }
     const filesChecksum = await getFileDidInfo(
       selectedAlgorithm?.id,
       selectedAlgorithm?.services?.[0].id,
