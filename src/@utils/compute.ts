@@ -362,16 +362,6 @@ export async function createTrustedAlgorithmList(
     const containerChecksum =
       selectedAlgorithm.metadata.algorithm.container.entrypoint +
       selectedAlgorithm.metadata.algorithm.container.checksum
-    console.log('containerChecksum ==', containerChecksum)
-    console.log(
-      'containerChecksum stringify ==',
-      JSON.stringify(containerChecksum)
-    )
-    console.log('containerChecksum hash ==', getHash(containerChecksum))
-    console.log(
-      'containerChecksum stringify hash ==',
-      getHash(JSON.stringify(containerChecksum))
-    )
     const trustedAlgorithm = {
       did: selectedAlgorithm.id,
       containerSectionChecksum: getHash(containerChecksum),
