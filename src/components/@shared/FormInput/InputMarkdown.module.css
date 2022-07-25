@@ -1,5 +1,5 @@
 .icon {
-  fill: var(--color-secondary);
+  fill: var(—-font-color-text);
   transition: 0.15s ease-out;
   width: 10px;
   height: 10px;
@@ -17,9 +17,8 @@
 
 .markdownToolbar > * {
   padding: calc(var(--spacer) / 3);
-  color: var(--background-body);
   border-color: var(--background-body);
-  background: var(--font-color-heading);
+  background: var(--background-highlight);
   margin-right: calc(var(--spacer) / 3);
   font-size: var(--font-size-base);
   cursor: pointer;
