@@ -100,7 +100,7 @@ function AssetProvider({
 
         setTitle(`This asset has been flagged as "${state}" by the publisher`)
         setIsV3Asset(await checkV3Asset(did, token))
-        setWarning(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
+        setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
         return
       }
