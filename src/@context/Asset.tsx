@@ -84,21 +84,23 @@ function AssetProvider({
       }
 
       if (asset.nft.state) {
-        let message
+        // handle nft states as documented in https://docs.oceanprotocol.com/concepts/did-ddo/#state
+        let state
         switch (asset.nft.state) {
           case 1:
-            message = 'This asset is in End-of-life.'
+            state = 'end-of-life'
             break
           case 2:
-            message = 'This asset has been deprecated.'
+            state = 'deprecated'
             break
           case 3:
-            message = 'This asset has been revoked.'
+            state = 'revoked'
             break
         }
 
+        setTitle(`This asset has been flagged as "${state}" by the publisher`)
         setIsV3Asset(await checkV3Asset(did, token))
-        setWarning(`\`${did}\`` + `\n\n${message}`)
+        setWarning(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
         return
       }
