@@ -13,7 +13,6 @@ import {
   PoolShares_poolShares as PoolShare
 } from '../@types/subgraph/PoolShares'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
-import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
 import { calcSingleOutGivenPoolIn } from './pool'
 import Decimal from 'decimal.js'
@@ -159,24 +158,6 @@ const UserTokenOrders = gql`
       }
       createdTimestamp
       tx
-    }
-  }
-`
-
-const UserSalesQuery = gql`
-  query UserSalesQuery($user: ID!) {
-    users(where: { id: $user }) {
-      id
-      totalSales
-    }
-  }
-`
-
-const TopSalesQuery = gql`
-  query TopSalesQuery {
-    users(first: 20, orderBy: totalSales, orderDirection: desc) {
-      id
-      totalSales
     }
   }
 `
