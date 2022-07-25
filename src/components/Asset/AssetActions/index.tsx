@@ -143,7 +143,7 @@ export default function AssetActions({
     <>
       <PoolProvider>
         <Tabs items={tabs} className={styles.actions} />
-        <Tabs2 items={tabs} className={styles.actions} />
+        <Tabs2 className={styles.actions} />
         <Web3Feedback
           networkId={asset?.chainId}
           isAssetNetwork={isAssetNetwork}

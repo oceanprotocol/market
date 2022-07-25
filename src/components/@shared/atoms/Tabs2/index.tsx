@@ -1,51 +1,76 @@
-import { Field, useFormikContext } from 'formik'
-import React, { ReactElement, ReactNode, useState } from 'react'
-import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
+import React, { ReactElement, useState } from 'react'
+import { Tabs as ReactTabs } from 'react-tabs'
 import styles from './index.module.css'
-import InputRadio from '@shared/FormInput/InputRadio'
 import contentAsset from '../../../../../content/settings/assets.json'
-
-export interface TabsItem {
-  title: string
-  content: ReactNode
-  disabled?: boolean
-}
+import Arrow from '@images/arrow.svg'
 
 export interface TabsProps {
-  items: TabsItem[]
   className?: string
-  handleTabChange?: (tabName: string) => void
   defaultIndex?: number
-  showRadio?: boolean
 }
 
 export default function Tabs2({
-  items,
   className,
-  handleTabChange,
-  defaultIndex,
-  showRadio
+  defaultIndex
 }: TabsProps): ReactElement {
-  const items2 = Object.entries(contentAsset).map(([key, value], index) => (
-    <>
+  const [openUp, setOpenUp] = useState(false)
+
+  const itemsClose = (index: any) =>
+    Object.entries(contentAsset).map(([key, value], index) => (
       <>
-        <li key={index}>
-          <h3>{value.name}</h3>
-        </li>
+        <>
+          {value.name.length > 0 ? (
+            <li key={index}>
+              <div className={styles.assetListTitle}>
+                <p>{value.name}</p>
+                <div>{value.number}</div>
+              </div>
+            </li>
+          ) : null}
+        </>
       </>
-    </>
-  ))
+    ))
+
+  const itemsOpen = (index: any) =>
+    Object.entries(contentAsset).map(([key, value], index) => (
+      <>
+        <>
+          {value.name.length > 0 ? (
+            <li key={index}>
+              <div className={styles.assetListTitle}>
+                <p>{value.name}</p>
+                <div>{value.number}</div>
+              </div>
+              <p>{value.description}</p>
+              <p>{value.source}</p>
+            </li>
+          ) : null}
+        </>
+      </>
+    ))
+
   return (
     <>
       <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
         <div className={styles.tab2Content}>
-          <div className={styles.tab2Content}>
-            <p>asset signal</p>
-            <p>show details</p>
+          <div>
+            <h4>asset signal</h4>
+            <p>
+              {openUp ? 'HIDE DETAILS' : 'SHOW DETAILS'}
+              <div
+                onClick={() => {
+                  setOpenUp(!openUp)
+                }}
+              >
+                <Arrow />
+              </div>
+            </p>
           </div>
           <div>
             {' '}
-            <ol className={styles.assets}>{items2}</ol>
+            <ol className={styles.assets}>
+              {openUp ? itemsOpen(!openUp) : itemsClose(!openUp)}
+            </ol>
           </div>
         </div>
       </ReactTabs>

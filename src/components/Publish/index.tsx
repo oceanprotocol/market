@@ -19,6 +19,7 @@ import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
+import Tabs2 from '@shared/atoms/Tabs2'
 
 // TODO: restore FormikPersist, add back clear form action
 // const formName = 'ocean-publish-form'
@@ -290,6 +291,8 @@ export default function PublishPage({
             <Form className={styles.form} ref={scrollToRef}>
               <Navigation />
               <Steps feedback={feedback} />
+              <Tabs2 className={styles.actions} />
+
               <Actions scrollToRef={scrollToRef} did={did} />
             </Form>
             {debug && <Debug />}

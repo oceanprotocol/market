@@ -7,17 +7,19 @@
     "options": ["List view", "Detail view"]
   },
   "2": {
-    "name": "Rag pull index - Rating",
+    "name": "Rug pull index - Rating",
     "description": "Rating (0-100%) is calculated by finding the best ever 'inequality' (low is better) and the highest ever 'Liquidity'.",
     "source": "Source",
     "display": "Display in",
+    "number": "3.9%",
     "options": ["List view", "Detail view"]
   },
   "3": {
-    "name": "Rag pull index - Inequality",
+    "name": "Rug pull index - Inequality",
     "description": "Inequality is a guini coefficient",
     "status": "Source",
     "display": "Display in",
+    "number": "88.4",
     "options": ["List view", "Detail view"]
   },
   "4": {
@@ -25,13 +27,7 @@
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in",
     "status": "Source",
     "display": "Display in",
-    "options": ["List view", "Detail view"]
-  },
-  "5": {
-    "name": "Add custom signal",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in",
-    "status": "Source",
-    "display": "Display in",
+    "number": "5",
     "options": ["List view", "Detail view"]
   }
 }
