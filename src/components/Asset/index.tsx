@@ -28,13 +28,13 @@ export default function AssetDetails({ uri }: { uri: string }): ReactElement {
     <Page title={pageTitle} uri={uri}>
       <AssetContent asset={asset} />
     </Page>
-  ) : warning && isV3Asset === false ? (
+  ) : (warning || error) && isV3Asset === false ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
-      <Alert title={pageTitle} text={warning} state="warning" />
-    </Page>
-  ) : error && isV3Asset === false ? (
-    <Page title={pageTitle} noPageHeader uri={uri}>
-      <Alert title={pageTitle} text={error} state="error" />
+      <Alert
+        title={pageTitle}
+        text={warning || error}
+        state={warning ? 'warning' : 'error'}
+      />
     </Page>
   ) : (
     <Page title={undefined} uri={uri}>
