@@ -1,12 +1,14 @@
 .assets {
   padding: 0;
-  /* margin: 0 auto; */
-  max-width: 40rem;
+  margin: 0 auto;
+  max-width: 20rem;
+  width: 40rem;
   padding-top: var(--spacer);
 }
 
 .assets li {
   display: block;
+  justify-content: space-between;
   padding-bottom: var(--spacer);
   margin-bottom: var(--spacer);
   counter-increment: list-number;
@@ -36,6 +38,11 @@
   color: var(--brand-white);
   background: var(--brand-alert-red);
   border-color: transparent;
+}
+
+.assetListTitle {
+  display: flex;
+  justify-content: space-between;
 }
 
 .tabList {
@@ -95,11 +102,20 @@
 .tab2Content > * {
   padding: calc(var(--spacer) / 2);
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+}
+
+.tab2Titles {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tab2Titles > * {
+  display: flex;
 }
 
 @media (min-width: 40rem) {
-  .tabContent {
+  .tab2Content {
     padding: var(--spacer);
   }
 }

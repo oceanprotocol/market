@@ -47,18 +47,13 @@ export interface FormSettingsData {
   assets?: SettingsAssets
 }
 
-// export interface StepContent {
-//   step: number
-//   title: string
-//   component: ReactElement
-// }
-
 export interface SettingsAssets {
   [key: string]: {
     name: string
     description: string
     status: string
     display: string
+    number: string
     options: []
   }
 }

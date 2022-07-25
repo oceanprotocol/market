@@ -34,13 +34,12 @@
   border-color: transparent;
 }
 
-.customTitle {
-}
-
 .customTitle > * {
   display: flex;
   justify-content: center;
-  color: brown;
+  color: var(--color-primary);
+  font-size: var(--font-size-base);
+  margin-bottom: 0;
 }
 
 .section {
@@ -65,4 +64,9 @@
 .sectionElementsBtn:first-child {
   justify-content: start;
   margin-right: 9rem;
+}
+
+.btnCancel {
+  background: var(--background-body-transparent);
+  color: var(--color-primary);
 }
