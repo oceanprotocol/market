@@ -316,6 +316,8 @@ export default function Compute({
           'Data set is not orderable in combination with selected algorithm.'
         )
 
+      await initPriceAndFees()
+
       setComputeStatusText(
         getComputeFeedback(
           selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
