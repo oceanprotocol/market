@@ -47,7 +47,6 @@ export function generateBaseQuery(
           ...(baseQueryParams.filters || []),
           getFilterTerm('chainId', baseQueryParams.chainIds),
           getFilterTerm('_index', 'aquarius'),
-          getFilterTerm('accessDetails.type', ['free', 'fixed']),
           ...(baseQueryParams.ignorePurgatory
             ? []
             : [getFilterTerm('purgatory.state', false)])
