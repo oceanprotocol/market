@@ -25,7 +25,6 @@ export interface AssetProviderValue {
   title: string
   owner: string
   error?: string
-  warning?: string
   isAssetNetwork: boolean
   isV3Asset: boolean
   isOwner: boolean

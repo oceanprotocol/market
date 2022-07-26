@@ -9,32 +9,27 @@ import { v3MarketUri } from 'app.config'
 
 export default function AssetDetails({ uri }: { uri: string }): ReactElement {
   const router = useRouter()
-  const { asset, title, error, warning, isInPurgatory, loading, isV3Asset } =
-    useAsset()
+  const { asset, title, error, isInPurgatory, loading, isV3Asset } = useAsset()
   const [pageTitle, setPageTitle] = useState<string>()
 
   useEffect(() => {
     if (isV3Asset) {
       router.push(`${v3MarketUri}${uri}`)
     }
-    if (!asset || error || warning) {
+    if (!asset || error) {
       setPageTitle(title || 'Could not retrieve asset')
       return
     }
     setPageTitle(isInPurgatory ? '' : title)
-  }, [asset, error, warning, isInPurgatory, isV3Asset, router, title, uri])
+  }, [asset, error, isInPurgatory, isV3Asset, router, title, uri])
 
   return asset && pageTitle !== undefined && !loading ? (
     <Page title={pageTitle} uri={uri}>
       <AssetContent asset={asset} />
     </Page>
-  ) : (warning || error) && isV3Asset === false ? (
+  ) : error && isV3Asset === false ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
-      <Alert
-        title={pageTitle}
-        text={warning || error}
-        state={warning ? 'warning' : 'error'}
-      />
+      <Alert title={pageTitle} text={error} state={'error'} />
     </Page>
   ) : (
     <Page title={undefined} uri={uri}>
