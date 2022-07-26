@@ -186,7 +186,7 @@ export default function FormStartCompute({
           {...field}
           options={algorithms}
           component={Input}
-          disabled={isLoading}
+          disabled={isLoading || isComputeButtonDisabled}
         />
       ))}
 

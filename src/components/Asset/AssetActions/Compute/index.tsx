@@ -106,7 +106,8 @@ export default function Compute({
     (!validOrderTx && !hasDatatoken && !isConsumablePrice) ||
     (!validAlgorithmOrderTx &&
       !hasAlgoAssetDatatoken &&
-      !isConsumableaAlgorithmPrice)
+      !isConsumableaAlgorithmPrice) ||
+    asset?.accessDetails?.type === 'dynamic'
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return

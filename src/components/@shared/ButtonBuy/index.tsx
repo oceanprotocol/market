@@ -41,12 +41,15 @@ function getConsumeHelpText(
   hasPreviousOrder: boolean,
   lowPoolLiquidity: boolean,
   assetType: string,
+  priceType: string,
   isConsumable: boolean,
   isBalanceSufficient: boolean,
   consumableFeedback: string
 ) {
   const text =
-    isConsumable === false
+    priceType === 'dynamic'
+      ? `This ${assetType}'s pricing schema is not valid anymore. Contract the publisher if you need this asset.`
+      : isConsumable === false
       ? consumableFeedback
       : hasPreviousOrder
       ? `You bought this ${assetType} already allowing you to use it without paying again.`
@@ -67,6 +70,7 @@ function getComputeAssetHelpText(
   dtBalance: string,
   lowPoolLiquidity: boolean,
   assetType: string,
+  priceType: string,
   isConsumable: boolean,
   consumableFeedback: string,
   isBalanceSufficient: boolean,
@@ -86,10 +90,16 @@ function getComputeAssetHelpText(
     hasPreviousOrder,
     lowPoolLiquidity,
     assetType,
+    priceType,
     isConsumable,
     isBalanceSufficient,
     consumableFeedback
   )
+
+  if (priceType === 'dynamic') {
+    return computeAssetHelpText
+  }
+
   const computeAlgoHelpText =
     (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
     isConsumable === false ||
@@ -143,7 +153,7 @@ export default function ButtonBuy({
   isAlgorithmConsumable,
   hasProviderFee
 }: ButtonBuyProps): ReactElement {
-  const buttonText =
+  let buttonText =
     action === 'download'
       ? hasPreviousOrder
         ? 'Download'
@@ -157,6 +167,10 @@ export default function ButtonBuy({
       : priceType === 'free' && algorithmPriceType === 'free'
       ? 'Order Compute Job'
       : `Buy Compute Job`
+
+  if (priceType === 'dynamic') {
+    buttonText = 'Price not available'
+  }
 
   return (
     <div className={styles.actions}>
@@ -182,6 +196,7 @@ export default function ButtonBuy({
                   hasPreviousOrder,
                   datasetLowPoolLiquidity,
                   assetType,
+                  priceType,
                   isConsumable,
                   isBalanceSufficient,
                   consumableFeedback
@@ -193,6 +208,7 @@ export default function ButtonBuy({
                   dtBalance,
                   datasetLowPoolLiquidity,
                   assetType,
+                  priceType,
                   isConsumable,
                   consumableFeedback,
                   isBalanceSufficient,

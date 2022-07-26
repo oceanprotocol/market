@@ -62,7 +62,7 @@ export default function Download({
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
         asset?.accessDetails?.type === 'free' ||
-        (!poolData && asset?.accessDetails?.type === 'dynamic') ||
+        asset?.accessDetails?.type === 'dynamic' ||
         isLoading
       )
         return
@@ -114,11 +114,15 @@ export default function Download({
      * - if the user is on the wrong network
      * - if user balance is not sufficient
      * - if user has no datatokens
+     * - if the asset has dynamic pricing
      */
     const isDisabled =
       !asset?.accessDetails.isPurchasable ||
       !isAssetNetwork ||
-      ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
+      ((!isBalanceSufficient || !isAssetNetwork) &&
+        !isOwned &&
+        !hasDatatoken) ||
+      asset.accessDetails?.type === 'dynamic'
 
     setIsDisabled(isDisabled)
   }, [
