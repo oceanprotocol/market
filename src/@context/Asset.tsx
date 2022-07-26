@@ -53,7 +53,6 @@ function AssetProvider({
   const [owner, setOwner] = useState<string>()
   const [isOwner, setIsOwner] = useState<boolean>()
   const [error, setError] = useState<string>()
-  const [warning, setWarning] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
   const [isV3Asset, setIsV3Asset] = useState<boolean>()
@@ -205,7 +204,6 @@ function AssetProvider({
           title,
           owner,
           error,
-          warning,
           isInPurgatory,
           purgatoryData,
           loading,
