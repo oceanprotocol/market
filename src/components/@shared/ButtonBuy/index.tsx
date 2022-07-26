@@ -48,7 +48,7 @@ function getConsumeHelpText(
 ) {
   const text =
     priceType === 'dynamic'
-      ? `This ${assetType}'s pricing schema is not valid anymore. Contract the publisher if you need this ${assetType}.`
+      ? `This ${assetType}'s pricing schema is not valid anymore. Contact the publisher if you need this ${assetType}.`
       : isConsumable === false
       ? consumableFeedback
       : hasPreviousOrder
