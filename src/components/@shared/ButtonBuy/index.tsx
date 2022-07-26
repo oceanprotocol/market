@@ -70,7 +70,7 @@ function getComputeAssetHelpText(
   dtBalance: string,
   lowPoolLiquidity: boolean,
   assetType: string,
-  priceType: string,
+  algorithmPriceType: string,
   isConsumable: boolean,
   consumableFeedback: string,
   isBalanceSufficient: boolean,
@@ -90,13 +90,13 @@ function getComputeAssetHelpText(
     hasPreviousOrder,
     lowPoolLiquidity,
     assetType,
-    priceType,
+    algorithmPriceType,
     isConsumable,
     isBalanceSufficient,
     consumableFeedback
   )
 
-  if (priceType === 'dynamic') {
+  if (algorithmPriceType === 'dynamic') {
     return computeAssetHelpText
   }
 
@@ -208,7 +208,7 @@ export default function ButtonBuy({
                   dtBalance,
                   datasetLowPoolLiquidity,
                   assetType,
-                  priceType,
+                  algorithmPriceType,
                   isConsumable,
                   consumableFeedback,
                   isBalanceSufficient,
