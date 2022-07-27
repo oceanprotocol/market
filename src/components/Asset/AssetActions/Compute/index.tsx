@@ -106,8 +106,10 @@ export default function Compute({
     (!validOrderTx && !hasDatatoken && !isConsumablePrice) ||
     (!validAlgorithmOrderTx &&
       !hasAlgoAssetDatatoken &&
-      !isConsumableaAlgorithmPrice) ||
-    asset?.accessDetails?.type === 'dynamic'
+      !isConsumableaAlgorithmPrice)
+  const isPriceTypeSupported =
+    asset?.accessDetails?.type === 'fixed' ||
+    asset?.accessDetails?.type === 'free'
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
@@ -367,25 +369,32 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        <Price accessDetails={asset?.accessDetails} conversion />
+        {isPriceTypeSupported ? (
+          <Price accessDetails={asset?.accessDetails} conversion />
+        ) : (
+          <Alert
+            text={`Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`}
+            state="info"
+          />
+        )}
       </div>
 
       {asset.metadata.type === 'algorithm' ? (
         <>
           <Alert
             text={
-              asset?.accessDetails?.type === 'dynamic'
-                ? `Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`
-                : "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+              "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
             }
             state="info"
           />
-          <AlgorithmDatasetsListForCompute
-            algorithmDid={asset.id}
-            asset={asset}
-          />
+          {isPriceTypeSupported && (
+            <AlgorithmDatasetsListForCompute
+              algorithmDid={asset.id}
+              asset={asset}
+            />
+          )}
         </>
-      ) : (
+      ) : !isPriceTypeSupported ? null : (
         <Formik
           initialValues={getInitialValues()}
           validateOnMount
