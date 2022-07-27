@@ -15,12 +15,10 @@ import {
   ProviderInstance
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import { calcInGivenOut } from './pool'
 import { getFixedBuyPrice } from './fixedRateExchange'
 import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import Decimal from 'decimal.js'
 import { consumeMarketOrderFee } from '../../app.config'
-import Web3 from 'web3'
 
 const tokensPriceQuery = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
@@ -74,22 +72,6 @@ const tokensPriceQuery = gql`
           address
         }
         active
-      }
-      pools {
-        id
-        spotPrice
-        isFinalized
-        datatokenLiquidity
-        baseToken {
-          symbol
-          name
-          address
-        }
-        datatoken {
-          symbol
-          name
-          address
-        }
       }
     }
   }
@@ -146,22 +128,6 @@ const tokenPriceQuery = gql`
           address
         }
         active
-      }
-      pools {
-        id
-        spotPrice
-        isFinalized
-        datatokenLiquidity
-        baseToken {
-          symbol
-          name
-          address
-        }
-        datatoken {
-          symbol
-          name
-          address
-        }
       }
     }
   }
@@ -233,7 +199,6 @@ function getAccessDetailsFromTokenPrice(
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
   accountId?: string,
-  paramsForPool?: CalcInGivenOutParams,
   providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
@@ -252,7 +217,6 @@ export async function getOrderPriceAndFees(
   } as OrderPriceAndFees
 
   // fetch provider fee
-
   const initializeData =
     !providerFees &&
     (await ProviderInstance.initialize(
@@ -265,27 +229,12 @@ export async function getOrderPriceAndFees(
   orderPriceAndFee.providerFee = providerFees || initializeData.providerFee
 
   // fetch price and swap fees
-  switch (asset?.accessDetails?.type) {
-    case 'dynamic': {
-      const poolPrice = calcInGivenOut(paramsForPool)
-      orderPriceAndFee.price = poolPrice.tokenAmount
-      orderPriceAndFee.liquidityProviderSwapFee =
-        poolPrice.liquidityProviderSwapFeeAmount
-      orderPriceAndFee.publisherMarketPoolSwapFee =
-        poolPrice.publishMarketSwapFeeAmount
-      orderPriceAndFee.consumeMarketPoolSwapFee =
-        poolPrice.consumeMarketSwapFeeAmount
-      break
-    }
-    case 'fixed': {
-      const fixed = await getFixedBuyPrice(asset?.accessDetails, asset?.chainId)
-      orderPriceAndFee.price = fixed.baseTokenAmount
-      orderPriceAndFee.opcFee = fixed.oceanFeeAmount
-      orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount
-      orderPriceAndFee.consumeMarketFixedSwapFee = fixed.consumeMarketFeeAmount
-
-      break
-    }
+  if (asset?.accessDetails?.type === 'fixed') {
+    const fixed = await getFixedBuyPrice(asset?.accessDetails, asset?.chainId)
+    orderPriceAndFee.price = fixed.baseTokenAmount
+    orderPriceAndFee.opcFee = fixed.oceanFeeAmount
+    orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount
+    orderPriceAndFee.consumeMarketFixedSwapFee = fixed.consumeMarketFeeAmount
   }
 
   // calculate full price, we assume that all the values are in ocean, otherwise this will be incorrect
@@ -293,6 +242,7 @@ export async function getOrderPriceAndFees(
     .add(new Decimal(+orderPriceAndFee?.consumeMarketOrderFee || 0))
     .add(new Decimal(+orderPriceAndFee?.publisherMarketOrderFee || 0))
     .toString()
+
   return orderPriceAndFee
 }
 

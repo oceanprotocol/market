@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
-import Loader from '../atoms/Loader'
 import Tooltip from '../atoms/Tooltip'
 import PriceUnit from './PriceUnit'
 import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
@@ -18,9 +17,10 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
-  return accessDetails?.type !== 'fixed' &&
-    accessDetails?.type !== 'free' ? null : accessDetails?.price ||
-    accessDetails?.type === 'free' ? (
+  const isSupported =
+    accessDetails?.type === 'fixed' || accessDetails?.type === 'free'
+
+  return isSupported ? (
     <PriceUnit
       price={`${orderPriceAndFees?.price || accessDetails?.price}`}
       symbol={accessDetails.baseToken?.symbol}
@@ -34,7 +34,5 @@ export default function Price({
       No price set{' '}
       <Tooltip content="No pricing mechanism has been set on this asset yet." />
     </div>
-  ) : (
-    <Loader message="Retrieving price..." />
-  )
+  ) : null
 }

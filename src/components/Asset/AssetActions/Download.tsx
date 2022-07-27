@@ -68,32 +68,12 @@ export default function Download({
       )
         return
 
-      !orderPriceAndFees && setIsLoading(true)
-      setStatusText('Refreshing price')
-      // this is needed just for pool
-      const paramsForPool: CalcInGivenOutParams = {
-        tokenInLiquidity: poolData?.baseTokenLiquidity,
-        tokenOutLiquidity: poolData?.datatokenLiquidity,
-        tokenOutAmount: '1',
-        opcFee: getOpcFeeForToken(
-          asset?.accessDetails?.baseToken.address,
-          asset?.chainId
-        ),
-        lpSwapFee: poolData?.liquidityProviderSwapFee,
-        publishMarketSwapFee: asset?.accessDetails?.publisherMarketOrderFee,
-        consumeMarketSwapFee: '0'
-      }
-      const _orderPriceAndFees = await getOrderPriceAndFees(
-        asset,
-        ZERO_ADDRESS,
-        paramsForPool
-      )
-
+      const _orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
       setOrderPriceAndFees(_orderPriceAndFees)
-      !orderPriceAndFees && setIsLoading(false)
     }
 
     init()
+
     /**
      * we listen to the assets' changes to get the most updated price
      * based on the asset and the poolData's information.
@@ -206,24 +186,30 @@ export default function Download({
     />
   )
 
-  function checkAsset(asset: AssetExtended) {
-    return asset?.accessDetails?.type === 'dynamic' ? (
+  const AssetAction = ({ asset }: { asset: AssetExtended }) => {
+    const isSupported =
+      asset?.accessDetails?.type === 'free' ||
+      asset?.accessDetails?.type === 'fixed'
+
+    return (
       <div>
-        <Alert
-          className={styles.fieldWarning}
-          state="info"
-          text={`Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`}
-        />
-      </div>
-    ) : (
-      <div className={styles.pricewrapper}>
-        <Price
-          accessDetails={asset.accessDetails}
-          orderPriceAndFees={orderPriceAndFees}
-          conversion
-          size="large"
-        />
-        {!isInPurgatory && <PurchaseButton />}
+        {!isSupported ? (
+          <Alert
+            className={styles.fieldWarning}
+            state="info"
+            text={`Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`}
+          />
+        ) : (
+          <>
+            <Price
+              accessDetails={asset.accessDetails}
+              orderPriceAndFees={orderPriceAndFees}
+              conversion
+              size="large"
+            />
+            {!isInPurgatory && <PurchaseButton />}
+          </>
+        )}
       </div>
     )
   }
@@ -234,7 +220,7 @@ export default function Download({
         <div className={styles.filewrapper}>
           <FileIcon file={file} isLoading={fileIsLoading} />
         </div>
-        {checkAsset(asset)}
+        <AssetAction asset={asset} />
       </div>
 
       {asset?.metadata?.type === 'algorithm' && (

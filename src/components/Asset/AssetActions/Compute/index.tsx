@@ -169,26 +169,9 @@ export default function Compute({
             asset.metadata.type
           )[0]
         )
-        const poolParams =
-          asset?.accessDetails?.type === 'dynamic'
-            ? {
-                tokenInLiquidity: poolData?.baseTokenLiquidity,
-                tokenOutLiquidity: poolData?.datatokenLiquidity,
-                tokenOutAmount: '1',
-                opcFee: getOpcFeeForToken(
-                  asset?.accessDetails?.baseToken.address,
-                  asset?.chainId
-                ),
-                lpSwapFee: poolData?.liquidityProviderSwapFee,
-                publishMarketSwapFee:
-                  asset?.accessDetails?.publisherMarketOrderFee,
-                consumeMarketSwapFee: '0'
-              }
-            : null
         const datasetPriceAndFees = await getOrderPriceAndFees(
           asset,
           ZERO_ADDRESS,
-          poolParams,
           initializedProvider?.datasets?.[0]?.providerFee
         )
         if (!datasetPriceAndFees)
@@ -209,32 +192,9 @@ export default function Compute({
             selectedAlgorithmAsset?.metadata?.type
           )[0]
         )
-        let algoPoolParams = null
-        if (selectedAlgorithmAsset?.accessDetails?.type === 'dynamic') {
-          const response = await getPoolData(
-            selectedAlgorithmAsset.chainId,
-            selectedAlgorithmAsset.accessDetails?.addressOrId,
-            selectedAlgorithmAsset?.nft.owner,
-            accountId || ''
-          )
-          algoPoolParams = {
-            tokenInLiquidity: response?.poolData?.baseTokenLiquidity,
-            tokenOutLiquidity: response?.poolData?.datatokenLiquidity,
-            tokenOutAmount: '1',
-            opcFee: getOpcFeeForToken(
-              selectedAlgorithmAsset?.accessDetails?.baseToken.address,
-              selectedAlgorithmAsset?.chainId
-            ),
-            lpSwapFee: response?.poolData?.liquidityProviderSwapFee,
-            publishMarketSwapFee:
-              selectedAlgorithmAsset?.accessDetails?.publisherMarketOrderFee,
-            consumeMarketSwapFee: '0'
-          }
-        }
         const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
           selectedAlgorithmAsset,
           ZERO_ADDRESS,
-          algoPoolParams,
           initializedProvider.algorithm.providerFee
         )
         if (!algorithmOrderPriceAndFees)
