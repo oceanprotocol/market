@@ -43,9 +43,6 @@ import { OrderPriceAndFees } from 'src/@types/Price'
 import { handleComputeOrder } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getComputeFeedback } from '@utils/feedback'
-import { usePool } from '@context/Pool'
-import { useMarketMetadata } from '@context/MarketMetadata'
-import { getPoolData } from '@context/Pool/_utils'
 import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
 
@@ -63,8 +60,6 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
-  const { getOpcFeeForToken } = useMarketMetadata()
-  const { poolData } = usePool()
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
 
@@ -381,12 +376,14 @@ export default function Compute({
 
       {asset.metadata.type === 'algorithm' ? (
         <>
-          <Alert
-            text={
-              "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
-            }
-            state="info"
-          />
+          {asset.services[0].type === 'compute' && (
+            <Alert
+              text={
+                "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+              }
+              state="info"
+            />
+          )}
           {isPriceTypeSupported && (
             <AlgorithmDatasetsListForCompute
               algorithmDid={asset.id}
