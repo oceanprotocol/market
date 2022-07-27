@@ -47,9 +47,7 @@ function getConsumeHelpText(
   consumableFeedback: string
 ) {
   const text =
-    priceType === 'dynamic'
-      ? `This ${assetType}'s pricing schema is not valid anymore. Contact the publisher if you need this ${assetType}.`
-      : isConsumable === false
+    isConsumable === false
       ? consumableFeedback
       : hasPreviousOrder
       ? `You bought this ${assetType} already allowing you to use it without paying again.`
@@ -96,10 +94,6 @@ function getComputeAssetHelpText(
     isBalanceSufficient,
     consumableFeedback
   )
-
-  if (algorithmPriceType === 'dynamic' || assetPriceType === 'dynamic') {
-    return computeAssetHelpText
-  }
 
   const computeAlgoHelpText =
     (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
@@ -155,9 +149,7 @@ export default function ButtonBuy({
   hasProviderFee
 }: ButtonBuyProps): ReactElement {
   const buttonText =
-    priceType === 'dynamic' || algorithmPriceType === 'dynamic'
-      ? 'Price not available'
-      : action === 'download'
+    action === 'download'
       ? hasPreviousOrder
         ? 'Download'
         : priceType === 'free'
