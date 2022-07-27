@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import Web3 from 'web3'
 import Web3Modal, { getProviderInfo, IProviderInfo } from 'web3modal'
-import { infuraProjectId as infuraId, portisId } from '../../app.config'
+import { infuraProjectId as infuraId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
@@ -57,12 +57,12 @@ const providerOptions = isBrowser
   ? {
       walletconnect: {
         package: WalletConnectProvider,
-        options: { infuraId }
-      },
-      portis: {
-        package: require('@portis/web3'),
         options: {
-          id: portisId
+          infuraId,
+          rpc: {
+            137: 'https://polygon-rpc.com',
+            80001: 'https://rpc-mumbai.matic.today'
+          }
         }
       }
       // torus: {

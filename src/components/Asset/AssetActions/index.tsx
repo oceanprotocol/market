@@ -18,6 +18,7 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import PoolProvider from '@context/Pool'
+import AssetStats from './AssetStats'
 
 export default function AssetActions({
   asset
@@ -63,6 +64,18 @@ export default function AssetActions({
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
+
+        // set the content type in the Dataset Schema
+        const datasetSchema = document.scripts?.namedItem('datasetSchema')
+        if (datasetSchema) {
+          const datasetSchemaJSON = JSON.parse(datasetSchema.innerText)
+          if (datasetSchemaJSON?.distribution[0]['@type'] === 'DataDownload') {
+            const contentType = fileInfoResponse[0]?.contentType
+            datasetSchemaJSON.distribution[0].encodingFormat = contentType
+            datasetSchema.innerText = JSON.stringify(datasetSchemaJSON)
+          }
+        }
+
         setFileIsLoading(false)
       } catch (error) {
         LoggerInstance.error(error.message)
@@ -111,31 +124,32 @@ export default function AssetActions({
     }
   }, [balance, accountId, asset?.accessDetails, dtBalance])
 
-  const UseContent = isCompute ? (
-    <Compute
-      ddo={asset}
-      accessDetails={asset?.accessDetails}
-      dtBalance={dtBalance}
-      file={fileMetadata}
-      fileIsLoading={fileIsLoading}
-    />
-  ) : (
-    <Consume
-      asset={asset}
-      dtBalance={dtBalance}
-      isBalanceSufficient={isBalanceSufficient}
-      file={fileMetadata}
-      fileIsLoading={fileIsLoading}
-    />
+  const UseContent = (
+    <>
+      {isCompute ? (
+        <Compute
+          asset={asset}
+          dtBalance={dtBalance}
+          file={fileMetadata}
+          fileIsLoading={fileIsLoading}
+        />
+      ) : (
+        <Consume
+          asset={asset}
+          dtBalance={dtBalance}
+          isBalanceSufficient={isBalanceSufficient}
+          file={fileMetadata}
+          fileIsLoading={fileIsLoading}
+        />
+      )}
+      <AssetStats />
+    </>
   )
 
   const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
 
   asset?.accessDetails?.type === 'dynamic' &&
-    tabs.push(
-      { title: 'Pool', content: <Pool /> },
-      { title: 'Trade', content: <Trade /> }
-    )
+    tabs.push({ title: 'Pool', content: <Pool /> })
 
   return (
     <>

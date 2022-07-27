@@ -75,9 +75,6 @@ module.exports = {
     storageKey: 'oceanDarkMode'
   },
 
-  // Wallets
-  portisId: process.env.NEXT_PUBLIC_PORTIS_ID || 'xxx',
-
   // Used to show or hide the fixed, dynamic or free price options
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.NEXT_PUBLIC_ALLOW_FIXED_PRICING || 'true',

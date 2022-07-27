@@ -3,6 +3,11 @@
   margin-top: calc(var(--spacer) / 2);
 }
 
+.actionsCenter {
+  margin: auto;
+  display: block;
+}
+
 .help {
   font-size: var(--font-size-mini);
   color: var(--color-secondary);

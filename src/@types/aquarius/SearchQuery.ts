@@ -4,8 +4,9 @@ export enum SortDirectionOptions {
 }
 
 export enum SortTermOptions {
-  Created = 'metadata.created',
-  Relevance = '_score'
+  Created = 'nft.created',
+  Relevance = '_score',
+  Stats = 'stats.orders'
 }
 
 // Note: could not figure out how to get `enum` to be ambiant
@@ -43,5 +44,6 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     query: any
     sort?: { [jsonPath: string]: SortDirectionOptions }
+    aggs?: any
   }
 }

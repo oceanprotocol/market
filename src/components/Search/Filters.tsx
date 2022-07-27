@@ -137,66 +137,69 @@ export default function FilterPrice({
 
   return (
     <div className={styleClasses}>
-      {serviceFilterItems.map((e, index) => {
-        const isServiceSelected =
-          e.value === serviceType || serviceSelections.includes(e.value)
-        const selectFilter = cx({
-          [styles.selected]: isServiceSelected,
-          [styles.filter]: true
-        })
-        return (
-          <Button
-            size="small"
-            style="text"
-            key={index}
-            className={selectFilter}
-            onClick={async () => {
-              handleSelectedFilter(isServiceSelected, e.value)
-            }}
-          >
-            {e.display}
-          </Button>
-        )
-      })}
-      <div className={styles.separator} />
-      {accessFilterItems.map((e, index) => {
-        const isAccessSelected =
-          e.value === accessType || accessSelections.includes(e.value)
-        const selectFilter = cx({
-          [styles.selected]: isAccessSelected,
-          [styles.filter]: true
-        })
-        return (
-          <Button
-            size="small"
-            style="text"
-            key={index}
-            className={selectFilter}
-            onClick={async () => {
-              handleSelectedFilter(isAccessSelected, e.value)
-            }}
-          >
-            {e.display}
-          </Button>
-        )
-      })}
-      {clearFilters.map((e, index) => {
-        const showClear =
-          accessSelections.length > 0 || serviceSelections.length > 0
-        return (
-          <Button
-            size="small"
-            style="text"
-            key={index}
-            className={showClear ? styles.showClear : styles.hideClear}
-            onClick={async () => {
-              applyClearFilter(addFiltersToUrl)
-            }}
-          >
-            {e.display}
-          </Button>
-        )
-      })}
+      <div>
+        {serviceFilterItems.map((e, index) => {
+          const isServiceSelected =
+            e.value === serviceType || serviceSelections.includes(e.value)
+          const selectFilter = cx({
+            [styles.selected]: isServiceSelected,
+            [styles.filter]: true
+          })
+          return (
+            <Button
+              size="small"
+              style="text"
+              key={index}
+              className={selectFilter}
+              onClick={async () => {
+                handleSelectedFilter(isServiceSelected, e.value)
+              }}
+            >
+              {e.display}
+            </Button>
+          )
+        })}
+      </div>
+      <div>
+        {accessFilterItems.map((e, index) => {
+          const isAccessSelected =
+            e.value === accessType || accessSelections.includes(e.value)
+          const selectFilter = cx({
+            [styles.selected]: isAccessSelected,
+            [styles.filter]: true
+          })
+          return (
+            <Button
+              size="small"
+              style="text"
+              key={index}
+              className={selectFilter}
+              onClick={async () => {
+                handleSelectedFilter(isAccessSelected, e.value)
+              }}
+            >
+              {e.display}
+            </Button>
+          )
+        })}
+        {clearFilters.map((e, index) => {
+          const showClear =
+            accessSelections.length > 0 || serviceSelections.length > 0
+          return (
+            <Button
+              size="small"
+              style="text"
+              key={index}
+              className={showClear ? styles.showClear : styles.hideClear}
+              onClick={async () => {
+                applyClearFilter(addFiltersToUrl)
+              }}
+            >
+              {e.display}
+            </Button>
+          )
+        })}
+      </div>
     </div>
   )
 }

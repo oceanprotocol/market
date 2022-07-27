@@ -27,6 +27,7 @@ export interface AssetProviderValue {
   error?: string
   isAssetNetwork: boolean
   isV3Asset: boolean
+  isOwner: boolean
   oceanConfig: Config
   loading: boolean
   fetchAsset: (token?: CancelToken) => Promise<void>
@@ -49,6 +50,7 @@ function AssetProvider({
   const [asset, setAsset] = useState<AssetExtended>()
   const [title, setTitle] = useState<string>()
   const [owner, setOwner] = useState<string>()
+  const [isOwner, setIsOwner] = useState<boolean>()
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
@@ -76,7 +78,32 @@ function AssetProvider({
             '\n\nWe could not find an asset for this DID in the cache. If you just published a new asset, wait some seconds and refresh this page.'
         )
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
-      } else {
+        return
+      }
+
+      if (asset.nft.state) {
+        // handle nft states as documented in https://docs.oceanprotocol.com/concepts/did-ddo/#state
+        let state
+        switch (asset.nft.state) {
+          case 1:
+            state = 'end-of-life'
+            break
+          case 2:
+            state = 'deprecated'
+            break
+          case 3:
+            state = 'revoked'
+            break
+        }
+
+        setTitle(`This asset has been flagged as "${state}" by the publisher`)
+        setIsV3Asset(await checkV3Asset(did, token))
+        setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
+        LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
+        return
+      }
+
+      if (asset) {
         setError(undefined)
         setAsset((prevState) => ({
           ...prevState,
@@ -141,6 +168,16 @@ function AssetProvider({
   }, [chainId, asset?.chainId])
 
   // -----------------------------------
+  // Asset owner check against wallet user
+  // -----------------------------------
+  useEffect(() => {
+    if (!accountId || !owner) return
+
+    const isOwner = accountId?.toLowerCase() === owner.toLowerCase()
+    setIsOwner(isOwner)
+  }, [accountId, owner])
+
+  // -----------------------------------
   // Load ocean config based on asset network
   // -----------------------------------
   useEffect(() => {
@@ -172,6 +209,7 @@ function AssetProvider({
           fetchAsset,
           isAssetNetwork,
           isV3Asset,
+          isOwner,
           oceanConfig
         } as AssetProviderValue
       }

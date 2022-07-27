@@ -1,8 +1,9 @@
 import { useUserPreferences } from '@context/UserPreferences'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import AccountList from '@shared/AccountList/AccountList'
 import { getTopAssetsPublishers } from '@utils/subgraph'
 import React, { ReactElement, useEffect, useState } from 'react'
-import styles from './Home.module.css'
+import styles from './index.module.css'
 
 export default function PublishersWithMostSales({
   title,
@@ -17,18 +18,19 @@ export default function PublishersWithMostSales({
 
   useEffect(() => {
     async function init() {
+      setLoading(true)
       if (chainIds.length === 0) {
         const result: AccountTeaserVM[] = []
         setResult(result)
         setLoading(false)
       } else {
         try {
-          setLoading(true)
           const publishers = await getTopAssetsPublishers(chainIds)
           setResult(publishers)
           setLoading(false)
         } catch (error) {
-          // Logger.error(error.message)
+          LoggerInstance.error(error.message)
+          setLoading(false)
         }
       }
     }

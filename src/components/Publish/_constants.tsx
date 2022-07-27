@@ -41,8 +41,8 @@ export const wizardSteps: StepContent[] = [
 const computeOptions: ServiceComputeOptions = {
   allowRawAlgorithm: false,
   allowNetworkAccess: true,
-  publisherTrustedAlgorithmPublishers: null,
-  publisherTrustedAlgorithms: null
+  publisherTrustedAlgorithmPublishers: [],
+  publisherTrustedAlgorithms: []
 }
 
 export const initialValues: FormPublishData = {
@@ -82,13 +82,8 @@ export const initialValues: FormPublishData = {
   ],
   pricing: {
     price: 0,
-    type:
-      allowDynamicPricing === 'true'
-        ? 'dynamic'
-        : allowFixedPricing === 'true'
-        ? 'fixed'
-        : 'free',
-    amountDataToken: allowDynamicPricing === 'true' ? 100 : 1000,
+    type: allowFixedPricing === 'true' ? 'fixed' : 'free',
+    amountDataToken: 1000,
     amountOcean: 100,
     weightOnOcean: '5', // 50% on OCEAN
     weightOnDataToken: '5', // 50% on datatoken
@@ -107,15 +102,17 @@ export interface MetadataAlgorithmContainer {
 export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
   {
     image: 'node',
-    tag: 'latest',
+    tag: '18.6.0', // TODO: Put this back to latest once merging the PR that fetches the container digest from docker hub via dockerhub-proxy
     entrypoint: 'node $ALGO',
-    checksum: '' // TODO: how to get? Most likely needs to be fetched from DockerHub.
+    checksum:
+      'sha256:c60726646352202d95de70d9e8393c15f382f8c6074afc5748b7e570ccd5995f'
   },
   {
     image: 'python',
-    tag: 'latest',
+    tag: '3.10.5', // TODO: Put this back to latest once merging the PR that fetches the container digest from docker hub via dockerhub-proxy
     entrypoint: 'python $ALGO',
-    checksum: ''
+    checksum:
+      'sha256:607635763e54907fd75397fedfeb83890e62a0f9b54a1d99d27d748c5d269be4'
   }
 ]
 
