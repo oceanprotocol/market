@@ -17,11 +17,8 @@ import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
 import slugify from 'slugify'
 import Web3 from 'web3'
-import {
-  algorithmContainerPresets,
-  MetadataAlgorithmContainer
-} from './_constants'
-import { FormPublishData } from './_types'
+import { algorithmContainerPresets } from './_constants'
+import { FormPublishData, MetadataAlgorithmContainer } from './_types'
 import {
   marketFeeAddress,
   publisherMarketOrderFee,

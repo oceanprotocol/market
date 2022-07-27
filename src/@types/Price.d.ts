@@ -45,14 +45,8 @@ interface AccessDetails {
   publisherMarketOrderFee: string
 }
 
-interface PriceOptions {
+interface PricePublishOptions {
   price: number
-  amountDataToken: number
-  amountOcean: number
   type: 'fixed' | 'free'
-  weightOnDataToken: string
-  weightOnOcean: string
-  // easier to keep this as number for Yup input validation
-  swapFee: number
   freeAgreement: boolean
 }
