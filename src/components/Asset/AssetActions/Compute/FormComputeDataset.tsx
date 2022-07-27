@@ -178,17 +178,24 @@ export default function FormStartCompute({
       <Alert
         className={styles.warning}
         state="info"
-        text={siteContent.warning.ctd}
+        text={
+          asset?.accessDetails?.type === 'dynamic' ||
+          selectedAlgorithmAsset?.accessDetails?.type === 'dynamic'
+            ? `Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`
+            : siteContent.warning.ctd
+        }
       />
-      {content.form.data.map((field: FormFieldContent) => (
-        <Field
-          key={field.name}
-          {...field}
-          options={algorithms}
-          component={Input}
-          disabled={isLoading || isComputeButtonDisabled}
-        />
-      ))}
+      {content.form.data.map((field: FormFieldContent) => {
+        return (
+          <Field
+            key={field.name}
+            {...field}
+            options={algorithms}
+            component={Input}
+            disabled={isLoading || isComputeButtonDisabled}
+          />
+        )
+      })}
 
       <PriceOutput
         hasPreviousOrder={hasPreviousOrder}

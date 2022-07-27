@@ -413,7 +413,11 @@ export default function Compute({
       {asset.metadata.type === 'algorithm' ? (
         <>
           <Alert
-            text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+            text={
+              asset?.accessDetails?.type === 'dynamic'
+                ? `Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`
+                : "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+            }
             state="info"
           />
           <AlgorithmDatasetsListForCompute
