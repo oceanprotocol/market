@@ -28,7 +28,7 @@ interface OrderPriceAndFees {
 
 /**
  * @interface AccessDetails
- * @prop {'dynamic' | 'fixed' | 'free' | ''}  type
+ * @prop {'fixed' | 'free' | ''}  type
  * @prop {string} price can be either spotPrice/rate
  * @prop {string} addressOrId if type is dynamic this is the pool address, for fixed/free this is an id.
  * @prop {TokenInfo} baseToken
@@ -55,7 +55,7 @@ interface PriceOptions {
   price: number
   amountDataToken: number
   amountOcean: number
-  type: 'dynamic' | 'fixed' | 'free' | ''
+  type: 'fixed' | 'free' | ''
   weightOnDataToken: string
   weightOnOcean: string
   // easier to keep this as number for Yup input validation

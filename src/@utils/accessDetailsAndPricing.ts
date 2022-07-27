@@ -222,27 +222,6 @@ function getAccessDetailsFromTokenPrice(
     return accessDetails
   }
 
-  // checking for pools
-  if (tokenPrice?.pools?.length > 0) {
-    const pool = tokenPrice.pools[0]
-    accessDetails.type = 'dynamic'
-    accessDetails.addressOrId = pool.id
-    accessDetails.price = pool.spotPrice
-    // TODO: pool.datatokenLiquidity > 3 is kinda random here, we shouldn't run into this anymore now , needs more thinking/testing
-    accessDetails.isPurchasable =
-      pool.isFinalized && pool.datatokenLiquidity > 3
-    accessDetails.baseToken = {
-      address: pool.baseToken.address,
-      name: pool.baseToken.name,
-      symbol: pool.baseToken.symbol
-    }
-    accessDetails.datatoken = {
-      address: pool.datatoken.address,
-      name: pool.datatoken.name,
-      symbol: pool.datatoken.symbol
-    }
-    return accessDetails
-  }
   return accessDetails
 }
 
