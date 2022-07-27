@@ -173,7 +173,6 @@ export default function Download({
       hasDatatoken={hasDatatoken}
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
-      datasetLowPoolLiquidity={!asset.accessDetails?.isPurchasable}
       onClick={handleOrderOrDownload}
       assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}

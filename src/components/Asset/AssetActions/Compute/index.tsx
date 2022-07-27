@@ -411,7 +411,6 @@ export default function Compute({
             hasPreviousOrder={validOrderTx !== undefined}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
-            datasetLowPoolLiquidity={!isConsumablePrice}
             assetType={asset?.metadata.type}
             assetTimeout={secondsToString(asset?.services[0].timeout)}
             hasPreviousOrderSelectedComputeAsset={
