@@ -1,13 +1,5 @@
 {
   "create": {
-    "empty": {
-      "title": "No Price Created",
-      "info": "This data set has no price yet. As the publisher you can create a fixed price, or make it free. Onwards!",
-      "action": {
-        "name": "Create Pricing",
-        "help": "Create Pricing will mint your datatokens, approve spending, and create a fixed rate exchange or dispenser in one process. You will need to approve those multiple steps in your wallet."
-      }
-    },
     "fixed": {
       "title": "Fixed",
       "info": "Set your price for accessing this data set. The datatoken for this data set will be worth the entered amount of OCEAN.",

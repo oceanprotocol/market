@@ -23,7 +23,7 @@ export default function PriceUnit({
   type
 }: {
   price: string
-  type: string
+  type?: string
   className?: string
   size?: 'small' | 'mini' | 'large'
   conversion?: boolean
