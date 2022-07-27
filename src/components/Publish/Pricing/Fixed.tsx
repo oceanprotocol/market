@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import FormHelp from '@shared/FormInput/Help'
 import Price from './Price'
 import Fees from './Fees'
-import styles from './Tabs.module.css'
+import styles from './index.module.css'
 
 export default function Fixed({ content }: { content: any }): ReactElement {
   return (

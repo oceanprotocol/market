@@ -219,7 +219,6 @@ export async function createTokensAndPricing(
 
   let erc721Address, datatokenAddress, txHash
 
-  // TODO: cleaner code for this huge switch !??!?
   switch (values.pricing.type) {
     case 'fixed': {
       const freParams: FreCreationParams = {
