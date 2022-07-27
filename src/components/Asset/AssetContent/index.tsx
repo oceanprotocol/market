@@ -60,7 +60,7 @@ export default function AssetContent({
               <>
                 <Markdown
                   className={styles.description}
-                  text={asset?.metadata.description || ''}
+                  text={asset?.metadata?.description || ''}
                 />
                 <MetaSecondary ddo={asset} />
               </>

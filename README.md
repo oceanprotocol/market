@@ -180,10 +180,10 @@ The app has [Urql Client](https://formidable.com/open-source/urql/docs/basics/re
 import { gql, useQuery } from 'urql'
 
 const query = gql`
-  query PoolLiquidity($id: ID!, $shareId: ID) {
-    pool(id: $id) {
+  query TopSalesQuery {
+    users(first: 20, orderBy: totalSales, orderDirection: desc) {
       id
-      totalShares
+      totalSales
     }
   }
 `
@@ -400,10 +400,6 @@ Additionally, we would also advise that your retain the text saying "Powered by 
 Everything else is made open according to the apache2 license. We look forward to seeing your data marketplace!
 
 ## 💰 Pricing Options
-
-### Dynamic Pricing
-
-To allow publishers to set pricing as "Dynamic" you need to add the following environmental variable to your .env file: `NEXT_PUBLIC_ALLOW_DYNAMIC_PRICING="true"` (default).
 
 ### Fixed Pricing
 
