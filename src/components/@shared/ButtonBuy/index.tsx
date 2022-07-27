@@ -153,8 +153,10 @@ export default function ButtonBuy({
   isAlgorithmConsumable,
   hasProviderFee
 }: ButtonBuyProps): ReactElement {
-  let buttonText =
-    action === 'download'
+  const buttonText =
+    priceType === 'dynamic'
+      ? 'Price not available'
+      : action === 'download'
       ? hasPreviousOrder
         ? 'Download'
         : priceType === 'free'
@@ -167,10 +169,6 @@ export default function ButtonBuy({
       : priceType === 'free' && algorithmPriceType === 'free'
       ? 'Order Compute Job'
       : `Buy Compute Job`
-
-  if (priceType === 'dynamic') {
-    buttonText = 'Price not available'
-  }
 
   return (
     <div className={styles.actions}>
