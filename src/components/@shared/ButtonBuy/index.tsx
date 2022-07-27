@@ -155,7 +155,7 @@ export default function ButtonBuy({
   hasProviderFee
 }: ButtonBuyProps): ReactElement {
   const buttonText =
-    priceType === 'dynamic'
+    priceType === 'dynamic' || algorithmPriceType === 'dynamic'
       ? 'Price not available'
       : action === 'download'
       ? hasPreviousOrder
