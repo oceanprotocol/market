@@ -275,22 +275,6 @@ export default function Compute({
         )
 
       await initPriceAndFees()
-        getComputeFeedback(
-          asset.accessDetails.baseToken?.symbol,
-          asset.accessDetails.datatoken?.symbol,
-          asset.metadata.type
-        )[asset.accessDetails?.type === 'fixed' ? 2 : 3]
-      )
-      const datasetOrderTx = await handleComputeOrder(
-        web3,
-        asset,
-        datasetOrderPriceAndFees,
-        accountId,
-        hasDatatoken,
-        initializedProviderResponse.datasets[0],
-        computeEnv.consumerAddress
-      )
-      if (!datasetOrderTx) throw new Error('Failed to order dataset.')
 
       setComputeStatusText(
         getComputeFeedback(
@@ -316,13 +300,7 @@ export default function Compute({
           asset.accessDetails.baseToken?.symbol,
           asset.accessDetails.datatoken?.symbol,
           asset.metadata.type
-        )[
-          asset.accessDetails?.type === 'fixed'
-            ? 2
-            : asset.accessDetails?.type === 'dynamic'
-            ? 1
-            : 3
-        ]
+        )[asset.accessDetails?.type === 'fixed' ? 2 : 3]
       )
       const datasetOrderTx = await handleComputeOrder(
         web3,
