@@ -3,6 +3,7 @@ import Head from 'next/head'
 
 import { isBrowser } from '@utils/index'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import { DatasetSchema } from './DatasetSchema'
 
 export default function Seo({
   title,
@@ -21,6 +22,8 @@ export default function Seo({
   const pageTitle = title
     ? `${title} - ${siteContent?.siteTitle}`
     : `${siteContent?.siteTitle} — ${siteContent?.siteTagline}`
+
+  const datasetSchema = DatasetSchema()
 
   return (
     <Head>
@@ -64,6 +67,12 @@ export default function Seo({
           <meta name="twitter:creator" content="@oceanprotocol" />
         )}
       <meta name="twitter:card" content="summary_large_image" />
+
+      {datasetSchema && (
+        <script type="application/ld+json" id="datasetSchema">
+          {JSON.stringify(datasetSchema).replace(/</g, '\\u003c')}
+        </script>
+      )}
     </Head>
   )
 }
