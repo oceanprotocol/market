@@ -174,12 +174,7 @@ export default function FormStartCompute({
       <Alert
         className={styles.warning}
         state="info"
-        text={
-          asset?.accessDetails?.type === 'dynamic' ||
-          selectedAlgorithmAsset?.accessDetails?.type === 'dynamic'
-            ? `Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`
-            : siteContent.warning.ctd
-        }
+        text={siteContent.warning.ctd}
       />
       {content.form.data.map((field: FormFieldContent) => {
         return (
@@ -218,8 +213,7 @@ export default function FormStartCompute({
           !isValid ||
           !isBalanceSufficient ||
           !isAssetNetwork ||
-          !selectedAlgorithmAsset?.accessDetails?.isPurchasable ||
-          selectedAlgorithmAsset?.accessDetails?.type === 'dynamic'
+          !selectedAlgorithmAsset?.accessDetails?.isPurchasable
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}

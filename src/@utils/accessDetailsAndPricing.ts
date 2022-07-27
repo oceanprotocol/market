@@ -205,10 +205,8 @@ export async function getOrderPriceAndFees(
     price: '0',
     publisherMarketOrderFee:
       asset?.accessDetails?.publisherMarketOrderFee || '0',
-    publisherMarketPoolSwapFee: '0',
     publisherMarketFixedSwapFee: '0',
     consumeMarketOrderFee: consumeMarketOrderFee || '0',
-    consumeMarketPoolSwapFee: '0',
     consumeMarketFixedSwapFee: '0',
     providerFee: {
       providerFeeAmount: '0'

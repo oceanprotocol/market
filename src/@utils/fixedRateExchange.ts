@@ -1,8 +1,8 @@
 import { FixedRateExchange, PriceAndFees } from '@oceanprotocol/lib'
+import { consumeMarketFixedSwapFee } from 'app.config'
 import { AccessDetails } from 'src/@types/Price'
 import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
-import { consumeMarketPoolSwapFee } from '../../app.config'
 import { getDummyWeb3 } from './web3'
 
 /**
@@ -30,7 +30,7 @@ export async function getFixedBuyPrice(
   const estimatedPrice = await fixed.calcBaseInGivenOutDT(
     accessDetails.addressOrId,
     '1',
-    consumeMarketPoolSwapFee
+    consumeMarketFixedSwapFee
   )
   return estimatedPrice
 }

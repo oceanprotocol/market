@@ -15,7 +15,6 @@ import styles from './index.module.css'
 import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import PoolProvider from '@context/Pool'
 import AssetStats from './AssetStats'
 
 export default function AssetActions({
@@ -136,13 +135,11 @@ export default function AssetActions({
 
   return (
     <>
-      <PoolProvider>
-        <Tabs items={tabs} className={styles.actions} />
-        <Web3Feedback
-          networkId={asset?.chainId}
-          isAssetNetwork={isAssetNetwork}
-        />
-      </PoolProvider>
+      <Tabs items={tabs} className={styles.actions} />
+      <Web3Feedback
+        networkId={asset?.chainId}
+        isAssetNetwork={isAssetNetwork}
+      />
     </>
   )
 }

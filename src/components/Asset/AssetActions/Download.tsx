@@ -10,14 +10,12 @@ import styles from './Download.module.css'
 import { FileInfo, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import { buyDtFromPool } from '@utils/pool'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
-import { usePool } from '@context/Pool'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 
@@ -39,7 +37,6 @@ export default function Download({
   const { accountId, web3 } = useWeb3()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
-  const { poolData } = usePool()
   const isMounted = useIsMounted()
 
   const [isDisabled, setIsDisabled] = useState(true)
@@ -63,7 +60,6 @@ export default function Download({
       if (
         asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
         asset?.accessDetails?.type === 'free' ||
-        asset?.accessDetails?.type === 'dynamic' ||
         isLoading
       )
         return
@@ -80,7 +76,7 @@ export default function Download({
      * Not adding isLoading and getOpcFeeForToken because we set these here. It is a compromise
      */
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asset, accountId, poolData, getOpcFeeForToken])
+  }, [asset, accountId, getOpcFeeForToken])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
@@ -95,15 +91,11 @@ export default function Download({
      * - if the user is on the wrong network
      * - if user balance is not sufficient
      * - if user has no datatokens
-     * - if the asset has dynamic pricing
      */
     const isDisabled =
       !asset?.accessDetails.isPurchasable ||
       !isAssetNetwork ||
-      ((!isBalanceSufficient || !isAssetNetwork) &&
-        !isOwned &&
-        !hasDatatoken) ||
-      asset.accessDetails?.type === 'dynamic'
+      ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
 
     setIsDisabled(isDisabled)
   }, [
@@ -130,18 +122,6 @@ export default function Download({
 
         await downloadFile(web3, asset, accountId, validOrderTx)
       } else {
-        if (!hasDatatoken && asset.accessDetails.type === 'dynamic') {
-          setStatusText(
-            getOrderFeedback(
-              asset.accessDetails.baseToken?.symbol,
-              asset.accessDetails.datatoken?.symbol
-            )[0]
-          )
-          const tx = await buyDtFromPool(asset.accessDetails, accountId, web3)
-          if (!tx) {
-            throw new Error()
-          }
-        }
         setStatusText(
           getOrderFeedback(
             asset.accessDetails.baseToken?.symbol,

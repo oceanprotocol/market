@@ -51,7 +51,7 @@ function getConsumeHelpText(
       ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
       : isBalanceSufficient === false
       ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
-      : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
+      : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher.`
   return text
 }
 
@@ -93,7 +93,7 @@ function getComputeAssetHelpText(
       ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
       : isBalanceSufficient === false
       ? ''
-      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
+      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher.`
   const providerFeeHelpText = hasProviderFee
     ? 'In order to start the job you also need to pay the fees for renting the c2d resources.'
     : 'C2D resources required to start the job are available, no payment required for those fees.'
