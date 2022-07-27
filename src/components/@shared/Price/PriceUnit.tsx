@@ -23,7 +23,7 @@ export default function PriceUnit({
   type
 }: {
   price: string
-  type?: string
+  type: string
   className?: string
   size?: 'small' | 'mini' | 'large'
   conversion?: boolean
@@ -33,8 +33,8 @@ export default function PriceUnit({
 
   return (
     <div className={`${styles.price} ${styles[size]} ${className}`}>
-      {type && type === 'free' ? (
-        <div> Free </div>
+      {type === 'free' ? (
+        <div>Free</div>
       ) : (
         <>
           <div>
