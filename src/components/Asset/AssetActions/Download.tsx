@@ -19,6 +19,7 @@ import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { usePool } from '@context/Pool'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import Alert from '@shared/atoms/Alert'
 
 export default function Download({
   asset,
@@ -205,21 +206,35 @@ export default function Download({
     />
   )
 
+  function checkAsset(asset: AssetExtended) {
+    return asset?.accessDetails?.type === 'dynamic' ? (
+      <div>
+        <Alert
+          className={styles.fieldWarning}
+          state="info"
+          text={`Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`}
+        />
+      </div>
+    ) : (
+      <div className={styles.pricewrapper}>
+        <Price
+          accessDetails={asset.accessDetails}
+          orderPriceAndFees={orderPriceAndFees}
+          conversion
+          size="large"
+        />
+        {!isInPurgatory && <PurchaseButton />}
+      </div>
+    )
+  }
+
   return (
     <aside className={styles.consume}>
       <div className={styles.info}>
         <div className={styles.filewrapper}>
           <FileIcon file={file} isLoading={fileIsLoading} />
         </div>
-        <div className={styles.pricewrapper}>
-          <Price
-            accessDetails={asset.accessDetails}
-            orderPriceAndFees={orderPriceAndFees}
-            conversion
-            size="large"
-          />
-          {!isInPurgatory && <PurchaseButton />}
-        </div>
+        {checkAsset(asset)}
       </div>
 
       {asset?.metadata?.type === 'algorithm' && (
