@@ -46,8 +46,10 @@ export default function Download({
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
 
+  const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
+
   useEffect(() => {
-    if (!asset?.accessDetails) return
+    if (!asset?.accessDetails || isUnsupportedPricing) return
 
     asset.accessDetails.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
     asset.accessDetails.validOrderTx &&
@@ -74,14 +76,20 @@ export default function Download({
      * Not adding isLoading and getOpcFeeForToken because we set these here. It is a compromise
      */
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asset, accountId, getOpcFeeForToken])
+  }, [asset, accountId, getOpcFeeForToken, isUnsupportedPricing])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
   }, [dtBalance])
 
   useEffect(() => {
-    if (!isMounted || !accountId || !asset?.accessDetails) return
+    if (
+      !isMounted ||
+      !accountId ||
+      !asset?.accessDetails ||
+      isUnsupportedPricing
+    )
+      return
 
     /**
      * disabled in these cases:
@@ -103,7 +111,8 @@ export default function Download({
     isAssetNetwork,
     hasDatatoken,
     accountId,
-    isOwned
+    isOwned,
+    isUnsupportedPricing
   ])
 
   async function handleOrderOrDownload() {
@@ -164,8 +173,6 @@ export default function Download({
   )
 
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
-    const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
-
     return (
       <div>
         {isUnsupportedPricing ? (
