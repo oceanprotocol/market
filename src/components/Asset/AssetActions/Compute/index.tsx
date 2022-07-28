@@ -33,7 +33,7 @@ import {
 } from '@utils/compute'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
-import AssetActionHistoryTable from '../AssetActionHistoryTable'
+import ComputeHistory from './History'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { Decimal } from 'decimal.js'
@@ -101,7 +101,7 @@ export default function Compute({
       !hasAlgoAssetDatatoken &&
       !isConsumableaAlgorithmPrice)
 
-  const hasPrice = asset?.accessDetails?.price
+  const hasPrice = Boolean(asset?.accessDetails?.price)
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
@@ -441,13 +441,13 @@ export default function Compute({
         )}
       </footer>
       {accountId && asset?.accessDetails?.datatoken && (
-        <AssetActionHistoryTable title="Your Compute Jobs">
+        <ComputeHistory title="Your Compute Jobs">
           <ComputeJobs
             minimal
             assetChainIds={[asset?.chainId]}
             refetchJobs={refetchJobs}
           />
-        </AssetActionHistoryTable>
+        </ComputeHistory>
       )}
     </>
   )

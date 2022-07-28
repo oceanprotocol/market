@@ -56,7 +56,7 @@ export default function AssetList({
         assets,
         accountId || ''
       )
-      if (!isMounted()) return
+      if (!isMounted() || !assetsWithPrices) return
       setAssetsWithPrices([...assetsWithPrices])
     }
     fetchPrices()

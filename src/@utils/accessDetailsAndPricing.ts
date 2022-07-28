@@ -16,7 +16,10 @@ import {
 } from '@oceanprotocol/lib'
 import { getFixedBuyPrice } from './fixedRateExchange'
 import Decimal from 'decimal.js'
-import { consumeMarketOrderFee } from '../../app.config'
+import {
+  consumeMarketOrderFee,
+  publisherMarketOrderFee
+} from '../../app.config'
 
 const tokensPriceQuery = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
@@ -135,7 +138,7 @@ function getAccessDetailsFromTokenPrice(
   tokenPrice: TokenPrice | TokensPrice,
   timeout?: number
 ): AccessDetails {
-  let accessDetails: AccessDetails
+  const accessDetails = {} as AccessDetails
 
   if (tokenPrice?.orders?.length > 0) {
     const order = tokenPrice.orders[0]
@@ -199,8 +202,7 @@ export async function getOrderPriceAndFees(
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
     price: '0',
-    publisherMarketOrderFee:
-      asset?.accessDetails?.publisherMarketOrderFee || '0',
+    publisherMarketOrderFee: publisherMarketOrderFee || '0',
     publisherMarketFixedSwapFee: '0',
     consumeMarketOrderFee: consumeMarketOrderFee || '0',
     consumeMarketFixedSwapFee: '0',
