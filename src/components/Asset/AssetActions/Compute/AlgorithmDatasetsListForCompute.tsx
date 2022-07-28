@@ -18,7 +18,7 @@ export default function AlgorithmDatasetsListForCompute({
     useState<AssetSelectionAsset[]>()
 
   useEffect(() => {
-    if (!asset || !asset?.accessDetails.type) return
+    if (!asset || !asset?.accessDetails?.type) return
 
     async function getDatasetsAllowedForCompute() {
       const isCompute = Boolean(getServiceByName(asset, 'compute'))
