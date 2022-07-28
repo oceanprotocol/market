@@ -129,7 +129,7 @@ export async function transformPublishFormToDdo(
             checksum:
               dockerImage === 'custom'
                 ? // ? dockerImageCustomChecksum
-                  ''
+                  'sha256:7fc268f502935d11ff50c54e3776dda76477648d5d83c2e3c4fdab744390ecf2'
                 : getAlgorithmContainerPreset(dockerImage).checksum
           }
         }

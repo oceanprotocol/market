@@ -102,7 +102,7 @@ function UserPreferencesProvider({
   useEffect(() => {
     debug === true
       ? LoggerInstance.setLevel(LogLevel.Verbose)
-      : LoggerInstance.setLevel(LogLevel.Error)
+      : LoggerInstance.setLevel(LogLevel.Verbose)
   }, [debug])
 
   // Get locale always from user's browser
