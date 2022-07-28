@@ -146,8 +146,8 @@
       },
       {
         "name": "fileType",
-        "label": "File Type",
-        "help": "Specify how the underlying files must be accessed.",
+        "label": "Storage Type",
+        "help": "Specify how the underlying files are stored.",
         "type": "boxSelection",
         "options": ["URL", "Arweave"],
         "required": true,
