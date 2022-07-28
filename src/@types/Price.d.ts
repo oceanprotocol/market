@@ -25,7 +25,7 @@ declare global {
 
   /**
    * @interface AccessDetails
-   * @prop {'fixed' | 'free'}  type
+   * @prop {'fixed' | 'free' | 'NOT_SUPPORTED'}  type
    * @prop {string} price can be either spotPrice/rate
    * @prop {string} addressOrId for fixed/free this is an id.
    * @prop {TokenInfo} baseToken
@@ -37,7 +37,7 @@ declare global {
    * @prop {FeeInfo} feeInfo  values of the relevant fees
    */
   interface AccessDetails {
-    type: 'fixed' | 'free'
+    type: 'fixed' | 'free' | 'NOT_SUPPORTED'
     price: string
     addressOrId: string
     baseToken: TokenInfo

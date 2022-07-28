@@ -164,11 +164,11 @@ export default function Download({
   )
 
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
-    const isDynamicDeprecatedAsset = Boolean(!asset?.accessDetails?.type)
+    const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
     return (
       <div>
-        {asset?.accessDetails && isDynamicDeprecatedAsset ? (
+        {isUnsupportedPricing ? (
           <Alert
             className={styles.fieldWarning}
             state="info"

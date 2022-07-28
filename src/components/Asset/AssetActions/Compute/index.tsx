@@ -101,7 +101,7 @@ export default function Compute({
       !hasAlgoAssetDatatoken &&
       !isConsumableaAlgorithmPrice)
 
-  const isDynamicDeprecatedAsset = Boolean(!asset?.accessDetails?.type)
+  const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
@@ -203,11 +203,11 @@ export default function Compute({
   }
 
   useEffect(() => {
-    if (!asset?.accessDetails || !accountId || isDynamicDeprecatedAsset) return
+    if (!asset?.accessDetails || !accountId || isUnsupportedPricing) return
 
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
-  }, [asset?.accessDetails, accountId, isDynamicDeprecatedAsset])
+  }, [asset?.accessDetails, accountId, isUnsupportedPricing])
 
   useEffect(() => {
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
@@ -231,7 +231,7 @@ export default function Compute({
   }, [selectedAlgorithmAsset, accountId])
 
   useEffect(() => {
-    if (!asset?.accessDetails || isDynamicDeprecatedAsset) return
+    if (!asset?.accessDetails || isUnsupportedPricing) return
 
     getAlgorithmsForAsset(asset, newCancelToken()).then((algorithmsAssets) => {
       setDdoAlgorithmList(algorithmsAssets)
@@ -241,7 +241,7 @@ export default function Compute({
         }
       )
     })
-  }, [asset, isDynamicDeprecatedAsset])
+  }, [asset, isUnsupportedPricing])
 
   // Output errors in toast UI
   useEffect(() => {
@@ -352,11 +352,11 @@ export default function Compute({
     <>
       <div
         className={`${styles.info} ${
-          isDynamicDeprecatedAsset ? styles.warning : null
+          isUnsupportedPricing ? styles.warning : null
         }`}
       >
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        {asset?.accessDetails && isDynamicDeprecatedAsset ? (
+        {isUnsupportedPricing ? (
           <Alert
             text={`No pricing schema available for this asset.`}
             state="info"
@@ -371,7 +371,7 @@ export default function Compute({
         )}
       </div>
 
-      {isDynamicDeprecatedAsset ? null : asset.metadata.type === 'algorithm' ? (
+      {isUnsupportedPricing ? null : asset.metadata.type === 'algorithm' ? (
         <>
           {asset.services[0].type === 'compute' && (
             <Alert

@@ -140,12 +140,12 @@ function getAccessDetailsFromTokenPrice(
 ): AccessDetails {
   const accessDetails = {} as AccessDetails
 
-  // LEGACY, return empty for dynamic assets
-  // Remove once DDO from Aquarius delivers pricing type
+  // Return early when no supported pricing schema found.
   if (
     tokenPrice?.dispensers?.length === 0 &&
     tokenPrice?.fixedRateExchanges?.length === 0
   ) {
+    accessDetails.type = 'NOT_SUPPORTED'
     return accessDetails
   }
 
