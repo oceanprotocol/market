@@ -140,6 +140,15 @@ function getAccessDetailsFromTokenPrice(
 ): AccessDetails {
   const accessDetails = {} as AccessDetails
 
+  // LEGACY, return empty for dynamic assets
+  // Remove once DDO from Aquarius delivers pricing type
+  if (
+    tokenPrice?.dispensers?.length === 0 &&
+    tokenPrice?.fixedRateExchanges?.length === 0
+  ) {
+    return accessDetails
+  }
+
   if (tokenPrice?.orders?.length > 0) {
     const order = tokenPrice.orders[0]
     const reusedOrder = order?.reuses?.length > 0 ? order.reuses[0] : null

@@ -101,7 +101,7 @@ export default function Compute({
       !hasAlgoAssetDatatoken &&
       !isConsumableaAlgorithmPrice)
 
-  const hasPrice = Boolean(asset?.accessDetails?.price)
+  const isDynamicDeprecatedAsset = Boolean(!asset?.accessDetails?.type)
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
@@ -203,11 +203,11 @@ export default function Compute({
   }
 
   useEffect(() => {
-    if (!asset?.accessDetails || !accountId) return
+    if (!asset?.accessDetails || !accountId || isDynamicDeprecatedAsset) return
 
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
-  }, [asset?.accessDetails, accountId])
+  }, [asset?.accessDetails, accountId, isDynamicDeprecatedAsset])
 
   useEffect(() => {
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
@@ -231,7 +231,7 @@ export default function Compute({
   }, [selectedAlgorithmAsset, accountId])
 
   useEffect(() => {
-    if (!asset?.accessDetails) return
+    if (!asset?.accessDetails || isDynamicDeprecatedAsset) return
 
     getAlgorithmsForAsset(asset, newCancelToken()).then((algorithmsAssets) => {
       setDdoAlgorithmList(algorithmsAssets)
@@ -241,7 +241,7 @@ export default function Compute({
         }
       )
     })
-  }, [asset])
+  }, [asset, isDynamicDeprecatedAsset])
 
   // Output errors in toast UI
   useEffect(() => {
@@ -352,26 +352,26 @@ export default function Compute({
     <>
       <div
         className={`${styles.info} ${
-          !asset?.accessDetails?.price ? styles.warning : null
+          isDynamicDeprecatedAsset ? styles.warning : null
         }`}
       >
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        {hasPrice ? (
+        {asset?.accessDetails && isDynamicDeprecatedAsset ? (
+          <Alert
+            text={`Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`}
+            state="info"
+          />
+        ) : (
           <Price
             accessDetails={asset?.accessDetails}
             orderPriceAndFees={datasetOrderPriceAndFees}
             conversion
             size="large"
           />
-        ) : !asset?.accessDetails?.price ? (
-          <Alert
-            text={`Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`}
-            state="info"
-          />
-        ) : null}
+        )}
       </div>
 
-      {asset?.accessDetails?.price && asset.metadata.type === 'algorithm' ? (
+      {isDynamicDeprecatedAsset ? null : asset.metadata.type === 'algorithm' ? (
         <>
           {asset.services[0].type === 'compute' && (
             <Alert
@@ -381,14 +381,12 @@ export default function Compute({
               state="info"
             />
           )}
-          {hasPrice && (
-            <AlgorithmDatasetsListForCompute
-              algorithmDid={asset.id}
-              asset={asset}
-            />
-          )}
+          <AlgorithmDatasetsListForCompute
+            algorithmDid={asset.id}
+            asset={asset}
+          />
         </>
-      ) : !hasPrice ? null : (
+      ) : (
         <Formik
           initialValues={getInitialValues()}
           validateOnMount
