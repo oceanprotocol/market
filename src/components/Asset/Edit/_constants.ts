@@ -1,5 +1,6 @@
-import { FileInfo, Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
+import { Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { secondsToString } from '@utils/ddo'
+import { UrlFileInfo, ArweaveFileInfo } from 'src/components/Publish/_types'
 import * as Yup from 'yup'
 import { ComputeEditForm, MetadataEditForm } from './_types'
 
@@ -10,7 +11,7 @@ export const validationSchema = Yup.object().shape({
   description: Yup.string().required('Required').min(10),
   price: Yup.number().required('Required'),
   links: Yup.array<any[]>().nullable(),
-  files: Yup.array<FileInfo[]>().nullable(),
+  files: Yup.array<(UrlFileInfo | ArweaveFileInfo)[]>().nullable(),
   timeout: Yup.string().required('Required'),
   author: Yup.string().nullable()
 })

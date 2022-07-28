@@ -3,18 +3,26 @@ import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
 import { PriceOptions } from 'src/@types/Price'
 
-interface FileInfo {
-  type: 'url' | 'arweave' | string
-  url?: string
-  transactionId?: string
+interface BaseFileInfo {
+  type: string
   valid?: boolean
   contentLength?: string
   contentType?: string
 }
 
+export interface UrlFileInfo extends BaseFileInfo {
+  type: 'url'
+  url: string
+}
+
+export interface ArweaveFileInfo extends BaseFileInfo {
+  type: 'arweave'
+  transactionId: string
+}
+
 export interface FormPublishService {
-  files: FileInfo[]
-  links?: FileInfo[]
+  files: (UrlFileInfo | ArweaveFileInfo)[]
+  links?: (UrlFileInfo | ArweaveFileInfo)[]
   timeout: string
   dataTokenOptions: { name: string; symbol: string }
   access: 'Download' | 'Compute' | string
