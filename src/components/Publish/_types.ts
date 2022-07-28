@@ -1,7 +1,6 @@
 import { ServiceComputeOptions } from '@oceanprotocol/lib'
 import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
-import { PricePublishOptions } from 'src/@types/Price'
 
 interface FileInfo {
   url: string

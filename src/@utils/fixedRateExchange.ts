@@ -1,6 +1,5 @@
 import { FixedRateExchange, PriceAndFees } from '@oceanprotocol/lib'
 import { consumeMarketFixedSwapFee } from 'app.config'
-import { AccessDetails } from 'src/@types/Price'
 import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 import { getDummyWeb3 } from './web3'

@@ -14,7 +14,6 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
 import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import AssetStats from './AssetStats'
 
 export default function AssetActions({

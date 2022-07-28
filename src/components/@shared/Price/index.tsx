@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import PriceUnit from './PriceUnit'
-import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 
 export default function Price({
   accessDetails,

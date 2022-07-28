@@ -39,9 +39,7 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { Decimal } from 'decimal.js'
 import { useAbortController } from '@hooks/useAbortController'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
-import { OrderPriceAndFees } from 'src/@types/Price'
 import { handleComputeOrder } from '@utils/order'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { getComputeFeedback } from '@utils/feedback'
 import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
@@ -102,9 +100,8 @@ export default function Compute({
     (!validAlgorithmOrderTx &&
       !hasAlgoAssetDatatoken &&
       !isConsumableaAlgorithmPrice)
-  const isPriceTypeSupported =
-    asset?.accessDetails?.type === 'fixed' ||
-    asset?.accessDetails?.type === 'free'
+
+  const hasPrice = asset?.accessDetails?.price
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
@@ -234,7 +231,8 @@ export default function Compute({
   }, [selectedAlgorithmAsset, accountId])
 
   useEffect(() => {
-    if (!asset) return
+    if (!asset?.accessDetails) return
+
     getAlgorithmsForAsset(asset, newCancelToken()).then((algorithmsAssets) => {
       setDdoAlgorithmList(algorithmsAssets)
       getAlgorithmAssetSelectionList(asset, algorithmsAssets).then(
@@ -354,14 +352,19 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        {isPriceTypeSupported ? (
-          <Price accessDetails={asset?.accessDetails} conversion />
-        ) : (
+        {hasPrice ? (
+          <Price
+            accessDetails={asset?.accessDetails}
+            orderPriceAndFees={datasetOrderPriceAndFees}
+            conversion
+            size="large"
+          />
+        ) : !asset?.accessDetails?.price ? (
           <Alert
             text={`Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`}
             state="info"
           />
-        )}
+        ) : null}
       </div>
 
       {asset.metadata.type === 'algorithm' ? (
@@ -374,14 +377,14 @@ export default function Compute({
               state="info"
             />
           )}
-          {isPriceTypeSupported && (
+          {hasPrice && (
             <AlgorithmDatasetsListForCompute
               algorithmDid={asset.id}
               asset={asset}
             />
           )}
         </>
-      ) : !isPriceTypeSupported ? null : (
+      ) : !hasPrice ? null : (
         <Formik
           initialValues={getInitialValues()}
           validateOnMount

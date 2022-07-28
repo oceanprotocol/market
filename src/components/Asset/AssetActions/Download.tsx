@@ -9,11 +9,9 @@ import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForC
 import styles from './Download.module.css'
 import { FileInfo, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
-import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
@@ -51,15 +49,15 @@ export default function Download({
   useEffect(() => {
     if (!asset?.accessDetails) return
 
-    asset?.accessDetails?.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
-    asset?.accessDetails?.validOrderTx &&
+    asset.accessDetails.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
+    asset.accessDetails.validOrderTx &&
       setValidOrderTx(asset?.accessDetails?.validOrderTx)
 
     // get full price and fees
     async function init() {
       if (
-        asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
-        asset?.accessDetails?.type === 'free' ||
+        asset.accessDetails.addressOrId === ZERO_ADDRESS ||
+        asset.accessDetails.type === 'free' ||
         isLoading
       )
         return
@@ -115,8 +113,8 @@ export default function Download({
       if (isOwned) {
         setStatusText(
           getOrderFeedback(
-            asset.accessDetails?.baseToken?.symbol,
-            asset.accessDetails?.datatoken?.symbol
+            asset.accessDetails.baseToken?.symbol,
+            asset.accessDetails.datatoken?.symbol
           )[3]
         )
 
@@ -126,7 +124,7 @@ export default function Download({
           getOrderFeedback(
             asset.accessDetails.baseToken?.symbol,
             asset.accessDetails.datatoken?.symbol
-          )[asset.accessDetails?.type === 'fixed' ? 2 : 1]
+          )[asset.accessDetails.type === 'fixed' ? 2 : 1]
         )
         const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
         if (!orderTx) {

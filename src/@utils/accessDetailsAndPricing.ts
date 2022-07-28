@@ -14,9 +14,7 @@ import {
   ProviderFees,
   ProviderInstance
 } from '@oceanprotocol/lib'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { getFixedBuyPrice } from './fixedRateExchange'
-import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import Decimal from 'decimal.js'
 import { consumeMarketOrderFee } from '../../app.config'
 
@@ -137,7 +135,7 @@ function getAccessDetailsFromTokenPrice(
   tokenPrice: TokenPrice | TokensPrice,
   timeout?: number
 ): AccessDetails {
-  const accessDetails = {} as AccessDetails
+  let accessDetails: AccessDetails
 
   if (tokenPrice?.orders?.length > 0) {
     const order = tokenPrice.orders[0]
@@ -164,7 +162,6 @@ function getAccessDetailsFromTokenPrice(
       name: dispenser.token.name,
       symbol: dispenser.token.symbol
     }
-    return accessDetails
   }
 
   // checking for fixed price
@@ -185,7 +182,6 @@ function getAccessDetailsFromTokenPrice(
       name: fixed.datatoken.name,
       symbol: fixed.datatoken.symbol
     }
-    return accessDetails
   }
 
   return accessDetails

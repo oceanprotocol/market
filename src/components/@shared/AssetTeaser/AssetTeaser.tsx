@@ -8,7 +8,6 @@ import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
-import { AssetExtended } from 'src/@types/AssetExtended'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended

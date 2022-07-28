@@ -5,7 +5,6 @@ import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AssetComputeList from '@shared/AssetList/AssetComputeList'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getServiceByName } from '@utils/ddo'
-import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function AlgorithmDatasetsListForCompute({
   asset,

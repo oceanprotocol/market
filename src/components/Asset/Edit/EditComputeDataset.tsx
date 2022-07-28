@@ -17,7 +17,6 @@ import {
   computeSettingsValidationSchema
 } from './_constants'
 import content from '../../../../content/pages/editComputeDataset.json'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { getServiceByName } from '@utils/ddo'
 import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
 import { transformComputeFormToServiceComputeOptions } from '@utils/compute'
