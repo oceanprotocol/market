@@ -358,7 +358,7 @@ export default function Compute({
         <FileIcon file={file} isLoading={fileIsLoading} small />
         {asset?.accessDetails && isDynamicDeprecatedAsset ? (
           <Alert
-            text={`Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`}
+            text={`No pricing schema available for this asset.`}
             state="info"
           />
         ) : (

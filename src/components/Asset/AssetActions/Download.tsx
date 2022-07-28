@@ -172,7 +172,7 @@ export default function Download({
           <Alert
             className={styles.fieldWarning}
             state="info"
-            text={`Dynamic pricing with pools [is deprecated](https://blog.oceanprotocol.com/ocean-market-changes-3384fd7e113c).`}
+            text={`No pricing schema available for this asset.`}
           />
         ) : (
           <>
