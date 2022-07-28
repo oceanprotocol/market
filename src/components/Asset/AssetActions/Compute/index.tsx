@@ -350,7 +350,11 @@ export default function Compute({
 
   return (
     <>
-      <div className={styles.info}>
+      <div
+        className={`${styles.info} ${
+          !asset?.accessDetails?.price ? styles.warning : null
+        }`}
+      >
         <FileIcon file={file} isLoading={fileIsLoading} small />
         {hasPrice ? (
           <Price
@@ -367,7 +371,7 @@ export default function Compute({
         ) : null}
       </div>
 
-      {asset.metadata.type === 'algorithm' ? (
+      {asset?.accessDetails?.price && asset.metadata.type === 'algorithm' ? (
         <>
           {asset.services[0].type === 'compute' && (
             <Alert
