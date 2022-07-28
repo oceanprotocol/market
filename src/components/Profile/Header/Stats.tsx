@@ -25,7 +25,7 @@ export default function Stats({
         const assetsPrices = await getAccessDetailsForAssets(assets)
         let count = 0
         for (const priceInfo of assetsPrices) {
-          if (priceInfo.stats.orders > 0) {
+          if (priceInfo?.accessDetails?.price && priceInfo.stats.orders > 0) {
             count +=
               parseInt(priceInfo.accessDetails.price) * priceInfo.stats.orders
           }
