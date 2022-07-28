@@ -2,6 +2,7 @@ import React, { ReactNode, ReactElement } from 'react'
 import PageHeader from './PageHeader'
 import Seo from './Seo'
 import Container from '@shared/atoms/Container'
+import Dotdotdot from 'react-dotdotdot'
 
 export interface PageProps {
   children: ReactNode
@@ -26,7 +27,7 @@ export default function Page({
       <Container>
         {title && !noPageHeader && (
           <PageHeader
-            title={<>{title}</>}
+            title={<Dotdotdot clamp={3}>{title.slice(0, 300)}</Dotdotdot>}
             description={description}
             center={headerCenter}
           />
