@@ -17,7 +17,6 @@ export interface AppConfig {
   consumeMarketFixedSwapFee: string
   currencies: string[]
   allowFixedPricing: string
-  allowDynamicPricing: string
   allowFreePricing: string
   defaultPrivacyPolicySlug: string
   privacyPreferenceCenter: string
