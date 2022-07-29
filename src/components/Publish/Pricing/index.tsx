@@ -11,18 +11,33 @@ import { useWeb3 } from '@context/Web3'
 
 export default function PricingFields(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { approvedBaseTokens } = useWeb3()
-
+  const { approvedBaseTokens, chainId } = useWeb3()
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { pricing } = values
   const { type } = pricing
 
+  const defaultBaseToken =
+    approvedBaseTokens?.find((token) =>
+      token.name.toLowerCase().includes('ocean')
+    ) || approvedBaseTokens?.[0]
+
+  const isBaseTokenSet = !!approvedBaseTokens?.find(
+    (token) => token?.address === values?.pricing?.baseToken?.address
+  )
+
   useEffect(() => {
-    if (approvedBaseTokens?.length > 0) {
-      setFieldValue('pricing.baseToken', approvedBaseTokens[0])
-    }
-  }, [approvedBaseTokens, setFieldValue])
+    if (!approvedBaseTokens?.length) return
+    if (isBaseTokenSet) return
+    setFieldValue('pricing.baseToken', defaultBaseToken)
+  }, [
+    approvedBaseTokens,
+    chainId,
+    defaultBaseToken,
+    isBaseTokenSet,
+    setFieldValue,
+    values.pricing.baseToken
+  ])
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
@@ -30,10 +45,7 @@ export default function PricingFields(): ReactElement {
     setFieldValue('pricing.type', type)
     setFieldValue('pricing.price', 0)
     setFieldValue('pricing.freeAgreement', false)
-    setFieldValue(
-      'pricing.baseToken',
-      pricing?.baseToken || approvedBaseTokens[0]
-    )
+    setFieldValue('pricing.baseToken', defaultBaseToken)
     type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
