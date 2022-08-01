@@ -34,8 +34,6 @@ export interface SignalsProviderValue {
   // setSignalUrls?(queryUrls: string[]): void
 }
 
-const refreshInterval = 120000 // 120 sec.
-
 const SignalsContext = createContext({} as SignalsProviderValue)
 
 function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
@@ -68,23 +66,19 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
         compareUrl.add(signal)
       })
       defaultSignalUrls.forEach((url) => {
-        console.log(defaultSignalUrls)
         if (compareUrl.has(url)) return
         setSignalUrls((signalUrlArray) => {
-          console.log([...signalUrlArray, url])
           return [...signalUrlArray, url]
         })
       })
     }
   }, [refSignals.current])
   useEffect(() => {
-    console.log('useEffect to set origin')
     const compareUrl = new Set()
     refSignalUrls.current.forEach((signal, index) => {
       compareUrl.add(signal)
     })
     if (signalUrls.length > 0) {
-      console.table(signalUrls)
       setOrigin(signalUrls)
     }
   }, [refSignalUrls.current])
@@ -119,6 +113,6 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
   )
 }
 
-const useSignal = (): SignalsProviderValue => useContext(SignalsContext)
+const useSignalContext = (): SignalsProviderValue => useContext(SignalsContext)
 
-export { SignalsProvider, useSignal, SignalsContext }
+export { SignalsProvider, useSignalContext, SignalsContext }

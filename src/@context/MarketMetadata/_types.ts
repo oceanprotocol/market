@@ -1,3 +1,5 @@
+import { SignalSettingsItem } from '@context/Signals/_types'
+
 export interface OpcFee {
   chainId: number
   swapNotApprovedFee: string
@@ -31,6 +33,7 @@ export interface AppConfig {
   }
   v3MetadataCacheUri: string
   v3MarketUri: string
+  signalSettings: SignalSettingsItem
 }
 export interface SiteContent {
   siteTitle: string

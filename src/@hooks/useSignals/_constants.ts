@@ -1,4 +1,4 @@
-import { AssetSignalItem, SignalSettingsItem } from '@context/Signals/_types'
+import { AssetSignalItem } from '@context/Signals/_types'
 
 const nftSignalItems: AssetSignalItem[] = [
   {
@@ -37,38 +37,4 @@ const nftSignalItems: AssetSignalItem[] = [
   }
 ]
 
-const signalSettingsConfig: SignalSettingsItem = {
-  lastUpdated: new Date().toDateString(),
-  signals: [
-    {
-      id: 'sample_qualitative_signal',
-      title: 'Sample Qualitative Signal',
-      origin:
-        'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/',
-      isCustom: false,
-      signals: [],
-      urlParams: {
-        assetIds: [],
-        publisherIds: [],
-        userAddresses: []
-      }
-    },
-    {
-      id: 'sample_defi_signal',
-      title: 'Sushi Defi Signal',
-      origin:
-        'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi/',
-      isCustom: false,
-      signals: [],
-      urlParams: {
-        assetIds: [],
-        publisherIds: [],
-        userAddresses: []
-      }
-    }
-  ],
-  enabled: true
-}
-const defiSignalItems: AssetSignalItem[] = []
-
-export { nftSignalItems, defiSignalItems, signalSettingsConfig }
+export { nftSignalItems }

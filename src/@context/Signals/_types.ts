@@ -116,6 +116,7 @@ export interface SignalParams {
    */
   assetIds: string[]
   /**
+   *
    * a string for the publisher we are using as a filter signals
    * @type {String}
    * @memberof SignalParams

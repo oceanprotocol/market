@@ -10,7 +10,6 @@ import { LoggerInstance, LogLevel } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
 import { useMarketMetadata } from './MarketMetadata'
 import { SignalOriginItem, SignalSettingsItem } from '@context/Signals/_types'
-import { signalSettingsConfig } from '@hooks/useSignals/_constants'
 
 interface UserPreferencesValue {
   debug: boolean
@@ -85,7 +84,7 @@ function UserPreferencesProvider({
   )
   // Initialize signal settings
   const [signalSettings, setSignalSettings] = useState<SignalSettingsItem>(
-    localStorage?.signalSettings || { ...signalSettingsConfig }
+    localStorage?.signalSettings || appConfig.signalSettings
   )
 
   // Write values to localStorage on change

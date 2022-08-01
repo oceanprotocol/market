@@ -94,5 +94,42 @@ module.exports = {
   // is used to create and show a privacy preference center / cookie banner
   // To learn more about how to configure and use this, please refer to the readme
   privacyPreferenceCenter:
-    process.env.NEXT_PUBLIC_PRIVACY_PREFERENCE_CENTER || 'false'
+    process.env.NEXT_PUBLIC_PRIVACY_PREFERENCE_CENTER || 'false',
+
+  // These are the default signal settings used for ssignalignal loading for assets, publishers and users
+  // The signals here are samples for now and can be replaced with actual signals from various sources
+  // See the signals documentation to learn how these work and add your own signals
+  // Check out SignalSettingsItem type in the Signals context folder to learn more
+  signalSettings: {
+    lastUpdated: new Date().toDateString(),
+    signals: [
+      {
+        id: 'sample_qualitative_signal',
+        title: 'Sample Qualitative Signal',
+        origin:
+          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/',
+        isCustom: false,
+        signals: [],
+        urlParams: {
+          assetIds: [],
+          publisherIds: [],
+          userAddresses: []
+        }
+      },
+      {
+        id: 'sample_defi_signal',
+        title: 'Sushi Defi Signal',
+        origin:
+          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi/',
+        isCustom: false,
+        signals: [],
+        urlParams: {
+          assetIds: [],
+          publisherIds: [],
+          userAddresses: []
+        }
+      }
+    ],
+    enabled: true
+  }
 }
