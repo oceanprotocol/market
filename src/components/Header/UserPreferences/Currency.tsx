@@ -2,13 +2,16 @@ import React, { ReactElement, ChangeEvent } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
 import Input from '@shared/FormInput'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import styles from './index.module.css'
+import Label from '@shared/FormInput/Label'
 
 export default function Currency(): ReactElement {
   const { currency, setCurrency } = useUserPreferences()
   const { appConfig } = useMarketMetadata()
 
   return (
-    <li>
+    <li className={styles.listItems}>
+      {/* <Label htmlFor="">Currency</Label> */}
       <Input
         name="currency"
         label="Currency"
