@@ -3,7 +3,6 @@ import { Field, useField, useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
 import Input from '@shared/FormInput'
 import Error from '@shared/FormInput/Error'
-import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './Price.module.css'
 import { FormPublishData } from '../_types'
 import { getFieldContent } from '@utils/form'
@@ -11,11 +10,9 @@ import CoinSelect from './CoinSelect'
 
 export default function Price({
   approvedBaseTokens,
-  firstPrice,
   content
 }: {
   approvedBaseTokens?: TokenInfo[]
-  firstPrice?: string
   content?: any
 }): ReactElement {
   const [field, meta] = useField('pricing.price')
@@ -59,16 +56,6 @@ export default function Price({
               </h4>
             </div>
           </div>
-          {firstPrice && (
-            <aside className={styles.firstPrice}>
-              Expected first price:{' '}
-              <PriceUnit
-                price={Number(firstPrice) > 0 ? firstPrice : '-'}
-                size="small"
-                conversion
-              />
-            </aside>
-          )}
         </>
       )}
     </div>
