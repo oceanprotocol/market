@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import FormHelp from '@shared/FormInput/Help'
 import Price from './Price'
 import Fees from './Fees'
-import styles from './index.module.css'
+import styles from './Fixed.module.css'
 
 export default function Fixed({
   approvedBaseTokens,

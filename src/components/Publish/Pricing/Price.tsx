@@ -3,6 +3,7 @@ import { Field, useField, useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
 import Input from '@shared/FormInput'
 import Error from '@shared/FormInput/Error'
+import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './Price.module.css'
 import { FormPublishData } from '../_types'
 import { getFieldContent } from '@utils/form'
@@ -22,18 +23,16 @@ export default function Price({
   const { values } = useFormikContext<FormPublishData>()
   const { dataTokenOptions } = values.services[0]
 
-  const classNames = `${styles.price} ${
-    values.pricing.type === 'free' ? styles.free : styles.fixed
-  }`
-
   return (
-    <div className={classNames}>
+    <div className={styles.price}>
       {values.pricing.type === 'free' ? (
-        <Field
-          {...getFieldContent('freeAgreement', content.fields)}
-          component={Input}
-          name="pricing.freeAgreement"
-        />
+        <div className={styles.free}>
+          <Field
+            {...getFieldContent('freeAgreement', content.fields)}
+            component={Input}
+            name="pricing.freeAgreement"
+          />
+        </div>
       ) : (
         <>
           <div className={styles.grid}>
@@ -59,12 +58,17 @@ export default function Price({
                 <Conversion price={field.value} className={styles.conversion} />
               </h4>
             </div>
-
-            <h4 className={styles.datatoken}>
-              = <strong>1</strong> {dataTokenOptions.symbol}{' '}
-              <Conversion price={field.value} className={styles.conversion} />
-            </h4>
           </div>
+          {firstPrice && (
+            <aside className={styles.firstPrice}>
+              Expected first price:{' '}
+              <PriceUnit
+                price={Number(firstPrice) > 0 ? firstPrice : '-'}
+                size="small"
+                conversion
+              />
+            </aside>
+          )}
         </>
       )}
     </div>
