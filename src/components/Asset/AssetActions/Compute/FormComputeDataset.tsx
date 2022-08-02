@@ -10,9 +10,7 @@ import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset } from '@oceanprotocol/lib'
-import { OrderPriceAndFees } from 'src/@types/Price'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
 import { useMarketMetadata } from '@context/MarketMetadata'
@@ -29,7 +27,6 @@ export default function FormStartCompute({
   hasPreviousOrder,
   hasDatatoken,
   dtBalance,
-  datasetLowPoolLiquidity,
   assetType,
   assetTimeout,
   hasPreviousOrderSelectedComputeAsset,
@@ -37,7 +34,6 @@ export default function FormStartCompute({
   oceanSymbol,
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
-  selectedComputeAssetLowPoolLiquidity,
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
   stepText,
@@ -57,7 +53,6 @@ export default function FormStartCompute({
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtBalance: string
-  datasetLowPoolLiquidity: boolean
   assetType: string
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset?: boolean
@@ -65,7 +60,6 @@ export default function FormStartCompute({
   oceanSymbol?: string
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
-  selectedComputeAssetLowPoolLiquidity?: boolean
   selectedComputeAssetType?: string
   selectedComputeAssetTimeout?: string
   stepText: string
@@ -185,15 +179,17 @@ export default function FormStartCompute({
         state="info"
         text={siteContent.warning.ctd}
       />
-      {content.form.data.map((field: FormFieldContent) => (
-        <Field
-          key={field.name}
-          {...field}
-          options={algorithms}
-          component={Input}
-          disabled={isLoading}
-        />
-      ))}
+      {content.form.data.map((field: FormFieldContent) => {
+        return (
+          <Field
+            key={field.name}
+            {...field}
+            options={algorithms}
+            component={Input}
+            disabled={isLoading || isComputeButtonDisabled}
+          />
+        )
+      })}
 
       <PriceOutput
         hasPreviousOrder={hasPreviousOrder}
@@ -227,7 +223,6 @@ export default function FormStartCompute({
         btSymbol={asset?.accessDetails?.baseToken?.symbol}
         dtSymbol={asset?.datatokens[0]?.symbol}
         dtBalance={dtBalance}
-        datasetLowPoolLiquidity={datasetLowPoolLiquidity}
         assetTimeout={assetTimeout}
         assetType={assetType}
         hasPreviousOrderSelectedComputeAsset={
@@ -236,9 +231,6 @@ export default function FormStartCompute({
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         dtSymbolSelectedComputeAsset={dtSymbolSelectedComputeAsset}
         dtBalanceSelectedComputeAsset={dtBalanceSelectedComputeAsset}
-        selectedComputeAssetLowPoolLiquidity={
-          selectedComputeAssetLowPoolLiquidity
-        }
         selectedComputeAssetType={selectedComputeAssetType}
         stepText={stepText}
         isLoading={isLoading}

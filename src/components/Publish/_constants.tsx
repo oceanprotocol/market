@@ -1,6 +1,11 @@
 import React from 'react'
 import { allowFixedPricing } from '../../../app.config.js'
-import { FormPublishData, PublishFeedback, StepContent } from './_types'
+import {
+  FormPublishData,
+  MetadataAlgorithmContainer,
+  PublishFeedback,
+  StepContent
+} from './_types'
 import content from '../../../content/publish/form.json'
 import PricingFields from './Pricing'
 import MetadataFields from './Metadata'
@@ -84,20 +89,8 @@ export const initialValues: FormPublishData = {
     baseToken: { address: '', name: '', symbol: 'OCEAN', decimals: 18 },
     price: 0,
     type: allowFixedPricing === 'true' ? 'fixed' : 'free',
-    amountDataToken: 1000,
-    amountBaseToken: 100,
-    weightOnBaseToken: '5', // 50% on OCEAN
-    weightOnDataToken: '5', // 50% on datatoken
-    swapFee: 0.1, // in %
     freeAgreement: false
   }
-}
-
-export interface MetadataAlgorithmContainer {
-  entrypoint: string
-  image: string
-  tag: string
-  checksum: string
 }
 
 export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [

@@ -26,7 +26,7 @@ export default function Page({
       <Container>
         {title && !noPageHeader && (
           <PageHeader
-            title={<>{title}</>}
+            title={<>{title.slice(0, 400)}</>}
             description={description}
             center={headerCenter}
           />

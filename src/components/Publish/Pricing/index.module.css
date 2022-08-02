@@ -10,3 +10,10 @@
   padding-left: 0;
   padding-right: 0;
 }
+
+.title {
+  font-size: var(--font-size-base);
+  margin-top: var(--spacer);
+  margin-bottom: 0;
+  padding-bottom: calc(var(--spacer) / 4);
+}

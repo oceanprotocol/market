@@ -10,21 +10,17 @@ import {
   ProviderFees,
   ProviderInstance
 } from '@oceanprotocol/lib'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 import { TransactionReceipt } from 'web3-eth'
-import { OrderPriceAndFees } from 'src/@types/Price'
 import {
   marketFeeAddress,
   consumeMarketOrderFee,
   consumeMarketFixedSwapFee
 } from '../../app.config'
-import { buyDtFromPool } from './pool'
 import { toast } from 'react-toastify'
 
 /**
- * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
  * @param web3
  * @param asset
  * @param orderPriceAndFees
@@ -102,17 +98,6 @@ export async function order(
 
       return tx
     }
-    case 'dynamic': {
-      const tx = await datatoken.startOrder(
-        asset.accessDetails.datatoken.address,
-        accountId,
-        computeConsumerAddress || accountId,
-        0,
-        providerFees || initializeData.providerFee
-      )
-      return tx
-    }
-
     case 'free': {
       const tx = await datatoken.buyFromDispenserAndOrder(
         asset.services[0].datatokenAddress,
@@ -191,14 +176,6 @@ async function startOrder(
   initializeData: ProviderComputeInitialize,
   computeConsumerAddress?: string
 ): Promise<TransactionReceipt> {
-  if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
-    const poolTx = await buyDtFromPool(asset?.accessDetails, accountId, web3)
-    LoggerInstance.log('[compute] Bought datatoken from pool: ', poolTx)
-    if (!poolTx) {
-      toast.error('Failed to buy datatoken from pool!')
-      return
-    }
-  }
   const tx = await order(
     web3,
     asset,

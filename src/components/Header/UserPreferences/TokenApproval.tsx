@@ -9,7 +9,7 @@ export default function TokenApproval(): ReactElement {
     <li>
       <Input
         label="Token Approvals"
-        help="Use infinite amount when approving tokens in _Use_, _Pool_, or _Trade_."
+        help="Use infinite amount when approving tokens in _Use_."
         name="infiniteApproval"
         type="checkbox"
         options={['Allow infinite amount']}

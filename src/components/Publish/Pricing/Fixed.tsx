@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import FormHelp from '@shared/FormInput/Help'
 import Price from './Price'
 import Fees from './Fees'
-import styles from './Fixed.module.css'
+import styles from './index.module.css'
 
 export default function Fixed({
   approvedBaseTokens,
@@ -16,8 +16,9 @@ export default function Fixed({
       <FormHelp>{content.info}</FormHelp>
 
       <h4 className={styles.title}>Price</h4>
+
       <Price approvedBaseTokens={approvedBaseTokens} />
-      <Fees tooltips={content.tooltips} pricingType="fixed" />
+      <Fees tooltips={content.tooltips} />
     </>
   )
 }

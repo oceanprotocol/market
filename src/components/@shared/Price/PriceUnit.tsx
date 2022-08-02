@@ -33,16 +33,13 @@ export default function PriceUnit({
 
   return (
     <div className={`${styles.price} ${styles[size]} ${className}`}>
-      {type && type === 'free' ? (
-        <div> Free </div>
+      {type === 'free' ? (
+        <div>Free</div>
       ) : (
         <>
           <div>
             {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
             <span className={styles.symbol}>{symbol}</span>
-            {type && type === 'dynamic' && (
-              <Badge label="pool" className={styles.badge} />
-            )}
           </div>
           {conversion && <Conversion price={price} />}
         </>

@@ -13,7 +13,6 @@ import { checkV3Asset, retrieveAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
@@ -126,6 +125,7 @@ function AssetProvider({
   // -----------------------------------
   const fetchAccessDetails = useCallback(async (): Promise<void> => {
     if (!asset?.chainId || !asset?.services) return
+
     const accessDetails = await getAccessDetails(
       asset.chainId,
       asset.services[0].datatokenAddress,
