@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import FormHelp from '@shared/FormInput/Help'
 import Price from './Price'
 import Fees from './Fees'
-import styles from './Dynamic.module.css'
+import styles from './index.module.css'
 
 export default function Fixed({ content }: { content: any }): ReactElement {
   return (
@@ -12,7 +12,7 @@ export default function Fixed({ content }: { content: any }): ReactElement {
       <h4 className={styles.title}>Price</h4>
 
       <Price />
-      <Fees tooltips={content.tooltips} pricingType="fixed" />
+      <Fees tooltips={content.tooltips} />
     </>
   )
 }

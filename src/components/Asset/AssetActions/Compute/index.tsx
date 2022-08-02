@@ -33,19 +33,14 @@ import {
 } from '@utils/compute'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
-import AssetActionHistoryTable from '../AssetActionHistoryTable'
+import ComputeHistory from './History'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { Decimal } from 'decimal.js'
 import { useAbortController } from '@hooks/useAbortController'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
-import { OrderPriceAndFees } from 'src/@types/Price'
 import { handleComputeOrder } from '@utils/order'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { getComputeFeedback } from '@utils/feedback'
-import { usePool } from '@context/Pool'
-import { useMarketMetadata } from '@context/MarketMetadata'
-import { getPoolData } from '@context/Pool/_utils'
 import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
 
@@ -63,8 +58,6 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
-  const { getOpcFeeForToken } = useMarketMetadata()
-  const { poolData } = usePool()
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
 
@@ -107,6 +100,8 @@ export default function Compute({
     (!validAlgorithmOrderTx &&
       !hasAlgoAssetDatatoken &&
       !isConsumableaAlgorithmPrice)
+
+  const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
@@ -168,26 +163,9 @@ export default function Compute({
             asset.metadata.type
           )[0]
         )
-        const poolParams =
-          asset?.accessDetails?.type === 'dynamic'
-            ? {
-                tokenInLiquidity: poolData?.baseTokenLiquidity,
-                tokenOutLiquidity: poolData?.datatokenLiquidity,
-                tokenOutAmount: '1',
-                opcFee: getOpcFeeForToken(
-                  asset?.accessDetails?.baseToken.address,
-                  asset?.chainId
-                ),
-                lpSwapFee: poolData?.liquidityProviderSwapFee,
-                publishMarketSwapFee:
-                  asset?.accessDetails?.publisherMarketOrderFee,
-                consumeMarketSwapFee: '0'
-              }
-            : null
         const datasetPriceAndFees = await getOrderPriceAndFees(
           asset,
           ZERO_ADDRESS,
-          poolParams,
           initializedProvider?.datasets?.[0]?.providerFee
         )
         if (!datasetPriceAndFees)
@@ -208,32 +186,9 @@ export default function Compute({
             selectedAlgorithmAsset?.metadata?.type
           )[0]
         )
-        let algoPoolParams = null
-        if (selectedAlgorithmAsset?.accessDetails?.type === 'dynamic') {
-          const response = await getPoolData(
-            selectedAlgorithmAsset.chainId,
-            selectedAlgorithmAsset.accessDetails?.addressOrId,
-            selectedAlgorithmAsset?.nft.owner,
-            accountId || ''
-          )
-          algoPoolParams = {
-            tokenInLiquidity: response?.poolData?.baseTokenLiquidity,
-            tokenOutLiquidity: response?.poolData?.datatokenLiquidity,
-            tokenOutAmount: '1',
-            opcFee: getOpcFeeForToken(
-              selectedAlgorithmAsset?.accessDetails?.baseToken.address,
-              selectedAlgorithmAsset?.chainId
-            ),
-            lpSwapFee: response?.poolData?.liquidityProviderSwapFee,
-            publishMarketSwapFee:
-              selectedAlgorithmAsset?.accessDetails?.publisherMarketOrderFee,
-            consumeMarketSwapFee: '0'
-          }
-        }
         const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
           selectedAlgorithmAsset,
           ZERO_ADDRESS,
-          algoPoolParams,
           initializedProvider.algorithm.providerFee
         )
         if (!algorithmOrderPriceAndFees)
@@ -248,11 +203,11 @@ export default function Compute({
   }
 
   useEffect(() => {
-    if (!asset?.accessDetails || !accountId) return
+    if (!asset?.accessDetails || !accountId || isUnsupportedPricing) return
 
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
-  }, [asset?.accessDetails, accountId])
+  }, [asset?.accessDetails, accountId, isUnsupportedPricing])
 
   useEffect(() => {
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
@@ -276,7 +231,8 @@ export default function Compute({
   }, [selectedAlgorithmAsset, accountId])
 
   useEffect(() => {
-    if (!asset) return
+    if (!asset?.accessDetails || isUnsupportedPricing) return
+
     getAlgorithmsForAsset(asset, newCancelToken()).then((algorithmsAssets) => {
       setDdoAlgorithmList(algorithmsAssets)
       getAlgorithmAssetSelectionList(asset, algorithmsAssets).then(
@@ -285,7 +241,7 @@ export default function Compute({
         }
       )
     })
-  }, [asset])
+  }, [asset, isUnsupportedPricing])
 
   // Output errors in toast UI
   useEffect(() => {
@@ -323,13 +279,7 @@ export default function Compute({
           selectedAlgorithmAsset.accessDetails.baseToken?.symbol,
           selectedAlgorithmAsset.accessDetails.datatoken?.symbol,
           selectedAlgorithmAsset.metadata.type
-        )[
-          selectedAlgorithmAsset.accessDetails?.type === 'fixed'
-            ? 2
-            : selectedAlgorithmAsset.accessDetails?.type === 'dynamic'
-            ? 1
-            : 3
-        ]
+        )[selectedAlgorithmAsset.accessDetails?.type === 'fixed' ? 2 : 3]
       )
 
       const algorithmOrderTx = await handleComputeOrder(
@@ -348,13 +298,7 @@ export default function Compute({
           asset.accessDetails.baseToken?.symbol,
           asset.accessDetails.datatoken?.symbol,
           asset.metadata.type
-        )[
-          asset.accessDetails?.type === 'fixed'
-            ? 2
-            : asset.accessDetails?.type === 'dynamic'
-            ? 1
-            : 3
-        ]
+        )[asset.accessDetails?.type === 'fixed' ? 2 : 3]
       )
       const datasetOrderTx = await handleComputeOrder(
         web3,
@@ -406,17 +350,37 @@ export default function Compute({
 
   return (
     <>
-      <div className={styles.info}>
+      <div
+        className={`${styles.info} ${
+          isUnsupportedPricing ? styles.warning : null
+        }`}
+      >
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        <Price accessDetails={asset?.accessDetails} conversion />
-      </div>
-
-      {asset.metadata.type === 'algorithm' ? (
-        <>
+        {isUnsupportedPricing ? (
           <Alert
-            text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+            text={`No pricing schema available for this asset.`}
             state="info"
           />
+        ) : (
+          <Price
+            accessDetails={asset?.accessDetails}
+            orderPriceAndFees={datasetOrderPriceAndFees}
+            conversion
+            size="large"
+          />
+        )}
+      </div>
+
+      {isUnsupportedPricing ? null : asset.metadata.type === 'algorithm' ? (
+        <>
+          {asset.services[0].type === 'compute' && (
+            <Alert
+              text={
+                "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+              }
+              state="info"
+            />
+          )}
           <AlgorithmDatasetsListForCompute
             algorithmDid={asset.id}
             asset={asset}
@@ -442,7 +406,6 @@ export default function Compute({
             hasPreviousOrder={validOrderTx !== undefined}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
-            datasetLowPoolLiquidity={!isConsumablePrice}
             assetType={asset?.metadata.type}
             assetTimeout={secondsToString(asset?.services[0].timeout)}
             hasPreviousOrderSelectedComputeAsset={
@@ -480,13 +443,13 @@ export default function Compute({
         )}
       </footer>
       {accountId && asset?.accessDetails?.datatoken && (
-        <AssetActionHistoryTable title="Your Compute Jobs">
+        <ComputeHistory title="Your Compute Jobs">
           <ComputeJobs
             minimal
             assetChainIds={[asset?.chainId]}
             refetchJobs={refetchJobs}
           />
-        </AssetActionHistoryTable>
+        </ComputeHistory>
       )}
     </>
   )

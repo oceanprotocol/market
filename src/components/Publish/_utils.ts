@@ -1,5 +1,4 @@
 import {
-  approve,
   Config,
   DDO,
   Erc20CreateParams,
@@ -10,25 +9,19 @@ import {
   Metadata,
   NftCreateData,
   NftFactory,
-  PoolCreationParams,
   Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
-import Decimal from 'decimal.js'
 import slugify from 'slugify'
 import Web3 from 'web3'
-import {
-  algorithmContainerPresets,
-  MetadataAlgorithmContainer
-} from './_constants'
-import { FormPublishData } from './_types'
+import { algorithmContainerPresets } from './_constants'
+import { FormPublishData, MetadataAlgorithmContainer } from './_types'
 import {
   marketFeeAddress,
   publisherMarketOrderFee,
-  publisherMarketPoolSwapFee,
   publisherMarketFixedSwapFee
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
@@ -226,7 +219,6 @@ export async function createTokensAndPricing(
 
   let erc721Address, datatokenAddress, txHash
 
-  // TODO: cleaner code for this huge switch !??!?
   switch (values.pricing.type) {
     case 'fixed': {
       const freParams: FreCreationParams = {

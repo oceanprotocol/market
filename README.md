@@ -109,7 +109,7 @@ All displayed data in the app is presented around the concept of one data set, w
 - the actual data set files
 - the NFT which represents the data set
 - the datatokens representing access rights to the data set files
-- financial data connected to these datatokens
+- financial data connected to these datatokens, either a fixed rate exchange contract or a dispenser for free assets
 - calculations and conversions based on financial data
 - metadata about publisher accounts
 

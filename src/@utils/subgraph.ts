@@ -1,23 +1,11 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
-import { AssetPoolPrice } from '../@types/subgraph/AssetPoolPrice'
 import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
-import {
-  HighestLiquidityAssets_pools as HighestLiquidityAssetsPool,
-  HighestLiquidityAssets as HighestLiquidityGraphAssets
-} from '../@types/subgraph/HighestLiquidityAssets'
-import {
-  PoolShares as PoolSharesList,
-  PoolShares_poolShares as PoolShare
-} from '../@types/subgraph/PoolShares'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
-import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import { calcSingleOutGivenPoolIn } from './pool'
-import Decimal from 'decimal.js'
-import { MAX_DECIMALS } from './constants'
+
 import { getPublishedAssets, getTopPublishers } from '@utils/aquarius'
 export interface UserLiquidity {
   price: string
@@ -27,24 +15,6 @@ export interface UserLiquidity {
 export interface PriceList {
   [key: string]: string
 }
-
-const AssetPoolPriceQuery = gql`
-  query AssetPoolPrice($datatokenAddress: String) {
-    pools(where: { datatoken: $datatokenAddress }) {
-      id
-      spotPrice
-      datatoken {
-        address
-        symbol
-      }
-      baseToken {
-        symbol
-      }
-      datatokenLiquidity
-      baseTokenLiquidity
-    }
-  }
-`
 
 const PreviousOrderQuery = gql`
   query AssetPreviousOrder($id: String!, $account: String!) {
@@ -56,84 +26,6 @@ const PreviousOrderQuery = gql`
     ) {
       createdTimestamp
       tx
-    }
-  }
-`
-const HighestLiquidityAssets = gql`
-  query HighestLiquidityAssets {
-    pools(
-      where: { datatokenLiquidity_gte: 1 }
-      orderBy: baseTokenLiquidity
-      orderDirection: desc
-      first: 15
-    ) {
-      id
-      datatoken {
-        address
-      }
-      baseToken {
-        symbol
-      }
-      baseTokenLiquidity
-      datatokenLiquidity
-    }
-  }
-`
-
-const UserSharesQuery = gql`
-  query UserSharesQuery($user: String, $pools: [String!]) {
-    poolShares(where: { user: $user, pool_in: $pools }) {
-      id
-      shares
-      user {
-        id
-      }
-      pool {
-        id
-        datatoken {
-          address
-          symbol
-        }
-        baseToken {
-          address
-          symbol
-        }
-        datatokenLiquidity
-        baseTokenLiquidity
-        totalShares
-        spotPrice
-        createdTimestamp
-      }
-    }
-  }
-`
-
-const userPoolSharesQuery = gql`
-  query PoolShares($user: String) {
-    poolShares(where: { user: $user, shares_gt: 0.001 }, first: 1000) {
-      id
-      shares
-      user {
-        id
-      }
-      pool {
-        id
-        datatoken {
-          id
-          address
-          symbol
-        }
-        baseToken {
-          id
-          address
-          symbol
-        }
-        baseTokenLiquidity
-        datatokenLiquidity
-        totalShares
-        spotPrice
-        createdTimestamp
-      }
     }
   }
 `
@@ -159,24 +51,6 @@ const UserTokenOrders = gql`
       }
       createdTimestamp
       tx
-    }
-  }
-`
-
-const UserSalesQuery = gql`
-  query UserSalesQuery($user: ID!) {
-    users(where: { id: $user }) {
-      id
-      totalSales
-    }
-  }
-`
-
-const TopSalesQuery = gql`
-  query TopSalesQuery {
-    users(first: 20, orderBy: totalSales, orderDirection: desc) {
-      id
-      totalSales
     }
   }
 `
@@ -286,99 +160,6 @@ export async function getPreviousOrders(
     } else {
       return null
     }
-  }
-}
-
-export async function getSpotPrice(asset: Asset): Promise<number> {
-  const poolVariables = {
-    datatokenAddress: asset?.services[0].datatokenAddress.toLowerCase()
-  }
-  const queryContext = getQueryContext(Number(asset.chainId))
-
-  const poolPriceResponse: OperationResult<AssetPoolPrice> = await fetchData(
-    AssetPoolPriceQuery,
-    poolVariables,
-    queryContext
-  )
-
-  return poolPriceResponse.data.pools[0].spotPrice
-}
-
-export async function getHighestLiquidityDatatokens(
-  chainIds: number[]
-): Promise<string[]> {
-  const dtList: string[] = []
-  let highestLiquidityAssets: HighestLiquidityAssetsPool[] = []
-
-  for (const chain of chainIds) {
-    const queryContext = getQueryContext(Number(chain))
-    const fetchedPools: OperationResult<HighestLiquidityGraphAssets, any> =
-      await fetchData(HighestLiquidityAssets, null, queryContext)
-    highestLiquidityAssets = highestLiquidityAssets.concat(
-      fetchedPools?.data?.pools
-    )
-  }
-  highestLiquidityAssets.sort(
-    (a, b) => b.baseTokenLiquidity - a.baseTokenLiquidity
-  )
-
-  for (let i = 0; i < highestLiquidityAssets.length; i++) {
-    if (!highestLiquidityAssets[i]?.datatoken?.address) continue
-    dtList.push(highestLiquidityAssets[i].datatoken.address)
-  }
-  return dtList
-}
-
-export async function getAccountLiquidityInOwnAssets(
-  accountId: string,
-  chainIds: number[],
-  pools: string[]
-): Promise<string> {
-  const queryVariables = {
-    user: accountId.toLowerCase(),
-    pools
-  }
-  const results: PoolSharesList[] = await fetchDataForMultipleChains(
-    UserSharesQuery,
-    queryVariables,
-    chainIds
-  )
-  let totalLiquidity = new Decimal(0)
-
-  for (const result of results) {
-    for (const poolShare of result.poolShares) {
-      const poolUserLiquidity = calcSingleOutGivenPoolIn(
-        poolShare.pool.baseTokenLiquidity,
-        poolShare.pool.totalShares,
-        poolShare.shares
-      )
-
-      totalLiquidity = totalLiquidity.add(new Decimal(poolUserLiquidity))
-    }
-  }
-  return totalLiquidity.toDecimalPlaces(MAX_DECIMALS).toString()
-}
-
-export async function getPoolSharesData(
-  accountId: string,
-  chainIds: number[]
-): Promise<PoolShare[]> {
-  const variables = { user: accountId?.toLowerCase() }
-  const data: PoolShare[] = []
-  try {
-    const result = await fetchDataForMultipleChains(
-      userPoolSharesQuery,
-      variables,
-      chainIds
-    )
-    for (let i = 0; i < result.length; i++) {
-      result[i].poolShares.forEach((poolShare: PoolShare) => {
-        data.push(poolShare)
-      })
-    }
-    return data
-  } catch (error) {
-    LoggerInstance.error('Error getPoolSharesData: ', error.message)
   }
 }
 

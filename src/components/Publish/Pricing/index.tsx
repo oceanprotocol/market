@@ -1,11 +1,7 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import Tabs from '@shared/atoms/Tabs'
-import { isValidNumber } from '@utils/numbers'
-import Decimal from 'decimal.js'
 import { FormPublishData } from '../_types'
-import { initialValues } from '../_constants'
-import Dynamic from './Dynamic'
 import Fixed from './Fixed'
 import Free from './Free'
 import content from '../../../../content/price.json'
@@ -26,7 +22,6 @@ export default function PricingFields(): ReactElement {
     setFieldValue('pricing.type', type)
     setFieldValue('pricing.price', 0)
     setFieldValue('pricing.freeAgreement', false)
-    type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
   // Update price when price is changed

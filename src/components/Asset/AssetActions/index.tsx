@@ -4,8 +4,6 @@ import Consume from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
-import Pool from './Pool'
-import Trade from './Trade'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import Web3Feedback from '@shared/Web3Feedback'
@@ -16,8 +14,6 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
 import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
-import { AssetExtended } from 'src/@types/AssetExtended'
-import PoolProvider from '@context/Pool'
 import AssetStats from './AssetStats'
 
 export default function AssetActions({
@@ -148,18 +144,13 @@ export default function AssetActions({
 
   const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
 
-  asset?.accessDetails?.type === 'dynamic' &&
-    tabs.push({ title: 'Pool', content: <Pool /> })
-
   return (
     <>
-      <PoolProvider>
-        <Tabs items={tabs} className={styles.actions} />
-        <Web3Feedback
-          networkId={asset?.chainId}
-          isAssetNetwork={isAssetNetwork}
-        />
-      </PoolProvider>
+      <Tabs items={tabs} className={styles.actions} />
+      <Web3Feedback
+        networkId={asset?.chainId}
+        isAssetNetwork={isAssetNetwork}
+      />
     </>
   )
 }

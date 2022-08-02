@@ -4,7 +4,6 @@ import { FormPublishData } from '../_types'
 import { useFormikContext } from 'formik'
 import AssetContent from 'src/components/Asset/AssetContent'
 import { transformPublishFormToDdo } from '../_utils'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { ZERO_ADDRESS } from '@oceanprotocol/lib'
 
 export default function Preview(): ReactElement {
@@ -18,7 +17,7 @@ export default function Preview(): ReactElement {
       asset.accessDetails = {
         type: values.pricing.type,
         addressOrId: ZERO_ADDRESS,
-        price: values.pricing.price,
+        price: `${values.pricing.price}`,
         baseToken: {
           address: ZERO_ADDRESS,
           name: 'OCEAN',
@@ -31,7 +30,8 @@ export default function Preview(): ReactElement {
         },
         isPurchasable: true,
         isOwned: false,
-        validOrderTx: ''
+        validOrderTx: '',
+        publisherMarketOrderFee: '0'
       }
       setAsset(asset)
     }
