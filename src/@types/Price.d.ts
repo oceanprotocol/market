@@ -50,6 +50,7 @@ declare global {
 
   interface PricePublishOptions {
     price: number
+    baseToken: TokenInfo
     type: 'fixed' | 'free'
     freeAgreement: boolean
   }
