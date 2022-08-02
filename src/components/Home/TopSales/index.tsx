@@ -1,9 +1,8 @@
 import { useUserPreferences } from '@context/UserPreferences'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import AccountList from 'src/components/Home/TopSales/AccountList'
-import { getTopAssetsPublishers } from '@utils/subgraph'
+import { getTopAssetsPublishers, UserSales } from '@utils/aquarius'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { UserSalesQuery_users as UserSales } from 'src/@types/subgraph/UserSalesQuery'
 import styles from './index.module.css'
 
 export default function TopSales({

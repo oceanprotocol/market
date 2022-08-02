@@ -7,10 +7,14 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { getUserSales, getUserTokenOrders } from '@utils/subgraph'
+import { getUserTokenOrders } from '@utils/subgraph'
 import { useUserPreferences } from './UserPreferences'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
-import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
+import {
+  getDownloadAssets,
+  getPublishedAssets,
+  getUserSales
+} from '@utils/aquarius'
 import axios, { CancelToken } from 'axios'
 import web3 from 'web3'
 import { useMarketMetadata } from './MarketMetadata'

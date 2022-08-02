@@ -3,7 +3,7 @@ import styles from './index.module.css'
 import Loader from '../../../@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
 import Account from 'src/components/Home/TopSales/Account'
-import { UserSalesQuery_users as UserSales } from 'src/@types/subgraph/UserSalesQuery'
+import { UserSales } from '@utils/aquarius'
 
 function LoaderArea() {
   return (

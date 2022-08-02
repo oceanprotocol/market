@@ -5,8 +5,7 @@ import { getOceanConfig } from './ocean'
 import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import { UserSalesQuery_users as UserSales } from 'src/@types/subgraph/UserSalesQuery'
-import { getPublishedAssets, getTopPublishers } from '@utils/aquarius'
+import { getPublishedAssets, getTopPublishers, UserSales } from './aquarius'
 
 export interface UserLiquidity {
   price: string
@@ -226,7 +225,6 @@ export async function getTopAssetsPublishers(
 
   for (let i = 0; i < topPublishers.buckets.length; i++) {
     publishers.push({
-      __typename: 'User',
       id: topPublishers.buckets[i].key,
       totalSales: parseInt(topPublishers.buckets[i].totalSales.value)
     })

@@ -5,7 +5,7 @@ import styles from './index.module.css'
 import { accountTruncate } from '@utils/web3'
 import Avatar from '../../../@shared/atoms/Avatar'
 import { getEnsProfile } from '@utils/ens'
-import { UserSalesQuery_users as UserSales } from 'src/@types/subgraph/UserSalesQuery'
+import { UserSales } from '@utils/aquarius'
 
 declare type AccountProps = {
   account: UserSales
