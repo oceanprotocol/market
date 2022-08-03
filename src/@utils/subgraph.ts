@@ -5,7 +5,6 @@ import { getOceanConfig } from './ocean'
 import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import { getPublishedAssets, getTopPublishers, UserSales } from './aquarius'
 
 export interface UserLiquidity {
   price: string
@@ -199,40 +198,6 @@ export async function getUserTokenOrders(
   } catch (error) {
     LoggerInstance.error('Error getUserTokenOrders', error.message)
   }
-}
-
-export async function getUserSales(
-  accountId: string,
-  chainIds: number[]
-): Promise<number> {
-  try {
-    const result = await getPublishedAssets(accountId, chainIds, null)
-    const { totalOrders } = result.aggregations
-    return totalOrders.value
-  } catch (error) {
-    LoggerInstance.error('Error getUserSales', error.message)
-  }
-}
-
-export async function getTopAssetsPublishers(
-  chainIds: number[],
-  nrItems = 9
-): Promise<UserSales[]> {
-  const publishers: UserSales[] = []
-
-  const result = await getTopPublishers(chainIds, null)
-  const { topPublishers } = result.aggregations
-
-  for (let i = 0; i < topPublishers.buckets.length; i++) {
-    publishers.push({
-      id: topPublishers.buckets[i].key,
-      totalSales: parseInt(topPublishers.buckets[i].totalSales.value)
-    })
-  }
-
-  publishers.sort((a, b) => b.totalSales - a.totalSales)
-
-  return publishers.slice(0, nrItems)
 }
 
 export async function getOpcsApprovedTokens(
