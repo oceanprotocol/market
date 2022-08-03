@@ -1,4 +1,5 @@
 import Input from '@shared/FormInput'
+import InputElement from '@shared/FormInput/InputElement'
 import { useFormikContext } from 'formik'
 import React, { ChangeEvent, ReactElement } from 'react'
 import { FormPublishData } from '../_types'
@@ -20,15 +21,14 @@ export default function CoinSelect({
 
   return (
     approvedBaseTokens?.length > 0 && (
-      <div className={styles.container}>
-        <Input
-          className={styles.coinSelect}
-          type="select"
-          options={approvedBaseTokens?.map((token) => token.symbol)}
-          value={values.pricing?.baseToken?.symbol}
-          onChange={handleBaseTokenSelection}
-        />
-      </div>
+      <InputElement
+        name="coinselect"
+        className={styles.coinSelect}
+        type="select"
+        options={approvedBaseTokens?.map((token) => token.symbol)}
+        value={values.pricing?.baseToken?.symbol}
+        onChange={handleBaseTokenSelection}
+      />
     )
   )
 }

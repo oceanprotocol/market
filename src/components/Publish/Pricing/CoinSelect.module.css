@@ -9,6 +9,7 @@
   padding: 0 1.75rem 0 0.25rem;
   height: 41px;
   text-align: center;
+  font-weight: var(--font-weight-bold);
 
   /* custom arrow, without the divider line */
   background-image: linear-gradient(
@@ -18,8 +19,4 @@
     ),
     linear-gradient(135deg, var(--font-color-text) 50%, transparent 50%);
   background-position: calc(100% - 14px) 1.2rem, calc(100% - 9px) 1.2rem, 100% 0;
-}
-
-.container > div {
-  margin-bottom: 0 !important;
 }

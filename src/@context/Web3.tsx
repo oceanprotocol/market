@@ -26,6 +26,7 @@ import { getOpcsApprovedTokens } from '@utils/subgraph'
 
 interface Web3ProviderValue {
   web3: Web3
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   web3Provider: any
   web3Modal: Web3Modal
   web3ProviderInfo: IProviderInfo
@@ -67,16 +68,6 @@ const providerOptions = isBrowser
           }
         }
       }
-      // torus: {
-      //   package: require('@toruslabs/torus-embed')
-      //   // options: {
-      //   //   networkParams: {
-      //   //     host: oceanConfig.url, // optional
-      //   //     chainId: 1337, // optional
-      //   //     networkId: 1337 // optional
-      //   //   }
-      //   // }
-      // }
     }
   : {}
 
@@ -95,7 +86,9 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const { appConfig } = useMarketMetadata()
 
   const [web3, setWeb3] = useState<Web3>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [web3Provider, setWeb3Provider] = useState<any>()
+
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
   const [web3ProviderInfo, setWeb3ProviderInfo] = useState<IProviderInfo>()
   const [networkId, setNetworkId] = useState<number>()
@@ -340,9 +333,12 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // Logout helper
   // -----------------------------------
   async function logout() {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     if (web3 && web3.currentProvider && (web3.currentProvider as any).close) {
       await (web3.currentProvider as any).close()
     }
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+
     await web3Modal.clearCachedProvider()
   }
   // -----------------------------------
@@ -391,6 +387,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       web3Provider.removeListener('networkChanged', handleNetworkChanged)
       web3Provider.removeListener('accountsChanged', handleAccountsChanged)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3Provider, web3])
 
   return (

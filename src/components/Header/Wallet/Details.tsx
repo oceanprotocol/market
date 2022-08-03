@@ -67,7 +67,6 @@ export default function Details(): ReactElement {
               <AddToken
                 address={oceanTokenMetadata?.address}
                 symbol={oceanTokenMetadata?.symbol}
-                logo="ocean"
                 className={styles.addToken}
               />
             )}
