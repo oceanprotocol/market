@@ -45,7 +45,7 @@ export default function Stats({
         value={
           <Conversion
             price={totalSales}
-            priceTokenId="ocean-protocol"
+            symbol={'ocean'}
             hideApproximateSymbol
           />
         }

@@ -12,6 +12,7 @@ import { LoggerInstance } from '@oceanprotocol/lib'
 import { useMarketMetadata } from '../MarketMetadata'
 import { Prices, PricesValue } from './_types'
 import { initialData, refreshInterval } from './_constants'
+import { getCoingeckoTokenId } from './_utils'
 
 const PricesContext = createContext(null)
 
@@ -56,4 +57,4 @@ export default function PricesProvider({
 // Helper hook to access the provider values
 const usePrices = (): PricesValue => useContext(PricesContext)
 
-export { PricesProvider, usePrices }
+export { PricesProvider, usePrices, getCoingeckoTokenId }

@@ -54,7 +54,7 @@ export default function Price({
                 = <strong>1</strong> {dataTokenOptions.symbol}{' '}
                 <Conversion
                   price={field.value}
-                  priceTokenId="ocean-protocol"
+                  symbol={values.pricing?.baseToken?.symbol}
                   className={styles.conversion}
                 />
               </h4>

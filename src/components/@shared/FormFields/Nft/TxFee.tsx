@@ -55,7 +55,7 @@ export default function TxFee({
   return gasFee ? (
     <p>
       Gas fee estimation for this artwork
-      <Conversion price={gasFee} priceTokenId="ocean-protocol" />
+      <Conversion price={gasFee} symbol={'OCEAN'} />
     </p>
   ) : accountId ? (
     <p>

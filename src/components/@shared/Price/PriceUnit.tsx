@@ -31,9 +31,6 @@ export default function PriceUnit({
 }): ReactElement {
   const { locale } = useUserPreferences()
 
-  const priceTokenId =
-    symbol === 'OCEAN' || symbol === 'mOCEAN' ? 'ocean-protocol' : symbol
-
   return (
     <div className={`${styles.price} ${styles[size]} ${className}`}>
       {type === 'free' ? (
@@ -44,9 +41,7 @@ export default function PriceUnit({
             {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
             <span className={styles.symbol}>{symbol}</span>
           </div>
-          {conversion && (
-            <Conversion price={price} priceTokenId={priceTokenId} />
-          )}
+          {conversion && <Conversion price={price} symbol={symbol} />}
         </>
       )}
     </div>
