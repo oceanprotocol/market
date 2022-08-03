@@ -207,7 +207,7 @@ export async function createTokensAndPricing(
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
-    feeToken: config.oceanTokenAddress,
+    feeToken: values.pricing.baseToken.address,
     feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
@@ -223,10 +223,10 @@ export async function createTokensAndPricing(
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
-        baseTokenAddress: config.oceanTokenAddress,
+        baseTokenAddress: values.pricing.baseToken.address,
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
-        baseTokenDecimals: 18,
+        baseTokenDecimals: values.pricing.baseToken.decimals,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
         marketFee: publisherMarketFixedSwapFee,

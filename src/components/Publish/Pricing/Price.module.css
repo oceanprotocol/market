@@ -1,23 +1,27 @@
+.form {
+  position: relative;
+}
+
+.form *,
+.form label {
+  margin-bottom: 0;
+}
+
 .price {
   background: var(--background-highlight);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  padding: calc(var(--spacer) / 1.5) calc(var(--spacer) / 2);
 }
 
-.form {
-  display: flex;
-  justify-content: center;
+.grid {
+  display: grid;
+  gap: calc(var(--spacer) / 2);
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  padding: calc(var(--spacer) / 2);
+  max-width: 30rem;
+  margin-left: auto;
+  margin-right: auto;
   align-items: center;
-}
-
-.inputWrap {
-  position: relative;
-  max-width: 15rem;
-}
-
-.inputWrap > div {
-  margin-bottom: 0;
 }
 
 .fixed label {
@@ -25,10 +29,15 @@
 }
 
 .datatoken {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+}
+
+.datatoken h4 {
   font-size: var(--font-size-base);
   color: var(--color-secondary);
   margin: 0;
-  margin-left: calc(var(--spacer) / 2);
 }
 
 .datatoken strong {
@@ -41,10 +50,10 @@
 
 .free {
   text-align: left;
+  margin: calc(var(--spacer) / 2);
   font-size: var(--font-size-base);
 }
 
-.free [class*='FormInput_field'],
-.free [class*='InputRadio_radioGroup'] {
+.free [class*='FormInput_field'] {
   margin: 0;
 }

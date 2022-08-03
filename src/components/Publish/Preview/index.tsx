@@ -20,8 +20,8 @@ export default function Preview(): ReactElement {
         price: `${values.pricing.price}`,
         baseToken: {
           address: ZERO_ADDRESS,
-          name: 'OCEAN',
-          symbol: 'OCEAN'
+          name: values.pricing?.baseToken?.symbol || 'OCEAN',
+          symbol: values.pricing?.baseToken?.symbol || 'OCEAN'
         },
         datatoken: {
           address: ZERO_ADDRESS,

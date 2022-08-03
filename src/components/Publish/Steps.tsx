@@ -22,6 +22,13 @@ export function Steps({
     setFieldValue('user.accountId', accountId)
   }, [chainId, accountId, setFieldValue])
 
+  // Reset the selected baseToken on chainId change
+  useEffect(() => {
+    if (!chainId) return
+
+    setFieldValue('pricing.baseToken', null)
+  }, [chainId, setFieldValue])
+
   // auto-sync publish feedback into form data values
   useEffect(() => {
     setFieldValue('feedback', feedback)

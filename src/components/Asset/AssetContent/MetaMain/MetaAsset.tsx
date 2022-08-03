@@ -41,7 +41,6 @@ export default function MetaAsset({
             <AddToken
               address={asset?.services[0].datatokenAddress}
               symbol={(asset as Asset)?.datatokens[0]?.symbol}
-              logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png"
               text={`Add ${(asset as Asset)?.datatokens[0]?.symbol} to wallet`}
               className={styles.add}
               minimal

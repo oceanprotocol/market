@@ -158,6 +158,7 @@ export default function Download({
       disabled={isDisabled}
       hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
+      btSymbol={asset?.accessDetails?.baseToken?.symbol}
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
       onClick={handleOrderOrDownload}

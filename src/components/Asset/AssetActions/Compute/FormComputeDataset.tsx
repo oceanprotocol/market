@@ -15,6 +15,7 @@ import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
+import { getTokenBalanceFromSymbol } from '@utils/web3'
 
 export default function FormStartCompute({
   algorithms,
@@ -160,12 +161,16 @@ export default function FormStartCompute({
   ])
 
   useEffect(() => {
-    if (!totalPrice || !balance?.ocean || !dtBalance) return
-
-    setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${totalPrice}`) || Number(dtBalance) >= 1
+    const baseTokenBalance = getTokenBalanceFromSymbol(
+      balance,
+      asset?.accessDetails?.baseToken?.symbol
     )
-  }, [totalPrice, balance?.ocean, dtBalance])
+
+    if (!totalPrice || !baseTokenBalance || !dtBalance) return
+    setIsBalanceSufficient(
+      compareAsBN(baseTokenBalance, `${totalPrice}`) || Number(dtBalance) >= 1
+    )
+  }, [totalPrice, balance, dtBalance, asset?.accessDetails?.baseToken?.symbol])
 
   return (
     <Form className={styles.form}>
@@ -215,6 +220,7 @@ export default function FormStartCompute({
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
+        btSymbol={asset?.accessDetails?.baseToken?.symbol}
         dtSymbol={asset?.datatokens[0]?.symbol}
         dtBalance={dtBalance}
         assetTimeout={assetTimeout}

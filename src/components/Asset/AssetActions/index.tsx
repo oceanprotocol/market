@@ -14,6 +14,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
 import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
+import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
 
 export default function AssetActions({
@@ -104,14 +105,19 @@ export default function AssetActions({
     if (asset?.accessDetails?.type === 'free') setIsBalanceSufficient(true)
     if (
       !asset?.accessDetails?.price ||
+      !asset?.accessDetails?.baseToken?.symbol ||
       !accountId ||
-      !balance?.ocean ||
+      !balance ||
       !dtBalance
     )
       return
 
+    const baseTokenBalance = getTokenBalanceFromSymbol(
+      balance,
+      asset?.accessDetails?.baseToken?.symbol
+    )
     setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${asset?.accessDetails.price}`) ||
+      compareAsBN(baseTokenBalance, `${asset?.accessDetails.price}`) ||
         Number(dtBalance) >= 1
     )
 
