@@ -1,17 +1,23 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import Tabs from '@shared/atoms/Tabs'
 import General from './General'
 import AssetSignals from './AssetSignals'
 import PublisherSignals from './PublisherSignals'
 import styles from './index.module.css'
 import { useWeb3 } from '@context/Web3'
+import { SignalOriginItem } from '../../../@context/Signals/_types'
+import { useUserPreferences } from '@context/UserPreferences'
 
 interface HistoryTab {
   title: string
   content: JSX.Element
 }
 
-function getTabs(accountId: string, userAccountId: string): HistoryTab[] {
+function getTabs(
+  accountId: string,
+  userAccountId: string,
+  signalSettings: SignalOriginItem[]
+): HistoryTab[] {
   const defaultTabs: HistoryTab[] = [
     {
       title: 'General',
@@ -19,7 +25,9 @@ function getTabs(accountId: string, userAccountId: string): HistoryTab[] {
     },
     {
       title: 'Asset Signals',
-      content: <AssetSignals accountId={accountId} />
+      content: (
+        <AssetSignals signalSettings={signalSettings} accountId={accountId} />
+      )
     },
     {
       title: 'Publisher Signals',
@@ -42,10 +50,15 @@ export default function HistoryPage({
   accountIdentifier: string
 }): ReactElement {
   const { accountId } = useWeb3()
-
+  const { signals } = useUserPreferences()
   const url = new URL(location.href)
   const defaultTab = url.searchParams.get('defaultTab')
-  const tabs = getTabs(accountIdentifier, accountId)
+  let tabs = getTabs(accountIdentifier, accountId, signals)
+  useEffect(() => {
+    console.log('------- signals changed--------')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    tabs = getTabs(accountIdentifier, accountId, signals)
+  }, [signals])
 
   let defaultTabIndex = 0
   defaultTab === 'ComputeJobs' ? (defaultTabIndex = 4) : (defaultTabIndex = 0)

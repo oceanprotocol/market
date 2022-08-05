@@ -1,3 +1,8 @@
+export interface SignalDisplayInput {
+  id: string
+  value: boolean
+  name: string
+}
 /**
  * an object that describes a signal for a given asset
  * @export
@@ -50,16 +55,22 @@ export interface SignalOriginItem {
    */
   title: string
   /**
+   * a string describing the details for this specific signal type instance
+   * @type {string}
+   * @memberof SignalOriginItem
+   */
+  description: string
+  /**
    * @type {SignalParams} object describing the type of signal e.g account signal vs asset signal
    * @memberof SignalOriginItem
    */
   urlParams?: SignalParams
   /**
-   * a string describing the type of signal e.g account signal vs asset signal
-   * @type {string}
+   * a string describing the type of signal i.e publisher signal = 2 vs asset signal = 1
+   * @type {number}
    * @memberof SignalOriginItem
    */
-  type?: string
+  type?: number
   /**
    * a unique origin/source of the signal
    * @type {string}
@@ -77,13 +88,13 @@ export interface SignalOriginItem {
    * @type {Boolean}
    * @memberof SignalSettingsItem
    */
-  listView?: boolean
+  listView?: SignalDisplayInput
   /**
    * a boolean representing when the signal should be displayed on the list page
    * @type {Boolean}
    * @memberof SignalSettingsItem
    */
-  detailView?: boolean
+  detailView?: SignalDisplayInput
   /**
    * a boolean representing when the signal should be defined as custom on the pages
    * @type {Boolean}

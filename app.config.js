@@ -106,10 +106,23 @@ module.exports = {
       {
         id: 'sample_qualitative_signal',
         title: 'Sample Qualitative Signal',
+        description:
+          'Qualitative signal helps you make better investment decisions',
         origin:
           'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/',
         isCustom: false,
         signals: [],
+        type: 1,
+        listView: {
+          id: 'listView',
+          value: true,
+          name: 'List View'
+        },
+        detailView: {
+          id: 'detailsView',
+          value: true,
+          name: 'Details View'
+        },
         urlParams: {
           assetIds: [],
           publisherIds: [],
@@ -119,10 +132,23 @@ module.exports = {
       {
         id: 'sample_defi_signal',
         title: 'Sushi Defi Signal',
+        description:
+          'Sushi defi signal helps you make better investment decisions',
         origin:
           'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi/',
         isCustom: false,
         signals: [],
+        type: 1,
+        listView: {
+          id: 'listView',
+          value: true,
+          name: 'List View'
+        },
+        detailView: {
+          id: 'detailView',
+          value: true,
+          name: 'Details View'
+        },
         urlParams: {
           assetIds: [],
           publisherIds: [],

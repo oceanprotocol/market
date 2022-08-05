@@ -62,3 +62,7 @@ export interface SettingsAssets {
     options: []
   }
 }
+
+export interface InputItem {
+  [key: string]: string | boolean | number
+}

@@ -5,8 +5,11 @@ import {
 } from '@context/Signals/_types'
 import { fetchData } from '@utils/fetch'
 
-export function getURLParams(urlParams: SignalParams) {
+export function getURLParams(urlParams: SignalParams | string[]) {
   let paramString = ''
+  if (Array.isArray(urlParams)) {
+    return `?${urlParams[0]}=${urlParams.slice(1).join(',')}`
+  }
   if (urlParams.assetIds.length > 0) {
     paramString = `?assetId=${urlParams.assetIds.join(',')}`
   }
@@ -19,7 +22,8 @@ export function getURLParams(urlParams: SignalParams) {
   return paramString
 }
 export function getSignalUrls(signalOriginItem: SignalOriginItem) {
-  return signalOriginItem.origin + getURLParams(signalOriginItem.urlParams)
+  // return signalOriginItem.origin + getURLParams(signalOriginItem.urlParams)
+  return signalOriginItem.origin
 }
 
 /**

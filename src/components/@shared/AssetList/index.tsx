@@ -15,7 +15,7 @@ import { AssetSignalItem } from '@context/Signals/_types'
 
 const cx = classNames.bind(styles)
 
-function LoaderArea() {
+export function LoaderArea() {
   return (
     <div className={styles.loaderWrap}>
       <Loader />
@@ -43,8 +43,7 @@ export default function AssetList({
   isLoading,
   onPageChange,
   className,
-  noPublisher,
-  signalItems
+  noPublisher
 }: AssetListProps): ReactElement {
   const { chainIds } = useUserPreferences()
   const { accountId } = useWeb3()

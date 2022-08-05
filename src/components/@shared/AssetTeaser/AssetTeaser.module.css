@@ -70,3 +70,12 @@
   right: calc(var(--spacer) / 3);
   bottom: calc(var(--spacer) / 3);
 }
+
+.signalUnit {
+  display: inline;
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-base);
+  padding: calc(var(--spacer) / 8);
+  color: var(--font-color-text);
+  line-height: 1.2;
+}

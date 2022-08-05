@@ -14,7 +14,6 @@ export default function useSignalsLoader(
   const [publisherIds, setPublisherIds] = useState<string[]>([])
   const [userAddresses, setUserAddresses] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  console.log('fetchSignalData', origin)
   const { data, error, isValidating } = useSWR(
     origin[0].length > 0 ? origin : null,
     fetcher,
@@ -27,7 +26,6 @@ export default function useSignalsLoader(
   useEffect(() => {
     setLoading((!data && !error) || isValidating)
     if (data) {
-      console.log('Signal data available', data)
       setSignalItems([...data])
     }
   }, [data, error, isValidating, loading])

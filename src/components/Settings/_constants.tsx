@@ -3,6 +3,7 @@ import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
 import { FormSettingsData, SettingsAssets } from './_types'
 import contentAsset from '../../../content/settings/assets.json'
 import { ServiceComputeOptions } from '@oceanprotocol/lib'
+import { SignalOriginItem } from '../../@context/Signals/_types'
 
 const computeOptions: ServiceComputeOptions = {
   allowRawAlgorithm: false,
@@ -64,3 +65,28 @@ export const initialValues: FormSettingsData = {
 }
 
 export const initialSettingsAssets: SettingsAssets = contentAsset
+export const assetSettingsValues: SignalOriginItem[] = []
+
+export const DEFAULT_NEW_CUSTOM_SIGNAL: SignalOriginItem = {
+  id: 'customSignal',
+  title: 'New Custom Signal',
+  description: 'Describe new signal',
+  origin: '',
+  isCustom: true,
+  signals: [],
+  listView: {
+    id: 'listView',
+    value: true,
+    name: 'List View'
+  },
+  detailView: {
+    id: 'detailsView',
+    value: true,
+    name: 'Details View'
+  },
+  urlParams: {
+    assetIds: [],
+    publisherIds: [],
+    userAddresses: []
+  }
+}
