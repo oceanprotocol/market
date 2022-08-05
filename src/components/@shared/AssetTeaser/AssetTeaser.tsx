@@ -27,7 +27,6 @@ export default function AssetTeaser({
   const urls = signalUrls.map((item) => {
     return item + getURLParams(['assetId', asset.id])
   })
-  console.log(urls)
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
   const isCompute = Boolean(getServiceByName(asset, 'compute'))

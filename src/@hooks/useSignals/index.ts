@@ -19,6 +19,7 @@ export default function useSignalsLoader(
     fetcher,
     {
       refreshInterval,
+      revalidateOnFocus: false,
       onSuccess,
       onError
     }
