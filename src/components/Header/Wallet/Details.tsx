@@ -48,7 +48,7 @@ export default function Details(): ReactElement {
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
             <span className={styles.symbol}>
-              {key === 'eth' ? mainCurrency : oceanTokenMetadata?.symbol}
+              {key === 'eth' ? mainCurrency : key.toUpperCase()}
             </span>{' '}
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
@@ -67,7 +67,6 @@ export default function Details(): ReactElement {
               <AddToken
                 address={oceanTokenMetadata?.address}
                 symbol={oceanTokenMetadata?.symbol}
-                logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png"
                 className={styles.addToken}
               />
             )}

@@ -3,7 +3,6 @@ import { useAsset } from '@context/Asset'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
-import { AccessDetails } from 'src/@types/Price'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
 
@@ -17,8 +16,8 @@ interface PriceOutputProps {
   hasDatatokenSelectedComputeAsset: boolean
   algorithmConsumeDetails: AccessDetails
   selectedComputeAssetTimeout: string
-  datasetOrderPrice?: number
-  algoOrderPrice?: number
+  datasetOrderPrice?: string
+  algoOrderPrice?: string
   providerFeeAmount?: string
   validUntil?: string
 }

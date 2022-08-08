@@ -5,7 +5,6 @@ import AddToken from '@shared/AddToken'
 import ExplorerLink from '@shared/ExplorerLink'
 import Publisher from '@shared/Publisher'
 import React, { ReactElement } from 'react'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import styles from './MetaAsset.module.css'
 
 export default function MetaAsset({
@@ -42,7 +41,6 @@ export default function MetaAsset({
             <AddToken
               address={asset?.services[0].datatokenAddress}
               symbol={(asset as Asset)?.datatokens[0]?.symbol}
-              logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png"
               text={`Add ${(asset as Asset)?.datatokens[0]?.symbol} to wallet`}
               className={styles.add}
               minimal

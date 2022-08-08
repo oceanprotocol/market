@@ -6,9 +6,6 @@ import classNames from 'classnames/bind'
 import Loader from '@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useIsMounted } from '@hooks/useIsMounted'
-// not sure why this import is required
-import { AssetExtended } from 'src/@types/AssetExtended'
-import { Asset } from '@oceanprotocol/lib'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
 
@@ -23,7 +20,7 @@ function LoaderArea() {
 }
 
 declare type AssetListProps = {
-  assets: Asset[]
+  assets: AssetExtended[]
   showPagination: boolean
   page?: number
   totalPages?: number
@@ -51,6 +48,7 @@ export default function AssetList({
 
   useEffect(() => {
     if (!assets) return
+
     setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
     async function fetchPrices() {
@@ -58,7 +56,7 @@ export default function AssetList({
         assets,
         accountId || ''
       )
-      if (!isMounted()) return
+      if (!isMounted() || !assetsWithPrices) return
       setAssetsWithPrices([...assetsWithPrices])
     }
     fetchPrices()

@@ -1,9 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './index.module.css'
-import Loader from '../atoms/Loader'
-import Tooltip from '../atoms/Tooltip'
 import PriceUnit from './PriceUnit'
-import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 
 export default function Price({
   accessDetails,
@@ -18,7 +14,10 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
-  return accessDetails?.price || accessDetails?.type === 'free' ? (
+  const isSupported =
+    accessDetails?.type === 'fixed' || accessDetails?.type === 'free'
+
+  return isSupported ? (
     <PriceUnit
       price={`${orderPriceAndFees?.price || accessDetails?.price}`}
       symbol={accessDetails.baseToken?.symbol}
@@ -27,18 +26,5 @@ export default function Price({
       conversion={conversion}
       type={accessDetails.type}
     />
-  ) : !accessDetails || accessDetails?.type === '' ? (
-    <div className={styles.empty}>
-      No price set{' '}
-      <Tooltip content="No pricing mechanism has been set on this asset yet." />
-    </div>
-  ) : (
-    // TODO: Hacky hack, put back some check for low liquidity
-    // ) : price.isConsumable !== 'true' ? (
-    //   <div className={styles.empty}>
-    //     Low liquidity{' '}
-    //     <Tooltip content="This pool does not have enough liquidity for using this data set." />
-    //   </div>
-    <Loader message="Retrieving price..." />
-  )
+  ) : null
 }

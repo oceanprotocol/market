@@ -88,3 +88,7 @@
 .addToken {
   margin-left: 0.3rem;
 }
+
+.addToken svg path {
+  fill: var(--brand-violet);
+}

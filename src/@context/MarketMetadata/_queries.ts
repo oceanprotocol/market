@@ -6,7 +6,10 @@ export const opcQuery = gql`
       swapOceanFee
       swapNonOceanFee
       approvedTokens {
-        id
+        address: id
+        symbol
+        name
+        decimals
       }
       id
     }

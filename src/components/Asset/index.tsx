@@ -17,7 +17,7 @@ export default function AssetDetails({ uri }: { uri: string }): ReactElement {
       router.push(`${v3MarketUri}${uri}`)
     }
     if (!asset || error) {
-      setPageTitle('Could not retrieve asset')
+      setPageTitle(title || 'Could not retrieve asset')
       return
     }
     setPageTitle(isInPurgatory ? '' : title)
@@ -29,7 +29,7 @@ export default function AssetDetails({ uri }: { uri: string }): ReactElement {
     </Page>
   ) : error && isV3Asset === false ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
-      <Alert title={pageTitle} text={error} state="error" />
+      <Alert title={pageTitle} text={error} state={'error'} />
     </Page>
   ) : (
     <Page title={undefined} uri={uri}>
