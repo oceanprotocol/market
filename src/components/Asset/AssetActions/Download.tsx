@@ -83,7 +83,9 @@ export default function Download({
   }, [dtBalance])
 
   useEffect(() => {
+    console.log(orderPriceAndFees)
     if (
+      (asset.accessDetails.type === 'fixed' && !orderPriceAndFees) ||
       !isMounted ||
       !accountId ||
       !asset?.accessDetails ||
@@ -112,7 +114,8 @@ export default function Download({
     hasDatatoken,
     accountId,
     isOwned,
-    isUnsupportedPricing
+    isUnsupportedPricing,
+    orderPriceAndFees
   ])
 
   async function handleOrderOrDownload() {
