@@ -64,8 +64,12 @@ export default function Download({
       )
         return
 
+      !orderPriceAndFees && setIsLoading(true)
+      setStatusText('Calculating full price (including fees)')
+
       const _orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
       setOrderPriceAndFees(_orderPriceAndFees)
+      !orderPriceAndFees && setIsLoading(false)
     }
 
     init()
@@ -85,7 +89,7 @@ export default function Download({
   useEffect(() => {
     console.log(orderPriceAndFees)
     if (
-      (asset.accessDetails.type === 'fixed' && !orderPriceAndFees) ||
+      (asset?.accessDetails?.type === 'fixed' && !orderPriceAndFees) ||
       !isMounted ||
       !accountId ||
       !asset?.accessDetails ||
