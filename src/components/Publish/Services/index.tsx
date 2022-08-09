@@ -3,6 +3,7 @@ import { Field, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
 import IconDownload from '@images/download.svg'
 import IconCompute from '@images/compute.svg'
+import IconStream from '@images/stream.svg'
 import content from '../../../../content/publish/form.json'
 import { getFieldContent } from '@utils/form'
 import { FormPublishData } from '../_types'
@@ -40,6 +41,14 @@ export default function ServicesFields(): ReactElement {
       icon: <IconCompute />,
       checked:
         values.services[0].access === accessTypeOptionsTitles[1].toLowerCase()
+    },
+    {
+      name: accessTypeOptionsTitles[2].toLowerCase(),
+      value: accessTypeOptionsTitles[2].toLowerCase(),
+      title: accessTypeOptionsTitles[2],
+      icon: <IconStream />,
+      checked:
+        values.services[0].access === accessTypeOptionsTitles[2].toLowerCase()
     }
   ]
 
