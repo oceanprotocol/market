@@ -13,7 +13,7 @@
         "name": "type",
         "label": "Asset Type",
         "type": "boxSelection",
-        "options": ["Dataset", "Algorithm"],
+        "options": ["Dataset", "Algorithm", "Data Stream"],
         "required": true
       },
       {
@@ -130,7 +130,7 @@
         "label": "Access Type",
         "help": "Choose how you want your files to be accessible for the specified price.",
         "type": "boxSelection",
-        "options": ["Access", "Compute"],
+        "options": ["Access", "Compute", "Stream"],
         "required": true,
         "disclaimer": "Please do not provide downloadable personal data without the consent of the data subjects.",
         "disclaimerValues": ["Download"]
