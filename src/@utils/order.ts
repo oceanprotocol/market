@@ -58,9 +58,8 @@ export async function order(
       consumeMarketFeeAddress: marketFeeAddress,
       consumeMarketFeeAmount: consumeMarketOrderFee,
       consumeMarketFeeToken:
-        asset.accessDetails && asset.accessDetails.baseToken
-          ? asset.accessDetails?.baseToken.address
-          : '0x0000000000000000000000000000000000000000'
+        asset?.accessDetails?.baseToken?.address ||
+        '0x0000000000000000000000000000000000000000'
     }
   } as OrderParams
 

@@ -85,7 +85,7 @@ export default function Download({
   useEffect(() => {
     console.log(orderPriceAndFees)
     if (
-      (asset.accessDetails.type === 'fixed' && !orderPriceAndFees) ||
+      (asset?.accessDetails?.type === 'fixed' && !orderPriceAndFees) ||
       !isMounted ||
       !accountId ||
       !asset?.accessDetails ||
