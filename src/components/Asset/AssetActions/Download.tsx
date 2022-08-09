@@ -88,7 +88,6 @@ export default function Download({
   }, [dtBalance])
 
   useEffect(() => {
-    console.log(orderPriceAndFees)
     if (
       (asset?.accessDetails?.type === 'fixed' && !orderPriceAndFees) ||
       !isMounted ||
