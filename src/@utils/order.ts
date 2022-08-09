@@ -57,7 +57,9 @@ export async function order(
     _consumeMarketFee: {
       consumeMarketFeeAddress: marketFeeAddress,
       consumeMarketFeeAmount: consumeMarketOrderFee,
-      consumeMarketFeeToken: asset.accessDetails.baseToken.address
+      consumeMarketFeeToken:
+        asset.accessDetails?.baseToken?.address ||
+        '0x0000000000000000000000000000000000000000'
     }
   } as OrderParams
 
@@ -71,7 +73,7 @@ export async function order(
         asset.accessDetails.datatoken.address,
         await amountToUnits(
           web3,
-          asset?.accessDetails?.baseToken?.address,
+          asset.accessDetails.baseToken.address,
           orderPriceAndFees.price
         ),
         false
@@ -84,8 +86,8 @@ export async function order(
         exchangeContract: config.fixedRateExchangeAddress,
         exchangeId: asset.accessDetails.addressOrId,
         maxBaseTokenAmount: orderPriceAndFees.price,
-        baseTokenAddress: asset?.accessDetails?.baseToken?.address,
-        baseTokenDecimals: asset?.accessDetails?.baseToken?.decimals || 18,
+        baseTokenAddress: asset.accessDetails.baseToken.address,
+        baseTokenDecimals: asset.accessDetails.baseToken.decimals || 18,
         swapMarketFee: consumeMarketFixedSwapFee,
         marketFeeAddress
       } as FreOrderParams
@@ -103,7 +105,7 @@ export async function order(
         asset.services[0].datatokenAddress,
         accountId,
         orderParams,
-        config.dispenserAddress
+        asset.accessDetails.addressOrId
       )
       return tx
     }

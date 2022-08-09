@@ -51,6 +51,7 @@ const tokensPriceQuery = gql`
         active
         isMinter
         maxBalance
+        contract
         token {
           id
           name
@@ -108,6 +109,7 @@ const tokenPriceQuery = gql`
         active
         isMinter
         maxBalance
+        contract
         token {
           id
           name
@@ -168,7 +170,7 @@ function getAccessDetailsFromTokenPrice(
   if (tokenPrice?.dispensers?.length > 0) {
     const dispenser = tokenPrice.dispensers[0]
     accessDetails.type = 'free'
-    accessDetails.addressOrId = dispenser.token.id
+    accessDetails.addressOrId = dispenser.contract
     accessDetails.price = '0'
     accessDetails.isPurchasable = dispenser.active
     accessDetails.datatoken = {
