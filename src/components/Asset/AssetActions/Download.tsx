@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
+import Loader from '@shared/atoms/Loader'
 
 export default function Download({
   asset,
@@ -41,6 +42,7 @@ export default function Download({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [statusText, setStatusText] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isPriceLoading, setIsPriceLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
   const [orderPriceAndFees, setOrderPriceAndFees] =
@@ -64,8 +66,11 @@ export default function Download({
       )
         return
 
+      !orderPriceAndFees && setIsPriceLoading(true)
+
       const _orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
       setOrderPriceAndFees(_orderPriceAndFees)
+      !orderPriceAndFees && setIsPriceLoading(false)
     }
 
     init()
@@ -84,6 +89,7 @@ export default function Download({
 
   useEffect(() => {
     if (
+      (asset?.accessDetails?.type === 'fixed' && !orderPriceAndFees) ||
       !isMounted ||
       !accountId ||
       !asset?.accessDetails ||
@@ -112,7 +118,8 @@ export default function Download({
     hasDatatoken,
     accountId,
     isOwned,
-    isUnsupportedPricing
+    isUnsupportedPricing,
+    orderPriceAndFees
   ])
 
   async function handleOrderOrDownload() {
@@ -184,12 +191,17 @@ export default function Download({
           />
         ) : (
           <>
-            <Price
-              accessDetails={asset.accessDetails}
-              orderPriceAndFees={orderPriceAndFees}
-              conversion
-              size="large"
-            />
+            {isPriceLoading ? (
+              <Loader message="Calculating full price (including fees)" />
+            ) : (
+              <Price
+                accessDetails={asset.accessDetails}
+                orderPriceAndFees={orderPriceAndFees}
+                conversion
+                size="large"
+              />
+            )}
+
             {!isInPurgatory && <PurchaseButton />}
           </>
         )}
