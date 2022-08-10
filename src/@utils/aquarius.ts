@@ -321,6 +321,7 @@ export async function getPublishedAssets(
         }
       }
     },
+    ignorePurgatory: true,
     esPaginationOptions: {
       from: (Number(page) - 1 || 0) * 9,
       size: 9

@@ -24,8 +24,8 @@ import { getServiceById, getServiceByName } from './ddo'
 import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { transformAssetToAssetSelection } from './assetConvertor'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { ComputeEditForm } from 'src/components/Asset/Edit/_types'
+import { getFileDidInfo } from './provider'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -261,6 +261,7 @@ async function getJobs(
   // }
   return computeJobs
 }
+
 export async function getComputeJobs(
   chainIds: number[],
   accountId: string,
@@ -346,18 +347,19 @@ export async function createTrustedAlgorithmList(
   if (!selectedAssets || selectedAssets.length === 0) return []
 
   for (const selectedAlgorithm of selectedAssets) {
-    const sanitizedAlgorithmContainer = {
-      entrypoint: selectedAlgorithm.metadata.algorithm.container.entrypoint,
-      image: selectedAlgorithm.metadata.algorithm.container.image,
-      tag: selectedAlgorithm.metadata.algorithm.container.tag,
-      checksum: selectedAlgorithm.metadata.algorithm.container.checksum
-    }
+    const filesChecksum = await getFileDidInfo(
+      selectedAlgorithm?.id,
+      selectedAlgorithm?.services?.[0].id,
+      selectedAlgorithm?.services?.[0]?.serviceEndpoint,
+      true
+    )
+    const containerChecksum =
+      selectedAlgorithm.metadata.algorithm.container.entrypoint +
+      selectedAlgorithm.metadata.algorithm.container.checksum
     const trustedAlgorithm = {
       did: selectedAlgorithm.id,
-      containerSectionChecksum: getHash(
-        JSON.stringify(sanitizedAlgorithmContainer)
-      ),
-      filesChecksum: getHash(selectedAlgorithm.services[0].files)
+      containerSectionChecksum: getHash(containerChecksum),
+      filesChecksum: filesChecksum?.[0]?.checksum
     }
     trustedAlgorithms.push(trustedAlgorithm)
   }

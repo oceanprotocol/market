@@ -4,7 +4,7 @@ export enum SortDirectionOptions {
 }
 
 export enum SortTermOptions {
-  Created = 'metadata.created',
+  Created = 'nft.created',
   Relevance = '_score',
   Stats = 'stats.orders'
 }
