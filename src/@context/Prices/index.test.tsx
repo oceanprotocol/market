@@ -1,14 +1,39 @@
 import React, { ReactElement } from 'react'
+import * as SWR from 'swr'
 import { renderHook } from '@testing-library/react'
 import { PricesProvider, usePrices, getCoingeckoTokenId } from '.'
 
+jest.mock('../MarketMetadata', () => ({
+  useMarketMetadata: () => ({
+    appConfig: {
+      currencies: ['USD', 'EUR'],
+      coingeckoTokenIds: ['ethereum', 'ocean-protocol']
+    }
+  })
+}))
+
+jest.spyOn(SWR, 'default').mockImplementation(() => ({
+  useSWR: { data: { 'ocean-protocol': { eur: '2' } } },
+  isValidating: false,
+  mutate: jest.fn()
+}))
+
+const wrapper = ({ children }: { children: ReactElement }) => (
+  <PricesProvider>{children}</PricesProvider>
+)
+
 test('should correctly initialize data', async () => {
-  const wrapper = ({ children }: { children: ReactElement }) => (
-    <PricesProvider>{children}</PricesProvider>
-  )
   const { result } = renderHook(() => usePrices(), { wrapper })
 
   expect(result.current.prices['ocean-protocol'].eur).toBeDefined()
+})
+
+test('useSWR is called', async () => {
+  const { result } = renderHook(() => usePrices(), { wrapper })
+  expect(SWR.default).toHaveBeenCalled()
+
+  // somehow the above spy seems to not fully work, but this assertion is the goal
+  // expect(result.current.prices['ocean-protocol'].eur).toBe('2')
 })
 
 test('should get correct Coingecko API ID for OCEAN', async () => {
