@@ -1,10 +1,11 @@
+//
+// Deal with differences between token symbol & Coingecko API IDs
+//
 export function getCoingeckoTokenId(symbol: string) {
-  const isOcean =
-    symbol?.toLowerCase() === 'ocean' || symbol?.toLowerCase() === 'mocean'
-  const isH2o =
-    symbol?.toLowerCase() === 'h2o' ||
-    symbol?.toLowerCase() === 'h20' ||
-    symbol?.toLowerCase() === 'h2o_data'
+  // can be OCEAN or mOCEAN
+  const isOcean = symbol?.toLowerCase().includes('ocean')
+  // can be H2O or H20
+  const isH2o = symbol?.toLowerCase().includes('h2')
   const isEth = symbol?.toLowerCase() === 'eth'
   const isMatic = symbol?.toLowerCase() === 'matic'
 

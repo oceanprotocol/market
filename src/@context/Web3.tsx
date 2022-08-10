@@ -189,7 +189,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
     }
-  }, [accountId, approvedBaseTokens, networkId, web3])
+  }, [accountId, approvedBaseTokens, networkId, web3, networkData])
 
   // -----------------------------------
   // Helper: Get user ENS name
