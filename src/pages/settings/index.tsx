@@ -20,7 +20,7 @@ export default function PageSettings({
   const { accountId } = useWeb3()
 
   return (
-    <Page uri={router.route} title="title" noPageHeader>
+    <Page uri={router.route} title="Settings" noPageHeader>
       <SettingsPage accountId={'123'} />
     </Page>
   )

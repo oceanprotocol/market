@@ -12,7 +12,8 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import { useSignalContext } from '@context/Signals'
 import { getURLParams } from '@hooks/useSignals/_util'
 import useSignalsLoader from '@hooks/useSignals'
-import { LoaderArea } from '@shared/AssetList'
+import Loader from '@shared/atoms/Loader'
+import Tooltip from '@shared/atoms/Tooltip'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -62,7 +63,21 @@ export default function AssetTeaser({
             <Price accessDetails={asset.accessDetails} size="small" />
             <NetworkName networkId={asset.chainId} className={styles.network} />
           </footer>
-          {loading && <LoaderArea />}
+          {loading && (
+            <div
+              className={styles.content}
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center'
+              }}
+            >
+              <Loader />
+              <span className={styles.signalLoaderText}>
+                Loading signals...
+              </span>
+            </div>
+          )}
           <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
             {signalItems.map((signal, index) => {
               return (
@@ -75,6 +90,10 @@ export default function AssetTeaser({
                 </span>
               )
             })}
+            <Tooltip
+              style={{ float: 'right' }}
+              content="Show a hover card for the signal items"
+            />
           </div>
         </a>
       </Link>

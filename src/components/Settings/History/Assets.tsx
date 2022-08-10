@@ -40,7 +40,7 @@ export function Assets({
           </div>
           <p>{signalOrigin.description}</p>
           <div className={styles.display}>
-            <a target="_blank" href="#">
+            <a target="_blank" href={signalOrigin.origin} rel="noreferrer">
               Source
             </a>
             <div>
