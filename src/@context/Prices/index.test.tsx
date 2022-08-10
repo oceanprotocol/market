@@ -3,15 +3,6 @@ import * as SWR from 'swr'
 import { renderHook } from '@testing-library/react'
 import { PricesProvider, usePrices, getCoingeckoTokenId } from '.'
 
-jest.mock('../MarketMetadata', () => ({
-  useMarketMetadata: () => ({
-    appConfig: {
-      currencies: ['USD', 'EUR'],
-      coingeckoTokenIds: ['ethereum', 'ocean-protocol']
-    }
-  })
-}))
-
 jest.spyOn(SWR, 'default').mockImplementation(() => ({
   useSWR: { data: { 'ocean-protocol': { eur: '2' } } },
   isValidating: false,
