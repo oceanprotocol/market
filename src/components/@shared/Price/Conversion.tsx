@@ -58,14 +58,14 @@ export default function Conversion({
     setPriceConverted(convertedFormattedHTMLstring)
   }, [price, prices, currency, locale, isFiat, priceTokenId])
 
-  return (
+  return Number(price) > 0 ? (
     <span
       className={`${styles.conversion} ${className || ''}`}
-      title="Approximation based on the current selected base token spot price on Coingecko"
+      title="Approximation based on the current spot price on Coingecko"
     >
       {!hideApproximateSymbol && '≈ '}
       <strong dangerouslySetInnerHTML={{ __html: priceConverted }} />{' '}
       {!isFiat && currency}
     </span>
-  )
+  ) : null
 }

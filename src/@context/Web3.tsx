@@ -163,8 +163,12 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     if (!accountId || !networkId || !web3) return
 
     try {
+      const isPolygonNetwork = networkId === 137 || networkId === 80001
+      const userBalance = web3.utils.fromWei(
+        await web3.eth.getBalance(accountId, 'latest')
+      )
       const balance: UserBalance = {
-        eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest'))
+        ...(isPolygonNetwork ? { matic: userBalance } : { eth: userBalance })
       }
       if (approvedBaseTokens?.length > 0) {
         await Promise.all(
