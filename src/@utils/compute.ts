@@ -227,8 +227,8 @@ async function getJobs(
   // for await (const providerUrl of providerUrls) {
   try {
     LoggerInstance.debug('Umesh provider url ' + providerUrls[0])
-    console.log('Umesh provider url ' + providerUrls[0])
-    providerUrls[0] = 'http://15.206.100.41:8030'
+    console.log('Umesh provider url ' + providerUrls[0])    
+    providerUrls[0] = 'http://aeefb33ccd4be4cecb044afb6843551a-1482170474.ap-south-1.elb.amazonaws.com:8030/'
     console.log('Umesh provider url ' + providerUrls[0])
     const providerComputeJobs = (await ProviderInstance.computeStatus(
       providerUrls[0],
