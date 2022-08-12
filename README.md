@@ -399,6 +399,12 @@ Additionally, we would also advise that your retain the text saying "Powered by 
 
 Everything else is made open according to the apache2 license. We look forward to seeing your data marketplace!
 
+If you are looking to fork Ocean Market and create your own marketplace, you will find the following guides useful in our docs:
+
+- [Forking Ocean Market](https://docs.oceanprotocol.com/building-with-ocean/build-a-marketplace/forking-ocean-market)
+- [Customising your Market](https://docs.oceanprotocol.com/building-with-ocean/build-a-marketplace/customising-your-market)
+- [Deploying your Market](https://docs.oceanprotocol.com/building-with-ocean/build-a-marketplace/deploying-market)
+
 ## 💰 Pricing Options
 
 ### Fixed Pricing
