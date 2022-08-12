@@ -52,7 +52,11 @@ export default function Price({
             <div className={styles.datatoken}>
               <h4>
                 = <strong>1</strong> {dataTokenOptions.symbol}{' '}
-                <Conversion price={field.value} className={styles.conversion} />
+                <Conversion
+                  price={field.value}
+                  symbol={values.pricing?.baseToken?.symbol}
+                  className={styles.conversion}
+                />
               </h4>
             </div>
           </div>

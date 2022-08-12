@@ -160,12 +160,15 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // Helper: Get user balance
   // -----------------------------------
   const getUserBalance = useCallback(async () => {
-    if (!accountId || !networkId || !web3) return
+    if (!accountId || !networkId || !web3 || !networkData) return
 
     try {
-      const balance: UserBalance = {
-        eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest'))
-      }
+      const userBalance = web3.utils.fromWei(
+        await web3.eth.getBalance(accountId, 'latest')
+      )
+      const key = networkData.nativeCurrency.symbol.toLowerCase()
+      const balance: UserBalance = { [key]: userBalance }
+
       if (approvedBaseTokens?.length > 0) {
         await Promise.all(
           approvedBaseTokens.map(async (token) => {
@@ -186,7 +189,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
     }
-  }, [accountId, approvedBaseTokens, networkId, web3])
+  }, [accountId, approvedBaseTokens, networkId, web3, networkData])
 
   // -----------------------------------
   // Helper: Get user ENS name

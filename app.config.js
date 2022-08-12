@@ -62,6 +62,10 @@ module.exports = {
     'LINK'
   ],
 
+  // Tokens to fetch the spot prices from coingecko, against above currencies.
+  // Refers to Coingecko API tokenIds.
+  coingeckoTokenIds: ['ocean-protocol', 'h2o', 'ethereum', 'matic-network'],
+
   // Config for https://github.com/donavon/use-dark-mode
   darkModeConfig: {
     classNameDark: 'dark',
