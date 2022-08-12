@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: market
+  name: ocean-market
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: market
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: market
+    spec:
+      containers:
+      - image: <image-registry-url>
+        name: ocean-market
+        ports:
+        - containerPort: 8000
