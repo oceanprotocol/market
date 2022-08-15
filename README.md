@@ -103,12 +103,12 @@ cp .env.example .env
 
 ## 🦀 Data Sources
 
-All displayed data in the app is presented around the concept of one data set, which is a combination of:
+All displayed data in the app is presented around the concept of one dataset, which is a combination of:
 
-- metadata about a data set
-- the actual data set files
-- the NFT which represents the data set
-- the datatokens representing access rights to the data set files
+- metadata about a dataset
+- the actual dataset files
+- the NFT which represents the dataset
+- the datatokens representing access rights to the dataset files
 - financial data connected to these datatokens, either a fixed rate exchange contract or a dispenser for free assets
 - calculations and conversions based on financial data
 - metadata about publisher accounts
@@ -117,7 +117,7 @@ All this data then comes from multiple sources:
 
 ### Aquarius
 
-All initial data sets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance, defined in `app.config.js`. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
+All initial datasets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance, defined in `app.config.js`. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
 
 - to cancel requests when components get unmounted in combination with [axios](https://github.com/axios/axios)
 - hit Aquarius as early as possible without relying on any ocean.js initialization
@@ -159,7 +159,7 @@ function Component() {
 }
 ```
 
-For components within a single data set view the `useAsset()` hook can be used, which in the background gets the respective metadata from Aquarius.
+For components within a single dataset view the `useAsset()` hook can be used, which in the background gets the respective metadata from Aquarius.
 
 ```tsx
 import { useAsset } from '@context/Asset'
@@ -232,7 +232,7 @@ function Component() {
 
 ### Purgatory
 
-Based on [list-purgatory](https://github.com/oceanprotocol/list-purgatory) some data sets get additional data. Within most components this can be done with the internal `useAsset()` hook which fetches data from the [market-purgatory](https://github.com/oceanprotocol/market-purgatory) endpoint in the background.
+Based on [list-purgatory](https://github.com/oceanprotocol/list-purgatory) some datasets get additional data. Within most components this can be done with the internal `useAsset()` hook which fetches data from the [market-purgatory](https://github.com/oceanprotocol/market-purgatory) endpoint in the background.
 
 For asset purgatory:
 

@@ -131,7 +131,7 @@ export default function EditComputeDataset({
       {({ values, isSubmitting }) =>
         isSubmitting || hasFeedback ? (
           <EditFeedback
-            loading="Updating data set with new compute settings..."
+            loading="Updating dataset with new compute settings..."
             error={error}
             success={success}
             setError={setError}
