@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useField, useFormikContext } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
@@ -16,7 +16,7 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
-    e.preventDefault()
+    e?.preventDefault()
 
     try {
       const providerUrl = values?.services
@@ -46,6 +46,12 @@ export default function FilesInput(props: InputProps): ReactElement {
     helpers.setValue(meta.initialValue)
     helpers.setTouched(false)
   }
+
+  useEffect(() => {
+    if (field.name === 'links' && asset?.metadata?.links) {
+      handleValidation(null, asset.metadata.links[0])
+    }
+  }, [])
 
   return (
     <>
