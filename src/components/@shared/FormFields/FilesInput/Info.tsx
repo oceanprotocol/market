@@ -6,18 +6,22 @@ import { FileInfo as FileInfoData } from '@oceanprotocol/lib'
 
 export default function FileInfo({
   file,
-  handleClose
+  handleClose,
+  hideUrl
 }: {
   file: FileInfoData
   handleClose(): void
+  hideUrl?: boolean
 }): ReactElement {
   const contentTypeCleaned = file.contentType
     ? cleanupContentType(file.contentType)
     : null
 
   return (
-    <div className={styles.info}>
-      <h3 className={styles.url}>{file.url}</h3>
+    <div className={`${styles.info}`}>
+      <h3 className={`${styles.url} ${hideUrl ? styles.hideUrl : null}`}>
+        {file.url}
+      </h3>
       <ul>
         <li className={styles.success}>✓ URL confirmed</li>
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}

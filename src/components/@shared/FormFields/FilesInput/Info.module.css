@@ -31,6 +31,10 @@
   padding-right: calc(var(--spacer) / 2);
 }
 
+.hideUrl {
+  filter: blur(0.2rem);
+}
+
 .warning {
   margin-top: calc(var(--spacer) / 3);
   margin-left: 0;
