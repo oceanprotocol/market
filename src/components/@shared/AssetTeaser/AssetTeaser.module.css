@@ -14,6 +14,18 @@
   flex-direction: column;
 }
 
+.signal {
+  composes: box from '@shared/atoms/Box.module.css';
+  font-size: var(--font-size-small);
+  height: 100%;
+  color: var(--color-secondary);
+  position: relative;
+  /* for sticking footer to bottom */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
 .algorithm .link {
   background-color: var(--background-body);
 }

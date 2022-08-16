@@ -123,3 +123,8 @@
 .radio {
   composes: radio from '../../FormInput/InputRadio.module.css';
 }
+
+.tab2ContentTitle:first-child {
+  font-size: var(--font-size-label);
+  color: red;
+}

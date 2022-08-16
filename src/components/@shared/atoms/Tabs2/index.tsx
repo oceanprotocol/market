@@ -53,8 +53,8 @@ export default function Tabs2({
     <>
       <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
         <div className={styles.tab2Content}>
-          <div>
-            <h4>asset signal</h4>
+          <div className={styles.tab2ContentTitle}>
+            <p>Asset Signal</p>
             <p>
               {openUp ? 'HIDE DETAILS' : 'SHOW DETAILS'}
               <div
