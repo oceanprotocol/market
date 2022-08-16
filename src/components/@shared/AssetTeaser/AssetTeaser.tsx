@@ -9,6 +9,7 @@ import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import contentAsset from '../../../../content/settings/assets.json'
 import { useSignalContext } from '@context/Signals'
 import { getURLParams } from '@hooks/useSignals/_util'
 import useSignalsLoader from '@hooks/useSignals'
@@ -34,69 +35,63 @@ export default function AssetTeaser({
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
   const { signalItems, loading } = useSignalsLoader(urls)
+
+  const itemsOpen = Object.values(contentAsset).map((value) => {
+    return value.source
+  })
+
   return (
-    <article className={`${styles.teaser} ${styles[type]}`}>
-      <Link href={`/asset/${asset.id}`}>
-        <a className={styles.link}>
-          <header className={styles.header}>
-            <div className={styles.symbol}>{datatokens[0]?.symbol}</div>
-            <Dotdotdot clamp={3}>
-              <h1 className={styles.title}>{name}</h1>
-            </Dotdotdot>
-            {!noPublisher && (
-              <Publisher account={owner} minimal className={styles.publisher} />
-            )}
-          </header>
+    <>
+      <article className={`${styles.teaser} ${styles[type]}`}>
+        <div>
+          <Link href={`/asset/${asset.id}`}>
+            <a className={styles.link}>
+              <header className={styles.header}>
+                <div className={styles.symbol}>{datatokens[0]?.symbol}</div>
+                <Dotdotdot clamp={3}>
+                  <h1 className={styles.title}>{name}</h1>
+                </Dotdotdot>
+                {!noPublisher && (
+                  <Publisher
+                    account={owner}
+                    minimal
+                    className={styles.publisher}
+                  />
+                )}
+              </header>
 
-          <AssetType
-            type={type}
-            accessType={accessType}
-            className={styles.typeDetails}
-          />
+              <AssetType
+                type={type}
+                accessType={accessType}
+                className={styles.typeDetails}
+              />
 
-          <div className={styles.content}>
-            <Dotdotdot tagName="p" clamp={3}>
-              {removeMarkdown(description?.substring(0, 300) || '')}
-            </Dotdotdot>
-          </div>
-          <footer className={styles.foot}>
-            <Price accessDetails={asset.accessDetails} size="small" />
-            <NetworkName networkId={asset.chainId} className={styles.network} />
-          </footer>
-          {loading && (
-            <div
-              className={styles.content}
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-start',
-                alignItems: 'center'
-              }}
-            >
-              <Loader />
-              <span className={styles.signalLoaderText}>
-                Loading signals...
-              </span>
-            </div>
-          )}
-          <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-            {signalItems.map((signal, index) => {
-              return (
-                <span key={index} className={styles.signalUnit}>
-                  {signal
-                    ? ((signal[0]?.value / 100) * Math.random()).toPrecision(
-                        2
-                      ) + '%'
-                    : ''}
-                </span>
-              )
-            })}
-            <Tooltip
-              style={{ float: 'right' }}
-              content="Show a hover card for the signal items"
-            />
-          </div>
-        </a>
-      </Link>
-    </article>
+              <div className={styles.content}>
+                <Dotdotdot tagName="p" clamp={3}>
+                  {removeMarkdown(description?.substring(0, 300) || '')}
+                </Dotdotdot>
+              </div>
+
+              <footer className={styles.foot}>
+                <Price accessDetails={asset.accessDetails} size="small" />
+                <NetworkName
+                  networkId={asset.chainId}
+                  className={styles.network}
+                />
+              </footer>
+            </a>
+          </Link>
+        </div>
+        <div>
+          <Link href={`/asset/${asset.id}`}>
+            <a className={styles.signal}>
+              <div className={styles.symbol}>88.4%</div>
+              <div className={styles.symbol}>39%</div>
+              <div className={styles.symbol}>4</div>
+            </a>
+          </Link>
+        </div>
+      </article>
+    </>
   )
 }
