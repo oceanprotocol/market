@@ -29,22 +29,20 @@ export default async function getEnsName(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  console.log('request.body', request.query)
-  console.log('accountId', request.query.accountId)
-  const accountId = String(request.query.accountId)
-  console.log('accountId', accountId)
-  const ens = await getEns()
-  let name
   try {
-    name = await ens.getName(accountId)
+    const accountId = String(request.query.accountId)
+    const ens = await getEns()
+    let name = await ens.getName(accountId)
+
+    // Check to be sure the reverse record is correct.
+    const reverseAccountId = await ens.name(name.name).getAddress()
+    console.log('reverseAccountId', reverseAccountId)
+    if (accountId.toLowerCase() !== reverseAccountId.toLowerCase()) name = null
+
+    console.log('name 2', name)
+    response.send(name)
   } catch (error) {
-    console.log('error', error)
+    console.log('error 2: ', error)
+    response.send(`${error}`)
   }
-  console.log('name', name)
-
-  // Check to be sure the reverse record is correct.
-  const reverseAccountId = await ens.name(name).getAddress()
-  if (accountId.toLowerCase() !== reverseAccountId.toLowerCase()) name = null
-
-  response.end(name)
 }
