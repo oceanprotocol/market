@@ -103,12 +103,12 @@ cp .env.example .env
 
 ## 🦀 Data Sources
 
-All displayed data in the app is presented around the concept of one data set, which is a combination of:
+All displayed data in the app is presented around the concept of one asset, which is a combination of:
 
-- metadata about a data set
-- the actual data set files
-- the NFT which represents the data set
-- the datatokens representing access rights to the data set files
+- metadata about an asset
+- the actual asset file
+- the NFT which represents the asset
+- the datatokens representing access rights to the asset file
 - financial data connected to these datatokens, either a fixed rate exchange contract or a dispenser for free assets
 - calculations and conversions based on financial data
 - metadata about publisher accounts
@@ -117,7 +117,7 @@ All this data then comes from multiple sources:
 
 ### Aquarius
 
-All initial data sets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance, defined in `app.config.js`. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
+All initial assets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance, defined in `app.config.js`. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
 
 - to cancel requests when components get unmounted in combination with [axios](https://github.com/axios/axios)
 - hit Aquarius as early as possible without relying on any ocean.js initialization
@@ -159,7 +159,7 @@ function Component() {
 }
 ```
 
-For components within a single data set view the `useAsset()` hook can be used, which in the background gets the respective metadata from Aquarius.
+For components within a single asset view the `useAsset()` hook can be used, which in the background gets the respective metadata from Aquarius.
 
 ```tsx
 import { useAsset } from '@context/Asset'
@@ -232,7 +232,7 @@ function Component() {
 
 ### Purgatory
 
-Based on [list-purgatory](https://github.com/oceanprotocol/list-purgatory) some data sets get additional data. Within most components this can be done with the internal `useAsset()` hook which fetches data from the [market-purgatory](https://github.com/oceanprotocol/market-purgatory) endpoint in the background.
+Based on [list-purgatory](https://github.com/oceanprotocol/list-purgatory) some assets get additional data. Within most components this can be done with the internal `useAsset()` hook which fetches data from the [market-purgatory](https://github.com/oceanprotocol/market-purgatory) endpoint in the background.
 
 For asset purgatory:
 
@@ -415,7 +415,7 @@ To allow publishers to set pricing as "Fixed" you need to add the following envi
 
 To allow publishers to set pricing as "Free" you need to add the following environmental variable to your .env file: `NEXT_PUBLIC_ALLOW_FREE_PRICING="true"` (default).
 
-This allocates the datatokens to the [dispenser contract](https://github.com/oceanprotocol/contracts/blob/main/contracts/dispenser/Dispenser.sol) which dispenses data tokens to users for free. Publishers in your market will now be able to offer their datasets to users for free (excluding gas costs).
+This allocates the datatokens to the [dispenser contract](https://github.com/oceanprotocol/contracts/blob/main/contracts/dispenser/Dispenser.sol) which dispenses data tokens to users for free. Publishers in your market will now be able to offer their assets to users for free (excluding gas costs).
 
 ## ✅ GDPR Compliance
 

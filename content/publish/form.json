@@ -33,7 +33,7 @@
         "name": "author",
         "label": "Author",
         "placeholder": "e.g. Jelly McJellyfish",
-        "help": "Give proper attribution for your data set. You are welcome to use a pseudonym, and you can change your author name at any time. Please note that it will remain in the transaction history. For more information on how personal data is handled within the metadata, please refer to our [privacy policy](/privacy/en).",
+        "help": "Give proper attribution for your dataset. You are welcome to use a pseudonym, and you can change your author name at any time. Please note that it will remain in the transaction history. For more information on how personal data is handled within the metadata, please refer to our [privacy policy](/privacy/en).",
         "required": true
       },
       {
@@ -104,7 +104,7 @@
         "name": "files",
         "label": "File",
         "placeholder": "e.g. https://file.com/file.json",
-        "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+        "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
         "prominentHelp": true,
         "type": "files",
         "required": true
@@ -113,7 +113,7 @@
         "name": "links",
         "label": "Sample file",
         "placeholder": "e.g. https://file.com/samplefile.json",
-        "help": "This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+        "help": "This file should reveal the data structure of your dataset, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
         "prominentHelp": true,
         "type": "files"
       },
@@ -122,7 +122,7 @@
         "label": "Algorithm Privacy",
         "type": "checkbox",
         "options": ["Keep my algorithm private"],
-        "help": "By default, your algorithm can be downloaded for free or a fixed price, in addition to running in compute jobs. Enabling this option will prevent downloading, so your algorithm can only be run as part of a compute job on a data set.",
+        "help": "By default, your algorithm can be downloaded for free or a fixed price, in addition to running in compute jobs. Enabling this option will prevent downloading, so your algorithm can only be run as part of a compute job on a dataset.",
         "required": false
       },
       {
@@ -138,7 +138,7 @@
       {
         "name": "timeout",
         "label": "Timeout",
-        "help": "Define how long buyers should be able to download the data set again after the initial purchase.",
+        "help": "Define how long buyers should be able to download the dataset again after the initial purchase.",
         "type": "select",
         "options": ["Forever", "1 day", "1 week", "1 month", "1 year"],
         "sortOptions": false,

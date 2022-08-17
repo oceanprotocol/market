@@ -13,7 +13,7 @@ import { useMarketMetadata } from '@context/MarketMetadata'
 
 const columns: TableOceanColumn<AssetExtended>[] = [
   {
-    name: 'Data Set',
+    name: 'Dataset',
     selector: (row) => {
       const { metadata } = row
       return <AssetTitle title={metadata.name} asset={row} />
