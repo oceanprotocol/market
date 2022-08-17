@@ -44,6 +44,7 @@ export interface SiteContent {
   announcement: string
   warning: {
     ctd: string
+    stream: string
   }
 }
 

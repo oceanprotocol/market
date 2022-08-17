@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik'
 import AssetContent from 'src/components/Asset/AssetContent'
 import { transformPublishFormToDdo } from '../_utils'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import { ZERO_ADDRESS } from '@oceanprotocol/lib'
+import { LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
 
 export default function Preview(): ReactElement {
   const [asset, setAsset] = useState<AssetExtended>()
@@ -33,6 +33,9 @@ export default function Preview(): ReactElement {
         isOwned: false,
         validOrderTx: ''
       }
+      LoggerInstance.log('asset:', asset)
+      LoggerInstance.log('metadataName:', values.metadata?.name)
+      LoggerInstance.log('metadataType:', values.metadata?.type)
       setAsset(asset)
     }
     makeDdo()

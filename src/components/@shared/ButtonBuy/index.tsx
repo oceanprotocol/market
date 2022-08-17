@@ -14,6 +14,7 @@ interface ButtonBuyProps {
   assetType: string
   assetTimeout: string
   isConsumable: boolean
+  isDataStream: boolean
   consumableFeedback: string
   hasPreviousOrderSelectedComputeAsset?: boolean
   hasDatatokenSelectedComputeAsset?: boolean
@@ -42,6 +43,7 @@ function getConsumeHelpText(
   lowPoolLiquidity: boolean,
   assetType: string,
   isConsumable: boolean,
+  isDataStream: boolean,
   isBalanceSufficient: boolean,
   consumableFeedback: string
 ) {
@@ -50,8 +52,10 @@ function getConsumeHelpText(
       ? consumableFeedback
       : hasPreviousOrder
       ? `You bought this ${assetType} already allowing you to use it without paying again.`
+      : hasPreviousOrder && isDataStream
+      ? `You procured the subscription for this ${assetType} and can access it until the time limit expires.`
       : hasDatatoken
-      ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
+      ? `You own ${dtBalance} ${dtSymbol} allowing you to use this ${assetType} by spending 1 ${dtSymbol}, but without paying OCEAN again.`
       : lowPoolLiquidity
       ? `There are not enought ${dtSymbol} available in the pool for the transaction to take place`
       : isBalanceSufficient === false
@@ -68,6 +72,7 @@ function getComputeAssetHelpText(
   lowPoolLiquidity: boolean,
   assetType: string,
   isConsumable: boolean,
+  isDataStream: boolean,
   consumableFeedback: string,
   isBalanceSufficient: boolean,
   hasPreviousOrderSelectedComputeAsset?: boolean,
@@ -87,6 +92,7 @@ function getComputeAssetHelpText(
     lowPoolLiquidity,
     assetType,
     isConsumable,
+    isDataStream,
     isBalanceSufficient,
     consumableFeedback
   )
@@ -126,6 +132,7 @@ export default function ButtonBuy({
   assetType,
   assetTimeout,
   isConsumable,
+  isDataStream,
   consumableFeedback,
   isBalanceSufficient,
   hasPreviousOrderSelectedComputeAsset,
@@ -183,6 +190,7 @@ export default function ButtonBuy({
                   datasetLowPoolLiquidity,
                   assetType,
                   isConsumable,
+                  isDataStream,
                   isBalanceSufficient,
                   consumableFeedback
                 )
@@ -194,6 +202,7 @@ export default function ButtonBuy({
                   datasetLowPoolLiquidity,
                   assetType,
                   isConsumable,
+                  isDataStream,
                   consumableFeedback,
                   isBalanceSufficient,
                   hasPreviousOrderSelectedComputeAsset,

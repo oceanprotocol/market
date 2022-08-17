@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import FileIcon from '@shared/FileIcon'
 import Price from '@shared/Price'
 import { useAsset } from '@context/Asset'
@@ -13,12 +13,17 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import { buyDtFromPool } from '@utils/pool'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
-import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
+import {
+  getOrderPriceAndFees,
+  getAccessDetails,
+  getAccessDetailsForAssets
+} from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { usePool } from '@context/Pool'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import { useProfile } from '@context/Profile'
 
 export default function Download({
   asset,
@@ -49,8 +54,63 @@ export default function Download({
   const [validOrderTx, setValidOrderTx] = useState('')
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+  const { poolShares, assets, assetsTotal, sales } = useProfile()
 
   useEffect(() => {
+    // -----------------------------------
+    // Helper: Get and set asset access details
+    // -----------------------------------
+    const _fetchAccessDetails = async () => {
+      LoggerInstance.log(`asset?.chainId: ${asset?.chainId}`)
+      LoggerInstance.log(
+        `datatokenAddress: ${asset?.services[0].datatokenAddress}`
+      )
+      LoggerInstance.log(`timeout: ${asset?.services[0].timeout}`)
+      LoggerInstance.log(`accountId: ${accountId}`)
+      if (!asset?.chainId || !asset?.services) return
+      const accessDetails = await getAccessDetails(
+        asset.chainId,
+        asset.services[0].datatokenAddress,
+        asset.services[0].timeout,
+        accountId
+      )
+      // setAsset((prevState) => ({
+      //   ...prevState,
+      //   accessDetails
+      // }))
+      LoggerInstance.log(`My Asset Details for ${asset.id}`, accessDetails)
+    }
+    // _fetchAccessDetails()
+  }, [asset?.chainId, asset?.services, accountId, asset.id])
+
+  const fetchAccessDetails = useCallback(async (): Promise<void> => {
+    const assetsPrices = await getAccessDetailsForAssets(assets)
+    if (!asset?.chainId || !asset?.services) return
+    LoggerInstance.log(`asset?.chainId: ${asset?.chainId}`)
+    LoggerInstance.log(
+      `datatokenAddress: ${asset?.services[0].datatokenAddress}`
+    )
+    LoggerInstance.log(`timeout: ${asset?.services[0].timeout}`)
+    LoggerInstance.log(`accountId: ${accountId}`)
+    // const accessDetails = await getAccessDetails(
+    //   asset.chainId,
+    //   asset.services[0].datatokenAddress,
+    //   asset.services[0].timeout,
+    //   accountId
+    // )
+    // setAsset((prevState) => ({
+    //   ...prevState,
+    //   accessDetails
+    // }))
+    // LoggerInstance.log(
+    //   `[asset] I Got my access details for ${asset.id}`,
+    //   accessDetails
+    // )
+  }, [asset?.chainId, asset?.services, accountId, asset.id])
+
+  useEffect(() => {
+    fetchAccessDetails()
+    LoggerInstance.log('asset:', asset)
     if (!asset?.accessDetails) return
 
     asset?.accessDetails?.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
@@ -120,6 +180,7 @@ export default function Download({
       !isAssetNetwork ||
       ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
 
+    // setIsDisabled(false)
     setIsDisabled(isDisabled)
   }, [
     isMounted,
@@ -135,7 +196,7 @@ export default function Download({
     setIsLoading(true)
 
     try {
-      if (isOwned) {
+      if (!isOwned) {
         setStatusText(
           getOrderFeedback(
             asset.accessDetails?.baseToken?.symbol,
@@ -143,7 +204,13 @@ export default function Download({
           )[3]
         )
 
-        await downloadFile(web3, asset, accountId, validOrderTx)
+        await downloadFile(
+          web3,
+          asset,
+          accountId,
+          // validOrderTx
+          '0x53205883bd0e9e64c7de147b3584f6c1e29f7f3b16e4b8e745cffbfca63e1024'
+        )
       } else {
         if (!hasDatatoken && asset.accessDetails.type === 'dynamic') {
           setStatusText(
@@ -183,9 +250,12 @@ export default function Download({
   const PurchaseButton = () => (
     <ButtonBuy
       action="download"
-      disabled={isDisabled}
-      hasPreviousOrder={isOwned}
-      hasDatatoken={hasDatatoken}
+      disabled={false} // enable button
+      // disabled={isDisabled}
+      hasPreviousOrder={false} // not paid yet
+      // hasPreviousOrder={isOwned}
+      hasDatatoken={true} // 4
+      // hasDatatoken={hasDatatoken}
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
       datasetLowPoolLiquidity={!asset.accessDetails?.isPurchasable}
@@ -195,8 +265,10 @@ export default function Download({
       stepText={statusText}
       isLoading={isLoading}
       priceType={asset.accessDetails?.type}
-      isConsumable={asset.accessDetails?.isPurchasable}
-      isBalanceSufficient={isBalanceSufficient}
+      isDataStream={true}
+      isConsumable={asset.accessDetails?.isPurchasable} // 1
+      isBalanceSufficient={true} // 3
+      // isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
     />
   )
