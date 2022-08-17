@@ -1,0 +1,16 @@
+diff --git a/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts b/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts
+index e2c9a8a..7e64fe7 100644
+--- a/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts
++++ b/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts
+@@ -65,9 +65,9 @@ export interface Metadata {
+     /**
+      * Asset type. Includes "dataset" (e.g. csv file), "algorithm" (e.g. Python script).
+      * Each type needs a different subset of metadata attributes.
+-     * @type {'dataset' | 'algorithm'}
++     * @type {'dataset' | 'algorithm' | 'datastream'}
+      */
+-    type: 'dataset' | 'algorithm';
++    type: 'dataset' | 'algorithm' | 'datastream';
+     /**
+      * Name of the entity generating this data (e.g. Tfl, Disney Corp, etc.).
+      * @type {string}

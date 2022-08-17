@@ -26,7 +26,11 @@ export default function AssetType({
       )}
 
       <div className={styles.typeLabel}>
-        {type === 'dataset' ? 'data set' : 'algorithm'}
+        {type === 'dataset'
+          ? 'data set'
+          : type === 'data stream'
+          ? 'data stream'
+          : 'algorithm'}
       </div>
 
       {totalSales ? (

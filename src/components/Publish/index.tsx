@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useRef } from 'react'
+import React, { ReactElement, useState, useRef, useEffect } from 'react'
 import { Form, Formik } from 'formik'
 import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -49,6 +49,7 @@ export default function PublishPage({
   // --------------------------------------------------
   // 1. Create NFT & datatokens & create pricing schema
   // --------------------------------------------------
+
   async function create(values: FormPublishData): Promise<{
     erc721Address: string
     datatokenAddress: string

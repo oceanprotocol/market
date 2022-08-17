@@ -95,6 +95,13 @@ export default function ServicesFields(): ReactElement {
               text={siteContent.warning.ctd}
             />
           )}
+          {values.services[0].access === 'stream' && (
+            <Alert
+              className={styles.fieldWarning}
+              state="info"
+              text={siteContent.warning.stream}
+            />
+          )}
         </>
       )}
       <Field
@@ -102,16 +109,34 @@ export default function ServicesFields(): ReactElement {
         component={Input}
         name="services[0].providerUrl"
       />
-      <Field
-        {...getFieldContent('files', content.services.fields)}
-        component={Input}
-        name="services[0].files"
-      />
-      <Field
-        {...getFieldContent('links', content.services.fields)}
-        component={Input}
-        name="services[0].links"
-      />
+      {values.services[0].access === 'stream' ? (
+        <>
+          <Field
+            {...getFieldContent('streamFiles', content.services.fields)}
+            component={Input}
+            name="services[0].streamFiles"
+          />
+          <Field
+            {...getFieldContent('streamDocs', content.services.fields)}
+            component={Input}
+            name="services[0].streamDocs"
+          />
+        </>
+      ) : (
+        <>
+          <Field
+            {...getFieldContent('files', content.services.fields)}
+            component={Input}
+            name="services[0].files"
+          />
+          <Field
+            {...getFieldContent('links', content.services.fields)}
+            component={Input}
+            name="services[0].links"
+          />
+        </>
+      )}
+
       <Field
         {...getFieldContent('timeout', content.services.fields)}
         component={Input}

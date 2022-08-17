@@ -15,7 +15,7 @@ export interface FormPublishService {
   links?: FileInfo[]
   timeout: string
   dataTokenOptions: { name: string; symbol: string }
-  access: 'Download' | 'Compute' | string
+  access: 'Download' | 'Compute' | 'Stream' | string
   providerUrl: { url: string; valid: boolean; custom: boolean }
   algorithmPrivacy?: boolean
   computeOptions?: ServiceComputeOptions
@@ -30,7 +30,7 @@ export interface FormPublishData {
   metadata: {
     nft: NftMetadata
     transferable: boolean
-    type: 'dataset' | 'algorithm'
+    type: 'dataset' | 'algorithm' | 'datastream'
     name: string
     description: string
     author: string
