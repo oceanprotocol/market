@@ -18,7 +18,7 @@ export function Assets({ assets }: { assets: any }): ReactElement {
           <p>{value.description}</p>
           <div className={styles.display}>
             <p>{value.status}</p>
-            <div>
+            <div className={styles.displaySignal}>
               <p>{value.display}</p>
               <Field
                 type="checkbox"

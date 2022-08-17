@@ -26,6 +26,15 @@
   justify-content: space-around;
 }
 
+.icon.svg {
+  color: antiquewhite;
+}
+
+.symbol2 {
+  display: flex;
+  flex-direction: row;
+}
+
 .algorithm .link {
   background-color: var(--background-body);
 }

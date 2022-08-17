@@ -43,6 +43,25 @@
 .assetListTitle {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  /* color: var(--color-secondary); */
+  color: red !important;
+}
+
+.assetListTitleNumber {
+  display: flex;
+  align-items: center;
+}
+
+.assetListTitleName {
+  display: flex;
+  align-items: center;
+}
+
+.assetListIcon svg {
+  display: flex;
+  align-items: center;
+  background-color: azure;
 }
 
 .tabList {
@@ -114,6 +133,9 @@
   display: flex;
 }
 
+.details {
+}
+
 @media (min-width: 40rem) {
   .tab2Content {
     padding: var(--spacer);
@@ -126,5 +148,5 @@
 
 .tab2ContentTitle:first-child {
   font-size: var(--font-size-label);
-  color: red;
+  color: var(--color-secondary);
 }

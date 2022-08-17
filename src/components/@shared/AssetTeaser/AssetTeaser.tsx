@@ -10,6 +10,7 @@ import styles from './AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import contentAsset from '../../../../content/settings/assets.json'
+import PolygonIcon from '@images/polygon.svg'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -75,9 +76,12 @@ export default function AssetTeaser({
         <div>
           <Link href={`/asset/${asset.id}`}>
             <a className={styles.signal}>
-              <div className={styles.symbol}>88.4%</div>
-              <div className={styles.symbol}>39%</div>
-              <div className={styles.symbol}>4</div>
+              <div className={styles.symbol2}>
+                <PolygonIcon className={styles.icon} /> <div>88.4%</div>
+              </div>
+
+              <div className={styles.symbol2}>39%</div>
+              <div className={styles.symbol2}>4</div>
             </a>
           </Link>
         </div>
