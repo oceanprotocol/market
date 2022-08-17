@@ -3,6 +3,7 @@ import { Tabs as ReactTabs } from 'react-tabs'
 import styles from './index.module.css'
 import contentAsset from '../../../../../content/settings/assets.json'
 import Arrow from '@images/arrow.svg'
+import AlgorithmIcon from '@images/algorithm.svg'
 
 export interface TabsProps {
   className?: string
@@ -22,8 +23,13 @@ export default function Tabs2({
           {value.name.length > 0 ? (
             <li key={index}>
               <div className={styles.assetListTitle}>
-                <p>{value.name}</p>
-                <div>{value.number}</div>
+                <div className={styles.assetListTitleName}>
+                  <AlgorithmIcon className={styles.assetListIcon} />
+                  <p> {value.name}</p>
+                </div>
+                <div className={styles.assetListTitleNumber}>
+                  <p>{value.number}</p>
+                </div>
               </div>
             </li>
           ) : null}
@@ -38,8 +44,15 @@ export default function Tabs2({
           {value.name.length > 0 ? (
             <li key={index}>
               <div className={styles.assetListTitle}>
-                <p>{value.name}</p>
-                <div>{value.number}</div>
+                <div>
+                  <p>
+                    <AlgorithmIcon className={styles.assetListIcon} />
+                  </p>
+                  <p> {value.name} </p>
+                </div>
+                <div className={styles.assetListTitleNumber}>
+                  {value.number}
+                </div>
               </div>
               <p>{value.description}</p>
               <p>{value.source}</p>
@@ -55,15 +68,14 @@ export default function Tabs2({
         <div className={styles.tab2Content}>
           <div className={styles.tab2ContentTitle}>
             <p>Asset Signal</p>
-            <p>
+            <p className={styles.details}>
               {openUp ? 'HIDE DETAILS' : 'SHOW DETAILS'}
+              <Arrow className={styles.tab2Icon} />
               <div
                 onClick={() => {
                   setOpenUp(!openUp)
                 }}
-              >
-                <Arrow />
-              </div>
+              ></div>
             </p>
           </div>
           <div>
