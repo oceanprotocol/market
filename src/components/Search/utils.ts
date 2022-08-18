@@ -35,7 +35,6 @@ export function getSearchQuery(
   text?: string,
   owner?: string,
   tags?: string,
-  categories?: string,
   page?: string,
   offset?: string,
   sort?: string,
@@ -45,83 +44,77 @@ export function getSearchQuery(
 ): SearchQuery {
   text = escapeESReservedChars(text)
   const emptySearchTerm = text === undefined || text === ''
+  const filters: FilterTerm[] = []
+  let searchTerm = text || ''
+  let nestedQuery
+  if (tags) {
+    filters.push(getFilterTerm('metadata.tags.keyword', tags))
+  } else {
+    searchTerm = searchTerm.trim()
+    const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
+    const noSpaceSearchTerm = searchTerm.split(' ').join('').trim()
 
-  let searchTerm = owner
-    ? `(nft.owner:${owner})`
-    : tags
-    ? // eslint-disable-next-line no-useless-escape
-      `(metadata.tags:\"${tags}\")`
-    : // : categories
-      // ? // eslint-disable-next-line no-useless-escape
-      //   `(service.attributes.additionalInformation.categories:\"${categories}\")`
-      text || ''
+    const prefixedSearchTerm =
+      emptySearchTerm && searchTerm
+        ? searchTerm
+        : !emptySearchTerm && searchTerm
+        ? '*' + searchTerm + '*'
+        : '**'
+    const searchFields = [
+      'id',
+      'nft.owner',
+      'datatokens.address',
+      'datatokens.name',
+      'datatokens.symbol',
+      'metadata.name^10',
+      'metadata.author',
+      'metadata.description',
+      'metadata.tags'
+    ]
 
-  searchTerm = searchTerm.trim()
-  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
-  const noSpaceSearchTerm = searchTerm.split(' ').join('').trim()
-
-  const prefixedSearchTerm =
-    emptySearchTerm && searchTerm
-      ? searchTerm
-      : !emptySearchTerm && searchTerm
-      ? '*' + searchTerm + '*'
-      : '**'
-  const searchFields = [
-    'id',
-    'nft.owner',
-    'datatokens.address',
-    'datatokens.name',
-    'datatokens.symbol',
-    'metadata.name^10',
-    'metadata.author',
-    'metadata.description',
-    'metadata.tags'
-  ]
-
-  const nestedQuery = {
-    must: [
-      {
-        bool: {
-          should: [
-            {
-              query_string: {
-                query: `${modifiedSearchTerm}`,
-                fields: searchFields,
-                minimum_should_match: '2<75%',
-                phrase_slop: 2,
-                boost: 5
-              }
-            },
-            {
-              query_string: {
-                query: `${noSpaceSearchTerm}*`,
-                fields: searchFields,
-                boost: 5,
-                lenient: true
-              }
-            },
-            {
-              match_phrase: {
-                content: {
-                  query: `${searchTerm}`,
-                  boost: 10
+    nestedQuery = {
+      must: [
+        {
+          bool: {
+            should: [
+              {
+                query_string: {
+                  query: `${modifiedSearchTerm}`,
+                  fields: searchFields,
+                  minimum_should_match: '2<75%',
+                  phrase_slop: 2,
+                  boost: 5
+                }
+              },
+              {
+                query_string: {
+                  query: `${noSpaceSearchTerm}*`,
+                  fields: searchFields,
+                  boost: 5,
+                  lenient: true
+                }
+              },
+              {
+                match_phrase: {
+                  content: {
+                    query: `${searchTerm}`,
+                    boost: 10
+                  }
+                }
+              },
+              {
+                query_string: {
+                  query: `${prefixedSearchTerm}`,
+                  fields: searchFields,
+                  default_operator: 'AND'
                 }
               }
-            },
-            {
-              query_string: {
-                query: `${prefixedSearchTerm}`,
-                fields: searchFields,
-                default_operator: 'AND'
-              }
-            }
-          ]
+            ]
+          }
         }
-      }
-    ]
+      ]
+    }
   }
-
-  const filters: FilterTerm[] = []
   accessType !== undefined &&
     filters.push(getFilterTerm('services.type', accessType))
   serviceType !== undefined &&
@@ -162,7 +155,6 @@ export async function getResults(
     text,
     owner,
     tags,
-    categories,
     page,
     offset,
     sort,
@@ -176,7 +168,6 @@ export async function getResults(
     text,
     owner,
     tags,
-    categories,
     page,
     offset,
     sort,

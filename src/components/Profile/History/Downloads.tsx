@@ -8,7 +8,7 @@ import { useUserPreferences } from '@context/UserPreferences'
 
 const columns: TableOceanColumn<DownloadedAsset>[] = [
   {
-    name: 'Data Set',
+    name: 'Dataset',
     selector: (row) => <AssetTitle asset={row.asset} />
   },
   {
