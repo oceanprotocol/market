@@ -16,8 +16,8 @@ export function Assets({ assets }: { assets: any }): ReactElement {
         <li key={index}>
           <h3>{value.name}</h3>
           <p className={styles.assetDescription}>{value.description}</p>
-          <div className={styles.display}>
-            <div className={styles.sourceDisplay}>
+          <div className={styles.displayBottom}>
+            <div className={styles.displaySource}>
               <p>{value.status}</p>
               {value.status != null ? (
                 <Source className={styles.sourceIcon} />
@@ -25,13 +25,13 @@ export function Assets({ assets }: { assets: any }): ReactElement {
             </div>
 
             <div className={styles.displaySignal}>
-              <div>
+              <div className={styles.displaySignalText}>
                 <p>{value.display}</p>
               </div>
 
               <Field
                 type="checkbox"
-                className={styles.display}
+                className={styles.displayCheck}
                 {...getFieldContent('type', [])}
                 component={Input}
                 name="Add custom signal"
