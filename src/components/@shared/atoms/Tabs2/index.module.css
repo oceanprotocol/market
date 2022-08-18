@@ -43,9 +43,8 @@
 .assetListTitle {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  /* color: var(--color-secondary); */
-  color: red !important;
+  align-items: baseline;
+  color: var(--color-secondary);
 }
 
 .assetListTitleNumber {
@@ -55,13 +54,19 @@
 
 .assetListTitleName {
   display: flex;
-  align-items: center;
+  align-items: baseline;
 }
 
-.assetListIcon svg {
-  display: flex;
-  align-items: center;
-  background-color: azure;
+.assetListTitleName svg {
+  margin-right: 0.5rem;
+}
+
+.assetListIcon {
+  fill: var(--brand-grey-light);
+  transition: 0.2s ease-out;
+  width: 1em;
+  height: 1em;
+  margin-left: 0.5rem;
 }
 
 .tabList {

@@ -3,7 +3,7 @@ import { Tabs as ReactTabs } from 'react-tabs'
 import styles from './index.module.css'
 import contentAsset from '../../../../../content/settings/assets.json'
 import DetailsArrow from '@images/details-arrow.svg'
-import AlgorithmIcon from '@images/algorithm.svg'
+import UtuIcon from '@images/utu-logo.svg'
 
 export interface TabsProps {
   className?: string
@@ -24,7 +24,7 @@ export default function Tabs2({
             <li key={index}>
               <div className={styles.assetListTitle}>
                 <div className={styles.assetListTitleName}>
-                  <AlgorithmIcon className={styles.assetListIcon} />
+                  <UtuIcon className={styles.assetListIcon} />
                   <p> {value.name}</p>
                 </div>
                 <div className={styles.assetListTitleNumber}>
@@ -46,7 +46,7 @@ export default function Tabs2({
               <div className={styles.assetListTitle}>
                 <div>
                   <p>
-                    <AlgorithmIcon className={styles.assetListIcon} />
+                    <UtuIcon className={styles.assetListIcon} />
                   </p>
                   <p> {value.name} </p>
                 </div>
