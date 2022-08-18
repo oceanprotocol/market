@@ -144,12 +144,21 @@
   align-items: center;
 }
 
-.tab2Icon {
+.tab2IconDown {
   fill: var(--brand-grey-light);
   transition: 0.2s ease-out;
   width: 0.7em;
   height: 0.7em;
   margin-left: 0.5rem;
+}
+
+.tab2IconUp {
+  fill: var(--brand-grey-light);
+  transition: 0.2s ease-out;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.5rem;
+  transform: rotate(180deg);
 }
 
 @media (min-width: 40rem) {
