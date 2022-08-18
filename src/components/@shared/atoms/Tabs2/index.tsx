@@ -2,7 +2,7 @@ import React, { ReactElement, useState } from 'react'
 import { Tabs as ReactTabs } from 'react-tabs'
 import styles from './index.module.css'
 import contentAsset from '../../../../../content/settings/assets.json'
-import Arrow from '@images/arrow.svg'
+import DetailsArrow from '@images/details-arrow.svg'
 import AlgorithmIcon from '@images/algorithm.svg'
 
 export interface TabsProps {
@@ -70,7 +70,7 @@ export default function Tabs2({
             <p>Asset Signal</p>
             <p className={styles.details}>
               {openUp ? 'HIDE DETAILS' : 'SHOW DETAILS'}
-              <Arrow className={styles.tab2Icon} />
+              <DetailsArrow className={styles.tab2Icon} />
               <div
                 onClick={() => {
                   setOpenUp(!openUp)
