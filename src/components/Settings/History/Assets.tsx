@@ -15,11 +15,11 @@ export function Assets({ assets }: { assets: any }): ReactElement {
       <>
         <li key={index}>
           <h3>{value.name}</h3>
-          <p>{value.description}</p>
+          <p className={styles.assetDescription}>{value.description}</p>
           <div className={styles.display}>
             <div className={styles.sourceDisplay}>
               <p>{value.status}</p>
-              {value.status !== null ? (
+              {value.status != null ? (
                 <Source className={styles.sourceIcon} />
               ) : null}
             </div>

@@ -127,3 +127,7 @@
   display: flex;
   align-items: baseline;
 }
+
+.assetDescription {
+  color: var(--color-secondary);
+}
