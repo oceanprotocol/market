@@ -56,6 +56,10 @@
   width: 70%;
 }
 
+.sectionElementsRight p {
+  color: var(--color-secondary);
+}
+
 .sectionElementsBtn {
   display: flex;
   justify-content: space-between;
@@ -69,4 +73,14 @@
 .btnCancel {
   background: var(--background-body-transparent);
   color: var(--color-primary);
+}
+
+.sectionElementsCode {
+  font-family: var(--font-family-monospace);
+}
+
+.sectionElementsRight p > * {
+  font-family: var(--font-family-monospace);
+  color: white;
+  margin-bottom: 0;
 }

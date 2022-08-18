@@ -58,8 +58,8 @@ export function Custom(): ReactElement {
           />
           <p>
             Enter the URL of the API endpoint which you want to add. The URL
-            must contain the placeholder $assetid in order to pass to the API
-            the reference of the data asset. Optionally you can also use
+            must contain the placeholder <p>$assetid</p> in order to pass to the
+            API the reference of the data asset. Optionally you can also use
             $usersaddress if the API needs the address of the connected user to
             compute the signal value and $accountid in order to pass a reference
             of the publisher.
