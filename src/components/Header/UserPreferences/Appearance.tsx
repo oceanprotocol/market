@@ -1,4 +1,4 @@
-import React, { ReactElement, ChangeEvent } from 'react'
+import React, { ReactElement, ChangeEvent, useState } from 'react'
 import { DarkMode } from 'use-dark-mode'
 import FormHelp from '@shared/FormInput/Help'
 import Label from '@shared/FormInput/Label'
@@ -33,15 +33,21 @@ export default function Appearance({
     event.target.value === 'Dark' ? darkMode.enable() : darkMode.disable()
   }
 
+  const [history, sethistory] = useState<boolean>()
+
   return (
-    <li className={styles.listItems}>
-      <Label htmlFor="">Appearance</Label>
-      <BoxSelection
-        options={options}
-        name="appearanceMode"
-        handleChange={handleChange}
-      />
-      <FormHelp>Defaults to your OS setting, select to override.</FormHelp>
+    <li>
+      <div>
+        <Label htmlFor="">Appearance</Label>
+        <div className={styles.appearanceBox}>
+          <BoxSelection
+            options={options}
+            name="appearanceMode"
+            handleChange={handleChange}
+          />
+          <FormHelp>Defaults to your OS setting, select to override.</FormHelp>
+        </div>
+      </div>
     </li>
   )
 }

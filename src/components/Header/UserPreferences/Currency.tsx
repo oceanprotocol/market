@@ -10,7 +10,7 @@ export default function Currency(): ReactElement {
   const { appConfig } = useMarketMetadata()
 
   return (
-    <li className={styles.listItems}>
+    <li>
       {/* <Label htmlFor="">Currency</Label> */}
       <Input
         name="currency"

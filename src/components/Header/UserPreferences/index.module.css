@@ -73,6 +73,19 @@ svg.caret {
   margin-bottom: 0;
 }
 
+.tokenApprovalList > *,
+.currencyList > * {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.listItemsList > * {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
 .listItems > * {
   display: flex;
   flex-direction: row;
@@ -96,4 +109,9 @@ svg.caret {
 
 .listItems:nth-child(2) {
   width: 20rem;
+}
+
+.appearanceBox {
+  display: flex;
+  flex-direction: column;
 }

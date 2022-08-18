@@ -43,5 +43,15 @@
 
 .generalDetails {
   padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
-  max-width: 40rem;
+  max-width: fit-content;
+}
+
+.generalDetails > * > * {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.generalDetails > * > * > :first-child {
+  margin-right: 10rem;
 }
