@@ -34,20 +34,20 @@ export function Assets({ handleRemoveSignal }: { handleRemoveSignal(id: string):
                   </button>
               )}
               <p className={styles.assetDescription}>{signalOrigin.description}</p>
-              <div className={styles.display}>
-                <div className={styles.sourceDisplay}>
+              <div className={styles.displayBottom}>
+                <div className={styles.displaySource}>
                   <a target="_blank" href={signalOrigin.origin} rel="noreferrer">
                     Source <Source className={styles.sourceIcon} />
                   </a>
                 </div>
                 <div className={styles.displaySignal}>
-                  <div>
+                  <div className={styles.displaySignalText}>
                     <p>Display in</p>
                   </div>
                   <Field
                       type="checkbox"
                       id={signalOrigin.id}
-                      className={styles.display}
+                      className={styles.displayCheck}
                       component={Input}
                       name={signalOrigin.id + signalOrigin.listView.id}
                       options={[displayOptions[0]]}
