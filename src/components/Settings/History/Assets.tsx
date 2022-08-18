@@ -5,7 +5,7 @@ import { FormSettingsData } from '../_types'
 import { getFieldContent } from '../_utils'
 import styles from './Asset.module.css'
 import contentAsset from '../../../../content/settings/assets.json'
-
+import Source from '@images/source.svg'
 export function Assets({ assets }: { assets: any }): ReactElement {
   const { values } = useFormikContext<FormSettingsData>()
 
@@ -17,9 +17,18 @@ export function Assets({ assets }: { assets: any }): ReactElement {
           <h3>{value.name}</h3>
           <p>{value.description}</p>
           <div className={styles.display}>
-            <p>{value.status}</p>
+            <div className={styles.sourceDisplay}>
+              <p>{value.status}</p>
+              {value.status !== null ? (
+                <Source className={styles.sourceIcon} />
+              ) : null}
+            </div>
+
             <div className={styles.displaySignal}>
-              <p>{value.display}</p>
+              <div>
+                <p>{value.display}</p>
+              </div>
+
               <Field
                 type="checkbox"
                 className={styles.display}
