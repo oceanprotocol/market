@@ -110,8 +110,3 @@ svg.caret {
 .listItems:nth-child(2) {
   width: 20rem;
 }
-
-.appearanceBox {
-  display: flex;
-  flex-direction: column;
-}

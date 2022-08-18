@@ -62,6 +62,10 @@
   display: flex;
 }
 
+.display > * > * > * > * {
+  padding-right: 1rem;
+}
+
 .displaySignal {
   display: flex;
   align-items: baseline;
