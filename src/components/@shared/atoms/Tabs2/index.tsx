@@ -14,7 +14,7 @@ export default function Tabs2({
   className,
   defaultIndex
 }: TabsProps): ReactElement {
-  const [openUp, setOpenUp] = useState(false)
+  const [openUp, setOpenUp] = useState(true)
 
   const itemsClose = (index: any) =>
     Object.entries(contentAsset).map(([key, value], index) => (
@@ -44,7 +44,7 @@ export default function Tabs2({
           {value.name.length > 0 ? (
             <li key={index}>
               <div className={styles.assetListTitle}>
-                <div>
+                <div className={styles.assetListTitleName}>
                   <p>
                     <UtuIcon className={styles.assetListIcon} />
                   </p>
@@ -70,12 +70,15 @@ export default function Tabs2({
             <h3>Asset Signal</h3>
             <h3 className={styles.details}>
               {openUp ? 'HIDE DETAILS' : 'SHOW DETAILS'}
-              <DetailsArrow className={styles.tab2Icon} />
+
               <div
                 onClick={() => {
                   setOpenUp(!openUp)
                 }}
-              ></div>
+              >
+                {' '}
+                <DetailsArrow className={styles.tab2Icon} />
+              </div>
             </h3>
           </div>
           <div>
