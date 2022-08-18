@@ -50,8 +50,19 @@
   display: flex;
   justify-content: flex-start;
   align-items: baseline;
+  padding: var(--spacer);
+  padding-top: 5rem;
+}
+
+.generalDetails li:not(:last-child) {
+  border-bottom: 1px solid var(--brand-grey-light);
+  padding-bottom: 1rem;
 }
 
 .generalDetails > * > * > :first-child {
-  margin-right: 10rem;
+  width: 30vw;
+}
+
+.generalDetails > * > * > :last-child {
+  width: 70vw;
 }

@@ -154,6 +154,7 @@
 @media (min-width: 40rem) {
   .tab2Content {
     padding: var(--spacer);
+    padding-bottom: 0;
   }
 }
 
@@ -161,7 +162,7 @@
   composes: radio from '../../FormInput/InputRadio.module.css';
 }
 
-.tab2ContentTitle:first-child {
+.tab2ContentTitle > * {
   font-size: var(--font-size-label);
   color: var(--color-secondary);
 }
