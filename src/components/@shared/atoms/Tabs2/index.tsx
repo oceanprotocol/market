@@ -14,7 +14,7 @@ export default function Tabs2({
   className,
   defaultIndex
 }: TabsProps): ReactElement {
-  const [openUp, setOpenUp] = useState(true)
+  const [openUp, setOpenUp] = useState(false)
 
   const itemsClose = (index: any) =>
     Object.entries(contentAsset).map(([key, value], index) => (
@@ -77,7 +77,9 @@ export default function Tabs2({
                 }}
               >
                 {' '}
-                <DetailsArrow className={styles.tab2Icon} />
+                <DetailsArrow
+                  className={openUp ? styles.tab2IconDown : styles.tab2IconUp}
+                />
               </div>
             </h3>
           </div>
