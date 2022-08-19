@@ -1,4 +1,4 @@
-import React, { ReactElement, ChangeEvent } from 'react'
+import React, { ReactElement, ChangeEvent, useEffect } from 'react'
 import { DarkMode } from 'use-dark-mode'
 import FormHelp from '@shared/FormInput/Help'
 import Label from '@shared/FormInput/Label'
@@ -32,6 +32,12 @@ export default function Appearance({
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     event.target.value === 'Dark' ? darkMode.enable() : darkMode.disable()
   }
+
+  useEffect(() => {
+    darkMode.value
+      ? document.documentElement.setAttribute('data-color-mode', 'dark')
+      : document.documentElement.setAttribute('data-color-mode', 'light')
+  }, [darkMode])
 
   return (
     <li className={styles.appearances}>
