@@ -21,7 +21,10 @@ const InputMarkdown = ({ ...props }): ReactElement => {
     <div className={styles.inputMarkdown}>
       <MDEditor
         value={values.metadata.description}
-        textareaProps={props}
+        textareaProps={{
+          ...props,
+          className: styles.inputMarkdownContent
+        }}
         onChange={setValue}
       />
     </div>

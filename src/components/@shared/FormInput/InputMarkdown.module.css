@@ -3,6 +3,23 @@
   border-bottom-right-radius: 0;
 }
 
+.inputMarkdownContent {
+  background-color: transparent;
+  height: 100%;
+}
+
+.w-md-editor-show-live .inputMarkdownContent {
+  width: 50%;
+}
+
+.inputMarkdownContent textarea {
+  height: auto;
+}
+
+.inputMarkdownContent pre {
+  background-color: transparent !important;
+}
+
 .inputMarkdown button {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
