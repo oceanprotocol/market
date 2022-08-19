@@ -1,5 +1,5 @@
 diff --git a/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts b/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts
-index e2c9a8a..7e64fe7 100644
+index e2c9a8a..1537404 100644
 --- a/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts
 +++ b/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts
 @@ -65,9 +65,9 @@ export interface Metadata {
@@ -10,7 +10,23 @@ index e2c9a8a..7e64fe7 100644
 +     * @type {'dataset' | 'algorithm' | 'datastream'}
       */
 -    type: 'dataset' | 'algorithm';
-+    type: 'dataset' | 'algorithm' | 'datastream';
++     type: 'dataset' | 'algorithm' | 'datastream';
      /**
       * Name of the entity generating this data (e.g. Tfl, Disney Corp, etc.).
       * @type {string}
+diff --git a/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Service.d.ts b/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Service.d.ts
+index 7c88c20..5b9fdfd 100644
+--- a/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Service.d.ts
++++ b/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Service.d.ts
+@@ -81,6 +81,11 @@ export interface Service {
+      * @type {string}
+      */
+     description?: string;
++    /**
++     * API Docs for stream files
++     * @type {string}
++     */
++    docs?: string;
+     /**
+      * If service is of type compute, holds information about the compute-related privacy settings & resources.
+      * @type {ServiceComputeOptions}

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useRef, useEffect } from 'react'
+import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik } from 'formik'
 import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -49,7 +49,6 @@ export default function PublishPage({
   // --------------------------------------------------
   // 1. Create NFT & datatokens & create pricing schema
   // --------------------------------------------------
-
   async function create(values: FormPublishData): Promise<{
     erc721Address: string
     datatokenAddress: string
@@ -66,6 +65,7 @@ export default function PublishPage({
     try {
       const config = getOceanConfig(chainId)
       LoggerInstance.log('[publish] using config: ', config)
+      LoggerInstance.log('[publish] values: ', values)
 
       const { erc721Address, datatokenAddress, txHash } =
         await createTokensAndPricing(
@@ -278,6 +278,7 @@ export default function PublishPage({
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         // kick off publishing
+        LoggerInstance.log('YepValues:', values)
         await handleSubmit(values)
       }}
     >

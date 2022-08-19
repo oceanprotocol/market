@@ -3,6 +3,7 @@ import classNames from 'classnames/bind'
 import { addTokenToWallet } from '@utils/web3'
 import { useWeb3 } from '@context/Web3'
 import Button from '@shared/atoms/Button'
+import OceanLogo from '@images/logo.svg'
 import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
@@ -10,14 +11,12 @@ const cx = classNames.bind(styles)
 export default function AddToken({
   address,
   symbol,
-  logo,
   text,
   className,
   minimal
 }: {
   address: string
   symbol: string
-  logo: string // needs to be a remote image
   text?: string
   className?: string
   minimal?: boolean
@@ -33,7 +32,7 @@ export default function AddToken({
   async function handleAddToken() {
     if (!web3Provider) return
 
-    await addTokenToWallet(web3Provider, address, symbol, logo)
+    await addTokenToWallet(web3Provider, address, symbol)
   }
 
   return (
@@ -44,7 +43,9 @@ export default function AddToken({
       onClick={handleAddToken}
     >
       <span className={styles.logoWrap}>
-        <img src={logo} className={styles.logo} width="16" height="16" />
+        <div className={styles.logo}>
+          <OceanLogo />
+        </div>
       </span>
 
       <span className={styles.text}>{text || `Add ${symbol}`}</span>

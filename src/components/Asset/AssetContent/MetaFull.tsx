@@ -3,10 +3,14 @@ import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { useFormikContext } from 'formik'
+import { FormPublishData } from 'src/components/Publish/_types'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
   const { isInPurgatory } = useAsset()
+  // const { values, setFieldValue } = useFormikContext<FormPublishData>()
+  // LoggerInstance.log('values_', values)
 
   function DockerImage() {
     const containerInfo = ddo?.metadata?.algorithm?.container
@@ -28,6 +32,10 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
         <MetaItem title="Docker Image" content={<DockerImage />} />
       )}
       <MetaItem title="DID" content={<code>{ddo?.id}</code>} />
+      <MetaItem
+        title="STREAM API DOCUMENTATION URL"
+        content={<code>{ddo?.services[0].docs}</code>}
+      />
     </div>
   ) : null
 }

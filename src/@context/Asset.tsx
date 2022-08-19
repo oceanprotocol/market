@@ -13,16 +13,18 @@ import { checkV3Asset, retrieveAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
+import { FormPublishData } from 'src/components/Publish/_types'
+import Debug from 'src/components/Publish/Debug'
 
 export interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: Purgatory
   asset: AssetExtended
   title: string
+  apiDocs: string
   owner: string
   error?: string
   isAssetNetwork: boolean
@@ -49,6 +51,7 @@ function AssetProvider({
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
   const [asset, setAsset] = useState<AssetExtended>()
   const [title, setTitle] = useState<string>()
+  const [apiDocs, setapiDocs] = useState<string>()
   const [owner, setOwner] = useState<string>()
   const [isOwner, setIsOwner] = useState<boolean>()
   const [error, setError] = useState<string>()
@@ -126,6 +129,7 @@ function AssetProvider({
   // -----------------------------------
   const fetchAccessDetails = useCallback(async (): Promise<void> => {
     if (!asset?.chainId || !asset?.services) return
+
     const accessDetails = await getAccessDetails(
       asset.chainId,
       asset.services[0].datatokenAddress,
@@ -201,6 +205,7 @@ function AssetProvider({
           asset,
           did,
           title,
+          apiDocs,
           owner,
           error,
           isInPurgatory,

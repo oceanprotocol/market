@@ -1,5 +1,4 @@
 import {
-  approve,
   Config,
   DDO,
   Erc20CreateParams,
@@ -10,25 +9,19 @@ import {
   Metadata,
   NftCreateData,
   NftFactory,
-  PoolCreationParams,
   Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
-import Decimal from 'decimal.js'
 import slugify from 'slugify'
 import Web3 from 'web3'
-import {
-  algorithmContainerPresets,
-  MetadataAlgorithmContainer
-} from './_constants'
-import { FormPublishData } from './_types'
+import { algorithmContainerPresets } from './_constants'
+import { FormPublishData, MetadataAlgorithmContainer } from './_types'
 import {
   marketFeeAddress,
   publisherMarketOrderFee,
-  publisherMarketPoolSwapFee,
   publisherMarketFixedSwapFee
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
@@ -67,6 +60,8 @@ export async function transformPublishFormToDdo(
   nftAddress?: string
 ): Promise<DDO> {
   const { metadata, services, user } = values
+  LoggerInstance.log('MyFile:', values)
+  LoggerInstance.log('services:', services[0])
   const { chainId, accountId } = user
   const {
     type,
@@ -81,7 +76,19 @@ export async function transformPublishFormToDdo(
     dockerImageCustomEntrypoint,
     dockerImageCustomChecksum
   } = metadata
-  const { access, files, links, providerUrl, timeout } = services[0]
+  const {
+    access,
+    files,
+    links,
+    providerUrl,
+    timeout,
+    streamDocs,
+    streamFiles
+  } = services[0]
+
+  LoggerInstance.log('streamDocsUrl:', streamDocs[0].url)
+  LoggerInstance.log('streamUrl:', streamFiles[0].url)
+  LoggerInstance.log('providerUrl:', providerUrl)
 
   const did = nftAddress ? generateDid(nftAddress, chainId) : '0x...'
   const currentTime = dateToStringNoMS(new Date())
@@ -145,20 +152,27 @@ export async function transformPublishFormToDdo(
         type: 'url',
         index: 0,
         url: files[0].url,
+        streamUrl: streamFiles[0].url,
         method: 'GET'
       }
     ]
   }
+  LoggerInstance.log('File:', files[0])
+  // LoggerInstance.log('MyFile:', streamAPIDocs.url)
+
   const filesEncrypted =
     !isPreview &&
     files?.length &&
+    streamFiles?.length &&
     files[0].valid &&
+    streamFiles[0].valid &&
     (await getEncryptedFiles(file, providerUrl.url))
 
   const newService: Service = {
     id: getHash(datatokenAddress + filesEncrypted),
     type: access,
     files: filesEncrypted || '',
+    docs: streamDocs[0].url,
     datatokenAddress,
     serviceEndpoint: providerUrl.url,
     timeout: mapTimeoutStringToSeconds(timeout),
@@ -206,6 +220,7 @@ export async function createTokensAndPricing(
     accountId,
     values.metadata.transferable
   )
+  LoggerInstance.log('[publish]_ values_: ', values)
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
@@ -214,7 +229,7 @@ export async function createTokensAndPricing(
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
-    feeToken: config.oceanTokenAddress,
+    feeToken: values.pricing.baseToken.address,
     feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
@@ -226,15 +241,14 @@ export async function createTokensAndPricing(
 
   let erc721Address, datatokenAddress, txHash
 
-  // TODO: cleaner code for this huge switch !??!?
   switch (values.pricing.type) {
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
-        baseTokenAddress: config.oceanTokenAddress,
+        baseTokenAddress: values.pricing.baseToken.address,
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
-        baseTokenDecimals: 18,
+        baseTokenDecimals: values.pricing.baseToken.decimals,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
         marketFee: publisherMarketFixedSwapFee,

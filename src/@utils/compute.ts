@@ -24,7 +24,6 @@ import { getServiceById, getServiceByName } from './ddo'
 import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { transformAssetToAssetSelection } from './assetConvertor'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { ComputeEditForm } from 'src/components/Asset/Edit/_types'
 import { getFileDidInfo } from './provider'
 

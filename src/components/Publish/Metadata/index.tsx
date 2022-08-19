@@ -59,7 +59,6 @@ export default function MetadataFields(): ReactElement {
   useEffect(() => {
     setFieldValue(
       'services[0].access',
-      // only algorithm evaluates to 'compute', the rest including datastream defaults to 'access'
       values.metadata.type === 'algorithm' ? 'compute' : 'access'
     )
     setFieldValue(

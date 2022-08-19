@@ -4,8 +4,7 @@ import { FormPublishData } from '../_types'
 import { useFormikContext } from 'formik'
 import AssetContent from 'src/components/Asset/AssetContent'
 import { transformPublishFormToDdo } from '../_utils'
-import { AssetExtended } from 'src/@types/AssetExtended'
-import { LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import { ZERO_ADDRESS } from '@oceanprotocol/lib'
 
 export default function Preview(): ReactElement {
   const [asset, setAsset] = useState<AssetExtended>()
@@ -18,11 +17,11 @@ export default function Preview(): ReactElement {
       asset.accessDetails = {
         type: values.pricing.type,
         addressOrId: ZERO_ADDRESS,
-        price: values.pricing.price,
+        price: `${values.pricing.price}`,
         baseToken: {
           address: ZERO_ADDRESS,
-          name: 'OCEAN',
-          symbol: 'OCEAN'
+          name: values.pricing?.baseToken?.symbol || 'OCEAN',
+          symbol: values.pricing?.baseToken?.symbol || 'OCEAN'
         },
         datatoken: {
           address: ZERO_ADDRESS,
@@ -31,11 +30,9 @@ export default function Preview(): ReactElement {
         },
         isPurchasable: true,
         isOwned: false,
-        validOrderTx: ''
+        validOrderTx: '',
+        publisherMarketOrderFee: '0'
       }
-      LoggerInstance.log('asset:', asset)
-      LoggerInstance.log('metadataName:', values.metadata?.name)
-      LoggerInstance.log('metadataType:', values.metadata?.type)
       setAsset(asset)
     }
     makeDdo()

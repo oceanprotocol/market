@@ -12,14 +12,12 @@ export interface AppConfig {
   chainIdsSupported: number[]
   marketFeeAddress: string
   publisherMarketOrderFee: string
-  publisherMarketPoolSwapFee: string
   publisherMarketFixedSwapFee: string
   consumeMarketOrderFee: string
-  consumeMarketPoolSwapFee: string
   consumeMarketFixedSwapFee: string
   currencies: string[]
+  coingeckoTokenIds: string[]
   allowFixedPricing: string
-  allowDynamicPricing: string
   allowFreePricing: string
   defaultPrivacyPolicySlug: string
   privacyPreferenceCenter: string

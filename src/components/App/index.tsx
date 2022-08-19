@@ -19,26 +19,11 @@ export default function App({
   const { siteContent, appConfig } = useMarketMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
-  function openInNewTab() {
-    window
-      .open(
-        'https://blog.oceanprotocol.com/how-to-publish-a-data-nft-f58ad2a622a9',
-        '_blank'
-      )
-      .focus()
-  }
 
   return (
     <div className={styles.app}>
       {siteContent?.announcement !== '' && (
-        <AnnouncementBanner
-          text={siteContent?.announcement}
-          action={{
-            name: 'Explore OceanONDA V4.',
-            style: 'link',
-            handleAction: openInNewTab
-          }}
-        />
+        <AnnouncementBanner text={siteContent?.announcement} />
       )}
       <Header />
 
