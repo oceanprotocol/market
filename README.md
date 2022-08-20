@@ -81,7 +81,7 @@ Finally, set environment variables to use this local connection in `.env` in the
 ```bash
 # modify env variables
 cp .env.example .env
-
+   
 npm start
 ```
 
