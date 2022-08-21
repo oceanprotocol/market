@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './FormComputeDataset.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
@@ -239,6 +240,7 @@ export default function FormStartCompute({
         algorithmPriceType={selectedAlgorithmAsset?.accessDetails?.type}
         isBalanceSufficient={isBalanceSufficient}
         isConsumable={isConsumable}
+        isStreamable={false}
         consumableFeedback={consumableFeedback}
         isAlgorithmConsumable={
           selectedAlgorithmAsset?.accessDetails?.isPurchasable

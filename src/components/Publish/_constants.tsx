@@ -74,6 +74,8 @@ export const initialValues: FormPublishData = {
     {
       files: [{ url: '' }],
       links: [{ url: '' }],
+      streamDocs: [{ url: '' }],
+      streamFiles: [{ url: '' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: 'access',

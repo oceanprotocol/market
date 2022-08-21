@@ -86,9 +86,9 @@ export async function transformPublishFormToDdo(
     streamFiles
   } = services[0]
 
-  LoggerInstance.log('streamDocsUrl:', streamDocs[0].url)
-  LoggerInstance.log('streamUrl:', streamFiles[0].url)
-  LoggerInstance.log('providerUrl:', providerUrl)
+  // LoggerInstance.log('streamDocsUrl:', streamDocs[0].url)
+  // LoggerInstance.log('streamUrl:', streamFiles[0].url)
+  // LoggerInstance.log('providerUrl:', providerUrl)
 
   const did = nftAddress ? generateDid(nftAddress, chainId) : '0x...'
   const currentTime = dateToStringNoMS(new Date())
@@ -152,7 +152,7 @@ export async function transformPublishFormToDdo(
         type: 'url',
         index: 0,
         url: files[0].url,
-        streamUrl: streamFiles[0].url,
+        streamUrl: streamFiles[0]?.url,
         method: 'GET'
       }
     ]
