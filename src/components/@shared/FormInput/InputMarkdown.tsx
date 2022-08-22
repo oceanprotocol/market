@@ -36,12 +36,7 @@ import '@uiw/react-markdown-preview/markdown.css'
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
 
 const InputMarkdown = ({ ...props }): ReactElement => {
-  const [value, setValue] = useState('')
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
-
-  useEffect(() => {
-    setFieldValue(props.name, value)
-  }, [props.name, setFieldValue, value])
 
   return (
     <div className={styles.inputMarkdown}>
@@ -52,7 +47,9 @@ const InputMarkdown = ({ ...props }): ReactElement => {
           className: styles.inputMarkdownContent
         }}
         preview={'edit'}
-        onChange={setValue}
+        onChange={(value: string) => {
+          setFieldValue(props.name, value)
+        }}
         commands={[
           bold,
           code,
@@ -72,8 +69,6 @@ const InputMarkdown = ({ ...props }): ReactElement => {
           title5,
           title6,
           divider,
-          codeLive,
-          fullscreen,
           image,
           strikethrough
         ]}
