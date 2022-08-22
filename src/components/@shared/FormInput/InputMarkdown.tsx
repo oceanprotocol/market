@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState, ChangeEvent } from 'react'
+import React, { ReactElement } from 'react'
 import { useFormikContext } from 'formik'
 import { FormPublishData } from '../../Publish/_types'
 import dynamic from 'next/dynamic'
@@ -22,8 +22,6 @@ import {
   title5,
   title6,
   divider,
-  codeLive,
-  fullscreen,
   image,
   strikethrough,
   codeEdit,
