@@ -3,13 +3,12 @@
   border-bottom-right-radius: 0;
 }
 
-.inputMarkdownContent {
-  background-color: transparent;
-  height: 100%;
+.inputMarkdown div {
+  background-color: transparent !important;
 }
 
-.w-md-editor-show-live .inputMarkdownContent {
-  width: 50%;
+.inputMarkdownContent {
+  height: 100%;
 }
 
 .inputMarkdownContent textarea {
