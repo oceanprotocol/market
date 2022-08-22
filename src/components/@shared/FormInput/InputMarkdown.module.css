@@ -11,13 +11,11 @@
   height: 100%;
 }
 
-.inputMarkdownContent textarea {
-  height: 100%;
-}
-
 .inputMarkdownContent pre {
   background-color: transparent !important;
   color: var(--font-color-text) !important;
+  overflow: auto !important;
+  max-height: 100%;
 }
 
 .inputMarkdown button {
