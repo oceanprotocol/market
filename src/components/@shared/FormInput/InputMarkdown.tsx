@@ -34,12 +34,12 @@ import '@uiw/react-markdown-preview/markdown.css'
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
 
 const InputMarkdown = ({ ...props }): ReactElement => {
-  const { values, setFieldValue } = useFormikContext<FormPublishData>()
+  const { setFieldValue } = useFormikContext<FormPublishData>()
 
   return (
     <div className={styles.inputMarkdown}>
       <MDEditor
-        value={values.metadata.description}
+        value={props.value}
         textareaProps={{
           ...props,
           className: styles.inputMarkdownContent
