@@ -13,11 +13,12 @@
 }
 
 .inputMarkdownContent textarea {
-  height: auto;
+  height: 100%;
 }
 
 .inputMarkdownContent pre {
   background-color: transparent !important;
+  color: var(--font-color-text) !important;
 }
 
 .inputMarkdown button {
@@ -25,15 +26,11 @@
   border-top-right-radius: 0;
   margin-top: -1px;
   width: 100%;
+  color: var(--font-color-text) !important;
 }
 
-.inputMarkdown button:hover,
-.inputMarkdown button:focus,
-.inputMarkdown input:focus + button:hover,
-.inputMarkdown input:focus + button:focus {
-  background: var(--brand-gradient);
-  transform: none;
-  box-shadow: none;
+.inputMarkdownContent textarea::selection {
+  -webkit-text-fill-color: var(--background-body);
 }
 
 @media screen and (min-width: 30rem) {
