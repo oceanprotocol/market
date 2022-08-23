@@ -1,9 +1,14 @@
 import { ReactElement, useEffect } from 'react'
 import { useFormikContext } from 'formik'
-import { wizardSteps, initialPublishFeedback } from './_constants'
+import {
+  wizardSteps,
+  initialPublishFeedback,
+  initialValues
+} from './_constants'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData, PublishFeedback } from './_types'
 import { getOceanConfig } from '@utils/ocean'
+import router from 'next/router'
 
 export function Steps({
   feedback
@@ -22,11 +27,15 @@ export function Steps({
     setFieldValue('user.accountId', accountId)
   }, [chainId, accountId, setFieldValue])
 
-  // Reset the selected baseToken on chainId change
   useEffect(() => {
     if (!chainId) return
 
-    setFieldValue('pricing.baseToken', null)
+    // Reset the pricing values on chainId change
+    // the user needs to update the pricing schema on network changes
+    if (values.pricing.price) {
+      setFieldValue('pricing', initialValues.pricing)
+      router.push(`/publish/3`)
+    }
   }, [chainId, setFieldValue])
 
   // auto-sync publish feedback into form data values
