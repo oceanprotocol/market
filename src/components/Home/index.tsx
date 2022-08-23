@@ -131,7 +131,7 @@ export default function HomePage(): ReactElement {
         query={queryLatest}
         action={
           <Button style="text" to="/search?sort=nft.created&sortOrder=desc">
-            All data sets and algorithms →
+            All datasets and algorithms →
           </Button>
         }
       />

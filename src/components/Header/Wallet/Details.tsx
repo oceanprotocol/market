@@ -29,8 +29,7 @@ export default function Details(): ReactElement {
   useEffect(() => {
     if (!networkId) return
 
-    const symbol =
-      networkId === 2021000 ? 'GX' : networkData?.nativeCurrency.symbol
+    const symbol = networkData?.nativeCurrency.symbol
     setMainCurrency(symbol)
 
     const oceanConfig = getOceanConfig(networkId)
@@ -49,11 +48,17 @@ export default function Details(): ReactElement {
           <li className={styles.balance} key={key}>
             <span className={styles.symbol}>
               {key === 'eth' ? mainCurrency : key.toUpperCase()}
-            </span>{' '}
-            {formatCurrency(Number(value), '', locale, false, {
-              significantFigures: 4
-            })}
-            {key === 'ocean' && <Conversion price={value} />}
+            </span>
+            <span className={styles.value}>
+              {formatCurrency(Number(value), '', locale, false, {
+                significantFigures: 4
+              })}
+            </span>
+            <Conversion
+              className={styles.conversion}
+              price={value}
+              symbol={key}
+            />
           </li>
         ))}
 

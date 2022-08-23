@@ -42,7 +42,13 @@ export default function Stats({
     <div className={styles.stats}>
       <NumberUnit
         label="Total Sales"
-        value={<Conversion price={totalSales} hideApproximateSymbol />}
+        value={
+          <Conversion
+            price={totalSales}
+            symbol={'ocean'}
+            hideApproximateSymbol
+          />
+        }
       />
       <NumberUnit label={`Sale${sales === 1 ? '' : 's'}`} value={sales} />
       <NumberUnit label="Published" value={assetsTotal} />

@@ -266,10 +266,10 @@ export default function Compute({
         computeAlgorithm,
         selectedAlgorithmAsset
       )
-      LoggerInstance.log('[compute] Is data set orderable?', allowed)
+      LoggerInstance.log('[compute] Is dataset orderable?', allowed)
       if (!allowed)
         throw new Error(
-          'Data set is not orderable in combination with selected algorithm.'
+          'Dataset is not orderable in combination with selected algorithm.'
         )
 
       await initPriceAndFees()
@@ -376,7 +376,7 @@ export default function Compute({
           {asset.services[0].type === 'compute' && (
             <Alert
               text={
-                "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+                "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed datasets though!"
               }
               state="info"
             />

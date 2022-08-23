@@ -41,7 +41,7 @@ export default function PriceUnit({
             {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
             <span className={styles.symbol}>{symbol}</span>
           </div>
-          {conversion && <Conversion price={price} />}
+          {conversion && <Conversion price={price} symbol={symbol} />}
         </>
       )}
     </div>
