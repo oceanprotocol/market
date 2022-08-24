@@ -1,13 +1,13 @@
 import { Field, useFormikContext } from 'formik'
 import Input from '@shared/FormInput'
-import React, { ReactElement } from 'react'
+import React, { ChangeEvent, ReactElement, useState } from 'react'
 import { FormSettingsData } from '../_types'
-import { getFieldContent } from '../_utils'
 import styles from './Asset.module.css'
 import contentAsset from '../../../../content/settings/assets.json'
 import Source from '@images/source.svg'
 export function Assets({ assets }: { assets: any }): ReactElement {
   const { values } = useFormikContext<FormSettingsData>()
+  const [checked, setChecked] = useState<boolean>()
 
   console.log('values', values)
   const items = Object.entries(contentAsset).map(([key, value], index) => (
@@ -29,13 +29,12 @@ export function Assets({ assets }: { assets: any }): ReactElement {
                 <p>{value.display}</p>
               </div>
 
-              <Field
+              <Input
                 type="checkbox"
                 className={styles.displayCheck}
-                {...getFieldContent('type', [])}
-                component={Input}
                 name="Add custom signal"
                 options={Object.values(value.options)}
+                onChange={() => setChecked(!checked)}
               />
             </div>
           </div>
