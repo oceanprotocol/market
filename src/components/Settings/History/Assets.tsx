@@ -1,6 +1,6 @@
 import { Field, useFormikContext } from 'formik'
 import Input from '@shared/FormInput'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, {ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { FormSettingsData } from '../_types'
 import { getFieldContent } from '../_utils'
 import styles from './Asset.module.css'
@@ -14,6 +14,8 @@ const displayOptions = ['List View', 'Detail View']
 export function Assets({ handleRemoveSignal }: { handleRemoveSignal(id: string): void }): ReactElement {
   const { values } = useFormikContext<FormSettingsData>()
   const { signals } = useUserPreferences()
+  const [checked, setChecked] = useState<boolean>()
+
   console.log('values', values)
   const getSignalPageViewOptions = () => {
     return signals.map((signalOrigin, index) => (
