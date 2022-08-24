@@ -4,7 +4,7 @@ import Compute from './Compute'
 import Consume from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
-import Tabs2 from '@shared/atoms/Tabs2'
+import AssetSignals from '@shared/atoms/AssetSignals'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
 import Trade from './Trade'
@@ -143,7 +143,7 @@ export default function AssetActions({
     <>
       <PoolProvider>
         <Tabs items={tabs} className={styles.actions} />
-        <Tabs2 className={styles.actions} />
+        <AssetSignals className={styles.actions} />
         <Web3Feedback
           networkId={asset?.chainId}
           isAssetNetwork={isAssetNetwork}

@@ -176,3 +176,16 @@
   font-size: var(--font-size-label);
   color: var(--color-secondary);
 }
+
+.sourceIcon {
+  fill: var(--brand-grey-light);
+  transition: 0.2s ease-out;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.5rem;
+}
+
+.displaySource {
+  display: flex;
+  align-items: baseline;
+}
