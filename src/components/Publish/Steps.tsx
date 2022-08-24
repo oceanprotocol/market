@@ -1,14 +1,9 @@
 import { ReactElement, useEffect } from 'react'
 import { useFormikContext } from 'formik'
-import {
-  wizardSteps,
-  initialPublishFeedback,
-  initialValues
-} from './_constants'
+import { wizardSteps, initialPublishFeedback } from './_constants'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData, PublishFeedback } from './_types'
 import { getOceanConfig } from '@utils/ocean'
-import router from 'next/router'
 
 export function Steps({
   feedback
