@@ -27,18 +27,6 @@ export function Steps({
     setFieldValue('user.accountId', accountId)
   }, [chainId, accountId, setFieldValue])
 
-  useEffect(() => {
-    if (!chainId) return
-
-    // Reset the pricing values on chainId change:
-    // - the user needs to update the pricing schema on network changes
-    // - if the tx has been started, don't restore pricing values
-    if (values.pricing.price && values.feedback[1].status === 'pending') {
-      setFieldValue('pricing', initialValues.pricing)
-      router.push(`/publish/3`)
-    }
-  }, [chainId, setFieldValue])
-
   // auto-sync publish feedback into form data values
   useEffect(() => {
     setFieldValue('feedback', feedback)
