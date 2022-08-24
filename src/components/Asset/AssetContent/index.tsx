@@ -17,8 +17,8 @@ import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useWeb3 } from '@context/Web3'
 import Web3 from 'web3'
-import Tabs2 from '@shared/atoms/Tabs'
-import styles2 from '../AssetActions/index.module.css'
+// import AssetSignals from '@shared/atoms/Tabs'
+// import styles2 from '../AssetActions/index.module.css'
 
 export default function AssetContent({
   asset
@@ -94,7 +94,7 @@ export default function AssetContent({
           )}
         </div>
       </article>
-      <Tabs2 className={styles2.actions} items={[]} />
+      {/* <AssetSignals className={styles2.actions} items={[]} /> */}
     </>
   )
 }

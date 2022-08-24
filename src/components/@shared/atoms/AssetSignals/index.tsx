@@ -4,13 +4,14 @@ import styles from './index.module.css'
 import contentAsset from '../../../../../content/settings/assets.json'
 import DetailsArrow from '@images/details-arrow.svg'
 import UtuIcon from '@images/utu-logo.svg'
+import Source from '@images/source.svg'
 
 export interface TabsProps {
   className?: string
   defaultIndex?: number
 }
 
-export default function Tabs2({
+export default function AssetSignals({
   className,
   defaultIndex
 }: TabsProps): ReactElement {
@@ -55,7 +56,12 @@ export default function Tabs2({
                 </div>
               </div>
               <p>{value.description}</p>
-              <p>{value.source}</p>
+              <div className={styles.displaySource}>
+                <p>{value.source}</p>
+                {value.source != null ? (
+                  <Source className={styles.sourceIcon} />
+                ) : null}
+              </div>
             </li>
           ) : null}
         </>
