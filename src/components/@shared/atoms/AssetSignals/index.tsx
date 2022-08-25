@@ -5,17 +5,29 @@ import contentAsset from '../../../../../content/settings/assets.json'
 import DetailsArrow from '@images/details-arrow.svg'
 import UtuIcon from '@images/utu-logo.svg'
 import Source from '@images/source.svg'
+import Loader from '@shared/atoms/Loader'
 
 export interface TabsProps {
   className?: string
   defaultIndex?: number
+  isLoading?: boolean
+}
+
+function LoaderArea() {
+  return (
+    <div className={styles.loaderWrap}>
+      <Loader />
+    </div>
+  )
 }
 
 export default function AssetSignals({
   className,
-  defaultIndex
+  defaultIndex,
+  isLoading
 }: TabsProps): ReactElement {
   const [openUp, setOpenUp] = useState(false)
+  const [loading, setLoading] = useState<boolean>(isLoading)
 
   const itemsClose = (index: any) =>
     Object.entries(contentAsset).map(([key, value], index) => (
@@ -44,24 +56,35 @@ export default function AssetSignals({
         <>
           {value.name.length > 0 ? (
             <li key={index}>
-              <div className={styles.assetListTitle}>
-                <div className={styles.assetListTitleName}>
-                  <p>
-                    <UtuIcon className={styles.assetListIcon} />
-                  </p>
-                  <p> {value.name} </p>
+              {!loading ? (
+                <div className={styles.assetListTitle}>
+                  <div className={styles.assetListTitleName}>
+                    <p>
+                      <UtuIcon className={styles.assetListIcon} />
+                    </p>
+                    <p> {value.name} </p>
+                  </div>
+
+                  <div className={styles.assetListTitleNumber}>
+                    {value.number}
+                  </div>
                 </div>
-                <div className={styles.assetListTitleNumber}>
-                  {value.number}
+              ) : (
+                <LoaderArea />
+              )}
+
+              {!loading ? <p>{value.description}</p> : <LoaderArea />}
+
+              {!loading ? (
+                <div className={styles.displaySource}>
+                  <p>{value.source}</p>
+                  {value.source != null ? (
+                    <Source className={styles.sourceIcon} />
+                  ) : null}
                 </div>
-              </div>
-              <p>{value.description}</p>
-              <div className={styles.displaySource}>
-                <p>{value.source}</p>
-                {value.source != null ? (
-                  <Source className={styles.sourceIcon} />
-                ) : null}
-              </div>
+              ) : (
+                <LoaderArea />
+              )}
             </li>
           ) : null}
         </>
