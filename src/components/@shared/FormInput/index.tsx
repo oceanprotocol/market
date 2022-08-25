@@ -112,6 +112,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   })
 
   const [disclaimerVisible, setDisclaimerVisible] = useState(true)
+  const [textVisible, settextVisible] = useState<boolean>(false)
 
   useEffect(() => {
     if (!isFormikField) return
@@ -150,6 +151,9 @@ export default function Input(props: Partial<InputProps>): ReactElement {
           <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>
         )}
         {additionalComponent && additionalComponent}
+        {textVisible ? (
+          <FormHelp>Defaults to your OS setting, select to override.</FormHelp>
+        ) : null}
       </div>
     </div>
   )

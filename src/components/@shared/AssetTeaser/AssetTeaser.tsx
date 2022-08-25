@@ -16,11 +16,13 @@ import { getURLParams } from '@hooks/useSignals/_util'
 import useSignalsLoader from '@hooks/useSignals'
 import Loader from '@shared/atoms/Loader'
 import Tooltip from '@shared/atoms/Tooltip'
+import Markdown from '@shared/Markdown'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
   isLoading?: boolean
+  help?: string
 }
 
 function LoaderArea() {
@@ -34,7 +36,8 @@ function LoaderArea() {
 export default function AssetTeaser({
   asset,
   noPublisher,
-  isLoading
+  isLoading,
+  help
 }: AssetTeaserProps): ReactElement {
   const { signalUrls } = useSignalContext()
   const urls = signalUrls.map((item) => {
@@ -131,6 +134,7 @@ export default function AssetTeaser({
               ) : (
                 <LoaderArea />
               )}
+              <Tooltip content={<Markdown text="information" />} />
             </a>
           </Link>
         </div>
