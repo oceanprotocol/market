@@ -115,26 +115,31 @@ export default function AssetTeaser({
         </div>
         <div>
           <Link href={`/asset/${asset.id}`}>
-            <a className={styles.signal}>
-              {!loading ? (
-                <div className={styles.symbol2}>
-                  <PolygonIcon className={styles.icon} />
-                  <div>38%</div>
-                </div>
-              ) : (
-                <LoaderArea />
-              )}
-              {!loading ? (
-                <div className={styles.symbol2}>39%</div>
-              ) : (
-                <LoaderArea />
-              )}
-              {!loading ? (
-                <div className={styles.symbol2}>4</div>
-              ) : (
-                <LoaderArea />
-              )}
-              <Tooltip content={<Markdown text="information" />} />
+            <a className={styles.signalContainer}>
+              <div className={styles.signal}>
+                {!loading ? (
+                  <div className={styles.symbol2}>
+                    <PolygonIcon className={styles.icon} />
+                    <div>38%</div>
+                  </div>
+                ) : (
+                  <LoaderArea />
+                )}
+                {!loading ? (
+                  <div className={styles.symbol2}>39%</div>
+                ) : (
+                  <LoaderArea />
+                )}
+                {!loading ? (
+                  <div className={styles.symbol2}>4</div>
+                ) : (
+                  <LoaderArea />
+                )}
+              </div>
+              <div>
+                {' '}
+                <Tooltip content={<Markdown text="information" />} />
+              </div>
             </a>
           </Link>
         </div>
