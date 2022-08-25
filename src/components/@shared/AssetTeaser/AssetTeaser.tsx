@@ -48,9 +48,25 @@ export default function AssetTeaser({
   const { signalItems, loading: isFetching } = useSignalsLoader(urls)
   const [loading, setLoading] = useState<boolean>(isLoading)
 
-  const itemsOpen = Object.values(contentAsset).map((value) => {
+  const assetSignals = Object.values(contentAsset).map((value) => {
     return value.source
   })
+
+  const signals = (index: any) =>
+    Object.entries(contentAsset).map(([key, value], index) => (
+      <>
+        <>
+          {value.name.length > 0 ? (
+            <li key={index}>
+              <div className={styles.symbol2}>
+                <PolygonIcon className={styles.icon} />{' '}
+                <div>{value.number}</div>
+              </div>
+            </li>
+          ) : null}
+        </>
+      </>
+    ))
 
   return (
     <>
@@ -99,7 +115,8 @@ export default function AssetTeaser({
             <a className={styles.signal}>
               {!loading ? (
                 <div className={styles.symbol2}>
-                  <PolygonIcon className={styles.icon} /> <div>88.4%</div>
+                  <PolygonIcon className={styles.icon} />
+                  <div>38%</div>
                 </div>
               ) : (
                 <LoaderArea />
