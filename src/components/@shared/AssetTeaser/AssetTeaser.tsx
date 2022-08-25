@@ -17,12 +17,14 @@ import useSignalsLoader from '@hooks/useSignals'
 import Loader from '@shared/atoms/Loader'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
+import { Tabs as ReactTabs } from 'react-tabs'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
   isLoading?: boolean
   help?: string
+  contentAsset: ReactElement
 }
 
 function LoaderArea() {
@@ -37,7 +39,8 @@ export default function AssetTeaser({
   asset,
   noPublisher,
   isLoading,
-  help
+  help,
+  contentAsset
 }: AssetTeaserProps): ReactElement {
   const { signalUrls } = useSignalContext()
   const urls = signalUrls.map((item) => {
@@ -51,25 +54,25 @@ export default function AssetTeaser({
   const { signalItems, loading: isFetching } = useSignalsLoader(urls)
   const [loading, setLoading] = useState<boolean>(isLoading)
 
-  const assetSignals = Object.values(contentAsset).map((value) => {
-    return value.source
-  })
+  // const assetSignals = Object.values(contentAsset).map((value) => {
+  //   return value.source
+  // })
 
-  const signals = (index: any) =>
-    Object.entries(contentAsset).map(([key, value], index) => (
-      <>
-        <>
-          {value.name.length > 0 ? (
-            <li key={index}>
-              <div className={styles.symbol2}>
-                <PolygonIcon className={styles.icon} />{' '}
-                <div>{value.number}</div>
-              </div>
-            </li>
-          ) : null}
-        </>
-      </>
-    ))
+  // const signals = () =>
+  //   Object.entries(contentAsset).map(([key, value], index) => (
+  //     <>
+  //       <>
+  //         {value.name.length > 0 ? (
+  //           <li key={index}>
+  //             <div className={styles.symbol2}>
+  //               <PolygonIcon className={styles.icon} />{' '}
+  //               <div>{value.number}</div>
+  //             </div>
+  //           </li>
+  //         ) : null}
+  //       </>
+  //     </>
+  //   ))
 
   return (
     <>
@@ -117,6 +120,8 @@ export default function AssetTeaser({
           <Link href={`/asset/${asset.id}`}>
             <a className={styles.signalContainer}>
               <div className={styles.signal}>
+                {/* {!loading ? { signals } : <LoaderArea />} */}
+
                 {!loading ? (
                   <div className={styles.symbol2}>
                     <PolygonIcon className={styles.icon} />

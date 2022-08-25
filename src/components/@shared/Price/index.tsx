@@ -40,5 +40,15 @@ export default function Price({
     //     <Tooltip content="This pool does not have enough liquidity for using this data set." />
     //   </div>
     <Loader message="Retrieving price..." />
+
+    // return (
+    //   <PriceUnit
+    //     price={`${orderPriceAndFees?.price || accessDetails?.price}`}
+    //     symbol={accessDetails.baseToken?.symbol}
+    //     className={className}
+    //     size={size}
+    //     conversion={conversion}
+    //     type={accessDetails.type}
+    //   />
   )
 }

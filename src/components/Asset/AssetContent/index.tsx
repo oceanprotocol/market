@@ -17,7 +17,7 @@ import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useWeb3 } from '@context/Web3'
 import Web3 from 'web3'
-// import AssetSignals from '@shared/atoms/Tabs'
+// import AssetSignals from '@shared/atoms/AssetSignals'
 // import styles2 from '../AssetActions/index.module.css'
 
 export default function AssetContent({
@@ -84,6 +84,7 @@ export default function AssetContent({
 
         <div className={styles.actions}>
           <AssetActions asset={asset} />
+          {/* <AssetSignals className={styles2.actions} items={[]} /> */}
 
           {isOwner && isAssetNetwork && (
             <div className={styles.ownerActions}>
@@ -94,7 +95,6 @@ export default function AssetContent({
           )}
         </div>
       </article>
-      {/* <AssetSignals className={styles2.actions} items={[]} /> */}
     </>
   )
 }
