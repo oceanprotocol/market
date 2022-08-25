@@ -12,6 +12,9 @@
   padding-bottom: var(--spacer);
   margin-bottom: var(--spacer);
   counter-increment: list-number;
+}
+
+.assets li:not(:last-child) {
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -128,6 +131,9 @@
   padding: calc(var(--spacer) / 2);
   display: flex;
   justify-content: space-between;
+}
+
+.AssetSignalsContent > * :not(:last-child) {
 }
 
 .AssetSignalsTitles {

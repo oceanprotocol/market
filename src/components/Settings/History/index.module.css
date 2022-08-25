@@ -46,9 +46,6 @@
   max-width: fit-content;
 }
 
-.generalDetails li:first-child {
-}
-
 .generalDetails > * > * {
   display: flex;
   justify-content: flex-start;
