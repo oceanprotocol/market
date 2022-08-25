@@ -12,11 +12,14 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import contentAsset from '../../../../content/settings/assets.json'
 import PolygonIcon from '@images/polygon.svg'
 import Loader from '@shared/atoms/Loader'
+import Tooltip from '@shared/atoms/Tooltip'
+import Markdown from '@shared/Markdown'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
   isLoading?: boolean
+  help?: string
 }
 
 function LoaderArea() {
@@ -30,7 +33,8 @@ function LoaderArea() {
 export default function AssetTeaser({
   asset,
   noPublisher,
-  isLoading
+  isLoading,
+  help
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
@@ -122,6 +126,7 @@ export default function AssetTeaser({
               ) : (
                 <LoaderArea />
               )}
+              <Tooltip content={<Markdown text="information" />} />
             </a>
           </Link>
         </div>
