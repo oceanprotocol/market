@@ -71,8 +71,8 @@ export default function AssetSignals({
   return (
     <>
       <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
-        <div className={styles.tab2Content}>
-          <div className={styles.tab2ContentTitle}>
+        <div className={styles.AssetSignalsContent}>
+          <div className={styles.AssetSignalsContentTitle}>
             <h3>Asset Signal</h3>
             <h3 className={styles.details}>
               {openUp ? 'HIDE DETAILS' : 'SHOW DETAILS'}
@@ -84,7 +84,11 @@ export default function AssetSignals({
               >
                 {' '}
                 <DetailsArrow
-                  className={openUp ? styles.tab2IconDown : styles.tab2IconUp}
+                  className={
+                    openUp
+                      ? styles.AssetSignalsIconDown
+                      : styles.AssetSignalsIconUp
+                  }
                 />
               </div>
             </h3>

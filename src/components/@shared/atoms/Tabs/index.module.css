@@ -52,7 +52,7 @@
   padding: calc(var(--spacer) / 2);
 }
 
-.tab2Content {
+.AssetSignalsContent {
   padding: calc(var(--spacer) / 2);
   display: flex;
   justify-content: space-around;

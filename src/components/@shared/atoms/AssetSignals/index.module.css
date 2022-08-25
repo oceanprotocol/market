@@ -124,18 +124,18 @@
   padding: calc(var(--spacer) / 2);
 }
 
-.tab2Content > * {
+.AssetSignalsContent > * {
   padding: calc(var(--spacer) / 2);
   display: flex;
   justify-content: space-between;
 }
 
-.tab2Titles {
+.AssetSignalsTitles {
   display: flex;
   justify-content: space-between;
 }
 
-.tab2Titles > * {
+.AssetSignalsTitles > * {
   display: flex;
 }
 
@@ -144,7 +144,7 @@
   align-items: center;
 }
 
-.tab2IconDown {
+.AssetSignalsIconDown {
   fill: var(--brand-grey-light);
   transition: 0.2s ease-out;
   width: 0.7em;
@@ -152,7 +152,7 @@
   margin-left: 0.5rem;
 }
 
-.tab2IconUp {
+.AssetSignalsIconUp {
   fill: var(--brand-grey-light);
   transition: 0.2s ease-out;
   width: 0.7em;
@@ -162,7 +162,7 @@
 }
 
 @media (min-width: 40rem) {
-  .tab2Content {
+  .AssetSignalsContent {
     padding: var(--spacer);
     padding-bottom: 0;
   }
@@ -172,7 +172,7 @@
   composes: radio from '../../FormInput/InputRadio.module.css';
 }
 
-.tab2ContentTitle > * {
+.AssetSignalsContentTitle > * {
   font-size: var(--font-size-label);
   color: var(--color-secondary);
 }
