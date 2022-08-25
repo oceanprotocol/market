@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import Link from 'next/link'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '@shared/Price'
@@ -20,11 +20,21 @@ import Tooltip from '@shared/atoms/Tooltip'
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
+  isLoading?: boolean
+}
+
+function LoaderArea() {
+  return (
+    <div className={styles.loaderWrap}>
+      <Loader />
+    </div>
+  )
 }
 
 export default function AssetTeaser({
   asset,
-  noPublisher
+  noPublisher,
+  isLoading
 }: AssetTeaserProps): ReactElement {
   const { signalUrls } = useSignalContext()
   const urls = signalUrls.map((item) => {
@@ -35,7 +45,8 @@ export default function AssetTeaser({
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
-  const { signalItems, loading } = useSignalsLoader(urls)
+  const { signalItems, loading: isFetching } = useSignalsLoader(urls)
+  const [loading, setLoading] = useState<boolean>(isLoading)
 
   const itemsOpen = Object.values(contentAsset).map((value) => {
     return value.source
@@ -86,12 +97,23 @@ export default function AssetTeaser({
         <div>
           <Link href={`/asset/${asset.id}`}>
             <a className={styles.signal}>
-              <div className={styles.symbol2}>
-                <PolygonIcon className={styles.icon} /> <div>88.4%</div>
-              </div>
-
-              <div className={styles.symbol2}>39%</div>
-              <div className={styles.symbol2}>4</div>
+              {!loading ? (
+                <div className={styles.symbol2}>
+                  <PolygonIcon className={styles.icon} /> <div>88.4%</div>
+                </div>
+              ) : (
+                <LoaderArea />
+              )}
+              {!loading ? (
+                <div className={styles.symbol2}>39%</div>
+              ) : (
+                <LoaderArea />
+              )}
+              {!loading ? (
+                <div className={styles.symbol2}>4</div>
+              ) : (
+                <LoaderArea />
+              )}
             </a>
           </Link>
         </div>
