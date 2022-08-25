@@ -30,6 +30,7 @@ import {
 
 import '@uiw/react-md-editor/markdown-editor.css'
 import '@uiw/react-markdown-preview/markdown.css'
+import Markdown from '@shared/Markdown'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
 
@@ -47,6 +48,11 @@ const InputMarkdown = ({ ...props }): ReactElement => {
         preview={'edit'}
         onChange={(value: string) => {
           setFieldValue(props.name, value)
+        }}
+        components={{
+          preview: (source) => {
+            return <Markdown text={source} />
+          }
         }}
         commands={[
           bold,

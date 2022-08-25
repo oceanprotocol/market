@@ -29,7 +29,7 @@
     "@oceanprotocol/lib": "^1.1.6",
     "@oceanprotocol/typographies": "^0.1.0",
     "@tippyjs/react": "^4.2.6",
-    "@uiw/react-md-editor": "^3.6.0",
+    "@uiw/react-md-editor": "^3.18.1",
     "@urql/exchange-refocus": "^0.2.5",
     "@walletconnect/web3-provider": "^1.7.8",
     "axios": "^0.27.2",
