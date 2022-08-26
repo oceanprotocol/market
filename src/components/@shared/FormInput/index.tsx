@@ -20,6 +20,7 @@ import FormHelp from './Help'
 const cx = classNames.bind(styles)
 
 export interface InputProps {
+  textVisible?: boolean
   name: string
   label?: string | ReactNode
   placeholder?: string
@@ -112,7 +113,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   })
 
   const [disclaimerVisible, setDisclaimerVisible] = useState(true)
-  const [textVisible, settextVisible] = useState<boolean>(false)
+  const [textVisible, setTextVisible] = useState<boolean>(false)
 
   useEffect(() => {
     if (!isFormikField) return
@@ -123,6 +124,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
           props.form?.values[parsedFieldName[0]]?.[parsedFieldName[1]]
         )
       )
+      setTextVisible(textVisible)
     }
   }, [isFormikField, props.form?.values])
 

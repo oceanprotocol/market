@@ -15,6 +15,7 @@ import Loader from '@shared/atoms/Loader'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import { Tabs as ReactTabs } from 'react-tabs'
+import UtuIcon from '@images/utu-logo.svg'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -65,6 +66,46 @@ export default function AssetTeaser({
   //       </>
   //     </>
   //   ))
+
+  const assetSignals = (
+    <ol className={styles.assets}>
+      <li key="1">
+        <div className={styles.assetListTitle}>
+          <div className={styles.assetListTitleName}>
+            <UtuIcon className={styles.icon} />
+            <p>Rug pull index - Rating</p>
+          </div>
+          <div className={styles.assetListTitleNumber}>
+            <p>39%</p>
+          </div>
+        </div>
+      </li>
+
+      <li key="2">
+        <div className={styles.assetListTitle}>
+          <div className={styles.assetListTitleName}>
+            <UtuIcon className={styles.icon} />
+            <p>Rug pull index - Inequality</p>
+          </div>
+          <div className={styles.assetListTitleNumber}>
+            <p>39%</p>
+          </div>
+        </div>
+      </li>
+
+      <li key="3">
+        <div className={styles.assetListTitle}>
+          <div className={styles.assetListTitleName}>
+            <UtuIcon className={styles.icon} />
+            <p>UTU - usage in your network</p>
+          </div>
+          <div className={styles.assetListTitleNumber}>
+            <p>4</p>
+          </div>
+        </div>
+      </li>
+    </ol>
+  )
 
   return (
     <>
@@ -135,7 +176,7 @@ export default function AssetTeaser({
               </div>
               <div>
                 {' '}
-                <Tooltip content={<Markdown text="information" />} />
+                <Tooltip content={assetSignals} />
               </div>
             </a>
           </Link>

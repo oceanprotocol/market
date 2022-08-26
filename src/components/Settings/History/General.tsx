@@ -13,6 +13,7 @@ import { validationSchema } from '../_validation'
 export default function GeneralTab(): ReactElement {
   const { appConfig } = useMarketMetadata()
   const darkMode = useDarkMode(false, appConfig?.darkModeConfig)
+  const textVisible = true
 
   return (
     <>
@@ -28,7 +29,7 @@ export default function GeneralTab(): ReactElement {
       >
         <Form>
           <ul className={styles.generalDetails}>
-            <Currency />
+            <Currency textVisible={textVisible} />
             <TokenApproval />
             <Appearance darkMode={darkMode} />
             <Debug />
