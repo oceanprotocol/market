@@ -33,6 +33,7 @@ declare type AssetListProps = {
   className?: string
   noPublisher?: boolean
   signalItems?: AssetSignalItem[]
+  help: any
 }
 
 export default function AssetList({
@@ -89,7 +90,6 @@ export default function AssetList({
               asset={assetWithPrice}
               key={assetWithPrice.id}
               noPublisher={noPublisher}
-              help={help}
             />
           ))
         ) : (

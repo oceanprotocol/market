@@ -9,7 +9,6 @@ import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import contentAsset from '../../../../content/settings/assets.json'
 import PolygonIcon from '@images/polygon.svg'
 import { useSignalContext } from '@context/Signals'
 import { getURLParams } from '@hooks/useSignals/_util'
@@ -17,14 +16,11 @@ import useSignalsLoader from '@hooks/useSignals'
 import Loader from '@shared/atoms/Loader'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
-import { Tabs as ReactTabs } from 'react-tabs'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
   isLoading?: boolean
-  help?: string
-  contentAsset: ReactElement
 }
 
 function LoaderArea() {
@@ -38,9 +34,7 @@ function LoaderArea() {
 export default function AssetTeaser({
   asset,
   noPublisher,
-  isLoading,
-  help,
-  contentAsset
+  isLoading
 }: AssetTeaserProps): ReactElement {
   const { signalUrls } = useSignalContext()
   const urls = signalUrls.map((item) => {
