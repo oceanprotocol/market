@@ -14,7 +14,7 @@ export default function GeneralTab(): ReactElement {
   const { appConfig } = useMarketMetadata()
   const { darkModeConfig, signalSettings } = appConfig
   const darkMode = useDarkMode(false, darkModeConfig)
-
+  const textVisible = true
   return (
     <>
       <Formik
@@ -29,7 +29,7 @@ export default function GeneralTab(): ReactElement {
       >
         <Form>
           <ul className={styles.generalDetails}>
-            <Currency />
+            <Currency textVisible={textVisible} />
             <TokenApproval />
             <Appearance darkMode={darkMode} />
             <Debug />
