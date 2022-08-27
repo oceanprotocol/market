@@ -173,6 +173,7 @@ export async function transformPublishFormToDdo(
     type: access,
     files: filesEncrypted || '',
     docs: streamDocs[0].url,
+    streamFiles: streamFiles[0].url,
     datatokenAddress,
     serviceEndpoint: providerUrl.url,
     timeout: mapTimeoutStringToSeconds(timeout),

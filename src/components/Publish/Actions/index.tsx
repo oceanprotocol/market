@@ -65,6 +65,8 @@ export default function Actions({
     values.feedback?.[2].status === 'error' ||
     values.feedback?.[3].status === 'error'
 
+  console.log({ contPubValues: values })
+
   return (
     <footer className={styles.actions}>
       {did ? (

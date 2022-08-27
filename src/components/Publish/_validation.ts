@@ -8,7 +8,7 @@ import { getMaxDecimalsValidation } from '@utils/numbers'
 
 const validationMetadata = {
   type: Yup.string()
-    .matches(/dataset|algorithm|data stream/g, { excludeEmptyString: true })
+    .matches(/dataset|algorithm|datastream/g, { excludeEmptyString: true })
     .required('Required'),
   name: Yup.string()
     .min(4, (param) => `Title must be at least ${param.min} characters`)

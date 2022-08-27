@@ -22,8 +22,6 @@ export default function ServicesFields(): ReactElement {
 
   // connect with Form state, use for conditional field rendering
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
-  LoggerInstance.log('values', values)
-
   // name and title should be download, but option value should be access, probably the best way would be to change the component so that option is an object like {name,value}
   const accessTypeOptions = [
     {
@@ -68,6 +66,12 @@ export default function ServicesFields(): ReactElement {
       values.services[0].algorithmPrivacy === true ? 'compute' : 'access'
     )
   }, [values.services[0].algorithmPrivacy, setFieldValue])
+
+  useEffect(() => {
+    if (values.services[0].access === 'stream') {
+      setFieldValue('services[0].files', values.services[0].streamFiles)
+    }
+  }, [setFieldValue, values])
 
   return (
     <>

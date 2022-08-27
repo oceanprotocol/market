@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { FormEvent, ReactElement } from 'react'
 import Button from '../atoms/Button'
 import styles from './index.module.css'
@@ -181,7 +182,6 @@ export default function ButtonBuy({
             {action === 'stream' ? buttonStreamText : buttonText}
           </Button>
           <StreamSubs />
-          {/* <MyPreview /> */}
           <div className={styles.help}>
             {action === 'download' || action === 'stream'
               ? getConsumeHelpText(

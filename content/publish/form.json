@@ -13,7 +13,7 @@
         "name": "type",
         "label": "Asset Type",
         "type": "boxSelection",
-        "options": ["Dataset", "Algorithm", "Data Stream"],
+        "options": ["Dataset", "Algorithm", "Datastream"],
         "required": true
       },
       {

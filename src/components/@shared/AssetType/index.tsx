@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 import Compute from '@images/compute.svg'
@@ -28,7 +29,7 @@ export default function AssetType({
       <div className={styles.typeLabel}>
         {type === 'dataset'
           ? 'data set'
-          : type === 'data stream'
+          : type === 'datastream'
           ? 'data stream'
           : 'algorithm'}
       </div>

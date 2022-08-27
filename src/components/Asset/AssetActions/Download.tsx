@@ -48,6 +48,7 @@ export default function Download({
   const [validOrderTx, setValidOrderTx] = useState('')
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+  const [copySuccess, setCopySuccess] = useState(null)
 
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
@@ -128,15 +129,22 @@ export default function Download({
     setIsLoading(true)
 
     try {
-      if (isOwned) {
+      if (isOwned && !asset.services[0].streamFiles) {
+        LoggerInstance.log('Yep')
         setStatusText(
           getOrderFeedback(
             asset.accessDetails.baseToken?.symbol,
             asset.accessDetails.datatoken?.symbol
           )[3]
         )
-
         await downloadFile(web3, asset, accountId, validOrderTx)
+      } else if (
+        asset.metadata.type === 'datastream' &&
+        asset.services[0].streamFiles
+      ) {
+        await navigator.clipboard.writeText(asset.services[0].streamFiles)
+        setCopySuccess('stream link copied!')
+        LoggerInstance.log('Yeppp Copied!', asset.services[0].streamFiles)
       } else {
         setStatusText(
           getOrderFeedback(
@@ -164,7 +172,8 @@ export default function Download({
   const PurchaseButton = () => (
     <ButtonBuy
       action={isStream ? 'stream' : 'download'}
-      disabled={validOrderTx !== '' || isDisabled}
+      disabled={isDisabled}
+      // disabled={validOrderTx !== '' || isDisabled}
       hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
       btSymbol={asset?.accessDetails?.baseToken?.symbol}
@@ -220,7 +229,7 @@ export default function Download({
         </div>
         <AssetAction asset={asset} />
       </div>
-
+      {asset?.metadata.type === 'datastream' && <span>{copySuccess}</span>}
       {asset?.metadata?.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute
           algorithmDid={asset.id}
