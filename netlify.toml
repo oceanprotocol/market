@@ -2,7 +2,6 @@
   for = "/_next/image/*"
 
   [headers.values]
-    Strict-Transport-Security = "max-age=31536000"
     X-Test = 'foobar'
     Content-Security-Policy= "upgrade-insecure-requests"
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
@@ -15,7 +14,6 @@
   for = "/*"
 
   [headers.values]
-    Strict-Transport-Security = "max-age=31536000"
     X-Test = 'foobar'
     Content-Security-Policy= "upgrade-insecure-requests"
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
