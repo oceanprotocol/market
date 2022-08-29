@@ -25,8 +25,8 @@ export async function getFixedBuyPrice(
 
   const config = getOceanConfig(chainId)
 
-  const fixed = new FixedRateExchange(web3, config.fixedRateExchangeAddress)
-  const estimatedPrice = await fixed.calcBaseInGivenOutDT(
+  const fixed = new FixedRateExchange(config.fixedRateExchangeAddress, web3)
+  const estimatedPrice = await fixed.calcBaseInGivenDatatokensOut(
     accessDetails.addressOrId,
     '1',
     consumeMarketFixedSwapFee

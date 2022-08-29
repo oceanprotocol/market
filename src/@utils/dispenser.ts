@@ -9,7 +9,7 @@ export async function setMinterToPublisher(
   accountId: string,
   setError: (msg: string) => void
 ): Promise<TransactionReceipt> {
-  const dispenserInstance = new Dispenser(web3, dispenserAddress)
+  const dispenserInstance = new Dispenser(dispenserAddress, web3)
   const status = await dispenserInstance.status(datatokenAddress)
   if (!status?.active) return
 

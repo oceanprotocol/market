@@ -1,7 +1,6 @@
 import {
   Config,
   DDO,
-  Erc20CreateParams,
   FreCreationParams,
   generateDid,
   getHash,
@@ -202,7 +201,7 @@ export async function createTokensAndPricing(
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
-  const ercParams: Erc20CreateParams = {
+  const ercParams = {
     templateIndex: 2,
     minter: accountId,
     paymentCollector: accountId,
@@ -238,7 +237,7 @@ export async function createTokensAndPricing(
         freParams
       )
 
-      const result = await nftFactory.createNftErc20WithFixedRate(
+      const result = await nftFactory.createNftWithDatatokenWithFixedRate(
         accountId,
         nftCreateData,
         ercParams,
@@ -270,7 +269,7 @@ export async function createTokensAndPricing(
         dispenserParams
       )
 
-      const result = await nftFactory.createNftErc20WithDispenser(
+      const result = await nftFactory.createNftWithDatatokenWithDispenser(
         accountId,
         nftCreateData,
         ercParams,
