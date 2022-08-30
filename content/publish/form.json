@@ -13,7 +13,7 @@
         "name": "type",
         "label": "Asset Type",
         "type": "boxSelection",
-        "options": ["Dataset", "Algorithm"],
+        "options": ["Dataset", "Algorithm", "DataStream"],
         "required": true
       },
       {
@@ -111,7 +111,7 @@
       },
       {
         "name": "links",
-        "label": "Sample file",
+        "label": "Sample or API Docs",
         "placeholder": "e.g. https://file.com/samplefile.json",
         "help": "This file should reveal the data structure of your dataset, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
         "prominentHelp": true,
@@ -130,7 +130,7 @@
         "label": "Access Type",
         "help": "Choose how you want your files to be accessible for the specified price.",
         "type": "boxSelection",
-        "options": ["Access", "Compute"],
+        "options": ["Access", "Compute", "Stream"],
         "required": true,
         "disclaimer": "Please do not provide downloadable personal data without the consent of the data subjects.",
         "disclaimerValues": ["Download"]

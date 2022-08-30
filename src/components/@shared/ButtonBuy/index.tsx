@@ -1,10 +1,13 @@
+/* eslint-disable prettier/prettier */
 import React, { FormEvent, ReactElement } from 'react'
 import Button from '../atoms/Button'
 import styles from './index.module.css'
 import Loader from '../atoms/Loader'
+import StreamSubs from 'src/components/Asset/AssetContent/StreamSubs'
+import Copy from '@shared/atoms/Copy'
 
 interface ButtonBuyProps {
-  action: 'download' | 'compute'
+  action: 'download' | 'compute' | 'stream'
   disabled: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
@@ -14,6 +17,7 @@ interface ButtonBuyProps {
   assetType: string
   assetTimeout: string
   isConsumable: boolean
+  isStreamble: boolean
   consumableFeedback: string
   hasPreviousOrderSelectedComputeAsset?: boolean
   hasDatatokenSelectedComputeAsset?: boolean
@@ -24,6 +28,7 @@ interface ButtonBuyProps {
   isLoading?: boolean
   onClick?: (e: FormEvent<HTMLButtonElement>) => void
   stepText?: string
+  copyText?: string
   type?: 'submit'
   priceType?: string
   algorithmPriceType?: string
@@ -32,6 +37,31 @@ interface ButtonBuyProps {
 }
 
 // TODO: we need to take a look at these messages
+
+function getStreamHelpText(
+  btSymbol: string,
+  dtBalance: string,
+  dtSymbol: string,
+  hasDatatoken: boolean,
+  hasPreviousOrder: boolean,
+  assetType: string,
+  isConsumable: boolean,
+  isStreamable: boolean,
+  isBalanceSufficient: boolean,
+  streamableFeedback: string
+) {
+  const text =
+    isStreamable === false
+      ? streamableFeedback
+      : hasPreviousOrder
+      ? `You procured the subscription for this ${assetType} and can access it until the time limit expires.`
+      : hasDatatoken
+      ? `You own ${dtBalance} ${dtSymbol} allowing you to subsribe to this ${assetType} by spending 1 ${dtSymbol}, but without paying ${btSymbol} again.`
+      : isBalanceSufficient === false
+      ? `You do not have enough ${btSymbol} in your wallet to subsribe to this ${assetType}.`
+      : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher.`
+  return text
+}
 
 function getConsumeHelpText(
   btSymbol: string,
@@ -117,6 +147,7 @@ export default function ButtonBuy({
   assetType,
   assetTimeout,
   isConsumable,
+  isStreamble,
   consumableFeedback,
   isBalanceSufficient,
   hasPreviousOrderSelectedComputeAsset,
@@ -126,6 +157,7 @@ export default function ButtonBuy({
   selectedComputeAssetType,
   onClick,
   stepText,
+  copyText,
   isLoading,
   type,
   priceType,
@@ -148,21 +180,47 @@ export default function ButtonBuy({
       ? 'Order Compute Job'
       : `Buy Compute Job`
 
+  const buttonStreamText =
+    action === 'stream'
+      ? hasPreviousOrder
+        ? 'Copy Feed URL'
+        : priceType === 'free'
+        ? 'Get'
+        : `Subscribe ${
+            assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`
+          }`
+      : ``
+
   return (
     <div className={styles.actions}>
       {isLoading ? (
         <Loader message={stepText} />
       ) : (
         <>
-          <Button
-            style="primary"
-            type={type}
-            onClick={onClick}
-            disabled={disabled}
-            className={action === 'compute' ? styles.actionsCenter : ''}
-          >
-            {buttonText}
-          </Button>
+          {action === 'stream' ? (
+            <Button
+              style="primary"
+              type={type}
+              onClick={onClick}
+              disabled={disabled}
+              className={styles.actionsCenter}
+            >
+              {buttonStreamText}
+            </Button>
+          ) : (
+            <Button
+              style="primary"
+              type={type}
+              onClick={onClick}
+              disabled={disabled}
+              className={action === 'compute' ? styles.actionsCenter : ''}
+            >
+              {/* {buttonText} */}
+              {buttonText}
+            </Button>
+          )}
+
+          <StreamSubs />
           <div className={styles.help}>
             {action === 'download'
               ? getConsumeHelpText(
@@ -173,6 +231,19 @@ export default function ButtonBuy({
                   hasPreviousOrder,
                   assetType,
                   isConsumable,
+                  isBalanceSufficient,
+                  consumableFeedback
+                )
+              : action === 'stream'
+              ? getStreamHelpText(
+                  btSymbol,
+                  dtBalance,
+                  dtSymbol,
+                  hasDatatoken,
+                  hasPreviousOrder,
+                  assetType,
+                  isConsumable,
+                  isStreamble,
                   isBalanceSufficient,
                   consumableFeedback
                 )

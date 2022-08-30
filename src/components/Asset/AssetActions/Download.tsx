@@ -47,10 +47,13 @@ export default function Download({
   const [validOrderTx, setValidOrderTx] = useState('')
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+  // const [isStream, setIsStream] = useState(true)
+  const [copySuccess, setCopySuccess] = useState(null)
 
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
   useEffect(() => {
+    console.log({ checkAsset: asset })
     if (!asset?.accessDetails || isUnsupportedPricing) return
 
     asset.accessDetails.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
@@ -104,12 +107,22 @@ export default function Download({
      * - if user balance is not sufficient
      * - if user has no datatokens
      */
+
     const isDisabled =
       !asset?.accessDetails.isPurchasable ||
       !isAssetNetwork ||
       ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
 
     setIsDisabled(isDisabled)
+
+    // LoggerInstance.log({
+    //   purchasable: asset?.accessDetails.isPurchasable,
+    //   isAssetNetwork,
+    //   isBalanceSufficient,
+    //   isOwned,
+    //   hasDatatoken,
+    //   validOrderTx
+    // })
   }, [
     isMounted,
     asset?.accessDetails,
@@ -126,7 +139,8 @@ export default function Download({
     setIsLoading(true)
 
     try {
-      if (isOwned) {
+      if (isOwned && !asset.services[0].streamFiles) {
+        LoggerInstance.log('Yep')
         setStatusText(
           getOrderFeedback(
             asset.accessDetails.baseToken?.symbol,
@@ -135,6 +149,10 @@ export default function Download({
         )
 
         await downloadFile(web3, asset, accountId, validOrderTx)
+      } else if (isOwned && asset.services[0].streamFiles) {
+        await navigator.clipboard.writeText(asset.services[0].streamFiles)
+        setCopySuccess('stream link copied!')
+        LoggerInstance.log('Yeppp Copied!', asset.services[0].streamFiles)
       } else {
         setStatusText(
           getOrderFeedback(
@@ -161,7 +179,7 @@ export default function Download({
 
   const PurchaseButton = () => (
     <ButtonBuy
-      action="download"
+      action={asset?.metadata?.type === 'datastream' ? 'stream' : 'download'}
       disabled={isDisabled}
       hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
@@ -172,9 +190,13 @@ export default function Download({
       assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
+      copyText={
+        asset?.metadata.type === 'datastream' && asset.services[0].streamFiles
+      }
       isLoading={isLoading}
       priceType={asset.accessDetails?.type}
       isConsumable={asset.accessDetails?.isPurchasable}
+      isStreamble={asset.accessDetails?.isPurchasable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
     />
@@ -217,7 +239,7 @@ export default function Download({
         </div>
         <AssetAction asset={asset} />
       </div>
-
+      {asset?.metadata.type === 'datastream' && <span>{copySuccess}</span>}
       {asset?.metadata?.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute
           algorithmDid={asset.id}

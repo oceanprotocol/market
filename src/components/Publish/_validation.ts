@@ -8,7 +8,7 @@ import { getMaxDecimalsValidation } from '@utils/numbers'
 
 const validationMetadata = {
   type: Yup.string()
-    .matches(/dataset|algorithm/g, { excludeEmptyString: true })
+    .matches(/dataset|algorithm|datastream/g, { excludeEmptyString: true })
     .required('Required'),
   name: Yup.string()
     .min(4, (param) => `Title must be at least ${param.min} characters`)
@@ -53,7 +53,7 @@ const validationService = {
   }),
   timeout: Yup.string().required('Required'),
   access: Yup.string()
-    .matches(/compute|access/g)
+    .matches(/compute|access|stream/g)
     .required('Required'),
   providerUrl: Yup.object().shape({
     url: Yup.string().url('Must be a valid URL.').required('Required'),

@@ -60,6 +60,8 @@ export async function transformPublishFormToDdo(
   nftAddress?: string
 ): Promise<DDO> {
   const { metadata, services, user } = values
+  LoggerInstance.log('MyFile:', values)
+  LoggerInstance.log('services:', services[0])
   const { chainId, accountId } = user
   const {
     type,
@@ -152,6 +154,8 @@ export async function transformPublishFormToDdo(
     id: getHash(datatokenAddress + filesEncrypted),
     type: access,
     files: filesEncrypted || '',
+    docs: values.metadata.type === 'datastream' ? files[0].url : '',
+    streamFiles: values.metadata.type === 'datastream' ? files[0].url : '',
     datatokenAddress,
     serviceEndpoint: providerUrl.url,
     timeout: mapTimeoutStringToSeconds(timeout),

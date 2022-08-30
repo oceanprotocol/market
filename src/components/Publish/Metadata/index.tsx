@@ -5,6 +5,7 @@ import React, { ReactElement, useEffect } from 'react'
 import content from '../../../../content/publish/form.json'
 import { FormPublishData } from '../_types'
 import IconDataset from '@images/dataset.svg'
+import IconDatastream from '@images/datastream.svg'
 import IconAlgorithm from '@images/algorithm.svg'
 import styles from './index.module.css'
 import { algorithmContainerPresets } from '../_constants'
@@ -37,6 +38,12 @@ export default function MetadataFields(): ReactElement {
       title: assetTypeOptionsTitles[1],
       checked: values.metadata.type === assetTypeOptionsTitles[1].toLowerCase(),
       icon: <IconAlgorithm />
+    },
+    {
+      name: assetTypeOptionsTitles[2].toLowerCase(),
+      title: assetTypeOptionsTitles[2],
+      checked: values.metadata.type === assetTypeOptionsTitles[2].toLowerCase(),
+      icon: <IconDatastream />
     }
   ]
 
