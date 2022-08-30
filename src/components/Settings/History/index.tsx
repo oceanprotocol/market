@@ -21,7 +21,7 @@ function getTabs(
   const defaultTabs: HistoryTab[] = [
     {
       title: 'General',
-      content: <General accountId={accountId} />
+      content: <General />
     },
     {
       title: 'Asset Signals',
