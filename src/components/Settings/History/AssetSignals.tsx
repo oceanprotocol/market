@@ -22,6 +22,9 @@ export default function AssetSignalsTab(props: {
     [key: string]: string | boolean | number
   } = {}
   props.signalSettings.forEach((signalOrigin) => {
+    if (!(signalOrigin.type === 1)) {
+      return
+    }
     const listKeyName = `${signalOrigin.id + signalOrigin.listView.id}`
     const detailKeyName = `${signalOrigin.id + signalOrigin.detailView.id}`
     signalSettingsDisplayValues[listKeyName] = signalOrigin.listView.value
@@ -29,11 +32,15 @@ export default function AssetSignalsTab(props: {
   })
   const [initialValues, setInitialValues] = useState({
     title: DEFAULT_NEW_CUSTOM_SIGNAL.title,
+    type: 1,
     origin: '',
     ...signalSettingsDisplayValues
   })
   const initializeFormValues = () => {
     props.signalSettings.forEach((item) => {
+      if (!(item.type === 1)) {
+        return
+      }
       setInitialValues((prevState) => {
         const listKeyName = `${item.id + item.listView.id}`
         const detailKeyName = `${item.id + item.detailView.id}`
@@ -71,6 +78,7 @@ export default function AssetSignalsTab(props: {
                 id: `custom-signal-${slugify(values.title.toLowerCase())}-${
                   props.signalSettings.length + 1
                 }`,
+                type: 1,
                 title: values.title,
                 origin: values.origin,
                 urlParams: {

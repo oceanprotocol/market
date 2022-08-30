@@ -1,18 +1,13 @@
-import { Field, useFormikContext } from 'formik'
+import { Field } from 'formik'
 import Input from '@shared/FormInput'
 import React, { ReactElement, useState } from 'react'
-import { FormSettingsData } from '../_types'
 import { getFieldContent } from '../_utils'
 import styles from './Custom.module.css'
 // import contentAsset from '../../../../content/settings/custom.json'
 import Button from '@shared/atoms/Button'
-export function Custom({ assets }: { assets: any }): ReactElement {
-  const { values } = useFormikContext<FormSettingsData>()
-
 
 export function Custom(): ReactElement {
   const [open, setOpen] = useState(false)
-
   const itemsClosed = (index: any) => (
     <div
       onClick={() => {
@@ -65,7 +60,9 @@ export function Custom(): ReactElement {
             of the publisher.
           </p>
           <div className={styles.sectionElementsBtn}>
-            <Button style="primary">add signal</Button>
+            <Button type={'submit'} style="primary">
+              add signal
+            </Button>
             <Button
               style="primary"
               className={styles.btnCancel}

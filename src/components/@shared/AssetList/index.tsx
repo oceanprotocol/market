@@ -90,7 +90,6 @@ export default function AssetList({
               asset={assetWithPrice}
               key={assetWithPrice.id}
               noPublisher={noPublisher}
-              help={help}
             />
           ))
         ) : (

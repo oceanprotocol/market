@@ -3,6 +3,11 @@ export interface SignalDisplayInput {
   value: boolean
   name: string
 }
+
+export interface SignalSettingsDisplayValues {
+  [key: string]: string | boolean | number
+}
+
 /**
  * an object that describes a signal for a given asset
  * @export

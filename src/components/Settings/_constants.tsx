@@ -1,9 +1,15 @@
 import React from 'react'
-import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
-import { FormSettingsData, SettingsAssets } from './_types'
-import contentAsset from '../../../content/settings/assets.json'
+import {
+  allowDynamicPricing,
+  allowFixedPricing,
+  signalSettings
+} from '../../../app.config.js'
+import { FormSettingsData } from './_types'
 import { ServiceComputeOptions } from '@oceanprotocol/lib'
-import { SignalOriginItem } from '../../@context/Signals/_types'
+import {
+  SignalOriginItem,
+  SignalSettingsItem
+} from '../../@context/Signals/_types'
 
 const computeOptions: ServiceComputeOptions = {
   allowRawAlgorithm: false,
@@ -18,6 +24,8 @@ export const initialValues: FormSettingsData = {
     chainId: 1,
     accountId: ''
   },
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   metadata: {
     nft: { name: '', symbol: '', description: '', image_data: '' },
     transferable: true,
@@ -64,7 +72,7 @@ export const initialValues: FormSettingsData = {
   }
 }
 
-export const initialSettingsAssets: SettingsAssets = contentAsset
+export const initialSettingsAssets: SignalSettingsItem = signalSettings
 export const assetSettingsValues: SignalOriginItem[] = []
 
 export const DEFAULT_NEW_CUSTOM_SIGNAL: SignalOriginItem = {
@@ -89,4 +97,12 @@ export const DEFAULT_NEW_CUSTOM_SIGNAL: SignalOriginItem = {
     publisherIds: [],
     userAddresses: []
   }
+}
+
+export const DEFAULT_CUSTOM_PUBLISHER_SIGNAL: SignalOriginItem = {
+  id: 'customPublisherSignal',
+  title: 'Custom Publisher Signal',
+  description: 'Describe new publisher signal',
+  origin: '',
+  ...DEFAULT_NEW_CUSTOM_SIGNAL
 }

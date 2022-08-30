@@ -64,7 +64,7 @@
 
 .displayBottom > * > * > * > * {
   display: flex;
-  width: 20rem;
+  width: 100%;
 }
 
 .displaySignal {
@@ -73,7 +73,11 @@
 }
 
 .displaySignalText {
-  margin-right: 1rem;
+  margin-right: 1.5rem;
+}
+
+.displaySignalText > p {
+  font-size: 0.9rem;
 }
 
 .displaySignal > * > * > * > * {
@@ -141,9 +145,14 @@
   margin-left: 0.5rem;
 }
 
-.displaySource {
+.displaySource,
+.displaySignalTitleContainer {
   display: flex;
   align-items: baseline;
+}
+
+.displaySignalTitleContainer {
+  justify-content: space-between;
 }
 
 .assetDescription {

@@ -22,13 +22,17 @@ export interface SignalsProviderValue {
   assetIds: string[]
   publisherIds: string[]
   signalUrls: string[]
+  assetSignalsUrls?: string[]
+  publisherSignalsUrls?: string[]
   signals?: SignalOriginItem[]
   signalItems: AssetSignalItem[]
   loading: boolean
   // Settings provide data to work with locally and then also decide fetching based on user preferences
   settings?: SignalSettingsItem
+
   // // A method to update the current assetIds to use in signal queries
   setAssetIds(assets: string[]): void
+
   // setUserAddresses?(userAddresses: string[]): void
   // setPublisherIds?(queryUrls: string[]): void
   // setSignalUrls?(queryUrls: string[]): void
@@ -38,6 +42,8 @@ const SignalsContext = createContext({} as SignalsProviderValue)
 
 function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
   const [signalUrls, setSignalUrls] = useState<string[]>([])
+  const [publisherSignalsUrls, setPublisherSignalsUrl] = useState<string[]>([])
+  const [assetSignalsUrls, setAssetSignalsUrl] = useState<string[]>([])
   const [origin, setOrigin] = useState<string[]>(
     signalUrls[0] ? signalUrls : ['']
   )
@@ -61,6 +67,12 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
       const defaultSignalUrls: string[] = signals.map((signalOrigin) =>
         getSignalUrls(signalOrigin)
       )
+      const assetTypeUrls: string[] = signals
+        .filter((signal) => signal.type === 1)
+        .map((signalOrigin) => getSignalUrls(signalOrigin))
+      const publisherTypeUrls: string[] = signals
+        .filter((signal) => signal.type === 2)
+        .map((signalOrigin) => getSignalUrls(signalOrigin))
       const compareUrl = new Set()
       refSignalUrls.current.forEach((signal, index) => {
         compareUrl.add(signal)
@@ -68,6 +80,18 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
       defaultSignalUrls.forEach((url) => {
         if (compareUrl.has(url)) return
         setSignalUrls((signalUrlArray) => {
+          return [...signalUrlArray, url]
+        })
+      })
+      assetTypeUrls.forEach((url) => {
+        if (compareUrl.has(url)) return
+        setAssetSignalsUrl((signalUrlArray) => {
+          return [...signalUrlArray, url]
+        })
+      })
+      publisherTypeUrls.forEach((url) => {
+        if (compareUrl.has(url)) return
+        setPublisherSignalsUrl((signalUrlArray) => {
           return [...signalUrlArray, url]
         })
       })
@@ -104,6 +128,8 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
           publisherIds,
           signalItems,
           signalUrls,
+          assetSignalsUrls,
+          publisherSignalsUrls,
           loading
         } as SignalsProviderValue
       }

@@ -104,6 +104,32 @@ module.exports = {
     lastUpdated: new Date().toDateString(),
     signals: [
       {
+        id: 'sample_quantitative_signal',
+        title: 'Sample Quantitative Signal',
+        description:
+          'Qualitative signal helps you make better investment decisions',
+        origin:
+          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/',
+        isCustom: false,
+        signals: [],
+        type: 1,
+        listView: {
+          id: 'listView',
+          value: true,
+          name: 'List View'
+        },
+        detailView: {
+          id: 'detailsView',
+          value: true,
+          name: 'Details View'
+        },
+        urlParams: {
+          assetIds: [],
+          publisherIds: [],
+          userAddresses: []
+        }
+      },
+      {
         id: 'sample_qualitative_signal',
         title: 'Sample Qualitative Signal',
         description:
@@ -136,6 +162,56 @@ module.exports = {
           'Sushi defi signal helps you make better investment decisions',
         origin:
           'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi/',
+        isCustom: false,
+        signals: [],
+        type: 2,
+        listView: {
+          id: 'listView',
+          value: true,
+          name: 'List View'
+        },
+        detailView: {
+          id: 'detailView',
+          value: true,
+          name: 'Details View'
+        },
+        urlParams: {
+          assetIds: [],
+          publisherIds: [],
+          userAddresses: []
+        }
+      },
+      {
+        id: 'sample_utu_signal',
+        title: 'UTU Ocean Signals',
+        description:
+          'UTU Ocean signal helps you make better data market decisions',
+        origin:
+          'https://stage-api.ututrust.com/core-api/ocean/interactionSummary',
+        isCustom: false,
+        signals: [],
+        type: 1,
+        listView: {
+          id: 'listView',
+          value: true,
+          name: 'List View'
+        },
+        detailView: {
+          id: 'detailView',
+          value: true,
+          name: 'Details View'
+        },
+        urlParams: {
+          assetIds: [],
+          publisherIds: [],
+          userAddresses: []
+        }
+      },
+      {
+        id: 'sample_utu-ranking_signal',
+        title: 'UTU Ranking Signal',
+        description: 'UTU Ranking signal helps you make better data reviews',
+        origin: 'https://stage-api.ututrust.com/core-api/ocean/ranking',
         isCustom: false,
         signals: [],
         type: 1,

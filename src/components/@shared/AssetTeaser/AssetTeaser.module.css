@@ -44,8 +44,8 @@
 .icon {
   fill: var(--brand-grey-light);
   transition: 0.2s ease-out;
-  width: 1em;
-  height: 1em;
+  min-width: 1.4rem;
+  height: 1.4rem;
   margin-right: 0.5rem;
 }
 
@@ -147,7 +147,6 @@
 
 .assetListTitleName {
   display: flex;
-  align-items: baseline;
 }
 
 .assets .active:before {

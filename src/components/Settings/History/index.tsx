@@ -31,12 +31,19 @@ function getTabs(
     },
     {
       title: 'Publisher Signals',
-      content: <PublisherSignals accountId={accountId} />
+      content: (
+        <PublisherSignals
+          signalSettings={signalSettings}
+          accountId={accountId}
+        />
+      )
     }
   ]
   const computeTab: HistoryTab = {
     title: 'Compute Jobs',
-    content: <PublisherSignals accountId={accountId} />
+    content: (
+      <PublisherSignals signalSettings={signalSettings} accountId={accountId} />
+    )
   }
   if (accountId === userAccountId) {
     defaultTabs.push(computeTab)
@@ -55,7 +62,6 @@ export default function HistoryPage({
   const defaultTab = url.searchParams.get('defaultTab')
   let tabs = getTabs(accountIdentifier, accountId, signals)
   useEffect(() => {
-    console.log('------- signals changed--------')
     // eslint-disable-next-line react-hooks/exhaustive-deps
     tabs = getTabs(accountIdentifier, accountId, signals)
   }, [signals])
