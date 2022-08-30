@@ -1,5 +1,4 @@
 import {
-  approve,
   Config,
   DDO,
   Erc20CreateParams,
@@ -10,35 +9,22 @@ import {
   Metadata,
   NftCreateData,
   NftFactory,
-  PoolCreationParams,
   Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
-import Decimal from 'decimal.js'
 import slugify from 'slugify'
 import Web3 from 'web3'
-import {
-  algorithmContainerPresets,
-  MetadataAlgorithmContainer
-} from './_constants'
-import { FormPublishData } from './_types'
+import { algorithmContainerPresets } from './_constants'
+import { FormPublishData, MetadataAlgorithmContainer } from './_types'
 import {
   marketFeeAddress,
   publisherMarketOrderFee,
-  publisherMarketPoolSwapFee,
   publisherMarketFixedSwapFee
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
-
-export function getFieldContent(
-  fieldName: string,
-  fields: FormFieldContent[]
-): FormFieldContent {
-  return fields.filter((field: FormFieldContent) => field.name === fieldName)[0]
-}
 
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
@@ -135,7 +121,8 @@ export async function transformPublishFormToDdo(
                 : getAlgorithmContainerPreset(dockerImage).tag,
             checksum:
               dockerImage === 'custom'
-                ? dockerImageCustomChecksum
+                ? // ? dockerImageCustomChecksum
+                  ''
                 : getAlgorithmContainerPreset(dockerImage).checksum
           }
         }
@@ -216,11 +203,11 @@ export async function createTokensAndPricing(
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
   const ercParams: Erc20CreateParams = {
-    templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
+    templateIndex: 2,
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
-    feeToken: config.oceanTokenAddress,
+    feeToken: values.pricing.baseToken.address,
     feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
@@ -232,72 +219,14 @@ export async function createTokensAndPricing(
 
   let erc721Address, datatokenAddress, txHash
 
-  // TODO: cleaner code for this huge switch !??!?
   switch (values.pricing.type) {
-    case 'dynamic': {
-      // no vesting in market by default, maybe at a later time , vestingAmount and vestedBlocks are hardcoded
-      // we use only ocean as basetoken
-      // swapFeeLiquidityProvider is the swap fee of the liquidity providers
-      // swapFeeMarketRunner is the swap fee of the market where the swap occurs
-      const poolParams: PoolCreationParams = {
-        ssContract: config.sideStakingAddress,
-        baseTokenAddress: config.oceanTokenAddress,
-        baseTokenSender: config.erc721FactoryAddress,
-        publisherAddress: accountId,
-        marketFeeCollector: marketFeeAddress,
-        poolTemplateAddress: config.poolTemplateAddress,
-        rate: new Decimal(1).div(values.pricing.price).toString(),
-        baseTokenDecimals: 18,
-        vestingAmount: '0',
-        vestedBlocks: 2726000,
-        initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
-        swapFeeLiquidityProvider: (values.pricing.swapFee / 100).toString(),
-        swapFeeMarketRunner: publisherMarketPoolSwapFee
-      }
-
-      LoggerInstance.log(
-        '[publish] Creating dynamic pricing with poolParams',
-        poolParams
-      )
-
-      // the spender in this case is the erc721Factory because we are delegating
-      const txApprove = await approve(
-        web3,
-        accountId,
-        config.oceanTokenAddress,
-        config.erc721FactoryAddress,
-        values.pricing.amountOcean.toString(),
-        false
-      )
-      LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
-
-      if (!txApprove) {
-        throw new Error(
-          'MetaMask Approve TX Signature: User denied transaction signature'
-        )
-      }
-
-      const result = await nftFactory.createNftErc20WithPool(
-        accountId,
-        nftCreateData,
-        ercParams,
-        poolParams
-      )
-
-      erc721Address = result.events.NFTCreated.returnValues[0]
-      datatokenAddress = result.events.TokenCreated.returnValues[0]
-      txHash = result.transactionHash
-
-      LoggerInstance.log('[publish] createNftErcWithPool tx', txHash)
-      break
-    }
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
-        baseTokenAddress: config.oceanTokenAddress,
+        baseTokenAddress: values.pricing.baseToken.address,
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
-        baseTokenDecimals: 18,
+        baseTokenDecimals: values.pricing.baseToken.decimals,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
         marketFee: publisherMarketFixedSwapFee,

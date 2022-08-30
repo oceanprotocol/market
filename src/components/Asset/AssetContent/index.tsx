@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import Link from 'next/link'
 import Markdown from '@shared/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -14,20 +13,15 @@ import EditHistory from './EditHistory'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
-import { AssetExtended } from 'src/@types/AssetExtended'
-import { useWeb3 } from '@context/Web3'
 import Web3 from 'web3'
-// import AssetSignals from '@shared/atoms/AssetSignals'
-// import styles2 from '../AssetActions/index.module.css'
+import Button from '@shared/atoms/Button'
 
 export default function AssetContent({
   asset
 }: {
   asset: AssetExtended
 }): ReactElement {
-  const [isOwner, setIsOwner] = useState(false)
-  const { accountId } = useWeb3()
-  const { isInPurgatory, purgatoryData, owner, isAssetNetwork } = useAsset()
+  const { isInPurgatory, purgatoryData, isOwner, isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [receipts, setReceipts] = useState([])
   const [nftPublisher, setNftPublisher] = useState<string>()
@@ -39,13 +33,6 @@ export default function AssetContent({
       )
     )
   }, [receipts])
-
-  useEffect(() => {
-    if (!accountId || !owner) return
-
-    const isOwner = accountId.toLowerCase() === owner.toLowerCase()
-    setIsOwner(isOwner)
-  }, [accountId, owner, asset])
 
   return (
     <>
@@ -71,7 +58,7 @@ export default function AssetContent({
               <>
                 <Markdown
                   className={styles.description}
-                  text={asset?.metadata.description || ''}
+                  text={asset?.metadata?.description || ''}
                 />
                 <MetaSecondary ddo={asset} />
               </>
@@ -88,9 +75,9 @@ export default function AssetContent({
 
           {isOwner && isAssetNetwork && (
             <div className={styles.ownerActions}>
-              <Link href={`/asset/${asset?.id}/edit`}>
-                <a>Edit</a>
-              </Link>
+              <Button style="text" size="small" to={`/asset/${asset?.id}/edit`}>
+                Edit Asset
+              </Button>
             </div>
           )}
         </div>

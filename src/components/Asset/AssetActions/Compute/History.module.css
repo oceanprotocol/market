@@ -1,0 +1,93 @@
+.container {
+  margin-left: calc(-1 * var(--spacer) / 1.5);
+  margin-right: calc(-1 * var(--spacer) / 1.5);
+  padding: calc(var(--spacer) / 1.5) calc(var(--spacer) / 1.5)
+    calc(var(--spacer) / 2) calc(var(--spacer) / 1.5);
+}
+
+@media (min-width: 40rem) {
+  .container {
+    padding-left: var(--spacer);
+    padding-right: var(--spacer);
+    margin-left: calc(-1 * var(--spacer));
+    margin-right: calc(-1 * var(--spacer));
+  }
+}
+
+.section {
+  composes: container;
+
+  border-top: 1px solid var(--border-color);
+  position: relative;
+}
+
+.section.highlight {
+  background: var(--background-highlight);
+}
+
+.section:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.actions {
+  composes: section;
+  margin-top: calc(var(--spacer) / 1.5);
+  padding: calc(var(--spacer) / 1.5);
+  background: var(--background-highlight);
+  margin-bottom: -1rem;
+}
+
+.actions [class*='rdt_Pagination'] {
+  margin-bottom: -1rem;
+}
+
+.title {
+  font-size: var(--font-size-base);
+  margin-bottom: calc(var(--spacer) / 3);
+  color: var(--color-secondary);
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.title:hover .toggle {
+  color: var(--color-primary);
+}
+
+.title + div {
+  margin-top: calc(var(--spacer) / 3);
+}
+
+.toggle {
+  color: var(--color-secondary);
+}
+
+.toggle svg {
+  display: inline-block;
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
+  fill: currentColor;
+  transition: 0.2s ease-out;
+}
+
+.open .toggle svg {
+  transform: rotate(180deg);
+}
+
+.actions [class*='Table-module--table'] {
+  /* 
+    react-data-table-component sets a default width: 100% 
+    which often leads to unneccessary overflows. Following lines make
+    sure table always spans between edges of container, without any overflow
+    when enough space is available. But it also destroys overflow table on narrow
+    viewports.
+  */
+  width: 100%;
+}
+
+.actions [class*='TableCell'] {
+  width: 140px;
+}
