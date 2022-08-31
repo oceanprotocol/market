@@ -8,11 +8,27 @@
   --color-prettylights-syntax-markup-bold: var(--font-color-text);
   --color-prettylights-syntax-brackethighlighter-angle: var(--font-color-text);
   --color-prettylights-syntax-sublimelinter-gutter-mark: var(--font-color-text);
+  --color-prettylights-syntax-markup-deleted-text: var(--font-color-text);
 }
 
 .inputMarkdown input {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+.inputMarkdownPreviewContainer {
+  padding: 10px !important;
+}
+
+/* decided to change the default font size in Preview as changing the Editor's */
+.inputMarkdownPreview {
+  font-size: var(--font-size-base) !important;
+}
+
+.inputMarkdownContent textarea,
+.inputMarkdownContent pre > code {
+  line-height: var(--line-height) !important;
+  font-size: var(--font-size-base) !important;
 }
 
 .inputMarkdown div {

@@ -37,13 +37,18 @@ const InputMarkdown = ({ ...props }): ReactElement => {
           ...props,
           className: styles.inputMarkdownContent
         }}
+        previewOptions={{
+          className: styles.inputMarkdownPreviewContainer
+        }}
         preview={'edit'}
         onChange={(value: string) => {
           setFieldValue(props.name, value)
         }}
         components={{
           preview: (source) => {
-            return <Markdown text={source} />
+            return (
+              <Markdown text={source} className={styles.inputMarkdownPreview} />
+            )
           },
           toolbar: (command, disabled, executeCommand) => {
             if (command.keyCommand === 'title3') {
