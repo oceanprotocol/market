@@ -1,3 +1,15 @@
+.inputMarkdown div:first-child {
+  --color-fg-default: var(--font-color-text);
+  --color-fg-muted: var(--font-color-text);
+  --color-fg-subtle: var(--font-color-text);
+  --color-prettylights-syntax-constant: var(--color-primary);
+  --color-prettylights-syntax-keyword: var(--font-color-text);
+  --color-prettylights-syntax-markup-italic: var(--font-color-text);
+  --color-prettylights-syntax-markup-bold: var(--font-color-text);
+  --color-prettylights-syntax-brackethighlighter-angle: var(--font-color-text);
+  --color-prettylights-syntax-sublimelinter-gutter-mark: var(--font-color-text);
+}
+
 .inputMarkdown input {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -24,6 +36,11 @@
   margin-top: -1px;
   width: 100%;
   color: var(--font-color-text) !important;
+  height: 24px !important;
+}
+
+.inputMarkdown button svg {
+  width: 14px;
 }
 
 .inputMarkdownContent textarea::selection {
