@@ -4,7 +4,7 @@ export interface MetadataEditForm {
   description: string
   timeout: string
   price?: string
-  links?: string[] | FileInfo[]
+  links?: string[] | any[]
   files: FileInfo[]
   author?: string
 }
