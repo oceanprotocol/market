@@ -226,10 +226,10 @@ async function getJobs(
   // commented loop since we decide how to filter jobs
   // for await (const providerUrl of providerUrls) {
   try {
-    LoggerInstance.debug('Umesh provider url ' + providerUrls[0])
-    console.log('Umesh provider url ' + providerUrls[0])    
-    providerUrls[0] = 'http://aeefb33ccd4be4cecb044afb6843551a-1482170474.ap-south-1.elb.amazonaws.com:8030/'
-    console.log('Umesh provider url ' + providerUrls[0])
+    LoggerInstance.debug('provider url ' + providerUrls[0])
+    console.log('provider url ' + providerUrls[0])    
+    providerUrls[0] = 'http://aed9021be15b14edbb0653b605ac3bc8-1857207079.us-east-1.elb.amazonaws.com:8030/'
+    console.log('provider url ' + providerUrls[0])
     const providerComputeJobs = (await ProviderInstance.computeStatus(
       providerUrls[0],
       accountId

@@ -29,7 +29,7 @@ module.exports = {
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
     process.env.NEXT_PUBLIC_MARKET_FEE_ADDRESS ||
-    '0x9984b2453eC7D99a73A5B3a46Da81f197B753C8d',
+    '0x1BDD96Fa11b44b392B6A760640A34504585c3b29',
   // publisher market fee that is taken upon ordering an asset, it is an absolute value, it is declared on erc20 creation
   publisherMarketOrderFee:
     process.env.NEXT_PUBLIC_PUBLISHER_MARKET_ORDER_FEE || '0',
