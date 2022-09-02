@@ -6,13 +6,35 @@ import { ComputeEditForm, MetadataEditForm } from './_types'
 export const validationSchema = Yup.object().shape({
   name: Yup.string()
     .min(4, (param) => `Title must be at least ${param.min} characters`)
+    .max(512, (param) => `Title must be less than ${param.max} characters`)
     .required('Required'),
-  description: Yup.string().required('Required').min(10),
+  description: Yup.string()
+    .required('Required')
+    .min(10, (param) => `Description must be at least ${param.min} characters`)
+    .max(
+      7000,
+      (param) => `Description must be less than ${param.max} characters`
+    ),
   price: Yup.number().required('Required'),
-  links: Yup.array<any[]>().nullable(),
+  links: Yup.array<FileInfo[]>()
+    .of(
+      Yup.object().shape({
+        url: Yup.string()
+          .min(1, `At least one file is required.`)
+          .max(
+            512,
+            (param) => `Links must be less than ${param.max} characters`
+          )
+          .url('Must be a valid URL.'),
+        valid: Yup.boolean()
+      })
+    )
+    .nullable(),
   files: Yup.array<FileInfo[]>().nullable(),
   timeout: Yup.string().required('Required'),
-  author: Yup.string().nullable()
+  author: Yup.string()
+    .max(256, (param) => `Author must have maximum ${param.max} characters`)
+    .required('Required')
 })
 
 export function getInitialValues(
@@ -25,7 +47,7 @@ export function getInitialValues(
     description: metadata?.description,
     price,
     links: metadata?.links,
-    files: '',
+    files: [{ url: '', type: '' }],
     timeout: secondsToString(timeout),
     author: metadata?.author
   }
