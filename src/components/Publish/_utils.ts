@@ -3,6 +3,8 @@ import {
   DDO,
   FreCreationParams,
   generateDid,
+  DatatokenCreateParams,
+  DispenserCreationParams,
   getHash,
   LoggerInstance,
   Metadata,
@@ -201,7 +203,7 @@ export async function createTokensAndPricing(
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
-  const ercParams = {
+  const ercParams: DatatokenCreateParams = {
     templateIndex: 2,
     minter: accountId,
     paymentCollector: accountId,
@@ -256,7 +258,7 @@ export async function createTokensAndPricing(
       // maxTokens -  how many tokens cand be dispensed when someone requests . If maxTokens=2 then someone can't request 3 in one tx
       // maxBalance - how many dt the user has in it's wallet before the dispenser will not dispense dt
       // both will be just 1 for the market
-      const dispenserParams = {
+      const dispenserParams: DispenserCreationParams = {
         dispenserAddress: config.dispenserAddress,
         maxTokens: web3.utils.toWei('1'),
         maxBalance: web3.utils.toWei('1'),
