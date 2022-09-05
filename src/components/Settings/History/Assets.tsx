@@ -1,7 +1,6 @@
 import { Field, useFormikContext } from 'formik'
 import Input from '@shared/FormInput'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { FormSettingsData } from '../_types'
 import styles from './Asset.module.css'
 import Source from '@images/source.svg'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -14,7 +13,7 @@ export function Assets({
 }: {
   handleRemoveSignal(id: string): void
 }): ReactElement {
-  const { values } = useFormikContext<FormSettingsData>()
+  const { values } = useFormikContext<any>()
   const { signals } = useUserPreferences()
   const [checked, setChecked] = useState<boolean>()
   const getSignalPageViewOptions = () => {
@@ -67,6 +66,12 @@ export function Assets({
                       component={Input}
                       name={signalOrigin.id + signalOrigin.listView.id}
                       options={[displayOptions[0]]}
+                      checked={
+                        values[signalOrigin.id + signalOrigin.listView.id]
+                      }
+                      onChange={(e) => {
+                        console.log('checked')
+                      }}
                     />
                     <Field
                       type="checkbox"

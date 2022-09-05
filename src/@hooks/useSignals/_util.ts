@@ -69,3 +69,46 @@ export function arrayEqual(a1: any[], a2: any[]) {
   }
   return true
 }
+
+function _appendSignalDetails(
+  detailedItems: SignalOriginItem[],
+  compArray: SignalOriginItem[]
+) {
+  return detailedItems.map((signalOrigin, index) => {
+    return {
+      description: compArray[index]?.description || '',
+      title: compArray[index]?.title || '',
+      id: compArray[index]?.id || '',
+      ...signalOrigin
+    } as SignalOriginItem
+  })
+}
+
+export function getAssetSignalItems(
+  signalItems: SignalOriginItem[] | SignalOriginItem,
+  compareIds: string[],
+  assetSignalOrigins: SignalOriginItem[]
+) {
+  // console.log(assetSignalOrigins)
+  let detailedItems
+  if (!Array.isArray(signalItems)) {
+    detailedItems = [signalItems]
+    detailedItems = _appendSignalDetails(detailedItems, assetSignalOrigins)
+  } else {
+    detailedItems = [...signalItems]
+    detailedItems = _appendSignalDetails(detailedItems, assetSignalOrigins)
+  }
+  return detailedItems.map((signalItem) => {
+    if (signalItem) {
+      return {
+        ...signalItem,
+        signals: signalItem.signals
+          ? signalItem.signals.filter((signal) =>
+              compareIds.includes(signal.assetId)
+            )
+          : []
+      }
+    }
+    return null
+  })
+}

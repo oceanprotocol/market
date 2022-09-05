@@ -7,11 +7,7 @@ import React, {
   useRef,
   useState
 } from 'react'
-import {
-  AssetSignalItem,
-  SignalOriginItem,
-  SignalSettingsItem
-} from '@context/Signals/_types'
+import { SignalOriginItem, SignalSettingsItem } from '@context/Signals/_types'
 import useSignalsLoader from '@hooks/useSignals'
 import { useUserPreferences } from '@context/UserPreferences'
 import { arrayEqual, getSignalUrls } from '@hooks/useSignals/_util'
@@ -25,13 +21,16 @@ export interface SignalsProviderValue {
   assetSignalsUrls?: string[]
   publisherSignalsUrls?: string[]
   signals?: SignalOriginItem[]
-  signalItems: AssetSignalItem[]
+  assetSignalOriginItems?: SignalOriginItem[]
+  signalItems: SignalOriginItem[]
   loading: boolean
   // Settings provide data to work with locally and then also decide fetching based on user preferences
   settings?: SignalSettingsItem
 
   // // A method to update the current assetIds to use in signal queries
   setAssetIds(assets: string[]): void
+
+  setAssetSignalOriginItems(signals: SignalOriginItem[]): void
 
   // setUserAddresses?(userAddresses: string[]): void
   // setPublisherIds?(queryUrls: string[]): void
@@ -49,7 +48,8 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
   )
   const { signals, addSignalSetting, removeSignalSetting } =
     useUserPreferences()
-
+  const [assetSignalOriginItems, setAssetSignalOriginItems] =
+    useState<SignalOriginItem[]>()
   // Using depsString method to resolve the array dependency issues when loading signalUrls array as a dependency
   // https://stackoverflow.com/questions/59467758/passing-array-to-useeffect-dependency-list
   const refSignals = useRef(signals)
@@ -113,8 +113,8 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
     setAssetIds,
     userAddresses,
     publisherIds,
-    signalItems,
-    loading
+    loading,
+    signalItems
   } = useSignalsLoader(origin)
 
   return (
@@ -130,7 +130,9 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
           signalUrls,
           assetSignalsUrls,
           publisherSignalsUrls,
-          loading
+          loading,
+          assetSignalOriginItems,
+          setAssetSignalOriginItems
         } as SignalsProviderValue
       }
     >

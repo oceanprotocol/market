@@ -103,7 +103,7 @@ module.exports = {
         description:
           'Qualitative signal helps you make better investment decisions',
         origin:
-          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/',
+          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/id',
         isCustom: false,
         signals: [],
         type: 1,
@@ -129,7 +129,7 @@ module.exports = {
         description:
           'Qualitative signal helps you make better investment decisions',
         origin:
-          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/',
+          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/id',
         isCustom: false,
         signals: [],
         type: 1,
@@ -149,32 +149,32 @@ module.exports = {
           userAddresses: []
         }
       },
-      {
-        id: 'sample_defi_signal',
-        title: 'Sushi Defi Signal',
-        description:
-          'Sushi defi signal helps you make better investment decisions',
-        origin:
-          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi/',
-        isCustom: false,
-        signals: [],
-        type: 2,
-        listView: {
-          id: 'listView',
-          value: true,
-          name: 'List View'
-        },
-        detailView: {
-          id: 'detailView',
-          value: true,
-          name: 'Details View'
-        },
-        urlParams: {
-          assetIds: [],
-          publisherIds: [],
-          userAddresses: []
-        }
-      },
+      // {
+      //   id: 'sample_defi_signal',
+      //   title: 'Sushi Defi Signal',
+      //   description:
+      //     'Sushi defi signal helps you make better investment decisions',
+      //   origin:
+      //     'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi/id',
+      //   isCustom: false,
+      //   signals: [],
+      //   type: 2,
+      //   listView: {
+      //     id: 'listView',
+      //     value: true,
+      //     name: 'List View'
+      //   },
+      //   detailView: {
+      //     id: 'detailView',
+      //     value: true,
+      //     name: 'Details View'
+      //   },
+      //   urlParams: {
+      //     assetIds: [],
+      //     publisherIds: [],
+      //     userAddresses: []
+      //   }
+      // },
       {
         id: 'sample_utu_signal',
         title: 'UTU Ocean Signals',
@@ -200,31 +200,31 @@ module.exports = {
           publisherIds: [],
           userAddresses: []
         }
-      },
-      {
-        id: 'sample_utu-ranking_signal',
-        title: 'UTU Ranking Signal',
-        description: 'UTU Ranking signal helps you make better data reviews',
-        origin: 'https://stage-api.ututrust.com/core-api/ocean/ranking',
-        isCustom: false,
-        signals: [],
-        type: 1,
-        listView: {
-          id: 'listView',
-          value: true,
-          name: 'List View'
-        },
-        detailView: {
-          id: 'detailView',
-          value: true,
-          name: 'Details View'
-        },
-        urlParams: {
-          assetIds: [],
-          publisherIds: [],
-          userAddresses: []
-        }
       }
+      // {
+      //   id: 'sample_utu-ranking_signal',
+      //   title: 'UTU Ranking Signal',
+      //   description: 'UTU Ranking signal helps you make better data reviews',
+      //   origin: 'https://stage-api.ututrust.com/core-api/ocean/ranking',
+      //   isCustom: false,
+      //   signals: [],
+      //   type: 1,
+      //   listView: {
+      //     id: 'listView',
+      //     value: true,
+      //     name: 'List View'
+      //   },
+      //   detailView: {
+      //     id: 'detailView',
+      //     value: true,
+      //     name: 'Details View'
+      //   },
+      //   urlParams: {
+      //     assetIds: [],
+      //     publisherIds: [],
+      //     userAddresses: []
+      //   }
+      // }
     ],
     enabled: true
   }

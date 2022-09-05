@@ -9,19 +9,18 @@ import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import PolygonIcon from '@images/polygon.svg'
 import { useSignalContext } from '@context/Signals'
-import { getURLParams } from '@hooks/useSignals/_util'
-import useSignalsLoader from '@hooks/useSignals'
+import { getAssetSignalItems } from '@hooks/useSignals/_util'
 import Loader from '@shared/atoms/Loader'
-import Tooltip from '@shared/atoms/Tooltip'
-import UtuIcon from '@images/utu-logo.svg'
-import { AssetSignalItem } from '@context/Signals/_types'
+import { SignalOriginItem } from '@context/Signals/_types'
+import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
+import AssetTeaserSignals from '../../Signals/AssetTeaserSignals'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
   isLoading?: boolean
+  signalItems?: SignalOriginItem[]
 }
 
 function LoaderArea() {
@@ -35,64 +34,38 @@ function LoaderArea() {
 export default function AssetTeaser({
   asset,
   noPublisher,
-  isLoading
+  isLoading,
+  signalItems
 }: AssetTeaserProps): ReactElement {
   const { datatokens } = asset
-  const { assetSignalsUrls, signals } = useSignalContext()
-  const assetSignalOrigins = signals.filter((signal) => signal.type === 1)
-  const dataTokenAddresses = datatokens.map((data) => data.address)
-  const urls = assetSignalsUrls.map((item) => {
-    return item + getURLParams(['assetId', dataTokenAddresses.join(',')])
-  })
+  const { signals, assetSignalsUrls } = useSignalContext()
+  const filterAssetSignals = () => {
+    return signals
+      .filter((signal) => signal.type === 1)
+      .filter((signal) => signal.listView.value)
+  }
+
   const { name, type, description } = asset.metadata
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
   const { orders } = asset.stats
-  const { signalItems, loading } = useSignalsLoader(urls)
-  useEffect(() => {
-    console.log(signalItems)
-  })
-  const loadedAssetSignals = signalItems.map(
-    (signal: AssetSignalItem, index) => {
-      if (!signal) return null
-      return (
-        <div key={signal.id} className={styles.symbol2}>
-          <PolygonIcon className={styles.icon} />
-          <div>
-            {signal
-              ? ((signal[0]?.value / 100) * Math.random()).toPrecision(2) + '%'
-              : ''}
-          </div>
-        </div>
-      )
-    }
+  const filteredSignals = getAssetSignalItems(
+    signalItems,
+    datatokens.map((data: AssetDatatoken) => data.address),
+    filterAssetSignals()
   )
-  let toolTipSignals = assetSignalOrigins.map((signal, index) => {
-    return (
-      <li key={index}>
-        <div className={styles.assetListTitle}>
-          <div className={styles.assetListTitleName}>
-            <UtuIcon className={styles.icon} />
-            <p>{signal.description}</p>
-          </div>
-          <div className={styles.assetListTitleNumber}>
-            <p>
-              {signalItems[index]
-                ? (
-                    (parseInt(signalItems[index][0]?.value || '0') / 100) *
-                    Math.random()
-                  ).toPrecision(2) + '%'
-                : 'N/A'}
-            </p>
-          </div>
-        </div>
-      </li>
-    )
-  })
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  toolTipSignals = <ol className={styles.assets}>{toolTipSignals}</ol>
+  useEffect(() => {
+    if (signalItems) {
+      // eslint-disable-next-line no-empty
+      if (signalItems.length > 0) {
+      }
+    }
+  }, [signalItems])
+
+  if (!signalItems || signalItems.length < 1) {
+    return null
+  }
   return (
     <>
       <article className={`${styles.teaser} ${styles[type]}`}>
@@ -136,32 +109,12 @@ export default function AssetTeaser({
             </a>
           </Link>
         </div>
-        <div>
-          <Link href={`/asset/${asset.id}`}>
-            <a className={styles.signalContainer}>
-              <div className={styles.signal}>
-                {signalItems.length > 0 &&
-                  signalItems.map((signal, index) => {
-                    if (!signal) return null
-                    return (
-                      <div key={signal.id} className={styles.symbol2}>
-                        <PolygonIcon className={styles.icon} />
-                        <div>
-                          {signal
-                            ? (signal[0]?.value / 100).toPrecision(2) + '%'
-                            : ''}
-                        </div>
-                      </div>
-                    )
-                  })}
-              </div>
-              <div>
-                {' '}
-                <Tooltip content={toolTipSignals} />
-              </div>
-            </a>
-          </Link>
-        </div>
+        {signalItems ? (
+          <AssetTeaserSignals
+            assetId={asset.id}
+            signalItems={filteredSignals}
+          />
+        ) : null}
       </article>
     </>
   )

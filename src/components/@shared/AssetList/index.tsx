@@ -9,6 +9,8 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
 import { AssetSignalItem } from '@context/Signals/_types'
+import useSignalsLoader, { useAssetListSignals } from '@hooks/useSignals'
+import { useSignalContext } from '@context/Signals'
 
 const cx = classNames.bind(styles)
 
@@ -44,16 +46,34 @@ export default function AssetList({
   noPublisher,
   help
 }: AssetListProps): ReactElement {
-  const { chainIds } = useUserPreferences()
+  const { chainIds, signals: settingsSignals } = useUserPreferences()
   const { accountId } = useWeb3()
   const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
   const [loading, setLoading] = useState<boolean>(isLoading)
+  const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>(
+    assetsWithPrices
+      ? assetsWithPrices.map((asset) =>
+          asset.datatokens.map((data) => data.address)
+        )
+      : null
+  )
   const isMounted = useIsMounted()
+  // Signals loading logic
+  // Get from AssetList component
+  const { assetSignalOriginItems, signals, assetSignalsUrls } =
+    useSignalContext()
+  const { assetSignalOrigins, urls } = useAssetListSignals(
+    dataTokenAddresses,
+    signals,
+    assetSignalsUrls
+  )
+  const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
+  // console.log(signals)
   useEffect(() => {
     if (!assets) return
-
     setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
+
     async function fetchPrices() {
       const assetsWithPrices = await getAccessDetailsForAssets(
         assets,
@@ -62,8 +82,19 @@ export default function AssetList({
       if (!isMounted() || !assetsWithPrices) return
       setAssetsWithPrices([...assetsWithPrices])
     }
+
     fetchPrices()
   }, [assets, isMounted, accountId])
+
+  useEffect(() => {
+    if (assetsWithPrices) {
+      setDataTokenAddresses(
+        assetsWithPrices.map((asset) =>
+          asset.datatokens.map((data) => data.address)
+        )
+      )
+    }
+  }, [assetsWithPrices])
 
   // // This changes the page field inside the query
   function handlePageChange(selected: number) {
@@ -83,13 +114,16 @@ export default function AssetList({
     <>
       <div className={styleClasses}>
         {assetsWithPrices.length > 0 ? (
-          assetsWithPrices.map((assetWithPrice) => (
-            <AssetTeaser
-              asset={assetWithPrice}
-              key={assetWithPrice.id}
-              noPublisher={noPublisher}
-            />
-          ))
+          assetsWithPrices.map((assetWithPrice) => {
+            return (
+              <AssetTeaser
+                asset={assetWithPrice}
+                key={assetWithPrice.id}
+                noPublisher={noPublisher}
+                signalItems={signalItems}
+              />
+            )
+          })
         ) : (
           <div className={styles.empty}>No results found</div>
         )}
