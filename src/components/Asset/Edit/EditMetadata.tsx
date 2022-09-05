@@ -43,9 +43,8 @@ export default function Edit({
     const config = getOceanConfig(asset.chainId)
 
     const fixedRateInstance = new FixedRateExchange(
-      asset.accessDetails.addressOrId,
-      web3,
-      config.fixedRateExchangeAddress
+      config.fixedRateExchangeAddress,
+      web3
     )
 
     const setPriceResp = await fixedRateInstance.setRate(
