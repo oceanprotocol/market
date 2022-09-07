@@ -155,7 +155,7 @@ async function approveProviderFee(
   accountId: string,
   web3: Web3,
   providerFeeAmount: string
-): Promise<string> {
+): Promise<TransactionReceipt> {
   const config = getOceanConfig(asset.chainId)
   const baseToken =
     asset?.accessDetails?.type === 'free'
@@ -169,7 +169,7 @@ async function approveProviderFee(
     asset?.accessDetails?.datatoken?.address,
     providerFeeAmount
   )
-  return txApproveWei as unknown as string // thanks ocean.js
+  return txApproveWei
 }
 
 async function startOrder(
