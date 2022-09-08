@@ -36,7 +36,11 @@ const validationService = {
   files: Yup.array<{ url: string; valid: boolean }[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string().url('Must be a valid URL.').required('Required'),
+        url: Yup.string()
+          .min(1, `At least one file is required.`)
+          .max(512, (param) => `URL must be less than ${param.max} characters`)
+          .url('Must be a valid URL.')
+          .required('Required'),
         valid: Yup.boolean().isTrue().required('File must be valid.')
       })
     )
@@ -45,7 +49,10 @@ const validationService = {
   links: Yup.array<{ url: string; valid: boolean }[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string().url('Must be a valid URL.'),
+        url: Yup.string()
+          .min(1, `At least one file is required.`)
+          .max(512, (param) => `URL must be less than ${param.max} characters`)
+          .url('Must be a valid URL.'),
         // TODO: require valid file only when URL is given
         valid: Yup.boolean()
         // valid: Yup.boolean().isTrue('File must be valid.')

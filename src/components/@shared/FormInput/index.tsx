@@ -78,7 +78,8 @@ function checkError(
       form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]) ||
     (form?.touched[field.name] &&
       form?.errors[field.name] &&
-      field.name !== 'links')
+      field.name !== 'links' &&
+      field.name !== 'files')
   ) {
     return true
   }
