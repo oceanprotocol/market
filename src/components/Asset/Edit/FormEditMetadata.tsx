@@ -15,6 +15,16 @@ export function checkIfTimeoutInPredefinedValues(
   return false
 }
 
+interface FormEditMetadataValues {
+  author: string
+  description: string
+  files: string
+  links: string
+  name: string
+  price: string
+  timeout: string
+}
+
 export default function FormEditMetadata({
   data,
   showPrice,
@@ -25,8 +35,8 @@ export default function FormEditMetadata({
   data: InputProps[]
   showPrice: boolean
   isComputeDataset: boolean
-  initialValues: any
-  currentValues: any
+  initialValues: FormEditMetadataValues
+  currentValues: FormEditMetadataValues
 }): ReactElement {
   const { oceanConfig } = useAsset()
 
@@ -34,7 +44,7 @@ export default function FormEditMetadata({
   // we'll add an outline when an input has changed
   const getDifference = (a: any, b: any) =>
     Object.entries(a).reduce(
-      (ac, [k, v]) => (b[k] && b[k] !== v ? ((ac[k] = b[k]), ac) : ac),
+      (ac: any, [k, v]) => (b[k] && b[k] !== v ? ((ac[k] = b[k]), ac) : ac),
       {}
     )
 
