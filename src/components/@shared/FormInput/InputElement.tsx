@@ -30,6 +30,7 @@ const DefaultInput = ({
     className={cx({ input: true, [size]: size, [className]: className })}
     id={props.name}
     {...props}
+    type={props.type === 'text' || props.type === 'url' ? 'search' : props.type}
   />
 )
 
