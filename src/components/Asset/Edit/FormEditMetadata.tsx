@@ -3,6 +3,7 @@ import { Field, Form } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
 import { useAsset } from '@context/Asset'
+import styles from './FormEditMetadata.module.css'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,
@@ -17,13 +18,27 @@ export function checkIfTimeoutInPredefinedValues(
 export default function FormEditMetadata({
   data,
   showPrice,
-  isComputeDataset
+  isComputeDataset,
+  initialValues,
+  currentValues
 }: {
   data: InputProps[]
   showPrice: boolean
   isComputeDataset: boolean
+  initialValues: any
+  currentValues: any
 }): ReactElement {
   const { oceanConfig } = useAsset()
+
+  // get diff between initial value and current value to get inputs changed
+  // we'll add an outline when an input has changed
+  const getDifference = (a: any, b: any) =>
+    Object.entries(a).reduce(
+      (ac, [k, v]) => (b[k] && b[k] !== v ? ((ac[k] = b[k]), ac) : ac),
+      {}
+    )
+
+  const diff = getDifference(initialValues, currentValues)
 
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
@@ -43,22 +58,26 @@ export default function FormEditMetadata({
 
   return (
     <Form>
-      {data.map(
-        (field: InputProps) =>
+      {data.map((field: InputProps) => {
+        const fieldHasChanged = Object.keys(diff).includes(field.name)
+        return (
           (!showPrice && field.name === 'price') || (
-            <Field
-              key={field.name}
-              options={
-                field.name === 'timeout' && isComputeDataset === true
-                  ? timeoutOptionsArray
-                  : field.options
-              }
-              {...field}
-              component={Input}
-              prefix={field.name === 'price' && oceanConfig?.oceanTokenSymbol}
-            />
+            <span className={fieldHasChanged ? styles.inputChanged : null}>
+              <Field
+                key={field.name}
+                options={
+                  field.name === 'timeout' && isComputeDataset === true
+                    ? timeoutOptionsArray
+                    : field.options
+                }
+                {...field}
+                component={Input}
+                prefix={field.name === 'price' && oceanConfig?.oceanTokenSymbol}
+              />
+            </span>
           )
-      )}
+        )
+      })}
 
       <FormActions />
     </Form>

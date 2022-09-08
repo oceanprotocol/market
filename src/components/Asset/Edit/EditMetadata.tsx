@@ -24,6 +24,7 @@ import { useAsset } from '@context/Asset'
 import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
+import { initialValues } from 'src/components/Publish/_constants'
 
 export default function Edit({
   asset
@@ -139,14 +140,16 @@ export default function Edit({
     }
   }
 
+  const initialValues = getInitialValues(
+    asset?.metadata,
+    asset?.services[0]?.timeout,
+    asset?.accessDetails?.price
+  )
+
   return (
     <Formik
       enableReinitialize
-      initialValues={getInitialValues(
-        asset?.metadata,
-        asset?.services[0]?.timeout,
-        asset?.accessDetails?.price
-      )}
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
@@ -176,6 +179,8 @@ export default function Edit({
               data={content.form.data}
               showPrice={asset?.accessDetails?.type === 'fixed'}
               isComputeDataset={isComputeType}
+              initialValues={initialValues}
+              currentValues={values}
             />
 
             <Web3Feedback

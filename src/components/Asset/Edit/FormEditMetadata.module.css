@@ -1,0 +1,5 @@
+.inputChanged input,
+.inputChanged textarea,
+.inputChanged select {
+  border: 1px solid var(--color-primary);
+}
