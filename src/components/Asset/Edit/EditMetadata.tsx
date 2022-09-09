@@ -7,7 +7,8 @@ import {
   Asset,
   Service
 } from '@oceanprotocol/lib'
-import { validationSchema, getInitialValues } from './_constants'
+import { validationSchema } from './_validation'
+import { getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
 import { useWeb3 } from '@context/Web3'
 import { useUserPreferences } from '@context/UserPreferences'
