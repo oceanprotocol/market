@@ -2,7 +2,7 @@ import { ServiceComputeOptions } from '@oceanprotocol/lib'
 import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
 
-interface FileInfo {
+export interface FileInfo {
   url: string
   valid?: boolean
   contentLength?: string

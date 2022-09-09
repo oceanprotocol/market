@@ -1,4 +1,4 @@
-import { FileInfo } from '@oceanprotocol/lib'
+import { FileInfo } from './_types'
 import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape({

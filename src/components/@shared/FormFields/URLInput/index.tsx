@@ -19,7 +19,9 @@ export default function URLInput({
   isLoading: boolean
   name: string
 }): ReactElement {
+  console.log(name)
   const [field, meta] = useField(name)
+  // console.log(field, meta)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
 
   useEffect(() => {
@@ -33,6 +35,8 @@ export default function URLInput({
         meta?.error
     )
   }, [field?.value, meta?.error])
+
+  console.log(props)
 
   return (
     <>
