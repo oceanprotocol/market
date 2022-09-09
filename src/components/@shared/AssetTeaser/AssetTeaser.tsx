@@ -8,7 +8,6 @@ import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
-import { AssetExtended } from 'src/@types/AssetExtended'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -25,7 +24,6 @@ export default function AssetTeaser({
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
   const { orders } = asset.stats
-
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`}>
@@ -33,7 +31,7 @@ export default function AssetTeaser({
           <header className={styles.header}>
             <div className={styles.symbol}>{datatokens[0]?.symbol}</div>
             <Dotdotdot tagName="h1" clamp={3} className={styles.title}>
-              {name}
+              {name.slice(0, 200)}
             </Dotdotdot>
             {!noPublisher && (
               <Publisher account={owner} minimal className={styles.publisher} />

@@ -1,7 +1,5 @@
 import React, { ReactElement } from 'react'
 import Tabs from '@shared/atoms/Tabs'
-import PoolShares from './PoolShares'
-import PoolTransactions from '@shared/PoolTransactions'
 import PublishedList from './PublishedList'
 import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
@@ -18,14 +16,6 @@ function getTabs(accountId: string, userAccountId: string): HistoryTab[] {
     {
       title: 'Published',
       content: <PublishedList accountId={accountId} />
-    },
-    {
-      title: 'Pool Shares',
-      content: <PoolShares accountId={accountId} />
-    },
-    {
-      title: 'Pool Transactions',
-      content: <PoolTransactions accountId={accountId} />
     },
     {
       title: 'Downloads',

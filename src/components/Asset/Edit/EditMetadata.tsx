@@ -16,7 +16,6 @@ import FormEditMetadata from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
 import content from '../../../../content/pages/editMetadata.json'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { useAbortController } from '@hooks/useAbortController'
 import DebugEditMetadata from './DebugEditMetadata'
 import { getOceanConfig } from '@utils/ocean'
@@ -51,7 +50,7 @@ export default function Edit({
     const setPriceResp = await fixedRateInstance.setRate(
       accountId,
       asset.accessDetails.addressOrId,
-      newPrice
+      newPrice.toString()
     )
     LoggerInstance.log('[edit] setFixedRate result', setPriceResp)
     if (!setPriceResp) {
