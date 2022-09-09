@@ -15,7 +15,7 @@ export function checkIfTimeoutInPredefinedValues(
   return false
 }
 
-interface FormEditMetadataValues {
+export interface FormEditMetadataValues {
   author: string
   description: string
   files: string

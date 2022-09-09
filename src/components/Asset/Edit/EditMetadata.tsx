@@ -12,7 +12,7 @@ import { MetadataEditForm } from './_types'
 import { useWeb3 } from '@context/Web3'
 import { useUserPreferences } from '@context/UserPreferences'
 import Web3Feedback from '@shared/Web3Feedback'
-import FormEditMetadata from './FormEditMetadata'
+import FormEditMetadata, { FormEditMetadataValues } from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
 import content from '../../../../content/pages/editMetadata.json'
@@ -24,7 +24,6 @@ import { useAsset } from '@context/Asset'
 import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
-import { initialValues } from 'src/components/Publish/_constants'
 
 export default function Edit({
   asset
@@ -144,7 +143,7 @@ export default function Edit({
     asset?.metadata,
     asset?.services[0]?.timeout,
     asset?.accessDetails?.price
-  )
+  ) as FormEditMetadataValues
 
   return (
     <Formik
