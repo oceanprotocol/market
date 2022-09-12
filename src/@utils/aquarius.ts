@@ -140,6 +140,27 @@ export async function retrieveAsset(
   }
 }
 
+export async function retrieveShaclSchema(
+  cancelToken: CancelToken
+): Promise<Asset> {
+  try {
+    const response: AxiosResponse<Asset> = await axios.get(
+      `${metadataCacheUri}/api/aquarius/validation/schema`,
+      { cancelToken }
+    )
+    if (!response || response.status !== 200 || !response.data) return
+
+    const data = { ...response.data }
+    return data
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
+
 export async function checkV3Asset(
   did: string,
   cancelToken: CancelToken
