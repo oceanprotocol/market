@@ -11,6 +11,7 @@
 
 .select [class$='control']:hover {
   border-color: var(--border-color);
+  cursor: text;
 }
 
 .select [class$='control']:focus-within {
