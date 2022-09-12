@@ -26,21 +26,10 @@
   margin: 0;
   padding-bottom: 0;
   padding-top: 0;
-  color: var(--font-color-heading);
+  color: var(--font-color-heading) !important;
   font-size: var(--font-size-base);
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-bold);
-}
-
-.select [class$='indicatorContainer'] > *,
-.select [class$='indicatorContainer']:hover > * {
-  color: var(--border-color);
-}
-
-.select [class$='indicatorSeparator'] {
-  margin-top: 0;
-  margin-bottom: 0;
-  background-color: var(--border-color);
 }
 
 .select [class$='menu'] {
