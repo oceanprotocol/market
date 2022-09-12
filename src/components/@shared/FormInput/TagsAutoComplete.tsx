@@ -7,6 +7,7 @@ import { getTagsList } from '@utils/aquarius'
 import { chainIds } from 'app.config'
 import { useCancelToken } from '@hooks/useCancelToken'
 import styles from './TagsAutoComplete.module.css'
+import { matchSorter } from 'match-sorter'
 
 interface AutoCompleteOption {
   readonly value: string
@@ -18,6 +19,9 @@ export default function TagsAutoComplete({
 }: InputProps): ReactElement {
   const { name, placeholder } = props
   const [tagsList, setTagsList] = useState<AutoCompleteOption[]>()
+  const [matchedTagsList, setMatchedTagsList] = useState<AutoCompleteOption[]>(
+    []
+  )
   const [field, meta, helpers] = useField(name)
   const [input, setInput] = useState<string>()
 
@@ -51,6 +55,15 @@ export default function TagsAutoComplete({
     helpers.setTouched(true)
   }
 
+  const handleOptionsFilter = (
+    options: AutoCompleteOption[],
+    input: string
+  ): void => {
+    setInput(input)
+    const matchedTagsList = matchSorter(options, input, { keys: ['value'] })
+    setMatchedTagsList(matchedTagsList)
+  }
+
   return (
     <CreatableSelect
       components={{
@@ -63,9 +76,9 @@ export default function TagsAutoComplete({
       isMulti
       noOptionsMessage={() => 'Start typing to get suggestions'}
       onChange={(value: AutoCompleteOption[]) => handleChange(value)}
-      onInputChange={(value) => setInput(value)}
+      onInputChange={(value) => handleOptionsFilter(tagsList, value)}
       openMenuOnClick={false}
-      options={!input || input?.length < 3 ? [] : tagsList}
+      options={!input || input?.length < 2 ? [] : matchedTagsList}
       placeholder={placeholder}
       theme={(theme) => ({
         ...theme,
