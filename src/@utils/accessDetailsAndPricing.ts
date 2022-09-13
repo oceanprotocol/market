@@ -23,7 +23,7 @@ import {
 
 const tokensPriceQuery = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
-    tokens(where: { id_in: $datatokenIds }) {
+    tokens(first: 1000, where: { id_in: $datatokenIds }) {
       id
       symbol
       name
