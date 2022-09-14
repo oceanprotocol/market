@@ -29,11 +29,11 @@ export default function AssetType({
         {type === 'dataset' ? 'dataset' : 'algorithm'}
       </div>
 
-      {totalSales ? (
-        <div className={styles.typeLabel}>
-          {`${totalSales} ${totalSales === 1 ? 'sale' : 'sales'}`}
-        </div>
-      ) : null}
+      <div className={styles.typeLabel}>
+        {totalSales < 0
+          ? 'N/A'
+          : `${totalSales} ${totalSales === 1 ? 'sale' : 'sales'}`}
+      </div>
     </div>
   )
 }
