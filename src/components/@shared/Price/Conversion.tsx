@@ -27,8 +27,6 @@ export default function Conversion({
   // referring to Coingecko tokenId in Prices context provider
   const priceTokenId = getCoingeckoTokenId(symbol)
 
-  console.log(price)
-
   useEffect(() => {
     if (
       !prices ||
