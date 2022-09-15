@@ -140,11 +140,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       </Label>
       <InputElement size={size} {...field} {...props} />
       {help && prominentHelp && <FormHelp>{help}</FormHelp>}
-      {isFormikField && hasFormikError && (
-        <div className={styles.error}>
-          <ErrorMessage name={field.name} />
-        </div>
-      )}
+
       {disclaimer && (
         <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>
       )}
