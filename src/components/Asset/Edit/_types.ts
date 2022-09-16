@@ -1,10 +1,4 @@
-export interface FileInfo {
-  url: string
-  valid?: boolean
-  contentLength?: string
-  contentType?: string
-}
-
+import { FileInfo } from '@oceanprotocol/lib'
 export interface MetadataEditForm {
   name: string
   description: string
