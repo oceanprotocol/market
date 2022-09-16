@@ -11,7 +11,7 @@ export const validationSchema = Yup.object().shape({
     .of(
       Yup.object().shape({
         url: Yup.string().url('Must be a valid URL.'),
-        valid: Yup.boolean()
+        valid: Yup.boolean().isTrue()
       })
     )
     .nullable(),
@@ -19,7 +19,7 @@ export const validationSchema = Yup.object().shape({
     .of(
       Yup.object().shape({
         url: Yup.string().url('Must be a valid URL.'),
-        valid: Yup.boolean()
+        valid: Yup.boolean().isTrue()
       })
     )
     .nullable(),
