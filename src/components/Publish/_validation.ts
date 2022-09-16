@@ -1,7 +1,7 @@
 import { MAX_DECIMALS } from '@utils/constants'
 import * as Yup from 'yup'
 import { getMaxDecimalsValidation } from '@utils/numbers'
-import { FileInfo } from './_types'
+import { FileInfo } from '@oceanprotocol/lib'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
