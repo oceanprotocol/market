@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: market
-  name: ocean-market
+  name: market
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,25 @@ spec:
         app.kubernetes.io/name: market
     spec:
       containers:
-      - image: <image-registry-url>
-        name: ocean-market
-        ports:
-        - containerPort: 8000
+        - name: market
+          image: 716160859964.dkr.ecr.us-east-1.amazonaws.com/athena-market:latest
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+
+          env:
+            - name: NEXT_PUBLIC_INFURA_PROJECT_ID
+              value: 953659398bd94786a13b867b5d3b5700
+
+            - name: NEXT_PUBLIC_MARKET_FEE_ADDRESS
+              value: 0x1BDD96Fa11b44b392B6A760640A34504585c3b29
+
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
