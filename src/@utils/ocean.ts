@@ -14,7 +14,12 @@ export function getOceanConfig(network: string | number): Config {
       ? undefined
       : process.env.NEXT_PUBLIC_INFURA_PROJECT_ID
   ) as Config
+
+  config.providerUri =
+  'http://aed9021be15b14edbb0653b605ac3bc8-1857207079.us-east-1.elb.amazonaws.com:8030'
+  
   return config as Config
+
 }
 
 export function getDevelopmentConfig(): Config {
