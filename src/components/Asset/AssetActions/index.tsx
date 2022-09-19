@@ -16,6 +16,7 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
+import VeAllocation from './VeAllocation'
 
 export default function AssetActions({
   asset
@@ -148,7 +149,10 @@ export default function AssetActions({
     </>
   )
 
-  const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
+  const tabs: TabsItem[] = [
+    { title: 'Use', content: UseContent },
+    { title: 'VeAllocation', content: <VeAllocation /> }
+  ]
 
   return (
     <>
