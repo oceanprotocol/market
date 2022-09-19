@@ -98,7 +98,8 @@ export async function transformPublishFormToDdo(
     license: 'https://market.oceanprotocol.com/terms',
     links: linksTransformed,
     additionalInformation: {
-      termsAndConditions
+      termsAndConditions,
+      source: 'hyperdata'
     },
     ...(type === 'algorithm' &&
       dockerImage !== '' && {

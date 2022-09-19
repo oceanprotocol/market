@@ -111,6 +111,11 @@ export function getSearchQuery(
               }
             ]
           }
+        },
+        {
+          match: {
+            'metadata.additionalInformation.source': 'hyperdata'
+          }
         }
       ]
     }

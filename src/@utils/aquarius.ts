@@ -37,23 +37,49 @@ export function getFilterTerm(
 export function generateBaseQuery(
   baseQueryParams: BaseQueryParams
 ): SearchQuery {
-  const generatedQuery = {
-    from: baseQueryParams.esPaginationOptions?.from || 0,
-    size: baseQueryParams.esPaginationOptions?.size || 1000,
-    query: {
-      bool: {
-        ...baseQueryParams.nestedQuery,
-        filter: [
-          ...(baseQueryParams.filters || []),
-          getFilterTerm('chainId', baseQueryParams.chainIds),
-          getFilterTerm('_index', 'aquarius'),
-          ...(baseQueryParams.ignorePurgatory
-            ? []
-            : [getFilterTerm('purgatory.state', false)])
-        ]
-      }
-    }
-  } as SearchQuery
+  const generatedQuery =
+    baseQueryParams.nestedQuery === undefined
+      ? ({
+          from: baseQueryParams.esPaginationOptions?.from || 0,
+          size: baseQueryParams.esPaginationOptions?.size || 1000,
+          query: {
+            bool: {
+              ...baseQueryParams.nestedQuery,
+              filter: [
+                ...(baseQueryParams.filters || []),
+                getFilterTerm('chainId', baseQueryParams.chainIds),
+                getFilterTerm('_index', 'aquarius'),
+                ...(baseQueryParams.ignorePurgatory
+                  ? []
+                  : [getFilterTerm('purgatory.state', false)])
+              ],
+              must: [
+                {
+                  match: {
+                    'metadata.additionalInformation.source': 'hyperdata'
+                  }
+                }
+              ]
+            }
+          }
+        } as SearchQuery)
+      : ({
+          from: baseQueryParams.esPaginationOptions?.from || 0,
+          size: baseQueryParams.esPaginationOptions?.size || 1000,
+          query: {
+            bool: {
+              ...baseQueryParams.nestedQuery,
+              filter: [
+                ...(baseQueryParams.filters || []),
+                getFilterTerm('chainId', baseQueryParams.chainIds),
+                getFilterTerm('_index', 'aquarius'),
+                ...(baseQueryParams.ignorePurgatory
+                  ? []
+                  : [getFilterTerm('purgatory.state', false)])
+              ]
+            }
+          }
+        } as SearchQuery)
 
   if (baseQueryParams.aggs !== undefined) {
     generatedQuery.aggs = baseQueryParams.aggs
