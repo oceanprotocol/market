@@ -4,9 +4,10 @@ import { OnChangeValue } from 'react-select'
 import { useField } from 'formik'
 import { InputProps } from '.'
 import { getTagsList } from '@utils/aquarius'
-import { useUserPreferences } from '@context/UserPreferences'
+import { chainIds } from 'app.config'
 import { useCancelToken } from '@hooks/useCancelToken'
 import styles from './TagsAutoComplete.module.css'
+import { matchSorter } from 'match-sorter'
 
 interface AutoCompleteOption {
   readonly value: string
@@ -16,10 +17,14 @@ interface AutoCompleteOption {
 export default function TagsAutoComplete({
   ...props
 }: InputProps): ReactElement {
-  const { chainIds } = useUserPreferences()
   const { name, placeholder } = props
   const [tagsList, setTagsList] = useState<AutoCompleteOption[]>()
+  const [matchedTagsList, setMatchedTagsList] = useState<AutoCompleteOption[]>(
+    []
+  )
   const [field, meta, helpers] = useField(name)
+  const [input, setInput] = useState<string>()
+
   const newCancelToken = useCancelToken()
 
   const generateAutocompleteOptions = (
@@ -42,7 +47,7 @@ export default function TagsAutoComplete({
       setTagsList(autocompleteOptions)
     }
     generateTagsList()
-  }, [chainIds, newCancelToken])
+  }, [newCancelToken])
 
   const handleChange = (userInput: OnChangeValue<AutoCompleteOption, true>) => {
     const normalizedInput = userInput.map((input) => input.value)
@@ -50,13 +55,30 @@ export default function TagsAutoComplete({
     helpers.setTouched(true)
   }
 
+  const handleOptionsFilter = (
+    options: AutoCompleteOption[],
+    input: string
+  ): void => {
+    setInput(input)
+    const matchedTagsList = matchSorter(options, input, { keys: ['value'] })
+    setMatchedTagsList(matchedTagsList)
+  }
+
   return (
     <CreatableSelect
+      components={{
+        DropdownIndicator: () => null,
+        IndicatorSeparator: () => null
+      }}
       className={styles.select}
       defaultValue={defaultTags}
+      hideSelectedOptions
       isMulti
+      noOptionsMessage={() => 'Start typing to get suggestions'}
       onChange={(value: AutoCompleteOption[]) => handleChange(value)}
-      options={tagsList}
+      onInputChange={(value) => handleOptionsFilter(tagsList, value)}
+      openMenuOnClick={false}
+      options={!input || input?.length < 2 ? [] : matchedTagsList}
       placeholder={placeholder}
       theme={(theme) => ({
         ...theme,
