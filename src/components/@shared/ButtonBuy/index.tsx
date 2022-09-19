@@ -215,7 +215,6 @@ export default function ButtonBuy({
               disabled={disabled}
               className={action === 'compute' ? styles.actionsCenter : ''}
             >
-              {/* {buttonText} */}
               {buttonText}
             </Button>
           )}

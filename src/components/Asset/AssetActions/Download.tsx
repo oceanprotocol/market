@@ -17,6 +17,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
+import IconCopy from '@images/copy.svg'
 
 export default function Download({
   asset,
@@ -49,6 +50,7 @@ export default function Download({
     useState<OrderPriceAndFees>()
   // const [isStream, setIsStream] = useState(true)
   const [copySuccess, setCopySuccess] = useState(null)
+  const [isCopied, setIsCopied] = useState(false)
 
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
@@ -91,6 +93,14 @@ export default function Download({
   }, [dtBalance])
 
   useEffect(() => {
+    LoggerInstance.log({
+      // purchasable: asset?.accessDetails.isPurchasable,
+      isAssetNetwork,
+      isBalanceSufficient,
+      isOwned,
+      hasDatatoken,
+      validOrderTx
+    })
     if (
       (asset?.accessDetails?.type === 'fixed' && !orderPriceAndFees) ||
       !isMounted ||
@@ -114,15 +124,6 @@ export default function Download({
       ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
 
     setIsDisabled(isDisabled)
-
-    // LoggerInstance.log({
-    //   purchasable: asset?.accessDetails.isPurchasable,
-    //   isAssetNetwork,
-    //   isBalanceSufficient,
-    //   isOwned,
-    //   hasDatatoken,
-    //   validOrderTx
-    // })
   }, [
     isMounted,
     asset?.accessDetails,
@@ -134,6 +135,17 @@ export default function Download({
     isUnsupportedPricing,
     orderPriceAndFees
   ])
+
+  // Clear copy success style after 5 sec.
+  useEffect(() => {
+    if (!isCopied) return
+
+    const timeout = setTimeout(() => {
+      setIsCopied(false)
+    }, 5000)
+
+    return () => clearTimeout(timeout)
+  }, [isCopied])
 
   async function handleOrderOrDownload() {
     setIsLoading(true)
@@ -151,7 +163,8 @@ export default function Download({
         await downloadFile(web3, asset, accountId, validOrderTx)
       } else if (isOwned && asset.services[0].streamFiles) {
         await navigator.clipboard.writeText(asset.services[0].streamFiles)
-        setCopySuccess('stream link copied!')
+        setCopySuccess('Stream Link Copied!')
+        setIsCopied(true)
         LoggerInstance.log('Yeppp Copied!', asset.services[0].streamFiles)
       } else {
         setStatusText(
@@ -239,7 +252,13 @@ export default function Download({
         </div>
         <AssetAction asset={asset} />
       </div>
-      {asset?.metadata.type === 'datastream' && <span>{copySuccess}</span>}
+      {/* {asset?.metadata.type === 'datastream' && <span>{copySuccess}</span>} */}
+      {asset?.metadata.type === 'datastream' && isCopied && (
+        <div className={styles.action}>
+          {/* <IconCopy className={styles.icon} /> */}
+          {<span className={styles.copyfeedback}>{copySuccess}</span>}
+        </div>
+      )}
       {asset?.metadata?.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute
           algorithmDid={asset.id}
