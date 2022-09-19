@@ -124,11 +124,12 @@ export default function MetadataFields(): ReactElement {
               />
               <Field
                 {...getFieldContent(
-                  'dockerImageCustomTag',
+                  'dockerImageChecksum',
                   content.metadata.fields
                 )}
                 component={Input}
-                name="metadata.dockerImageCustomTag"
+                name="metadata.dockerImageCustomChecksum"
+                disabled
               />
               <Field
                 {...getFieldContent(

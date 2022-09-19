@@ -55,15 +55,16 @@
       {
         "name": "dockerImageCustom",
         "label": "Docker Image URL",
-        "placeholder": "e.g. oceanprotocol/algo_dockers or https://example.com/image_path",
-        "help": "Provide the name of a public Docker image or the full url if you have it hosted in a 3rd party repo",
+        "placeholder": "e.g. oceanprotocol/algo_dockers:latest or https://example.com/image_path:image_tag",
+        "help": "Provide the name and the tag of a public Docker hub image or the full url if you have it hosted in a 3rd party repo",
+        "type": "container",
         "required": true
       },
       {
-        "name": "dockerImageCustomTag",
-        "label": "Docker Image Tag",
-        "placeholder": "e.g. latest",
-        "help": "Provide the tag for your Docker image.",
+        "name": "dockerImageChecksum",
+        "label": "Docker container checksum",
+        "placeholder": "e.g. sha256:xiXqb7Vet0FbN9q0GFMgUdi5C22wjJT0i2G6lYKC2jl6QxkKzVz7KaPDgqfTMjNF",
+        "help": "Provide the checksum of your docker container image.",
         "required": true
       },
       {

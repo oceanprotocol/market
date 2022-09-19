@@ -12,12 +12,14 @@ export default function URLInput({
   handleButtonClick,
   isLoading,
   name,
+  checkUrl,
   ...props
 }: {
   submitText: string
   handleButtonClick(e: React.SyntheticEvent, data: string): void
   isLoading: boolean
   name: string
+  checkUrl?: boolean
 }): ReactElement {
   const [field, meta] = useField(name)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
@@ -28,7 +30,7 @@ export default function URLInput({
     setIsButtonDisabled(
       !field?.value ||
         field.value === '' ||
-        !isUrl(field.value) ||
+        (checkUrl && !isUrl(field.value)) ||
         field.value.includes('javascript:') ||
         meta?.error
     )
