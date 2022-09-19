@@ -19,3 +19,31 @@
   width: 100%;
   margin-top: calc(var(--spacer));
 }
+
+.icon {
+  fill: var(--color-secondary);
+  transition: 0.15s ease-out;
+  width: 10px;
+  height: 10px;
+}
+
+.button:hover .icon {
+  fill: var(--font-color-text);
+}
+
+.copied .icon,
+.button.copied:hover .icon {
+  fill: var(--brand-alert-green);
+}
+
+.action {
+  display: flex;
+  gap: 5px;
+}
+
+.copyfeedback {
+  font-size: var(--font-size-mini);
+  color: var(--brand-alert-green);
+  margin-top: -11rem;
+  margin-left: 12rem;
+}

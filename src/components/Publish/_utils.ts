@@ -154,7 +154,7 @@ export async function transformPublishFormToDdo(
     id: getHash(datatokenAddress + filesEncrypted),
     type: access,
     files: filesEncrypted || '',
-    docs: values.metadata.type === 'datastream' ? files[0].url : '',
+    docs: values.metadata.type === 'datastream' ? links[0].url : '',
     streamFiles: values.metadata.type === 'datastream' ? files[0].url : '',
     datatokenAddress,
     serviceEndpoint: providerUrl.url,

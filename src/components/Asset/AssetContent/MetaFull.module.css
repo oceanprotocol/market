@@ -18,3 +18,10 @@
 .metaFull + div {
   margin-top: var(--spacer);
 }
+
+.svg {
+  display: inline;
+  fill: currentColor;
+  width: 0.6em;
+  height: 0.6em;
+}
