@@ -39,7 +39,10 @@ export function generateBaseQuery(
 ): SearchQuery {
   const generatedQuery = {
     from: baseQueryParams.esPaginationOptions?.from || 0,
-    size: baseQueryParams.esPaginationOptions?.size || 1000,
+    size:
+      baseQueryParams.esPaginationOptions?.size >= 0
+        ? baseQueryParams.esPaginationOptions?.size
+        : 1000,
     query: {
       bool: {
         ...baseQueryParams.nestedQuery,

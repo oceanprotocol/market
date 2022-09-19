@@ -78,7 +78,7 @@ export default function TagsAutoComplete({
       onChange={(value: AutoCompleteOption[]) => handleChange(value)}
       onInputChange={(value) => handleOptionsFilter(tagsList, value)}
       openMenuOnClick={false}
-      options={!input || input?.length < 2 ? [] : matchedTagsList}
+      options={!input || input?.length < 3 ? [] : matchedTagsList}
       placeholder={placeholder}
       theme={(theme) => ({
         ...theme,
