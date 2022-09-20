@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 import isUrl from 'is-url-superb'
 import ImageInfo from './Info'
+import { getContainerChecksum } from '@utils/docker'
 
 export default function ContainerInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -15,38 +16,6 @@ export default function ContainerInput(props: InputProps): ReactElement {
   const [isValid, setIsValid] = useState(false)
   const { values, setFieldError, setFieldValue } =
     useFormikContext<FormPublishData>()
-
-  async function getContainerChecksum(
-    image: string,
-    tag: string
-  ): Promise<string> {
-    try {
-      const response = await axios.post(
-        `https://dockerhub-proxy.oceanprotocol.com`,
-        {
-          image,
-          tag
-        }
-      )
-      if (
-        !response ||
-        response.status !== 200 ||
-        response.data.status !== 'success'
-      ) {
-        toast.error(
-          'Could not fetch docker hub image info. Please input the container checksum manually'
-        )
-        return null
-      }
-      return response.data.result.checksum
-    } catch (error) {
-      LoggerInstance.error(error.message)
-      toast.error(
-        'Could not fetch docker hub image info. Please input the container checksum manually'
-      )
-      return null
-    }
-  }
 
   async function handleValidation(e: React.SyntheticEvent, container: string) {
     e.preventDefault()

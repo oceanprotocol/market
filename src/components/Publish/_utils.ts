@@ -26,20 +26,23 @@ import {
   publisherMarketFixedSwapFee
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
+import { getContainerChecksum } from '@utils/docker'
 
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
   return splittedFileUrl[splittedFileUrl.length - 1]
 }
 
-function getAlgorithmContainerPreset(
+async function getAlgorithmContainerPreset(
   dockerImage: string
-): MetadataAlgorithmContainer {
+): Promise<MetadataAlgorithmContainer> {
   if (dockerImage === '') return
 
   const preset = algorithmContainerPresets.find(
     (preset) => `${preset.image}:${preset.tag}` === dockerImage
   )
+  preset.checksum = await getContainerChecksum(preset.image, preset.tag)
+  console.log('preset')
   return preset
 }
 
@@ -111,20 +114,19 @@ export async function transformPublishFormToDdo(
             entrypoint:
               dockerImage === 'custom'
                 ? dockerImageCustomEntrypoint
-                : getAlgorithmContainerPreset(dockerImage).entrypoint,
+                : (await getAlgorithmContainerPreset(dockerImage)).entrypoint,
             image:
               dockerImage === 'custom'
                 ? dockerImageCustom
-                : getAlgorithmContainerPreset(dockerImage).image,
+                : (await getAlgorithmContainerPreset(dockerImage)).image,
             tag:
               dockerImage === 'custom'
                 ? dockerImageCustomTag
-                : getAlgorithmContainerPreset(dockerImage).tag,
+                : (await getAlgorithmContainerPreset(dockerImage)).tag,
             checksum:
               dockerImage === 'custom'
-                ? // ? dockerImageCustomChecksum
-                  ''
-                : getAlgorithmContainerPreset(dockerImage).checksum
+                ? dockerImageCustomChecksum
+                : (await getAlgorithmContainerPreset(dockerImage)).checksum
           }
         }
       })
