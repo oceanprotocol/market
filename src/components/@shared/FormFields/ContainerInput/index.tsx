@@ -64,7 +64,6 @@ export default function ContainerInput(props: InputProps): ReactElement {
           setFieldValue('metadata.dockerImageCustomChecksum', checksum)
           setIsValid(true)
         }
-      } else {
       }
     } catch (error) {
       setFieldError(`${field.name}[0].url`, error.message)
