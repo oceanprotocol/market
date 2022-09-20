@@ -71,7 +71,7 @@ function checkError(
   parsedFieldName: string[],
   field: FieldInputProps<any>
 ) {
-  if (Object.entries(form?.errors).length === 0) {
+  if (form?.errors && Object.entries(form?.errors).length === 0) {
     return false
   } else if (
     (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
