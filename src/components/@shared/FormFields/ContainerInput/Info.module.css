@@ -21,7 +21,11 @@
   color: var(--brand-alert-green);
 }
 
-.url {
+.info li.error {
+  color: var(--brand-alert-red);
+}
+
+.contianer {
   margin: 0;
   font-size: var(--font-size-base);
   line-height: var(--line-height);
@@ -29,11 +33,6 @@
   word-wrap: break-word;
   word-break: break-all;
   padding-right: calc(var(--spacer) / 2);
-}
-
-.warning {
-  margin-top: calc(var(--spacer) / 3);
-  margin-left: 0;
 }
 
 .removeButton {
