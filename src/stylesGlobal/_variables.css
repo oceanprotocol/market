@@ -29,7 +29,7 @@
   --background-body-transparent: rgba(255, 255, 255, 0.8);
   --background-content: #fff;
   --background-highlight: #f7f7f7;
-  --border-color: #e2e2e2;
+  --border-color: #000000;
   --box-shadow-color: rgba(0, 0, 0, 0.05);
 
   --font-family-base: 'Sharp Sans', -apple-system, BlinkMacSystemFont,
@@ -69,12 +69,12 @@
 }
 
 .dark {
-  --font-color-text: #e2e2e2;
-  --font-color-heading: #f7f7f7;
-  --background-body: rgb(10, 10, 10);
-  --background-body-transparent: rgba(10, 10, 10, 0.9);
-  --background-content: #141414;
-  --background-highlight: #201f1f;
+  --font-color-text: #000000;
+  --font-color-heading: #000000;
+  --background-body: #ffffff;
+  --background-body-transparent: #ffff;
+  --background-content: #ffffff;
+  --background-highlight: #fffff;
   --border-color: #303030;
   --box-shadow-color: rgba(0, 0, 0, 0.2);
 }
