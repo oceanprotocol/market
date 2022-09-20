@@ -129,7 +129,7 @@ export default function MetadataFields(): ReactElement {
                 )}
                 component={Input}
                 name="metadata.dockerImageCustomChecksum"
-                disabled
+                disabled={values.metadata.dockerImageCustomChecksum !== null}
               />
               <Field
                 {...getFieldContent(

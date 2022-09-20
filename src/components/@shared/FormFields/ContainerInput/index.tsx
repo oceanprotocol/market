@@ -7,11 +7,14 @@ import { LoggerInstance } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import isUrl from 'is-url-superb'
+import ImageInfo from './Info'
 
-export default function FilesInput(props: InputProps): ReactElement {
+export default function ContainerInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
-  const { values, setFieldError } = useFormikContext<FormPublishData>()
+  const [isValid, setIsValid] = useState(false)
+  const { values, setFieldError, setFieldValue } =
+    useFormikContext<FormPublishData>()
 
   async function getContainerChecksum(
     image: string,
@@ -52,17 +55,16 @@ export default function FilesInput(props: InputProps): ReactElement {
       setIsLoading(true)
       if (!isUrl(container, { lenient: false })) {
         const parsedContainerValue = container.split(':')
-        const checksum = await getContainerChecksum(
-          parsedContainerValue[0],
-          parsedContainerValue[1]
-        )
-        values.metadata.dockerImageCustom = parsedContainerValue[0]
-        values.metadata.dockerImageCustomTag = parsedContainerValue[1]
+        const image = parsedContainerValue[0]
+        const tag = parsedContainerValue[1]
+        const checksum = await getContainerChecksum(image, tag)
+        setFieldValue('metadata.dockerImageCustom', image)
+        setFieldValue('metadata.dockerImageCustomTag', tag)
         if (checksum) {
-          values.metadata.dockerImageCustomChecksum = checksum
+          setFieldValue('metadata.dockerImageCustomChecksum', checksum)
+          setIsValid(true)
         }
       } else {
-        console.log('open input modal')
       }
     } catch (error) {
       setFieldError(`${field.name}[0].url`, error.message)
@@ -73,26 +75,31 @@ export default function FilesInput(props: InputProps): ReactElement {
   }
 
   function handleClose() {
-    helpers.setValue(meta.initialValue)
+    setFieldValue('metadata.dockerImageCustom', '')
+    setFieldValue('metadata.dockerImageCustomTag', '')
+    setFieldValue('metadata.dockerImageCustomChecksum', '')
+    setIsValid(false)
     helpers.setTouched(false)
   }
 
   return (
     <>
-      <UrlInput
-        submitText="Check"
-        {...props}
-        name={`${field.name}[0].url`}
-        checkUrl={false}
-        isLoading={isLoading}
-        handleButtonClick={handleValidation}
-      />
-
-      {/* {field?.value?.[0]?.valid === true ? (
-        <FileInfo file={field.value[0]} handleClose={handleClose} />
+      {isValid ? (
+        <ImageInfo
+          image={values.metadata.dockerImageCustom}
+          tag={values.metadata.dockerImageCustomTag}
+          handleClose={handleClose}
+        />
       ) : (
-       
-      )} */}
+        <UrlInput
+          submitText="Use"
+          {...props}
+          name={`${field.name}[0].url`}
+          checkUrl={false}
+          isLoading={isLoading}
+          handleButtonClick={handleValidation}
+        />
+      )}
     </>
   )
 }
