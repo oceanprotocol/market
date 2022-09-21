@@ -48,7 +48,7 @@ export default function Bookmarks(): ReactElement {
   const newCancelToken = useCancelToken()
 
   useEffect(() => {
-    if (!appConfig?.metadataCacheUri || bookmarks === []) return
+    if (!appConfig?.metadataCacheUri || bookmarks?.length === 0) return
 
     async function init() {
       if (!bookmarks?.length) {
