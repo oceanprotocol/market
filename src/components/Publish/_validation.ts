@@ -37,15 +37,6 @@ const validationService = {
     )
     .min(1, `At least one file is required.`)
     .required('Enter a valid URL and click ADD FILE.'),
-  streamFiles: Yup.array<{ url: string; valid: boolean }[]>()
-    .of(
-      Yup.object().shape({
-        url: Yup.string().url('Must be a valid URL.').required('Required'),
-        valid: Yup.boolean().isTrue().required('File must be valid.')
-      })
-    )
-    .min(1, (param) => `At least one file is required.`)
-    .required('Enter a valid URL and click ADD FILE.'),
   links: Yup.array<{ url: string; valid: boolean }[]>()
     .of(
       Yup.object().shape({

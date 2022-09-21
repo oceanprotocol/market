@@ -1,5 +1,5 @@
 diff --git a/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts b/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts
-index e2c9a8a..1537404 100644
+index e2c9a8a..7e64fe7 100644
 --- a/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts
 +++ b/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Metadata.d.ts
 @@ -65,9 +65,9 @@ export interface Metadata {
@@ -10,12 +10,12 @@ index e2c9a8a..1537404 100644
 +     * @type {'dataset' | 'algorithm' | 'datastream'}
       */
 -    type: 'dataset' | 'algorithm';
-+     type: 'dataset' | 'algorithm' | 'datastream';
++    type: 'dataset' | 'algorithm' | 'datastream';
      /**
       * Name of the entity generating this data (e.g. Tfl, Disney Corp, etc.).
       * @type {string}
 diff --git a/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Service.d.ts b/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Service.d.ts
-index 7c88c20..133e2d2 100644
+index 7c88c20..e7036dd 100644
 --- a/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Service.d.ts
 +++ b/node_modules/@oceanprotocol/lib/dist/src/@types/DDO/Service.d.ts
 @@ -56,6 +56,11 @@ export interface Service {
@@ -26,7 +26,7 @@ index 7c88c20..133e2d2 100644
 +     * Datastream file URLs.
 +     * @type {string}
 +     */
-+     streamFiles: string;
++    streamFiles: string;
      /**
       * Datatoken address
       * @type {string}
@@ -34,7 +34,7 @@ index 7c88c20..133e2d2 100644
       * @type {string}
       */
      description?: string;
-+    /**
++     /**
 +     * API Docs for stream files
 +     * @type {string}
 +     */

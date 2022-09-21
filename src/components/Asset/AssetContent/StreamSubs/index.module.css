@@ -1,5 +1,5 @@
 .stats {
-  border-top: 1px solid var(--border-color);
+  /* border-top: 1px solid var(--border-color); */
   margin: calc(var(--spacer) / 2) calc(var(--spacer) / -2)
     calc(var(--spacer) / -5) calc(var(--spacer) / -2);
   margin-top: calc(var(--spacer) / 2);
@@ -19,8 +19,32 @@
     padding-right: var(--spacer);
   }
 }
+.name {
+  font-size: var(--font-size-h3);
+  margin-bottom: calc(var(--spacer) / 8);
+}
 
 .number {
   font-weight: var(--font-weight-bold);
   color: var(--font-color-heading);
+}
+
+.label {
+  color: rgb(244, 6, 145);
+  /* color: var(--font-color-text); */
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-heading);
+  line-height: 1.2;
+  display: block;
+  margin-bottom: calc(var(--spacer) / 4);
+  margin-left: calc(var(--spacer) / -0.36);
+  /* margin-right: calc(var(--spacer) / -1); */
+}
+
+.endpoint {
+  margin-left: calc(var(--spacer) / -3.24);
+}
+.copy {
+  margin-left: calc(var(--spacer) / -12.34);
+  margin-top: calc(var(--spacer) / -6);
 }

@@ -7,6 +7,7 @@ import Copy from '@shared/atoms/Copy'
 import Blockies from '@shared/atoms/Blockies'
 import styles from './Account.module.css'
 import { useProfile } from '@context/Profile'
+import { accountTruncate } from '@utils/web3'
 
 export default function Account({
   accountId
@@ -59,4 +60,8 @@ export default function Account({
       </div>
     </div>
   )
+
+  // return (
+  //   <div>{accountTruncate('0xDdDc9cEE9f436339fF2d73bbb7Ba1A79715552290b')}</div>
+  // )
 }

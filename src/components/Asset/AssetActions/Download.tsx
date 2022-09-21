@@ -17,6 +17,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
+import IconCopy from '@images/copy.svg'
 
 export default function Download({
   asset,
@@ -39,7 +40,6 @@ export default function Download({
   const isMounted = useIsMounted()
 
   const [isDisabled, setIsDisabled] = useState(true)
-  const [isStream, setIsStream] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [statusText, setStatusText] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -48,17 +48,19 @@ export default function Download({
   const [validOrderTx, setValidOrderTx] = useState('')
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+  // const [isStream, setIsStream] = useState(true)
   const [copySuccess, setCopySuccess] = useState(null)
+  const [isCopied, setIsCopied] = useState(false)
 
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
   useEffect(() => {
+    console.log({ checkAsset: asset })
     if (!asset?.accessDetails || isUnsupportedPricing) return
 
     asset.accessDetails.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
     asset.accessDetails.validOrderTx &&
       setValidOrderTx(asset?.accessDetails?.validOrderTx)
-    LoggerInstance.log('validOrderTx:', validOrderTx)
 
     // get full price and fees
     async function init() {
@@ -91,6 +93,14 @@ export default function Download({
   }, [dtBalance])
 
   useEffect(() => {
+    LoggerInstance.log({
+      // purchasable: asset?.accessDetails.isPurchasable,
+      isAssetNetwork,
+      isBalanceSufficient,
+      isOwned,
+      hasDatatoken,
+      validOrderTx
+    })
     if (
       (asset?.accessDetails?.type === 'fixed' && !orderPriceAndFees) ||
       !isMounted ||
@@ -107,6 +117,7 @@ export default function Download({
      * - if user balance is not sufficient
      * - if user has no datatokens
      */
+
     const isDisabled =
       !asset?.accessDetails.isPurchasable ||
       !isAssetNetwork ||
@@ -125,6 +136,17 @@ export default function Download({
     orderPriceAndFees
   ])
 
+  // Clear copy success style after 5 sec.
+  useEffect(() => {
+    if (!isCopied) return
+
+    const timeout = setTimeout(() => {
+      setIsCopied(false)
+    }, 5000)
+
+    return () => clearTimeout(timeout)
+  }, [isCopied])
+
   async function handleOrderOrDownload() {
     setIsLoading(true)
 
@@ -137,13 +159,12 @@ export default function Download({
             asset.accessDetails.datatoken?.symbol
           )[3]
         )
+
         await downloadFile(web3, asset, accountId, validOrderTx)
-      } else if (
-        asset.metadata.type === 'datastream' &&
-        asset.services[0].streamFiles
-      ) {
+      } else if (isOwned && asset.services[0].streamFiles) {
         await navigator.clipboard.writeText(asset.services[0].streamFiles)
-        setCopySuccess('stream link copied!')
+        setCopySuccess('Stream Link Copied!')
+        setIsCopied(true)
         LoggerInstance.log('Yeppp Copied!', asset.services[0].streamFiles)
       } else {
         setStatusText(
@@ -171,9 +192,8 @@ export default function Download({
 
   const PurchaseButton = () => (
     <ButtonBuy
-      action={isStream ? 'stream' : 'download'}
+      action={asset?.metadata?.type === 'datastream' ? 'stream' : 'download'}
       disabled={isDisabled}
-      // disabled={validOrderTx !== '' || isDisabled}
       hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
       btSymbol={asset?.accessDetails?.baseToken?.symbol}
@@ -183,10 +203,13 @@ export default function Download({
       assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
+      copyText={
+        asset?.metadata.type === 'datastream' && asset.services[0].streamFiles
+      }
       isLoading={isLoading}
       priceType={asset.accessDetails?.type}
-      isStreamable={isStream}
       isConsumable={asset.accessDetails?.isPurchasable}
+      isStreamble={asset.accessDetails?.isPurchasable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
     />
@@ -229,7 +252,13 @@ export default function Download({
         </div>
         <AssetAction asset={asset} />
       </div>
-      {asset?.metadata.type === 'datastream' && <span>{copySuccess}</span>}
+      {/* {asset?.metadata.type === 'datastream' && <span>{copySuccess}</span>} */}
+      {asset?.metadata.type === 'datastream' && isCopied && (
+        <div className={styles.action}>
+          {/* <IconCopy className={styles.icon} /> */}
+          {<span className={styles.copyfeedback}>{copySuccess}</span>}
+        </div>
+      )}
       {asset?.metadata?.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute
           algorithmDid={asset.id}
