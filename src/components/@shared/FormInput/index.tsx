@@ -71,9 +71,7 @@ function checkError(
   parsedFieldName: string[],
   field: FieldInputProps<any>
 ) {
-  if (form?.errors === {}) {
-    return false
-  } else if (
+  if (
     (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
       form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]) ||
     (form?.touched[field.name] &&
@@ -140,6 +138,12 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       </Label>
       <InputElement size={size} {...field} {...props} />
       {help && prominentHelp && <FormHelp>{help}</FormHelp>}
+
+      {field?.name !== 'files' && isFormikField && hasFormikError && (
+        <div className={styles.error}>
+          <ErrorMessage name={field.name} />
+        </div>
+      )}
 
       {disclaimer && (
         <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>
