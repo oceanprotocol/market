@@ -28,13 +28,7 @@ export default function Conversion({
   const priceTokenId = getCoingeckoTokenId(symbol)
 
   useEffect(() => {
-    if (
-      !prices ||
-      !price ||
-      price === 0 ||
-      !priceTokenId ||
-      !prices[priceTokenId]
-    ) {
+    if (!prices || !price || !priceTokenId || !prices[priceTokenId]) {
       return
     }
 
