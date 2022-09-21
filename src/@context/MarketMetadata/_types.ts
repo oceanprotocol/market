@@ -1,5 +1,3 @@
-import { Asset } from '@oceanprotocol/lib'
-import { CancelToken } from 'axios'
 import { ShaclSchema } from './_shaclType'
 
 export interface OpcFee {
@@ -54,5 +52,5 @@ export interface MarketMetadataProviderValue {
   siteContent: SiteContent
   appConfig: AppConfig
   getOpcFeeForToken: (tokenAddress: string, chainId: number) => string
-  getShaclSchema: (token?: CancelToken) => Promise<Asset>
+  shaclSchema: ShaclSchema
 }

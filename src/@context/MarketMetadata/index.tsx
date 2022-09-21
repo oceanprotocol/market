@@ -27,6 +27,7 @@ function MarketMetadataProvider({
   children: ReactNode
 }): ReactElement {
   const [opcFees, setOpcFees] = useState<OpcFee[]>()
+  const [shaclSchema, setShaclSchema] = useState<ShaclSchema>()
 
   useEffect(() => {
     async function getOpcData() {
@@ -55,6 +56,12 @@ function MarketMetadataProvider({
       setOpcFees(opcData)
     }
     getOpcData()
+
+    async function getShaclSchema() {
+      const schema = await retrieveShaclSchema()
+      setShaclSchema(schema)
+    }
+    getShaclSchema()
   }, [])
 
   const getOpcFeeForToken = useCallback(
@@ -68,11 +75,6 @@ function MarketMetadataProvider({
     [opcFees]
   )
 
-  const getShaclSchema = useCallback(async (token?: CancelToken) => {
-    const schema = await retrieveShaclSchema()
-    return schema
-  }, [])
-
   return (
     <MarketMetadataContext.Provider
       value={
@@ -81,7 +83,7 @@ function MarketMetadataProvider({
           siteContent,
           appConfig,
           getOpcFeeForToken,
-          getShaclSchema
+          shaclSchema
         } as MarketMetadataProviderValue
       }
     >
