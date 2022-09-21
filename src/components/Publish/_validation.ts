@@ -1,30 +1,53 @@
 import { MAX_DECIMALS } from '@utils/constants'
 import * as Yup from 'yup'
 import { getMaxDecimalsValidation } from '@utils/numbers'
+import { retrieveShaclSchema } from '@utils/aquarius'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
 // hint, hint: https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
 
-const validationMetadata = {
-  type: Yup.string()
-    .matches(/dataset|algorithm/g, { excludeEmptyString: true })
-    .required('Required'),
-  name: Yup.string()
-    .min(4, (param) => `Title must be at least ${param.min} characters`)
-    .required('Required'),
-  description: Yup.string()
-    .min(10, (param) => `Description must be at least ${param.min} characters`)
-    .max(
-      5000,
-      (param) => `Description must have maximum ${param.max} characters`
-    )
-    .required('Required'),
-  author: Yup.string().required('Required'),
-  tags: Yup.string().nullable(),
-  termsAndConditions: Yup.boolean()
-    .required('Required')
-    .isTrue('Please agree to the Terms and Conditions.')
+const getValidationMetadata = async () => {
+  const { metadata } = await retrieveShaclSchema()
+  console.log(metadata)
+
+  return {
+    type: Yup.string()
+      .matches(/dataset|algorithm/g, { excludeEmptyString: true })
+      .required('Required'),
+    name: Yup.string()
+      .min(4, (param) => `Title must be at least ${param.min} characters`)
+      .max(
+        metadata.name.maxLength,
+        (param) => `Description must have maximum ${param.max} characters`
+      )
+      .required('Required'),
+    description: Yup.string()
+      .min(
+        10,
+        (param) => `Description must be at least ${param.min} characters`
+      )
+      .max(
+        metadata.description.maxLength,
+        (param) => `Description must have maximum ${param.max} characters`
+      )
+      .required('Required'),
+    author: Yup.string()
+      .max(
+        metadata.author.maxLength,
+        (param) => `Author must have maximum ${param.max} characters`
+      )
+      .required('Required'),
+    tags: Yup.string()
+      .max(
+        metadata.tags.maxLength,
+        (param) => `Tags must have maximum ${param.max} characters`
+      )
+      .nullable(),
+    termsAndConditions: Yup.boolean()
+      .required('Required')
+      .isTrue('Please agree to the Terms and Conditions.')
+  }
 }
 
 const validationService = {
@@ -91,7 +114,7 @@ export const validationSchema: Yup.SchemaOf<any> = Yup.object().shape({
     chainId: Yup.number().required('Required'),
     accountId: Yup.string().required('Required')
   }),
-  metadata: Yup.object().shape(validationMetadata),
+  metadata: Yup.object().shape(getValidationMetadata()),
   services: Yup.array().of(Yup.object().shape(validationService)),
   pricing: Yup.object().shape(validationPricing)
 })

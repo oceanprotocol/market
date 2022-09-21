@@ -25,8 +25,7 @@ import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
-import { retrieveShaclSchema } from '@utils/aquarius'
-import { CancelToken } from 'axios'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 // TODO: restore FormikPersist, add back clear form action
 // const formName = 'ocean-publish-form'
@@ -53,14 +52,6 @@ export default function PublishPage({
   const [ddo, setDdo] = useState<DDO>()
   const [ddoEncrypted, setDdoEncrypted] = useState<string>()
   const [did, setDid] = useState<string>()
-
-  const getShaclSchema = useCallback(async (token?: CancelToken) => {
-    const schema = await retrieveShaclSchema(token)
-    console.log(schema)
-  }, [])
-  useEffect(() => {
-    getShaclSchema()
-  }, [])
 
   // --------------------------------------------------
   // 1. Create NFT & datatokens & create pricing schema

@@ -8,6 +8,7 @@ import {
   SortTermOptions
 } from '../@types/aquarius/SearchQuery'
 import { transformAssetToAssetSelection } from './assetConvertor'
+import { ShaclSchema } from '@context/MarketMetadata/_shaclType'
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 
@@ -140,13 +141,10 @@ export async function retrieveAsset(
   }
 }
 
-export async function retrieveShaclSchema(
-  cancelToken: CancelToken
-): Promise<Asset> {
+export async function retrieveShaclSchema(): Promise<ShaclSchema> {
   try {
-    const response: AxiosResponse<Asset> = await axios.get(
-      `${metadataCacheUri}/api/aquarius/validation/schema`,
-      { cancelToken }
+    const response: AxiosResponse<ShaclSchema> = await axios.get(
+      `${metadataCacheUri}/api/aquarius/validation/schema`
     )
     if (!response || response.status !== 200 || !response.data) return
 

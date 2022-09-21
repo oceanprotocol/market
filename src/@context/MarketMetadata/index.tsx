@@ -15,6 +15,9 @@ import siteContent from '../../../content/site.json'
 import appConfig from '../../../app.config'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import { LoggerInstance } from '@oceanprotocol/lib'
+import { retrieveShaclSchema } from '@utils/aquarius'
+import { CancelToken } from 'axios'
+import { ShaclSchema } from './_shaclType'
 
 const MarketMetadataContext = createContext({} as MarketMetadataProviderValue)
 
@@ -64,6 +67,12 @@ function MarketMetadataProvider({
     },
     [opcFees]
   )
+
+  const getShaclSchema = useCallback(async (token?: CancelToken) => {
+    const schema = await retrieveShaclSchema()
+    return schema
+  }, [])
+
   return (
     <MarketMetadataContext.Provider
       value={
@@ -71,7 +80,8 @@ function MarketMetadataProvider({
           opcFees,
           siteContent,
           appConfig,
-          getOpcFeeForToken
+          getOpcFeeForToken,
+          getShaclSchema
         } as MarketMetadataProviderValue
       }
     >
