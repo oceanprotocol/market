@@ -199,15 +199,18 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
 
     try {
       const profile = await getEnsProfile(accountId)
-      if (!profile) return
 
-      if (profile.name) {
-        setAccountEns(profile.name)
-        LoggerInstance.log(
-          `[web3] ENS name found for ${accountId}:`,
-          profile.name
-        )
+      if (!profile) {
+        setAccountEns(null)
+        setAccountEnsAvatar(null)
+        return
       }
+
+      setAccountEns(profile.name)
+      LoggerInstance.log(
+        `[web3] ENS name found for ${accountId}:`,
+        profile.name
+      )
 
       if (profile.avatar) {
         setAccountEnsAvatar(profile.avatar)
@@ -215,6 +218,8 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
           `[web3] ENS avatar found for ${accountId}:`,
           profile.avatar
         )
+      } else {
+        setAccountEnsAvatar(null)
       }
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
