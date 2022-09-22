@@ -199,7 +199,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
 
     try {
       const name = await getEnsName(accountId)
-      const avatar = getEnsAvatar(name)
+      const avatar = await getEnsAvatar(name)
 
       if (name) {
         setAccountEns(name)

@@ -8,7 +8,7 @@ import React, {
   ReactNode
 } from 'react'
 import { getUserTokenOrders } from '@utils/subgraph'
-import { useUserPreferences } from './UserPreferences'
+import { useUserPreferences } from '../UserPreferences'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import {
   getDownloadAssets,
@@ -17,7 +17,7 @@ import {
 } from '@utils/aquarius'
 import axios, { CancelToken } from 'axios'
 import web3 from 'web3'
-import { useMarketMetadata } from './MarketMetadata'
+import { useMarketMetadata } from '../MarketMetadata'
 import { getEnsProfile } from '@utils/ens'
 
 interface ProfileProviderValue {
