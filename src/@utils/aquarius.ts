@@ -140,16 +140,23 @@ export async function retrieveAsset(
     }
   }
 }
+let schema: any
+export function retrieveShaclSchema(): Promise<ShaclSchema> {
+  console.log(schema)
+  if (schema) return schema
 
-export async function retrieveShaclSchema(): Promise<ShaclSchema> {
   try {
-    const response: AxiosResponse<ShaclSchema> = await axios.get(
+    const getSchema = axios.get(
       `${metadataCacheUri}/api/aquarius/validation/schema`
     )
-    if (!response || response.status !== 200 || !response.data) return
 
-    const data = { ...response.data }
-    return data
+    return getSchema.then((res: any) => {
+      if (!res || res.status !== 200 || !res.data) return
+
+      const data = { ...res.data }
+      schema = data
+      return data
+    })
   } catch (error) {
     if (axios.isCancel(error)) {
       LoggerInstance.log(error.message)
