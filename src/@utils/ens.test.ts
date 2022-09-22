@@ -1,6 +1,9 @@
 import { getEnsName, getEnsAddress, getEnsProfile } from './ens'
 
 describe('@utils/ens', () => {
+  jest.setTimeout(10000)
+  jest.retryTimes(2)
+
   test('getEnsName', async () => {
     const ensName = await getEnsName(
       '0x99840Df5Cb42faBE0Feb8811Aaa4BC99cA6C84e0'
@@ -39,8 +42,6 @@ describe('@utils/ens', () => {
   })
 
   test('getEnsProfile', async () => {
-    jest.setTimeout(10000)
-
     const ensProfile = await getEnsProfile(
       '0x99840Df5Cb42faBE0Feb8811Aaa4BC99cA6C84e0'
     )
