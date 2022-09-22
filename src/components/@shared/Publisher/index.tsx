@@ -20,7 +20,7 @@ export default function Publisher({
   const [name, setName] = useState(accountTruncate(account))
 
   useEffect(() => {
-    if (!account) return
+    if (!account || account === '') return
 
     // set default name on hook
     // to avoid side effect (UI not updating on account's change)
