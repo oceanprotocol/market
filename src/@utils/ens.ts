@@ -16,16 +16,6 @@ export async function getEnsAddress(accountId: string): Promise<string> {
   return data?.address
 }
 
-export async function getEnsAvatar(accountId: string): Promise<string> {
-  if (!accountId || accountId === '') return
-
-  // TODO: use dedicated /avatar endpoint to prevent unneccessary contract calls
-  // because of text records fetching.
-  // See https://github.com/oceanprotocol/ens-proxy/issues/12
-  const data = await fetchData(`${apiUrl}/profile?address=${accountId}`)
-  return data?.profile.avatar
-}
-
 export async function getEnsProfile(accountId: string): Promise<Profile> {
   if (!accountId || accountId === '') return
 
