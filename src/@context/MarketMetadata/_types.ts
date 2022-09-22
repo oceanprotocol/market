@@ -1,5 +1,3 @@
-import { ShaclSchema } from './_shaclType'
-
 export interface OpcFee {
   chainId: number
   swapNotApprovedFee: string
@@ -52,5 +50,4 @@ export interface MarketMetadataProviderValue {
   siteContent: SiteContent
   appConfig: AppConfig
   getOpcFeeForToken: (tokenAddress: string, chainId: number) => string
-  shaclSchema: ShaclSchema
 }

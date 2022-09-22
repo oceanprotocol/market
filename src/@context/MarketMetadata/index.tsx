@@ -16,8 +16,6 @@ import appConfig from '../../../app.config'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { retrieveShaclSchema } from '@utils/aquarius'
-import { CancelToken } from 'axios'
-import { ShaclSchema } from './_shaclType'
 
 const MarketMetadataContext = createContext({} as MarketMetadataProviderValue)
 
@@ -27,7 +25,6 @@ function MarketMetadataProvider({
   children: ReactNode
 }): ReactElement {
   const [opcFees, setOpcFees] = useState<OpcFee[]>()
-  const [shaclSchema, setShaclSchema] = useState<ShaclSchema>()
 
   useEffect(() => {
     async function getOpcData() {
@@ -56,12 +53,6 @@ function MarketMetadataProvider({
       setOpcFees(opcData)
     }
     getOpcData()
-
-    async function getShaclSchema() {
-      const schema = await retrieveShaclSchema()
-      setShaclSchema(schema)
-    }
-    getShaclSchema()
   }, [])
 
   const getOpcFeeForToken = useCallback(
@@ -82,8 +73,7 @@ function MarketMetadataProvider({
           opcFees,
           siteContent,
           appConfig,
-          getOpcFeeForToken,
-          shaclSchema
+          getOpcFeeForToken
         } as MarketMetadataProviderValue
       }
     >
