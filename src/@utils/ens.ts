@@ -5,7 +5,7 @@ const apiUrl = 'https://ens-proxy.oceanprotocol.com/api'
 export async function getEnsName(accountId: string): Promise<string> {
   if (!accountId || accountId === '') return
 
-  const data = await fetchData(`${apiUrl}/name?address=${accountId}`)
+  const data = await fetchData(`${apiUrl}/name?accountId=${accountId}`)
   return data?.name
 }
 
