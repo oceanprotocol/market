@@ -16,7 +16,7 @@
 - [🦀 Data Sources](#-data-sources)
   - [Aquarius](#aquarius)
   - [Ocean Protocol Subgraph](#ocean-protocol-subgraph)
-  - [3Box](#3box)
+  - [ENS](#ens)
   - [Purgatory](#purgatory)
   - [Network Metadata](#network-metadata)
 - [👩‍🎤 Storybook](#-storybook)
@@ -194,37 +194,21 @@ function Component() {
 }
 ```
 
-### 3Box
+### ENS
 
-Publishers can create a profile on [3Box Hub](https://www.3box.io/hub) and when found, it will be displayed in the app.
+Publishers can fill their account's [ENS domain](https://ens.domains) profile and when found, it will be displayed in the app.
 
-For this our own [3box-proxy](https://github.com/oceanprotocol/3box-proxy) is used, within the app the utility method `get3BoxProfile()` can be used to get all info:
+For this our own [ens-proxy](https://github.com/oceanprotocol/ens-proxy) is used, within the app the utility method `getEnsProfile()` is called as part of the `useProfile()` hook:
 
 ```tsx
-import get3BoxProfile from '@utils/profile'
+import { useProfile } from '@context/Profile'
 
 function Component() {
-  const [profile, setProfile] = useState<Profile>()
+  const { profile } = useProfile()
 
-  useEffect(() => {
-    if (!account) return
-    const source = axios.CancelToken.source()
-
-    async function get3Box() {
-      const profile = await get3BoxProfile(account, source.token)
-      if (!profile) return
-
-      setProfile(profile)
-    }
-    get3Box()
-
-    return () => {
-      source.cancel()
-    }
-  }, [account])
   return (
     <div>
-      {profile.emoji} {profile.name}
+      {profile.avatar} {profile.name}
     </div>
   )
 }
