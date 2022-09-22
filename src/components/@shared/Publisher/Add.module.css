@@ -1,7 +1,0 @@
-.add {
-  color: var(--brand-pink);
-}
-
-.linksExternal {
-  composes: linksExternal from './index.module.css';
-}
