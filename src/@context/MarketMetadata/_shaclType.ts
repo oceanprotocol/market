@@ -1,316 +1,96 @@
+export interface ShaclSchemaField {
+  maxCount: number
+  minCount: number
+  minLength?: number
+  maxLength?: number
+  pattern?: string
+}
+
 export interface ShaclSchema {
-  chainId: {
-    maxCount: number
-    minCount: number
-  }
+  chainId: ShaclSchemaField
   credentials: {
     allow: {
-      type: {
-        maxCount: number
-        maxLength: number
-        minCount: number
-        pattern: string
-      }
-      values: {
-        maxLength: number
-        minCount: number
-        pattern: string
-      }
+      type: ShaclSchemaField
+      values: ShaclSchemaField
     }
     deny: {
-      type: {
-        maxCount: number
-        maxLength: number
-        minCount: number
-        pattern: string
-      }
-      values: {
-        maxLength: number
-        minCount: number
-        pattern: string
-      }
+      type: ShaclSchemaField
+      values: ShaclSchemaField
     }
   }
-  id: {
-    maxCount: number
-    maxLength: number
-    minCount: number
-    minLength: number
-    pattern: string
-  }
+  id: ShaclSchemaField
   metadata: {
     additionalInformation: any
     algorithm: {
       consumerParameters: {
-        default: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
-        description: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
-        label: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
-        name: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
-        options: {
-          maxLength: number
-          pattern: string
-        }
-        required: {
-          maxCount: number
-          minCount: number
-        }
-        type: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
+        default: ShaclSchemaField
+        description: ShaclSchemaField
+        label: ShaclSchemaField
+        name: ShaclSchemaField
+        options: ShaclSchemaField
+        required: ShaclSchemaField
+        type: ShaclSchemaField
       }
       container: {
-        checksum: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          minLength: number
-          pattern: string
-        }
-        entrypoint: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
-        image: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
-        tag: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
+        checksum: ShaclSchemaField
+        entrypoint: ShaclSchemaField
+        image: ShaclSchemaField
+        tag: ShaclSchemaField
       }
-      language: {
-        maxCount: number
-        maxLength: number
-        pattern: string
-      }
-      version: {
-        maxCount: number
-        maxLength: number
-        pattern: string
-      }
+      language: ShaclSchemaField
+      version: ShaclSchemaField
     }
-    author: {
-      maxCount: number
-      maxLength: number
-      minCount: number
-      pattern: string
-    }
-    categories: {
-      maxCount: number
-      maxLength: number
-      pattern: string
-    }
-    contentLanguage: {
-      maxCount: number
-      maxLength: number
-      pattern: string
-    }
-    copyrightHolder: {
-      maxCount: number
-      maxLength: number
-      pattern: string
-    }
-    description: {
-      maxCount: number
-      maxLength: number
-      minCount: number
-      pattern: string
-    }
-    license: {
-      maxCount: number
-      maxLength: number
-      minCount: number
-      pattern: string
-    }
-    links: {
-      maxCount: number
-      maxLength: number
-      pattern: string
-    }
-    name: {
-      maxCount: number
-      maxLength: number
-      minCount: number
-      pattern: string
-    }
-    tags: {
-      maxCount: number
-      maxLength: number
-      pattern: string
-    }
-    type: {
-      maxCount: number
-      maxLength: number
-      minCount: number
-      pattern: string
-    }
+    author: ShaclSchemaField
+    categories: ShaclSchemaField
+    contentLanguage: ShaclSchemaField
+    copyrightHolder: ShaclSchemaField
+    description: ShaclSchemaField
+    license: ShaclSchemaField
+    links: ShaclSchemaField
+    name: ShaclSchemaField
+    tags: ShaclSchemaField
+    type: ShaclSchemaField
   }
-  nftAddress: {
-    maxCount: number
-    maxLength: number
-    minCount: number
-    minLength: number
-  }
+  nftAddress: ShaclSchemaField
   services: {
     additionalInformation: any
     compute: {
-      allowNetworkAccess: {
-        maxCount: number
-        minCount: number
-      }
-      allowRawAlgorithm: {
-        maxCount: number
-        minCount: number
-      }
-      publisherTrustedAlgorithmPublishers: {
-        maxLength: number
-        pattern: string
-      }
+      allowNetworkAccess: ShaclSchemaField
+      allowRawAlgorithm: ShaclSchemaField
+      publisherTrustedAlgorithmPublishers: ShaclSchemaField
       publisherTrustedAlgorithms: {
-        containerSectionChecksum: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
-        did: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
-        filesChecksum: {
-          maxCount: number
-          maxLength: number
-          minCount: number
-          pattern: string
-        }
+        containerSectionChecksum: ShaclSchemaField
+        did: ShaclSchemaField
+        filesChecksum: ShaclSchemaField
       }
     }
     consumerParameters: {
-      default: {
-        maxCount: number
-        maxLength: number
-        minCount: number
-        pattern: string
-      }
-      description: {
-        maxCount: number
-        maxLength: number
-        minCount: number
-        pattern: string
-      }
-      label: {
-        maxCount: number
-        maxLength: number
-        minCount: number
-        pattern: string
-      }
-      name: {
-        maxCount: number
-        maxLength: number
-        minCount: number
-        pattern: string
-      }
-      options: {
-        maxLength: number
-        pattern: string
-      }
-      required: {
-        maxCount: number
-        minCount: number
-      }
-      type: {
-        maxCount: number
-        maxLength: number
-        minCount: number
-        pattern: string
-      }
+      default: ShaclSchemaField
+      description: ShaclSchemaField
+      label: ShaclSchemaField
+      name: ShaclSchemaField
+      options: ShaclSchemaField
+      required: ShaclSchemaField
+      type: ShaclSchemaField
     }
-    datatokenAddress: {
-      maxCount: number
-      maxLength: number
-      minCount: number
-      minLength: number
-      pattern: string
-    }
+    datatokenAddress: ShaclSchemaField
     description: {
       maxCount: number
       maxLength: number
       minLength: number
       pattern: string
     }
-    files: {
-      maxCount: number
-      maxLength: number
-      minCount: number
-      pattern: string
-    }
-    id: {
-      maxCount: number
-      maxLength: number
-      minCount: number
-      pattern: string
-    }
+    files: ShaclSchemaField
+    id: ShaclSchemaField
     name: {
       maxCount: number
       maxLength: number
       minLength: number
       pattern: string
     }
-    serviceEndpoint: {
-      maxCount: number
-      maxLength: number
-      minCount: number
-      minLength: number
-      pattern: string
-    }
-    timeout: {
-      maxCount: number
-      minCount: number
-      pattern: string
-    }
-    type: {
-      maxCount: number
-      maxLength: number
-      minCount: number
-      pattern: string
-    }
+    serviceEndpoint: ShaclSchemaField
+    timeout: ShaclSchemaField
+    type: ShaclSchemaField
   }
-  version: {
-    maxCount: number
-    maxLength: number
-    minCount: number
-    pattern: string
-  }
+  version: ShaclSchemaField
 }
