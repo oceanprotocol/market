@@ -6,6 +6,7 @@ import { UserPreferencesProvider } from '@context/UserPreferences'
 import PricesProvider from '@context/Prices'
 import UrqlProvider from '@context/UrqlProvider'
 import ConsentProvider from '@context/CookieConsent'
+import { OrbisProvider } from '@context/Orbis'
 import App from 'src/components/App'
 
 import '@oceanprotocol/typographies/css/ocean-typo.css'
@@ -22,9 +23,11 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
           <UserPreferencesProvider>
             <PricesProvider>
               <ConsentProvider>
-                <App>
-                  <Component {...pageProps} />
-                </App>
+                <OrbisProvider>
+                  <App>
+                    <Component {...pageProps} />
+                  </App>
+                </OrbisProvider>
               </ConsentProvider>
             </PricesProvider>
           </UserPreferencesProvider>

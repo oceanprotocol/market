@@ -1,0 +1,76 @@
+.wrapper {
+  width: 100%;
+  padding: 0 calc(var(--spacer) / 3);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: all 300ms ease 0s;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.floating {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 400px;
+  height: 530px;
+  max-height: 80vh;
+  background-color: var(--brand-black);
+  border: 1px solid var(--border-color);
+  border-bottom: 0;
+  border-radius: var(--border-radius);
+  transform: translateY(0);
+  transition: all 0.3s ease-in-out;
+}
+
+.isClosed {
+  transform: translateY(90%);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: calc(0.35 * var(--spacer)) var(--spacer);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+  font-size: var(--font-size-h5);
+  font-weight: var(--font-weight-bold);
+}
+
+.icon {
+  margin-left: 0;
+  width: 1.5rem;
+  margin-right: calc(0.5 * var(--spacer));
+}
+
+.toggle {
+  cursor: pointer;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--font-color-text);
+  width: 32px;
+  height: 32px;
+}
+
+.isFlipped {
+  transform: scaleY(-1);
+}
+
+@media screen and (min-width: 42rem) {
+  .wrapper {
+    padding: 0 calc(var(--spacer) / 2);
+  }
+}
+
+@media screen and (min-width: 55rem) {
+  .wrapper {
+    padding: 0 var(--spacer);
+  }
+}

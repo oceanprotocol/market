@@ -1,0 +1,54 @@
+.conversation {
+  position: fixed;
+  width: 400px;
+  display: flex;
+  justify-content: flex-end;
+  right: calc(var(--spacer) / 3);
+  bottom: calc(var(--spacer) / 3);
+  z-index: 20;
+}
+
+.toggler {
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  margin-left: calc(var(--spacer) / 3);
+  background-color: var(--background-content);
+  white-space: nowrap;
+}
+
+.toggler svg {
+  fill: var(--brand-grey-light);
+  transition: 0.2s ease-out;
+  width: 1.75em;
+}
+
+.toggler:hover svg {
+  fill: var(--font-color-text);
+}
+
+.box {
+  height: 600px;
+  max-height: 100%;
+  width: 350px;
+  max-width: 100%;
+}
+
+@media screen and (min-width: 42rem) {
+  .conversation {
+    right: calc(var(--spacer) / 2);
+    bottom: calc(var(--spacer) / 2);
+  }
+}
+
+@media screen and (min-width: 55rem) {
+  .conversation {
+    right: var(--spacer);
+    bottom: var(--spacer);
+  }
+}
