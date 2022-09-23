@@ -135,11 +135,11 @@ function UserPreferencesProvider({
 
   // chainIds old data migration
   // remove deprecated networks from user-saved chainIds
-  useEffect(() => {
-    if (!chainIds.includes(3) || !chainIds.includes(4)) return
-    const newChainIds = chainIds.filter((id) => id !== 3 && id !== 4)
-    setChainIds(newChainIds)
-  }, [chainIds])
+  // useEffect(() => {
+  //   if (!chainIds.includes(3) || !chainIds.includes(4)) return
+  //   const newChainIds = chainIds.filter((id) => id !== 3 && id !== 4)
+  //   setChainIds(newChainIds)
+  // }, [chainIds])
 
   return (
     <UserPreferencesContext.Provider
