@@ -92,7 +92,7 @@
     "apollo": "^2.34.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.23.1",
-    "eslint-config-oceanprotocol": "^2.0.3",
+    "eslint-config-oceanprotocol": "^2.0.4",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest-dom": "^4.0.2",
     "eslint-plugin-prettier": "^4.2.1",
