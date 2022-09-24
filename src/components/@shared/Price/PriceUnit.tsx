@@ -3,10 +3,9 @@ import { formatCurrency } from '@coingecko/cryptoformat'
 import Conversion from './Conversion'
 import styles from './PriceUnit.module.css'
 import { useUserPreferences } from '@context/UserPreferences'
-import Badge from '@shared/atoms/Badge'
 
-export function formatPrice(price: string, locale: string): string {
-  return formatCurrency(Number(price), '', locale, false, {
+export function formatPrice(price: number, locale: string): string {
+  return formatCurrency(price, '', locale, false, {
     // Not exactly clear what `significant figures` are for this library,
     // but setting this seems to give us the formatting we want.
     // See https://github.com/oceanprotocol/market/issues/70
@@ -22,7 +21,7 @@ export default function PriceUnit({
   symbol,
   type
 }: {
-  price: string
+  price: number
   type?: string
   className?: string
   size?: 'small' | 'mini' | 'large'
@@ -38,7 +37,7 @@ export default function PriceUnit({
       ) : (
         <>
           <div>
-            {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
+            {Number.isNaN(price) ? '-' : formatPrice(price, locale)}{' '}
             <span className={styles.symbol}>{symbol}</span>
           </div>
           {conversion && <Conversion price={price} symbol={symbol} />}
