@@ -6,16 +6,6 @@ import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
 
-import { getPublishedAssets, getTopPublishers } from '@utils/aquarius'
-export interface UserLiquidity {
-  price: string
-  oceanBalance: string
-}
-
-export interface PriceList {
-  [key: string]: string
-}
-
 const PreviousOrderQuery = gql`
   query AssetPreviousOrder($id: String!, $account: String!) {
     orders(
@@ -153,29 +143,6 @@ export async function getOpcFees(chainId: number) {
   return opcFees
 }
 
-export async function getPreviousOrders(
-  id: string,
-  account: string,
-  assetTimeout: string
-): Promise<string> {
-  const variables = { id, account }
-  const fetchedPreviousOrders: OperationResult<AssetPreviousOrder> =
-    await fetchData(PreviousOrderQuery, variables, null)
-  if (fetchedPreviousOrders.data?.orders?.length === 0) return null
-  if (assetTimeout === '0') {
-    return fetchedPreviousOrders?.data?.orders[0]?.tx
-  } else {
-    const expiry =
-      fetchedPreviousOrders?.data?.orders[0]?.createdTimestamp * 1000 +
-      Number(assetTimeout) * 1000
-    if (Date.now() <= expiry) {
-      return fetchedPreviousOrders?.data?.orders[0]?.tx
-    } else {
-      return null
-    }
-  }
-}
-
 export async function getUserTokenOrders(
   accountId: string,
   chainIds: number[]
@@ -199,40 +166,6 @@ export async function getUserTokenOrders(
   } catch (error) {
     LoggerInstance.error('Error getUserTokenOrders', error.message)
   }
-}
-
-export async function getUserSales(
-  accountId: string,
-  chainIds: number[]
-): Promise<number> {
-  try {
-    const result = await getPublishedAssets(accountId, chainIds, null)
-    const { totalOrders } = result.aggregations
-    return totalOrders.value
-  } catch (error) {
-    LoggerInstance.error('Error getUserSales', error.message)
-  }
-}
-
-export async function getTopAssetsPublishers(
-  chainIds: number[],
-  nrItems = 9
-): Promise<AccountTeaserVM[]> {
-  const publishers: AccountTeaserVM[] = []
-
-  const result = await getTopPublishers(chainIds, null)
-  const { topPublishers } = result.aggregations
-
-  for (let i = 0; i < topPublishers.buckets.length; i++) {
-    publishers.push({
-      address: topPublishers.buckets[i].key,
-      nrSales: parseInt(topPublishers.buckets[i].totalSales.value)
-    })
-  }
-
-  publishers.sort((a, b) => b.nrSales - a.nrSales)
-
-  return publishers.slice(0, nrItems)
 }
 
 export async function getOpcsApprovedTokens(

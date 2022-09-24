@@ -28,7 +28,7 @@ export default function PageProfile(): ReactElement {
 
       const pathAccount = router.query.account as string
 
-      // Path has ETH addreess
+      // Path has ETH address
       if (web3.utils.isAddress(pathAccount)) {
         const finalAccountId = pathAccount || accountId
         setFinalAccountId(finalAccountId)
@@ -40,6 +40,11 @@ export default function PageProfile(): ReactElement {
         // Path has ENS name
         setFinalAccountEns(pathAccount)
         const resolvedAccountId = await getEnsAddress(pathAccount)
+        if (
+          !resolvedAccountId ||
+          resolvedAccountId === '0x0000000000000000000000000000000000000000'
+        )
+          return
         setFinalAccountId(resolvedAccountId)
       }
     }
