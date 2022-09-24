@@ -80,6 +80,8 @@ export default function ServicesFields(): ReactElement {
           component={Input}
           name="services[0].algorithmPrivacy"
         />
+      ) : values.metadata.type === 'datastream' ? (
+        ' '
       ) : (
         <>
           <Field

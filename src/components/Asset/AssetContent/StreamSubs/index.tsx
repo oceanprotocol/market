@@ -12,19 +12,21 @@ export default function StreamSubs() {
   const endpointFormatted = endpointTruncate(asset)
 
   return (
-    <div className={styles.stats}>
-      <label className={styles.label}>Datastream EndPoint</label>
-      <section className={styles.endpoint}>
-        <Input
-          type="text"
-          value={endpointFormatted}
-          // readOnly={true}
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          onChange={() => {}}
-          // disabled={true}
-          // prefix={accountTruncate(`${asset.services[0].streamFiles}`)}
-        />
-      </section>
-    </div>
+    asset?.metadata.type === 'datastream' && (
+      <div className={styles.stats}>
+        <label className={styles.label}>Datastream EndPoint</label>
+        <section className={styles.endpoint}>
+          <Input
+            type="text"
+            value={endpointFormatted}
+            // readOnly={true}
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            onChange={() => {}}
+            // disabled={true}
+            // prefix={accountTruncate(`${asset.services[0].streamFiles}`)}
+          />
+        </section>
+      </div>
+    )
   )
 }

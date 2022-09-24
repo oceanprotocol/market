@@ -111,7 +111,7 @@
       },
       {
         "name": "links",
-        "label": "Sample or API Docs",
+        "label": "Sample File",
         "placeholder": "e.g. https://file.com/samplefile.json",
         "help": "This file should reveal the data structure of your dataset, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
         "prominentHelp": true,
