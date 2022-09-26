@@ -45,7 +45,7 @@ function Row({
       <div className={styles.type}>{type}</div>
       <div>
         <PriceUnit
-          price={hasPreviousOrder || hasDatatoken ? '0' : `${price}`}
+          price={hasPreviousOrder || hasDatatoken ? 0 : Number(price)}
           symbol={symbol}
           size="small"
           className={styles.price}
@@ -81,7 +81,7 @@ export default function PriceOutput({
   return (
     <div className={styles.priceComponent}>
       You will pay{' '}
-      <PriceUnit price={`${totalPrice}`} symbol={symbol} size="small" />
+      <PriceUnit price={Number(totalPrice)} symbol={symbol} size="small" />
       <Tooltip
         content={
           <div className={styles.calculation}>

@@ -66,7 +66,7 @@ module.exports = {
   // Refers to Coingecko API tokenIds.
   coingeckoTokenIds: ['ocean-protocol', 'h2o', 'ethereum', 'matic-network'],
 
-  // Config for https://github.com/donavon/use-dark-mode
+  // Config for https://github.com/oceanprotocol/use-dark-mode
   darkModeConfig: {
     classNameDark: 'dark',
     classNameLight: 'light',

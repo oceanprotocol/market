@@ -24,5 +24,8 @@
 }
 
 .linksExternal {
-  composes: linksExternal from '@shared/Publisher/index.module.css';
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  fill: var(--color-secondary);
 }
