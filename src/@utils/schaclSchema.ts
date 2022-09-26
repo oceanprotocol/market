@@ -37,9 +37,10 @@ export async function validateFieldSchaclSchema(
   value: any,
   createError: any
 ): Promise<any> {
-  const schemaField: any = await retrieveShaclSchema()
-  const fieldSchema: ShaclSchemaField = schemaField[keyField][valueField]
+  const schemaFields: any = await retrieveShaclSchema()
+  const fieldSchema: ShaclSchemaField = schemaFields[keyField][valueField]
   const { minLength, maxLength } = getMinMax(valueField, fieldSchema)
+  console.log(schemaFields)
 
   // TODO: add minLength when integrated in endpoint
   if (value.length < minLength) {

@@ -66,7 +66,7 @@ const validationMetadata = {
         createError
       )
     }),
-  termsAndConditions: Yup.boolean()
+  termsAndConditions: Yup.boolean().isTrue()
 }
 
 const validationService = {
