@@ -52,7 +52,7 @@ export default function Conversion({
     setPriceConverted(convertedFormattedHTMLstring)
   }, [price, prices, currency, locale, isFiat, priceTokenId])
 
-  return price > 0 ? (
+  return Number(price) >= 0 ? (
     <span
       className={`${styles.conversion} ${className || ''}`}
       title="Approximation based on the current spot price on Coingecko"
