@@ -1,12 +1,7 @@
 import { MAX_DECIMALS } from '@utils/constants'
 import * as Yup from 'yup'
 import { getMaxDecimalsValidation } from '@utils/numbers'
-import { retrieveShaclSchema } from '@utils/aquarius'
-import {
-  ShaclSchema,
-  ShaclSchemaField
-} from '@context/MarketMetadata/_shaclType'
-import { capitalizeFirstLetter } from '@utils/textTransform'
+import { validateFieldSchaclSchema } from '@utils/schaclSchema'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
@@ -19,97 +14,57 @@ const validationMetadata = {
     .required('Required')
     .test(async (value, { path, createError }): Promise<any> => {
       if (!value) return
-      const schemaField: any = await retrieveShaclSchema()
-      const fieldValidation: ShaclSchemaField =
-        schemaField[path.split('.')[0]][path.split('.')[1]]
-      // TODO: add minLength when integrated in endpoint
-      if (value.length < 10) {
-        return createError({
-          message: `${capitalizeFirstLetter(
-            path.split('.')[1]
-          )} must be at least ${10} characters`
-        })
-      } else if (value.length > fieldValidation.maxLength) {
-        return createError({
-          message: `${capitalizeFirstLetter(
-            path.split('.')[1]
-          )} must have maximum ${fieldValidation.maxLength} characters`
-        })
-      } else {
-        return value
-      }
+      const keyField = path.split('.')[0]
+      const valueField = path.split('.')[1]
+
+      return await validateFieldSchaclSchema(
+        keyField,
+        valueField,
+        value,
+        createError
+      )
     }),
   description: Yup.string()
     .required('Required')
     .test(async (value, { path, createError }): Promise<any> => {
       if (!value) return
-      const schemaField: any = await retrieveShaclSchema()
-      const fieldValidation: ShaclSchemaField =
-        schemaField[path.split('.')[0]][path.split('.')[1]]
-      // TODO: add minLength when integrated in endpoint
-      if (value.length < 10) {
-        return createError({
-          message: `${capitalizeFirstLetter(
-            path.split('.')[1]
-          )} must be at least ${10} characters`
-        })
-      } else if (value.length > fieldValidation.maxLength) {
-        return createError({
-          message: `${capitalizeFirstLetter(
-            path.split('.')[1]
-          )} must have maximum ${fieldValidation.maxLength} characters`
-        })
-      } else {
-        return value
-      }
+      const keyField = path.split('.')[0]
+      const valueField = path.split('.')[1]
+
+      return await validateFieldSchaclSchema(
+        keyField,
+        valueField,
+        value,
+        createError
+      )
     }),
   author: Yup.string()
     .required('Required')
     .test(async (value, { path, createError }): Promise<any> => {
       if (!value) return
-      const schemaField: any = await retrieveShaclSchema()
-      const fieldValidation: ShaclSchemaField =
-        schemaField[path.split('.')[0]][path.split('.')[1]]
-      // TODO: add minLength when integrated in endpoint
-      if (value.length < 1) {
-        return createError({
-          message: `${capitalizeFirstLetter(
-            path.split('.')[1]
-          )} must be at least ${1} characters`
-        })
-      } else if (value.length > fieldValidation.maxLength) {
-        return createError({
-          message: `${capitalizeFirstLetter(
-            path.split('.')[1]
-          )} must have maximum ${fieldValidation.maxLength} characters`
-        })
-      } else {
-        return value
-      }
+      const keyField = path.split('.')[0]
+      const valueField = path.split('.')[1]
+
+      return await validateFieldSchaclSchema(
+        keyField,
+        valueField,
+        value,
+        createError
+      )
     }),
   tags: Yup.string()
     .nullable(true)
     .test(async (value, { path, createError }): Promise<any> => {
-      if (!value) return true
-      const schemaField: any = await retrieveShaclSchema()
-      const fieldValidation: ShaclSchemaField =
-        schemaField[path.split('.')[0]][path.split('.')[1]]
-      // TODO: add minLength when integrated in endpoint
-      if (value.length < 1) {
-        return createError({
-          message: `${capitalizeFirstLetter(
-            path.split('.')[1]
-          )} must be at least ${1} characters`
-        })
-      } else if (value.length > fieldValidation.maxLength) {
-        return createError({
-          message: `${capitalizeFirstLetter(
-            path.split('.')[1]
-          )} must have maximum ${fieldValidation.maxLength} characters`
-        })
-      } else {
-        return value
-      }
+      if (!value) return
+      const keyField = path.split('.')[0]
+      const valueField = path.split('.')[1]
+
+      return await validateFieldSchaclSchema(
+        keyField,
+        valueField,
+        value,
+        createError
+      )
     }),
   termsAndConditions: Yup.boolean()
 }
