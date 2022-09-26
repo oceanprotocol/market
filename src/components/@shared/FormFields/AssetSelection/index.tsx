@@ -108,7 +108,7 @@ export default function AssetSelection({
                 </label>
 
                 <PriceUnit
-                  price={asset.price}
+                  price={Number(asset.price)}
                   type={asset.price === '0' ? 'free' : undefined}
                   size="small"
                   className={styles.price}
