@@ -57,6 +57,7 @@ export default function MetadataFields(): ReactElement {
     }))
 
   useEffect(() => {
+    console.log({ values_: values })
     setFieldValue(
       'services[0].access',
       values.metadata.type === 'algorithm' ? 'compute' : 'access'
@@ -87,6 +88,13 @@ export default function MetadataFields(): ReactElement {
           className={styles.fieldWarning}
           state="info"
           text={siteContent.warning.ctd}
+        />
+      )}
+      {values.metadata.type === 'datastream' && (
+        <Alert
+          className={styles.fieldWarning}
+          state="info"
+          text={siteContent.warning.stream}
         />
       )}
       <Field

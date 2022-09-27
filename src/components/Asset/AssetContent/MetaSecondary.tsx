@@ -21,7 +21,7 @@ const SampleButton = ({ url }: { url: string }) => (
 export default function MetaSecondary({ ddo }: { ddo: Asset }): ReactElement {
   return (
     <aside className={styles.metaSecondary}>
-      {ddo?.metadata.links?.length > 0 && (
+      {ddo?.metadata.links?.length > 0 && ddo?.metadata.type !== 'datastream' && (
         <div className={styles.samples}>
           <MetaItem
             title="Sample Data"

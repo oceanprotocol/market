@@ -97,6 +97,13 @@ export default function ServicesFields(): ReactElement {
               text={siteContent.warning.ctd}
             />
           )}
+          {values.services[0].access === 'stream' && (
+            <Alert
+              className={styles.fieldWarning}
+              state="info"
+              text={siteContent.warning.stream}
+            />
+          )}
         </>
       )}
       <Field
