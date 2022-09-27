@@ -12,10 +12,8 @@ import { useUserPreferences } from '@context/UserPreferences'
 import styles from './index.module.css'
 import Web3Feedback from '@shared/Web3Feedback'
 import { useCancelToken } from '@hooks/useCancelToken'
-import {
-  getComputeSettingsInitialValues,
-  computeSettingsValidationSchema
-} from './_constants'
+import { getComputeSettingsInitialValues } from './_constants'
+import { computeSettingsValidationSchema } from './_validation'
 import content from '../../../../content/pages/editComputeDataset.json'
 import { getServiceByName } from '@utils/ddo'
 import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'

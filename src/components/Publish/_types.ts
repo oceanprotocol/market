@@ -1,14 +1,6 @@
-import { ServiceComputeOptions } from '@oceanprotocol/lib'
+import { FileInfo, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
-
-interface FileInfo {
-  url: string
-  valid?: boolean
-  contentLength?: string
-  contentType?: string
-}
-
 export interface FormPublishService {
   files: FileInfo[]
   links?: FileInfo[]

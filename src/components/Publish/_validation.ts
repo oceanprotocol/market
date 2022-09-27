@@ -1,6 +1,7 @@
 import { MAX_DECIMALS } from '@utils/constants'
 import * as Yup from 'yup'
 import { getMaxDecimalsValidation } from '@utils/numbers'
+import { FileInfo } from '@oceanprotocol/lib'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
@@ -28,7 +29,7 @@ const validationMetadata = {
 }
 
 const validationService = {
-  files: Yup.array<{ url: string; valid: boolean }[]>()
+  files: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
         url: Yup.string().url('Must be a valid URL.').required('Required'),
@@ -37,7 +38,7 @@ const validationService = {
     )
     .min(1, `At least one file is required.`)
     .required('Enter a valid URL and click ADD FILE.'),
-  links: Yup.array<{ url: string; valid: boolean }[]>()
+  links: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
         url: Yup.string().url('Must be a valid URL.'),
