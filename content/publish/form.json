@@ -55,7 +55,7 @@
       {
         "name": "dockerImageCustom",
         "label": "Docker Image URL",
-        "placeholder": "e.g. oceanprotocol/algo_dockers:latest or https://example.com/image_path:image_tag",
+        "placeholder": "e.g. oceanprotocol/algo_dockers:node-vibrant or https://example.com/image_path:image_tag",
         "help": "Provide the name and the tag of a public Docker hub image or the full URL if you have it hosted in a 3rd party repository",
         "type": "container",
         "required": true
