@@ -240,7 +240,7 @@ export default function FormStartCompute({
         algorithmPriceType={selectedAlgorithmAsset?.accessDetails?.type}
         isBalanceSufficient={isBalanceSufficient}
         isConsumable={isConsumable}
-        isStreamable={false}
+        isStreamble={false}
         consumableFeedback={consumableFeedback}
         isAlgorithmConsumable={
           selectedAlgorithmAsset?.accessDetails?.isPurchasable

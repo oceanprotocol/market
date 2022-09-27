@@ -3,11 +3,21 @@ import { LoggerInstance } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 import { AbiItem } from 'web3-utils/types'
+import AssetActions from 'src/components/Asset/AssetActions'
+import { useAsset } from '@context/Asset'
 
 export function accountTruncate(account: string): string {
   if (!account || account === '') return
   const middle = account.substring(6, 38)
   const truncated = account.replace(middle, '…')
+  return truncated
+}
+export function endpointTruncate(asset: AssetExtended) {
+  // const { asset } = useAsset()
+  // value={accountTruncate(`${asset.services[0].streamFiles}`)}
+  if (!asset || !asset.services[0].streamFiles) return
+  const middle = asset.services[0].streamFiles.substring(12, 38)
+  const truncated = asset.services[0].streamFiles.replace(middle, '…')
   return truncated
 }
 /**

@@ -13,7 +13,7 @@
         "name": "type",
         "label": "Asset Type",
         "type": "boxSelection",
-        "options": ["Dataset", "Algorithm", "Datastream"],
+        "options": ["Dataset", "Algorithm", "DataStream"],
         "required": true
       },
       {
@@ -101,23 +101,6 @@
         "required": true
       },
       {
-        "name": "streamFiles",
-        "label": "Datastream Endpoint URL",
-        "placeholder": "e.g. https://file.com/samplefile.json",
-        "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
-        "prominentHelp": true,
-        "type": "files",
-        "required": true
-      },
-      {
-        "name": "streamDocs",
-        "label": "Datastream API Docs URL",
-        "placeholder": "e.g. https://file.com/samplefile.json",
-        "help": "This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
-        "prominentHelp": true,
-        "type": "files"
-      },
-      {
         "name": "files",
         "label": "File",
         "placeholder": "e.g. https://file.com/file.json",
@@ -128,7 +111,7 @@
       },
       {
         "name": "links",
-        "label": "Sample file",
+        "label": "Sample File",
         "placeholder": "e.g. https://file.com/samplefile.json",
         "help": "This file should reveal the data structure of your dataset, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
         "prominentHelp": true,

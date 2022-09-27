@@ -10,7 +10,6 @@ import { FormPublishData } from '../_types'
 import Alert from '@shared/atoms/Alert'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import styles from '../index.module.css'
-import { LoggerInstance } from '@oceanprotocol/lib'
 
 const accessTypeOptionsTitles = getFieldContent(
   'access',
@@ -22,6 +21,7 @@ export default function ServicesFields(): ReactElement {
 
   // connect with Form state, use for conditional field rendering
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
+
   // name and title should be download, but option value should be access, probably the best way would be to change the component so that option is an object like {name,value}
   const accessTypeOptions = [
     {
@@ -67,12 +67,6 @@ export default function ServicesFields(): ReactElement {
     )
   }, [values.services[0].algorithmPrivacy, setFieldValue])
 
-  useEffect(() => {
-    if (values.services[0].access === 'stream') {
-      setFieldValue('services[0].files', values.services[0].streamFiles)
-    }
-  }, [setFieldValue, values])
-
   return (
     <>
       <Field
@@ -86,6 +80,8 @@ export default function ServicesFields(): ReactElement {
           component={Input}
           name="services[0].algorithmPrivacy"
         />
+      ) : values.metadata.type === 'datastream' ? (
+        ' '
       ) : (
         <>
           <Field
@@ -101,13 +97,6 @@ export default function ServicesFields(): ReactElement {
               text={siteContent.warning.ctd}
             />
           )}
-          {values.services[0].access === 'stream' && (
-            <Alert
-              className={styles.fieldWarning}
-              state="info"
-              text={siteContent.warning.stream}
-            />
-          )}
         </>
       )}
       <Field
@@ -115,34 +104,16 @@ export default function ServicesFields(): ReactElement {
         component={Input}
         name="services[0].providerUrl"
       />
-      {values.services[0].access === 'stream' ? (
-        <>
-          <Field
-            {...getFieldContent('streamFiles', content.services.fields)}
-            component={Input}
-            name="services[0].streamFiles"
-          />
-          <Field
-            {...getFieldContent('streamDocs', content.services.fields)}
-            component={Input}
-            name="services[0].streamDocs"
-          />
-        </>
-      ) : (
-        <>
-          <Field
-            {...getFieldContent('files', content.services.fields)}
-            component={Input}
-            name="services[0].files"
-          />
-          <Field
-            {...getFieldContent('links', content.services.fields)}
-            component={Input}
-            name="services[0].links"
-          />
-        </>
-      )}
-
+      <Field
+        {...getFieldContent('files', content.services.fields)}
+        component={Input}
+        name="services[0].files"
+      />
+      <Field
+        {...getFieldContent('links', content.services.fields)}
+        component={Input}
+        name="services[0].links"
+      />
       <Field
         {...getFieldContent('timeout', content.services.fields)}
         component={Input}

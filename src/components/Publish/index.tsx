@@ -65,7 +65,6 @@ export default function PublishPage({
     try {
       const config = getOceanConfig(chainId)
       LoggerInstance.log('[publish] using config: ', config)
-      LoggerInstance.log('[publish] values: ', values)
 
       const { erc721Address, datatokenAddress, txHash } =
         await createTokensAndPricing(
@@ -278,7 +277,6 @@ export default function PublishPage({
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         // kick off publishing
-        LoggerInstance.log('YepValues:', values)
         await handleSubmit(values)
       }}
     >

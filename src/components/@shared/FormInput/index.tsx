@@ -22,8 +22,6 @@ const cx = classNames.bind(styles)
 export interface InputProps {
   name: string
   label?: string | ReactNode
-  streamEndpointLabel?: string | ReactNode
-  streamAPIDocsLabel?: string | ReactNode
   placeholder?: string
   required?: boolean
   help?: string
