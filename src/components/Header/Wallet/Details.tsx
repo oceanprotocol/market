@@ -56,7 +56,7 @@ export default function Details(): ReactElement {
             </span>
             <Conversion
               className={styles.conversion}
-              price={value}
+              price={Number(value)}
               symbol={key}
             />
           </li>
