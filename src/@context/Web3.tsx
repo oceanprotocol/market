@@ -170,15 +170,8 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       const balance: UserBalance = { [key]: userBalance }
 
       if (approvedBaseTokens?.length > 0) {
-        // TODO: remove this once subgraph is fixed
-        // See https://github.com/oceanprotocol/ocean-subgraph/issues/548
-        const approvedBaseTokensFiltered = approvedBaseTokens.filter(
-          (token) =>
-            token.address !== '0xd8992ed72c445c35cb4a2be468568ed1079357c8'
-        )
-
         await Promise.all(
-          approvedBaseTokensFiltered.map(async (token) => {
+          approvedBaseTokens.map(async (token) => {
             const { address, decimals, symbol } = token
             const tokenBalance = await getTokenBalance(
               accountId,
