@@ -46,13 +46,13 @@ export async function validateFieldSchaclSchema(
   if (value.length < minLength) {
     return createError({
       message: `${capitalizeFirstLetter(
-        valueField
+        valueField === 'name' ? 'title' : valueField
       )} must be at least ${minLength} characters`
     })
   } else if (value.length > maxLength) {
     return createError({
       message: `${capitalizeFirstLetter(
-        valueField
+        valueField === 'name' ? 'title' : valueField
       )} must have maximum ${maxLength} characters`
     })
   } else {
