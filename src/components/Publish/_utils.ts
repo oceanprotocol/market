@@ -83,6 +83,11 @@ export async function transformPublishFormToDdo(
   const currentTime = dateToStringNoMS(new Date())
   const isPreview = !datatokenAddress && !nftAddress
 
+  const algorithmContainerPresets =
+    type === 'algorithm' && dockerImage !== '' && dockerImage !== 'custom'
+      ? await getAlgorithmContainerPreset(dockerImage)
+      : null
+
   // Transform from files[0].url to string[] assuming only 1 file
   const filesTransformed = files?.length &&
     files[0].valid && [sanitizeUrl(files[0].url)]
@@ -113,19 +118,19 @@ export async function transformPublishFormToDdo(
             entrypoint:
               dockerImage === 'custom'
                 ? dockerImageCustomEntrypoint
-                : (await getAlgorithmContainerPreset(dockerImage)).entrypoint,
+                : algorithmContainerPresets.entrypoint,
             image:
               dockerImage === 'custom'
                 ? dockerImageCustom
-                : (await getAlgorithmContainerPreset(dockerImage)).image,
+                : algorithmContainerPresets.image,
             tag:
               dockerImage === 'custom'
                 ? dockerImageCustomTag
-                : (await getAlgorithmContainerPreset(dockerImage)).tag,
+                : algorithmContainerPresets.tag,
             checksum:
               dockerImage === 'custom'
                 ? dockerImageCustomChecksum
-                : (await getAlgorithmContainerPreset(dockerImage)).checksum
+                : algorithmContainerPresets.checksum
           }
         }
       })
