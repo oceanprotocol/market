@@ -16,7 +16,7 @@
 - [🦀 Data Sources](#-data-sources)
   - [Aquarius](#aquarius)
   - [Ocean Protocol Subgraph](#ocean-protocol-subgraph)
-  - [3Box](#3box)
+  - [ENS](#ens)
   - [Purgatory](#purgatory)
   - [Network Metadata](#network-metadata)
 - [👩‍🎤 Storybook](#-storybook)
@@ -103,12 +103,12 @@ cp .env.example .env
 
 ## 🦀 Data Sources
 
-All displayed data in the app is presented around the concept of one data set, which is a combination of:
+All displayed data in the app is presented around the concept of one asset, which is a combination of:
 
-- metadata about a data set
-- the actual data set files
-- the NFT which represents the data set
-- the datatokens representing access rights to the data set files
+- metadata about an asset
+- the actual asset file
+- the NFT which represents the asset
+- the datatokens representing access rights to the asset file
 - financial data connected to these datatokens, either a fixed rate exchange contract or a dispenser for free assets
 - calculations and conversions based on financial data
 - metadata about publisher accounts
@@ -117,7 +117,7 @@ All this data then comes from multiple sources:
 
 ### Aquarius
 
-All initial data sets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance, defined in `app.config.js`. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
+All initial assets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance, defined in `app.config.js`. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
 
 - to cancel requests when components get unmounted in combination with [axios](https://github.com/axios/axios)
 - hit Aquarius as early as possible without relying on any ocean.js initialization
@@ -159,7 +159,7 @@ function Component() {
 }
 ```
 
-For components within a single data set view the `useAsset()` hook can be used, which in the background gets the respective metadata from Aquarius.
+For components within a single asset view the `useAsset()` hook can be used, which in the background gets the respective metadata from Aquarius.
 
 ```tsx
 import { useAsset } from '@context/Asset'
@@ -194,37 +194,21 @@ function Component() {
 }
 ```
 
-### 3Box
+### ENS
 
-Publishers can create a profile on [3Box Hub](https://www.3box.io/hub) and when found, it will be displayed in the app.
+Publishers can fill their account's [ENS domain](https://ens.domains) profile and when found, it will be displayed in the app.
 
-For this our own [3box-proxy](https://github.com/oceanprotocol/3box-proxy) is used, within the app the utility method `get3BoxProfile()` can be used to get all info:
+For this our own [ens-proxy](https://github.com/oceanprotocol/ens-proxy) is used, within the app the utility method `getEnsProfile()` is called as part of the `useProfile()` hook:
 
 ```tsx
-import get3BoxProfile from '@utils/profile'
+import { useProfile } from '@context/Profile'
 
 function Component() {
-  const [profile, setProfile] = useState<Profile>()
+  const { profile } = useProfile()
 
-  useEffect(() => {
-    if (!account) return
-    const source = axios.CancelToken.source()
-
-    async function get3Box() {
-      const profile = await get3BoxProfile(account, source.token)
-      if (!profile) return
-
-      setProfile(profile)
-    }
-    get3Box()
-
-    return () => {
-      source.cancel()
-    }
-  }, [account])
   return (
     <div>
-      {profile.emoji} {profile.name}
+      {profile.avatar} {profile.name}
     </div>
   )
 }
@@ -232,7 +216,7 @@ function Component() {
 
 ### Purgatory
 
-Based on [list-purgatory](https://github.com/oceanprotocol/list-purgatory) some data sets get additional data. Within most components this can be done with the internal `useAsset()` hook which fetches data from the [market-purgatory](https://github.com/oceanprotocol/market-purgatory) endpoint in the background.
+Based on [list-purgatory](https://github.com/oceanprotocol/list-purgatory) some assets get additional data. Within most components this can be done with the internal `useAsset()` hook which fetches data from the [market-purgatory](https://github.com/oceanprotocol/market-purgatory) endpoint in the background.
 
 For asset purgatory:
 
@@ -399,6 +383,12 @@ Additionally, we would also advise that your retain the text saying "Powered by 
 
 Everything else is made open according to the apache2 license. We look forward to seeing your data marketplace!
 
+If you are looking to fork Ocean Market and create your own marketplace, you will find the following guides useful in our docs:
+
+- [Forking Ocean Market](https://docs.oceanprotocol.com/building-with-ocean/build-a-marketplace/forking-ocean-market)
+- [Customising your Market](https://docs.oceanprotocol.com/building-with-ocean/build-a-marketplace/customising-your-market)
+- [Deploying your Market](https://docs.oceanprotocol.com/building-with-ocean/build-a-marketplace/deploying-market)
+
 ## 💰 Pricing Options
 
 ### Fixed Pricing
@@ -409,7 +399,7 @@ To allow publishers to set pricing as "Fixed" you need to add the following envi
 
 To allow publishers to set pricing as "Free" you need to add the following environmental variable to your .env file: `NEXT_PUBLIC_ALLOW_FREE_PRICING="true"` (default).
 
-This allocates the datatokens to the [dispenser contract](https://github.com/oceanprotocol/contracts/blob/main/contracts/dispenser/Dispenser.sol) which dispenses data tokens to users for free. Publishers in your market will now be able to offer their datasets to users for free (excluding gas costs).
+This allocates the datatokens to the [dispenser contract](https://github.com/oceanprotocol/contracts/blob/main/contracts/dispenser/Dispenser.sol) which dispenses data tokens to users for free. Publishers in your market will now be able to offer their assets to users for free (excluding gas costs).
 
 ## ✅ GDPR Compliance
 

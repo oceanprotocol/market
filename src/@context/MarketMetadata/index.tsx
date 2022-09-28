@@ -14,6 +14,7 @@ import { MarketMetadataProviderValue, OpcFee } from './_types'
 import siteContent from '../../../content/site.json'
 import appConfig from '../../../app.config'
 import { fetchData, getQueryContext } from '@utils/subgraph'
+import { LoggerInstance } from '@oceanprotocol/lib'
 
 const MarketMetadataContext = createContext({} as MarketMetadataProviderValue)
 
@@ -43,6 +44,11 @@ function MarketMetadataProvider({
           swapNotApprovedFee: response.data?.opc.swapNonOceanFee
         } as OpcFee)
       }
+      LoggerInstance.log('[MarketMetadata] Got new data.', {
+        opcFees: opcData,
+        siteContent,
+        appConfig
+      })
       setOpcFees(opcData)
     }
     getOpcData()

@@ -5,11 +5,11 @@ import Bookmarks from './Bookmarks'
 import { generateBaseQuery, queryMetadata } from '@utils/aquarius'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
-import styles from './index.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
-import PublishersWithMostSales from './PublishersWithMostSales'
+import TopSales from './TopSales'
+import styles from './index.module.css'
 
 function sortElements(items: Asset[], sorted: string[]) {
   items.sort(function (a, b) {
@@ -131,12 +131,12 @@ export default function HomePage(): ReactElement {
         query={queryLatest}
         action={
           <Button style="text" to="/search?sort=nft.created&sortOrder=desc">
-            All data sets and algorithms →
+            All datasets and algorithms →
           </Button>
         }
       />
 
-      <PublishersWithMostSales title="Publishers With Most Sales" />
+      <TopSales title="Publishers With Most Sales" />
     </>
   )
 }

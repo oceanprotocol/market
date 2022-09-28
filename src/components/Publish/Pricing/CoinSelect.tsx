@@ -1,4 +1,3 @@
-import Input from '@shared/FormInput'
 import InputElement from '@shared/FormInput/InputElement'
 import { useFormikContext } from 'formik'
 import React, { ChangeEvent, ReactElement } from 'react'

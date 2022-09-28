@@ -57,7 +57,9 @@ export async function order(
     _consumeMarketFee: {
       consumeMarketFeeAddress: marketFeeAddress,
       consumeMarketFeeAmount: consumeMarketOrderFee,
-      consumeMarketFeeToken: asset.accessDetails.baseToken.address
+      consumeMarketFeeToken:
+        asset?.accessDetails?.baseToken?.address ||
+        '0x0000000000000000000000000000000000000000'
     }
   } as OrderParams
 
@@ -66,6 +68,7 @@ export async function order(
       // this assumes all fees are in ocean
       const txApprove = await approve(
         web3,
+        config,
         accountId,
         asset.accessDetails.baseToken.address,
         asset.accessDetails.datatoken.address,
@@ -152,19 +155,21 @@ async function approveProviderFee(
   accountId: string,
   web3: Web3,
   providerFeeAmount: string
-): Promise<string> {
+): Promise<TransactionReceipt> {
+  const config = getOceanConfig(asset.chainId)
   const baseToken =
     asset?.accessDetails?.type === 'free'
       ? getOceanConfig(asset.chainId).oceanTokenAddress
       : asset?.accessDetails?.baseToken?.address
   const txApproveWei = await approveWei(
     web3,
+    config,
     accountId,
     baseToken,
     asset?.accessDetails?.datatoken?.address,
     providerFeeAmount
   )
-  return txApproveWei as string // thanks ocean.js
+  return txApproveWei
 }
 
 async function startOrder(

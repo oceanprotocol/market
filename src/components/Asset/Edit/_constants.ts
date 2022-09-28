@@ -1,19 +1,6 @@
-import { FileInfo, Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
+import { Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { secondsToString } from '@utils/ddo'
-import * as Yup from 'yup'
 import { ComputeEditForm, MetadataEditForm } from './_types'
-
-export const validationSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(4, (param) => `Title must be at least ${param.min} characters`)
-    .required('Required'),
-  description: Yup.string().required('Required').min(10),
-  price: Yup.number().required('Required'),
-  links: Yup.array<any[]>().nullable(),
-  files: Yup.array<FileInfo[]>().nullable(),
-  timeout: Yup.string().required('Required'),
-  author: Yup.string().nullable()
-})
 
 export function getInitialValues(
   metadata: Metadata,
@@ -24,18 +11,12 @@ export function getInitialValues(
     name: metadata?.name,
     description: metadata?.description,
     price,
-    links: metadata?.links,
-    files: '',
+    links: metadata?.links as any,
+    files: [{ url: '', type: '' }],
     timeout: secondsToString(timeout),
     author: metadata?.author
   }
 }
-
-export const computeSettingsValidationSchema = Yup.object().shape({
-  allowAllPublishedAlgorithms: Yup.boolean().nullable(),
-  publisherTrustedAlgorithms: Yup.array().nullable(),
-  publisherTrustedAlgorithmPublishers: Yup.array().nullable()
-})
 
 export function getComputeSettingsInitialValues({
   publisherTrustedAlgorithms,

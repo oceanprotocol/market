@@ -15,7 +15,7 @@ export default function Stats({
   const { chainIds } = useUserPreferences()
   const { assets, assetsTotal, sales } = useProfile()
 
-  const [totalSales, setTotalSales] = useState('0')
+  const [totalSales, setTotalSales] = useState(0)
 
   useEffect(() => {
     if (!assets || !accountId || !chainIds) return
@@ -30,7 +30,7 @@ export default function Stats({
               parseInt(priceInfo.accessDetails.price) * priceInfo.stats.orders
           }
         }
-        setTotalSales(JSON.stringify(count))
+        setTotalSales(count)
       } catch (error) {
         LoggerInstance.error(error.message)
       }
@@ -42,9 +42,22 @@ export default function Stats({
     <div className={styles.stats}>
       <NumberUnit
         label="Total Sales"
-        value={<Conversion price={totalSales} hideApproximateSymbol />}
+        value={
+          totalSales > 0 ? (
+            <Conversion
+              price={totalSales}
+              symbol={'ocean'}
+              hideApproximateSymbol
+            />
+          ) : (
+            '0'
+          )
+        }
       />
-      <NumberUnit label={`Sale${sales === 1 ? '' : 's'}`} value={sales} />
+      <NumberUnit
+        label={`Sale${sales === 1 ? '' : 's'}`}
+        value={sales < 0 ? 0 : sales}
+      />
       <NumberUnit label="Published" value={assetsTotal} />
     </div>
   )
