@@ -3,7 +3,7 @@ const webpack = require('webpack')
 module.exports = {
   core: { builder: 'webpack5' },
   stories: ['../src/**/*.stories.tsx'],
-  addons: ['@storybook/addon-essentials'],
+  addons: ['@storybook/addon-essentials', 'storybook-dark-mode/register'],
   framework: '@storybook/react',
   webpackFinal: async (config) => {
     config.resolve.plugins = [
