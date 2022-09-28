@@ -8,12 +8,16 @@ import ImageInfo from './Info'
 import { getContainerChecksum } from '@utils/docker'
 
 export default function ContainerInput(props: InputProps): ReactElement {
-  const [field, meta, helpers] = useField(props.name)
+  const [field] = useField(props.name)
+  const [fieldChecksum, metaChecksum, helpersChecksum] = useField(
+    'metadata.dockerImageCustomChecksum'
+  )
+
+  const { values, setFieldError, setFieldValue } =
+    useFormikContext<FormPublishData>()
   const [isLoading, setIsLoading] = useState(false)
   const [isValid, setIsValid] = useState(false)
   const [checked, setChecked] = useState(false)
-  const { values, setFieldError, setFieldValue } =
-    useFormikContext<FormPublishData>()
 
   async function handleValidation(e: React.SyntheticEvent, container: string) {
     e.preventDefault()
@@ -28,6 +32,7 @@ export default function ContainerInput(props: InputProps): ReactElement {
       const checksum = await getContainerChecksum(imageNname, tag)
       if (checksum) {
         setFieldValue('metadata.dockerImageCustomChecksum', checksum)
+        helpersChecksum.setTouched(false)
         setIsValid(true)
       }
       setChecked(true)
@@ -45,7 +50,7 @@ export default function ContainerInput(props: InputProps): ReactElement {
     setFieldValue('metadata.dockerImageCustomChecksum', '')
     setChecked(false)
     setIsValid(false)
-    helpers.setTouched(false)
+    helpersChecksum.setTouched(true)
   }
 
   return (
