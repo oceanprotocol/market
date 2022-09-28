@@ -41,7 +41,9 @@ async function getAlgorithmContainerPreset(
   const preset = algorithmContainerPresets.find(
     (preset) => `${preset.image}:${preset.tag}` === dockerImage
   )
-  preset.checksum = await getContainerChecksum(preset.image, preset.tag)
+  preset.checksum = await (
+    await getContainerChecksum(preset.image, preset.tag)
+  ).checksum
   return preset
 }
 
