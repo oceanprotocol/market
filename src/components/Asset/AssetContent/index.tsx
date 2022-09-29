@@ -4,7 +4,6 @@ import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
 import AssetActions from '../AssetActions'
 import { useUserPreferences } from '@context/UserPreferences'
-import { useOrbis } from '@context/Orbis'
 import Bookmark from './Bookmark'
 import { useAsset } from '@context/Asset'
 import Alert from '@shared/atoms/Alert'
@@ -16,6 +15,7 @@ import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import Web3 from 'web3'
 import Button from '@shared/atoms/Button'
+import Comment from '../../@shared/Orbis/Comment'
 
 export default function AssetContent({
   asset
@@ -23,7 +23,6 @@ export default function AssetContent({
   asset: AssetExtended
 }): ReactElement {
   const { isInPurgatory, purgatoryData, isOwner, isAssetNetwork } = useAsset()
-  const { account, connectOrbis } = useOrbis()
   const { debug } = useUserPreferences()
   const [receipts, setReceipts] = useState([])
   const [nftPublisher, setNftPublisher] = useState<string>()
@@ -35,10 +34,6 @@ export default function AssetContent({
       )
     )
   }, [receipts])
-
-  useEffect(() => {
-    console.log(account)
-  }, [account])
 
   return (
     <>
@@ -74,9 +69,7 @@ export default function AssetContent({
             {debug === true && <DebugOutput title="DDO" output={asset} />}
           </div>
 
-          <div>
-            <button onClick={() => connectOrbis()}>Connect Orbis</button>
-          </div>
+          <Comment asset={asset} />
         </div>
 
         <div className={styles.actions}>

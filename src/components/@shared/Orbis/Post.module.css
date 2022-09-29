@@ -1,0 +1,72 @@
+.post {
+  display: flex;
+  width: 100%;
+  padding: calc(var(--spacer) / 2) var(--spacer);
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.post:last-of-type {
+  border-bottom: 0;
+}
+
+.content {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacer) / 4);
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.profile > .name {
+  font-size: var(--font-size-small);
+}
+
+.profile > .metadata {
+  font-size: var(--font-size-mini);
+}
+
+.blockies {
+  aspect-ratio: 1/1;
+  flex-shrink: 0;
+  width: calc(var(--font-size-large) * 1.5) !important;
+  height: calc(var(--font-size-large) * 1.5) !important;
+  /* border-radius: 50%; */
+  margin-left: 0;
+  margin-right: calc(var(--spacer) / 2);
+}
+
+.reactions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: calc(var(--spacer) / 2);
+  margin-top: calc(var(--spacer) / 2);
+}
+
+.reactions button {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--font-color-text);
+}
+
+.reactions button:hover,
+.reactions button.reacted {
+  color: var(--brand-pink);
+}
+
+.reactions svg {
+  fill: currentColor;
+  width: var(--font-size-large);
+  margin-right: calc(var(--spacer) / 8);
+}

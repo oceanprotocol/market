@@ -1,0 +1,20 @@
+.postbox {
+  width: 100%;
+}
+
+.postbox .editable {
+  padding: calc(var(--spacer) / 4);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  min-height: 80px;
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.postbox .editable:empty:before {
+  content: attr(data-placeholder);
+  color: var(--font-color-text);
+}
+
+.postbox .sendButtonWrap {
+  text-align: right;
+}

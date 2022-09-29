@@ -47,6 +47,7 @@
   margin-left: 0;
   width: 1.5rem;
   margin-right: calc(0.5 * var(--spacer));
+  fill: var(--font-color-text);
 }
 
 .toggle {
@@ -59,8 +60,26 @@
   height: 32px;
 }
 
+.toggle .icon {
+  fill: transparent;
+}
+
 .isFlipped {
   transform: scaleY(-1);
+}
+
+.dmItem {
+  padding: calc(var(--spacer) / 2);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dmDetails {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background-body);
 }
 
 @media screen and (min-width: 42rem) {

@@ -3,7 +3,7 @@
 
 declare module '@orbisclub/orbis-sdk'
 
-interface OrbisInterface {
+declare interface OrbisInterface {
   connect: function
   connectLit: function
   connectWithSeed: function
@@ -52,9 +52,94 @@ interface OrbisInterface {
   updateTileDocument: function
 }
 
-interface AccountInterface {
+declare interface OrbisAccountInterface {
   details: object
   did: string
   result: string
   status: number
+}
+
+declare interface OrbisPostCreatorDetailsInterface {
+  a_r: number
+  did: string
+  metadata: {
+    chain: string
+  }
+}
+
+declare interface OrbisPostMentionsInterface {
+  did: string
+  username: string
+}
+
+interface OrbisPostContentInterface {
+  body: string
+  context: string
+  master: string
+  mentions: OrbisPostMentionsInterface[]
+  reply_to: string
+  type: string
+}
+
+interface OrbisCreatorMetadataInterface {
+  address?: string
+  chain?: string
+  ensName?: string
+}
+
+interface OrbisCreatorProfileInterface {
+  description?: string
+  pfp?: string
+  pfpIsNft?: {
+    chain: string
+    contract: string
+    timestamp: string
+    tokenId: string
+  }
+  username?: string
+}
+
+declare interface OrbisPostInterface {
+  content: OrbisPostContentInterface
+  context: string
+  context_details?: {
+    channel_details?: {
+      description: string
+      group_id: string
+      name: string
+      type: string
+    }
+    channel_id?: string
+    group_details?: {
+      description: string
+      name: string
+      pfp: string
+    }
+    group_id?: string
+  }
+  count_commits: number
+  count_downvotes: number
+  count_haha: number
+  count_likes: number
+  count_replies: number
+  creator: string
+  creator_details?: {
+    a_r: number
+    did: string
+    metadata: OrbisCreatorMetadataInterface
+    nonces?: object
+    profile?: OrbisCreatorProfileInterface
+  }
+  group_id?: string | null
+  master?: string | null
+  reply_to?: string | null
+  reply_to_creator_details?: {
+    did: string
+    metadata: OrbisCreatorMetadataInterface
+    profile: OrbisCreatorProfileInterface
+  }
+  reply_to_details?: OrbisPostContentInterface
+  stream_id: string
+  timestamp: number
+  type: string
 }
