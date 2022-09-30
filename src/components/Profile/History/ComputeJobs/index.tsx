@@ -49,6 +49,8 @@ const columns: TableOceanColumn<ComputeJobMetaData>[] = [
   }
 ]
 
+const refreshInterval = 10000 // 10 sec.
+let initialLoad = false
 export default function ComputeJobs({
   minimal,
   assetChainIds,
@@ -70,28 +72,35 @@ export default function ComputeJobs({
 
   const fetchJobs = useCallback(async () => {
     if (!chainIds || chainIds.length === 0 || !accountId) {
-      setJobs([])
-      setIsLoading(false)
       return
     }
+
     try {
-      setIsLoading(true)
-      const jobs = await getComputeJobs(
+      !initialLoad && setIsLoading(true)
+      const computeJobs = await getComputeJobs(
         assetChainIds || chainIds,
         accountId,
         asset,
         newCancelToken()
       )
-      isMounted() && setJobs(jobs.computeJobs)
-      setIsLoading(!jobs.isLoaded)
+      isMounted() && setJobs(computeJobs.computeJobs)
+      initialLoad = true
+      setIsLoading(!computeJobs.isLoaded)
     } catch (error) {
       LoggerInstance.error(error.message)
     }
-  }, [chainIds, accountId, asset, isMounted, assetChainIds, newCancelToken])
+  }, [chainIds, accountId, isMounted, assetChainIds, asset, newCancelToken])
 
   useEffect(() => {
     fetchJobs()
-  }, [fetchJobs, refetchJobs])
+
+    // init periodic refresh for jobs
+    const balanceInterval = setInterval(() => fetchJobs(), refreshInterval)
+
+    return () => {
+      clearInterval(balanceInterval)
+    }
+  }, [refetchJobs])
 
   return accountId ? (
     <>
