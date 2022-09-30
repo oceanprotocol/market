@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Markdown from '@shared/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -71,8 +71,6 @@ export default function AssetContent({
 
         <div className={styles.actions}>
           <AssetActions asset={asset} />
-          {/* <AssetSignals className={styles2.actions} items={[]} /> */}
-
           {isOwner && isAssetNetwork && (
             <div className={styles.ownerActions}>
               <Button style="text" size="small" to={`/asset/${asset?.id}/edit`}>

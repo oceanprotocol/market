@@ -32,7 +32,6 @@ export function getSignalUrls(signalOriginItem: SignalOriginItem) {
  * @memberOf useSignalsLoader
  * */
 export async function fetchSignals(url: string): Promise<any[]> {
-  console.log('url', url)
   if (url.length === 0) throw Error('empty url')
   try {
     return await fetchData(url)
@@ -89,7 +88,6 @@ export function getAssetSignalItems(
   compareIds: string[],
   assetSignalOrigins: SignalOriginItem[]
 ) {
-  // console.log(assetSignalOrigins)
   let detailedItems
   if (!Array.isArray(signalItems)) {
     detailedItems = [signalItems]

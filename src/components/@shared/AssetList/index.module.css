@@ -7,7 +7,7 @@
 @media screen and (min-width: 25rem) {
   .assetList {
     grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-    gap: var(--spacer);
+    gap: calc(var(--spacer) * 2) var(--spacer);
   }
 }
 

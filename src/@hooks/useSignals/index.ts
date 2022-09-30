@@ -52,9 +52,9 @@ export default function useSignalsLoader(
 export function useAssetListSignals(
   dataTokenAddresses: string[][],
   signals: SignalOriginItem[],
-  assetSignalsUrls: string[]
+  assetSignalsUrls: string[],
+  signalViewType = 'listView'
 ) {
-  // const { assetSignalsUrls, signals } = useSignalContext()
   const [assetSignalOrigins, setAssetSignalOrigins] = useState<any[]>([])
   const [datatokensStringsArray, setDatatokensStringsArray] = useState([])
   const [urls, setUrls] = useState<any[]>()
@@ -65,7 +65,9 @@ export function useAssetListSignals(
       setAssetSignalOrigins(
         signals
           .filter((signal) => signal.type === 1)
-          .filter((signal) => signal.listView.value)
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          .filter((signal) => signal[signalViewType].value)
       )
       setDatatokensStringsArray(
         dataTokenAddresses.map((datatokensList) => {
@@ -73,8 +75,13 @@ export function useAssetListSignals(
           return datatokensList[0]
         })
       )
+      console.log('datatokensStringsArray')
+      console.log(dataTokenAddresses)
       setUrls(
         assetSignalsUrls.map((item) => {
+          console.log(
+            item + getURLParams(['assetId', datatokensStringsArray.join(',')])
+          )
           return (
             item + getURLParams(['assetId', datatokensStringsArray.join(',')])
           )
@@ -82,6 +89,5 @@ export function useAssetListSignals(
       )
     }
   }, [signals, dataTokenAddresses])
-
   return { urls, assetSignalOrigins }
 }

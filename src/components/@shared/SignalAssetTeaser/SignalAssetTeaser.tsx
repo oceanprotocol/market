@@ -6,8 +6,10 @@ import removeMarkdown from 'remove-markdown'
 import Publisher from '@shared/Publisher'
 import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
-import styles from './AssetTeaser.module.css'
+import styles from '../AssetTeaser/AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useSignalContext } from '@context/Signals'
 import { getAssetSignalItems } from '@hooks/useSignals/_util'
@@ -31,7 +33,7 @@ function LoaderArea() {
   )
 }
 
-export default function AssetTeaser({
+export default function SignalAssetTeaser({
   asset,
   noPublisher,
   isLoading,
@@ -96,12 +98,6 @@ export default function AssetTeaser({
           <footer className={styles.foot}>
             <Price accessDetails={asset.accessDetails} size="small" />
             <NetworkName networkId={asset.chainId} className={styles.network} />
-            {signalItems ? (
-              <AssetTeaserSignals
-                assetId={asset.id}
-                signalItems={filteredSignals}
-              />
-            ) : null}
           </footer>
         </a>
       </Link>

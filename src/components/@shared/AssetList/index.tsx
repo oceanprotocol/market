@@ -1,4 +1,3 @@
-import AssetTeaser from '@shared/AssetTeaser/AssetTeaser'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
@@ -11,6 +10,7 @@ import { useWeb3 } from '@context/Web3'
 import { AssetSignalItem } from '@context/Signals/_types'
 import useSignalsLoader, { useAssetListSignals } from '@hooks/useSignals'
 import { useSignalContext } from '@context/Signals'
+import SignalAssetTeaser from '@shared/SignalAssetTeaser/SignalAssetTeaser'
 
 const cx = classNames.bind(styles)
 
@@ -116,7 +116,7 @@ export default function AssetList({
         {assetsWithPrices.length > 0 ? (
           assetsWithPrices.map((assetWithPrice) => {
             return (
-              <AssetTeaser
+              <SignalAssetTeaser
                 asset={assetWithPrice}
                 key={assetWithPrice.id}
                 noPublisher={noPublisher}

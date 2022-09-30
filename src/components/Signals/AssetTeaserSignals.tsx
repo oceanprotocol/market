@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import styles from '@shared/AssetTeaser/AssetTeaser.module.css'
+import styles from '@shared/SignalAssetTeaser/SignalAssetTeaser.module.css'
+import assetStyles from '@shared/AssetTeaser/AssetTeaser.module.css'
 import PolygonIcon from '@images/polygon.svg'
 import Tooltip from '@shared/atoms/Tooltip'
 import ToolTipSignals from './ToolTipSignals'
@@ -20,7 +21,7 @@ export default function AssetTeaserSignals({
       if (signal.signals.length >= 1 && signal.signals.length < 4) {
         itemsList.push(
           signal.signals.map((item, index) => (
-            <div key={index} className={styles.symbol2}>
+            <div key={index} className={assetStyles.symbol2}>
               <PolygonIcon className={styles.icon} />
               <div>{item ? item.value : ''}</div>
             </div>
@@ -31,18 +32,11 @@ export default function AssetTeaserSignals({
     itemsList = itemsList.flat()
     if (itemsList.length === 0) {
       return (
-        <div>
-          <Link href={`/asset/${assetId}`}>
-            <a className={styles.signalContainer}>
-              No Signals Available
-              <div className={styles.signal}></div>
-              <div>
-                {/*{' '}*/}
-                {/*<Tooltip content={<ToolTipSignals signalItems={signalItems} />} />*/}
-              </div>
-            </a>
-          </Link>
-        </div>
+        <Link href={`/asset/${assetId}`}>
+          <a className={styles.signalContainer}>
+            <div className={styles.signal}> No Signals Available</div>
+          </a>
+        </Link>
       )
     }
     return (
@@ -52,9 +46,11 @@ export default function AssetTeaserSignals({
             <div className={styles.signal}>
               {itemsList.length > 3 ? itemsList.slice(0, 3) : itemsList}
             </div>
-            <div>
-              {' '}
-              <Tooltip content={<ToolTipSignals signalItems={signalItems} />} />
+            <div className={styles.signalTooltipContainer}>
+              <Tooltip
+                className={styles.signalTooltip}
+                content={<ToolTipSignals signalItems={signalItems} />}
+              />
             </div>
           </a>
         </Link>
