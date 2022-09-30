@@ -2,12 +2,17 @@ import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
-import { metadataCacheUri, v3MetadataCacheUri } from '../../app.config'
+import { metadataCacheUri } from '../../app.config'
 import {
   SortDirectionOptions,
   SortTermOptions
 } from '../@types/aquarius/SearchQuery'
 import { transformAssetToAssetSelection } from './assetConvertor'
+
+export interface UserSales {
+  id: string
+  totalSales: number
+}
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 
@@ -137,28 +142,6 @@ export async function retrieveAsset(
     } else {
       LoggerInstance.error(error.message)
     }
-  }
-}
-
-export async function checkV3Asset(
-  did: string,
-  cancelToken: CancelToken
-): Promise<boolean> {
-  try {
-    const response: AxiosResponse<Asset> = await axios.get(
-      `${v3MetadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
-      { cancelToken }
-    )
-    if (!response || response.status !== 200 || !response.data) return false
-
-    return true
-  } catch (error) {
-    if (axios.isCancel(error)) {
-      LoggerInstance.log(error.message)
-    } else {
-      LoggerInstance.error(error.message)
-    }
-    return false
   }
 }
 
@@ -394,6 +377,40 @@ export async function getTopPublishers(
     } else {
       LoggerInstance.error(error.message)
     }
+  }
+}
+
+export async function getTopAssetsPublishers(
+  chainIds: number[],
+  nrItems = 9
+): Promise<UserSales[]> {
+  const publishers: UserSales[] = []
+
+  const result = await getTopPublishers(chainIds, null)
+  const { topPublishers } = result.aggregations
+
+  for (let i = 0; i < topPublishers.buckets.length; i++) {
+    publishers.push({
+      id: topPublishers.buckets[i].key,
+      totalSales: parseInt(topPublishers.buckets[i].totalSales.value)
+    })
+  }
+
+  publishers.sort((a, b) => b.totalSales - a.totalSales)
+
+  return publishers.slice(0, nrItems)
+}
+
+export async function getUserSales(
+  accountId: string,
+  chainIds: number[]
+): Promise<number> {
+  try {
+    const result = await getPublishedAssets(accountId, chainIds, null)
+    const { totalOrders } = result.aggregations
+    return totalOrders.value
+  } catch (error) {
+    LoggerInstance.error('Error getUserSales', error.message)
   }
 }
 

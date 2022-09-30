@@ -44,19 +44,6 @@
   color: var(--font-color-text);
 }
 
-.firstPrice {
-  font-size: var(--font-size-small);
-  color: var(--color-secondary);
-  text-align: center;
-  padding-top: calc(var(--spacer) / 3);
-  padding-bottom: calc(var(--spacer) / 3);
-  border-top: 1px solid var(--border-color);
-}
-
-.firstPrice div {
-  display: inline-block;
-}
-
 .conversion strong {
   color: var(--color-secondary);
 }

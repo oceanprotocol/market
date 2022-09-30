@@ -29,8 +29,7 @@ export default function Details(): ReactElement {
   useEffect(() => {
     if (!networkId) return
 
-    const symbol =
-      networkId === 2021000 ? 'GX' : networkData?.nativeCurrency.symbol
+    const symbol = networkData?.nativeCurrency.symbol
     setMainCurrency(symbol)
 
     const oceanConfig = getOceanConfig(networkId)
@@ -48,12 +47,18 @@ export default function Details(): ReactElement {
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
             <span className={styles.symbol}>
-              {key === 'eth' ? mainCurrency : oceanTokenMetadata?.symbol}
-            </span>{' '}
-            {formatCurrency(Number(value), '', locale, false, {
-              significantFigures: 4
-            })}
-            {key === 'ocean' && <Conversion price={value} />}
+              {key === 'eth' ? mainCurrency : key.toUpperCase()}
+            </span>
+            <span className={styles.value}>
+              {formatCurrency(Number(value), '', locale, false, {
+                significantFigures: 4
+              })}
+            </span>
+            <Conversion
+              className={styles.conversion}
+              price={Number(value)}
+              symbol={key}
+            />
           </li>
         ))}
 
@@ -67,7 +72,6 @@ export default function Details(): ReactElement {
               <AddToken
                 address={oceanTokenMetadata?.address}
                 symbol={oceanTokenMetadata?.symbol}
-                logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png"
                 className={styles.addToken}
               />
             )}

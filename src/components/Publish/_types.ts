@@ -1,28 +1,9 @@
-import { ServiceComputeOptions } from '@oceanprotocol/lib'
+import { FileInfo, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
-import { PriceOptions } from 'src/@types/Price'
-
-interface BaseFileInfo {
-  type: string
-  valid?: boolean
-  contentLength?: string
-  contentType?: string
-}
-
-export interface UrlFileInfo extends BaseFileInfo {
-  type: 'url'
-  url: string
-}
-
-export interface ArweaveFileInfo extends BaseFileInfo {
-  type: 'arweave'
-  transactionId: string
-}
-
 export interface FormPublishService {
-  files: (UrlFileInfo | ArweaveFileInfo)[]
-  links?: (UrlFileInfo | ArweaveFileInfo)[]
+  files: FileInfo[]
+  links?: FileInfo[]
   timeout: string
   dataTokenOptions: { name: string; symbol: string }
   access: 'Download' | 'Compute' | string
@@ -53,7 +34,7 @@ export interface FormPublishData {
     dockerImageCustomChecksum?: string
   }
   services: FormPublishService[]
-  pricing: PriceOptions
+  pricing: PricePublishOptions
   feedback?: PublishFeedback
 }
 
@@ -72,4 +53,11 @@ export interface PublishFeedback {
     errorMessage?: string
     txHash?: string
   }
+}
+
+export interface MetadataAlgorithmContainer {
+  entrypoint: string
+  image: string
+  tag: string
+  checksum: string
 }

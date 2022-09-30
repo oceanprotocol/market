@@ -33,14 +33,8 @@ export function Steps({
       ...feedback,
       '1': {
         ...feedback['1'],
-        txCount: values.pricing.type === 'dynamic' ? 2 : 1,
-        description:
-          values.pricing.type === 'dynamic'
-            ? feedback['1'].description.replace(
-                'a single transaction',
-                'a single transaction, after an initial approve transaction'
-              )
-            : initialPublishFeedback['1'].description
+        txCount: 1,
+        description: initialPublishFeedback['1'].description
       }
     })
   }, [values.pricing.type, feedback, setFieldValue])

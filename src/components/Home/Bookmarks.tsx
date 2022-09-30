@@ -7,14 +7,13 @@ import Tooltip from '@shared/atoms/Tooltip'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { retrieveDDOListByDIDs } from '@utils/aquarius'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
 const columns: TableOceanColumn<AssetExtended>[] = [
   {
-    name: 'Data Set',
+    name: 'Dataset',
     selector: (row) => {
       const { metadata } = row
       return <AssetTitle title={metadata.name} asset={row} />
@@ -49,7 +48,7 @@ export default function Bookmarks(): ReactElement {
   const newCancelToken = useCancelToken()
 
   useEffect(() => {
-    if (!appConfig?.metadataCacheUri || bookmarks === []) return
+    if (!appConfig?.metadataCacheUri || bookmarks?.length === 0) return
 
     async function init() {
       if (!bookmarks?.length) {

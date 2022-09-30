@@ -7,7 +7,8 @@ import {
   Asset,
   Service
 } from '@oceanprotocol/lib'
-import { validationSchema, getInitialValues } from './_constants'
+import { validationSchema } from './_validation'
+import { getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
 import { useWeb3 } from '@context/Web3'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -16,7 +17,6 @@ import FormEditMetadata from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
 import content from '../../../../content/pages/editMetadata.json'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { useAbortController } from '@hooks/useAbortController'
 import DebugEditMetadata from './DebugEditMetadata'
 import { getOceanConfig } from '@utils/ocean'
@@ -44,8 +44,8 @@ export default function Edit({
     const config = getOceanConfig(asset.chainId)
 
     const fixedRateInstance = new FixedRateExchange(
-      web3,
-      config.fixedRateExchangeAddress
+      config.fixedRateExchangeAddress,
+      web3
     )
 
     const setPriceResp = await fixedRateInstance.setRate(

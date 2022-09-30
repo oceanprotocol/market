@@ -8,8 +8,6 @@ import {
   ProviderComputeInitializeResults,
   ProviderInstance
 } from '@oceanprotocol/lib'
-import { AssetExtended } from 'src/@types/AssetExtended'
-import { ArweaveFileInfo, UrlFileInfo } from 'src/components/Publish/_types'
 import Web3 from 'web3'
 import { getValidUntilTime } from './compute'
 
@@ -70,7 +68,7 @@ export async function getFileDidInfo(
   serviceId: string,
   providerUrl: string,
   withChecksum = false
-): Promise<(UrlFileInfo | ArweaveFileInfo)[]> {
+): Promise<FileInfo[]> {
   try {
     const response = await ProviderInstance.checkDidFiles(
       did,
@@ -87,7 +85,7 @@ export async function getFileDidInfo(
 export async function getFileUrlInfo(
   url: string,
   providerUrl: string
-): Promise<(UrlFileInfo | ArweaveFileInfo)[]> {
+): Promise<FileInfo[]> {
   try {
     const response = await ProviderInstance.checkFileUrl(url, providerUrl)
     return response

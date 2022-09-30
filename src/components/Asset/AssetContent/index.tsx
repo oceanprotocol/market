@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import Link from 'next/link'
 import Markdown from '@shared/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -14,7 +13,6 @@ import EditHistory from './EditHistory'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
 import Button from '@shared/atoms/Button'
 
