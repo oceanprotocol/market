@@ -1,6 +1,5 @@
-import React, { ReactElement, useEffect, useState, useCallback } from 'react'
+import React, { ReactElement, useState } from 'react'
 import Time from '@shared/atoms/Time'
-import { LoggerInstance } from '@oceanprotocol/lib'
 import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import Button from '@shared/atoms/Button'
 import { useWeb3 } from '@context/Web3'
@@ -8,11 +7,7 @@ import Details from './Details'
 import Refresh from '@images/refresh.svg'
 import { useUserPreferences } from '@context/UserPreferences'
 import NetworkName from '@shared/NetworkName'
-import { getComputeJobs } from '@utils/compute'
 import styles from './index.module.css'
-import { useAsset } from '@context/Asset'
-import { useIsMounted } from '@hooks/useIsMounted'
-import { useCancelToken } from '@hooks/useCancelToken'
 import AssetListTitle from '@shared/AssetList/AssetListTitle'
 
 export function Status({ children }: { children: string }): ReactElement {
@@ -49,58 +44,20 @@ const columns: TableOceanColumn<ComputeJobMetaData>[] = [
   }
 ]
 
-const refreshInterval = 10000 // 10 sec.
-let initialLoad = false
 export default function ComputeJobs({
   minimal,
-  assetChainIds,
+  jobs,
+  isLoading,
   refetchJobs
 }: {
   minimal?: boolean
-  assetChainIds?: number[]
-  refetchJobs?: boolean
+  jobs?: ComputeJobMetaData[]
+  isLoading?: boolean
+  refetchJobs?: any
 }): ReactElement {
   const { accountId } = useWeb3()
-  const { asset } = useAsset()
   const { chainIds } = useUserPreferences()
-  const isMounted = useIsMounted()
-  const newCancelToken = useCancelToken()
-
-  const [isLoading, setIsLoading] = useState(false)
-  const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const [columnsMinimal] = useState([columns[4], columns[5], columns[3]])
-
-  const fetchJobs = useCallback(async () => {
-    if (!chainIds || chainIds.length === 0 || !accountId) {
-      return
-    }
-
-    try {
-      !initialLoad && setIsLoading(true)
-      const computeJobs = await getComputeJobs(
-        assetChainIds || chainIds,
-        accountId,
-        asset,
-        newCancelToken()
-      )
-      isMounted() && setJobs(computeJobs.computeJobs)
-      initialLoad = true
-      setIsLoading(!computeJobs.isLoaded)
-    } catch (error) {
-      LoggerInstance.error(error.message)
-    }
-  }, [chainIds, accountId, isMounted, assetChainIds, asset, newCancelToken])
-
-  useEffect(() => {
-    fetchJobs()
-
-    // init periodic refresh for jobs
-    const balanceInterval = setInterval(() => fetchJobs(), refreshInterval)
-
-    return () => {
-      clearInterval(balanceInterval)
-    }
-  }, [refetchJobs])
 
   return accountId ? (
     <>
@@ -109,7 +66,7 @@ export default function ComputeJobs({
           style="text"
           size="small"
           title="Refresh compute jobs"
-          onClick={async () => await fetchJobs()}
+          onClick={async () => await refetchJobs(true)}
           disabled={isLoading}
           className={styles.refresh}
         >
