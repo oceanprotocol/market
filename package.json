@@ -88,7 +88,7 @@
     "@types/react-paginate": "^7.1.1",
     "@types/remove-markdown": "^0.3.1",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
-    "@typescript-eslint/parser": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.1",
     "apollo": "^2.34.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.23.1",
