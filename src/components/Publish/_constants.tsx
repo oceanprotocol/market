@@ -72,7 +72,7 @@ export const initialValues: FormPublishData = {
   },
   services: [
     {
-      files: [{ url: '', type: '' }],
+      files: [{ url: '', type: 'url' }],
       links: [{ url: '', type: '' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
