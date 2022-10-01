@@ -38,6 +38,15 @@ const validationService = {
     )
     .min(1, `At least one file is required.`)
     .required('Enter a valid URL and click ADD FILE.'),
+  transactionId: Yup.array<FileInfo[]>()
+    .of(
+      Yup.object().shape({
+        url: Yup.string().required('Required'),
+        valid: Yup.boolean().isTrue().required('File must be valid.')
+      })
+    )
+    .min(1, `At least one file is required.`)
+    .required('Enter a valid URL and click ADD FILE.'),
   links: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
@@ -55,6 +64,9 @@ const validationService = {
   timeout: Yup.string().required('Required'),
   access: Yup.string()
     .matches(/compute|access/g)
+    .required('Required'),
+  fileType: Yup.string()
+    .matches(/url|arweave/g)
     .required('Required'),
   providerUrl: Yup.object().shape({
     url: Yup.string().url('Must be a valid URL.').required('Required'),
