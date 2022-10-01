@@ -1,4 +1,5 @@
 import {
+  Arweave,
   ComputeAlgorithm,
   ComputeAsset,
   ComputeEnvironment,
@@ -6,7 +7,8 @@ import {
   FileInfo,
   LoggerInstance,
   ProviderComputeInitializeResults,
-  ProviderInstance
+  ProviderInstance,
+  UrlFile
 } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getValidUntilTime } from './compute'
@@ -87,7 +89,24 @@ export async function getFileUrlInfo(
   providerUrl: string
 ): Promise<FileInfo[]> {
   try {
-    const response = await ProviderInstance.checkFileUrl(url, providerUrl)
+    const urlFile: UrlFile = { url: url, method: 'GET' }
+    const response = await ProviderInstance.checkFileUrl(urlFile, providerUrl)
+    return response
+  } catch (error) {
+    LoggerInstance.error(error.message)
+  }
+}
+
+export async function getArweaveFileInfo(
+  transactionId: string,
+  providerUrl: string
+): Promise<FileInfo[]> {
+  try {
+    const arweaveFile: Arweave = { transactionId: transactionId }
+    const response = await ProviderInstance.checkFileUrl(
+      arweaveFile,
+      providerUrl
+    )
     return response
   } catch (error) {
     LoggerInstance.error(error.message)
