@@ -5,7 +5,7 @@ import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
 import { getFileUrlInfo } from '@utils/provider'
 import { FormPublishData } from 'src/components/Publish/_types'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance, UrlFile } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 
 export default function FilesInput(props: InputProps): ReactElement {
@@ -23,7 +23,12 @@ export default function FilesInput(props: InputProps): ReactElement {
         ? values?.services[0].providerUrl.url
         : asset.services[0].serviceEndpoint
       setIsLoading(true)
-      const checkedFile = await getFileUrlInfo(url, providerUrl)
+      const urlFile: UrlFile = {
+        type: 'url',
+        url: url,
+        method: 'GET'
+      }
+      const checkedFile = await getFileUrlInfo(urlFile, providerUrl)
 
       // error if something's not right from response
       if (!checkedFile)
