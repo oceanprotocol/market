@@ -9,23 +9,24 @@
   right: 0;
   bottom: 0;
   left: 0;
-  transition: all 300ms ease 0s;
+  transition: transform 300ms ease 0s;
   pointer-events: none;
   z-index: 20;
 }
 
 .floating {
+  display: flex;
+  flex-direction: column;
   pointer-events: auto;
   width: 100%;
   max-width: 400px;
   height: 530px;
   max-height: 80vh;
-  background-color: var(--brand-black);
+  background-color: var(--background-content);
   border: 1px solid var(--border-color);
   border-bottom: 0;
   border-radius: var(--border-radius);
   transform: translateY(0);
-  transition: all 0.3s ease-in-out;
 }
 
 .isClosed {
@@ -36,6 +37,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  align-items: center;
   padding: calc(0.35 * var(--spacer)) var(--spacer);
   border-bottom: 1px solid var(--border-color);
   box-shadow: var(--box-shadow);
@@ -48,6 +50,22 @@
   width: 1.5rem;
   margin-right: calc(0.5 * var(--spacer));
   fill: var(--font-color-text);
+}
+
+.back {
+  margin-left: 0;
+  width: 1rem;
+  margin-right: calc(0.5 * var(--spacer));
+  fill: var(--font-color-text);
+  transform: rotate(180deg);
+}
+
+.btnBack {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
 }
 
 .toggle {
@@ -68,9 +86,92 @@
   transform: scaleY(-1);
 }
 
+.dmList {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
 .dmItem {
-  padding: calc(var(--spacer) / 2);
+  display: flex;
+  padding: calc(var(--spacer) / 2) var(--spacer);
   border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+}
+
+.dmDate {
+  font-size: var(--font-size-mini);
+  color: var(--font-color-text);
+  min-width: calc(var(--spacer) * 1.5);
+  text-align: right;
+}
+
+.dmCount {
+  background-color: var(--color-primary);
+  width: 20px;
+  height: 20px;
+  color: var(--brand-white);
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-size-mini);
+  font-weight: 600;
+}
+
+.accountAvatarSet .dmCount {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+}
+
+.header .dmCount {
+  margin-left: calc(var(--spacer) / 4);
+}
+
+.accountInfo {
+  -webkit-box-flex: 1;
+  flex: 1;
+  padding-left: calc(var(--spacer) / 2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.accountHeading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.accountAvatarSet {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.accountAvatar {
+  aspect-ratio: 1/1;
+  border-radius: 100%;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+  width: calc(var(--font-size-large) * 2.5);
+  height: calc(var(--font-size-large) * 2.5);
+  margin-left: 0;
+}
+
+.accountName {
+  margin-bottom: calc(var(--spacer) / 6);
+  font-size: var(--font-size-medium);
+  color: var(--color-primary);
+}
+
+.accountChat {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dmDetails {
@@ -79,7 +180,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--background-body);
+  height: 100%;
+  background-color: var(--background-content);
 }
 
 @media screen and (min-width: 42rem) {

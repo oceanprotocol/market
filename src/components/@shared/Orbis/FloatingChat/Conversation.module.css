@@ -1,0 +1,89 @@
+.conversationBox {
+  padding: calc(var(--spacer) / 2);
+  height: calc(100% - (var(--spacer) * 3.5));
+  overflow-y: auto;
+}
+
+.conversationRecipient,
+.conversationSend {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.conversationSend .chatBubbleItem {
+  text-align: right;
+  padding-left: 48px;
+}
+
+.colAvatar {
+  flex-shrink: 0;
+  padding-right: calc(var(--spacer) / 2);
+}
+
+.avatar {
+  aspect-ratio: 1/1;
+  border-radius: 100%;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+  width: calc(var(--font-size-large) * 2);
+  height: calc(var(--font-size-large) * 2);
+}
+
+.colBubble {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.chatBubbleItem {
+  display: block;
+}
+
+.chatBubbleItem + .chatBubbleItem {
+  margin-top: calc(var(--spacer) / 8);
+}
+
+.chatBubble {
+  display: inline-block;
+  background-color: var(--color-primary);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2.5);
+  font-size: var(--font-size-base);
+  border-radius: 1rem;
+}
+
+.chatPrimary {
+  color: var(--brand-white);
+  background-color: var(--color-primary);
+}
+
+.chatDefault {
+  background-color: var(--border-color);
+}
+
+.conversationRecipient .colBubble .chatBubbleItem .chatBubble {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0px;
+}
+
+.conversationRecipient .colBubble .chatBubbleItem:first-of-type .chatBubble {
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 0px;
+}
+
+.conversationSend .colBubble .chatBubbleItem .chatBubble {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0px;
+  text-align: left;
+}
+
+.conversationSend .colBubble .chatBubbleItem:first-of-type .chatBubble {
+  border-top-right-radius: 1rem;
+  border-bottom-left-radius: 0px;
+}
+
+.chatStamp {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  padding-top: calc(var(--spacer) / 8);
+}

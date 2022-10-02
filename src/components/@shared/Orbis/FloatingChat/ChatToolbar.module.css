@@ -1,0 +1,46 @@
+.chatToolbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: var(--background-content);
+  padding: calc(var(--spacer) / 2);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chatMessage {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: calc(var(--spacer) / 2);
+}
+
+.chatMessage div {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.chatMessage label {
+  margin: 0;
+}
+
+.button {
+  right: calc(var(--spacer) / 4);
+  background-color: var(--background-content);
+  border: none;
+  cursor: pointer;
+  color: var(--brand-white);
+  font-size: var(--font-size-title);
+  transition: color 200ms ease;
+}
+
+.button:hover,
+.button:focus {
+  color: var(--color-primary);
+}
+
+.sendIcon {
+  fill: currentColor;
+}
