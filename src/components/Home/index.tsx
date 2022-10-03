@@ -48,13 +48,16 @@ export default function HomePage(): ReactElement {
         <h3>Bookmarks</h3>
         <Bookmarks />
       </section>
+
       <SectionQueryResult
-        title="Highest Ve Allocation"
+        title="Highest veOCEAN Allocations"
         query={queryAndDids?.[0]}
         queryData={queryAndDids?.[1]}
       />
 
       <SectionQueryResult title="Most Sales" query={queryMostSales} />
+
+      <TopSales title="Publishers With Most Sales" />
 
       <SectionQueryResult
         title="Recently Published"
@@ -65,8 +68,6 @@ export default function HomePage(): ReactElement {
           </Button>
         }
       />
-
-      <TopSales title="Publishers With Most Sales" />
     </>
   )
 }
