@@ -32,7 +32,7 @@ export default function Account({
           <Jellyfish className={styles.image} />
         )}
       </figure>
-
+      {/* <div>aaa</div> */}
       <div>
         <h3 className={styles.name}>{profile?.name}</h3>
         {accountId && (
