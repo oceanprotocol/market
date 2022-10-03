@@ -1,14 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ChatBubble from '@images/chatbubble.svg'
 import ArrowBack from '@images/arrow.svg'
 import ChevronDoubleUp from '@images/chevrondoubleup.svg'
 import styles from './index.module.css'
 import Conversation from './Conversation'
 import ChatToolbar from './ChatToolbar'
+import { useOrbis } from '@context/Orbis'
 
 export default function FloatingChat() {
   const [opened, setOpened] = useState(false)
-  const [dmDetails, setDmDetails] = useState(null)
+  const [conversationId, setConversationId] = useState(null)
+  const [conversations, setConversations] = useState([])
+  const [messages, setMessages] = useState([])
+
+  const { orbis, account } = useOrbis()
+
+  const getConversations = async () => {
+    const { data, error } = await orbis.getConversations({ did: account?.did })
+
+    if (data) {
+      console.log(data)
+      setConversations(data)
+    }
+    if (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (orbis && account) {
+      getConversations()
+    }
+  }, [orbis, account])
+
+  const getMessages = async (id: string) => {
+    const { data, error } = await orbis.getMessages(id)
+
+    if (data) {
+      console.log(data)
+      setMessages(data)
+    }
+    if (error) {
+      console.log(error)
+    }
+  }
 
   const dummyData = [
     {
@@ -45,8 +80,9 @@ export default function FloatingChat() {
     return prev + +current.count
   }, 0)
 
-  function openDetails(id: string) {
-    setDmDetails(id)
+  function openConversation(id: string) {
+    setConversationId(id)
+    getMessages(id)
   }
 
   return (
@@ -69,11 +105,11 @@ export default function FloatingChat() {
           </button>
         </div>
         <div className={styles.dmList}>
-          {dummyData.map((dm, index) => (
+          {conversations.map((dm, index) => (
             <div
               key={index}
               className={styles.dmItem}
-              onClick={() => openDetails(dm.name)}
+              onClick={() => openConversation(dm.stream_id)}
             >
               <div className={styles.accountAvatarSet}>
                 <img
@@ -95,14 +131,14 @@ export default function FloatingChat() {
             </div>
           ))}
         </div>
-        {dmDetails && (
-          <div className={styles.dmDetails}>
+        {conversationId && (
+          <div className={styles.conversationId}>
             <div className={styles.header}>
               <button
                 type="button"
                 aria-label="button"
                 className={styles.btnBack}
-                onClick={() => openDetails(null)}
+                onClick={() => openConversation(null)}
               >
                 <ArrowBack
                   role="img"
@@ -110,7 +146,7 @@ export default function FloatingChat() {
                   className={styles.back}
                 />
               </button>
-              <span>{dmDetails}</span>
+              <span>{conversationId}</span>
               <button
                 type="button"
                 className={styles.toggle}
@@ -123,7 +159,7 @@ export default function FloatingChat() {
                 />
               </button>
             </div>
-            <Conversation />
+            <Conversation messages={messages} orbis={orbis} />
             <ChatToolbar />
           </div>
         )}

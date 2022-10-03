@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './Conversation.module.css'
 
-export default function DmConversation() {
+export default function DmConversation({
+  messages,
+  orbis
+}: {
+  messages: OrbisPostInterface[]
+  orbis: OrbisInterface
+}) {
   const dummyData = [
     {
       name: 'realdatawhale.eth',
@@ -17,23 +23,39 @@ export default function DmConversation() {
     }
   ]
 
+  const decryptMessage = async (content: OrbisPostContentInterface) => {
+    const res = await orbis.decryptMessage(content)
+
+    if (res) {
+      console.log(res)
+    }
+    return <>{res.result}</>
+  }
+
+  useEffect(() => {
+    console.log(messages)
+    messages.forEach((message) => {
+      decryptMessage(message?.content)
+    })
+  }, [messages])
+
   return (
     <>
-      {dummyData.map((dm, index) => (
+      {messages.map((dm, index) => (
         <div className={styles.conversationBox} key={index}>
           <div className={styles.conversationRecipient}>
             <div className={styles.colAvatar}>
-              <img src={dm.image} alt="Avatar" className={styles.avatar}></img>
+              {/* <img src={} alt="Avatar" className={styles.avatar}></img> */}
             </div>
             <div className={styles.colBubble}>
               <div className={styles.chatBubbleItem}>
                 <div className={`${styles.chatBubble} ${styles.chatPrimary}`}>
-                  {dm.chat1}
+                  (<>{decryptMessage(dm.content)}</>)
                 </div>
               </div>
               <div className={styles.chatBubbleItem}>
                 <div className={`${styles.chatBubble} ${styles.chatPrimary}`}>
-                  {dm.chat2}
+                  {/* {dm.chat2} */}
                 </div>
                 <div className={styles.chatStamp}>{dm.timestamp}</div>
               </div>
@@ -43,17 +65,17 @@ export default function DmConversation() {
             <div className={styles.colBubble}>
               <div className={styles.chatBubbleItem}>
                 <div className={`${styles.chatBubble} ${styles.chatDefault}`}>
-                  {dm.chat3}
+                  {/* {dm.chat3} */}
                 </div>
               </div>
               <div className={styles.chatBubbleItem}>
                 <div className={`${styles.chatBubble} ${styles.chatDefault}`}>
-                  {dm.chat4}
+                  {/* {dm.chat4} */}
                 </div>
               </div>
               <div className={styles.chatBubbleItem}>
                 <div className={`${styles.chatBubble} ${styles.chatDefault}`}>
-                  {dm.chat5}
+                  {/* {dm.chat5} */}
                 </div>
                 <div className={styles.chatStamp}>{dm.timestamp}</div>
               </div>
@@ -61,22 +83,22 @@ export default function DmConversation() {
           </div>
           <div className={styles.conversationRecipient}>
             <div className={styles.colAvatar}>
-              <img src={dm.image} alt="Avatar" className={styles.avatar}></img>
+              {/* <img src={} alt="Avatar" className={styles.avatar}></img> */}
             </div>
             <div className={styles.colBubble}>
               <div className={styles.chatBubbleItem}>
                 <div className={`${styles.chatBubble} ${styles.chatPrimary}`}>
-                  {dm.chat1}
+                  {/* {dm.chat1} */}
                 </div>
               </div>
               <div className={styles.chatBubbleItem}>
                 <div className={`${styles.chatBubble} ${styles.chatPrimary}`}>
-                  {dm.chat4}
+                  {/* {dm.chat4} */}
                 </div>
               </div>
               <div className={styles.chatBubbleItem}>
                 <div className={`${styles.chatBubble} ${styles.chatPrimary}`}>
-                  {dm.chat2}
+                  {/* {dm.chat2} */}
                 </div>
                 <div className={styles.chatStamp}>{dm.timestamp}</div>
               </div>
