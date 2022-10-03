@@ -6,7 +6,7 @@ import removeMarkdown from 'remove-markdown'
 import Publisher from '@shared/Publisher'
 import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
-import styles from './AssetTeaser.module.css'
+import styles from './index.module.css'
 import { getServiceByName } from '@utils/ddo'
 
 declare type AssetTeaserProps = {
@@ -24,26 +24,32 @@ export default function AssetTeaser({
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
   const { orders } = asset.stats
+
+  // TODO: get this number for each asset
+  const allocated = 5000000
+
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`}>
         <a className={styles.link}>
+          <aside className={styles.detailLine}>
+            <AssetType
+              className={styles.typeLabel}
+              type={type}
+              accessType={accessType}
+            />
+            <NetworkName
+              networkId={asset.chainId}
+              className={styles.typeLabel}
+            />
+          </aside>
           <header className={styles.header}>
-            <div className={styles.symbol}>{datatokens[0]?.symbol}</div>
+            <div>{datatokens[0]?.symbol}</div>
             <Dotdotdot tagName="h1" clamp={3} className={styles.title}>
               {name.slice(0, 200)}
             </Dotdotdot>
-            {!noPublisher && (
-              <Publisher account={owner} minimal className={styles.publisher} />
-            )}
+            {!noPublisher && <Publisher account={owner} minimal />}
           </header>
-
-          <AssetType
-            type={type}
-            accessType={accessType}
-            className={styles.typeDetails}
-            totalSales={orders}
-          />
 
           <div className={styles.content}>
             <Dotdotdot tagName="p" clamp={3}>
@@ -51,9 +57,21 @@ export default function AssetTeaser({
             </Dotdotdot>
           </div>
 
-          <footer className={styles.foot}>
-            <Price accessDetails={asset.accessDetails} size="small" />
-            <NetworkName networkId={asset.chainId} className={styles.network} />
+          <Price accessDetails={asset.accessDetails} size="small" />
+
+          <footer className={styles.footer}>
+            {(allocated || allocated > 0) && (
+              <span className={styles.typeLabel}>
+                {allocated < 0 ? '' : `${allocated} veOCEAN`}
+              </span>
+            )}
+            {(orders || orders === 0) && (
+              <span className={styles.typeLabel}>
+                {orders < 0
+                  ? 'N/A'
+                  : `${orders} ${orders === 1 ? 'sale' : 'sales'}`}
+              </span>
+            )}
           </footer>
         </a>
       </Link>

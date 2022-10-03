@@ -1,4 +1,4 @@
-import AssetTeaser from '@shared/AssetTeaser/AssetTeaser'
+import AssetTeaser from '@shared/AssetTeaser'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
