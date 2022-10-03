@@ -38,13 +38,13 @@ export default function AssetTeaser({
               type={type}
               accessType={accessType}
             />
+            <span className={styles.typeLabel}>{datatokens[0]?.symbol}</span>
             <NetworkName
               networkId={asset.chainId}
               className={styles.typeLabel}
             />
           </aside>
           <header className={styles.header}>
-            <div>{datatokens[0]?.symbol}</div>
             <Dotdotdot tagName="h1" clamp={3} className={styles.title}>
               {name.slice(0, 200)}
             </Dotdotdot>
@@ -60,18 +60,18 @@ export default function AssetTeaser({
           <Price accessDetails={asset.accessDetails} size="small" />
 
           <footer className={styles.footer}>
-            {(allocated || allocated > 0) && (
+            {allocated && allocated > 0 ? (
               <span className={styles.typeLabel}>
-                {allocated < 0 ? '' : `${allocated} veOCEAN`}
+                {allocated < 0 ? '' : `${allocated} veOCEAN allocated`}
               </span>
-            )}
-            {(orders || orders === 0) && (
+            ) : null}
+            {orders && orders > 0 ? (
               <span className={styles.typeLabel}>
                 {orders < 0
                   ? 'N/A'
                   : `${orders} ${orders === 1 ? 'sale' : 'sales'}`}
               </span>
-            )}
+            ) : null}
           </footer>
         </a>
       </Link>
