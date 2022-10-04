@@ -11,7 +11,7 @@ declare interface OrbisInterface {
   createContext: function
   createConversation: function
   createGroup: function
-  createPost: function
+  createPost: (options: any) => void
   createTileDocument: function
   decryptMessage: function
   decryptPost: function
