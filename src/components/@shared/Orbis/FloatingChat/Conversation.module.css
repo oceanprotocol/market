@@ -2,15 +2,18 @@
   padding: calc(var(--spacer) / 2);
   height: calc(100% - (var(--spacer) * 3.5));
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   overflow-y: auto;
 }
 
-.conversationRecipient,
-.conversationSend {
+.conversationItem {
   display: flex;
   align-items: flex-end;
-  margin-bottom: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.conversationItem[data-type='right'] {
+  justify-content: end;
 }
 
 .conversationSend .chatBubbleItem {
@@ -28,14 +31,14 @@
   border-radius: 100%;
   border: 1px solid var(--border-color);
   flex-shrink: 0;
-  width: calc(var(--font-size-large) * 2);
-  height: calc(var(--font-size-large) * 2);
+  width: calc(var(--font-size-large) * 2) !important;
+  height: calc(var(--font-size-large) * 2) !important;
 }
 
 .colBubble {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  max-width: 80%;
 }
 
 .chatBubbleItem {
@@ -50,7 +53,7 @@
   display: inline-block;
   background-color: var(--color-primary);
   padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2.5);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-text);
   border-radius: 1rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -65,22 +68,28 @@
 }
 
 .chatDefault {
-  border-bottom-left-radius: 0px;
   background-color: var(--border-color);
+  border-bottom-left-radius: 0px;
 }
 
-.conversationRecipient[data-sender='away']
-  + .conversationRecipient[data-sender='away']
+.conversationItem[data-type='right']
+  + .conversationItem[data-type='right']
   .chatBubble {
-  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
-/* .conversationRecipient .colBubble .chatBubbleItem .chatBubble {
+.conversationItem[data-type='left']
+  + .conversationItem[data-type='left']
+  .chatBubble {
+  border-top-left-radius: 0;
+}
+
+/* .conversationItem .colBubble .chatBubbleItem .chatBubble {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0px;
 } */
 
-/* .conversationRecipient .colBubble .chatBubbleItem:first-of-type .chatBubble {
+/* .conversationItem .colBubble .chatBubbleItem:first-of-type .chatBubble {
   border-top-left-radius: 1rem;
   border-bottom-left-radius: 0px;
 }
@@ -100,4 +109,22 @@
   font-size: var(--font-size-small);
   color: var(--color-secondary);
   padding-top: calc(var(--spacer) / 8);
+}
+
+.decrypting {
+  -webkit-animation: pulse 2s ease-in-out 0s infinite forwards;
+  -moz-animation: pulse 2s ease-in-out 0s infinite forwards;
+  animation: pulse 2s ease-in-out 0s infinite forwards;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

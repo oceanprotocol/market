@@ -6,14 +6,17 @@ import styles from './index.module.css'
 import Conversation from './Conversation'
 import ChatToolbar from './ChatToolbar'
 import { useOrbis } from '@context/Orbis'
+import ConversationItem from './ConversationItem'
 
 export default function FloatingChat() {
+  const { orbis, account } = useOrbis()
+
   const [opened, setOpened] = useState(false)
   const [conversationId, setConversationId] = useState(null)
   const [conversations, setConversations] = useState([])
   const [messages, setMessages] = useState([])
-
-  const { orbis, account } = useOrbis()
+  const [conversationTitle, setConversationTitle] = useState(null)
+  const [unreads, setUnreads] = useState([])
 
   const getConversations = async () => {
     const { data, error } = await orbis.getConversations({ did: account?.did })
@@ -27,8 +30,34 @@ export default function FloatingChat() {
     }
   }
 
+  const getNotifications = async () => {
+    const { data, error } = await orbis.api.rpc('orbis_f_notifications', {
+      user_did: account?.did || 'none',
+      notif_type: 'messages'
+    })
+
+    if (error) {
+      console.log(error)
+    }
+
+    if (data.length > 0) {
+      const _unreads = data.filter((o: OrbisNotificationInterface) => {
+        return o.status === 'new'
+      })
+      setUnreads(_unreads)
+    }
+  }
+
+  const getConversationUnreads = (conversationId: string) => {
+    const _unreads = unreads.filter(
+      (o) => o.content.conversation_id === conversationId
+    )
+    return _unreads.length
+  }
+
   useEffect(() => {
     if (orbis && account) {
+      getNotifications()
       getConversations()
     }
   }, [orbis, account])
@@ -37,7 +66,8 @@ export default function FloatingChat() {
     const { data, error } = await orbis.getMessages(id)
 
     if (data) {
-      console.log(data)
+      data.reverse()
+      // const _messages = [...messages, ...data]
       setMessages(data)
     }
     if (error) {
@@ -45,44 +75,20 @@ export default function FloatingChat() {
     }
   }
 
-  const dummyData = [
-    {
-      name: '0xd30D…AFbD',
-      chat: 'Hello world!',
-      date: '15 Minutes Ago',
-      image: '/apple-touch-icon.png',
-      count: '3'
-    },
-    {
-      name: 'realdatawhale.eth',
-      chat: 'Getting some similar glitches with profile NFT. The current non-NFT photo works fine.',
-      date: '1 Day Ago',
-      image: '/apple-touch-icon.png',
-      count: '1'
-    },
-    {
-      name: 'hidetaka.eth',
-      chat: 'I already updated in the past.',
-      date: '1 Oct',
-      image: '/apple-touch-icon.png',
-      count: '0'
-    },
-    {
-      name: 'orbisclub.eth',
-      chat: 'Yeah that is weird, Did you update your profile within Orbis or with an app you built',
-      date: '1 Oct',
-      image: '/apple-touch-icon.png',
-      count: '0'
+  function openConversation(conversation: OrbisConversationInterface | null) {
+    if (!conversation) {
+      setConversationId(null)
+      setConversationTitle(null)
+      setMessages([])
+    } else {
+      setConversationId(conversation.stream_id)
+      getMessages(conversation.stream_id)
+      // Get conversation title
+      const recipient = conversation.recipients_details.find(
+        (o) => o.did !== account.did
+      )
+      setConversationTitle(recipient?.metadata?.ensName)
     }
-  ]
-
-  const sumCount = dummyData.reduce(function (prev, current) {
-    return prev + +current.count
-  }, 0)
-
-  function openConversation(id: string) {
-    setConversationId(id)
-    getMessages(id)
   }
 
   return (
@@ -91,7 +97,9 @@ export default function FloatingChat() {
         <div className={styles.header}>
           <ChatBubble role="img" aria-label="Chat" className={styles.icon} />
           <span>Direct Messages</span>
-          {sumCount > 0 && <span className={styles.dmCount}>{sumCount}</span>}
+          {unreads.length > 0 && (
+            <span className={styles.notificationCount}>{unreads.length}</span>
+          )}
           <button
             type="button"
             className={styles.toggle}
@@ -104,35 +112,18 @@ export default function FloatingChat() {
             />
           </button>
         </div>
-        <div className={styles.dmList}>
-          {conversations.map((dm, index) => (
-            <div
+        <div className={styles.conversations}>
+          {conversations.map((conversation, index) => (
+            <ConversationItem
               key={index}
-              className={styles.dmItem}
-              onClick={() => openConversation(dm.stream_id)}
-            >
-              <div className={styles.accountAvatarSet}>
-                <img
-                  src={dm.image}
-                  alt="Avatar"
-                  className={styles.accountAvatar}
-                ></img>
-                {dm.count > '0' && (
-                  <div className={styles.dmCount}>{dm.count}</div>
-                )}
-              </div>
-              <div className={styles.accountInfo}>
-                <div className={styles.accountHeading}>
-                  <h3 className={styles.accountName}>{dm.name}</h3>
-                  <span className={styles.dmDate}>{dm.date}</span>
-                </div>
-                <p className={styles.accountChat}>{dm.chat}</p>
-              </div>
-            </div>
+              conversation={conversation}
+              unreads={getConversationUnreads(conversation.stream_id)}
+              onClick={() => openConversation(conversation)}
+            />
           ))}
         </div>
         {conversationId && (
-          <div className={styles.conversationId}>
+          <div className={styles.conversation}>
             <div className={styles.header}>
               <button
                 type="button"
@@ -146,7 +137,7 @@ export default function FloatingChat() {
                   className={styles.back}
                 />
               </button>
-              <span>{conversationId}</span>
+              <span>{conversationTitle}</span>
               <button
                 type="button"
                 className={styles.toggle}
@@ -159,7 +150,7 @@ export default function FloatingChat() {
                 />
               </button>
             </div>
-            <Conversation messages={messages} orbis={orbis} />
+            <Conversation messages={messages} />
             <ChatToolbar />
           </div>
         )}

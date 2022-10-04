@@ -124,7 +124,7 @@ export default function Post({
       <Blockies
         accountId={address}
         className={styles.blockies}
-        image={profile?.image}
+        image={profile?.image || post?.creator_details?.profile?.pfp}
       />
       <div className={styles.content}>
         {showProfile && (

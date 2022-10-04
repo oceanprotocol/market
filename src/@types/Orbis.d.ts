@@ -63,8 +63,12 @@ declare interface OrbisPostCreatorDetailsInterface {
   a_r: number
   did: string
   metadata: {
+    address: string
     chain: string
+    ensName: string
   }
+  nonces?: object
+  profile?: OrbisCreatorProfileInterface
 }
 
 declare interface OrbisPostMentionsInterface {
@@ -142,4 +146,41 @@ declare interface OrbisPostInterface {
   stream_id: string
   timestamp: number
   type: string
+}
+
+declare interface OrbisConversationInterface {
+  content: {
+    recipients: string[]
+  }
+  context?: string | null
+  details: {
+    content: {
+      recipients: string[]
+      creator: string
+    }
+  }
+  last_message_timestamp: number
+  last_timestamp_read: number
+  recipients: string[]
+  recipients_details: OrbisPostCreatorDetailsInterface[]
+  stream_id: string
+}
+
+declare interface OrbisNotificationInterface {
+  content: {
+    conversation_id: string
+    encryptedMessage: {
+      accessControlConditions: string
+      encryptedString: string
+      encryptedSymmetricKey: string
+    }
+  }
+  family: string
+  post_details: object
+  status: string
+  type: string
+  user_notifying_details: {
+    did: string
+    profile: OrbisCreatorProfileInterface
+  }
 }

@@ -30,7 +30,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     }
   }
 
-  const checkConnection = async (provider: object): Promise<void> => {
+  const checkConnection = async (): Promise<void> => {
     const res = await orbis.isConnected()
 
     if (res.status === 200) {
@@ -67,7 +67,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   // Check if wallet connected
   useEffect(() => {
     if (!account && orbis && web3Provider) {
-      checkConnection(web3Provider)
+      checkConnection()
     }
   }, [account, orbis, web3Provider])
 

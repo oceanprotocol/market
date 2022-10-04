@@ -1,0 +1,80 @@
+.conversationItem {
+  display: flex;
+  padding: calc(var(--spacer) / 2) var(--spacer);
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+}
+
+.accountAvatarSet {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.accountAvatarSet .notificationCount {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+}
+
+.accountAvatar {
+  aspect-ratio: 1/1;
+  border-radius: 100%;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+  width: calc(var(--font-size-large) * 2.5);
+  height: calc(var(--font-size-large) * 2.5);
+  margin-left: 0;
+}
+
+.notificationCount {
+  background-color: var(--color-primary);
+  width: 20px;
+  height: 20px;
+  color: var(--brand-white);
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-size-mini);
+  font-weight: 600;
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+}
+
+.accountInfo {
+  -webkit-box-flex: 1;
+  flex: 1;
+  padding-left: calc(var(--spacer) / 2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.accountHeading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.accountName {
+  margin-bottom: calc(var(--spacer) / 6);
+  font-size: var(--font-size-medium);
+  color: var(--color-primary);
+}
+
+.lastMessageDate {
+  font-size: var(--font-size-mini);
+  color: var(--font-color-text);
+  min-width: calc(var(--spacer) * 1.5);
+  text-align: right;
+}
+
+.accountChat {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
