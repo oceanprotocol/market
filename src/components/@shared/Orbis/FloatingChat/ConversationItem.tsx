@@ -31,7 +31,7 @@ export default function ConversationItem({
         (o) => o.did !== account.did
       )
 
-      const _address = didToAddress(details.did)
+      const _address = didToAddress(details?.did)
       setAddress(_address)
 
       if (details?.metadata?.ensName) {
