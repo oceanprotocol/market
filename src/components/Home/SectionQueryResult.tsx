@@ -52,11 +52,9 @@ export default function SectionQueryResult({
           const result = await queryMetadata(query, newCancelToken())
           if (!isMounted()) return
           if (queryData && result?.totalResults > 0) {
-            console.log('res', result, queryData)
             const sortedAssets = sortElements(result.results, queryData)
             const overflow = sortedAssets.length - 9
             sortedAssets.splice(sortedAssets.length - overflow, overflow)
-            console.log('sortedAssets', sortedAssets)
             result.results = sortedAssets
           }
           setResult(result)
