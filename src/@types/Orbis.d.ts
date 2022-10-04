@@ -78,11 +78,11 @@ declare interface OrbisPostMentionsInterface {
 
 interface OrbisPostContentInterface {
   body: string
-  context: string
-  master: string
-  mentions: OrbisPostMentionsInterface[]
-  reply_to: string
-  type: string
+  context?: string
+  master?: string
+  mentions?: OrbisPostMentionsInterface[]
+  reply_to?: string
+  type?: string
 }
 
 interface OrbisCreatorMetadataInterface {
@@ -105,7 +105,7 @@ interface OrbisCreatorProfileInterface {
 
 declare interface OrbisPostInterface {
   content: OrbisPostContentInterface
-  context: string
+  context?: string
   context_details?: {
     channel_details?: {
       description: string
@@ -121,16 +121,16 @@ declare interface OrbisPostInterface {
     }
     group_id?: string
   }
-  count_commits: number
-  count_downvotes: number
-  count_haha: number
-  count_likes: number
-  count_replies: number
+  count_commits?: number
+  count_downvotes?: number
+  count_haha?: number
+  count_likes?: number
+  count_replies?: number
   creator: string
   creator_details?: {
-    a_r: number
+    a_r?: number
     did: string
-    metadata: OrbisCreatorMetadataInterface
+    metadata?: OrbisCreatorMetadataInterface
     nonces?: object
     profile?: OrbisCreatorProfileInterface
   }
@@ -145,7 +145,7 @@ declare interface OrbisPostInterface {
   reply_to_details?: OrbisPostContentInterface
   stream_id: string
   timestamp: number
-  type: string
+  type?: string
 }
 
 declare interface OrbisConversationInterface {

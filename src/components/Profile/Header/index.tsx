@@ -7,6 +7,9 @@ import Account from './Account'
 import styles from './index.module.css'
 import { useProfile } from '@context/Profile'
 import { useOrbis } from '@context/Orbis'
+import { Context } from 'urql'
+import { filter } from 'lodash'
+import { sleep } from '@utils/index'
 
 const isDescriptionTextClamped = () => {
   const el = document.getElementById('description')
@@ -27,7 +30,15 @@ export default function AccountHeader({
   accountId: string
 }): ReactElement {
   const { profile } = useProfile()
-  const { orbis, account } = useOrbis()
+  const {
+    orbis,
+    account,
+    convOpen,
+    setConvOpen,
+    conversationId,
+    setConversationId,
+    conversations
+  } = useOrbis()
   const [isShowMore, setIsShowMore] = useState(false)
   const [userDid, setUserDid] = useState<string>()
 
@@ -37,11 +48,18 @@ export default function AccountHeader({
 
   const getDid = async () => {
     const { data, error } = await orbis.getDids(accountId)
+    console.log(data)
     if (data) {
       if (data.length > 0) {
-        setUserDid(data[0])
+        console.log(data[0].did)
+        setUserDid(data[0].did)
+      } else if (accountId) {
+        console.log(accountId)
+        setUserDid('did:pkh:eip155:1:' + accountId?.toLocaleLowerCase())
       } else {
-        setUserDid('did:pkh:eip155:1:' + accountId.toLocaleLowerCase())
+        console.log('try again')
+        await sleep(1000)
+        getDid()
       }
     }
 
@@ -51,24 +69,47 @@ export default function AccountHeader({
   }
 
   const createConversation = async () => {
-    // const res = await orbis.createConversation({
-    //   recipients: [userDid]
-    // })
-    // if (res.status === 200) {
-    //   console.log(res)
-    // }
+    const res = await orbis.createConversation({
+      recipients: [userDid],
+      context: 'ocean_market'
+    })
+    if (res.status === 200) {
+      console.log(res)
+      const { data } = await orbis.getConversation(res.doc)
+      console.log(data)
+      setConversationId(res.doc)
+      setConvOpen(true)
+    }
     console.log('clicked')
   }
 
   useEffect(() => {
-    console.log(userDid)
-  }, [userDid])
+    if (orbis && accountId) {
+      getDid()
+      // console.log(userDid)
+    }
+  }, [accountId])
 
   const clickHandler = () => {
     console.log(accountId)
     console.log(account)
     getDid()
     createConversation()
+  }
+
+  const checkConversation = () => {
+    const filtered = conversations.filter(
+      (conversation: OrbisConversationInterface) => {
+        // console.log(conversation)
+        console.log(userDid)
+        return conversation.recipients.includes(userDid)
+      }
+    )
+    if (!filtered.length) {
+      if (userDid) {
+        createConversation()
+      }
+    }
   }
 
   return (
@@ -84,7 +125,8 @@ export default function AccountHeader({
             style="primary"
             size="small"
             className={styles.sendMessage}
-            onClick={clickHandler}
+            disabled={!userDid}
+            onClick={checkConversation}
           >
             Send Messages
           </Button>

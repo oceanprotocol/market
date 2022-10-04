@@ -16,6 +16,9 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   const { web3Provider } = useWeb3()
   const [orbis, setOrbis] = useState<OrbisInterface>()
   const [account, setAccount] = useState<OrbisAccountInterface>()
+  const [convOpen, setConvOpen] = useState(false)
+  const [conversationId, setConversationId] = useState(null)
+  const [conversations, setConversations] = useState([])
 
   // Connecting to Orbis
   const connectOrbis = async (provider: object): Promise<void> => {
@@ -65,14 +68,46 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   // }, [orbis])
 
   // Check if wallet connected
+
+  const getConversations = async () => {
+    const { data, error } = await orbis.getConversations({
+      did: account?.did
+      // context: 'ocean_market'
+    })
+
+    if (data) {
+      console.log(data)
+      setConversations(data)
+    }
+    if (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     if (!account && orbis && web3Provider) {
       checkConnection()
     }
+    if (account && orbis) {
+      getConversations()
+    }
   }, [account, orbis, web3Provider])
 
   return (
-    <OrbisContext.Provider value={{ orbis, account, connectOrbis }}>
+    <OrbisContext.Provider
+      value={{
+        orbis,
+        account,
+        connectOrbis,
+        setConvOpen,
+        convOpen,
+        conversationId,
+        setConversationId,
+        conversations,
+        setConversations,
+        getConversations
+      }}
+    >
       {children}
     </OrbisContext.Provider>
   )

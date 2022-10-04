@@ -5,17 +5,19 @@ import { useOrbis } from '@context/Orbis'
 
 export default function Postbox({
   id,
-  placeholder = 'Share your post here...'
+  placeholder = 'Share your post here...',
+  callbackPost
 }: {
   placeholder: string
   id: string
+  callbackPost: (post: OrbisPostInterface) => void
 }) {
   const [post, setPost] = useState()
 
   const postBoxArea = useRef(null)
-  const { orbis } = useOrbis()
+  const { orbis, account } = useOrbis()
 
-  function handleInput(e) {
+  function handleInput(e: any) {
     setPost(e.currentTarget.innerText)
     const _keyCode = e.nativeEvent.data
 
@@ -23,7 +25,22 @@ export default function Postbox({
   }
 
   const createPost = async () => {
-    console.log('clicked')
+    // console.log(post)
+    const _callbackContent: OrbisPostInterface = {
+      creator: account.did,
+      creator_details: {
+        did: account.did,
+        profile: account.profile
+      },
+      stream_id: null,
+      content: {
+        body: post
+      },
+      timestamp: Date.now()
+    }
+    // console.log(_callbackContent)
+    callbackPost(_callbackContent)
+    // console.log('clicked')
     const res = await orbis.createPost({ body: post, context: id })
 
     if (res.status === 200) {
@@ -33,6 +50,17 @@ export default function Postbox({
         postBoxArea.current.textContent = ''
         postBoxArea.current.focus()
       }
+
+      setTimeout(async () => {
+        const { data, error } = await orbis.getPost(res.doc)
+        console.log(data)
+        if (data) {
+          callbackPost(data)
+        }
+        if (error) {
+          console.log(error)
+        }
+      }, 2000)
     }
   }
 

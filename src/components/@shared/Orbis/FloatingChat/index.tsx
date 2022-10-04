@@ -9,26 +9,19 @@ import { useOrbis } from '@context/Orbis'
 import ConversationItem from './ConversationItem'
 
 export default function FloatingChat() {
-  const { orbis, account } = useOrbis()
+  const {
+    orbis,
+    account,
+    convOpen,
+    setConvOpen,
+    conversationId,
+    setConversationId,
+    conversations
+  } = useOrbis()
 
-  const [opened, setOpened] = useState(false)
-  const [conversationId, setConversationId] = useState(null)
-  const [conversations, setConversations] = useState([])
   const [messages, setMessages] = useState([])
   const [conversationTitle, setConversationTitle] = useState(null)
   const [unreads, setUnreads] = useState([])
-
-  const getConversations = async () => {
-    const { data, error } = await orbis.getConversations({ did: account?.did })
-
-    if (data) {
-      console.log(data)
-      setConversations(data)
-    }
-    if (error) {
-      console.log(error)
-    }
-  }
 
   const getNotifications = async () => {
     const { data, error } = await orbis.api.rpc('orbis_f_notifications', {
@@ -58,7 +51,6 @@ export default function FloatingChat() {
   useEffect(() => {
     if (orbis && account) {
       getNotifications()
-      getConversations()
     }
   }, [orbis, account])
 
@@ -78,21 +70,26 @@ export default function FloatingChat() {
   function openConversation(conversation: OrbisConversationInterface | null) {
     if (!conversation) {
       setConversationId(null)
-      setConversationTitle(null)
-      setMessages([])
     } else {
       setConversationId(conversation.stream_id)
-      getMessages(conversation.stream_id)
-      // Get conversation title
-      const recipient = conversation.recipients_details.find(
-        (o) => o.did !== account.did
-      )
-      setConversationTitle(recipient?.metadata?.ensName)
     }
   }
 
+  useEffect(() => {
+    if (conversationId) {
+      getMessages(conversationId)
+      // Get conversation title
+      // const recipient = conversation.recipients_details.find(
+      //   (o) => o.did !== account.did
+      // )
+      // setConversationTitle(recipient?.metadata?.ensName)
+    } else {
+      setMessages([])
+    }
+  }, [conversationId])
+
   return (
-    <div className={`${styles.wrapper} ${!opened && styles.isClosed}`}>
+    <div className={`${styles.wrapper} ${!convOpen && styles.isClosed}`}>
       <div className={styles.floating}>
         <div className={styles.header}>
           <ChatBubble role="img" aria-label="Chat" className={styles.icon} />
@@ -103,24 +100,27 @@ export default function FloatingChat() {
           <button
             type="button"
             className={styles.toggle}
-            onClick={() => setOpened(!opened)}
+            onClick={() => setConvOpen(!convOpen)}
           >
             <ChevronDoubleUp
               role="img"
               aria-label="Toggle"
-              className={`${styles.icon} ${opened && styles.isFlipped}`}
+              className={`${styles.icon} ${convOpen && styles.isFlipped}`}
             />
           </button>
         </div>
         <div className={styles.conversations}>
-          {conversations.map((conversation, index) => (
-            <ConversationItem
-              key={index}
-              conversation={conversation}
-              unreads={getConversationUnreads(conversation.stream_id)}
-              onClick={() => openConversation(conversation)}
-            />
-          ))}
+          {conversations &&
+            conversations.map(
+              (conversation: OrbisConversationInterface, index: number) => (
+                <ConversationItem
+                  key={index}
+                  conversation={conversation}
+                  unreads={getConversationUnreads(conversation.stream_id)}
+                  onClick={() => openConversation(conversation)}
+                />
+              )
+            )}
         </div>
         {conversationId && (
           <div className={styles.conversation}>
@@ -141,12 +141,12 @@ export default function FloatingChat() {
               <button
                 type="button"
                 className={styles.toggle}
-                onClick={() => setOpened(!opened)}
+                onClick={() => setConvOpen(!convOpen)}
               >
                 <ChevronDoubleUp
                   role="img"
                   aria-label="Toggle"
-                  className={`${styles.icon} ${opened && styles.isFlipped}`}
+                  className={`${styles.icon} ${convOpen && styles.isFlipped}`}
                 />
               </button>
             </div>
