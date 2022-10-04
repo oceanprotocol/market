@@ -1,6 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import PublisherLinks from './PublisherLinks'
 import Markdown from '@shared/Markdown'
+import Button from '@shared/atoms/Button'
 import Stats from './Stats'
 import Account from './Account'
 import styles from './index.module.css'
@@ -78,6 +79,16 @@ export default function AccountHeader({
       </div>
 
       <div>
+        <div className={styles.buttonWrap}>
+          <Button
+            style="primary"
+            size="small"
+            className={styles.sendMessage}
+            onClick={clickHandler}
+          >
+            Send Messages
+          </Button>
+        </div>
         <Markdown text={profile?.description} className={styles.description} />
         {isDescriptionTextClamped() ? (
           <span className={styles.more} onClick={toogleShowMore}>
@@ -92,9 +103,6 @@ export default function AccountHeader({
         {profile?.links?.length > 0 && (
           <PublisherLinks className={styles.publisherLinks} />
         )}
-        <button className="sendMessage" onClick={clickHandler}>
-          Send Messages
-        </button>
       </div>
       <div className={styles.meta}>
         Profile data from{' '}
