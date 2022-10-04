@@ -55,6 +55,6 @@
 
 .buttonWrap {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding: calc(var(--spacer) / 4) 0;
 }
