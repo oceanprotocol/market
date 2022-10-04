@@ -7,6 +7,7 @@ import Source from '@images/source.svg'
 import Loader from '@shared/atoms/Loader'
 import { useSignalContext } from '@context/Signals'
 import { getURLParams } from '@hooks/useSignals/_util'
+// @ts-ignore
 import { AssetExtended } from '../../../../@types/AssetExtended'
 import { SignalOriginItem } from '@context/Signals/_types'
 
@@ -94,8 +95,6 @@ export default function AssetSignals({
     return itemsList
   }
   const signalDetails = () => {
-    console.log(signalItems.length)
-
     if (isLoading) return
     // return array of [ [SignalsItem, SignalsItem], SignalsItem]
     const sigs = signalItems.map((item, index) => {
@@ -139,54 +138,7 @@ export default function AssetSignals({
           )
         })
       }
-      // if (item.signals.length === 1) {
-      //   return (
-      //     <>
-      //       <>
-      //         {item.title ? (
-      //           <li key={index}>
-      //             {!isLoading ? (
-      //               <div className={styles.assetListTitle}>
-      //                 <div className={styles.assetListTitleName}>
-      //                   <p>
-      //                     <UtuIcon className={styles.assetListIcon} />
-      //                   </p>
-      //                   <p> {item.title} </p>
-      //                 </div>
-      //                 <div className={styles.assetListTitleNumber}>
-      //                   {item.signals[0]?.value ? item.signals[0].value : 'N/A'}
-      //                 </div>
-      //               </div>
-      //             ) : (
-      //               <LoaderArea />
-      //             )}
-      //
-      //             {!isLoading ? <p>{item.description}</p> : <LoaderArea />}
-      //
-      //             {!isLoading ? (
-      //               <div className={styles.displaySource}>
-      //                 <p>Source</p>
-      //                 {item.origin != null ? (
-      //                   <a
-      //                     target={'_blank'}
-      //                     href={item.origin}
-      //                     rel="noreferrer"
-      //                   >
-      //                     <Source className={styles.sourceIcon} />
-      //                   </a>
-      //                 ) : null}
-      //               </div>
-      //             ) : (
-      //               <LoaderArea />
-      //             )}
-      //           </li>
-      //         ) : null}
-      //       </>
-      //     </>
-      //   )
-      // }
     })
-    console.log(sigs)
     return sigs.flat()
   }
   const itemsOpen = (index: any) => {
@@ -219,15 +171,18 @@ export default function AssetSignals({
             </h3>
           </div>
           <div>
-            {' '}
-            {/*<ol className={styles.assets}>*/}
-            {/*  {openUp ? signalDetails() : itemsClose()}*/}
-            {/*</ol>*/}
-            {openUp ? (
-              <ol className={styles.assets}> {signalDetails()}</ol>
-            ) : (
-              <ol className={styles.assets}> {itemsClose()} </ol>
-            )}
+            <ol
+              style={{ display: openUp ? 'block' : 'none' }}
+              className={styles.assets}
+            >
+              {signalDetails()}
+            </ol>
+            <ol
+              style={{ display: !openUp ? 'block' : 'none' }}
+              className={styles.assets}
+            >
+              {itemsClose()}
+            </ol>
           </div>
         </div>
       </ReactTabs>

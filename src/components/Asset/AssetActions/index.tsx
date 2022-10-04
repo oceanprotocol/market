@@ -49,10 +49,9 @@ export default function AssetActions({
 
   // Signals loading logic
   // Get from AssetList component
-  const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>(
-    asset ? [asset.datatokens.map((data) => data.address)] : null
-  )
-
+  const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>([
+    asset.datatokens.map((data) => data.address)
+  ])
   const { assetSignalOriginItems, signals, assetSignalsUrls } =
     useSignalContext()
   const filterAssetSignals = () => {
@@ -66,7 +65,9 @@ export default function AssetActions({
     assetSignalsUrls,
     'detailView'
   )
+  console.log(urls)
   const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
+
   const filteredSignals = getAssetSignalItems(
     signalItems,
     asset.datatokens.map((data: AssetDatatoken) => data.address),
@@ -180,6 +181,7 @@ export default function AssetActions({
 
   const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
 
+  console.log(dataTokenAddresses)
   return (
     <>
       <Tabs items={tabs} className={styles.actions} />
