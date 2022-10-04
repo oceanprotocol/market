@@ -37,8 +37,6 @@ export async function getHighestAllocationNfts(
   const dtList: { address: string; allocation: number }[] = []
   let highestAllocationAssets: any[] = []
   const ids = getVeChainIds(chainIds)
-  // ve is only on main
-
   for (const chainId of ids) {
     const queryContext = getQueryContext(chainId)
     const variables = {
