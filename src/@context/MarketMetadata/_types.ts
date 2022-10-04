@@ -26,8 +26,6 @@ export interface AppConfig {
     classNameLight: string
     storageKey: string
   }
-  v3MetadataCacheUri: string
-  v3MarketUri: string
 }
 export interface SiteContent {
   siteTitle: string
