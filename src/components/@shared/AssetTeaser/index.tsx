@@ -23,10 +23,7 @@ export default function AssetTeaser({
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
-  const { orders } = asset.stats
-
-  // TODO: get this number for each asset
-  const allocated = 5000000
+  const { orders, allocated } = asset.stats
 
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>

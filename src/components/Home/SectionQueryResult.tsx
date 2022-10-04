@@ -18,12 +18,15 @@ export default function SectionQueryResult({
   title,
   query,
   action,
-  queryData
+  queryData,
+  allocations
 }: {
   title: ReactElement | string
   query: SearchQuery
   action?: ReactElement
   queryData?: string[]
+  // this is just temporary until we have it in aquarius
+  allocations?: { address: string; allocation: number }[]
 }): ReactElement {
   const { chainIds } = useUserPreferences()
   const [result, setResult] = useState<PagedAssets>()
@@ -53,8 +56,18 @@ export default function SectionQueryResult({
           if (!isMounted()) return
           if (queryData && result?.totalResults > 0) {
             const sortedAssets = sortElements(result.results, queryData)
-            const overflow = sortedAssets.length - 9
+            const overflow = sortedAssets.length - 6
             sortedAssets.splice(sortedAssets.length - overflow, overflow)
+
+            // again temporary hack, will be removed.
+            if (allocations) {
+              sortedAssets.forEach((x) => {
+                x.stats.allocated = allocations.find(
+                  (y) => y.address === x.nftAddress
+                ).allocation
+              })
+            }
+
             result.results = sortedAssets
           }
           setResult(result)

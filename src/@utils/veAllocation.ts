@@ -33,8 +33,8 @@ export function getVeChainIds(chainIds: number[]): number[] {
 
 export async function getHighestAllocationNfts(
   chainIds: number[]
-): Promise<string[]> {
-  const dtList: string[] = []
+): Promise<{ address: string; allocation: number }[]> {
+  const dtList: { address: string; allocation: number }[] = []
   let highestAllocationAssets: any[] = []
 
   // ve is only on main
@@ -48,14 +48,17 @@ export async function getHighestAllocationNfts(
   highestAllocationAssets = fetchedAllocations.data.veAllocateIds
 
   highestAllocationAssets.forEach((x) => {
-    dtList.push(Web3.utils.toChecksumAddress(x.nftAddress))
+    dtList.push({
+      address: Web3.utils.toChecksumAddress(x.nftAddress),
+      allocation: x.allocatedTotal
+    })
   })
   return dtList
 }
 
 export async function getQueryHighestAllocation(
   chainIds: number[]
-): Promise<[SearchQuery, string[]]> {
+): Promise<[SearchQuery, { address: string; allocation: number }[]]> {
   const ids = getVeChainIds(chainIds)
   const dtList = await getHighestAllocationNfts(ids)
   const baseQueryParams = {
@@ -63,7 +66,12 @@ export async function getQueryHighestAllocation(
     esPaginationOptions: {
       size: dtList.length > 0 ? 6 : 1
     },
-    filters: [getFilterTerm('nftAddress.keyword', dtList)]
+    filters: [
+      getFilterTerm(
+        'nftAddress.keyword',
+        dtList.map((x) => x.address)
+      )
+    ]
   } as BaseQueryParams
   const queryHighest = generateBaseQuery(baseQueryParams)
 
