@@ -17,7 +17,7 @@ export default function Posts({ id }: { id: string }) {
     const context = process.env.NODE_ENV
       ? 'kjzl6cwe1jw149vvm1f8p9qlohhtkjuc302f22mipq95q7mevdljgx3tv9swujy'
       : id
-    const { data, error } = await orbis.getPosts({ context }, page)
+    const { data, error } = await orbis.getPosts({ context: id }, page)
     if (error) {
       console.log(error)
     }

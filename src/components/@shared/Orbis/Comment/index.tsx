@@ -12,7 +12,7 @@ export default function Comment({ asset }: { asset: AssetExtended }) {
         <span>Public Comment</span>
       </div>
       <div className={styles.postBox}>
-        <Postbox placeholder="Share your comment here..." />
+        <Postbox id={asset?.id} placeholder="Share your comment here..." />
       </div>
       <div className={styles.content}>
         <Posts id={asset?.id} />

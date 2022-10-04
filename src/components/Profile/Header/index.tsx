@@ -50,12 +50,13 @@ export default function AccountHeader({
   }
 
   const createConversation = async () => {
-    const res = await orbis.createConversation({
-      recipients: [userDid]
-    })
-    if (res.status === 200) {
-      console.log(res)
-    }
+    // const res = await orbis.createConversation({
+    //   recipients: [userDid]
+    // })
+    // if (res.status === 200) {
+    //   console.log(res)
+    // }
+    console.log('clicked')
   }
 
   useEffect(() => {
