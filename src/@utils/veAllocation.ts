@@ -36,31 +36,35 @@ export async function getHighestAllocationNfts(
 ): Promise<{ address: string; allocation: number }[]> {
   const dtList: { address: string; allocation: number }[] = []
   let highestAllocationAssets: any[] = []
-
+  const ids = getVeChainIds(chainIds)
   // ve is only on main
-  const queryContext = getQueryContext(1)
-  const variables = {
-    chainIds
-  }
-  const fetchedAllocations: OperationResult<HighestAllocationAssets, any> =
-    await fetchData(HighestAllocationAssets, variables, queryContext)
 
-  highestAllocationAssets = fetchedAllocations.data.veAllocateIds
+  for (const chainId of ids) {
+    const queryContext = getQueryContext(chainId)
+    const variables = {
+      chainIds
+    }
+    const fetchedAllocations: OperationResult<HighestAllocationAssets, any> =
+      await fetchData(HighestAllocationAssets, variables, queryContext)
 
-  highestAllocationAssets.forEach((x) => {
-    dtList.push({
-      address: Web3.utils.toChecksumAddress(x.nftAddress),
-      allocation: x.allocatedTotal
+    highestAllocationAssets = fetchedAllocations.data.veAllocateIds
+
+    highestAllocationAssets.forEach((x) => {
+      dtList.push({
+        address: Web3.utils.toChecksumAddress(x.nftAddress),
+        allocation: x.allocatedTotal
+      })
     })
-  })
+  }
+  dtList.sort((a, b) => b.allocation - a.allocation)
+
   return dtList
 }
 
 export async function getQueryHighestAllocation(
   chainIds: number[]
 ): Promise<[SearchQuery, { address: string; allocation: number }[]]> {
-  const ids = getVeChainIds(chainIds)
-  const dtList = await getHighestAllocationNfts(ids)
+  const dtList = await getHighestAllocationNfts(chainIds)
   const baseQueryParams = {
     chainIds,
     esPaginationOptions: {
