@@ -7,6 +7,7 @@ export interface MetadataEditForm {
   files: FileInfo[]
   links?: FileInfo[]
   author?: string
+  tags?: string[]
 }
 
 export interface ComputeEditForm {

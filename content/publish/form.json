@@ -39,8 +39,8 @@
       {
         "name": "tags",
         "label": "Tags",
-        "placeholder": "e.g. logistics, ai",
-        "help": "Separate tags with comma."
+        "type": "tags",
+        "placeholder": "e.g. logistics"
       },
       {
         "name": "dockerImage",
