@@ -1,12 +1,12 @@
 import { HighestAllocationAssets } from 'src/@types/subgraph/HighestAllocationAssets'
 import { NftAllocation } from 'src/@types/subgraph/NftAllocation'
-import { AllAllocation } from 'src/@types/subgraph/AllAllocation'
 import { AllLocked } from 'src/@types/subgraph/AllLocked'
 import { gql, OperationResult } from 'urql'
 import Web3 from 'web3'
 import { generateBaseQuery, getFilterTerm } from './aquarius'
 import { fetchData, getQueryContext } from './subgraph'
 import appConfig from '../../app.config'
+import axios from 'axios'
 
 const HighestAllocationAssets = gql`
   query HighestAllocationAssets($chainIds: [BigInt!]) {
@@ -34,13 +34,6 @@ const AllLocked = gql`
   query AllLocked {
     veOCEANs(first: 1000) {
       lockedAmount
-    }
-  }
-`
-const AllAllocation = gql`
-  query AllAllocation {
-    veAllocateIds(first: 1000) {
-      allocatedTotal
     }
   }
 `
@@ -134,14 +127,14 @@ export async function getTotalAllocatedAndLocked(): Promise<TotalVe> {
   }
 
   const queryContext = getQueryContext(1)
-  const fetchedAllocations: OperationResult<AllAllocation, any> =
-    await fetchData(AllAllocation, null, queryContext)
 
-  totals.totalAllocated = fetchedAllocations.data?.veAllocateIds.reduce(
-    (previousValue, currentValue) =>
-      previousValue + Number(currentValue.allocatedTotal),
+  const response = await axios.post(`https://df-sql.oceandao.org/nftinfo`)
+  totals.totalAllocated = response.data?.reduce(
+    (previousValue: number, currentValue: { ve_allocated: any }) =>
+      previousValue + Number(currentValue.ve_allocated),
     0
   )
+
   const fetchedLocked: OperationResult<AllLocked, any> = await fetchData(
     AllLocked,
     null,
