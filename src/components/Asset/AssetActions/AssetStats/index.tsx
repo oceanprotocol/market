@@ -4,9 +4,7 @@ import styles from './index.module.css'
 
 export default function AssetStats() {
   const { asset } = useAsset()
-
-  // TODO: get this number for each asset
-  const allocated = 5000000
+  const { orders, allocated } = asset.stats
 
   return (
     <footer className={styles.stats}>
@@ -15,14 +13,14 @@ export default function AssetStats() {
           <span className={styles.number}>{allocated}</span> veOCEAN
         </span>
       ) : null}
-      {!asset || !asset?.stats || asset?.stats?.orders < 0 ? (
+      {!asset || !asset?.stats || orders < 0 ? (
         'N/A'
-      ) : asset?.stats?.orders === 0 ? (
+      ) : orders === 0 ? (
         'No sales yet'
       ) : (
         <span className={styles.stat}>
-          <span className={styles.number}>{asset.stats.orders}</span> sale
-          {asset.stats.orders === 1 ? '' : 's'}
+          <span className={styles.number}>{orders}</span> sale
+          {orders === 1 ? '' : 's'}
         </span>
       )}
     </footer>

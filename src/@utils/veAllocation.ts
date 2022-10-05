@@ -1,4 +1,5 @@
 import { HighestAllocationAssets } from 'src/@types/subgraph/HighestAllocationAssets'
+import { NftAllocation } from 'src/@types/subgraph/NftAllocation'
 import { gql, OperationResult } from 'urql'
 import Web3 from 'web3'
 import { generateBaseQuery, getFilterTerm } from './aquarius'
@@ -16,6 +17,14 @@ const HighestAllocationAssets = gql`
       allocatedTotal
       chainId
       nftAddress
+    }
+  }
+`
+
+const NftAllocation = gql`
+  query NftAllocation($nftAddress: String) {
+    veAllocateIds(where: { nftAddress: $nftAddress }) {
+      allocatedTotal
     }
   }
 `
@@ -78,4 +87,22 @@ export async function getQueryHighestAllocation(
   const queryHighest = generateBaseQuery(baseQueryParams)
 
   return [queryHighest, dtList]
+}
+
+export async function getAllocationForNft(
+  address: string,
+  chainId: number
+): Promise<number> {
+  const veChain = getVeChainIds([chainId])
+  const queryContext = getQueryContext(veChain[0])
+  let allocation = 0
+  const variables = {
+    nftAddress: address.toLowerCase()
+  }
+  const fetchedAllocations: OperationResult<NftAllocation, any> =
+    await fetchData(NftAllocation, variables, queryContext)
+  const returnValue = fetchedAllocations.data?.veAllocateIds
+  console.log('returnValue', returnValue)
+  allocation = returnValue[0]?.allocatedTotal
+  return allocation
 }

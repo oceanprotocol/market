@@ -16,6 +16,7 @@ import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
+import { getAllocationForNft } from '@utils/veAllocation'
 
 export interface AssetProviderValue {
   isInPurgatory: boolean
@@ -99,6 +100,12 @@ function AssetProvider({
       }
 
       if (asset) {
+        // temp hack fetch allocation
+        const allocation = await getAllocationForNft(
+          asset.nftAddress,
+          asset.chainId
+        )
+        asset.stats.allocated = allocation
         setError(undefined)
         setAsset((prevState) => ({
           ...prevState,
