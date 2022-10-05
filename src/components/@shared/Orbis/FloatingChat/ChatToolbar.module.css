@@ -31,7 +31,7 @@
   background-color: var(--background-content);
   border: none;
   cursor: pointer;
-  color: var(--brand-white);
+  color: var(--font-color-text);
   font-size: var(--font-size-title);
   transition: color 200ms ease;
 }
@@ -41,6 +41,23 @@
   color: var(--color-primary);
 }
 
-.sendIcon {
+.buttonIcon {
   fill: currentColor;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.inputWrap .button {
+  position: absolute;
+  right: calc(var(--spacer) / 42);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.pickerBox {
+  position: absolute;
+  bottom: calc(var(--spacer) * 1.7);
+  left: calc(var(--spacer) / 2);
 }
