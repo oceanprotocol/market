@@ -16,19 +16,23 @@ export function getOceanConfig(network: string | number): Config {
       : process.env.NEXT_PUBLIC_INFURA_PROJECT_ID
   ) as Config
 
-  console.log(config, network)
-
+  // TODO: remove after fixing in ocean.js
+  // we need to hardcoded these values from Barge (see 'development' object in console)
   if (network === 8996) {
     config = {
       ...config,
-      nodeUri: 'http://127.0.0.1:8545',
-      subgraphUri: 'https://v4.subgraph.goerli.oceanprotocol.com',
+      nodeUri: '',
+      subgraphUri: '',
       chainId: 8996,
-      network: 'development',
-      metadataCacheUri: 'http://127.0.0.1:5000',
-      providerUri: 'http://127.0.0.1:8030'
+      network: '',
+      metadataCacheUri: '',
+      fixedRateExchangeAddress: '',
+      dispenserAddress: '',
+      oceanTokenAddress: '',
+      nftFactoryAddress: '',
+      providerUri: ''
     }
-    console.log('new config: ', config)
+    console.log('barge config: ', config)
   }
 
   return config as Config
