@@ -203,7 +203,7 @@ export async function createTokensAndPricing(
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
   const ercParams: DatatokenCreateParams = {
-    templateIndex: 2,
+    templateIndex: 1,
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,

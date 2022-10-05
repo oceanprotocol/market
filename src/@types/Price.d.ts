@@ -39,6 +39,7 @@ declare global {
   interface AccessDetails {
     type: 'fixed' | 'free' | 'NOT_SUPPORTED'
     price: string
+    templateId: number
     addressOrId: string
     baseToken: TokenInfo
     datatoken: TokenInfo
