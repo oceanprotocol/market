@@ -102,7 +102,6 @@ export async function getAllocationForNft(
   const fetchedAllocations: OperationResult<NftAllocation, any> =
     await fetchData(NftAllocation, variables, queryContext)
   const returnValue = fetchedAllocations.data?.veAllocateIds
-  console.log('returnValue', returnValue)
   allocation = returnValue[0]?.allocatedTotal
   return allocation
 }
