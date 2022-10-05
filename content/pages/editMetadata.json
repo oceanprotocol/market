@@ -64,8 +64,7 @@
         "name": "tags",
         "label": "New Tags",
         "type": "tags",
-        "placeholder": "e.g. logistics, ai",
-        "help": "Add or remove tags.",
+        "placeholder": "e.g. logistics",
         "required": false
       }
     ]
