@@ -17,6 +17,7 @@ export default function Preview(): ReactElement {
       asset.accessDetails = {
         type: values.pricing.type,
         addressOrId: ZERO_ADDRESS,
+        templateId: 1,
         price: `${values.pricing.price}`,
         baseToken: {
           address: ZERO_ADDRESS,
