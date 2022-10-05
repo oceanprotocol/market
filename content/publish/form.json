@@ -40,8 +40,7 @@
         "name": "tags",
         "label": "Tags",
         "type": "tags",
-        "placeholder": "e.g. logistics, ai",
-        "help": "Select existing values from the dropdown list or create your own."
+        "placeholder": "e.g. logistics"
       },
       {
         "name": "dockerImage",

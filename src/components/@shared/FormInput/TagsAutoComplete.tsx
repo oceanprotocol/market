@@ -74,20 +74,18 @@ export default function TagsAutoComplete({
       defaultValue={defaultTags}
       hideSelectedOptions
       isMulti
+      isClearable={false}
       noOptionsMessage={() =>
         'Start typing to get suggestions based on tags from all published assets.'
       }
       onChange={(value: AutoCompleteOption[]) => handleChange(value)}
       onInputChange={(value) => handleOptionsFilter(tagsList, value)}
       openMenuOnClick
-      options={!input || input?.length < 3 ? [] : matchedTagsList}
+      options={!input || input?.length < 1 ? [] : matchedTagsList}
       placeholder={placeholder}
       theme={(theme) => ({
         ...theme,
-        colors: {
-          ...theme.colors,
-          primary25: 'var(--border-color)'
-        }
+        colors: { ...theme.colors, primary25: 'var(--border-color)' }
       })}
     />
   )
