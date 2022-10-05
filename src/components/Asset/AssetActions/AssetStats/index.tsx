@@ -1,4 +1,5 @@
 import { useAsset } from '@context/Asset'
+import PriceUnit from '@shared/Price/PriceUnit'
 import React from 'react'
 import styles from './index.module.css'
 
@@ -10,7 +11,10 @@ export default function AssetStats() {
     <footer className={styles.stats}>
       {allocated && allocated > 0 ? (
         <span className={styles.stat}>
-          <span className={styles.number}>{allocated}</span> veOCEAN
+          <span className={styles.number}>
+            {' '}
+            <PriceUnit price={allocated} symbol="veOCEAN" size="small" />
+          </span>{' '}
         </span>
       ) : null}
       {!asset || !asset?.stats || orders < 0 ? (

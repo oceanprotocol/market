@@ -8,6 +8,7 @@ import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './index.module.css'
 import { getServiceByName } from '@utils/ddo'
+import PriceUnit from '@shared/Price/PriceUnit'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -59,7 +60,11 @@ export default function AssetTeaser({
           <footer className={styles.footer}>
             {allocated && allocated > 0 ? (
               <span className={styles.typeLabel}>
-                {allocated < 0 ? '' : `${allocated} veOCEAN`}
+                {allocated < 0 ? (
+                  ''
+                ) : (
+                  <PriceUnit price={allocated} symbol="veOcean" size="mini" />
+                )}
               </span>
             ) : null}
             {orders && orders > 0 ? (

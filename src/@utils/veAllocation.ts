@@ -1,5 +1,7 @@
 import { HighestAllocationAssets } from 'src/@types/subgraph/HighestAllocationAssets'
 import { NftAllocation } from 'src/@types/subgraph/NftAllocation'
+import { AllAllocation } from 'src/@types/subgraph/AllAllocation'
+import { AllLocked } from 'src/@types/subgraph/AllLocked'
 import { gql, OperationResult } from 'urql'
 import Web3 from 'web3'
 import { generateBaseQuery, getFilterTerm } from './aquarius'
@@ -24,6 +26,20 @@ const HighestAllocationAssets = gql`
 const NftAllocation = gql`
   query NftAllocation($nftAddress: String) {
     veAllocateIds(where: { nftAddress: $nftAddress }) {
+      allocatedTotal
+    }
+  }
+`
+const AllLocked = gql`
+  query AllLocked {
+    veOCEANs(first: 1000) {
+      lockedAmount
+    }
+  }
+`
+const AllAllocation = gql`
+  query AllAllocation {
+    veAllocateIds(first: 1000) {
       allocatedTotal
     }
   }
@@ -104,4 +120,37 @@ export async function getAllocationForNft(
   const returnValue = fetchedAllocations.data?.veAllocateIds
   allocation = returnValue[0]?.allocatedTotal
   return allocation
+}
+
+interface TotalVe {
+  totalLocked: number
+  totalAllocated: number
+}
+
+export async function getTotalAllocatedAndLocked(): Promise<TotalVe> {
+  const totals = {
+    totalLocked: 0,
+    totalAllocated: 0
+  }
+
+  const queryContext = getQueryContext(1)
+  const fetchedAllocations: OperationResult<AllAllocation, any> =
+    await fetchData(AllAllocation, null, queryContext)
+
+  totals.totalAllocated = fetchedAllocations.data?.veAllocateIds.reduce(
+    (previousValue, currentValue) =>
+      previousValue + Number(currentValue.allocatedTotal),
+    0
+  )
+  const fetchedLocked: OperationResult<AllLocked, any> = await fetchData(
+    AllLocked,
+    null,
+    queryContext
+  )
+  totals.totalLocked = fetchedLocked.data?.veOCEANs.reduce(
+    (previousValue, currentValue) =>
+      previousValue + Number(currentValue.lockedAmount),
+    0
+  )
+  return totals
 }
