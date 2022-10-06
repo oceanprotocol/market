@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import styles from './ChatToolbar.module.css'
 import SendIcon from '@images/send.svg'
 import EmojiIcon from '@images/emoji.svg'
 import Input from '@shared/FormInput'
 import { useOrbis } from '@context/Orbis'
 import dynamic from 'next/dynamic'
-import EmojiPicker, {
-  EmojiClickData,
-  EmojiStyle,
-  Theme
-} from 'emoji-picker-react'
+import Picker, { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react'
 
-export default function ChatToolbar() {
+interface ChatToolbarProps {
+  mode: boolean
+}
+
+const ChatToolbar: FC<ChatToolbarProps> = ({ mode }) => {
+  console.log('THEME', mode)
   const { orbis, conversationId } = useOrbis()
   const [content, setContent] = useState<string>('')
   const [showPicker, setShowPicker] = useState(false)
@@ -53,7 +54,7 @@ export default function ChatToolbar() {
             size="small"
             placeholder="Type Message"
             value={content}
-            onInput={(e) => setContent(e.target.value)}
+            onChange={(e: any) => setContent(e.target.value)}
           />
           <button
             className={styles.button}
@@ -71,10 +72,10 @@ export default function ChatToolbar() {
         {showPicker && (
           <Picker
             onEmojiClick={onEmojiClick}
-            theme={Theme.DARK}
+            theme={mode ? Theme.DARK : Theme.LIGHT}
             emojiStyle={EmojiStyle.NATIVE}
             autoFocusSearch={false}
-            lazyLoadEmojis={true}
+            lazyLoadEmojis={false}
             width={324}
             height={400}
           />
@@ -83,3 +84,5 @@ export default function ChatToolbar() {
     </div>
   )
 }
+
+export default ChatToolbar

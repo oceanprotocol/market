@@ -88,6 +88,18 @@ export default function FloatingChat() {
     }
   }, [conversationId])
 
+  const [mode, setMode] = useState(true)
+
+  const storage: boolean =
+    window !== undefined
+      ? window.localStorage.getItem('oceanDarkMode') === 'true'
+      : false
+
+  useEffect(() => {
+    console.log(storage)
+    setMode(storage)
+  }, [storage])
+
   return (
     <div className={`${styles.wrapper} ${!convOpen && styles.isClosed}`}>
       <div className={styles.floating}>
@@ -151,7 +163,7 @@ export default function FloatingChat() {
               </button>
             </div>
             <Conversation messages={messages} />
-            <ChatToolbar />
+            <ChatToolbar mode={mode} />
           </div>
         )}
       </div>
