@@ -5,14 +5,18 @@ import EmojiIcon from '@images/emoji.svg'
 import Input from '@shared/FormInput'
 import { useOrbis } from '@context/Orbis'
 import dynamic from 'next/dynamic'
-import Picker, { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react'
+import { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react'
+import useDarkMode from '@oceanprotocol/use-dark-mode'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
-interface ChatToolbarProps {
-  mode: boolean
-}
+// interface ChatToolbarProps {
+//   mode: boolean
+// }
 
-const ChatToolbar: FC<ChatToolbarProps> = ({ mode }) => {
-  console.log('THEME', mode)
+const ChatToolbar = () => {
+  const { appConfig } = useMarketMetadata()
+  const darkMode = useDarkMode(false, appConfig?.darkModeConfig)
+
   const { orbis, conversationId } = useOrbis()
   const [content, setContent] = useState<string>('')
   const [showPicker, setShowPicker] = useState(false)
@@ -30,8 +34,8 @@ const ChatToolbar: FC<ChatToolbarProps> = ({ mode }) => {
   }
 
   useEffect(() => {
-    console.log(content)
-  }, [content])
+    console.log(darkMode)
+  }, [darkMode])
 
   const sendMessage = async () => {
     const res = await orbis.sendMessage({
@@ -72,7 +76,7 @@ const ChatToolbar: FC<ChatToolbarProps> = ({ mode }) => {
         {showPicker && (
           <Picker
             onEmojiClick={onEmojiClick}
-            theme={mode ? Theme.DARK : Theme.LIGHT}
+            theme={darkMode.value ? Theme.DARK : Theme.LIGHT}
             emojiStyle={EmojiStyle.NATIVE}
             autoFocusSearch={false}
             lazyLoadEmojis={false}
