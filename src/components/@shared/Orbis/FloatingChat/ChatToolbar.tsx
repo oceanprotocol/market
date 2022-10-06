@@ -1,11 +1,11 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './ChatToolbar.module.css'
 import SendIcon from '@images/send.svg'
 import EmojiIcon from '@images/emoji.svg'
 import Input from '@shared/FormInput'
 import { useOrbis } from '@context/Orbis'
-import dynamic from 'next/dynamic'
-import { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react'
+// import dynamic from 'next/dynamic'
+import Picker, { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react'
 import useDarkMode from '@oceanprotocol/use-dark-mode'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
@@ -17,16 +17,16 @@ const ChatToolbar = () => {
   const { appConfig } = useMarketMetadata()
   const darkMode = useDarkMode(false, appConfig?.darkModeConfig)
 
-  const { orbis, conversationId } = useOrbis()
+  const { orbis, conversationId, convOpen } = useOrbis()
   const [content, setContent] = useState<string>('')
   const [showPicker, setShowPicker] = useState(false)
 
-  const Picker = dynamic(
-    () => {
-      return import('emoji-picker-react')
-    },
-    { ssr: false }
-  )
+  // const Picker = dynamic(
+  //   () => {
+  //     return import('emoji-picker-react')
+  //   },
+  //   { ssr: false }
+  // )
 
   const onEmojiClick = (emojiData: EmojiClickData) => {
     setContent((prevInput) => prevInput + emojiData.emoji)
@@ -34,8 +34,11 @@ const ChatToolbar = () => {
   }
 
   useEffect(() => {
-    console.log(darkMode)
-  }, [darkMode])
+    console.log(convOpen)
+    if (!convOpen) {
+      setShowPicker(false)
+    }
+  }, [convOpen])
 
   const sendMessage = async () => {
     const res = await orbis.sendMessage({
@@ -77,7 +80,7 @@ const ChatToolbar = () => {
           <Picker
             onEmojiClick={onEmojiClick}
             theme={darkMode.value ? Theme.DARK : Theme.LIGHT}
-            emojiStyle={EmojiStyle.NATIVE}
+            emojiStyle={EmojiStyle.APPLE}
             autoFocusSearch={false}
             lazyLoadEmojis={false}
             width={324}
