@@ -25,7 +25,7 @@ export default function AssetTeaser({
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
   const { orders, allocated } = asset.stats
-
+  const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`}>
@@ -48,15 +48,16 @@ export default function AssetTeaser({
             </Dotdotdot>
             {!noPublisher && <Publisher account={owner} minimal />}
           </header>
-
           <div className={styles.content}>
             <Dotdotdot tagName="p" clamp={3}>
               {removeMarkdown(description?.substring(0, 300) || '')}
             </Dotdotdot>
           </div>
-
-          <Price accessDetails={asset.accessDetails} size="small" />
-
+          {isUnsupportedPricing ? (
+            <strong>No pricing schema available</strong>
+          ) : (
+            <Price accessDetails={asset.accessDetails} size="small" />
+          )}
           <footer className={styles.footer}>
             {allocated && allocated > 0 ? (
               <span className={styles.typeLabel}>
