@@ -9,9 +9,9 @@ export default function MarketStatsTotal({
 }): ReactElement {
   return (
     <>
-      <strong>{total.orders}</strong> orders across{' '}
-      <strong>{total.nfts}</strong> assets with{' '}
-      <strong>{total.datatokens}</strong> different datatokens.{' '}
+      <PriceUnit price={total.orders} size="small" /> orders across{' '}
+      <PriceUnit price={total.nfts} size="small" /> assets with{' '}
+      <PriceUnit price={total.datatokens} size="small" /> different datatokens.{' '}
       <PriceUnit price={total.veAllocated} symbol="veOCEAN" size="small" />{' '}
       allocated.{' '}
       <PriceUnit price={total.veLocked} symbol="OCEAN" size="small" /> locked.

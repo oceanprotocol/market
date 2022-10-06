@@ -37,15 +37,15 @@ export default function MarketStats(): ReactElement {
   // Set the main chain ids we want to display stats for
   //
   useEffect(() => {
-    if (!networksList || !appConfig || !appConfig?.chainIdsSupported) return
+    if (!networksList || !appConfig || !appConfig?.chainIds) return
 
     const mainChainIdsList = filterNetworksByType(
       'mainnet',
-      appConfig.chainIdsSupported,
+      appConfig.chainIds,
       networksList
     )
     setMainChainIds(mainChainIdsList)
-  }, [appConfig, appConfig?.chainIdsSupported, networksList])
+  }, [appConfig, appConfig?.chainIds, networksList])
 
   //
   // Helper: fetch data from subgraph
