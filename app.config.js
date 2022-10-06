@@ -17,7 +17,7 @@ module.exports = {
     56,
     246,
     1285,
-    process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true' ? 8996 : ''
+    process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true' ? 8996 : null
   ],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
@@ -30,7 +30,7 @@ module.exports = {
     5,
     80001,
     1287,
-    process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true' ? 8996 : ''
+    process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true' ? 8996 : null
   ],
 
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
