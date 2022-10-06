@@ -20,13 +20,13 @@ export default function Networks(): ReactElement {
 
   const networksMain = filterNetworksByType(
     'mainnet',
-    appConfig.chainIdsSupported,
+    appConfig.chainIds,
     networksList
   )
 
   const networksTest = filterNetworksByType(
     'testnet',
-    appConfig.chainIdsSupported,
+    appConfig.chainIds,
     networksList
   )
 
