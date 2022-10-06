@@ -8,10 +8,7 @@ export interface OpcFee {
 export interface AppConfig {
   metadataCacheUri: string
   infuraProjectId: string
-  chainIdsProduction: number[]
-  chainIdsTest: number[]
-  chainIdsDefault: number[]
-  chainIdsSupported: number[]
+  chainIds: number[]
   marketFeeAddress: string
   publisherMarketOrderFee: string
   publisherMarketFixedSwapFee: string
