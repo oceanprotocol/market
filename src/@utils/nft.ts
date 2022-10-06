@@ -99,9 +99,16 @@ export async function setNftMetadata(
   web3: Web3,
   signal: AbortSignal
 ): Promise<TransactionReceipt> {
+  // TODO: remove this harcoded value after fixing issue on oceanjs
+  let providerUrl
+  if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
+    providerUrl = 'http://127.0.0.1:8030'
+  } else {
+    providerUrl = asset.services[0].serviceEndpoint
+  }
   const encryptedDdo = await ProviderInstance.encrypt(
     asset,
-    asset.services[0].serviceEndpoint,
+    providerUrl,
     signal
   )
   LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
@@ -133,9 +140,16 @@ export async function setNFTMetadataAndTokenURI(
   nftMetadata: NftMetadata,
   signal: AbortSignal
 ): Promise<TransactionReceipt> {
+  // TODO: remove this harcoded value after fixing issue on oceanjs
+  let providerUrl
+  if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
+    providerUrl = 'http://127.0.0.1:8030'
+  } else {
+    providerUrl = asset.services[0].serviceEndpoint
+  }
   const encryptedDdo = await ProviderInstance.encrypt(
     asset,
-    asset.services[0].serviceEndpoint,
+    providerUrl,
     signal
   )
   LoggerInstance.log(

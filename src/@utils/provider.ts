@@ -54,6 +54,10 @@ export async function getEncryptedFiles(
   files: any,
   providerUrl: string
 ): Promise<string> {
+  // TODO: remove this harcoded value after fixing issue on oceanjs
+  if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
+    providerUrl = 'http://127.0.0.1:8030'
+  }
   try {
     // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
     const response = await ProviderInstance.encrypt(files, providerUrl)
@@ -70,6 +74,10 @@ export async function getFileDidInfo(
   withChecksum = false
 ): Promise<FileInfo[]> {
   try {
+    // TODO: remove this harcoded value after fixing issue on oceanjs
+    if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
+      providerUrl = 'http://127.0.0.1:8030'
+    }
     const response = await ProviderInstance.checkDidFiles(
       did,
       serviceId,
@@ -87,6 +95,10 @@ export async function getFileUrlInfo(
   providerUrl: string
 ): Promise<FileInfo[]> {
   try {
+    // TODO: remove this harcoded value after fixing issue on oceanjs
+    if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
+      providerUrl = 'http://127.0.0.1:8030'
+    }
     const response = await ProviderInstance.checkFileUrl(url, providerUrl)
     return response
   } catch (error) {
@@ -100,13 +112,20 @@ export async function downloadFile(
   accountId: string,
   validOrderTx?: string
 ) {
+  let providerUrl
+  // TODO: remove this harcoded value after fixing issue on oceanjs
+  if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
+    providerUrl = 'http://127.0.0.1:8030'
+  } else {
+    providerUrl = asset.services[0].serviceEndpoint
+  }
   const downloadUrl = await ProviderInstance.getDownloadUrl(
     asset.id,
     accountId,
     asset.services[0].id,
     0,
     validOrderTx || asset.accessDetails.validOrderTx,
-    asset.services[0].serviceEndpoint,
+    providerUrl,
     web3
   )
   await downloadFileBrowser(downloadUrl)
