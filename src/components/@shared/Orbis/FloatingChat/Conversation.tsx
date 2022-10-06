@@ -17,6 +17,11 @@ function RenderDecryptedMessage({
 
   useEffect(() => {
     const decryptMessage = async (content: OrbisPostContentInterface) => {
+      if (!content?.encryptedMessage) {
+        setLoading(false)
+        setDecrypted(content.body)
+        return
+      }
       setLoading(true)
       const res = await orbis.decryptMessage(content)
 

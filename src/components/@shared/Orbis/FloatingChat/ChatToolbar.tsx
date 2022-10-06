@@ -6,18 +6,13 @@ import Input from '@shared/FormInput'
 import { useOrbis } from '@context/Orbis'
 // import dynamic from 'next/dynamic'
 import Picker, { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react'
-import useDarkMode from '@oceanprotocol/use-dark-mode'
-import { useMarketMetadata } from '@context/MarketMetadata'
 
-// interface ChatToolbarProps {
-//   mode: boolean
-// }
-
-const ChatToolbar = () => {
-  const { appConfig } = useMarketMetadata()
-  const darkMode = useDarkMode(false, appConfig?.darkModeConfig)
-
-  const { orbis, conversationId, convOpen } = useOrbis()
+export default function ChatToolbar({
+  callbackMessage
+}: {
+  callbackMessage: (post: OrbisPostInterface) => void
+}) {
+  const { orbis, conversationId, account, convOpen } = useOrbis()
   const [content, setContent] = useState<string>('')
   const [showPicker, setShowPicker] = useState(false)
 
@@ -41,6 +36,21 @@ const ChatToolbar = () => {
   }, [convOpen])
 
   const sendMessage = async () => {
+    const _callbackMessage: OrbisPostInterface = {
+      creator: account.did,
+      creator_details: {
+        did: account.did,
+        profile: account.profile
+      },
+      stream_id: null,
+      content: {
+        body: content
+      },
+      timestamp: Date.now()
+    }
+    callbackMessage(_callbackMessage)
+    setContent('')
+
     const res = await orbis.sendMessage({
       conversation_id: conversationId,
       body: content
@@ -48,6 +58,7 @@ const ChatToolbar = () => {
 
     if (res.status === 200) {
       console.log('succes send message with,', res)
+      setContent('')
     }
   }
 
@@ -61,7 +72,7 @@ const ChatToolbar = () => {
             size="small"
             placeholder="Type Message"
             value={content}
-            onChange={(e: any) => setContent(e.target.value)}
+            onInput={(e) => setContent(e.target.value)}
           />
           <button
             className={styles.button}
@@ -79,10 +90,10 @@ const ChatToolbar = () => {
         {showPicker && (
           <Picker
             onEmojiClick={onEmojiClick}
-            theme={darkMode.value ? Theme.DARK : Theme.LIGHT}
+            theme={Theme.DARK}
             emojiStyle={EmojiStyle.APPLE}
             autoFocusSearch={false}
-            lazyLoadEmojis={false}
+            lazyLoadEmojis={true}
             width={324}
             height={400}
           />
@@ -91,5 +102,3 @@ const ChatToolbar = () => {
     </div>
   )
 }
-
-export default ChatToolbar

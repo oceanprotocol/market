@@ -83,6 +83,7 @@ interface OrbisPostContentInterface {
   mentions?: OrbisPostMentionsInterface[]
   reply_to?: string
   type?: string
+  encryptedMessage?: object
 }
 
 interface OrbisCreatorMetadataInterface {

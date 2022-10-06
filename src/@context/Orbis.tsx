@@ -8,9 +8,9 @@ import React, {
 } from 'react'
 import { sleep } from '@utils/index'
 import { Orbis } from '@orbisclub/orbis-sdk'
+import { useWeb3 } from './Web3'
 import { accountTruncate } from '@utils/web3'
 import { didToAddress } from '@utils/orbis'
-import { useWeb3 } from './Web3'
 
 const OrbisContext = createContext(null)
 

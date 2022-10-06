@@ -20,7 +20,7 @@ export default function FloatingChat() {
     conversationTitle
   } = useOrbis()
 
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<OrbisPostInterface[]>([])
   // const [conversationTitle, setConversationTitle] = useState(null)
   const [unreads, setUnreads] = useState([])
 
@@ -73,6 +73,23 @@ export default function FloatingChat() {
       setConversationId(null)
     } else {
       setConversationId(conversation.stream_id)
+    }
+  }
+
+  const callbackMessage = (nMessage: OrbisPostInterface) => {
+    if (nMessage.stream_id) {
+      const _nMessage = messages.findIndex((o) => {
+        return !o.stream_id
+      })
+      console.log(_nMessage)
+      if (_nMessage > -1) {
+        const _messages = [...messages]
+        _messages[_nMessage] = nMessage
+        setMessages(_messages)
+      }
+    } else {
+      const _messages = [...messages, nMessage]
+      setMessages(_messages)
     }
   }
 
@@ -152,7 +169,7 @@ export default function FloatingChat() {
               </button>
             </div>
             <Conversation messages={messages} />
-            <ChatToolbar />
+            <ChatToolbar callbackMessage={callbackMessage} />
           </div>
         )}
       </div>
