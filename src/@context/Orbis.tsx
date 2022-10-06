@@ -8,6 +8,8 @@ import React, {
 } from 'react'
 import { sleep } from '@utils/index'
 import { Orbis } from '@orbisclub/orbis-sdk'
+import { accountTruncate } from '@utils/web3'
+import { didToAddress } from '@utils/orbis'
 import { useWeb3 } from './Web3'
 
 const OrbisContext = createContext(null)
@@ -19,6 +21,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   const [convOpen, setConvOpen] = useState(false)
   const [conversationId, setConversationId] = useState(null)
   const [conversations, setConversations] = useState([])
+  const [conversationTitle, setConversationTitle] = useState(null)
 
   // Connecting to Orbis
   const connectOrbis = async (provider: object): Promise<void> => {
@@ -49,30 +52,10 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     setOrbis(_orbis)
   }, [])
 
-  // Check if already connected to orbis
-  // useEffect(() => {
-  //   if (!orbis) return
-
-  //   const isConnected = async (): Promise<void> => {
-  //     const res = await orbis.isConnected()
-
-  //     if (res.status !== 200) {
-  //       await sleep(2000)
-  //       isConnected()
-  //     } else {
-  //       setAccount(res)
-  //     }
-  //   }
-
-  //   isConnected()
-  // }, [orbis])
-
-  // Check if wallet connected
-
   const getConversations = async () => {
     const { data, error } = await orbis.getConversations({
-      did: account?.did
-      // context: 'ocean_market'
+      did: account?.did,
+      context: 'ocean_market'
     })
 
     if (data) {
@@ -85,13 +68,40 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   }
 
   useEffect(() => {
+    // Check if wallet connected
     if (!account && orbis && web3Provider) {
       checkConnection()
     }
+
+    // Fetch conversations
     if (account && orbis) {
       getConversations()
     }
   }, [account, orbis, web3Provider])
+
+  useEffect(() => {
+    if (conversationId && conversations.length) {
+      const conversation = conversations.find(
+        (o) => o.stream_id === conversationId
+      )
+      if (conversation) {
+        const recipient = conversation.recipients_details.find(
+          (o: any) => o.did !== account.did
+        )
+
+        const address =
+          recipient?.metadata?.address || didToAddress(recipient?.did)
+
+        setConversationTitle(
+          recipient?.metadata?.ensName ||
+            recipient?.profile?.username ||
+            accountTruncate(address)
+        )
+      }
+    } else {
+      setConversationTitle(null)
+    }
+  }, [conversationId, account, conversations])
 
   return (
     <OrbisContext.Provider
@@ -105,7 +115,8 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         setConversationId,
         conversations,
         setConversations,
-        getConversations
+        getConversations,
+        conversationTitle
       }}
     >
       {children}

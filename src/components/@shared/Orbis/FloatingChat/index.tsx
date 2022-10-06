@@ -16,11 +16,12 @@ export default function FloatingChat() {
     setConvOpen,
     conversationId,
     setConversationId,
-    conversations
+    conversations,
+    conversationTitle
   } = useOrbis()
 
   const [messages, setMessages] = useState([])
-  const [conversationTitle, setConversationTitle] = useState(null)
+  // const [conversationTitle, setConversationTitle] = useState(null)
   const [unreads, setUnreads] = useState([])
 
   const getNotifications = async () => {
