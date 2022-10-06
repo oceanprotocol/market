@@ -130,15 +130,11 @@ export default function PublishPage({
       if (!datatokenAddress || !erc721Address)
         throw new Error('No NFT or Datatoken received. Please try again.')
 
-      console.log('here 1')
-
       const ddo = await transformPublishFormToDdo(
         values,
         datatokenAddress,
         erc721Address
       )
-
-      console.log('here 2')
 
       if (!ddo) throw new Error('No DDO received. Please try again.')
 
@@ -153,15 +149,11 @@ export default function PublishPage({
         providerUrl = values.services[0].providerUrl.url
       }
 
-      console.log(providerUrl)
-
       const ddoEncrypted = await ProviderInstance.encrypt(
         ddo,
         providerUrl,
         newAbortController()
       )
-
-      console.log('here')
 
       if (!ddoEncrypted)
         throw new Error('No encrypted DDO received. Please try again.')
@@ -277,10 +269,7 @@ export default function PublishPage({
       _ddo = ddo
       _ddoEncrypted = ddoEncrypted
       setDdo(ddo)
-      console.log('here 1')
-
       setDdoEncrypted(ddoEncrypted)
-      console.log('here 2')
     }
 
     if (!_did) {
