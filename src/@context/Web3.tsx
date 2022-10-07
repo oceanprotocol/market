@@ -360,12 +360,12 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
 
   useEffect(() => {
-    if (appConfig.chainIdsSupported.includes(networkId)) {
+    if (appConfig.chainIds.includes(networkId)) {
       setIsSupportedOceanNetwork(true)
     } else {
       setIsSupportedOceanNetwork(false)
     }
-  }, [networkId, appConfig.chainIdsSupported])
+  }, [networkId, appConfig.chainIds])
 
   // -----------------------------------
   // Handle change events

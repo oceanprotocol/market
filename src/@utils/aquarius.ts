@@ -53,7 +53,9 @@ export function generateBaseQuery(
         ...baseQueryParams.nestedQuery,
         filter: [
           ...(baseQueryParams.filters || []),
-          getFilterTerm('chainId', baseQueryParams.chainIds),
+          baseQueryParams.chainIds
+            ? getFilterTerm('chainId', baseQueryParams.chainIds)
+            : [],
           getFilterTerm('_index', 'aquarius'),
           ...(baseQueryParams.ignorePurgatory
             ? []

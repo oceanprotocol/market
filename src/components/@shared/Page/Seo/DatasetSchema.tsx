@@ -12,7 +12,7 @@ const DatasetSchema = (): object => {
 
   const networksMain = filterNetworksByType(
     'mainnet',
-    appConfig.chainIdsSupported,
+    appConfig.chainIds,
     networksList
   )
 
