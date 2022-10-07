@@ -10,6 +10,7 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
 import TopSales from './TopSales'
 import styles from './index.module.css'
+import TopTags from './TopTags'
 
 function sortElements(items: Asset[], sorted: string[]) {
   items.sort(function (a, b) {
@@ -111,7 +112,7 @@ export default function HomePage(): ReactElement {
         size: 9
       },
       sortOptions: {
-        sortBy: SortTermOptions.Stats
+        sortBy: SortTermOptions.Orders
       } as SortOptions
     } as BaseQueryParams
     setQueryMostSales(generateBaseQuery(baseParamsSales))
@@ -135,7 +136,7 @@ export default function HomePage(): ReactElement {
           </Button>
         }
       />
-
+      <TopTags title="Top Tags By Sales" />
       <TopSales title="Publishers With Most Sales" />
     </>
   )

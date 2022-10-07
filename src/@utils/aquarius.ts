@@ -303,7 +303,7 @@ export async function getPublishedAssets(
     aggs: {
       totalOrders: {
         sum: {
-          field: SortTermOptions.Stats
+          field: SortTermOptions.Orders
         }
       }
     },
@@ -357,7 +357,7 @@ export async function getTopPublishers(
         aggs: {
           totalSales: {
             sum: {
-              field: SortTermOptions.Stats
+              field: SortTermOptions.Orders
             }
           }
         }
