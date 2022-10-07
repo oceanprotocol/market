@@ -1,5 +1,4 @@
 import {
-  Arweave,
   ComputeAlgorithm,
   ComputeAsset,
   ComputeEnvironment,
@@ -85,7 +84,7 @@ export async function getFileDidInfo(
 }
 
 export async function getFileUrlInfo(
-  file: UrlFile | Arweave,
+  file: UrlFile,
   providerUrl: string
 ): Promise<FileInfo[]> {
   try {
