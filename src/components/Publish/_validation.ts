@@ -22,7 +22,7 @@ const validationMetadata = {
     )
     .required('Required'),
   author: Yup.string().required('Required'),
-  tags: Yup.string().nullable(),
+  tags: Yup.array<string[]>().nullable(),
   termsAndConditions: Yup.boolean()
     .required('Required')
     .isTrue('Please agree to the Terms and Conditions.')

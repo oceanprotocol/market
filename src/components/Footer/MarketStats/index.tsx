@@ -14,11 +14,14 @@ import { useMarketMetadata } from '@context/MarketMetadata'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import content from '../../../../content/footer.json'
+import { getTotalAllocatedAndLocked } from '@utils/veAllocation'
 
 const initialTotal: StatsTotal = {
   nfts: 0,
   datatokens: 0,
-  orders: 0
+  orders: 0,
+  veAllocated: 0,
+  veLocked: 0
 }
 
 export default function MarketStats(): ReactElement {
@@ -34,15 +37,15 @@ export default function MarketStats(): ReactElement {
   // Set the main chain ids we want to display stats for
   //
   useEffect(() => {
-    if (!networksList || !appConfig || !appConfig?.chainIdsSupported) return
+    if (!networksList || !appConfig || !appConfig?.chainIds) return
 
     const mainChainIdsList = filterNetworksByType(
       'mainnet',
-      appConfig.chainIdsSupported,
+      appConfig.chainIds,
       networksList
     )
     setMainChainIds(mainChainIdsList)
-  }, [appConfig, appConfig?.chainIdsSupported, networksList])
+  }, [appConfig, appConfig?.chainIds, networksList])
 
   //
   // Helper: fetch data from subgraph
@@ -68,6 +71,12 @@ export default function MarketStats(): ReactElement {
         LoggerInstance.error('Error fetching global stats: ', error.message)
       }
     }
+
+    const veTotals = await getTotalAllocatedAndLocked()
+    total.veAllocated = veTotals.totalAllocated
+    total.veLocked = veTotals.totalLocked
+    setTotal(total)
+
     setData(newData)
   }, [mainChainIds])
 
@@ -83,9 +92,7 @@ export default function MarketStats(): ReactElement {
   //
   useEffect(() => {
     if (!data || !mainChainIds?.length) return
-    const newTotal: StatsTotal = {
-      ...initialTotal // always start calculating beginning from initial 0 values
-    }
+    const newTotal: StatsTotal = total
 
     for (const chainId of mainChainIds) {
       try {

@@ -14,7 +14,8 @@ export function getInitialValues(
     links: metadata?.links as any,
     files: [{ url: '', type: '' }],
     timeout: secondsToString(timeout),
-    author: metadata?.author
+    author: metadata?.author,
+    tags: metadata?.tags
   }
 }
 
