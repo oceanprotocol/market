@@ -13,20 +13,19 @@ export default function AvailableNetworks(): ReactElement {
 
   const networksMain = filterNetworksByType(
     'mainnet',
-    appConfig.chainIds,
+    appConfig.chainIdsSupported,
     networksList
   )
 
   const networksTest = filterNetworksByType(
     'testnet',
-    appConfig.chainIds,
+    appConfig.chainIdsSupported,
     networksList
   )
   const networkCategories = [
     { title: 'Main', data: networksMain },
     { title: 'Test', data: networksTest }
   ]
-
   const networkList = (networks: number[]) =>
     networks.map((chainId) => (
       <li key={chainId}>

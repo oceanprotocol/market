@@ -9,6 +9,7 @@ export interface AppConfig {
   metadataCacheUri: string
   infuraProjectId: string
   chainIds: number[]
+  chainIdsSupported: number[]
   marketFeeAddress: string
   publisherMarketOrderFee: string
   publisherMarketFixedSwapFee: string
