@@ -15,11 +15,6 @@ declare global {
     name: string
   }
 
-  interface ComputePrivacyForm {
-    allowAllPublishedAlgorithms: boolean
-    publisherTrustedAlgorithms: string[]
-  }
-
   interface TokenOrder {
     id: string
     serviceIndex: number

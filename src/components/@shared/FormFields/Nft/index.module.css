@@ -27,7 +27,7 @@
   position: absolute;
   left: 0;
   bottom: 0;
-  padding: 0 calc(var(--spacer) / 4);
+  padding: calc(var(--spacer) / 4);
   display: flex;
   justify-content: space-between;
   align-items: center;

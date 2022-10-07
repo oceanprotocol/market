@@ -1,6 +1,0 @@
-.buttonMax {
-  position: absolute;
-  font-size: var(--font-size-mini);
-  bottom: calc(var(--spacer) / 2.6);
-  right: calc(var(--spacer) * 2.5);
-}

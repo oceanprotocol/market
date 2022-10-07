@@ -10,17 +10,12 @@ import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset, ZERO_ADDRESS } from '@oceanprotocol/lib'
-import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
-import {
-  getAccessDetailsForAssets,
-  getAccessDetails
-} from '@utils/accessDetailsAndPricing'
-import { AssetExtended } from 'src/@types/AssetExtended'
+import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from '@utils/constants'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
-import { getDummyWeb3 } from '@utils/web3'
+import { getTokenBalanceFromSymbol } from '@utils/web3'
 
 export default function FormStartCompute({
   algorithms,
@@ -32,7 +27,6 @@ export default function FormStartCompute({
   hasPreviousOrder,
   hasDatatoken,
   dtBalance,
-  datasetLowPoolLiquidity,
   assetType,
   assetTimeout,
   hasPreviousOrderSelectedComputeAsset,
@@ -40,7 +34,6 @@ export default function FormStartCompute({
   oceanSymbol,
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
-  selectedComputeAssetLowPoolLiquidity,
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
   stepText,
@@ -60,7 +53,6 @@ export default function FormStartCompute({
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtBalance: string
-  datasetLowPoolLiquidity: boolean
   assetType: string
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset?: boolean
@@ -68,7 +60,6 @@ export default function FormStartCompute({
   oceanSymbol?: string
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
-  selectedComputeAssetLowPoolLiquidity?: boolean
   selectedComputeAssetType?: string
   selectedComputeAssetTimeout?: string
   stepText: string
@@ -169,12 +160,16 @@ export default function FormStartCompute({
   ])
 
   useEffect(() => {
-    if (!totalPrice || !balance?.ocean || !dtBalance) return
-
-    setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${totalPrice}`) || Number(dtBalance) >= 1
+    const baseTokenBalance = getTokenBalanceFromSymbol(
+      balance,
+      asset?.accessDetails?.baseToken?.symbol
     )
-  }, [totalPrice, balance?.ocean, dtBalance])
+
+    if (!totalPrice || !baseTokenBalance || !dtBalance) return
+    setIsBalanceSufficient(
+      compareAsBN(baseTokenBalance, `${totalPrice}`) || Number(dtBalance) >= 1
+    )
+  }, [totalPrice, balance, dtBalance, asset?.accessDetails?.baseToken?.symbol])
 
   return (
     <Form className={styles.form}>
@@ -183,15 +178,17 @@ export default function FormStartCompute({
         state="info"
         text={siteContent.warning.ctd}
       />
-      {content.form.data.map((field: FormFieldContent) => (
-        <Field
-          key={field.name}
-          {...field}
-          options={algorithms}
-          component={Input}
-          disabled={isLoading}
-        />
-      ))}
+      {content.form.data.map((field: FormFieldContent) => {
+        return (
+          <Field
+            key={field.name}
+            {...field}
+            options={algorithms}
+            component={Input}
+            disabled={isLoading || isComputeButtonDisabled}
+          />
+        )
+      })}
 
       <PriceOutput
         hasPreviousOrder={hasPreviousOrder}
@@ -222,9 +219,9 @@ export default function FormStartCompute({
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
+        btSymbol={asset?.accessDetails?.baseToken?.symbol}
         dtSymbol={asset?.datatokens[0]?.symbol}
         dtBalance={dtBalance}
-        datasetLowPoolLiquidity={datasetLowPoolLiquidity}
         assetTimeout={assetTimeout}
         assetType={assetType}
         hasPreviousOrderSelectedComputeAsset={
@@ -233,9 +230,6 @@ export default function FormStartCompute({
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         dtSymbolSelectedComputeAsset={dtSymbolSelectedComputeAsset}
         dtBalanceSelectedComputeAsset={dtBalanceSelectedComputeAsset}
-        selectedComputeAssetLowPoolLiquidity={
-          selectedComputeAssetLowPoolLiquidity
-        }
         selectedComputeAssetType={selectedComputeAssetType}
         stepText={stepText}
         isLoading={isLoading}

@@ -13,8 +13,7 @@ import { infuraProjectId as infuraId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
-import { getEnsName } from '@utils/ens'
-import { getOceanBalance } from '@utils/ocean'
+import { getEnsProfile } from '@utils/ens'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName,
@@ -22,14 +21,18 @@ import useNetworkMetadata, {
   NetworkType
 } from '../@hooks/useNetworkMetadata'
 import { useMarketMetadata } from './MarketMetadata'
+import { getTokenBalance } from '@utils/web3'
+import { getOpcsApprovedTokens } from '@utils/subgraph'
 
 interface Web3ProviderValue {
   web3: Web3
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   web3Provider: any
   web3Modal: Web3Modal
   web3ProviderInfo: IProviderInfo
   accountId: string
   accountEns: string
+  accountEnsAvatar: string
   balance: UserBalance
   networkId: number
   chainId: number
@@ -39,6 +42,7 @@ interface Web3ProviderValue {
   isTestnet: boolean
   web3Loading: boolean
   isSupportedOceanNetwork: boolean
+  approvedBaseTokens: TokenInfo[]
   connect: () => Promise<void>
   logout: () => Promise<void>
 }
@@ -51,24 +55,18 @@ const web3ModalTheme = {
   hover: 'var(--background-highlight)'
 }
 
-// HEADS UP! We inline-require some packages so the SSR build does not break.
-// We only need them client-side.
 const providerOptions = isBrowser
   ? {
       walletconnect: {
         package: WalletConnectProvider,
-        options: { infuraId }
+        options: {
+          infuraId,
+          rpc: {
+            137: 'https://polygon-rpc.com',
+            80001: 'https://rpc-mumbai.matic.today'
+          }
+        }
       }
-      // torus: {
-      //   package: require('@toruslabs/torus-embed')
-      //   // options: {
-      //   //   networkParams: {
-      //   //     host: oceanConfig.url, // optional
-      //   //     chainId: 1337, // optional
-      //   //     networkId: 1337 // optional
-      //   //   }
-      //   // }
-      // }
     }
   : {}
 
@@ -87,7 +85,9 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const { appConfig } = useMarketMetadata()
 
   const [web3, setWeb3] = useState<Web3>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [web3Provider, setWeb3Provider] = useState<any>()
+
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
   const [web3ProviderInfo, setWeb3ProviderInfo] = useState<IProviderInfo>()
   const [networkId, setNetworkId] = useState<number>()
@@ -98,12 +98,13 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
   const [accountEns, setAccountEns] = useState<string>()
+  const [accountEnsAvatar, setAccountEnsAvatar] = useState<string>()
   const [web3Loading, setWeb3Loading] = useState<boolean>(true)
   const [balance, setBalance] = useState<UserBalance>({
-    eth: '0',
-    ocean: '0'
+    eth: '0'
   })
   const [isSupportedOceanNetwork, setIsSupportedOceanNetwork] = useState(true)
+  const [approvedBaseTokens, setApprovedBaseTokens] = useState<TokenInfo[]>()
 
   // -----------------------------------
   // Helper: connect to web3
@@ -143,42 +144,83 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [web3Modal])
 
   // -----------------------------------
+  // Helper: Get approved base tokens list
+  // -----------------------------------
+  const getApprovedBaseTokens = useCallback(async (chainId: number) => {
+    try {
+      const approvedTokensList = await getOpcsApprovedTokens(chainId)
+      setApprovedBaseTokens(approvedTokensList)
+      LoggerInstance.log('[web3] Approved baseTokens', approvedTokensList)
+    } catch (error) {
+      LoggerInstance.error('[web3] Error: ', error.message)
+    }
+  }, [])
+
+  // -----------------------------------
   // Helper: Get user balance
   // -----------------------------------
   const getUserBalance = useCallback(async () => {
-    if (!accountId || !networkId || !web3) return
+    if (!accountId || !networkId || !web3 || !networkData) return
 
     try {
-      const balance = {
-        eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest')),
-        ocean: await getOceanBalance(accountId, networkId, web3)
+      const userBalance = web3.utils.fromWei(
+        await web3.eth.getBalance(accountId, 'latest')
+      )
+      const key = networkData.nativeCurrency.symbol.toLowerCase()
+      const balance: UserBalance = { [key]: userBalance }
+
+      if (approvedBaseTokens?.length > 0) {
+        await Promise.all(
+          approvedBaseTokens.map(async (token) => {
+            const { address, decimals, symbol } = token
+            const tokenBalance = await getTokenBalance(
+              accountId,
+              decimals,
+              address,
+              web3
+            )
+            balance[symbol.toLocaleLowerCase()] = tokenBalance
+          })
+        )
       }
+
       setBalance(balance)
       LoggerInstance.log('[web3] Balance: ', balance)
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
     }
-  }, [accountId, networkId, web3])
+  }, [accountId, approvedBaseTokens, networkId, web3, networkData])
 
   // -----------------------------------
-  // Helper: Get user ENS name
+  // Helper: Get user ENS info
   // -----------------------------------
-  const getUserEnsName = useCallback(async () => {
+  const getUserEns = useCallback(async () => {
     if (!accountId) return
 
     try {
-      // const accountEns = await getEnsNameWithWeb3(
-      //   accountId,
-      //   web3Provider,
-      //   `${networkId}`
-      // )
-      const accountEns = await getEnsName(accountId)
-      setAccountEns(accountEns)
-      accountEns &&
+      const profile = await getEnsProfile(accountId)
+
+      if (!profile) {
+        setAccountEns(null)
+        setAccountEnsAvatar(null)
+        return
+      }
+
+      setAccountEns(profile.name)
+      LoggerInstance.log(
+        `[web3] ENS name found for ${accountId}:`,
+        profile.name
+      )
+
+      if (profile.avatar) {
+        setAccountEnsAvatar(profile.avatar)
         LoggerInstance.log(
-          `[web3] ENS name found for ${accountId}:`,
-          accountEns
+          `[web3] ENS avatar found for ${accountId}:`,
+          profile.avatar
         )
+      } else {
+        setAccountEnsAvatar(null)
+      }
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
     }
@@ -222,6 +264,14 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [connect, web3Modal])
 
   // -----------------------------------
+  // Get and set approved base tokens list
+  // -----------------------------------
+  useEffect(() => {
+    if (web3Loading) return
+    getApprovedBaseTokens(chainId || 1)
+  }, [chainId, getApprovedBaseTokens, web3Loading])
+
+  // -----------------------------------
   // Get and set user balance
   // -----------------------------------
   useEffect(() => {
@@ -236,11 +286,11 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [getUserBalance])
 
   // -----------------------------------
-  // Get and set user ENS name
+  // Get and set user ENS info
   // -----------------------------------
   useEffect(() => {
-    getUserEnsName()
-  }, [getUserEnsName])
+    getUserEns()
+  }, [getUserEns])
 
   // -----------------------------------
   // Get and set network metadata
@@ -297,9 +347,12 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // Logout helper
   // -----------------------------------
   async function logout() {
-    if (web3 && web3.currentProvider && (web3.currentProvider as any).close) {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    if ((web3?.currentProvider as any)?.close) {
       await (web3.currentProvider as any).close()
     }
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+
     await web3Modal.clearCachedProvider()
   }
   // -----------------------------------
@@ -348,6 +401,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       web3Provider.removeListener('networkChanged', handleNetworkChanged)
       web3Provider.removeListener('accountsChanged', handleAccountsChanged)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3Provider, web3])
 
   return (
@@ -359,6 +413,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         web3ProviderInfo,
         accountId,
         accountEns,
+        accountEnsAvatar,
         balance,
         networkId,
         chainId,
@@ -368,6 +423,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         isTestnet,
         web3Loading,
         isSupportedOceanNetwork,
+        approvedBaseTokens,
         connect,
         logout
       }}

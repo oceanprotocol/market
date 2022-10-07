@@ -1,6 +1,11 @@
 import React from 'react'
-import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
-import { FormPublishData, PublishFeedback, StepContent } from './_types'
+import { allowFixedPricing } from '../../../app.config.js'
+import {
+  FormPublishData,
+  MetadataAlgorithmContainer,
+  PublishFeedback,
+  StepContent
+} from './_types'
 import content from '../../../content/publish/form.json'
 import PricingFields from './Pricing'
 import MetadataFields from './Metadata'
@@ -58,7 +63,7 @@ export const initialValues: FormPublishData = {
     name: '',
     author: '',
     description: '',
-    tags: '',
+    tags: [],
     termsAndConditions: false,
     dockerImage: '',
     dockerImageCustom: '',
@@ -67,8 +72,8 @@ export const initialValues: FormPublishData = {
   },
   services: [
     {
-      files: [{ url: '' }],
-      links: [{ url: '' }],
+      files: [{ url: '', type: '' }],
+      links: [{ url: '', type: '' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: 'access',
@@ -81,41 +86,27 @@ export const initialValues: FormPublishData = {
     }
   ],
   pricing: {
+    baseToken: { address: '', name: '', symbol: 'OCEAN', decimals: 18 },
     price: 0,
-    type:
-      allowDynamicPricing === 'true'
-        ? 'dynamic'
-        : allowFixedPricing === 'true'
-        ? 'fixed'
-        : 'free',
-    amountDataToken: allowDynamicPricing === 'true' ? 100 : 1000,
-    amountOcean: 100,
-    weightOnOcean: '5', // 50% on OCEAN
-    weightOnDataToken: '5', // 50% on datatoken
-    swapFee: 0.1, // in %
+    type: allowFixedPricing === 'true' ? 'fixed' : 'free',
     freeAgreement: false
   }
-}
-
-export interface MetadataAlgorithmContainer {
-  entrypoint: string
-  image: string
-  tag: string
-  checksum: string
 }
 
 export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
   {
     image: 'node',
-    tag: 'latest',
+    tag: '18.6.0', // TODO: Put this back to latest once merging the PR that fetches the container digest from docker hub via dockerhub-proxy
     entrypoint: 'node $ALGO',
-    checksum: '' // TODO: how to get? Most likely needs to be fetched from DockerHub.
+    checksum:
+      'sha256:c60726646352202d95de70d9e8393c15f382f8c6074afc5748b7e570ccd5995f'
   },
   {
     image: 'python',
-    tag: 'latest',
+    tag: '3.10.5', // TODO: Put this back to latest once merging the PR that fetches the container digest from docker hub via dockerhub-proxy
     entrypoint: 'python $ALGO',
-    checksum: ''
+    checksum:
+      'sha256:607635763e54907fd75397fedfeb83890e62a0f9b54a1d99d27d748c5d269be4'
   }
 ]
 

@@ -1,11 +1,14 @@
 .consume {
-  display: flex;
-  flex-wrap: wrap;
+  width: auto;
+  margin-bottom: calc(var(--spacer) / 2);
+  margin-top: -1rem;
+  margin-left: -2rem;
 }
 
 .info {
   display: flex;
   width: auto;
+  padding: 0 calc(var(--spacer) / 2) 0 calc(var(--spacer) * 1.5);
 }
 
 .filewrapper {

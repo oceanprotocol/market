@@ -9,20 +9,12 @@ module.exports = {
     process.env.NEXT_PUBLIC_METADATACACHE_URI ||
     'https://v4.aquarius.oceanprotocol.com',
 
-  v3MetadataCacheUri:
-    process.env.NEXT_PUBLIC_V3_METADATACACHE_URI ||
-    'https://aquarius.oceanprotocol.com',
-
-  v3MarketUri:
-    process.env.NEXT_PUBLIC_V3_MARKET_URI ||
-    'https://v3.market.oceanprotocol.com',
-
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
   chainIds: [1, 137, 56, 246, 1285],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 137, 56, 246, 1285, 3, 4, 80001, 1287],
+  chainIdsSupported: [1, 137, 56, 246, 1285, 5, 80001, 1287],
 
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
@@ -33,9 +25,6 @@ module.exports = {
   // publisher market fee that is taken upon ordering an asset, it is an absolute value, it is declared on erc20 creation
   publisherMarketOrderFee:
     process.env.NEXT_PUBLIC_PUBLISHER_MARKET_ORDER_FEE || '0',
-  // fee recieved by the publisher market when a dt is swaped from a pool, percent
-  publisherMarketPoolSwapFee:
-    process.env.NEXT_PUBLIC_PUBLISHER_MARKET_POOL_SWAP_FEE || '0',
   // fee recieved by the publisher market when a dt is bought from a fixed rate exchange, percent
   publisherMarketFixedSwapFee:
     process.env.NEXT_PUBLIC_PUBLISHER_MARKET_FIXED_SWAP_FEE || '0',
@@ -43,9 +32,6 @@ module.exports = {
   // consume market fee that is taken upon ordering an asset, it is an absolute value, it is specified on order
   consumeMarketOrderFee:
     process.env.NEXT_PUBLIC_CONSUME_MARKET_ORDER_FEE || '0',
-  // fee recieved by the consume market when a dt is swaped from a pool, percent
-  consumeMarketPoolSwapFee:
-    process.env.NEXT_PUBLIC_CONSUME_MARKET_POOL_SWAP_FEE || '0',
   // fee recieved by the consume market when a dt is bought from a fixed rate exchange, percent
   consumeMarketFixedSwapFee:
     process.env.NEXT_PUBLIC_CONSUME_MARKET_FIXED_SWAP_FEE || '0',
@@ -68,17 +54,20 @@ module.exports = {
     'LINK'
   ],
 
-  // Config for https://github.com/donavon/use-dark-mode
+  // Tokens to fetch the spot prices from coingecko, against above currencies.
+  // Refers to Coingecko API tokenIds.
+  coingeckoTokenIds: ['ocean-protocol', 'h2o', 'ethereum', 'matic-network'],
+
+  // Config for https://github.com/oceanprotocol/use-dark-mode
   darkModeConfig: {
     classNameDark: 'dark',
     classNameLight: 'light',
     storageKey: 'oceanDarkMode'
   },
 
-  // Used to show or hide the fixed, dynamic or free price options
+  // Used to show or hide the fixed or free price options
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.NEXT_PUBLIC_ALLOW_FIXED_PRICING || 'true',
-  allowDynamicPricing: process.env.NEXT_PUBLIC_ALLOW_DYNAMIC_PRICING || 'true',
   allowFreePricing: process.env.NEXT_PUBLIC_ALLOW_FREE_PRICING || 'true',
 
   // Set the default privacy policy to initially display

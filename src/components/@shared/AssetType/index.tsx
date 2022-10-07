@@ -1,26 +1,22 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
-import classNames from 'classnames/bind'
 import Compute from '@images/compute.svg'
 import Download from '@images/download.svg'
 import Lock from '@images/lock.svg'
 
-const cx = classNames.bind(styles)
-
 export default function AssetType({
   type,
   accessType,
-  className
+  className,
+  totalSales
 }: {
   type: string
   accessType: string
   className?: string
+  totalSales?: number
 }): ReactElement {
-  const styleClasses = cx({
-    [className]: className
-  })
   return (
-    <div className={styleClasses}>
+    <div className={className || null}>
       {accessType === 'access' ? (
         <Download role="img" aria-label="Download" className={styles.icon} />
       ) : accessType === 'compute' && type === 'algorithm' ? (
@@ -30,8 +26,16 @@ export default function AssetType({
       )}
 
       <div className={styles.typeLabel}>
-        {type === 'dataset' ? 'data set' : 'algorithm'}
+        {type === 'dataset' ? 'dataset' : 'algorithm'}
       </div>
+
+      {(totalSales || totalSales === 0) && (
+        <div className={styles.typeLabel}>
+          {totalSales < 0
+            ? 'N/A'
+            : `${totalSales} ${totalSales === 1 ? 'sale' : 'sales'}`}
+        </div>
+      )}
     </div>
   )
 }

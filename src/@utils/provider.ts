@@ -8,7 +8,6 @@ import {
   ProviderComputeInitializeResults,
   ProviderInstance
 } from '@oceanprotocol/lib'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
 import { getValidUntilTime } from './compute'
 
@@ -67,13 +66,15 @@ export async function getEncryptedFiles(
 export async function getFileDidInfo(
   did: string,
   serviceId: string,
-  providerUrl: string
+  providerUrl: string,
+  withChecksum = false
 ): Promise<FileInfo[]> {
   try {
     const response = await ProviderInstance.checkDidFiles(
       did,
-      serviceId as any, // TODO: why does ocean.js want a number here?
-      providerUrl
+      serviceId,
+      providerUrl,
+      withChecksum
     )
     return response
   } catch (error) {

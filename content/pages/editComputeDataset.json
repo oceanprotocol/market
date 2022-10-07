@@ -1,15 +1,14 @@
 {
-  "description": "Only selected algorithms are allowed to run on this data set. Updating these settings will create an on-chain transaction you have to approve in your wallet.",
   "form": {
     "title": "Set allowed algorithms",
-    "success": "🎉 Successfully updated. 🎉",
-    "successAction": "Close",
+    "description": "Only the algorithms selected here will be allowed to run on your dataset. Uncheck all to remove any access to your dataset.",
+    "success": "🎉 Successfully updated. 🎉\n\nUpdates might not show up right away on your asset. In this case, wait some seconds and reload your asset details page in your browser.",
     "error": "Updating DDO failed.",
     "data": [
       {
         "name": "publisherTrustedAlgorithms",
         "label": "Selected Algorithms",
-        "help": "Choose one or multiple algorithms you trust to allow them to run on this data set.",
+        "help": "Choose one or multiple algorithms you trust to allow them to run on this dataset.",
         "type": "assetSelectionMultiple",
         "multiple": true,
         "options": [],
@@ -18,7 +17,7 @@
       {
         "name": "allowAllPublishedAlgorithms",
         "label": "All Algorithms",
-        "help": "Allow any published algorithm to run on this data set.",
+        "help": "Allow any published algorithm to run on this dataset.",
         "type": "checkbox",
         "options": ["Allow any published algorithm"]
       }

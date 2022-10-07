@@ -10,7 +10,7 @@ AWS_S3_BUCKET="www-market"
 set -e;
 
 function s3sync {
-  aws s3 sync ./public s3://"$1" \
+  aws s3 sync ./out s3://"$1" \
     --include "*" \
     --exclude "*.html" \
     --exclude "sw.js" \
@@ -24,7 +24,7 @@ function s3sync {
     --delete \
     --acl public-read
 
-  aws s3 sync ./public s3://"$1" \
+  aws s3 sync ./out s3://"$1" \
     --exclude "*" \
     --include "*.html" \
     --include "sw.js" \

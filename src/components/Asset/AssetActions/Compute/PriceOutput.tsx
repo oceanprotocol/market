@@ -3,7 +3,6 @@ import { useAsset } from '@context/Asset'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
-import { AccessDetails } from 'src/@types/Price'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
 
@@ -17,8 +16,8 @@ interface PriceOutputProps {
   hasDatatokenSelectedComputeAsset: boolean
   algorithmConsumeDetails: AccessDetails
   selectedComputeAssetTimeout: string
-  datasetOrderPrice?: number
-  algoOrderPrice?: number
+  datasetOrderPrice?: string
+  algoOrderPrice?: string
   providerFeeAmount?: string
   validUntil?: string
 }
@@ -46,7 +45,7 @@ function Row({
       <div className={styles.type}>{type}</div>
       <div>
         <PriceUnit
-          price={hasPreviousOrder || hasDatatoken ? '0' : `${price}`}
+          price={hasPreviousOrder || hasDatatoken ? 0 : Number(price)}
           symbol={symbol}
           size="small"
           className={styles.price}
@@ -82,7 +81,7 @@ export default function PriceOutput({
   return (
     <div className={styles.priceComponent}>
       You will pay{' '}
-      <PriceUnit price={`${totalPrice}`} symbol={symbol} size="small" />
+      <PriceUnit price={Number(totalPrice)} symbol={symbol} size="small" />
       <Tooltip
         content={
           <div className={styles.calculation}>

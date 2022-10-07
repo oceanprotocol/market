@@ -1,21 +1,20 @@
 import { useUserPreferences } from '@context/UserPreferences'
 import React, { ReactElement, useEffect, useState } from 'react'
-import Table from '@shared/atoms/Table'
+import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import Price from '@shared/Price'
 import Tooltip from '@shared/atoms/Tooltip'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { retrieveDDOListByDIDs } from '@utils/aquarius'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
-const columns = [
+const columns: TableOceanColumn<AssetExtended>[] = [
   {
-    name: 'Data Set',
-    selector: function getAssetRow(row: AssetExtended) {
+    name: 'Dataset',
+    selector: (row) => {
       const { metadata } = row
       return <AssetTitle title={metadata.name} asset={row} />
     },
@@ -24,20 +23,16 @@ const columns = [
   },
   {
     name: 'Datatoken Symbol',
-    selector: function getAssetRow(row: AssetExtended) {
-      return (
-        <Tooltip content={row.datatokens[0].name}>
-          <>{row.datatokens[0].symbol}</>
-        </Tooltip>
-      )
-    },
+    selector: (row) => (
+      <Tooltip content={row.datatokens[0].name}>
+        <>{row.datatokens[0].symbol}</>
+      </Tooltip>
+    ),
     maxWidth: '10rem'
   },
   {
     name: 'Price',
-    selector: function getAssetRow(row: AssetExtended) {
-      return <Price accessDetails={row.accessDetails} size="small" />
-    },
+    selector: (row) => <Price accessDetails={row.accessDetails} size="small" />,
     right: true
   }
 ]
@@ -53,7 +48,7 @@ export default function Bookmarks(): ReactElement {
   const newCancelToken = useCancelToken()
 
   useEffect(() => {
-    if (!appConfig?.metadataCacheUri || bookmarks === []) return
+    if (!appConfig?.metadataCacheUri || bookmarks?.length === 0) return
 
     async function init() {
       if (!bookmarks?.length) {
