@@ -8,7 +8,8 @@ import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './index.module.css'
 import { getServiceByName } from '@utils/ddo'
-import PriceUnit from '@shared/Price/PriceUnit'
+import { formatPrice } from '@shared/Price/PriceUnit'
+import { useUserPreferences } from '@context/UserPreferences'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -26,6 +27,8 @@ export default function AssetTeaser({
   const { owner } = asset.nft
   const { orders, allocated } = asset.stats
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
+  const { locale } = useUserPreferences()
+
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`}>
@@ -61,11 +64,9 @@ export default function AssetTeaser({
           <footer className={styles.footer}>
             {allocated && allocated > 0 ? (
               <span className={styles.typeLabel}>
-                {allocated < 0 ? (
-                  ''
-                ) : (
-                  <PriceUnit price={allocated} symbol="veOcean" size="mini" />
-                )}
+                {allocated < 0
+                  ? ''
+                  : `${formatPrice(allocated, locale)} veOCEAN`}
               </span>
             ) : null}
             {orders && orders > 0 ? (

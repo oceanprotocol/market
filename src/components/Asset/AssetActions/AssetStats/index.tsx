@@ -1,9 +1,11 @@
 import { useAsset } from '@context/Asset'
-import PriceUnit from '@shared/Price/PriceUnit'
+import { useUserPreferences } from '@context/UserPreferences'
+import { formatPrice } from '@shared/Price/PriceUnit'
 import React from 'react'
 import styles from './index.module.css'
 
 export default function AssetStats() {
+  const { locale } = useUserPreferences()
   const { asset } = useAsset()
   const { orders, allocated } = asset.stats
 
@@ -12,9 +14,9 @@ export default function AssetStats() {
       {allocated && allocated > 0 ? (
         <span className={styles.stat}>
           <span className={styles.number}>
-            {' '}
-            <PriceUnit price={allocated} symbol="veOCEAN" size="small" />
-          </span>{' '}
+            {formatPrice(allocated, locale)}
+          </span>
+          veOCEAN
         </span>
       ) : null}
       {!asset || !asset?.stats || orders < 0 ? (
