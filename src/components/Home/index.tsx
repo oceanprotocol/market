@@ -108,7 +108,7 @@ export default function HomePage(): ReactElement {
     const baseParamsSales = {
       chainIds,
       esPaginationOptions: {
-        size: 9
+        size: 6
       },
       sortOptions: {
         sortBy: SortTermOptions.Stats

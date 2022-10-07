@@ -10,6 +10,8 @@ import App from 'src/components/App'
 
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../stylesGlobal/styles.css'
+import '../stylesGlobal/tailwind.css'
+import '../stylesGlobal/main.css'
 import Decimal from 'decimal.js'
 import MarketMetadataProvider from '@context/MarketMetadata'
 
