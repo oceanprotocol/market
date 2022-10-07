@@ -47,8 +47,7 @@ function dateToStringNoMS(date: Date): string {
   return date.toISOString().replace(/\.[0-9]{3}Z/, 'Z')
 }
 
-function transformTags(value: string): string[] {
-  const originalTags = value?.split(',')
+function transformTags(originalTags: string[]): string[] {
   const transformedTags = originalTags?.map((tag) => slugify(tag).toLowerCase())
   return transformedTags
 }

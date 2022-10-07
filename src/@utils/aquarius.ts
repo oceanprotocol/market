@@ -44,7 +44,10 @@ export function generateBaseQuery(
 ): SearchQuery {
   const generatedQuery = {
     from: baseQueryParams.esPaginationOptions?.from || 0,
-    size: baseQueryParams.esPaginationOptions?.size || 1000,
+    size:
+      baseQueryParams.esPaginationOptions?.size >= 0
+        ? baseQueryParams.esPaginationOptions?.size
+        : 1000,
     query: {
       bool: {
         ...baseQueryParams.nestedQuery,
@@ -448,6 +451,50 @@ export async function getDownloadAssets(
       .sort((a, b) => b.timestamp - a.timestamp)
 
     return downloadedAssets
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
+
+export async function getTagsList(
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<string[]> {
+  const baseQueryParams = {
+    chainIds,
+    esPaginationOptions: { from: 0, size: 0 }
+  } as BaseQueryParams
+  const query = {
+    ...generateBaseQuery(baseQueryParams),
+    aggs: {
+      tags: {
+        terms: {
+          field: 'metadata.tags.keyword',
+          size: 1000
+        }
+      }
+    }
+  }
+
+  try {
+    const response: AxiosResponse<SearchResponse> = await axios.post(
+      `${metadataCacheUri}/api/aquarius/assets/query`,
+      { ...query },
+      { cancelToken }
+    )
+    if (response?.status !== 200 || !response?.data) return
+    const { buckets }: { buckets: AggregatedTag[] } =
+      response.data.aggregations.tags
+
+    const tagsList = buckets
+      .filter((tag) => tag.key !== '')
+      .map((tag) => tag.key)
+
+    return tagsList.sort()
   } catch (error) {
     if (axios.isCancel(error)) {
       LoggerInstance.log(error.message)
