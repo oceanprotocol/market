@@ -2,7 +2,7 @@ import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
-import { metadataCacheUri, v3MetadataCacheUri } from '../../app.config'
+import { metadataCacheUri } from '../../app.config'
 import {
   SortDirectionOptions,
   SortTermOptions
@@ -44,7 +44,10 @@ export function generateBaseQuery(
 ): SearchQuery {
   const generatedQuery = {
     from: baseQueryParams.esPaginationOptions?.from || 0,
-    size: baseQueryParams.esPaginationOptions?.size || 1000,
+    size:
+      baseQueryParams.esPaginationOptions?.size >= 0
+        ? baseQueryParams.esPaginationOptions?.size
+        : 1000,
     query: {
       bool: {
         ...baseQueryParams.nestedQuery,
@@ -142,28 +145,6 @@ export async function retrieveAsset(
     } else {
       LoggerInstance.error(error.message)
     }
-  }
-}
-
-export async function checkV3Asset(
-  did: string,
-  cancelToken: CancelToken
-): Promise<boolean> {
-  try {
-    const response: AxiosResponse<Asset> = await axios.get(
-      `${v3MetadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
-      { cancelToken }
-    )
-    if (!response || response.status !== 200 || !response.data) return false
-
-    return true
-  } catch (error) {
-    if (axios.isCancel(error)) {
-      LoggerInstance.log(error.message)
-    } else {
-      LoggerInstance.error(error.message)
-    }
-    return false
   }
 }
 
@@ -470,6 +451,50 @@ export async function getDownloadAssets(
       .sort((a, b) => b.timestamp - a.timestamp)
 
     return downloadedAssets
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
+
+export async function getTagsList(
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<string[]> {
+  const baseQueryParams = {
+    chainIds,
+    esPaginationOptions: { from: 0, size: 0 }
+  } as BaseQueryParams
+  const query = {
+    ...generateBaseQuery(baseQueryParams),
+    aggs: {
+      tags: {
+        terms: {
+          field: 'metadata.tags.keyword',
+          size: 1000
+        }
+      }
+    }
+  }
+
+  try {
+    const response: AxiosResponse<SearchResponse> = await axios.post(
+      `${metadataCacheUri}/api/aquarius/assets/query`,
+      { ...query },
+      { cancelToken }
+    )
+    if (response?.status !== 200 || !response?.data) return
+    const { buckets }: { buckets: AggregatedTag[] } =
+      response.data.aggregations.tags
+
+    const tagsList = buckets
+      .filter((tag) => tag.key !== '')
+      .map((tag) => tag.key)
+
+    return tagsList.sort()
   } catch (error) {
     if (axios.isCancel(error)) {
       LoggerInstance.log(error.message)
