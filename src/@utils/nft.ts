@@ -103,6 +103,7 @@ export async function setNftMetadata(
   let providerUrl
   if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
     providerUrl = 'http://127.0.0.1:8030'
+    asset.services[0].serviceEndpoint = providerUrl
   } else {
     providerUrl = asset.services[0].serviceEndpoint
   }
@@ -123,7 +124,7 @@ export async function setNftMetadata(
     asset.nftAddress,
     accountId,
     0,
-    asset.services[0].serviceEndpoint,
+    providerUrl,
     '',
     flags,
     encryptedDdo,
@@ -144,6 +145,7 @@ export async function setNFTMetadataAndTokenURI(
   let providerUrl
   if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
     providerUrl = 'http://127.0.0.1:8030'
+    asset.services[0].serviceEndpoint = providerUrl
   } else {
     providerUrl = asset.services[0].serviceEndpoint
   }
@@ -175,7 +177,7 @@ export async function setNFTMetadataAndTokenURI(
 
   const metadataAndTokenURI: MetadataAndTokenURI = {
     metaDataState: 0,
-    metaDataDecryptorUrl: asset.services[0].serviceEndpoint,
+    metaDataDecryptorUrl: providerUrl,
     metaDataDecryptorAddress: '',
     flags,
     data: encryptedDdo,

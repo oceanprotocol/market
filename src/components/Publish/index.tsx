@@ -145,6 +145,7 @@ export default function PublishPage({
       // TODO: remove this harcoded value after fixing issue on oceanjs
       if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
         providerUrl = 'http://127.0.0.1:8030'
+        values.services[0].providerUrl.url = providerUrl
       } else {
         providerUrl = values.services[0].providerUrl.url
       }
