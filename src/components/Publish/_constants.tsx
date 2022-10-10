@@ -63,7 +63,7 @@ export const initialValues: FormPublishData = {
     name: '',
     author: '',
     description: '',
-    tags: '',
+    tags: [],
     termsAndConditions: false,
     dockerImage: '',
     dockerImageCustom: '',
