@@ -49,14 +49,12 @@
   position: relative;
 }
 
-.inputWrap .button {
-  position: absolute;
-  right: calc(var(--spacer) / 42);
-  top: 50%;
-  transform: translateY(-50%);
+.inputWrap input {
+  transition: none;
+  padding-right: calc(var(--spacer) * 1.3);
 }
 
-.pickerBox {
+.emojiPicker {
   position: absolute;
   bottom: calc(var(--spacer) * 1.7);
   left: calc(var(--spacer) / 2);

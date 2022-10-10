@@ -84,27 +84,6 @@
   border-top-left-radius: 0;
 }
 
-/* .conversationItem .colBubble .chatBubbleItem .chatBubble {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0px;
-} */
-
-/* .conversationItem .colBubble .chatBubbleItem:first-of-type .chatBubble {
-  border-top-left-radius: 1rem;
-  border-bottom-left-radius: 0px;
-}
-
-.conversationSend .colBubble .chatBubbleItem .chatBubble {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0px;
-  text-align: left;
-}
-
-.conversationSend .colBubble .chatBubbleItem:first-of-type .chatBubble {
-  border-top-right-radius: 1rem;
-  border-bottom-left-radius: 0px;
-} */
-
 .chatStamp {
   font-size: var(--font-size-small);
   color: var(--color-secondary);

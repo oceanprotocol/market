@@ -1,0 +1,17 @@
+.EmojiPickerReact.epr-dark-theme {
+  --epr-bg-color: var(--background-content) !important;
+  --epr-category-label-bg-color: #141414e6 !important;
+}
+.EmojiPickerReact {
+  --epr-emoji-size: 24px !important;
+}
+
+.EmojiPickerReact .epr-search-container input.epr-search:focus {
+  background-color: var(--epr-search-input-bg-color-active);
+  border: 1px solid var(--border-color) !important;
+}
+
+.EmojiPickerReact .epr-category-nav > button.epr-cat-btn {
+  -webkit-filter: hue-rotate(110deg) saturate(2);
+  filter: hue-rotate(110deg) saturate(2);
+}

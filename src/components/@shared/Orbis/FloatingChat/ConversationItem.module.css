@@ -1,5 +1,6 @@
 .conversationItem {
   display: flex;
+  align-items: center;
   padding: calc(var(--spacer) / 2) var(--spacer);
   border-bottom: 1px solid var(--border-color);
   cursor: pointer;
