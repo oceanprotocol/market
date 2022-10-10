@@ -15,7 +15,6 @@ import siteContent from '../../../content/site.json'
 import appConfig from '../../../app.config'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { retrieveShaclSchema } from '@utils/aquarius'
 
 const MarketMetadataContext = createContext({} as MarketMetadataProviderValue)
 
