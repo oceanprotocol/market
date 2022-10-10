@@ -136,6 +136,16 @@
         "disclaimerValues": ["Download"]
       },
       {
+        "name": "control",
+        "label": "Access Control",
+        "help": "Choose what attributes you want users to have in order to access your files.",
+        "type": "boxSelection",
+        "options": ["HR", "Finance", "Operations", "Engineering"],
+        "required": true,
+        "disclaimer": "Please do not provide downloadable personal data without the consent of the data subjects.",
+        "disclaimerValues": ["Download"]
+      },
+      {
         "name": "timeout",
         "label": "Timeout",
         "help": "Define how long buyers should be able to download the dataset again after the initial purchase.",
