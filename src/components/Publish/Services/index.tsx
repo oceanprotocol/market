@@ -52,7 +52,7 @@ export default function ServicesFields(): ReactElement {
     {
       name: 'download',
       value: accessControlOptionsTitles[0].toLowerCase(),
-      title: 'Access',
+      title: 'HR',
       // BoxSelection component is not a Formik component
       // so we need to handle checked state manually.
       checked:
@@ -74,6 +74,14 @@ export default function ServicesFields(): ReactElement {
       checked:
         values.services[0].access ===
         accessControlOptionsTitles[2].toLowerCase()
+    },
+    {
+      name: accessControlOptionsTitles[3].toLowerCase(),
+      value: accessControlOptionsTitles[3].toLowerCase(),
+      title: accessControlOptionsTitles[3],
+      checked:
+        values.services[0].access ===
+        accessControlOptionsTitles[3].toLowerCase()
     }
   ]
 
@@ -127,6 +135,11 @@ export default function ServicesFields(): ReactElement {
         component={Input}
         name="services[0].control"
         options={accessControlOptions}
+      />
+      <Field
+        {...getFieldContent('reputation', content.services.fields)}
+        component={Input}
+        name="services[0].reputation"
       />
       <Field
         {...getFieldContent('providerUrl', content.services.fields)}
