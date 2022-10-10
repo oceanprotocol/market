@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, useEffect } from 'react'
+import React, { useState, ReactElement, useEffect, useCallback } from 'react'
 import {
   Asset,
   DDO,
@@ -29,7 +29,8 @@ import {
   isOrderable,
   getAlgorithmAssetSelectionList,
   getAlgorithmsForAsset,
-  getComputeEnviroment
+  getComputeEnviroment,
+  getComputeJobs
 } from '@utils/compute'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
@@ -43,7 +44,9 @@ import { handleComputeOrder } from '@utils/order'
 import { getComputeFeedback } from '@utils/feedback'
 import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
+import { useUserPreferences } from '@context/UserPreferences'
 
+const refreshInterval = 10000 // 10 sec.
 export default function Compute({
   asset,
   dtBalance,
@@ -58,6 +61,7 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
+  const { chainIds } = useUserPreferences()
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
 
@@ -91,6 +95,8 @@ export default function Compute({
   const [isRequestingAlgoOrderPrice, setIsRequestingAlgoOrderPrice] =
     useState(false)
   const [refetchJobs, setRefetchJobs] = useState(false)
+  const [isLoadingJobs, setIsLoadingJobs] = useState(false)
+  const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
@@ -242,6 +248,44 @@ export default function Compute({
       )
     })
   }, [asset, isUnsupportedPricing])
+
+  const fetchJobs = useCallback(
+    async (type: string) => {
+      if (!chainIds || chainIds.length === 0 || !accountId) {
+        return
+      }
+
+      try {
+        type === 'init' && setIsLoadingJobs(true)
+        const computeJobs = await getComputeJobs(
+          [asset?.chainId] || chainIds,
+          accountId,
+          asset,
+          newCancelToken()
+        )
+        setJobs(computeJobs.computeJobs)
+        setIsLoadingJobs(!computeJobs.isLoaded)
+      } catch (error) {
+        LoggerInstance.error(error.message)
+        setIsLoadingJobs(false)
+      }
+    },
+    [accountId, asset, chainIds, isLoadingJobs, newCancelToken]
+  )
+
+  useEffect(() => {
+    fetchJobs('init')
+
+    // init periodic refresh for jobs
+    const balanceInterval = setInterval(
+      () => fetchJobs('repeat'),
+      refreshInterval
+    )
+
+    return () => {
+      clearInterval(balanceInterval)
+    }
+  }, [refetchJobs])
 
   // Output errors in toast UI
   useEffect(() => {
@@ -443,11 +487,15 @@ export default function Compute({
         )}
       </footer>
       {accountId && asset?.accessDetails?.datatoken && (
-        <ComputeHistory title="Your Compute Jobs">
+        <ComputeHistory
+          title="Your Compute Jobs"
+          refetchJobs={() => setRefetchJobs(!refetchJobs)}
+        >
           <ComputeJobs
             minimal
-            assetChainIds={[asset?.chainId]}
-            refetchJobs={refetchJobs}
+            jobs={jobs}
+            isLoading={isLoadingJobs}
+            refetchJobs={() => setRefetchJobs(!refetchJobs)}
           />
         </ComputeHistory>
       )}
