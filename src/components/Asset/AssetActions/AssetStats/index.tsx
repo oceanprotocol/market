@@ -1,13 +1,23 @@
 import { useAsset } from '@context/Asset'
 import { useUserPreferences } from '@context/UserPreferences'
 import { formatPrice } from '@shared/Price/PriceUnit'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
 
 export default function AssetStats() {
   const { locale } = useUserPreferences()
   const { asset } = useAsset()
-  const { orders, allocated } = asset.stats
+  const [orders, setOrders] = useState(0)
+  const [allocated, setAllocated] = useState(0)
+
+  useEffect(() => {
+    if (!asset) return
+
+    const { orders, allocated } = asset.stats
+
+    setOrders(orders)
+    setAllocated(allocated)
+  }, [asset])
 
   return (
     <footer className={styles.stats}>
