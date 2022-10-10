@@ -24,22 +24,23 @@ export default function ContainerInput(props: InputProps): ReactElement {
     try {
       setIsLoading(true)
       const parsedContainerValue = container?.split(':')
-      const imageNname = parsedContainerValue?.slice(0, -1).join(':')
+      const imageName =
+        parsedContainerValue?.length > 1
+          ? parsedContainerValue?.slice(0, -1).join(':')
+          : parsedContainerValue[0]
       const tag =
         parsedContainerValue?.length > 1 ? parsedContainerValue?.at(-1) : ''
-      const containerInfo = await getContainerChecksum(imageNname, tag)
-      if (containerInfo.exists) {
-        setFieldValue('metadata.dockerImageCustom', imageNname)
-        setFieldValue('metadata.dockerImageCustomTag', tag)
-        setChecked(true)
-        if (containerInfo.checksum) {
-          setFieldValue(
-            'metadata.dockerImageCustomChecksum',
-            containerInfo.checksum
-          )
-          helpersChecksum.setTouched(false)
-          setIsValid(true)
-        }
+      const containerInfo = await getContainerChecksum(imageName, tag)
+      setFieldValue('metadata.dockerImageCustom', imageName)
+      setFieldValue('metadata.dockerImageCustomTag', tag)
+      setChecked(true)
+      if (containerInfo.checksum) {
+        setFieldValue(
+          'metadata.dockerImageCustomChecksum',
+          containerInfo.checksum
+        )
+        helpersChecksum.setTouched(false)
+        setIsValid(true)
       }
     } catch (error) {
       setFieldError(`${field.name}[0].url`, error.message)

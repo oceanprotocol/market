@@ -54,9 +54,9 @@
       },
       {
         "name": "dockerImageCustom",
-        "label": "Docker Image URL",
-        "placeholder": "e.g. oceanprotocol/algo_dockers:node-vibrant or https://example.com/image_path:image_tag",
-        "help": "Provide the name and the tag of a public Docker hub image or the full URL if you have it hosted in a 3rd party repository",
+        "label": "Custom Docker Image",
+        "placeholder": "e.g. oceanprotocol/algo_dockers:node-vibrant or quay.io/startx/mariadb",
+        "help": "Provide the name and the tag of a public Docker hub image or the custom image if you have it hosted in a 3rd party repository",
         "type": "container",
         "required": true
       },
@@ -69,7 +69,7 @@
       },
       {
         "name": "dockerImageCustomEntrypoint",
-        "label": "Docker Entrypoint",
+        "label": "Docker Image Entrypoint",
         "placeholder": "e.g. python $ALGO",
         "help": "Provide the entrypoint for your algorithm.",
         "required": true

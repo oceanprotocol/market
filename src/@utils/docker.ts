@@ -1,6 +1,5 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import axios from 'axios'
-import isUrl from 'is-url-superb'
 import { toast } from 'react-toastify'
 
 export interface dockerContainerInfo {
@@ -8,7 +7,7 @@ export interface dockerContainerInfo {
   checksum: string
 }
 
-async function getDockerHubImageChecksum(
+export async function getContainerChecksum(
   image: string,
   tag: string
 ): Promise<dockerContainerInfo> {
@@ -30,7 +29,7 @@ async function getDockerHubImageChecksum(
       response.data.status !== 'success'
     ) {
       toast.error(
-        'Could not fetch docker hub image info. Please check container image and tag and try again'
+        'Could not fetch docker hub image informations. If you have it hosted in a 3rd party repository please fill in the container checksum manually.'
       )
       return containerInfo
     }
@@ -40,44 +39,8 @@ async function getDockerHubImageChecksum(
   } catch (error) {
     LoggerInstance.error(error.message)
     toast.error(
-      'Could not fetch docker hub image info. Please check container image and tag and try again'
+      'Could not fetch docker hub image informations. If you have it hosted in a 3rd party repository please fill in the container checksum manually.'
     )
     return containerInfo
   }
-}
-
-async function validateContainerImageUrl(
-  imageURL: string
-): Promise<dockerContainerInfo> {
-  const containerInfo: dockerContainerInfo = {
-    exists: false,
-    checksum: null
-  }
-  try {
-    const response = await axios.head(imageURL)
-    if (!response || response.status !== 200) {
-      toast.error(
-        'Could not fetch docker image info. Please check URL and try again'
-      )
-      return containerInfo
-    }
-    containerInfo.exists = true
-    return containerInfo
-  } catch (error) {
-    LoggerInstance.error(error.message)
-    toast.error(
-      'Could not fetch docker image info. Please check URL and try again'
-    )
-    return containerInfo
-  }
-}
-
-export async function getContainerChecksum(
-  dockerImage: string,
-  tag: string
-): Promise<dockerContainerInfo> {
-  const isValid = isUrl(dockerImage)
-    ? await validateContainerImageUrl(dockerImage)
-    : await getDockerHubImageChecksum(dockerImage, tag)
-  return isValid
 }
