@@ -1,4 +1,4 @@
-.blockies {
+.avatar {
   aspect-ratio: 1/1;
   width: calc(var(--font-size-large) * 2) !important;
   height: calc(var(--font-size-large) * 2) !important;
@@ -8,7 +8,7 @@
 }
 
 .teaser {
-  composes: box from '../atoms/Box.module.css';
+  composes: box from '@shared/atoms/Box.module.css';
   padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2);
   color: var(--color-secondary);
   position: relative;

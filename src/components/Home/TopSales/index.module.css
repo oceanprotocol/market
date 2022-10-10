@@ -1,0 +1,3 @@
+.section {
+  composes: section from '../index.module.css';
+}

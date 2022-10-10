@@ -16,10 +16,11 @@ export default function Price({
 }): ReactElement {
   const isSupported =
     accessDetails?.type === 'fixed' || accessDetails?.type === 'free'
+  const price = `${orderPriceAndFees?.price || accessDetails?.price}`
 
   return isSupported ? (
     <PriceUnit
-      price={`${orderPriceAndFees?.price || accessDetails?.price}`}
+      price={Number(price)}
       symbol={accessDetails.baseToken?.symbol}
       className={className}
       size={size}

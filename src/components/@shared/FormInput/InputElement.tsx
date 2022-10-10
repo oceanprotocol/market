@@ -11,6 +11,7 @@ import AssetSelection, {
 } from '../FormFields/AssetSelection'
 import Nft from '../FormFields/Nft'
 import InputRadio from './InputRadio'
+import TagsAutoComplete from './TagsAutoComplete'
 
 const cx = classNames.bind(styles)
 
@@ -121,6 +122,8 @@ export default function InputElement({
           {...props}
         />
       )
+    case 'tags':
+      return <TagsAutoComplete {...field} {...props} />
     default:
       return prefix || postfix ? (
         <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>
