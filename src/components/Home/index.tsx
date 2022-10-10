@@ -5,8 +5,9 @@ import { generateBaseQuery } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
 import TopSales from './TopSales'
-import styles from './index.module.css'
+import TopTags from './TopTags'
 import SectionQueryResult from './SectionQueryResult'
+import styles from './index.module.css'
 
 export default function HomePage(): ReactElement {
   const [queryLatest, setQueryLatest] = useState<SearchQuery>()
@@ -32,7 +33,7 @@ export default function HomePage(): ReactElement {
         size: 6
       },
       sortOptions: {
-        sortBy: SortTermOptions.Stats
+        sortBy: SortTermOptions.Orders
       } as SortOptions
     } as BaseQueryParams
     setQueryMostSales(generateBaseQuery(baseParamsSales))
@@ -63,6 +64,7 @@ export default function HomePage(): ReactElement {
       <SectionQueryResult title="Most Sales" query={queryMostSales} />
 
       <TopSales title="Publishers With Most Sales" />
+      <TopTags title="Top Tags By Sales" />
 
       <SectionQueryResult
         title="Recently Published"
