@@ -15,6 +15,11 @@ const accessTypeOptionsTitles = getFieldContent(
   content.services.fields
 ).options
 
+const accessControlOptionsTitles = getFieldContent(
+  'control',
+  content.services.fields
+).options
+
 export default function ServicesFields(): ReactElement {
   const { siteContent } = useMarketMetadata()
 
@@ -40,6 +45,35 @@ export default function ServicesFields(): ReactElement {
       icon: <IconCompute />,
       checked:
         values.services[0].access === accessTypeOptionsTitles[1].toLowerCase()
+    }
+  ]
+
+  const accessControlOptions = [
+    {
+      name: 'download',
+      value: accessControlOptionsTitles[0].toLowerCase(),
+      title: 'Access',
+      // BoxSelection component is not a Formik component
+      // so we need to handle checked state manually.
+      checked:
+        values.services[0].access ===
+        accessControlOptionsTitles[0].toLowerCase()
+    },
+    {
+      name: accessControlOptionsTitles[1].toLowerCase(),
+      value: accessControlOptionsTitles[1].toLowerCase(),
+      title: accessControlOptionsTitles[1],
+      checked:
+        values.services[0].access ===
+        accessControlOptionsTitles[1].toLowerCase()
+    },
+    {
+      name: accessControlOptionsTitles[2].toLowerCase(),
+      value: accessControlOptionsTitles[2].toLowerCase(),
+      title: accessControlOptionsTitles[2],
+      checked:
+        values.services[0].access ===
+        accessControlOptionsTitles[2].toLowerCase()
     }
   ]
 
@@ -88,6 +122,12 @@ export default function ServicesFields(): ReactElement {
           )}
         </>
       )}
+      <Field
+        {...getFieldContent('control', content.services.fields)}
+        component={Input}
+        name="services[0].control"
+        options={accessControlOptions}
+      />
       <Field
         {...getFieldContent('providerUrl', content.services.fields)}
         component={Input}
