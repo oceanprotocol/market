@@ -2,7 +2,12 @@ import { AllLocked } from 'src/@types/subgraph/AllLocked'
 import { gql, OperationResult } from 'urql'
 import { fetchData, getQueryContext } from './subgraph'
 import axios from 'axios'
-
+import networkdata from '../../content/networks-metadata.json'
+import {
+  getNetworkDataById,
+  getNetworkType,
+  NetworkType
+} from '@hooks/useNetworkMetadata'
 const AllLocked = gql`
   query AllLocked {
     veOCEANs(first: 1000) {
@@ -14,6 +19,13 @@ const AllLocked = gql`
 interface TotalVe {
   totalLocked: number
   totalAllocated: number
+}
+
+export function getVeChainNetworkId(assetNetworkId: number): number {
+  const networkData = getNetworkDataById(networkdata, assetNetworkId)
+  const networkType = getNetworkType(networkData)
+  if (networkType === NetworkType.Mainnet) return 1
+  else return 5
 }
 
 export async function getTotalAllocatedAndLocked(): Promise<TotalVe> {

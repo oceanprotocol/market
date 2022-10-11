@@ -151,7 +151,7 @@ export default function AssetActions({
 
   const tabs: TabsItem[] = [
     { title: 'Use', content: UseContent },
-    { title: 'VeAllocation', content: <VeAllocation /> }
+    { title: 'VeOCEAN', content: <VeAllocation /> }
   ]
 
   return (
