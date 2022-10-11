@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import MarketMetadataProvider from '@context/MarketMetadata'
 import { UserPreferencesProvider } from '@context/UserPreferences'
 import AssetList, { AssetListProps } from '.'
-import { assets } from './index.test'
+import { assets } from '../../../../.jest/__fixtures__/assetsWithAccessDetails'
 
 export default {
   title: 'Component/@shared/AssetList',

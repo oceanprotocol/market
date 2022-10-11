@@ -1,5 +1,3 @@
-import { asset } from '../../__fixtures__/assetWithAccessDetails'
+import { assets } from '../../__fixtures__/assetsWithAccessDetails'
 
-export const getAccessDetailsForAssets = jest
-  .fn()
-  .mockResolvedValue([asset, asset, asset, asset, asset, asset])
+export const getAccessDetailsForAssets = jest.fn().mockResolvedValue(assets)

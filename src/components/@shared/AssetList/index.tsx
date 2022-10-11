@@ -3,7 +3,6 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
 import Loader from '@shared/atoms/Loader'
-import { useUserPreferences } from '@context/UserPreferences'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
@@ -37,14 +36,14 @@ export default function AssetList({
   className,
   noPublisher
 }: AssetListProps): ReactElement {
-  const { chainIds } = useUserPreferences()
   const { accountId } = useWeb3()
-  const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
+  const [assetsWithPrices, setAssetsWithPrices] =
+    useState<AssetExtended[]>(assets)
   const [loading, setLoading] = useState<boolean>(isLoading)
   const isMounted = useIsMounted()
 
   useEffect(() => {
-    if (!assets) return
+    if (!assets || !assets.length) return
 
     setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
@@ -66,11 +65,7 @@ export default function AssetList({
 
   const styleClasses = `${styles.assetList} ${className || ''}`
 
-  return chainIds.length === 0 ? (
-    <div className={styleClasses}>
-      <div className={styles.empty}>No network selected</div>
-    </div>
-  ) : assetsWithPrices && !loading ? (
+  return assetsWithPrices && !loading ? (
     <>
       <div className={styleClasses}>
         {assetsWithPrices.length > 0 ? (
