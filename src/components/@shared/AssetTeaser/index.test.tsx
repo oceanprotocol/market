@@ -1,8 +1,8 @@
 import React from 'react'
 import testRender from '../../../../.jest/testRender'
 import AssetTeaser from './index'
-import { Default } from './index.stories'
+import { asset } from '../../../../.jest/__fixtures__/assetWithAccessDetails'
 
 describe('AssetTeaser', () => {
-  testRender(<AssetTeaser {...Default.args} />)
+  testRender(<AssetTeaser asset={asset} />)
 })

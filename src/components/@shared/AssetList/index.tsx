@@ -2,14 +2,11 @@ import AssetTeaser from '@shared/AssetTeaser'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
-import classNames from 'classnames/bind'
 import Loader from '@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
-
-const cx = classNames.bind(styles)
 
 function LoaderArea() {
   return (
@@ -19,7 +16,7 @@ function LoaderArea() {
   )
 }
 
-declare type AssetListProps = {
+export declare type AssetListProps = {
   assets: AssetExtended[]
   showPagination: boolean
   page?: number
@@ -67,10 +64,7 @@ export default function AssetList({
     onPageChange(selected + 1)
   }
 
-  const styleClasses = cx({
-    assetList: true,
-    [className]: className
-  })
+  const styleClasses = `${styles.assetList} ${className || ''}`
 
   return chainIds.length === 0 ? (
     <div className={styleClasses}>

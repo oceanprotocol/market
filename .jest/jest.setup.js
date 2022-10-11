@@ -1,12 +1,18 @@
 import '@testing-library/jest-dom/extend-expect'
 import './__mocks__/matchMedia'
-import marketMetadataMock from './__mocks__/MarketMetadata'
-import userPreferencesMock from './__mocks__/UserPreferences'
+
+import marketMetadata from './__fixtures__/marketMetadata'
+import userPreferences from './__fixtures__/userPreferences'
+import web3 from './__fixtures__/web3'
 
 jest.mock('../../src/@context/MarketMetadata', () => ({
-  useMarketMetadata: () => marketMetadataMock
+  useMarketMetadata: () => marketMetadata
 }))
 
 jest.mock('../../src/@context/UserPreferences', () => ({
-  useUserPreferences: () => userPreferencesMock
+  useUserPreferences: () => userPreferences
+}))
+
+jest.mock('../../src/@context/Web3', () => ({
+  useWeb3: () => web3
 }))
