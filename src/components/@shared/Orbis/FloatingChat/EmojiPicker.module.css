@@ -3,7 +3,7 @@
   padding: calc(var(--spacer) / 4.5) calc(var(--spacer) / 3);
   cursor: pointer;
   white-space: nowrap;
-  top: 0;
+  bottom: 0;
   right: 0;
   width: auto !important;
 }

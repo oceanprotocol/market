@@ -1,7 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './Postbox.module.css'
 import { useOrbis } from '@context/Orbis'
+import EmojiPicker from './FloatingChat/EmojiPicker'
+import { EmojiClickData, EmojiStyle } from 'emoji-picker-react'
 
 export default function Postbox({
   id,
@@ -12,10 +14,15 @@ export default function Postbox({
   id: string
   callbackPost: (post: OrbisPostInterface) => void
 }) {
-  const [post, setPost] = useState()
+  const [post, setPost] = useState<string>('')
 
   const postBoxArea = useRef(null)
   const { orbis, account } = useOrbis()
+
+  const onEmojiClick = (emojiData: EmojiClickData) => {
+    setPost((prevInput) => prevInput + emojiData.emoji)
+    postBoxArea.current.innerText += emojiData.emoji
+  }
 
   function handleInput(e: any) {
     setPost(e.currentTarget.innerText)
@@ -67,14 +74,17 @@ export default function Postbox({
   return (
     <>
       <div className={styles.postbox}>
-        <div
-          id="postbox-area"
-          ref={postBoxArea}
-          className={styles.editable}
-          contentEditable={true}
-          data-placeholder={placeholder}
-          onInput={(e) => handleInput(e)}
-        ></div>
+        <div className={styles.postboxInput}>
+          <div
+            id="postbox-area"
+            ref={postBoxArea}
+            className={styles.editable}
+            contentEditable={true}
+            data-placeholder={placeholder}
+            onInput={(e) => handleInput(e)}
+          ></div>
+          <EmojiPicker onEmojiClick={onEmojiClick} />
+        </div>
         <div className={styles.sendButtonWrap}>
           <Button
             style="primary"

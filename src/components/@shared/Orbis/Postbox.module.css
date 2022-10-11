@@ -8,6 +8,11 @@
   border: 1px solid var(--border-color);
   min-height: 80px;
   margin-bottom: calc(var(--spacer) / 4);
+  outline: none;
+}
+
+.postbox .editable:focus {
+  border-color: var(--brand-white);
 }
 
 .postbox .editable:empty:before {
@@ -17,4 +22,8 @@
 
 .postbox .sendButtonWrap {
   text-align: right;
+}
+
+.postbox .postboxInput {
+  position: relative;
 }
