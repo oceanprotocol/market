@@ -9,6 +9,14 @@ import * as Yup from 'yup'
 import styles from './index.module.css'
 import Loader from '@shared/atoms/Loader'
 import Button from '@shared/atoms/Button'
+import SuccessConfetti from '@shared/SuccessConfetti'
+import ExplorerLink from '@shared/ExplorerLink'
+import {
+  AssetWithOwnAllocation,
+  getOwnAssetsWithAllocation,
+  getVeChainNetworkId
+} from '@utils/veAllocation'
+import AssetAllocationList from './AssetAllocationList'
 export interface FormAddAllocation {
   amount: number
 }
@@ -29,11 +37,27 @@ export default function VeAllocation(): ReactElement {
   const { asset } = useAsset()
   const [allocation, setAllocation] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+  const [txId, setTxId] = useState<string>()
+  const [veNetworkId, setVeNetworkId] = useState(0)
+  const [assetsWithAllocation, setAssetsWithAllocation] =
+    useState<AssetWithOwnAllocation[]>()
+  useEffect(() => {
+    async function init() {
+      const veNetworkId = getVeChainNetworkId(asset.chainId)
+      setVeNetworkId(veNetworkId)
+      const assetsWithAllocation = await getOwnAssetsWithAllocation(
+        veNetworkId,
+        accountId
+      )
 
+      console.log(assetsWithAllocation)
+      setAssetsWithAllocation(assetsWithAllocation)
+    }
+    init()
+  }, [asset, accountId])
   async function handleUpdateAllocation(amount: number, resetForm: () => void) {
-    console.log('submit')
-
-    const config = getOceanConfig(5)
+    const config = getOceanConfig(veNetworkId)
+    console.log('ve config', config)
     const veAllocation = new VeAllocate(
       '0x3EFDD8f728c8e774aB81D14d0B2F07a8238960f4',
       web3
@@ -44,6 +68,7 @@ export default function VeAllocation(): ReactElement {
       asset.nftAddress,
       asset.chainId
     )
+    setTxId(tx.transactionHash)
   }
   return (
     <Formik
@@ -73,6 +98,19 @@ export default function VeAllocation(): ReactElement {
               </Button>
             )}
           </div>
+          {txId && (
+            <SuccessConfetti
+              className={styles.success}
+              success="Update succesfull"
+              action={
+                <ExplorerLink networkId={veNetworkId} path={`/tx/${txId}`}>
+                  View transaction
+                </ExplorerLink>
+              }
+            />
+          )}
+          <h3 className={styles.text}>Assets with allocation</h3>
+          <AssetAllocationList assets={assetsWithAllocation} />
         </>
       )}
     </Formik>

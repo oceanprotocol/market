@@ -9,6 +9,7 @@ import { FormAddAllocation } from '.'
 import { useAsset } from '@context/Asset'
 import { getOceanConfig } from '@utils/ocean'
 import { VeAllocate } from '@oceanprotocol/lib'
+import { getVeChainNetworkId } from '@utils/veAllocation'
 
 export default function FormAdd({ amount }: { amount: number }): ReactElement {
   const [isOnCorrectNetwork, setIsOnCorrectNetwork] = useState(true)
@@ -20,11 +21,12 @@ export default function FormAdd({ amount }: { amount: number }): ReactElement {
   const [field, meta] = useField('amount')
   useEffect(() => {
     async function init() {
-      const config = getOceanConfig(5)
-      const veAllocation = new VeAllocate(
-        '0x3EFDD8f728c8e774aB81D14d0B2F07a8238960f4',
-        web3
-      )
+      const veNetworkId = getVeChainNetworkId(asset.chainId)
+      const config = getOceanConfig(veNetworkId)
+      console.log('ve config', config)
+      const veAllocation = new VeAllocate(config.veAllocate, web3)
+      const totalAllocation = await veAllocation.getTotalAllocation(accountId)
+      console.log('totalAllocation', totalAllocation)
       const allocation = await veAllocation.getVeAllocation(
         accountId,
         asset.nftAddress,

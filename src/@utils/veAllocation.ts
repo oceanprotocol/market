@@ -1,4 +1,5 @@
 import { AllLocked } from 'src/@types/subgraph/AllLocked'
+import { OwnAllocations } from 'src/@types/subgraph/OwnAllocations'
 import { gql, OperationResult } from 'urql'
 import { fetchData, getQueryContext } from './subgraph'
 import axios from 'axios'
@@ -8,6 +9,9 @@ import {
   getNetworkType,
   NetworkType
 } from '@hooks/useNetworkMetadata'
+import { getAssetsFromNftList } from './aquarius'
+import { chainIdsSupported } from 'app.config'
+import { Asset } from '@oceanprotocol/lib'
 const AllLocked = gql`
   query AllLocked {
     veOCEANs(first: 1000) {
@@ -16,9 +20,30 @@ const AllLocked = gql`
   }
 `
 
-interface TotalVe {
+const OwnAllocations = gql`
+  query OwnAllocations($address: String) {
+    veAllocations(where: { allocationUser: $address }) {
+      id
+      nftAddress
+      allocated
+    }
+  }
+`
+
+export interface TotalVe {
   totalLocked: number
   totalAllocated: number
+}
+export interface Allocation {
+  nftAddress: string
+  allocation: number
+}
+export interface AssetWithOwnAllocation {
+  did: string
+  nftAddress: string
+  allocation: number
+  name: string
+  symbol: string
 }
 
 export function getVeChainNetworkId(assetNetworkId: number): number {
@@ -54,4 +79,58 @@ export async function getTotalAllocatedAndLocked(): Promise<TotalVe> {
     0
   )
   return totals
+}
+
+export async function getOwnAllocations(
+  networkId: number,
+  userAddress: string
+): Promise<Allocation[]> {
+  const allocations: Allocation[] = []
+
+  const queryContext = getQueryContext(networkId)
+  const fetchedAllocations: OperationResult<OwnAllocations, any> =
+    await fetchData(
+      OwnAllocations,
+      {
+        address: userAddress.toLowerCase()
+      },
+      queryContext
+    )
+
+  fetchedAllocations.data?.veAllocations.forEach((x) =>
+    allocations.push({
+      nftAddress: x.nftAddress,
+      allocation: x.allocated / 100
+    })
+  )
+  return allocations
+}
+
+export async function getOwnAssetsWithAllocation(
+  networkId: number,
+  userAddress: string
+): Promise<AssetWithOwnAllocation[]> {
+  const assetsWithAllocations: AssetWithOwnAllocation[] = []
+  const allocations = await getOwnAllocations(networkId, userAddress)
+  const assets = await getAssetsFromNftList(
+    allocations.map((x) => x.nftAddress),
+    chainIdsSupported,
+    null
+  )
+  assets?.forEach((asset: Asset) => {
+    const allocation = allocations.find(
+      (x) => x.nftAddress.toLowerCase() === asset.nftAddress.toLowerCase()
+    )
+    console.log('allocation', allocation, asset)
+
+    assetsWithAllocations.push({
+      did: asset.id,
+      nftAddress: asset.nftAddress,
+      allocation: allocation.allocation,
+      name: asset.metadata.name,
+      symbol: asset.datatokens[0].symbol
+    })
+  })
+
+  return assetsWithAllocations
 }
