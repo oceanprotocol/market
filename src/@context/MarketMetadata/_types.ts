@@ -10,6 +10,7 @@ export interface AppConfig {
   infuraProjectId: string
   chainIds: number[]
   chainIdsSupported: number[]
+  defaultDatatokenTemplateIndex: number
   marketFeeAddress: string
   publisherMarketOrderFee: string
   publisherMarketFixedSwapFee: string

@@ -23,7 +23,8 @@ import { FormPublishData, MetadataAlgorithmContainer } from './_types'
 import {
   marketFeeAddress,
   publisherMarketOrderFee,
-  publisherMarketFixedSwapFee
+  publisherMarketFixedSwapFee,
+  defaultDatatokenTemplateIndex
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
 
@@ -203,7 +204,7 @@ export async function createTokensAndPricing(
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
   const ercParams: DatatokenCreateParams = {
-    templateIndex: 1,
+    templateIndex: defaultDatatokenTemplateIndex,
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
