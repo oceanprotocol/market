@@ -10,7 +10,7 @@ import AssetSelection, { AssetSelectionAsset } from './Custom/AssetSelection'
 import Nft from './Custom/Nft'
 import InputRadio from './InputRadio'
 import ContainerInput from '@shared/FormInput/Custom/ContainerInput'
-import TagsAutoComplete from './TagsAutoComplete'
+import TagsAutoComplete from './Custom/TagsAutoComplete'
 
 const cx = classNames.bind(styles)
 
