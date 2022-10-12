@@ -1,7 +1,12 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-
-import Tags, { TagsProps } from '@shared/atoms/Tags'
+import Tags, { TagsProps } from './'
+import {
+  args,
+  argsMaxNumberOfTags,
+  argsShowMore,
+  argsWithoutLinks
+} from './index.test'
 
 export default {
   title: 'Component/@shared/atoms/Tags',
@@ -15,26 +20,13 @@ interface Props {
 }
 
 export const Default: Props = Template.bind({})
-Default.args = {
-  items: [' tag1 ', ' tag2 ', ' tag3 '],
-  className: 'custom-class'
-}
+Default.args = args
 
 export const MaxNumberOfTags: Props = Template.bind({})
-MaxNumberOfTags.args = {
-  items: [' tag1 ', ' tag2 ', ' tag3 '],
-  max: 2
-}
+MaxNumberOfTags.args = argsMaxNumberOfTags
 
 export const ShowMore: Props = Template.bind({})
-ShowMore.args = {
-  items: [' tag1 ', ' tag2 ', ' tag3 '],
-  max: 2,
-  showMore: true
-}
+ShowMore.args = argsShowMore
 
 export const WithoutLinks: Props = Template.bind({})
-WithoutLinks.args = {
-  items: [' tag1 ', ' tag2 ', ' tag3 '],
-  noLinks: true
-}
+WithoutLinks.args = argsWithoutLinks
