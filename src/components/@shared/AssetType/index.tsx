@@ -7,13 +7,11 @@ import Lock from '@images/lock.svg'
 export default function AssetType({
   type,
   accessType,
-  className,
-  totalSales
+  className
 }: {
   type: string
   accessType: string
   className?: string
-  totalSales?: number
 }): ReactElement {
   return (
     <div className={className || null}>
@@ -26,14 +24,8 @@ export default function AssetType({
       )}
 
       <div className={styles.typeLabel}>
-        {type === 'dataset' ? 'data set' : 'algorithm'}
+        {type === 'dataset' ? 'dataset' : 'algorithm'}
       </div>
-
-      {totalSales ? (
-        <div className={styles.typeLabel}>
-          {`${totalSales} ${totalSales === 1 ? 'sale' : 'sales'}`}
-        </div>
-      ) : null}
     </div>
   )
 }

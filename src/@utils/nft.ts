@@ -171,15 +171,6 @@ export async function setNFTMetadataAndTokenURI(
     metadataProofs: []
   }
 
-  const estGasSetMetadataAndTokenURI = await nft.estGasSetMetadataAndTokenURI(
-    asset.nftAddress,
-    accountId,
-    metadataAndTokenURI
-  )
-  LoggerInstance.log(
-    '[setNFTMetadataAndTokenURI] est Gas set metadata and token uri --',
-    estGasSetMetadataAndTokenURI
-  )
   const setMetadataAndTokenURITx = await nft.setMetadataAndTokenURI(
     asset.nftAddress,
     accountId,

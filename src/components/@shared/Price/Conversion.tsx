@@ -10,7 +10,7 @@ export default function Conversion({
   className,
   hideApproximateSymbol
 }: {
-  price: string // expects price in OCEAN, not wei
+  price: number // expects price in OCEAN, not wei
   symbol: string
   className?: string
   hideApproximateSymbol?: boolean
@@ -28,18 +28,12 @@ export default function Conversion({
   const priceTokenId = getCoingeckoTokenId(symbol)
 
   useEffect(() => {
-    if (
-      !prices ||
-      !price ||
-      price === '0' ||
-      !priceTokenId ||
-      !prices[priceTokenId]
-    ) {
+    if (!prices || !price || !priceTokenId || !prices[priceTokenId]) {
       return
     }
 
     const conversionValue = prices[priceTokenId][currency.toLowerCase()]
-    const converted = conversionValue * Number(price)
+    const converted = conversionValue * price
     const convertedFormatted = formatCurrency(
       converted,
       // No passing of `currency` for non-fiat so symbol conversion
@@ -58,7 +52,7 @@ export default function Conversion({
     setPriceConverted(convertedFormattedHTMLstring)
   }, [price, prices, currency, locale, isFiat, priceTokenId])
 
-  return Number(price) > 0 ? (
+  return Number(price) >= 0 ? (
     <span
       className={`${styles.conversion} ${className || ''}`}
       title="Approximation based on the current spot price on Coingecko"

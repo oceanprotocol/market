@@ -9,20 +9,12 @@ module.exports = {
     process.env.NEXT_PUBLIC_METADATACACHE_URI ||
     'https://v4.aquarius.oceanprotocol.com',
 
-  v3MetadataCacheUri:
-    process.env.NEXT_PUBLIC_V3_METADATACACHE_URI ||
-    'https://aquarius.oceanprotocol.com',
-
-  v3MarketUri:
-    process.env.NEXT_PUBLIC_V3_MARKET_URI ||
-    'https://v3.market.oceanprotocol.com',
-
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
   chainIds: [1, 137, 56, 246, 1285],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 137, 56, 246, 1285, 3, 4, 80001, 1287],
+  chainIdsSupported: [1, 137, 56, 246, 1285, 5, 80001, 1287],
 
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
@@ -66,7 +58,7 @@ module.exports = {
   // Refers to Coingecko API tokenIds.
   coingeckoTokenIds: ['ocean-protocol', 'h2o', 'ethereum', 'matic-network'],
 
-  // Config for https://github.com/donavon/use-dark-mode
+  // Config for https://github.com/oceanprotocol/use-dark-mode
   darkModeConfig: {
     classNameDark: 'dark',
     classNameLight: 'light',

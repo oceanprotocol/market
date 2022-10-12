@@ -2,12 +2,17 @@ import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
-import { metadataCacheUri, v3MetadataCacheUri } from '../../app.config'
+import { metadataCacheUri } from '../../app.config'
 import {
   SortDirectionOptions,
   SortTermOptions
 } from '../@types/aquarius/SearchQuery'
 import { transformAssetToAssetSelection } from './assetConvertor'
+
+export interface UserSales {
+  id: string
+  totalSales: number
+}
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 
@@ -39,13 +44,18 @@ export function generateBaseQuery(
 ): SearchQuery {
   const generatedQuery = {
     from: baseQueryParams.esPaginationOptions?.from || 0,
-    size: baseQueryParams.esPaginationOptions?.size || 1000,
+    size:
+      baseQueryParams.esPaginationOptions?.size >= 0
+        ? baseQueryParams.esPaginationOptions?.size
+        : 1000,
     query: {
       bool: {
         ...baseQueryParams.nestedQuery,
         filter: [
           ...(baseQueryParams.filters || []),
-          getFilterTerm('chainId', baseQueryParams.chainIds),
+          baseQueryParams.chainIds
+            ? getFilterTerm('chainId', baseQueryParams.chainIds)
+            : [],
           getFilterTerm('_index', 'aquarius'),
           ...(baseQueryParams.ignorePurgatory
             ? []
@@ -137,28 +147,6 @@ export async function retrieveAsset(
     } else {
       LoggerInstance.error(error.message)
     }
-  }
-}
-
-export async function checkV3Asset(
-  did: string,
-  cancelToken: CancelToken
-): Promise<boolean> {
-  try {
-    const response: AxiosResponse<Asset> = await axios.get(
-      `${v3MetadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
-      { cancelToken }
-    )
-    if (!response || response.status !== 200 || !response.data) return false
-
-    return true
-  } catch (error) {
-    if (axios.isCancel(error)) {
-      LoggerInstance.log(error.message)
-    } else {
-      LoggerInstance.error(error.message)
-    }
-    return false
   }
 }
 
@@ -280,7 +268,7 @@ export async function getAlgorithmDatasetsForCompute(
   const query = generateBaseQuery(baseQueryParams)
   const computeDatasets = await queryMetadata(query, cancelToken)
 
-  if (computeDatasets.totalResults === 0) return []
+  if (computeDatasets?.totalResults === 0) return []
 
   const datasets = await transformAssetToAssetSelection(
     datasetProviderUri,
@@ -317,7 +305,7 @@ export async function getPublishedAssets(
     aggs: {
       totalOrders: {
         sum: {
-          field: SortTermOptions.Stats
+          field: SortTermOptions.Orders
         }
       }
     },
@@ -371,7 +359,7 @@ export async function getTopPublishers(
         aggs: {
           totalSales: {
             sum: {
-              field: SortTermOptions.Stats
+              field: SortTermOptions.Orders
             }
           }
         }
@@ -394,6 +382,40 @@ export async function getTopPublishers(
     } else {
       LoggerInstance.error(error.message)
     }
+  }
+}
+
+export async function getTopAssetsPublishers(
+  chainIds: number[],
+  nrItems = 9
+): Promise<UserSales[]> {
+  const publishers: UserSales[] = []
+
+  const result = await getTopPublishers(chainIds, null)
+  const { topPublishers } = result.aggregations
+
+  for (let i = 0; i < topPublishers.buckets.length; i++) {
+    publishers.push({
+      id: topPublishers.buckets[i].key,
+      totalSales: parseInt(topPublishers.buckets[i].totalSales.value)
+    })
+  }
+
+  publishers.sort((a, b) => b.totalSales - a.totalSales)
+
+  return publishers.slice(0, nrItems)
+}
+
+export async function getUserSales(
+  accountId: string,
+  chainIds: number[]
+): Promise<number> {
+  try {
+    const result = await getPublishedAssets(accountId, chainIds, null)
+    const { totalOrders } = result.aggregations
+    return totalOrders.value
+  } catch (error) {
+    LoggerInstance.error('Error getUserSales', error.message)
   }
 }
 
@@ -431,6 +453,50 @@ export async function getDownloadAssets(
       .sort((a, b) => b.timestamp - a.timestamp)
 
     return downloadedAssets
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
+
+export async function getTagsList(
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<string[]> {
+  const baseQueryParams = {
+    chainIds,
+    esPaginationOptions: { from: 0, size: 0 }
+  } as BaseQueryParams
+  const query = {
+    ...generateBaseQuery(baseQueryParams),
+    aggs: {
+      tags: {
+        terms: {
+          field: 'metadata.tags.keyword',
+          size: 1000
+        }
+      }
+    }
+  }
+
+  try {
+    const response: AxiosResponse<SearchResponse> = await axios.post(
+      `${metadataCacheUri}/api/aquarius/assets/query`,
+      { ...query },
+      { cancelToken }
+    )
+    if (response?.status !== 200 || !response?.data) return
+    const { buckets }: { buckets: AggregatedTag[] } =
+      response.data.aggregations.tags
+
+    const tagsList = buckets
+      .filter((tag) => tag.key !== '')
+      .map((tag) => tag.key)
+
+    return tagsList.sort()
   } catch (error) {
     if (axios.isCancel(error)) {
       LoggerInstance.log(error.message)

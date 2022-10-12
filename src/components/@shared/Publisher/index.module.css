@@ -7,10 +7,3 @@
     display: inline-block;
   }
 }
-
-.linksExternal {
-  width: 6px;
-  height: 6px;
-  display: inline-block;
-  fill: var(--color-secondary);
-}

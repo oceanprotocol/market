@@ -1,5 +1,5 @@
 import React, { ReactElement, ChangeEvent } from 'react'
-import { DarkMode } from 'use-dark-mode'
+import { DarkMode } from '@oceanprotocol/use-dark-mode'
 import FormHelp from '@shared/FormInput/Help'
 import Label from '@shared/FormInput/Label'
 import Moon from '@images/moon.svg'
