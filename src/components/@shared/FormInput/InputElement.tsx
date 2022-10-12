@@ -1,17 +1,15 @@
 import React, { ReactElement } from 'react'
 import styles from './InputElement.module.css'
 import { InputProps } from '.'
-import FilesInput from '../FormFields/FilesInput'
-import CustomProvider from '../FormFields/Provider'
-import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
-import Datatoken from '../FormFields/Datatoken'
+import FilesInput from './Custom/FilesInput'
+import CustomProvider from './Custom/Provider'
+import BoxSelection, { BoxSelectionOption } from './Custom/BoxSelection'
+import Datatoken from './Custom/Datatoken'
 import classNames from 'classnames/bind'
-import AssetSelection, {
-  AssetSelectionAsset
-} from '../FormFields/AssetSelection'
-import Nft from '../FormFields/Nft'
+import AssetSelection, { AssetSelectionAsset } from './Custom/AssetSelection'
+import Nft from './Custom/Nft'
 import InputRadio from './InputRadio'
-import ContainerInput from '@shared/FormFields/ContainerInput'
+import ContainerInput from '@shared/FormInput/Custom/ContainerInput'
 import TagsAutoComplete from './TagsAutoComplete'
 
 const cx = classNames.bind(styles)
@@ -87,12 +85,14 @@ export default function InputElement({
 
     case 'radio':
     case 'checkbox':
-      return <InputRadio options={options} inputSize={size} {...props} />
+      return (
+        <InputRadio options={options as string[]} inputSize={size} {...props} />
+      )
 
     case 'assetSelection':
       return (
         <AssetSelection
-          assets={options as unknown as AssetSelectionAsset[]}
+          assets={options as AssetSelectionAsset[]}
           {...field}
           {...props}
         />
@@ -101,7 +101,7 @@ export default function InputElement({
     case 'assetSelectionMultiple':
       return (
         <AssetSelection
-          assets={options as unknown as AssetSelectionAsset[]}
+          assets={options as AssetSelectionAsset[]}
           multiple
           {...field}
           {...props}
@@ -120,7 +120,7 @@ export default function InputElement({
     case 'boxSelection':
       return (
         <BoxSelection
-          options={options as unknown as BoxSelectionOption[]}
+          options={options as BoxSelectionOption[]}
           {...field}
           {...props}
         />

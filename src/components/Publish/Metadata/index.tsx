@@ -1,4 +1,4 @@
-import { BoxSelectionOption } from '@shared/FormFields/BoxSelection'
+import { BoxSelectionOption } from '@shared/FormInput/Custom/BoxSelection'
 import Input from '@shared/FormInput'
 import { Field, useField, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect } from 'react'

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Loader from '@shared/atoms/Loader'
 import styles from './index.module.css'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/Custom/AssetSelection'
 
 function Empty() {
   return <div className={styles.empty}>No assets found.</div>

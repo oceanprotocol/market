@@ -1,3 +1,5 @@
+import { BoxSelectionOption } from '@shared/FormInput/Custom/BoxSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/Custom/AssetSelection'
 import { render, screen } from '@testing-library/react'
 import React from 'react'
 import FormInput from './index'
@@ -53,7 +55,27 @@ describe('@shared/FormInput', () => {
   })
 
   it('renders assetSelection', () => {
-    render(<FormInput type="assetSelection" />)
+    const assets: AssetSelectionAsset[] = [
+      {
+        did: 'did:op:xxx',
+        name: 'Asset',
+        price: '10',
+        checked: false,
+        symbol: 'OCEAN'
+      },
+      {
+        did: 'did:op:yyy',
+        name: 'Asset',
+        price: '10',
+        checked: true,
+        symbol: 'OCEAN'
+      }
+    ]
+    render(<FormInput type="assetSelection" options={assets} />)
+  })
+
+  it('renders empty assetSelection', () => {
+    render(<FormInput type="assetSelection" options={[]} />)
   })
 
   it('renders assetSelectionMultiple', () => {
@@ -61,6 +83,27 @@ describe('@shared/FormInput', () => {
   })
 
   it('renders boxSelection', () => {
-    render(<FormInput type="boxSelection" />)
+    const options: BoxSelectionOption[] = [
+      {
+        name: 'option1',
+        title: 'Option 1',
+        checked: true,
+        text: 'Option 1 Text',
+        icon: <div>Icon</div>
+      },
+      {
+        name: 'option2',
+        title: 'Option 2',
+        checked: true
+      }
+    ]
+
+    render(
+      <FormInput
+        type="boxSelection"
+        options={options}
+        onChange={() => jest.fn()}
+      />
+    )
   })
 })
