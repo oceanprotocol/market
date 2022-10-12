@@ -1,24 +1,24 @@
 import { render } from '@testing-library/react'
 import React from 'react'
-import Tags from '.'
+import Tags, { TagsProps } from '.'
 
-export const args = {
+export const args: TagsProps = {
   items: [' tag1 ', ' tag2 ', ' tag3 '],
   className: 'custom-class'
 }
 
-export const argsMaxNumberOfTags = {
+export const argsMaxNumberOfTags: TagsProps = {
   items: [' tag1 ', ' tag2 ', ' tag3 '],
   max: 2
 }
 
-export const argsShowMore = {
+export const argsShowMore: TagsProps = {
   items: [' tag1 ', ' tag2 ', ' tag3 '],
   max: 2,
   showMore: true
 }
 
-export const argsWithoutLinks = {
+export const argsWithoutLinks: TagsProps = {
   items: [' tag1 ', ' tag2 ', ' tag3 '],
   noLinks: true
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import testRender from '../../../../.jest/testRender'
 import AnnouncementBanner from './index'
 
-describe('AnnouncementBanner', () => {
+describe('@shared/AnnouncementBanner', () => {
   testRender(
     <AnnouncementBanner
       text="# Hello World!"

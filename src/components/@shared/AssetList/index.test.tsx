@@ -3,7 +3,7 @@ import React from 'react'
 import AssetList from './index'
 import { assetAquarius } from '../../../../.jest/__fixtures__/assetAquarius'
 
-describe('AssetList', () => {
+describe('@shared/AssetList', () => {
   it('renders without crashing', async () => {
     const onPageChange = jest.fn()
 

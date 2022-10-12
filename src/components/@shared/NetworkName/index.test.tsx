@@ -2,7 +2,7 @@ import { render } from '@testing-library/react'
 import React from 'react'
 import NetworkName from './index'
 
-describe('NetworkName', () => {
+describe('@shared/NetworkName', () => {
   it('renders without crashing', () => {
     render(<NetworkName networkId={1} />)
   })

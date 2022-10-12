@@ -4,7 +4,7 @@ import { render } from '@testing-library/react'
 import React from 'react'
 import FileIcon from './index'
 
-describe('FileIcon', () => {
+describe('@shared/FileIcon', () => {
   const file: FileInfo = {
     type: 'url',
     contentType: 'text/plain',

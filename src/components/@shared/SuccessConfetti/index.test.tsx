@@ -3,7 +3,7 @@ import React from 'react'
 import testRender from '../../../../.jest/testRender'
 import SuccessConfetti from './index'
 
-describe('SuccessConfetti', () => {
+describe('@shared/SuccessConfetti', () => {
   testRender(<SuccessConfetti success="Nice Success!" />)
 
   it('renders without success', () => {
