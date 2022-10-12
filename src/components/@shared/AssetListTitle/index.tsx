@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { getAssetsNames } from '@utils/aquarius'
-import styles from './AssetListTitle.module.css'
+import styles from './index.module.css'
 import axios from 'axios'
 import { Asset } from '@oceanprotocol/lib'
 import { useMarketMetadata } from '@context/MarketMetadata'

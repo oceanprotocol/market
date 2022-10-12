@@ -1,7 +1,7 @@
 import React, { FormEvent, ReactElement } from 'react'
-import Button from '../atoms/Button'
+import Button from '../../../@shared/atoms/Button'
 import styles from './index.module.css'
-import Loader from '../atoms/Loader'
+import Loader from '../../../@shared/atoms/Loader'
 
 interface ButtonBuyProps {
   action: 'download' | 'compute'

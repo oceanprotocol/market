@@ -3,7 +3,7 @@ import Dotdotdot from 'react-dotdotdot'
 import Link from 'next/link'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Loader from '@shared/atoms/Loader'
-import styles from './AssetComputeList.module.css'
+import styles from './index.module.css'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 
 function Empty() {

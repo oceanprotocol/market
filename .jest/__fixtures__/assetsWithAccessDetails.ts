@@ -1,4 +1,4 @@
-import { assetAquarius } from './assetAquarius'
+// This is a dump of a typical `queryResult.results` response from Aquarius
 
 export const assets: AssetExtended[] = [
   {

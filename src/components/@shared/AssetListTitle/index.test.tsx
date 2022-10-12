@@ -1,6 +1,6 @@
 import React from 'react'
 import testRender from '../../../../.jest/testRender'
-import AssetListTitle from './AssetListTitle'
+import AssetListTitle from '.'
 
 describe('AssetListTitle', () => {
   testRender(
