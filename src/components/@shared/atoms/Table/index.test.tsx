@@ -39,4 +39,10 @@ describe('Table', () => {
     render(<Table {...argsEmpty} />)
     expect(screen.getByText('I am empty')).toBeInTheDocument()
   })
+
+  it('renders Empty without message', () => {
+    const args: TableOceanProps<any> = { ...argsEmpty, emptyMessage: undefined }
+    render(<Table {...args} />)
+    expect(screen.getByText('No results found')).toBeInTheDocument()
+  })
 })
