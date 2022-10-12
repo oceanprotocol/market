@@ -153,7 +153,7 @@ export async function transformPublishFormToDdo(
     type: access,
     files: filesEncrypted || '',
     datatokenAddress,
-    serviceEndpoint: providerUrl.url,
+    serviceEndpoint: 'http://172.15.0.3:8545',
     timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
       compute: values.services[0].computeOptions
@@ -207,7 +207,7 @@ export async function createTokensAndPricing(
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
-    feeToken: values.pricing.baseToken.address,
+    feeToken: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
     feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
@@ -223,10 +223,10 @@ export async function createTokensAndPricing(
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
-        baseTokenAddress: values.pricing.baseToken.address,
+        baseTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
-        baseTokenDecimals: values.pricing.baseToken.decimals,
+        baseTokenDecimals: 18,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
         marketFee: publisherMarketFixedSwapFee,

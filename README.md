@@ -59,21 +59,17 @@ This will start the development server under
 
 ### Local components with Barge
 
-If you prefer to connect to locally running components instead of remote connections, you can spin up [`barge`](https://github.com/oceanprotocol/barge) and use a local Ganache network in another terminal before running `npm start`:
+If you prefer to connect to locally running components instead of remote connections, you can spin up [`barge`](https://github.com/oceanprotocol/barge) and use a local Ganache network in another terminal before running `npm start:local`. To fully test all [The Graph](https://thegraph.com) integrations, you have to start barge with the local Graph node:
 
 ```bash
 git clone git@github.com:oceanprotocol/barge.git
 cd barge
 
-# startup with local Ganache node
-./start_ocean.sh
+# startup with local Ganache and Graph nodes
+./start_ocean.sh --the-graph
 ```
 
 Barge will deploy contracts to the local Ganache node which will take some time. At the end the compiled artifacts need to be copied over to this project into `node_modules/@oceanprotocol/contracts/artifacts`. This script will do that for you:
-
-```bash
-./scripts/copy-contracts.sh
-```
 
 Finally, set environment variables to use this local connection in `.env` in the app:
 

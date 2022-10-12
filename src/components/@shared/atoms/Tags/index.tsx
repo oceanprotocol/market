@@ -30,10 +30,10 @@ export default function Tags({
   className,
   noLinks
 }: TagsProps): ReactElement {
-  max = max || items.length
-  const remainder = items.length - max
+  max = max || items?.length
+  const remainder = items?.length - max
   // filter out empty array items, and restrict to `max`
-  const tags = items.filter((tag) => tag !== '').slice(0, max)
+  const tags = items?.filter((tag) => tag !== '').slice(0, max)
   const shouldShowMore = showMore && remainder > 0
   const classes = className ? `${styles.tags} ${className}` : styles.tags
 
