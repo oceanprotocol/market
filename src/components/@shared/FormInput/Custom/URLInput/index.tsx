@@ -7,6 +7,14 @@ import InputGroup from '@shared/FormInput/InputGroup'
 import InputElement from '@shared/FormInput/InputElement'
 import isUrl from 'is-url-superb'
 
+export interface URLInputProps {
+  submitText: string
+  handleButtonClick(e: React.SyntheticEvent, data: string): void
+  isLoading: boolean
+  name: string
+  checkUrl?: boolean
+}
+
 export default function URLInput({
   submitText,
   handleButtonClick,
@@ -14,13 +22,7 @@ export default function URLInput({
   name,
   checkUrl,
   ...props
-}: {
-  submitText: string
-  handleButtonClick(e: React.SyntheticEvent, data: string): void
-  isLoading: boolean
-  name: string
-  checkUrl?: boolean
-}): ReactElement {
+}: URLInputProps): ReactElement {
   const [field, meta] = useField(name)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
 
