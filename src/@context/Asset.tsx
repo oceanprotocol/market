@@ -168,7 +168,7 @@ function AssetProvider({
   }, [chainId, asset?.chainId])
 
   // -----------------------------------
-  // Asset owner check against wallet user
+  // Asset owner check against wallet.svg user
   // -----------------------------------
   useEffect(() => {
     if (!accountId || !owner) return

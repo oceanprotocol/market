@@ -256,7 +256,7 @@ export async function createTokensAndPricing(
     }
     case 'free': {
       // maxTokens -  how many tokens cand be dispensed when someone requests . If maxTokens=2 then someone can't request 3 in one tx
-      // maxBalance - how many dt the user has in it's wallet before the dispenser will not dispense dt
+      // maxBalance - how many dt the user has in it's wallet.svg before the dispenser will not dispense dt
       // both will be just 1 for the market
       const dispenserParams: DispenserCreationParams = {
         dispenserAddress: config.dispenserAddress,

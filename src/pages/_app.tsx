@@ -7,6 +7,7 @@ import PricesProvider from '@context/Prices'
 import UrqlProvider from '@context/UrqlProvider'
 import ConsentProvider from '@context/CookieConsent'
 import App from 'src/components/App'
+import { Provider } from 'react-redux'
 
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../stylesGlobal/styles.css'
@@ -14,6 +15,7 @@ import '../stylesGlobal/tailwind.css'
 import '../stylesGlobal/main.css'
 import Decimal from 'decimal.js'
 import MarketMetadataProvider from '@context/MarketMetadata'
+import store from '../store'
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })
@@ -24,9 +26,11 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
           <UserPreferencesProvider>
             <PricesProvider>
               <ConsentProvider>
-                <App>
-                  <Component {...pageProps} />
-                </App>
+                <Provider store={store}>
+                  <App>
+                    <Component {...pageProps} />
+                  </App>
+                </Provider>
               </ConsentProvider>
             </PricesProvider>
           </UserPreferencesProvider>

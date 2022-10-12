@@ -266,7 +266,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     getUserBalance()
 
-    // init periodic refresh of wallet balance
+    // init periodic refresh of wallet.svg balance
     const balanceInterval = setInterval(() => getUserBalance(), refreshInterval)
 
     return () => {

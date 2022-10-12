@@ -59,5 +59,8 @@ export function computeControlPoints(K: number[]) {
 
   p2[n - 1] = 0.5 * (K[n] + p1[n - 1])
 
-  return { p1: p1.map((p) => Math.floor(p)), p2: p2.map((p) => Math.floor(p)) }
+  return {
+    p1: p1.map((p) => Math.floor(p)),
+    p2: p2.map((p) => Math.floor(p))
+  }
 }

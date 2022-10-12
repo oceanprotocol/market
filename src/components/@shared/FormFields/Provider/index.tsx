@@ -45,11 +45,15 @@ export default function CustomProvider(props: InputProps): ReactElement {
 
       if (providerChainId !== userChainId)
         throw Error(
-          '✗ This provider is incompatible with the network your wallet is connected to.'
+          '✗ This provider is incompatible with the network your wallet.svg is connected to.'
         )
 
       // if all good, add provider to formik state
-      helpers.setValue({ url: field.value.url, valid: isValid, custom: true })
+      helpers.setValue({
+        url: field.value.url,
+        valid: isValid,
+        custom: true
+      })
     } catch (error) {
       setFieldError(`${field.name}.url`, error.message)
       LoggerInstance.error(error.message)

@@ -82,7 +82,10 @@ function ProfileProvider({
     const cancelTokenSource = axios.CancelToken.source()
 
     async function getInfo() {
-      setProfile({ name: accountEns || accountTruncate(accountId), accountEns })
+      setProfile({
+        name: accountEns || accountTruncate(accountId),
+        accountEns
+      })
 
       const profile3Box = await get3BoxProfile(
         accountId,

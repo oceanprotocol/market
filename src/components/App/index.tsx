@@ -1,7 +1,5 @@
 import React, { ReactElement } from 'react'
 import Alert from '@shared/atoms/Alert'
-import Footer from '../Footer/Footer'
-import Header from '../Header'
 import { useWeb3 } from '@context/Web3'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 import AnnouncementBanner from '@shared/AnnouncementBanner'
@@ -10,6 +8,8 @@ import styles from './index.module.css'
 import { ToastContainer } from 'react-toastify'
 import contentPurgatory from '../../../content/purgatory.json'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import Navbar from '../Navbar'
+import Sidebar from '../Sidebar/sidebar'
 
 export default function App({
   children
@@ -21,11 +21,11 @@ export default function App({
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
 
   return (
-    <div className={styles.app}>
-      {siteContent?.announcement !== '' && (
-        <AnnouncementBanner text={siteContent?.announcement} />
-      )}
-      <Header />
+    <div className="min-h-screen">
+      {/* {siteContent?.announcement !== '' && (
+                <AnnouncementBanner text={siteContent?.announcement} />
+            )} */}
+      {/* <Header /> */}
 
       {isInPurgatory && (
         <Alert
@@ -35,8 +35,16 @@ export default function App({
           state="error"
         />
       )}
-      <main className={styles.main}>{children}</main>
-      <Footer />
+
+      <div className="h-screen flex overflow-hidden">
+        <Sidebar />
+        <div className="w-full overflow-hidden ">
+          <Navbar />
+          <main className="overflow-y-auto w-full">{children}</main>
+        </div>
+      </div>
+
+      {/* <Footer /> */}
 
       {appConfig?.privacyPreferenceCenter === 'true' && (
         <PrivacyPreferenceCenter style="small" />

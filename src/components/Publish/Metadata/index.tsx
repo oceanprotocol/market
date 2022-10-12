@@ -60,7 +60,11 @@ export default function MetadataFields(): ReactElement {
     )
   }, [values.metadata.type])
 
-  dockerImageOptions.push({ name: 'custom', title: 'Custom', checked: false })
+  dockerImageOptions.push({
+    name: 'custom',
+    title: 'Custom',
+    checked: false
+  })
 
   return (
     <>
