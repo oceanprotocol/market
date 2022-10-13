@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './index.module.css'
 import Posts from './Posts'
-import Postbox from '../Postbox'
+import Postbox from './Postbox'
 import CommentIcon from '@images/comment.svg'
 import { useOrbis } from '@context/Orbis'
 
@@ -14,9 +14,10 @@ export default function Comment({ asset }: { asset: AssetExtended }) {
 
   const loadPosts = async () => {
     setLoading(true)
-    const context = process.env.NODE_ENV
-      ? 'kjzl6cwe1jw149vvm1f8p9qlohhtkjuc302f22mipq95q7mevdljgx3tv9swujy'
-      : asset?.id
+    // const context =
+    //   process.env.NODE_ENV === 'development'
+    //     ? 'kjzl6cwe1jw149vvm1f8p9qlohhtkjuc302f22mipq95q7mevdljgx3tv9swujy'
+    //     : asset?.id
     const { data, error } = await orbis.getPosts({ context: asset?.id }, page)
     if (error) {
       console.log(error)
@@ -34,10 +35,10 @@ export default function Comment({ asset }: { asset: AssetExtended }) {
   }
 
   useEffect(() => {
-    if (asset?.id) {
+    if (asset?.id && !posts.length && orbis) {
       loadPosts()
     }
-  }, [asset])
+  }, [asset, posts, orbis])
 
   const callbackPost = (nPost: OrbisPostInterface) => {
     // console.log(nPost)
@@ -71,7 +72,7 @@ export default function Comment({ asset }: { asset: AssetExtended }) {
       <div className={styles.postBox}>
         <Postbox
           callbackPost={callbackPost}
-          id={asset?.id}
+          assetId={asset?.id}
           placeholder="Share your comment here..."
         />
       </div>

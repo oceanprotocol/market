@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { useOrbis } from '@context/Orbis'
+import React from 'react'
 import Loader from '@shared/atoms/Loader'
 import Button from '@shared/atoms/Button'
-import Post from '../Post'
+import Post from './Post'
 import styles from './Posts.module.css'
 
 export default function Posts({
@@ -12,7 +11,7 @@ export default function Posts({
   loading
 }: {
   posts: OrbisPostInterface[]
-  loadPosts: any
+  loadPosts: () => void
   hasMore: boolean
   loading: boolean
 }) {

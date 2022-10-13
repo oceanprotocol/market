@@ -1,35 +1,21 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './Postbox.module.css'
 import { useOrbis } from '@context/Orbis'
-import EmojiPicker from './DirectMessages/EmojiPicker'
-import { EmojiClickData, EmojiStyle } from 'emoji-picker-react'
 
 export default function Postbox({
-  id,
+  assetId,
   placeholder = 'Share your post here...',
   callbackPost
 }: {
   placeholder: string
-  id: string
+  assetId: string
   callbackPost: (post: OrbisPostInterface) => void
 }) {
-  const [post, setPost] = useState<string>('')
+  const [post, setPost] = useState('')
 
   const postBoxArea = useRef(null)
   const { orbis, account } = useOrbis()
-
-  const onEmojiClick = (emojiData: EmojiClickData) => {
-    setPost((prevInput) => prevInput + emojiData.emoji)
-    postBoxArea.current.innerText += emojiData.emoji
-  }
-
-  function handleInput(e: any) {
-    setPost(e.currentTarget.innerText)
-    const _keyCode = e.nativeEvent.data
-
-    /** Manage custom actions for some keycodes */
-  }
 
   const createPost = async () => {
     // console.log(post)
@@ -43,12 +29,16 @@ export default function Postbox({
       content: {
         body: post
       },
-      timestamp: Date.now()
+      timestamp: Math.floor(Date.now() / 1000),
+      count_replies: 0,
+      count_likes: 0,
+      count_downvotes: 0,
+      count_haha: 0
     }
-    // console.log(_callbackContent)
+    console.log(_callbackContent)
     callbackPost(_callbackContent)
-    // console.log('clicked')
-    const res = await orbis.createPost({ body: post, context: id })
+
+    const res = await orbis.createPost({ body: post, context: assetId })
 
     if (res.status === 200) {
       console.log('success with,', res)
@@ -74,17 +64,14 @@ export default function Postbox({
   return (
     <>
       <div className={styles.postbox}>
-        <div className={styles.postboxInput}>
-          <div
-            id="postbox-area"
-            ref={postBoxArea}
-            className={styles.editable}
-            contentEditable={true}
-            data-placeholder={placeholder}
-            onInput={(e) => handleInput(e)}
-          ></div>
-          <EmojiPicker onEmojiClick={onEmojiClick} />
-        </div>
+        <div
+          id="postbox-area"
+          ref={postBoxArea}
+          className={styles.editable}
+          contentEditable={true}
+          data-placeholder={placeholder}
+          onInput={(e) => setPost(e.currentTarget.innerText)}
+        ></div>
         <div className={styles.sendButtonWrap}>
           <Button
             style="primary"

@@ -8,7 +8,7 @@ import ChatToolbar from './ChatToolbar'
 import { useOrbis } from '@context/Orbis'
 import ConversationItem from './ConversationItem'
 
-export default function FloatingChat() {
+export default function DirectMessages() {
   const {
     orbis,
     account,

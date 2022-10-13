@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import Alert from '@shared/atoms/Alert'
 import Footer from '../Footer/Footer'
 import Header from '../Header'
-import FloatingChat from '@shared/Orbis/FloatingChat'
+import DirectMessages from '@shared/Orbis/DirectMessages'
 import { useWeb3 } from '@context/Web3'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 import AnnouncementBanner from '@shared/AnnouncementBanner'
@@ -39,7 +39,7 @@ export default function App({
       <main className={styles.main}>{children}</main>
       <Footer />
 
-      <FloatingChat />
+      <DirectMessages />
 
       {appConfig?.privacyPreferenceCenter === 'true' && (
         <PrivacyPreferenceCenter style="small" />
