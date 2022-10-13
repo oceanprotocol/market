@@ -51,7 +51,7 @@
   font-size: var(--font-size-mini);
   display: inline-block;
   border-left: 1px solid var(--border-color);
-  padding-left: calc(var(--spacer) / 3.5);
+  padding-left: calc(var(--spacer) / 4);
   margin-left: calc(var(--spacer) / 4);
 }
 
