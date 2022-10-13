@@ -1,26 +1,14 @@
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../src/stylesGlobal/styles.css'
 import { ThemeProvider } from 'styled-components'
+import { useDarkMode } from 'storybook-dark-mode'
+import addons from '@storybook/addons'
 
-export const globalTypes = {
+export const globalSetup = {
   theme: {
     name: 'Ocean Market',
     description: 'Global theme for Ocean Market',
-    defaultValue: 'light',
-    toolbar: {
-      icon: 'circlehollow',
-      items: [
-        { value: 'light', title: 'Light' },
-        { value: 'dark', title: 'Dark' }
-      ]
-    }
-  },
-  backgrounds: {
-    default: 'light',
-    values: [
-      { name: 'dark', value: 'rgb(10, 10, 10)' },
-      { name: 'light', value: '#fcfcfc' }
-    ]
+    defaultValue: 'light'
   },
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
@@ -31,17 +19,29 @@ export const globalTypes = {
   }
 }
 
+const channel = addons.getChannel()
+
+channel.on('DARK_MODE', (isDark) => {
+  if (isDark) {
+    document.body.classList.add('dark')
+  } else {
+    document.body.classList.remove('dark')
+  }
+})
+
+const themeSelection = (mode) => {
+  return {
+    mode: mode,
+    ...globalSetup
+  }
+}
+
 const withThemeProvider = (Story, context) => {
-  const theme = context.globals.theme
-
-  var storyBody = document.getElementById('story-body')
-
-  storyBody && theme === 'dark'
-    ? storyBody.classList.add('dark')
-    : storyBody.classList.remove('dark')
+  const mode = useDarkMode() ? 'dark' : 'light'
+  const currentTheme = themeSelection(mode)
 
   return (
-    <ThemeProvider theme={globalTypes}>
+    <ThemeProvider theme={currentTheme}>
       <Story {...context} />
     </ThemeProvider>
   )
