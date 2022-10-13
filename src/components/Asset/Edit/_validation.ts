@@ -10,8 +10,8 @@ export const validationSchema = Yup.object().shape({
   files: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string().url('Must be a valid URL.'),
-        valid: Yup.boolean().isTrue()
+        url: Yup.string().url('Must be a valid URL.').required('Required'),
+        valid: Yup.boolean().isTrue().required('File must be valid.')
       })
     )
     .nullable(),

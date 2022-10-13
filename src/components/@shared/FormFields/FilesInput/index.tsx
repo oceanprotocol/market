@@ -44,14 +44,14 @@ export default function FilesInput(props: InputProps): ReactElement {
   }
 
   function handleClose() {
-    helpers.setValue(meta.initialValue)
     helpers.setTouched(false)
+    helpers.setValue(meta.initialValue)
   }
 
   useEffect(() => {
     if (field.name === 'links' && asset?.metadata?.links) {
       handleValidation(null, asset.metadata.links[0])
-    } else if (field.name === 'files' && asset?.metadata?.links) {
+    } else if (field.name === 'files') {
       getFileDidInfo(
         asset?.id,
         asset?.services[0]?.id,
@@ -60,7 +60,12 @@ export default function FilesInput(props: InputProps): ReactElement {
         setHideUrl(true)
         // setting placeholder for url file to avoid txs for the url file during initializing
         helpers.setValue([
-          { url: 'oceanprotocol.com/placeholder', ...fileDidInfo[0] }
+          {
+            url: fileDidInfo[0].valid
+              ? 'http://oceanprotocol.com/placeholder'
+              : '',
+            ...fileDidInfo[0]
+          }
         ])
       })
     }
