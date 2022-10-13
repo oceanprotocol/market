@@ -24,7 +24,8 @@ export const validationSchema = Yup.object().shape({
     )
     .nullable(),
   timeout: Yup.string().required('Required'),
-  author: Yup.string().nullable()
+  author: Yup.string().nullable(),
+  tags: Yup.array<string[]>().nullable()
 })
 
 export const computeSettingsValidationSchema = Yup.object().shape({
