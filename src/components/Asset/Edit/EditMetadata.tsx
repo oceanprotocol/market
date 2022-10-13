@@ -182,6 +182,7 @@ export default function Edit({
 
             <Web3Feedback
               networkId={asset?.chainId}
+              accountId={accountId}
               isAssetNetwork={isAssetNetwork}
             />
 
