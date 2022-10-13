@@ -1,0 +1,101 @@
+.select [class$='control'] {
+  border-color: var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: none;
+  background-color: var(--background-content);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  cursor: text;
+  min-height: 43px;
+}
+
+.select [class$='control']:hover {
+  border-color: var(--border-color);
+}
+
+.select [class$='control']:focus-within {
+  border-color: var(--font-color-text);
+}
+
+.select [class$='ValueContainer'] {
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 3);
+}
+
+.select [class$='Input'] {
+  margin: 0;
+  padding-bottom: 0;
+  padding-top: 0;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+}
+
+.select input {
+  color: var(--font-color-heading) !important;
+}
+
+.select [class$='menu'] {
+  background-color: var(--background-highlight);
+  border-radius: var(--border-radius);
+}
+
+.select [class$='option'] {
+  color: var(--font-color-heading);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+}
+
+.select [class$='option']:active {
+  background-color: var(--color-secondary);
+}
+
+.select [class$='multiValue'],
+.select [class$='multiValue'] > *,
+.select [class$='multiValue']:hover > * {
+  border-radius: var(--border-radius);
+  background-color: var(--background-highlight);
+  color: var(--font-color-text);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.select [class$='multiValue'] > div[role$='button'],
+.select [class$='indicatorContainer'] svg {
+  cursor: pointer;
+}
+
+.select [class$='placeholder'] {
+  margin-left: 0;
+  margin-right: 0;
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-base);
+  transition: 0.2s ease-out;
+  opacity: 0.7;
+}
+
+.select [class$='menu'] {
+  background-color: var(--background-content);
+  margin-top: -2px;
+  border: 1px solid var(--font-color-text);
+  border-top-color: var(--border-color);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  box-shadow: none;
+}
+
+.select [class$='menu'] [class$='option']:hover,
+.select [class$='menu'] [class$='option']:focus-within {
+  background-color: var(--font-color-heading);
+  color: var(--background-content);
+}
+
+.select [class$='NoOptionsMessage'] {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  text-align: left;
+}

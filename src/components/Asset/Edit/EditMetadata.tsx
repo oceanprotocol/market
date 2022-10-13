@@ -73,7 +73,8 @@ export default function Edit({
         name: values.name,
         description: values.description,
         links: linksTransformed,
-        author: values.author
+        author: values.author,
+        tags: values.tags
       }
 
       asset?.accessDetails?.type === 'fixed' &&

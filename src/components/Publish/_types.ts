@@ -26,7 +26,7 @@ export interface FormPublishData {
     description: string
     author: string
     termsAndConditions: boolean
-    tags?: string
+    tags?: string[]
     dockerImage?: string
     dockerImageCustom?: string
     dockerImageCustomTag?: string
