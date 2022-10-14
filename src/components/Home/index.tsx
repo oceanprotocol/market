@@ -1,20 +1,46 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import Bookmarks from './Bookmarks'
-import { generateBaseQuery } from '@utils/aquarius'
+import { generateBaseQuery, getFilterTerm } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
 import TopSales from './TopSales'
 import TopTags from './TopTags'
 import SectionQueryResult from './SectionQueryResult'
 import styles from './index.module.css'
+import { useWeb3 } from '@context/Web3'
+import { getOwnAllocations } from '@utils/veAllocation'
 
 export default function HomePage(): ReactElement {
+  const { accountId } = useWeb3()
   const [queryLatest, setQueryLatest] = useState<SearchQuery>()
   const [queryMostSales, setQueryMostSales] = useState<SearchQuery>()
   const [queryMostAllocation, setQueryMostAllocation] = useState<SearchQuery>()
+  const [queryAssetsAllocation, setQueryAssetsAllocation] =
+    useState<SearchQuery>()
+  const [hasAllocations, setHasAllocations] = useState(false)
   const { chainIds } = useUserPreferences()
 
+  useEffect(() => {
+    async function init() {
+      if (!accountId) return
+      const allocations = await getOwnAllocations(chainIds, accountId)
+      setHasAllocations(allocations && allocations.length > 0)
+
+      const baseParams = {
+        chainIds,
+        filters: [
+          getFilterTerm(
+            'nftAddress',
+            allocations.map((x) => x.nftAddress)
+          )
+        ],
+        ignorePurgatory: true
+      } as BaseQueryParams
+      setQueryAssetsAllocation(generateBaseQuery(baseParams))
+    }
+    init()
+  }, [accountId, chainIds])
   useEffect(() => {
     const baseParams = {
       chainIds,
@@ -56,6 +82,12 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
+      {hasAllocations && (
+        <SectionQueryResult
+          title="Assets with allocations"
+          query={queryAssetsAllocation}
+        />
+      )}
       <SectionQueryResult
         title="Highest veOCEAN Allocations"
         query={queryMostAllocation}

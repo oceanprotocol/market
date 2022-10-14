@@ -6,6 +6,8 @@ import NumberUnit from './NumberUnit'
 import styles from './Stats.module.css'
 import { useProfile } from '@context/Profile'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
+import { getLocked } from '@utils/veAllocation'
+import PriceUnit from '@shared/Price/PriceUnit'
 
 export default function Stats({
   accountId
@@ -16,7 +18,16 @@ export default function Stats({
   const { assets, assetsTotal, sales } = useProfile()
 
   const [totalSales, setTotalSales] = useState(0)
+  const [lockedOcean, setLockedOcean] = useState(0)
 
+  useEffect(() => {
+    async function getLockedOcean() {
+      if (!accountId) return
+      const locked = await getLocked(accountId, chainIds)
+      setLockedOcean(locked)
+    }
+    getLockedOcean()
+  }, [accountId, chainIds])
   useEffect(() => {
     if (!assets || !accountId || !chainIds) return
 
@@ -59,6 +70,20 @@ export default function Stats({
         value={sales < 0 ? 0 : sales}
       />
       <NumberUnit label="Published" value={assetsTotal} />
+      <NumberUnit
+        label="Locked OCEAN"
+        value={
+          lockedOcean > 0 ? (
+            <Conversion
+              price={lockedOcean}
+              symbol={'ocean'}
+              hideApproximateSymbol
+            />
+          ) : (
+            '0'
+          )
+        }
+      />
     </div>
   )
 }

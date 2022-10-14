@@ -1,6 +1,8 @@
 import { useAsset } from '@context/Asset'
 import { useUserPreferences } from '@context/UserPreferences'
+import { useWeb3 } from '@context/Web3'
 import { formatPrice } from '@shared/Price/PriceUnit'
+import { getNftOwnAllocation } from '@utils/veAllocation'
 import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
 
@@ -9,7 +11,8 @@ export default function AssetStats() {
   const { asset } = useAsset()
   const [orders, setOrders] = useState(0)
   const [allocated, setAllocated] = useState(0)
-
+  const { accountId } = useWeb3()
+  const [ownAllocation, setOwnAllocation] = useState(0)
   useEffect(() => {
     if (!asset) return
 
@@ -18,6 +21,19 @@ export default function AssetStats() {
     setOrders(orders)
     setAllocated(allocated)
   }, [asset])
+
+  useEffect(() => {
+    async function init() {
+      const allocation = await getNftOwnAllocation(
+        accountId,
+        asset.nftAddress,
+        asset.chainId
+      )
+      console.log('allocation', allocation)
+      setOwnAllocation(allocation / 100)
+    }
+    init()
+  }, [accountId, asset.chainId, asset.nftAddress])
 
   return (
     <footer className={styles.stats}>
@@ -39,6 +55,11 @@ export default function AssetStats() {
           {orders === 1 ? '' : 's'}
         </span>
       )}
+      {ownAllocation && ownAllocation > 0 ? (
+        <span className={styles.stat}>
+          <span className={styles.number}>{ownAllocation}</span>% allocation
+        </span>
+      ) : null}
     </footer>
   )
 }
