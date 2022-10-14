@@ -21,7 +21,7 @@ const mockMeta = {
   value: ''
 }
 
-describe('@shared/FormInput/Custom/URLInput', () => {
+describe('@shared/FormInput/InputElement/URLInput', () => {
   it('renders without crashing', () => {
     const mockField = {
       value: '',

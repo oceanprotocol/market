@@ -1,12 +1,12 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import React from 'react'
-import Datatoken from './index'
+import Nft from './index'
 import { useField } from 'formik'
 
 jest.mock('formik')
 
 const props = {
-  name: 'Datatoken'
+  name: 'NFT'
 }
 
 const mockMeta = {
@@ -21,7 +21,11 @@ const mockMeta = {
 const mockField = {
   value: {
     name: '',
-    symbol: ''
+    symbol: '',
+    description: '',
+    external_url: '',
+    background_color: '',
+    image_data: ''
   },
   checked: false,
   onChange: jest.fn(),
@@ -33,10 +37,10 @@ const mockHelpers = {
   setValue: jest.fn()
 }
 
-describe('@shared/FormInput/Custom/Datatoken', () => {
+describe('@shared/FormInput/InputElement/Nft', () => {
   it('renders without crashing', () => {
     ;(useField as any).mockReturnValue([mockField, mockMeta, mockHelpers])
-    render(<Datatoken {...props} />)
+    render(<Nft {...props} />)
     fireEvent.click(screen.getByRole('button'))
   })
 
@@ -54,6 +58,6 @@ describe('@shared/FormInput/Custom/Datatoken', () => {
       mockMeta,
       mockHelpers
     ])
-    render(<Datatoken {...props} />)
+    render(<Nft {...props} />)
   })
 })

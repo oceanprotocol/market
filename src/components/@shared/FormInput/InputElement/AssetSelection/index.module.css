@@ -58,11 +58,11 @@
 }
 
 .radio {
-  composes: radio from '@shared/FormInput/InputRadio.module.css';
+  composes: radio from '@shared/FormInput/InputElement/Radio/index.module.css';
 }
 
 .checkbox {
-  composes: checkbox from '@shared/FormInput/InputRadio.module.css';
+  composes: checkbox from '@shared/FormInput/InputElement/Radio/index.module.css';
 }
 
 .title {

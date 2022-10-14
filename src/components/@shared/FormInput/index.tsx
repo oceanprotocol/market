@@ -16,8 +16,8 @@ import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import FormHelp from './Help'
-import { AssetSelectionAsset } from '@shared/FormInput/Custom/AssetSelection'
-import { BoxSelectionOption } from '@shared/FormInput/Custom/BoxSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
+import { BoxSelectionOption } from '@shared/FormInput/InputElement/BoxSelection'
 
 const cx = classNames.bind(styles)
 

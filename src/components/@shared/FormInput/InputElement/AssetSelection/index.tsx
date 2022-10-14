@@ -1,14 +1,11 @@
 import React, { ChangeEvent, useState } from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import slugify from 'slugify'
-import classNames from 'classnames/bind'
 import PriceUnit from '@shared/Price/PriceUnit'
 import External from '@images/external.svg'
 import InputElement from '@shared/FormInput/InputElement'
 import Loader from '@shared/atoms/Loader'
 import styles from './index.module.css'
-
-const cx = classNames.bind(styles)
 
 export interface AssetSelectionAsset {
   did: string
@@ -34,18 +31,19 @@ export default function AssetSelection({
 }): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
 
-  const styleClassesInput = cx({
-    input: true,
-    [styles.checkbox]: multiple,
-    [styles.radio]: !multiple
-  })
+  const styleClassesWrapper = `${styles.selection} ${
+    disabled ? styles.disabled : ''
+  }`
+  const styleClassesInput = `${styles.input} ${
+    multiple ? styles.checkbox : styles.radio
+  }`
 
   function handleSearchInput(e: ChangeEvent<HTMLInputElement>) {
     setSearchValue(e.target.value)
   }
 
   return (
-    <div className={`${styles.selection} ${disabled ? styles.disabled : ''}`}>
+    <div className={styleClassesWrapper}>
       <InputElement
         type="search"
         name="search"

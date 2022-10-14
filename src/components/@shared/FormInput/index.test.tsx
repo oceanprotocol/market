@@ -1,5 +1,5 @@
-import { BoxSelectionOption } from '@shared/FormInput/Custom/BoxSelection'
-import { AssetSelectionAsset } from '@shared/FormInput/Custom/AssetSelection'
+import { BoxSelectionOption } from '@shared/FormInput/InputElement/BoxSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { render, screen } from '@testing-library/react'
 import React from 'react'
 import FormInput from './index'
@@ -72,10 +72,6 @@ describe('@shared/FormInput', () => {
       }
     ]
     render(<FormInput type="assetSelection" options={assets} />)
-  })
-
-  it('renders empty assetSelection', () => {
-    render(<FormInput type="assetSelection" options={[]} />)
   })
 
   it('renders assetSelectionMultiple', () => {

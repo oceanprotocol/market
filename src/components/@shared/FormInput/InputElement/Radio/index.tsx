@@ -1,7 +1,7 @@
 import React, { InputHTMLAttributes, ReactElement } from 'react'
 import slugify from 'slugify'
 import classNames from 'classnames/bind'
-import styles from './InputRadio.module.css'
+import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
 

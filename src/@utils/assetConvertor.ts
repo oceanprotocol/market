@@ -1,6 +1,6 @@
 import { getAccessDetailsForAssets } from './accessDetailsAndPricing'
 import { PublisherTrustedAlgorithm, Asset } from '@oceanprotocol/lib'
-import { AssetSelectionAsset } from '@shared/FormInput/Custom/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { getServiceByName } from './ddo'
 
 export async function transformAssetToAssetSelection(
