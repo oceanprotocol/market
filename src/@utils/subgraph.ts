@@ -5,6 +5,7 @@ import { getOceanConfig } from './ocean'
 import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
+import { chainIdsSupported } from 'app.config'
 
 const PreviousOrderQuery = gql`
   query AssetPreviousOrder($id: String!, $account: String!) {
@@ -76,6 +77,12 @@ export function getSubgraphUri(chainId: number): string {
 
 export function getQueryContext(chainId: number): OperationContext {
   try {
+    const isNetworkSupported = chainIdsSupported.includes(chainId)
+    if (!isNetworkSupported)
+      throw Object.assign(
+        new Error('network not supported, query context cancelled')
+      )
+
     const queryContext: OperationContext = {
       url: `${getSubgraphUri(
         Number(chainId)
