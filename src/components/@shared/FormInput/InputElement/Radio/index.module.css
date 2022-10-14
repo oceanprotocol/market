@@ -16,7 +16,7 @@
 
 .radio,
 .checkbox {
-  composes: input from './InputElement.module.css';
+  composes: input from '../index.module.css';
   position: relative;
   padding: 0;
   width: 18px;

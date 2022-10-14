@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './InputElement.module.css'
+import styles from './index.module.css'
 import { InputProps } from '..'
 import FilesInput from './FilesInput'
 import CustomProvider from './Provider'
