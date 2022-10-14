@@ -39,13 +39,13 @@ const mockHelpers = {
 
 describe('@shared/FormInput/InputElement/Nft', () => {
   it('renders without crashing', () => {
-    ;(useField as any).mockReturnValue([mockField, mockMeta, mockHelpers])
+    ;(useField as jest.Mock).mockReturnValue([mockField, mockMeta, mockHelpers])
     render(<Nft {...props} />)
     fireEvent.click(screen.getByRole('button'))
   })
 
   it('does nothing when data already present', () => {
-    ;(useField as any).mockReturnValue([
+    ;(useField as jest.Mock).mockReturnValue([
       {
         value: {
           name: 'Hello Name'

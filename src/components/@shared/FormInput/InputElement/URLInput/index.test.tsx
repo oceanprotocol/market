@@ -30,7 +30,7 @@ describe('@shared/FormInput/InputElement/URLInput', () => {
       onBlur: jest.fn(),
       name: 'url'
     }
-    ;(useField as any).mockReturnValue([mockField, mockMeta])
+    ;(useField as jest.Mock).mockReturnValue([mockField, mockMeta])
 
     render(<URLInput {...props} />)
     expect(screen.getByRole('button')).toBeDisabled()
@@ -48,7 +48,7 @@ describe('@shared/FormInput/InputElement/URLInput', () => {
       onBlur: jest.fn(),
       name: 'url'
     }
-    ;(useField as any).mockReturnValue([mockField, mockMeta])
+    ;(useField as jest.Mock).mockReturnValue([mockField, mockMeta])
 
     render(<URLInput {...props} />)
     expect(screen.getByRole('button')).toBeEnabled()

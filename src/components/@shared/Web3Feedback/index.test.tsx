@@ -6,7 +6,7 @@ import { useGraphSyncStatus } from '../../../@hooks/useGraphSyncStatus'
 jest.mock('../../../@hooks/useGraphSyncStatus')
 
 describe('@shared/Web3Feedback', () => {
-  ;(useGraphSyncStatus as any).mockImplementation(() => ({
+  ;(useGraphSyncStatus as jest.Mock).mockImplementation(() => ({
     isGraphSynced: true,
     blockGraph: '333333',
     blockHead: '333333'
@@ -26,7 +26,7 @@ describe('@shared/Web3Feedback', () => {
   })
 
   it('renders isGraphSynced === false', async () => {
-    ;(useGraphSyncStatus as any).mockImplementation(() => ({
+    ;(useGraphSyncStatus as jest.Mock).mockImplementation(() => ({
       isGraphSynced: false
     }))
     render(
@@ -41,7 +41,7 @@ describe('@shared/Web3Feedback', () => {
   })
 
   it('do nothing if nothing to show', async () => {
-    ;(useGraphSyncStatus as any).mockImplementation(() => ({
+    ;(useGraphSyncStatus as jest.Mock).mockImplementation(() => ({
       isGraphSynced: true
     }))
     render(
