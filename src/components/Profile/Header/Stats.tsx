@@ -8,6 +8,7 @@ import { useProfile } from '@context/Profile'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { getLocked } from '@utils/veAllocation'
 import PriceUnit from '@shared/Price/PriceUnit'
+import Tooltip from '@shared/atoms/Tooltip'
 
 export default function Stats({
   accountId
@@ -80,7 +81,10 @@ export default function Stats({
               hideApproximateSymbol
             />
           ) : (
-            '0'
+            <>
+              {'0'}
+              <Tooltip content="LOCK OCEAN!!" />
+            </>
           )
         }
       />
