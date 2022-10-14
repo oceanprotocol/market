@@ -13,7 +13,8 @@ import {
 } from '@hooks/useNetworkMetadata'
 import { getAssetsFromNftList } from './aquarius'
 import { chainIdsSupported } from 'app.config'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+
 const AllLocked = gql`
   query AllLocked {
     veOCEANs(first: 1000) {
@@ -100,6 +101,7 @@ export async function getNftOwnAllocation(
 
   return fetchedAllocation.data?.veAllocations[0]?.allocated
 }
+
 export async function getTotalAllocatedAndLocked(): Promise<TotalVe> {
   const totals = {
     totalLocked: 0,
@@ -110,7 +112,7 @@ export async function getTotalAllocatedAndLocked(): Promise<TotalVe> {
 
   const response = await axios.post(`https://df-sql.oceandao.org/nftinfo`)
   totals.totalAllocated = response.data?.reduce(
-    (previousValue: number, currentValue: { ve_allocated: any }) =>
+    (previousValue: number, currentValue: { ve_allocated: string }) =>
       previousValue + Number(currentValue.ve_allocated),
     0
   )
@@ -138,9 +140,7 @@ export async function getLocked(
     const queryContext = getQueryContext(veNetworkIds[i])
     const fetchedLocked: OperationResult<OceanLocked, any> = await fetchData(
       OceanLocked,
-      {
-        address: userAddress.toLowerCase()
-      },
+      { address: userAddress.toLowerCase() },
       queryContext
     )
 
@@ -163,9 +163,7 @@ export async function getOwnAllocations(
     const fetchedAllocations: OperationResult<OwnAllocations, any> =
       await fetchData(
         OwnAllocations,
-        {
-          address: userAddress.toLowerCase()
-        },
+        { address: userAddress.toLowerCase() },
         queryContext
       )
 
