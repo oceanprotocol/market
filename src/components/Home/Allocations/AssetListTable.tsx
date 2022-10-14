@@ -39,7 +39,7 @@ export default function AssetListTable({
       columns={columns}
       data={data}
       isLoading={isLoading}
-      emptyMessage={'Your allocated assets will appear here.'}
+      emptyMessage={`Your allocated assets will appear here. [Lock your OCEAN](https://df.oceandao.org) to get started.`}
       noTableHead
     />
   )

@@ -54,7 +54,7 @@ export default function HomePage(): ReactElement {
   return (
     <>
       <section className={styles.section}>
-        <h3>Bookmarks</h3>
+        <h3>Your Bookmarks</h3>
         <Bookmarks />
       </section>
 
