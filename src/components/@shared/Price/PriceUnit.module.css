@@ -7,7 +7,7 @@
   line-height: 1.2;
 }
 
-.price > div:firt-child {
+.price > div:first-child {
   white-space: nowrap;
 }
 

@@ -9,6 +9,7 @@ import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { getLocked } from '@utils/veAllocation'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Tooltip from '@shared/atoms/Tooltip'
+import Button from '@shared/atoms/Button'
 
 export default function Stats({
   accountId
@@ -29,6 +30,7 @@ export default function Stats({
     }
     getLockedOcean()
   }, [accountId, chainIds])
+
   useEffect(() => {
     if (!assets || !accountId || !chainIds) return
 
@@ -72,20 +74,27 @@ export default function Stats({
       />
       <NumberUnit label="Published" value={assetsTotal} />
       <NumberUnit
-        label="Locked OCEAN"
-        value={
+        label={
           lockedOcean > 0 ? (
-            <Conversion
-              price={lockedOcean}
-              symbol={'ocean'}
-              hideApproximateSymbol
-            />
-          ) : (
             <>
-              {'0'}
-              <Tooltip content="LOCK OCEAN!!" />
+              <PriceUnit price={lockedOcean} symbol="OCEAN" /> locked
             </>
+          ) : (
+            <Button
+              className={styles.link}
+              style="text"
+              href="https://df.oceandao.org"
+            >
+              Lock OCEAN
+            </Button>
           )
+        }
+        value={
+          <Conversion
+            price={lockedOcean > 0 ? lockedOcean : 0}
+            symbol="OCEAN"
+            hideApproximateSymbol
+          />
         }
       />
     </div>
