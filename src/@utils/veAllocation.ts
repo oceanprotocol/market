@@ -164,11 +164,13 @@ export async function getOwnAllocations(
         queryContext
       )
 
-    fetchedAllocations.data?.veAllocations.forEach((x) =>
-      allocations.push({
-        nftAddress: x.nftAddress,
-        allocation: x.allocated / 100
-      })
+    fetchedAllocations.data?.veAllocations.forEach(
+      (x) =>
+        x.allocated !== '0' &&
+        allocations.push({
+          nftAddress: x.nftAddress,
+          allocation: x.allocated / 100
+        })
     )
   }
 
