@@ -8,12 +8,14 @@ import TopSales from './TopSales'
 import TopTags from './TopTags'
 import SectionQueryResult from './SectionQueryResult'
 import styles from './index.module.css'
+import Allocations from './Allocations'
 
 export default function HomePage(): ReactElement {
+  const { chainIds } = useUserPreferences()
+
   const [queryLatest, setQueryLatest] = useState<SearchQuery>()
   const [queryMostSales, setQueryMostSales] = useState<SearchQuery>()
   const [queryMostAllocation, setQueryMostAllocation] = useState<SearchQuery>()
-  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
     const baseParams = {
@@ -52,9 +54,11 @@ export default function HomePage(): ReactElement {
   return (
     <>
       <section className={styles.section}>
-        <h3>Bookmarks</h3>
+        <h3>Your Bookmarks</h3>
         <Bookmarks />
       </section>
+
+      <Allocations />
 
       <SectionQueryResult
         title="Highest veOCEAN Allocations"

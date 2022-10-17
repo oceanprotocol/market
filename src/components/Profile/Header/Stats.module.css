@@ -4,3 +4,24 @@
   grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
   margin-top: var(--spacer);
 }
+
+.stats [class^='PriceUnit_symbol'] {
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-base);
+  font-size: var(--font-size-small);
+}
+
+.stats .link,
+.stats .link:hover {
+  color: var(--color-primary);
+  font-size: var(--font-size-small);
+  text-decoration: none;
+  padding: 0;
+  border: 0;
+}
+
+.stats [class^='PriceUnit_price'] {
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-base);
+  font-size: var(--font-size-small);
+}
