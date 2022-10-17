@@ -3,13 +3,11 @@ div.filterList {
   white-space: normal;
   margin-top: 0;
   margin-bottom: 0;
-  display: flex;
   gap: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
-  flex-direction: column;
-  align-items: baseline;
 }
 
-.filter {
+.filter,
+.filterList > div {
   display: inline-block;
 }
 
