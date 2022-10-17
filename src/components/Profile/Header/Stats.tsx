@@ -8,14 +8,15 @@ import { useProfile } from '@context/Profile'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { getLocked } from '@utils/veAllocation'
 import PriceUnit from '@shared/Price/PriceUnit'
-import Tooltip from '@shared/atoms/Tooltip'
 import Button from '@shared/atoms/Button'
+import { useWeb3 } from '@context/Web3'
 
 export default function Stats({
   accountId
 }: {
   accountId: string
 }): ReactElement {
+  const web3 = useWeb3()
   const { chainIds } = useUserPreferences()
   const { assets, assetsTotal, sales } = useProfile()
 
@@ -75,11 +76,7 @@ export default function Stats({
       <NumberUnit label="Published" value={assetsTotal} />
       <NumberUnit
         label={
-          lockedOcean > 0 ? (
-            <>
-              <PriceUnit price={lockedOcean} symbol="OCEAN" /> locked
-            </>
-          ) : (
+          lockedOcean === 0 && accountId === web3.accountId ? (
             <Button
               className={styles.link}
               style="text"
@@ -87,6 +84,10 @@ export default function Stats({
             >
               Lock OCEAN
             </Button>
+          ) : (
+            <>
+              <PriceUnit price={lockedOcean} symbol="OCEAN" /> locked
+            </>
           )
         }
         value={
