@@ -1,9 +1,9 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useField, useFormikContext } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
-import { getFileDidInfo, getFileUrlInfo } from '@utils/provider'
+import { getFileUrlInfo } from '@utils/provider'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
@@ -11,7 +11,6 @@ import { useAsset } from '@context/Asset'
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
-  const [hideUrl, setHideUrl] = useState(false)
   const { values, setFieldError } = useFormikContext<FormPublishData>()
   const { asset } = useAsset()
 
@@ -48,37 +47,11 @@ export default function FilesInput(props: InputProps): ReactElement {
     helpers.setValue(meta.initialValue)
   }
 
-  useEffect(() => {
-    if (field.name === 'links' && asset?.metadata?.links) {
-      handleValidation(null, asset.metadata.links[0])
-    } else if (field.name === 'files') {
-      getFileDidInfo(
-        asset?.id,
-        asset?.services[0]?.id,
-        asset?.services[0]?.serviceEndpoint
-      ).then((fileDidInfo) => {
-        setHideUrl(true)
-        // setting placeholder for url file to avoid txs for the url file during initializing
-        helpers.setValue([
-          {
-            url: fileDidInfo[0].valid
-              ? 'http://oceanprotocol.com/placeholder'
-              : '',
-            ...fileDidInfo[0]
-          }
-        ])
-      })
-    }
-  }, [])
-
   return (
     <>
-      {field?.value?.[0]?.valid === true ? (
-        <FileInfo
-          hideUrl={hideUrl}
-          file={field.value[0]}
-          handleClose={handleClose}
-        />
+      {field?.value?.[0]?.valid === true ||
+      field?.value?.[0]?.type === 'hidden' ? (
+        <FileInfo file={field.value[0]} handleClose={handleClose} />
       ) : (
         <UrlInput
           submitText="Validate"

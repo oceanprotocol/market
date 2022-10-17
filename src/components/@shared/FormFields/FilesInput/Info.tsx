@@ -6,21 +6,21 @@ import { FileInfo as FileInfoData } from '@oceanprotocol/lib'
 
 export default function FileInfo({
   file,
-  handleClose,
-  hideUrl
+  handleClose
 }: {
   file: FileInfoData
   handleClose(): void
-  hideUrl?: boolean
 }): ReactElement {
   const contentTypeCleaned = file.contentType
     ? cleanupContentType(file.contentType)
     : null
 
+  const hideUrl = file.type === 'hidden' || false
+
   return (
     <div className={`${styles.info}`}>
       <h3 className={`${styles.url} ${hideUrl ? styles.hideUrl : null}`}>
-        {file.url}
+        {hideUrl ? 'https://oceanprotocol/placeholder' : file.url}
       </h3>
       <ul>
         <li className={styles.success}>✓ URL confirmed</li>

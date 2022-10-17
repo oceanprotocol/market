@@ -33,6 +33,7 @@
 
 .hideUrl {
   filter: blur(0.2rem);
+  user-select: none;
 }
 
 .warning {
