@@ -1,7 +1,26 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Table, { TableOceanProps } from '@shared/atoms/Table'
-import { args, argsEmpty, argsLoading, argsWithPagination } from './index.test'
+import { columns, data } from '../../../../../.jest/__fixtures__/table'
+
+export const args: TableOceanProps<any> = { columns, data }
+
+export const argsWithPagination: TableOceanProps<any> = {
+  columns,
+  data: data.flatMap((i) => [i, i, i])
+}
+
+export const argsLoading: TableOceanProps<any> = {
+  isLoading: true,
+  columns: [],
+  data: []
+}
+
+export const argsEmpty: TableOceanProps<any> = {
+  emptyMessage: 'I am empty',
+  columns: [],
+  data: []
+}
 
 export default {
   title: 'Component/@shared/atoms/Table',

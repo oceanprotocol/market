@@ -1,12 +1,27 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Tags, { TagsProps } from './'
-import {
-  args,
-  argsMaxNumberOfTags,
-  argsShowMore,
-  argsWithoutLinks
-} from './index.test'
+
+export const args: TagsProps = {
+  items: [' tag1 ', ' tag2 ', ' tag3 '],
+  className: 'custom-class'
+}
+
+export const argsMaxNumberOfTags: TagsProps = {
+  items: [' tag1 ', ' tag2 ', ' tag3 '],
+  max: 2
+}
+
+export const argsShowMore: TagsProps = {
+  items: [' tag1 ', ' tag2 ', ' tag3 '],
+  max: 2,
+  showMore: true
+}
+
+export const argsWithoutLinks: TagsProps = {
+  items: [' tag1 ', ' tag2 ', ' tag3 '],
+  noLinks: true
+}
 
 export default {
   title: 'Component/@shared/atoms/Tags',

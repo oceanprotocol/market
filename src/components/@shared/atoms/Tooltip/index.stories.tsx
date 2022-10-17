@@ -2,13 +2,33 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { TippyProps } from '@tippyjs/react'
 import Tooltip from '@shared/atoms/Tooltip'
-import {
-  args,
-  argsDisabled,
-  argsWithContentOpened,
-  argsWithCustomTriggerElement,
-  argsWithCustomTriggerEvent
-} from './index.test'
+
+export const props: TippyProps = {
+  content:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquam facilisis molestie.'
+}
+
+export const propsWithContentOpened: TippyProps = {
+  content: props.content,
+  showOnCreate: true
+}
+
+export const propsWithCustomTriggerElement: TippyProps = {
+  content: props.content,
+  children: <a>Tooltip trigger</a>
+}
+
+export const propsWithCustomTriggerEvent: TippyProps = {
+  content: props.content,
+  children: <button>Click here</button>,
+  trigger: 'on click'
+}
+
+export const propsDisabled: TippyProps = {
+  content: props.content,
+  children: <a>Tooltip disabled</a>,
+  disabled: true
+}
 
 export default {
   title: 'Component/@shared/atoms/Tooltip',
@@ -22,16 +42,16 @@ interface Props {
 }
 
 export const Default: Props = Template.bind({})
-Default.args = args
+Default.args = props
 
 export const WithContentOpened: Props = Template.bind({})
-WithContentOpened.args = argsWithContentOpened
+WithContentOpened.args = propsWithContentOpened
 
 export const WithCustomTriggerElement: Props = Template.bind({})
-WithCustomTriggerElement.args = argsWithCustomTriggerElement
+WithCustomTriggerElement.args = propsWithCustomTriggerElement
 
 export const WithCustomTriggerEvent: Props = Template.bind({})
-WithCustomTriggerEvent.args = argsWithCustomTriggerEvent
+WithCustomTriggerEvent.args = propsWithCustomTriggerEvent
 
 export const Disabled: Props = Template.bind({})
-Disabled.args = argsDisabled
+Disabled.args = propsDisabled

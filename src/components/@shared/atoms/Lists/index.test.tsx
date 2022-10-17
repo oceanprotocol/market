@@ -1,15 +1,7 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 import { ListItem } from './index'
-
-export const items = [
-  'List item short',
-  'List item long ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquam facilisis molestie',
-  'List item long ipsum dolor sit amet, consectetur adipiscing elit',
-  'List item short',
-  'List item long ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquam facilisis molestie',
-  'List item long ipsum dolor sit amet, consectetur adipiscing elit'
-]
+import { items } from './index.stories'
 
 describe('Lists', () => {
   it('renders unordered', () => {
