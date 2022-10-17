@@ -20,9 +20,9 @@ const columns: TableOceanColumn<AssetWithOwnAllocation>[] = [
   },
   {
     name: 'Allocated',
-    // TODO: this needs to be own allocations number
     selector: (row) => row.allocation,
-    right: true
+    right: true,
+    sortable: true
   }
 ]
 
@@ -30,8 +30,6 @@ export default function AssetListTable({
   data,
   isLoading
 }: {
-  // TODO: we onlyt need for each asset: name, datatoken symbol, own allocated
-  // so this is what we should pass instead of full result response.
   data: AssetWithOwnAllocation[]
   isLoading: boolean
 }) {
@@ -39,6 +37,8 @@ export default function AssetListTable({
     <Table
       columns={columns}
       data={data}
+      defaultSortFieldId={3}
+      sortAsc={false}
       isLoading={isLoading}
       emptyMessage={`Your allocated assets will appear here. [Lock your OCEAN](https://df.oceandao.org) to get started.`}
       noTableHead
