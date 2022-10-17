@@ -59,12 +59,10 @@ export interface Allocation {
   nftAddress: string
   allocation: number
 }
+
 export interface AssetWithOwnAllocation {
-  did: string
-  nftAddress: string
-  allocation: number
-  name: string
-  symbol: string
+  asset: AssetExtended
+  allocation: string
 }
 
 export function getVeChainNetworkId(assetNetworkId: number): number {
@@ -146,7 +144,6 @@ export async function getLocked(
 
     fetchedLocked.data?.veOCEAN?.lockedAmount &&
       (total += Number(fetchedLocked.data?.veOCEAN?.lockedAmount))
-    console.log('locked', fetchedLocked.data?.veOCEAN?.lockedAmount, total)
   }
 
   return total

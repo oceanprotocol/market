@@ -1,26 +1,27 @@
 import React from 'react'
 import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
+import { AssetWithOwnAllocation } from '@utils/veAllocation'
 
-const columns: TableOceanColumn<AssetExtended>[] = [
+const columns: TableOceanColumn<AssetWithOwnAllocation>[] = [
   {
     name: 'Dataset',
     selector: (row) => {
-      const { metadata } = row
-      return <AssetTitle title={metadata.name} asset={row} />
+      const { metadata } = row.asset
+      return <AssetTitle title={metadata.name} asset={row.asset} />
     },
     maxWidth: '45rem',
     grow: 1
   },
   {
     name: 'Datatoken Symbol',
-    selector: (row) => row.datatokens[0].symbol,
+    selector: (row) => row.asset.datatokens[0].symbol,
     maxWidth: '10rem'
   },
   {
     name: 'Allocated',
     // TODO: this needs to be own allocations number
-    selector: (row) => row.stats?.allocated,
+    selector: (row) => row.allocation,
     right: true
   }
 ]
@@ -31,7 +32,7 @@ export default function AssetListTable({
 }: {
   // TODO: we onlyt need for each asset: name, datatoken symbol, own allocated
   // so this is what we should pass instead of full result response.
-  data: AssetExtended[]
+  data: AssetWithOwnAllocation[]
   isLoading: boolean
 }) {
   return (

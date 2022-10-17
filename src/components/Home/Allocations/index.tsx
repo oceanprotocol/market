@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useWeb3 } from '@context/Web3'
-import { getOwnAllocations } from '@utils/veAllocation'
+import { AssetWithOwnAllocation, getOwnAllocations } from '@utils/veAllocation'
 import styles from './index.module.css'
 import {
   getFilterTerm,
@@ -20,7 +20,7 @@ export default function Allocations(): ReactElement {
   const newCancelToken = useCancelToken()
 
   const [loading, setLoading] = useState<boolean>()
-  const [result, setResult] = useState<PagedAssets>()
+  const [data, setData] = useState<AssetWithOwnAllocation[]>()
   const [hasAllocations, setHasAllocations] = useState(false)
 
   useEffect(() => {
@@ -61,8 +61,21 @@ export default function Allocations(): ReactElement {
         const query = generateBaseQuery(baseParams)
 
         const result = await queryMetadata(query, newCancelToken())
+
+        const assetsWithAllocation: AssetWithOwnAllocation[] = []
+
+        result?.results.forEach((asset) => {
+          const allocation = allocations.find(
+            (x) => x.nftAddress.toLowerCase() === asset.nftAddress.toLowerCase()
+          )
+          assetsWithAllocation.push({
+            asset,
+            allocation: `${allocation.allocation} %`
+          })
+        })
+
         if (!isMounted()) return
-        setResult(result)
+        setData(assetsWithAllocation)
         setLoading(false)
       } catch (error) {
         LoggerInstance.error(error.message)
@@ -74,7 +87,7 @@ export default function Allocations(): ReactElement {
   return (
     <section className={styles.section}>
       <h3>Your Allocated Assets</h3>
-      <AssetListTable data={result?.results} isLoading={loading} />
+      <AssetListTable data={data} isLoading={loading} />
     </section>
   )
 }
