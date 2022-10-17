@@ -40,11 +40,13 @@ function computeTotalPrice(
 ): totalPriceMap[] {
   const totalPrices: totalPriceMap[] = []
   const priceDataset =
-    hasPreviousOrder || hasDatatoken
+    !datasetOrderPrice || hasPreviousOrder || hasDatatoken
       ? new Decimal(0)
       : new Decimal(datasetOrderPrice).toDecimalPlaces(MAX_DECIMALS)
   const priceAlgo =
-    hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
+    !algoOrderPrice ||
+    hasPreviousOrderSelectedComputeAsset ||
+    hasDatatokenSelectedComputeAsset
       ? new Decimal(0)
       : new Decimal(algoOrderPrice).toDecimalPlaces(MAX_DECIMALS)
   const providerFees = providerFeeAmount

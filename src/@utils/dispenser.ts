@@ -4,15 +4,10 @@ import { TransactionReceipt } from 'web3-core'
 
 export async function setMinterToPublisher(
   web3: Web3,
-  dispenserAddress: string,
   datatokenAddress: string,
   accountId: string,
   setError: (msg: string) => void
 ): Promise<TransactionReceipt> {
-  const dispenserInstance = new Dispenser(dispenserAddress, web3)
-  const status = await dispenserInstance.status(datatokenAddress)
-  if (!status?.active) return
-
   const datatokenInstance = new Datatoken(web3)
 
   const response = await datatokenInstance.removeMinter(
@@ -20,6 +15,7 @@ export async function setMinterToPublisher(
     accountId,
     accountId
   )
+
   if (!response) {
     setError('Updating DDO failed.')
     LoggerInstance.error('Failed at cancelMinter')
