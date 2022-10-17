@@ -108,7 +108,7 @@ export default function InputElement({
         />
       )
     case 'files':
-      return <FilesInput {...field} {...props} />
+      return <FilesInput {...field} form={form} {...props} />
     case 'container':
       return <ContainerInput {...field} {...props} />
     case 'providerUrl':

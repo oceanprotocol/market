@@ -1,17 +1,15 @@
 import React, { ReactElement, useState } from 'react'
-import { useField, useFormikContext } from 'formik'
+import { useField } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
 import { getFileUrlInfo } from '@utils/provider'
-import { FormPublishData } from 'src/components/Publish/_types'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
-  const { values, setFieldError } = useFormikContext<FormPublishData>()
   const { asset } = useAsset()
 
   async function handleValidation(e: React.SyntheticEvent, url: string) {
@@ -19,8 +17,8 @@ export default function FilesInput(props: InputProps): ReactElement {
     e?.preventDefault()
 
     try {
-      const providerUrl = values?.services
-        ? values?.services[0].providerUrl.url
+      const providerUrl = props.form?.values?.services
+        ? props.form?.values?.services[0].providerUrl.url
         : asset.services[0].serviceEndpoint
       setIsLoading(true)
       const checkedFile = await getFileUrlInfo(url, providerUrl)
@@ -35,7 +33,7 @@ export default function FilesInput(props: InputProps): ReactElement {
       // if all good, add file to formik state
       helpers.setValue([{ url, ...checkedFile[0] }])
     } catch (error) {
-      setFieldError(`${field.name}[0].url`, error.message)
+      props.form.setFieldError(`${field.name}[0].url`, error.message)
       LoggerInstance.error(error.message)
     } finally {
       setIsLoading(false)
