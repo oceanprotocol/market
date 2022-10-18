@@ -76,8 +76,7 @@ function AssetProvider({
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
         return
       }
-
-      if (asset.nft.state) {
+      if (asset.nft.state !== 0 && asset.nft.state !== 4) {
         // handle nft states as documented in https://docs.oceanprotocol.com/concepts/did-ddo/#state
         let state
         switch (asset.nft.state) {
