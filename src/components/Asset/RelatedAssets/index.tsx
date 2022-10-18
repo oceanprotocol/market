@@ -4,7 +4,13 @@ import { useUserPreferences } from '@context/UserPreferences'
 import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
 import SectionQueryResult from '../../Home/SectionQueryResult'
 
-export default function RelatedAssets(): ReactElement {
+export default function RelatedAssets({
+  tags,
+  id
+}: {
+  tags: string[]
+  id: string
+}): ReactElement {
   const { chainIds } = useUserPreferences()
 
   const [queryRelatedAssets, setQueryRelatedAssets] = useState<SearchQuery>()
@@ -13,9 +19,16 @@ export default function RelatedAssets(): ReactElement {
     const baseParamsSales = {
       chainIds,
       esPaginationOptions: {
-        size: 6
+        size: 3
       },
-      filters: [getFilterTerm('metadata.tags', 'dimitra')],
+      nestedQuery: {
+        must_not: {
+          match: {
+            id
+          }
+        }
+      },
+      filters: [getFilterTerm('metadata.tags', tags)],
       sortOptions: {
         sortBy: SortTermOptions.Orders
       } as SortOptions

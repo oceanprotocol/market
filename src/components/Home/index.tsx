@@ -34,7 +34,6 @@ export default function HomePage(): ReactElement {
       esPaginationOptions: {
         size: 6
       },
-      filters: [getFilterTerm('metadata.tags', 'dimitra')],
       sortOptions: {
         sortBy: SortTermOptions.Orders
       } as SortOptions
