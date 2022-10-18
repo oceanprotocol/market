@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import Bookmarks from './Bookmarks'
-import { generateBaseQuery } from '@utils/aquarius'
+import { generateBaseQuery, getFilterTerm } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
 import TopSales from './TopSales'
@@ -34,6 +34,7 @@ export default function HomePage(): ReactElement {
       esPaginationOptions: {
         size: 6
       },
+      filters: [getFilterTerm('metadata.tags', 'dimitra')],
       sortOptions: {
         sortBy: SortTermOptions.Orders
       } as SortOptions
