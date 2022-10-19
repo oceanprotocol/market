@@ -5,6 +5,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
+import { totalPriceMap } from './FormComputeDataset'
 
 interface PriceOutputProps {
   hasPreviousOrder: boolean
@@ -20,91 +21,7 @@ interface PriceOutputProps {
   algoOrderPrice?: string
   providerFeeAmount?: string
   validUntil?: string
-}
-
-interface totalPriceMap {
-  value: string
-  symbol: string
-}
-
-function computeTotalPrice(
-  hasPreviousOrder: boolean,
-  hasDatatoken: boolean,
-  symbol: string,
-  hasPreviousOrderSelectedComputeAsset: boolean,
-  hasDatatokenSelectedComputeAsset: boolean,
-  algorithmSymbol: string,
-  datasetOrderPrice?: string,
-  algoOrderPrice?: string,
-  providerFeeAmount?: string
-): totalPriceMap[] {
-  const totalPrices: totalPriceMap[] = []
-  const priceDataset =
-    !datasetOrderPrice || hasPreviousOrder || hasDatatoken
-      ? new Decimal(0)
-      : new Decimal(datasetOrderPrice).toDecimalPlaces(MAX_DECIMALS)
-  const priceAlgo =
-    !algoOrderPrice ||
-    hasPreviousOrderSelectedComputeAsset ||
-    hasDatatokenSelectedComputeAsset
-      ? new Decimal(0)
-      : new Decimal(algoOrderPrice).toDecimalPlaces(MAX_DECIMALS)
-  const providerFees = providerFeeAmount
-    ? new Decimal(providerFeeAmount).toDecimalPlaces(MAX_DECIMALS)
-    : new Decimal(0)
-
-  if (algorithmSymbol === 'OCEAN') {
-    let sum = providerFees.add(priceAlgo)
-    totalPrices.push({
-      value: sum.toDecimalPlaces(MAX_DECIMALS).toString(),
-      symbol: algorithmSymbol
-    })
-    if (algorithmSymbol === symbol) {
-      sum = sum.add(priceDataset)
-      totalPrices[0].value = sum.toDecimalPlaces(MAX_DECIMALS).toString()
-    } else {
-      totalPrices.push({
-        value: priceDataset.toDecimalPlaces(MAX_DECIMALS).toString(),
-        symbol: symbol
-      })
-    }
-  } else {
-    if (symbol === 'OCEAN') {
-      const sum = providerFees.add(priceDataset)
-      totalPrices.push({
-        value: sum.toDecimalPlaces(MAX_DECIMALS).toString(),
-        symbol: symbol
-      })
-      totalPrices.push({
-        value: priceAlgo.toDecimalPlaces(MAX_DECIMALS).toString(),
-        symbol: algorithmSymbol
-      })
-    } else if (symbol === algorithmSymbol) {
-      const sum = priceAlgo.add(priceDataset)
-      totalPrices.push({
-        value: sum.toDecimalPlaces(MAX_DECIMALS).toString(),
-        symbol: algorithmSymbol
-      })
-      totalPrices.push({
-        value: providerFees.toDecimalPlaces(MAX_DECIMALS).toString(),
-        symbol: 'OCEAN'
-      })
-    } else {
-      totalPrices.push({
-        value: priceDataset.toDecimalPlaces(MAX_DECIMALS).toString(),
-        symbol: symbol
-      })
-      totalPrices.push({
-        value: providerFees.toDecimalPlaces(MAX_DECIMALS).toString(),
-        symbol: 'OCEAN'
-      })
-      totalPrices.push({
-        value: priceAlgo.toDecimalPlaces(MAX_DECIMALS).toString(),
-        symbol: algorithmSymbol
-      })
-    }
-  }
-  return totalPrices
+  totalPrices?: totalPriceMap[]
 }
 
 function Row({
@@ -159,20 +76,11 @@ export default function PriceOutput({
   datasetOrderPrice,
   algoOrderPrice,
   providerFeeAmount,
-  validUntil
+  validUntil,
+  totalPrices
 }: PriceOutputProps): ReactElement {
   const { asset } = useAsset()
-  const totalPrices = computeTotalPrice(
-    hasPreviousOrder,
-    hasDatatoken,
-    symbol,
-    hasPreviousOrderSelectedComputeAsset,
-    hasDatatokenSelectedComputeAsset,
-    algorithmSymbol,
-    datasetOrderPrice,
-    algoOrderPrice,
-    providerFeeAmount
-  )
+
   return (
     <div className={styles.priceComponent}>
       You will pay{' '}
