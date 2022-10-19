@@ -23,11 +23,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         ? values?.services[0].providerUrl.url
         : asset.services[0].serviceEndpoint
       setIsLoading(true)
-      const urlFile: UrlFile = {
-        type: 'url',
-        url: url,
-        method: 'GET'
-      }
+      const urlFile: UrlFile = { type: 'url', url, method: 'GET' }
       const checkedFile = await getFileInfo(urlFile, providerUrl)
 
       // error if something's not right from response
