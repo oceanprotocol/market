@@ -17,11 +17,6 @@ import { getTokenBalanceFromSymbol } from '@utils/web3'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
 
-export interface totalPriceMap {
-  value: string
-  symbol: string
-}
-
 export default function FormStartCompute({
   algorithms,
   ddoListAlgorithms,

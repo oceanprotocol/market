@@ -5,7 +5,6 @@ import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
-import { totalPriceMap } from './FormComputeDataset'
 
 interface PriceOutputProps {
   hasPreviousOrder: boolean
