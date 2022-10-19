@@ -196,9 +196,7 @@ export default function FormStartCompute({
         hasPreviousOrderSelectedComputeAsset={
           hasPreviousOrderSelectedComputeAsset
         }
-        hasDatatoken={hasDatatoken}
         selectedComputeAssetTimeout={selectedComputeAssetTimeout}
-        hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         algorithmConsumeDetails={selectedAlgorithmAsset?.accessDetails}
         symbol={oceanSymbol}
         totalPrice={totalPrice}

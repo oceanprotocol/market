@@ -9,11 +9,9 @@ import Decimal from 'decimal.js'
 interface PriceOutputProps {
   totalPrice: string
   hasPreviousOrder: boolean
-  hasDatatoken: boolean
   symbol: string
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset: boolean
-  hasDatatokenSelectedComputeAsset: boolean
   algorithmConsumeDetails: AccessDetails
   selectedComputeAssetTimeout: string
   datasetOrderPrice?: string
@@ -25,7 +23,6 @@ interface PriceOutputProps {
 function Row({
   price,
   hasPreviousOrder,
-  hasDatatoken,
   symbol,
   timeout,
   sign,
@@ -33,7 +30,6 @@ function Row({
 }: {
   price: string
   hasPreviousOrder?: boolean
-  hasDatatoken?: boolean
   symbol?: string
   timeout?: string
   sign?: string
@@ -45,7 +41,7 @@ function Row({
       <div className={styles.type}>{type}</div>
       <div>
         <PriceUnit
-          price={hasPreviousOrder || hasDatatoken ? 0 : Number(price)}
+          price={Number(price)}
           symbol={symbol}
           size="small"
           className={styles.price}
@@ -64,11 +60,9 @@ function Row({
 export default function PriceOutput({
   totalPrice,
   hasPreviousOrder,
-  hasDatatoken,
   assetTimeout,
   symbol,
   hasPreviousOrderSelectedComputeAsset,
-  hasDatatokenSelectedComputeAsset,
   algorithmConsumeDetails,
   selectedComputeAssetTimeout,
   datasetOrderPrice,
@@ -87,7 +81,6 @@ export default function PriceOutput({
           <div className={styles.calculation}>
             <Row
               hasPreviousOrder={hasPreviousOrder}
-              hasDatatoken={hasDatatoken}
               price={new Decimal(
                 datasetOrderPrice || asset?.accessDetails?.price || 0
               )
@@ -99,7 +92,6 @@ export default function PriceOutput({
             />
             <Row
               hasPreviousOrder={hasPreviousOrderSelectedComputeAsset}
-              hasDatatoken={hasDatatokenSelectedComputeAsset}
               price={new Decimal(
                 algoOrderPrice || algorithmConsumeDetails?.price || 0
               )
