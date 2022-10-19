@@ -46,10 +46,12 @@ const clearedProfile: Profile = {
 function ProfileProvider({
   accountId,
   accountEns,
+  ownAccount,
   children
 }: {
   accountId: string
   accountEns: string
+  ownAccount: boolean
   children: ReactNode
 }): ReactElement {
   const { chainIds } = useUserPreferences()
@@ -111,7 +113,8 @@ function ProfileProvider({
         const result = await getPublishedAssets(
           accountId,
           chainIds,
-          cancelTokenSource.token
+          cancelTokenSource.token,
+          ownAccount
         )
         setAssets(result.results)
         setAssetsTotal(result.totalResults)
@@ -134,7 +137,13 @@ function ProfileProvider({
     return () => {
       cancelTokenSource.cancel()
     }
-  }, [accountId, appConfig.metadataCacheUri, chainIds, isEthAddress])
+  }, [
+    accountId,
+    appConfig.metadataCacheUri,
+    chainIds,
+    isEthAddress,
+    ownAccount
+  ])
 
   //
   // DOWNLOADS
@@ -158,7 +167,8 @@ function ProfileProvider({
         dtList,
         tokenOrders,
         chainIds,
-        cancelToken
+        cancelToken,
+        ownAccount
       )
       setDownloads(downloads)
       setDownloadsTotal(downloads.length)
@@ -167,7 +177,7 @@ function ProfileProvider({
         downloads
       )
     },
-    [accountId, chainIds]
+    [accountId, chainIds, ownAccount]
   )
 
   useEffect(() => {

@@ -39,6 +39,7 @@ export default function PublishedList({
           accountId.toLowerCase(),
           chainIds,
           cancelToken,
+          false,
           page,
           service,
           access

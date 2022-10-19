@@ -319,6 +319,7 @@ export async function getPublishedAssets(
   accountId: string,
   chainIds: number[],
   cancelToken: CancelToken,
+  ignoreState = false,
   page?: number,
   type?: string,
   accesType?: string
@@ -347,7 +348,7 @@ export async function getPublishedAssets(
       }
     },
     ignorePurgatory: true,
-    ignoreState: true,
+    ignoreState,
     esPaginationOptions: {
       from: (Number(page) - 1 || 0) * 9,
       size: 9
@@ -461,7 +462,8 @@ export async function getDownloadAssets(
   dtList: string[],
   tokenOrders: OrdersData[],
   chainIds: number[],
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
+  ignoreState = false
 ): Promise<DownloadedAsset[]> {
   const baseQueryparams = {
     chainIds,
@@ -470,7 +472,7 @@ export async function getDownloadAssets(
       getFilterTerm('services.type', 'access')
     ],
     ignorePurgatory: true,
-    ignoreState: true
+    ignoreState
   } as BaseQueryParams
   const query = generateBaseQuery(baseQueryparams)
   try {
