@@ -77,7 +77,7 @@ function AssetProvider({
         return
       }
 
-      if (asset.nft.state) {
+      if ([1, 2, 3].includes(asset.nft.state)) {
         // handle nft states as documented in https://docs.oceanprotocol.com/concepts/did-ddo/#state
         let state
         switch (asset.nft.state) {

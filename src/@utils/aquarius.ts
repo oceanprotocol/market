@@ -59,7 +59,22 @@ export function generateBaseQuery(
           getFilterTerm('_index', 'aquarius'),
           ...(baseQueryParams.ignorePurgatory
             ? []
-            : [getFilterTerm('purgatory.state', false)])
+            : [getFilterTerm('purgatory.state', false)]),
+          ...(baseQueryParams.ignoreState
+            ? []
+            : [
+                {
+                  bool: {
+                    must_not: [
+                      {
+                        term: {
+                          'nft.state': 5
+                        }
+                      }
+                    ]
+                  }
+                }
+              ])
         ]
       }
     }
@@ -332,6 +347,7 @@ export async function getPublishedAssets(
       }
     },
     ignorePurgatory: true,
+    ignoreState: true,
     esPaginationOptions: {
       from: (Number(page) - 1 || 0) * 9,
       size: 9
@@ -452,7 +468,9 @@ export async function getDownloadAssets(
     filters: [
       getFilterTerm('services.datatokenAddress', dtList),
       getFilterTerm('services.type', 'access')
-    ]
+    ],
+    ignorePurgatory: true,
+    ignoreState: true
   } as BaseQueryParams
   const query = generateBaseQuery(baseQueryparams)
   try {
