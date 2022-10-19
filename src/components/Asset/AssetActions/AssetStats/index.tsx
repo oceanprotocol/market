@@ -1,44 +1,61 @@
 import { useAsset } from '@context/Asset'
 import { useUserPreferences } from '@context/UserPreferences'
+import { useWeb3 } from '@context/Web3'
+import Tooltip from '@shared/atoms/Tooltip'
 import { formatPrice } from '@shared/Price/PriceUnit'
+import { getNftOwnAllocation } from '@utils/veAllocation'
 import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
 
 export default function AssetStats() {
   const { locale } = useUserPreferences()
   const { asset } = useAsset()
-  const [orders, setOrders] = useState(0)
-  const [allocated, setAllocated] = useState(0)
+  const { accountId } = useWeb3()
+
+  const [ownAllocation, setOwnAllocation] = useState(0)
 
   useEffect(() => {
-    if (!asset) return
+    if (!asset || !accountId) return
 
-    const { orders, allocated } = asset.stats
-
-    setOrders(orders)
-    setAllocated(allocated)
-  }, [asset])
+    async function init() {
+      const allocation = await getNftOwnAllocation(
+        accountId,
+        asset.nftAddress,
+        asset.chainId
+      )
+      setOwnAllocation(allocation / 100)
+    }
+    init()
+  }, [accountId, asset])
 
   return (
     <footer className={styles.stats}>
-      {allocated && allocated > 0 ? (
+      {asset?.stats?.allocated && asset?.stats?.allocated > 0 ? (
         <span className={styles.stat}>
           <span className={styles.number}>
-            {formatPrice(allocated, locale)}
+            {formatPrice(asset.stats.allocated, locale)}
           </span>
           veOCEAN
         </span>
       ) : null}
-      {!asset || !asset?.stats || orders < 0 ? (
+      {!asset?.stats || asset?.stats?.orders < 0 ? (
         'N/A'
-      ) : orders === 0 ? (
+      ) : asset?.stats?.orders === 0 ? (
         'No sales yet'
       ) : (
         <span className={styles.stat}>
-          <span className={styles.number}>{orders}</span> sale
-          {orders === 1 ? '' : 's'}
+          <span className={styles.number}>{asset.stats.orders}</span> sale
+          {asset.stats.orders === 1 ? '' : 's'}
         </span>
       )}
+      {ownAllocation && ownAllocation > 0 ? (
+        <span className={styles.stat}>
+          <span className={styles.number}>{ownAllocation}</span>% allocated
+          <Tooltip
+            content={`You have ${ownAllocation}% of your total veOCEAN allocated to this asset.`}
+          />
+        </span>
+      ) : null}
     </footer>
   )
 }
