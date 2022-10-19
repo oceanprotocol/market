@@ -145,14 +145,14 @@ export default function Edit({
     asset?.metadata,
     asset?.services[0]?.timeout,
     asset?.accessDetails?.price
-  ) as FormEditMetadataValues
+  ) as unknown as FormEditMetadataValues
 
   return (
     <Formik
       enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={async (values, { resetForm }) => {
+      onSubmit={async (values: any, { resetForm }) => {
         // move user's focus to top of screen
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         // kick off editing
