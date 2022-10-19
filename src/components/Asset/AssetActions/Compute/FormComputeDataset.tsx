@@ -219,6 +219,7 @@ export default function FormStartCompute({
         setIsBalanceSufficient(false)
         return
       }
+      // if one comparison of baseTokenBalance and token price comparison is false then the state will be false
       setIsBalanceSufficient(
         isBalanceSufficient && compareAsBN(baseTokenBalance, `${price.value}`)
       )

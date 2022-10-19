@@ -1,4 +1,4 @@
-import { LoggerInstance, Dispenser, Datatoken } from '@oceanprotocol/lib'
+import { LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-core'
 
