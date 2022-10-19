@@ -451,14 +451,12 @@ export default function Compute({
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
             isLoading={isOrdering || isRequestingAlgoOrderPrice}
             isComputeButtonDisabled={isComputeButtonDisabled}
-            hasPreviousOrder={validOrderTx !== undefined}
+            hasPreviousOrder={!!validOrderTx}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
             assetType={asset?.metadata.type}
             assetTimeout={secondsToString(asset?.services[0].timeout)}
-            hasPreviousOrderSelectedComputeAsset={
-              validAlgorithmOrderTx !== undefined
-            }
+            hasPreviousOrderSelectedComputeAsset={!!validAlgorithmOrderTx}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
             oceanSymbol={
               asset?.accessDetails?.baseToken?.symbol ||
