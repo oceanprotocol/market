@@ -191,7 +191,7 @@ export default function Download({
           <Alert
             className={styles.fieldWarning}
             state="info"
-            text={`The publisher temporary disabled ordering for this asset`}
+            text={`The publisher temporarily disabled ordering for this asset`}
           />
         ) : (
           <>
