@@ -15,7 +15,8 @@ export default function RelatedAssets({
 }): ReactElement {
   const { chainIds } = useUserPreferences()
   const [queryRelatedAssets, setQueryRelatedAssets] = useState<SearchQuery>()
-  const modifiedTags = tags.toString().split(',').join(' OR ')
+  const modifiedSearchTerm =
+    tags.toString().split(',').join(' OR ') + ' OR ' + owner.toLowerCase()
 
   useEffect(() => {
     const baseParamsSales = {
@@ -35,14 +36,8 @@ export default function RelatedAssets({
         must: [
           {
             query_string: {
-              query: modifiedTags,
-              fields: ['metadata.tags']
-            }
-          },
-          {
-            query_string: {
-              query: `${owner.toLowerCase()}`,
-              fields: ['nft.owner']
+              query: modifiedSearchTerm,
+              fields: ['metadata.tags', 'nft.owner']
             }
           }
         ]
@@ -52,7 +47,7 @@ export default function RelatedAssets({
       } as SortOptions
     } as BaseQueryParams
     setQueryRelatedAssets(generateBaseQuery(baseParamsSales))
-  }, [chainIds, dtAddress, tags])
+  }, [chainIds, dtAddress, modifiedSearchTerm])
 
   return (
     <SectionQueryResult title="Related Assets:" query={queryRelatedAssets} />
