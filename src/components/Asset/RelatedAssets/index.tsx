@@ -1,19 +1,21 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { generateBaseQuery, getFilterTerm } from '@utils/aquarius'
+import { generateBaseQuery } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
 import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
 import SectionQueryResult from '../../Home/SectionQueryResult'
 
 export default function RelatedAssets({
   tags,
-  id
+  dtAddress,
+  owner
 }: {
   tags: string[]
-  id: string
+  dtAddress: string
+  owner: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-
   const [queryRelatedAssets, setQueryRelatedAssets] = useState<SearchQuery>()
+  const modifiedTags = tags.toString().split(',').join(' OR ')
 
   useEffect(() => {
     const baseParamsSales = {
@@ -22,19 +24,35 @@ export default function RelatedAssets({
         size: 3
       },
       nestedQuery: {
-        must_not: {
-          match: {
-            id
+        must_not: [
+          {
+            query_string: {
+              query: `${dtAddress.toLowerCase()}`,
+              fields: ['datatokens.address']
+            }
           }
-        }
+        ],
+        must: [
+          {
+            query_string: {
+              query: modifiedTags,
+              fields: ['metadata.tags']
+            }
+          },
+          {
+            query_string: {
+              query: `${owner.toLowerCase()}`,
+              fields: ['nft.owner']
+            }
+          }
+        ]
       },
-      filters: [getFilterTerm('metadata.tags', tags)],
       sortOptions: {
         sortBy: SortTermOptions.Orders
       } as SortOptions
     } as BaseQueryParams
     setQueryRelatedAssets(generateBaseQuery(baseParamsSales))
-  }, [chainIds])
+  }, [chainIds, dtAddress, tags])
 
   return (
     <SectionQueryResult title="Related Assets:" query={queryRelatedAssets} />

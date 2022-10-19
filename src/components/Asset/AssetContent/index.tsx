@@ -79,7 +79,11 @@ export default function AssetContent({
               </Button>
             </div>
           )}
-          <RelatedAssets tags={asset?.metadata?.tags} id={asset?.id} />
+          <RelatedAssets
+            tags={asset?.metadata?.tags}
+            dtAddress={asset?.datatokens[0]?.address}
+            owner={asset?.nft?.owner}
+          />
         </div>
       </article>
     </>
