@@ -23,6 +23,7 @@ export default function PageProfile(): ReactElement {
       if (router.asPath === '/profile') {
         setFinalAccountEns(accountEns)
         setFinalAccountId(accountId)
+        setOwnAccount(true)
         return
       }
 
@@ -71,7 +72,7 @@ export default function PageProfile(): ReactElement {
       <ProfileProvider
         accountId={finalAccountId}
         accountEns={finalAccountEns}
-        ownAccount
+        ownAccount={ownAccount}
       >
         <ProfilePage accountId={finalAccountId} />
       </ProfileProvider>

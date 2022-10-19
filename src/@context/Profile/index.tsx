@@ -29,6 +29,7 @@ interface ProfileProviderValue {
   downloadsTotal: number
   isDownloadsLoading: boolean
   sales: number
+  ownAccount: boolean
 }
 
 const ProfileContext = createContext({} as ProfileProviderValue)
@@ -58,7 +59,6 @@ function ProfileProvider({
   const { appConfig } = useMarketMetadata()
 
   const [isEthAddress, setIsEthAddress] = useState<boolean>()
-
   //
   // Do nothing in all following effects
   // when accountId is no ETH address
@@ -163,6 +163,7 @@ function ProfileProvider({
       for (let i = 0; i < tokenOrders?.length; i++) {
         dtList.push(tokenOrders[i].datatoken.address)
       }
+
       const downloads = await getDownloadAssets(
         dtList,
         tokenOrders,
@@ -240,6 +241,7 @@ function ProfileProvider({
         downloads,
         downloadsTotal,
         isDownloadsLoading,
+        ownAccount,
         sales
       }}
     >

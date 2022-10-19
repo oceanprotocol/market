@@ -8,6 +8,7 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import Filters from '../../Search/Filters'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import { CancelToken } from 'axios'
+import { useProfile } from '@context/Profile'
 
 export default function PublishedList({
   accountId
@@ -16,7 +17,7 @@ export default function PublishedList({
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
   const { chainIds } = useUserPreferences()
-
+  const { ownAccount } = useProfile()
   const [queryResult, setQueryResult] = useState<PagedAssets>()
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
@@ -39,7 +40,7 @@ export default function PublishedList({
           accountId.toLowerCase(),
           chainIds,
           cancelToken,
-          false,
+          ownAccount,
           page,
           service,
           access
@@ -51,7 +52,7 @@ export default function PublishedList({
         setIsLoading(false)
       }
     },
-    []
+    [ownAccount]
   )
 
   useEffect(() => {
