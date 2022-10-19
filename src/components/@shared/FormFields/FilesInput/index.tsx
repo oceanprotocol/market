@@ -3,7 +3,7 @@ import { useField, useFormikContext } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
-import { getFileUrlInfo } from '@utils/provider'
+import { getFileInfo } from '@utils/provider'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { LoggerInstance, UrlFile } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
@@ -28,7 +28,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         url: url,
         method: 'GET'
       }
-      const checkedFile = await getFileUrlInfo(urlFile, providerUrl)
+      const checkedFile = await getFileInfo(urlFile, providerUrl)
 
       // error if something's not right from response
       if (!checkedFile)

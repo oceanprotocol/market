@@ -83,7 +83,7 @@ export async function getFileDidInfo(
   }
 }
 
-export async function getFileUrlInfo(
+export async function getFileInfo(
   file: UrlFile,
   providerUrl: string
 ): Promise<FileInfo[]> {
