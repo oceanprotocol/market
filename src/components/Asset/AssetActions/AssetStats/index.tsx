@@ -1,22 +1,61 @@
 import { useAsset } from '@context/Asset'
-import React from 'react'
+import { useUserPreferences } from '@context/UserPreferences'
+import { useWeb3 } from '@context/Web3'
+import Tooltip from '@shared/atoms/Tooltip'
+import { formatPrice } from '@shared/Price/PriceUnit'
+import { getNftOwnAllocation } from '@utils/veAllocation'
+import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
 
 export default function AssetStats() {
+  const { locale } = useUserPreferences()
   const { asset } = useAsset()
+  const { accountId } = useWeb3()
+
+  const [ownAllocation, setOwnAllocation] = useState(0)
+
+  useEffect(() => {
+    if (!asset || !accountId) return
+
+    async function init() {
+      const allocation = await getNftOwnAllocation(
+        accountId,
+        asset.nftAddress,
+        asset.chainId
+      )
+      setOwnAllocation(allocation / 100)
+    }
+    init()
+  }, [accountId, asset])
 
   return (
     <footer className={styles.stats}>
-      {!asset || !asset?.stats || asset?.stats?.orders < 0 ? (
+      {asset?.stats?.allocated && asset?.stats?.allocated > 0 ? (
+        <span className={styles.stat}>
+          <span className={styles.number}>
+            {formatPrice(asset.stats.allocated, locale)}
+          </span>
+          veOCEAN
+        </span>
+      ) : null}
+      {!asset?.stats || asset?.stats?.orders < 0 ? (
         'N/A'
       ) : asset?.stats?.orders === 0 ? (
         'No sales yet'
       ) : (
-        <>
+        <span className={styles.stat}>
           <span className={styles.number}>{asset.stats.orders}</span> sale
           {asset.stats.orders === 1 ? '' : 's'}
-        </>
+        </span>
       )}
+      {ownAllocation && ownAllocation > 0 ? (
+        <span className={styles.stat}>
+          <span className={styles.number}>{ownAllocation}</span>% allocated
+          <Tooltip
+            content={`You have ${ownAllocation}% of your total veOCEAN allocated to this asset.`}
+          />
+        </span>
+      ) : null}
     </footer>
   )
 }
