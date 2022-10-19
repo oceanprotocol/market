@@ -9,7 +9,7 @@ import styles from './index.module.css'
 export function NetworkIcon({ name }: { name: string }): ReactElement {
   const IconMapped = name.includes('ETH')
     ? EthIcon
-    : name.includes('Polygon')
+    : name.includes('Polygon') || name.includes('Mumbai')
     ? PolygonIcon
     : name.includes('Moon')
     ? MoonbeamIcon

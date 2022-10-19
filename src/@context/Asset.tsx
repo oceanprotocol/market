@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
-import { checkV3Asset, retrieveAsset } from '@utils/aquarius'
+import { retrieveAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
@@ -25,7 +25,6 @@ export interface AssetProviderValue {
   owner: string
   error?: string
   isAssetNetwork: boolean
-  isV3Asset: boolean
   isOwner: boolean
   oceanConfig: Config
   loading: boolean
@@ -53,7 +52,6 @@ function AssetProvider({
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
-  const [isV3Asset, setIsV3Asset] = useState<boolean>()
   const [oceanConfig, setOceanConfig] = useState<Config>()
 
   const newCancelToken = useCancelToken()
@@ -71,7 +69,6 @@ function AssetProvider({
       const asset = await retrieveAsset(did, token)
 
       if (!asset) {
-        setIsV3Asset(await checkV3Asset(did, token))
         setError(
           `\`${did}\`` +
             '\n\nWe could not find an asset for this DID in the cache. If you just published a new asset, wait some seconds and refresh this page.'
@@ -96,7 +93,6 @@ function AssetProvider({
         }
 
         setTitle(`This asset has been flagged as "${state}" by the publisher`)
-        setIsV3Asset(await checkV3Asset(did, token))
         setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
         return
@@ -208,7 +204,6 @@ function AssetProvider({
           loading,
           fetchAsset,
           isAssetNetwork,
-          isV3Asset,
           isOwner,
           oceanConfig
         } as AssetProviderValue

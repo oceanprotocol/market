@@ -37,7 +37,7 @@ export default function AssetComputeSelection({
                   </Dotdotdot>
                 </div>
                 <PriceUnit
-                  price={asset.price}
+                  price={Number(asset.price)}
                   size="small"
                   className={styles.price}
                 />
