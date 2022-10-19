@@ -17,7 +17,7 @@ export default function RelatedAssets({
   const [queryRelatedAssets, setQueryRelatedAssets] = useState<SearchQuery>()
   const modifiedSearchTerm =
     tags.toString().split(',').join(' OR ') + ' OR ' + owner.toLowerCase()
-
+  console.log({ modifiedSearchTerm })
   useEffect(() => {
     const baseParamsSales = {
       chainIds,
