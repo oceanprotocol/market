@@ -58,9 +58,6 @@
     width: auto;
     left: auto;
     background: none;
-  }
-
-  .input:focus + .button {
     z-index: 3;
   }
 }

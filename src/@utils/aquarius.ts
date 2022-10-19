@@ -215,6 +215,28 @@ export async function getAssetsFromDtList(
   }
 }
 
+export async function getAssetsFromNftList(
+  nftList: string[],
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<Asset[]> {
+  try {
+    if (!(nftList.length > 0)) return
+
+    const baseParams = {
+      chainIds,
+      filters: [getFilterTerm('nftAddress', nftList)],
+      ignorePurgatory: true
+    } as BaseQueryParams
+    const query = generateBaseQuery(baseParams)
+
+    const queryResult = await queryMetadata(query, cancelToken)
+    return queryResult?.results
+  } catch (error) {
+    LoggerInstance.error(error.message)
+  }
+}
+
 export async function retrieveDDOListByDIDs(
   didList: string[],
   chainIds: number[],
@@ -268,7 +290,7 @@ export async function getAlgorithmDatasetsForCompute(
   const query = generateBaseQuery(baseQueryParams)
   const computeDatasets = await queryMetadata(query, cancelToken)
 
-  if (computeDatasets.totalResults === 0) return []
+  if (computeDatasets?.totalResults === 0) return []
 
   const datasets = await transformAssetToAssetSelection(
     datasetProviderUri,

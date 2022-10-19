@@ -39,7 +39,9 @@ export default function AssetTeaser({
               type={type}
               accessType={accessType}
             />
-            <span className={styles.typeLabel}>{datatokens[0]?.symbol}</span>
+            <span className={styles.typeLabel}>
+              {datatokens[0]?.symbol.substring(0, 9)}
+            </span>
             <NetworkName
               networkId={asset.chainId}
               className={styles.typeLabel}
