@@ -57,7 +57,7 @@ export default function Compute({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3, isSupportedOceanNetwork } = useWeb3()
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
 
@@ -140,13 +140,13 @@ export default function Compute({
 
       setInitializedProviderResponse(initializedProvider)
 
-      setProviderFeeAmount(
-        await unitsToAmount(
-          web3 || (await getDummyWeb3(asset?.chainId)),
-          initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
-          initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
-        )
+      const feeAmount = await unitsToAmount(
+        !isSupportedOceanNetwork ? await getDummyWeb3(asset?.chainId) : web3,
+        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
+        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
       )
+
+      setProviderFeeAmount(feeAmount)
 
       const computeDuration = (
         parseInt(initializedProvider?.datasets?.[0]?.providerFee?.validUntil) -
