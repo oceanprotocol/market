@@ -45,14 +45,14 @@ export default function Download({
   const [isPriceLoading, setIsPriceLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-  const [isTemporaryDisabled, setIsTemporaryDisabled] = useState(false)
+  const [isOrderDisabled, setIsOrderDisabled] = useState(false)
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
 
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
   useEffect(() => {
-    Number(asset?.nft.state) === 4 && setIsTemporaryDisabled(true)
+    Number(asset?.nft.state) === 4 && setIsOrderDisabled(true)
   }, [asset?.nft.state])
   useEffect(() => {
     if (!asset?.accessDetails || isUnsupportedPricing) return
@@ -187,7 +187,7 @@ export default function Download({
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
     return (
       <div>
-        {isTemporaryDisabled ? (
+        {isOrderDisabled ? (
           <Alert
             className={styles.fieldWarning}
             state="info"
