@@ -15,6 +15,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import content from '../../../../content/footer.json'
 import { getTotalAllocatedAndLocked } from '@utils/veAllocation'
+import PriceUnit from '@shared/Price/PriceUnit'
 
 const initialTotal: StatsTotal = {
   nfts: 0,
@@ -113,7 +114,7 @@ export default function MarketStats(): ReactElement {
 
   return (
     <div className={styles.stats}>
-      <>
+      <div>
         <MarketStatsTotal total={total} />{' '}
         <Tooltip
           className={styles.info}
@@ -121,7 +122,12 @@ export default function MarketStats(): ReactElement {
             <Markdown className={styles.note} text={content.stats.note} />
           }
         />
-      </>
+      </div>
+      <div>
+        <PriceUnit price={total.veLocked} symbol="OCEAN" size="small" /> locked.{' '}
+        <PriceUnit price={total.veAllocated} symbol="veOCEAN" size="small" />{' '}
+        allocated.
+      </div>
     </div>
   )
 }

@@ -8,15 +8,9 @@
   overflow-y: auto;
 }
 
-@media (min-width: 55rem) {
-  .sortList {
-    align-self: flex-end;
-    overflow-y: unset;
-  }
-}
-
 .sortLabel {
   composes: label from '@shared/FormInput/Label.module.css';
+  padding: 0;
   margin-bottom: 0;
   margin-left: calc(var(--spacer) / 2);
   margin-right: calc(var(--spacer) / 1.5);
@@ -26,7 +20,7 @@
 }
 
 .sorted {
-  display: flex;
+  display: inline-block;
   padding: calc(var(--spacer) / 6) calc(var(--spacer) / 2);
   margin-right: calc(var(--spacer) / 4);
   color: var(--color-secondary);
@@ -35,6 +29,7 @@
   font-weight: var(--font-weight-base);
   background: var(--background-content);
   box-shadow: none;
+  white-space: nowrap;
 }
 
 .sorted:hover,
@@ -47,7 +42,6 @@
 }
 
 .direction {
-  display: flex;
   background: transparent;
   border: none;
   color: inherit;
