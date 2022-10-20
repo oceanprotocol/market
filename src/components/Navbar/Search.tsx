@@ -1,22 +1,24 @@
-import React from 'react'
-import { FiSearch } from 'react-icons/fi'
+import React, { ReactElement } from 'react'
+import { ChevronDown, SearchIcon } from '../../assets/images/icons'
 
-const Search: React.FC = () => {
+export default function Search(): ReactElement {
   return (
-    <form className="w-full max-w-xs mr-2">
-      <div className="relative">
+    <form className="flex w-full h-10 " action="#" method="GET">
+      <div className="relative border border-gray-300 rounded-md py-1 w-full text-gray-300 ">
+        <div className="pointer-events-none absolute inset-y-0 left-2 flex items-center">
+          <SearchIcon />
+        </div>
+        <div className="cursor-pointer absolute inset-y-0 right-2 flex items-center">
+          <ChevronDown />
+        </div>
         <input
-          type="search"
+          id="search-field"
+          className="bg-gray-800 block h-full w-full py-2 pl-8 pr-3 placeholder-gray-300 focus:border-transparent focus:placeholder-gray-300 focus:outline-none focus:ring-0 sm:text-sm"
+          placeholder="Search"
+          type="search mm"
           name="search"
-          placeholder="Search..."
-          className="w-full h-10 pl-10 pr-5 text-sm rounded-full appearance-none focus:outline-none bg-gray-100 dark:bg-gray-800 border border-gray-100 dark:border-gray-700"
         />
-        <button type="submit" className="absolute top-0 left-0 mt-3 ml-4">
-          <FiSearch className="w-4 h-4 stroke-current" />
-        </button>
       </div>
     </form>
   )
 }
-
-export default Search

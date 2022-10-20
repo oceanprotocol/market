@@ -2,14 +2,16 @@ import React, { ReactElement } from 'react'
 import Alert from '@shared/atoms/Alert'
 import { useWeb3 } from '@context/Web3'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
-import AnnouncementBanner from '@shared/AnnouncementBanner'
 import PrivacyPreferenceCenter from '../Privacy/PrivacyPreferenceCenter'
-import styles from './index.module.css'
 import { ToastContainer } from 'react-toastify'
 import contentPurgatory from '../../../content/purgatory.json'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Navbar from '../Navbar'
-import Sidebar from '../Sidebar/sidebar'
+import Sidebar from '../Sidebar'
+import Categories from '../Categories'
+import PageHeader from '../PageHeader'
+import Tabs from '../Tabs'
+import { useAppSelector } from '../../store'
 
 export default function App({
   children
@@ -19,6 +21,7 @@ export default function App({
   const { siteContent, appConfig } = useMarketMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
+  const tabs = useAppSelector((state) => state.tabs.discover)
 
   return (
     <div className="min-h-screen">
@@ -36,11 +39,18 @@ export default function App({
         />
       )}
 
-      <div className="h-screen flex overflow-hidden">
+      <div className="h-screen flex flex-row overflow-hidden">
         <Sidebar />
-        <div className="w-full overflow-hidden ">
+        <div className="w-full h-full flex flex-col overflow-hidden ">
           <Navbar />
-          <main className="overflow-y-auto w-full">{children}</main>
+          <div className="w-full bg-gray-900  pl-4 h-full overflow-hidden">
+            <PageHeader />
+            <Tabs tabs={tabs} />
+            <div className="w-full h-full flex flex-row overflow-hidden">
+              <Categories />
+              <main className="overflow-y-auto w-full">{children}</main>
+            </div>
+          </div>
         </div>
       </div>
 

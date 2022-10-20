@@ -3,12 +3,14 @@ import { TypedUseSelectorHook, useSelector, useDispatch } from 'react-redux'
 import colorsReducer from './slices/colors'
 import configReducer from './slices/config'
 import navigationReducer from './slices/navigation'
+import tabsReducer from './slices/tabs'
 
 const store = configureStore({
   reducer: {
     colors: colorsReducer,
     config: configReducer,
-    navigation: navigationReducer
+    navigation: navigationReducer,
+    tabs: tabsReducer
   }
 })
 
