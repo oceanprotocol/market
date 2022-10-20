@@ -10,12 +10,6 @@ function getMinMax(valueField: string, field: ShaclSchemaField) {
   // TODO: remove once all fields in schema has minLength property
   if (!min) {
     switch (valueField) {
-      case 'name':
-        min = 4
-        break
-      case 'description':
-        min = 10
-        break
       case 'author':
         min = 1
         break
