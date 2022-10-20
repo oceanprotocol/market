@@ -128,7 +128,7 @@ export default function FormStartCompute({
         selectedAlgorithmAsset?.accessDetails.price
     )
     const priceDataset = new Decimal(
-      hasPreviousOrder
+      hasPreviousOrder || hasDatatoken
         ? 0
         : datasetOrderPriceAndFees?.price || asset.accessDetails.price
     ).toDecimalPlaces(MAX_DECIMALS)
@@ -144,6 +144,7 @@ export default function FormStartCompute({
     const providerFees = providerFeeAmount
       ? new Decimal(providerFeeAmount).toDecimalPlaces(MAX_DECIMALS)
       : new Decimal(0)
+
     const totalPrice = priceDataset
       .plus(priceAlgo)
       .plus(providerFees)
