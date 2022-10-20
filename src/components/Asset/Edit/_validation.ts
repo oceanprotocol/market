@@ -1,36 +1,11 @@
 import { FileInfo } from '@oceanprotocol/lib'
-import { validateFieldSchaclSchema } from '@utils/schaclSchema'
 import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape({
   name: Yup.string()
-    .required('Required')
-    .test(async (value, { path, createError }): Promise<any> => {
-      if (!value) return
-      const keyField = path.split('.')[0]
-      const valueField = path.split('.')[1]
-
-      return await validateFieldSchaclSchema(
-        keyField,
-        valueField,
-        value,
-        createError
-      )
-    }),
-  description: Yup.string()
-    .required('Required')
-    .test(async (value, { path, createError }): Promise<any> => {
-      if (!value) return
-      const keyField = path.split('.')[0]
-      const valueField = path.split('.')[1]
-
-      return await validateFieldSchaclSchema(
-        keyField,
-        valueField,
-        value,
-        createError
-      )
-    }),
+    .min(4, (param) => `Title must be at least ${param.min} characters`)
+    .required('Required'),
+  description: Yup.string().required('Required').min(10),
   price: Yup.number().required('Required'),
   files: Yup.array<FileInfo[]>()
     .of(
@@ -49,20 +24,8 @@ export const validationSchema = Yup.object().shape({
     )
     .nullable(),
   timeout: Yup.string().required('Required'),
-  author: Yup.string()
-    .required('Required')
-    .test(async (value, { path, createError }): Promise<any> => {
-      if (!value) return
-      const keyField = path.split('.')[0]
-      const valueField = path.split('.')[1]
-
-      return await validateFieldSchaclSchema(
-        keyField,
-        valueField,
-        value,
-        createError
-      )
-    })
+  author: Yup.string().nullable(),
+  tags: Yup.array<string[]>().nullable()
 })
 
 export const computeSettingsValidationSchema = Yup.object().shape({
