@@ -42,7 +42,7 @@ function MarketMetadataProvider({
           ),
           swapApprovedFee: response.data?.opc.swapOceanFee,
           swapNotApprovedFee: response.data?.opc.swapNonOceanFee
-        } as unknown as OpcFee)
+        } as OpcFee)
       }
       LoggerInstance.log('[MarketMetadata] Got new data.', {
         opcFees: opcData,
