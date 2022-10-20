@@ -2,24 +2,9 @@ import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
-import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import { chainIdsSupported } from 'app.config'
-
-const PreviousOrderQuery = gql`
-  query AssetPreviousOrder($id: String!, $account: String!) {
-    orders(
-      first: 1
-      where: { datatoken: $id, payer: $account }
-      orderBy: createdTimestamp
-      orderDirection: desc
-    ) {
-      createdTimestamp
-      tx
-    }
-  }
-`
+import appConfig from 'app.config'
 
 const UserTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -77,8 +62,7 @@ export function getSubgraphUri(chainId: number): string {
 
 export function getQueryContext(chainId: number): OperationContext {
   try {
-    const isNetworkSupported = chainIdsSupported.includes(chainId)
-    if (!isNetworkSupported)
+    if (!appConfig.chainIdsSupported.includes(chainId))
       throw Object.assign(
         new Error('network not supported, query context cancelled')
       )
