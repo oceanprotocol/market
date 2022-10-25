@@ -15,9 +15,13 @@ export default function FileInfo({
     ? cleanupContentType(file.contentType)
     : null
 
+  const hideUrl = file.type === 'hidden' || false
+
   return (
-    <div className={styles.info}>
-      <h3 className={styles.url}>{file.url}</h3>
+    <div className={`${styles.info}`}>
+      <h3 className={`${styles.url} ${hideUrl ? styles.hideUrl : null}`}>
+        {hideUrl ? 'https://oceanprotocol/placeholder' : file.url}
+      </h3>
       <ul>
         <li className={styles.success}>✓ URL confirmed</li>
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}
