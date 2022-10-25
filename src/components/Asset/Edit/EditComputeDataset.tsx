@@ -6,21 +6,15 @@ import {
   LoggerInstance,
   ServiceComputeOptions,
   Service,
-  ProviderInstance,
-  getHash,
-  Nft,
   Asset
 } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
 import styles from './index.module.css'
 import Web3Feedback from '@shared/Web3Feedback'
 import { useCancelToken } from '@hooks/useCancelToken'
-import {
-  getComputeSettingsInitialValues,
-  computeSettingsValidationSchema
-} from './_constants'
+import { getComputeSettingsInitialValues } from './_constants'
+import { computeSettingsValidationSchema } from './_validation'
 import content from '../../../../content/pages/editComputeDataset.json'
-import { AssetExtended } from 'src/@types/AssetExtended'
 import { getServiceByName } from '@utils/ddo'
 import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
 import { transformComputeFormToServiceComputeOptions } from '@utils/compute'
@@ -29,6 +23,7 @@ import DebugEditCompute from './DebugEditCompute'
 import { useAsset } from '@context/Asset'
 import EditFeedback from './EditFeedback'
 import { setNftMetadata } from '@utils/nft'
+import { ComputeEditForm } from './_types'
 
 export default function EditComputeDataset({
   asset
@@ -44,10 +39,7 @@ export default function EditComputeDataset({
   const newCancelToken = useCancelToken()
   const hasFeedback = error || success
 
-  async function handleSubmit(
-    values: ComputePrivacyForm,
-    resetForm: () => void
-  ) {
+  async function handleSubmit(values: ComputeEditForm, resetForm: () => void) {
     try {
       if (asset?.accessDetails?.type === 'free') {
         const tx = await setMinterToPublisher(
@@ -130,18 +122,19 @@ export default function EditComputeDataset({
         // move user's focus to top of screen
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         // kick off editing
-        await handleSubmit(values as any, resetForm)
+        await handleSubmit(values, resetForm)
       }}
+      enableReinitialize
     >
       {({ values, isSubmitting }) =>
         isSubmitting || hasFeedback ? (
           <EditFeedback
-            title="Updating Data Set"
+            loading="Updating dataset with new compute settings..."
             error={error}
             success={success}
             setError={setError}
             successAction={{
-              name: 'View Asset',
+              name: 'Back to Asset',
               onClick: async () => {
                 await fetchAsset()
               },
@@ -150,13 +143,7 @@ export default function EditComputeDataset({
           />
         ) : (
           <>
-            <p className={styles.description}>{content.description}</p>
-            <article>
-              <FormEditComputeDataset
-                title={content.form.title}
-                data={content.form.data}
-              />
-            </article>
+            <FormEditComputeDataset />
             <Web3Feedback
               networkId={asset?.chainId}
               isAssetNetwork={isAssetNetwork}

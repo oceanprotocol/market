@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from '../_types'
 import FormHelp from '@shared/FormInput/Help'
 import Price from './Price'
-import styles from './Dynamic.module.css'
+import styles from './index.module.css'
 
 export default function Free({ content }: { content: any }): ReactElement {
   // connect with Form state, use for conditional field rendering

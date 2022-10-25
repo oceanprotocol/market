@@ -1,7 +1,0 @@
-.form {
-  composes: box from '@shared/atoms/Box.module.css';
-}
-
-.form select[multiple] {
-  height: 130px;
-}

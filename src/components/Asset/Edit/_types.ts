@@ -1,11 +1,17 @@
-// import { EditableMetadataLinks } from '@oceanprotocol/lib'
-
+import { FileInfo } from '@oceanprotocol/lib'
 export interface MetadataEditForm {
   name: string
   description: string
   timeout: string
   price?: string
-  links?: string | any[]
-  files: string | any[]
+  files: FileInfo[]
+  links?: FileInfo[]
   author?: string
+  tags?: string[]
+}
+
+export interface ComputeEditForm {
+  allowAllPublishedAlgorithms: boolean
+  publisherTrustedAlgorithms: string[]
+  publisherTrustedAlgorithmPublishers: string[]
 }

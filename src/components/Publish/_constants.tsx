@@ -1,6 +1,11 @@
 import React from 'react'
-import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
-import { FormPublishData, PublishFeedback, StepContent } from './_types'
+import { allowFixedPricing } from '../../../app.config.js'
+import {
+  FormPublishData,
+  MetadataAlgorithmContainer,
+  PublishFeedback,
+  StepContent
+} from './_types'
 import content from '../../../content/publish/form.json'
 import PricingFields from './Pricing'
 import MetadataFields from './Metadata'
@@ -41,8 +46,8 @@ export const wizardSteps: StepContent[] = [
 const computeOptions: ServiceComputeOptions = {
   allowRawAlgorithm: false,
   allowNetworkAccess: true,
-  publisherTrustedAlgorithmPublishers: null,
-  publisherTrustedAlgorithms: null
+  publisherTrustedAlgorithmPublishers: [],
+  publisherTrustedAlgorithms: []
 }
 
 export const initialValues: FormPublishData = {
@@ -58,7 +63,7 @@ export const initialValues: FormPublishData = {
     name: '',
     author: '',
     description: '',
-    tags: '',
+    tags: [],
     termsAndConditions: false,
     dockerImage: '',
     dockerImageCustom: '',
@@ -67,8 +72,8 @@ export const initialValues: FormPublishData = {
   },
   services: [
     {
-      files: [{ url: '' }],
-      links: [{ url: '' }],
+      files: [{ url: '', type: '' }],
+      links: [{ url: '', type: '' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: 'access',
@@ -81,27 +86,11 @@ export const initialValues: FormPublishData = {
     }
   ],
   pricing: {
+    baseToken: { address: '', name: '', symbol: 'OCEAN', decimals: 18 },
     price: 0,
-    type:
-      allowDynamicPricing === 'true'
-        ? 'dynamic'
-        : allowFixedPricing === 'true'
-        ? 'fixed'
-        : 'free',
-    amountDataToken: allowDynamicPricing === 'true' ? 100 : 1000,
-    amountOcean: 100,
-    weightOnOcean: '5', // 50% on OCEAN
-    weightOnDataToken: '5', // 50% on datatoken
-    swapFee: 0.1, // in %
+    type: allowFixedPricing === 'true' ? 'fixed' : 'free',
     freeAgreement: false
   }
-}
-
-export interface MetadataAlgorithmContainer {
-  entrypoint: string
-  image: string
-  tag: string
-  checksum: string
 }
 
 export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
@@ -109,7 +98,7 @@ export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
     image: 'node',
     tag: 'latest',
     entrypoint: 'node $ALGO',
-    checksum: '' // TODO: how to get? Most likely needs to be fetched from DockerHub.
+    checksum: ''
   },
   {
     image: 'python',

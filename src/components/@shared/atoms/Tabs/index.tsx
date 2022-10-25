@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useState } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import styles from './index.module.css'
 import InputRadio from '@shared/FormInput/InputRadio'
@@ -25,8 +25,8 @@ export default function Tabs({
   showRadio
 }: TabsProps): ReactElement {
   return (
-    <>
-      <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
+    <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
+      <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
           {items.map((item, index) => (
             <Tab
@@ -51,14 +51,12 @@ export default function Tabs({
             </Tab>
           ))}
         </TabList>
-        <div className={styles.tabContent}>
-          {items.map((item, index) => (
-            <>
-              <TabPanel key={index}>{item.content}</TabPanel>
-            </>
-          ))}
-        </div>
-      </ReactTabs>
-    </>
+      </div>
+      <div className={styles.tabContent}>
+        {items.map((item, index) => (
+          <TabPanel key={index}>{item.content}</TabPanel>
+        ))}
+      </div>
+    </ReactTabs>
   )
 }

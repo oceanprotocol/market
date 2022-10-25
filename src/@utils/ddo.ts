@@ -10,6 +10,13 @@ export function getServiceByName(
   return service
 }
 
+export function getServiceById(ddo: Asset | DDO, serviceId: string): Service {
+  if (!ddo) return
+
+  const service = ddo.services.find((s) => s.id === serviceId)
+  return service
+}
+
 export function mapTimeoutStringToSeconds(timeout: string): number {
   switch (timeout) {
     case 'Forever':

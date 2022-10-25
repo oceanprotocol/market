@@ -3,10 +3,9 @@ export interface StatsValue {
 }
 
 export interface StatsTotal {
-  totalValueLockedInOcean: number
-  totalOceanLiquidity: number
-  pools: number
   nfts: number
   datatokens: number
   orders: number
+  veAllocated: number
+  veLocked: number
 }

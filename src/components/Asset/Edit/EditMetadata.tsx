@@ -7,7 +7,8 @@ import {
   Asset,
   Service
 } from '@oceanprotocol/lib'
-import { validationSchema, getInitialValues } from './_constants'
+import { validationSchema } from './_validation'
+import { getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
 import { useWeb3 } from '@context/Web3'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -15,8 +16,7 @@ import Web3Feedback from '@shared/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
-import content from '../../../../content/pages/edit.json'
-import { AssetExtended } from 'src/@types/AssetExtended'
+import content from '../../../../content/pages/editMetadata.json'
 import { useAbortController } from '@hooks/useAbortController'
 import DebugEditMetadata from './DebugEditMetadata'
 import { getOceanConfig } from '@utils/ocean'
@@ -44,14 +44,14 @@ export default function Edit({
     const config = getOceanConfig(asset.chainId)
 
     const fixedRateInstance = new FixedRateExchange(
-      web3,
-      config.fixedRateExchangeAddress
+      config.fixedRateExchangeAddress,
+      web3
     )
 
     const setPriceResp = await fixedRateInstance.setRate(
       accountId,
       asset.accessDetails.addressOrId,
-      newPrice
+      newPrice.toString()
     )
     LoggerInstance.log('[edit] setFixedRate result', setPriceResp)
     if (!setPriceResp) {
@@ -73,7 +73,8 @@ export default function Edit({
         name: values.name,
         description: values.description,
         links: linksTransformed,
-        author: values.author
+        author: values.author,
+        tags: values.tags
       }
 
       asset?.accessDetails?.type === 'fixed' &&
@@ -159,12 +160,12 @@ export default function Edit({
       {({ isSubmitting, values }) =>
         isSubmitting || hasFeedback ? (
           <EditFeedback
-            title="Updating Data Set"
+            loading="Updating asset with new metadata..."
             error={error}
             success={success}
             setError={setError}
             successAction={{
-              name: 'View Asset',
+              name: 'Back to Asset',
               onClick: async () => {
                 await fetchAsset()
               },
@@ -173,27 +174,22 @@ export default function Edit({
           />
         ) : (
           <>
-            <p className={styles.description}>{content.description}</p>
-            <article>
-              <FormEditMetadata
-                data={content.form.data}
-                showPrice={asset?.accessDetails?.type === 'fixed'}
-                isComputeDataset={isComputeType}
-              />
+            <FormEditMetadata
+              data={content.form.data}
+              showPrice={asset?.accessDetails?.type === 'fixed'}
+              isComputeDataset={isComputeType}
+            />
 
-              <aside>
-                <Web3Feedback
-                  networkId={asset?.chainId}
-                  isAssetNetwork={isAssetNetwork}
-                />
-              </aside>
+            <Web3Feedback
+              networkId={asset?.chainId}
+              isAssetNetwork={isAssetNetwork}
+            />
 
-              {debug === true && (
-                <div className={styles.grid}>
-                  <DebugEditMetadata values={values} asset={asset} />
-                </div>
-              )}
-            </article>
+            {debug === true && (
+              <div className={styles.grid}>
+                <DebugEditMetadata values={values} asset={asset} />
+              </div>
+            )}
           </>
         )
       }

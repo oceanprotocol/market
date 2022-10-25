@@ -1,18 +1,18 @@
 import Conversion from '@shared/Price/Conversion'
 import { Field, useField, useFormikContext } from 'formik'
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import Input from '@shared/FormInput'
 import Error from '@shared/FormInput/Error'
-import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './Price.module.css'
 import { FormPublishData } from '../_types'
-import { getFieldContent } from '../_utils'
+import { getFieldContent } from '@utils/form'
+import CoinSelect from './CoinSelect'
 
 export default function Price({
-  firstPrice,
+  approvedBaseTokens,
   content
 }: {
-  firstPrice?: string
+  approvedBaseTokens?: TokenInfo[]
   content?: any
 }): ReactElement {
   const [field, meta] = useField('pricing.price')
@@ -38,7 +38,13 @@ export default function Price({
                 type="number"
                 min="1"
                 placeholder="0"
-                prefix="OCEAN"
+                prefix={
+                  approvedBaseTokens?.length > 1 ? (
+                    <CoinSelect approvedBaseTokens={approvedBaseTokens} />
+                  ) : (
+                    values.pricing?.baseToken?.symbol
+                  )
+                }
                 {...field}
               />
               <Error meta={meta} />
@@ -46,20 +52,14 @@ export default function Price({
             <div className={styles.datatoken}>
               <h4>
                 = <strong>1</strong> {dataTokenOptions.symbol}{' '}
-                <Conversion price={field.value} className={styles.conversion} />
+                <Conversion
+                  price={field.value}
+                  symbol={values.pricing?.baseToken?.symbol}
+                  className={styles.conversion}
+                />
               </h4>
             </div>
           </div>
-          {firstPrice && (
-            <aside className={styles.firstPrice}>
-              Expected first price:{' '}
-              <PriceUnit
-                price={Number(firstPrice) > 0 ? firstPrice : '-'}
-                size="small"
-                conversion
-              />
-            </aside>
-          )}
         </>
       )}
     </div>

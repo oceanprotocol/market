@@ -1,0 +1,24 @@
+.accountList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--spacer) / 2);
+}
+
+@media screen and (min-width: 25rem) {
+  .accountList {
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: var(--spacer);
+  }
+}
+
+.empty {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+  font-style: italic;
+}
+
+.loaderWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

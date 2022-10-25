@@ -3,6 +3,12 @@
   border-bottom-left-radius: var(--border-radius) !important;
 }
 
+.title {
+  font-size: var(--font-size-base);
+  color: var(--font-color-text);
+  margin-bottom: calc(var(--spacer) / 3);
+}
+
 .help {
   margin-top: calc(var(--spacer) / 3);
 }

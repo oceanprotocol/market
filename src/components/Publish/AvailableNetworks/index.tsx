@@ -26,7 +26,6 @@ export default function AvailableNetworks(): ReactElement {
     { title: 'Main', data: networksMain },
     { title: 'Test', data: networksTest }
   ]
-
   const networkList = (networks: number[]) =>
     networks.map((chainId) => (
       <li key={chainId}>

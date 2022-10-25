@@ -4,12 +4,13 @@ import { accountTruncate } from '@utils/web3'
 import Loader from '@shared/atoms/Loader'
 import styles from './Account.module.css'
 import { useWeb3 } from '@context/Web3'
-import Blockies from '@shared/atoms/Blockies'
+import Avatar from '@shared/atoms/Avatar'
 
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { accountId, accountEns, web3Modal, connect } = useWeb3()
+  const { accountId, accountEns, accountEnsAvatar, web3Modal, connect } =
+    useWeb3()
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in
@@ -21,7 +22,7 @@ const Account = React.forwardRef((props, ref: any) => {
   return !accountId && web3Modal?.cachedProvider ? (
     // Improve user experience for cached provider when connecting takes some time
     <button className={styles.button} onClick={(e) => e.preventDefault()}>
-      <Loader message="Reconnecting..." />
+      <Loader />
     </button>
   ) : accountId ? (
     <button
@@ -30,7 +31,7 @@ const Account = React.forwardRef((props, ref: any) => {
       ref={ref}
       onClick={(e) => e.preventDefault()}
     >
-      <Blockies accountId={accountId} />
+      <Avatar accountId={accountId} src={accountEnsAvatar} />
       <span className={styles.address} title={accountId}>
         {accountTruncate(accountEns || accountId)}
       </span>
@@ -44,7 +45,7 @@ const Account = React.forwardRef((props, ref: any) => {
       // the Tippy to show in this state.
       ref={ref}
     >
-      Connect&nbsp;<span>Wallet</span>
+      Connect <span>Wallet</span>
     </button>
   )
 })

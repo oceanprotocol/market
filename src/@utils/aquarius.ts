@@ -2,14 +2,25 @@ import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
-import { metadataCacheUri, v3MetadataCacheUri } from '../../app.config'
+import { metadataCacheUri } from '../../app.config'
 import {
   SortDirectionOptions,
   SortTermOptions
 } from '../@types/aquarius/SearchQuery'
 import { transformAssetToAssetSelection } from './assetConvertor'
 
+export interface UserSales {
+  id: string
+  totalSales: number
+}
+
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
+
+export function escapeEsReservedCharacters(value: string): string {
+  // eslint-disable-next-line no-useless-escape
+  const pattern = /([\!\*\+\-\=\<\>\&\|\(\)\[\]\{\}\^\~\?\:\\/"])/g
+  return value.replace(pattern, '\\$1')
+}
 
 /**
  * @param filterField the name of the actual field from the ddo schema e.g. 'id','service.attributes.main.type'
@@ -33,13 +44,18 @@ export function generateBaseQuery(
 ): SearchQuery {
   const generatedQuery = {
     from: baseQueryParams.esPaginationOptions?.from || 0,
-    size: baseQueryParams.esPaginationOptions?.size || 1000,
+    size:
+      baseQueryParams.esPaginationOptions?.size >= 0
+        ? baseQueryParams.esPaginationOptions?.size
+        : 1000,
     query: {
       bool: {
         ...baseQueryParams.nestedQuery,
         filter: [
           ...(baseQueryParams.filters || []),
-          getFilterTerm('chainId', baseQueryParams.chainIds),
+          baseQueryParams.chainIds
+            ? getFilterTerm('chainId', baseQueryParams.chainIds)
+            : [],
           getFilterTerm('_index', 'aquarius'),
           ...(baseQueryParams.ignorePurgatory
             ? []
@@ -48,6 +64,10 @@ export function generateBaseQuery(
       }
     }
   } as SearchQuery
+
+  if (baseQueryParams.aggs !== undefined) {
+    generatedQuery.aggs = baseQueryParams.aggs
+  }
 
   if (baseQueryParams.sortOptions !== undefined)
     generatedQuery.sort = {
@@ -68,12 +88,15 @@ export function transformQueryResult(
     results: [],
     page: 0,
     totalPages: 0,
-    totalResults: 0
+    totalResults: 0,
+    aggregations: []
   }
 
   result.results = (queryResult.hits.hits || []).map(
     (hit) => hit._source as Asset
   )
+
+  result.aggregations = queryResult.aggregations
   result.totalResults = queryResult.hits.total.value
   result.totalPages =
     result.totalResults / size < 1
@@ -127,28 +150,6 @@ export async function retrieveAsset(
   }
 }
 
-export async function checkV3Asset(
-  did: string,
-  cancelToken: CancelToken
-): Promise<boolean> {
-  try {
-    const response: AxiosResponse<Asset> = await axios.get(
-      `${v3MetadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
-      { cancelToken }
-    )
-    if (!response || response.status !== 200 || !response.data) return false
-
-    return true
-  } catch (error) {
-    if (axios.isCancel(error)) {
-      LoggerInstance.log(error.message)
-    } else {
-      LoggerInstance.error(error.message)
-    }
-    return false
-  }
-}
-
 export async function getAssetsNames(
   didList: string[],
   cancelToken: CancelToken
@@ -174,7 +175,7 @@ export async function getAssetsFromDidList(
   didList: string[],
   chainIds: number[],
   cancelToken: CancelToken
-): Promise<any> {
+): Promise<PagedAssets> {
   try {
     if (!(didList.length > 0)) return
 
@@ -203,6 +204,28 @@ export async function getAssetsFromDtList(
     const baseParams = {
       chainIds,
       filters: [getFilterTerm('services.datatokenAddress', dtList)],
+      ignorePurgatory: true
+    } as BaseQueryParams
+    const query = generateBaseQuery(baseParams)
+
+    const queryResult = await queryMetadata(query, cancelToken)
+    return queryResult?.results
+  } catch (error) {
+    LoggerInstance.error(error.message)
+  }
+}
+
+export async function getAssetsFromNftList(
+  nftList: string[],
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<Asset[]> {
+  try {
+    if (!(nftList.length > 0)) return
+
+    const baseParams = {
+      chainIds,
+      filters: [getFilterTerm('nftAddress', nftList)],
       ignorePurgatory: true
     } as BaseQueryParams
     const query = generateBaseQuery(baseParams)
@@ -249,12 +272,15 @@ export async function getAlgorithmDatasetsForCompute(
 ): Promise<AssetSelectionAsset[]> {
   const baseQueryParams = {
     chainIds: [datasetChainId],
-    filters: [
-      getFilterTerm(
-        'service.compite.publisherTrustedAlgorithms.did',
-        algorithmId
-      )
-    ],
+    nestedQuery: {
+      must: {
+        match: {
+          'services.compute.publisherTrustedAlgorithms.did': {
+            query: escapeEsReservedCharacters(algorithmId)
+          }
+        }
+      }
+    },
     sortOptions: {
       sortBy: SortTermOptions.Created,
       sortDirection: SortDirectionOptions.Descending
@@ -264,7 +290,7 @@ export async function getAlgorithmDatasetsForCompute(
   const query = generateBaseQuery(baseQueryParams)
   const computeDatasets = await queryMetadata(query, cancelToken)
 
-  if (computeDatasets.totalResults === 0) return []
+  if (computeDatasets?.totalResults === 0) return []
 
   const datasets = await transformAssetToAssetSelection(
     datasetProviderUri,
@@ -298,6 +324,14 @@ export async function getPublishedAssets(
       sortBy: SortTermOptions.Created,
       sortDirection: SortDirectionOptions.Descending
     },
+    aggs: {
+      totalOrders: {
+        sum: {
+          field: SortTermOptions.Orders
+        }
+      }
+    },
+    ignorePurgatory: true,
     esPaginationOptions: {
       from: (Number(page) - 1 || 0) * 9,
       size: 9
@@ -305,6 +339,7 @@ export async function getPublishedAssets(
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseQueryParams)
+
   try {
     const result = await queryMetadata(query, cancelToken)
     return result
@@ -314,6 +349,95 @@ export async function getPublishedAssets(
     } else {
       LoggerInstance.error(error.message)
     }
+  }
+}
+
+export async function getTopPublishers(
+  chainIds: number[],
+  cancelToken: CancelToken,
+  page?: number,
+  type?: string,
+  accesType?: string
+): Promise<PagedAssets> {
+  const filters: FilterTerm[] = []
+
+  accesType !== undefined &&
+    filters.push(getFilterTerm('services.type', accesType))
+  type !== undefined && filters.push(getFilterTerm('metadata.type', type))
+
+  const baseQueryParams = {
+    chainIds,
+    filters,
+    sortOptions: {
+      sortBy: SortTermOptions.Created,
+      sortDirection: SortDirectionOptions.Descending
+    },
+    aggs: {
+      topPublishers: {
+        terms: {
+          field: 'nft.owner.keyword',
+          order: { totalSales: 'desc' }
+        },
+        aggs: {
+          totalSales: {
+            sum: {
+              field: SortTermOptions.Orders
+            }
+          }
+        }
+      }
+    },
+    esPaginationOptions: {
+      from: (Number(page) - 1 || 0) * 9,
+      size: 9
+    }
+  } as BaseQueryParams
+
+  const query = generateBaseQuery(baseQueryParams)
+
+  try {
+    const result = await queryMetadata(query, cancelToken)
+    return result
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
+
+export async function getTopAssetsPublishers(
+  chainIds: number[],
+  nrItems = 9
+): Promise<UserSales[]> {
+  const publishers: UserSales[] = []
+
+  const result = await getTopPublishers(chainIds, null)
+  const { topPublishers } = result.aggregations
+
+  for (let i = 0; i < topPublishers.buckets.length; i++) {
+    publishers.push({
+      id: topPublishers.buckets[i].key,
+      totalSales: parseInt(topPublishers.buckets[i].totalSales.value)
+    })
+  }
+
+  publishers.sort((a, b) => b.totalSales - a.totalSales)
+
+  return publishers.slice(0, nrItems)
+}
+
+export async function getUserSales(
+  accountId: string,
+  chainIds: number[]
+): Promise<number> {
+  try {
+    const result = await getPublishedAssets(accountId, chainIds, null)
+    const { totalOrders } = result.aggregations
+    return totalOrders.value
+  } catch (error) {
+    LoggerInstance.error('Error getUserSales', error.message)
   }
 }
 
@@ -351,6 +475,50 @@ export async function getDownloadAssets(
       .sort((a, b) => b.timestamp - a.timestamp)
 
     return downloadedAssets
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
+
+export async function getTagsList(
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<string[]> {
+  const baseQueryParams = {
+    chainIds,
+    esPaginationOptions: { from: 0, size: 0 }
+  } as BaseQueryParams
+  const query = {
+    ...generateBaseQuery(baseQueryParams),
+    aggs: {
+      tags: {
+        terms: {
+          field: 'metadata.tags.keyword',
+          size: 1000
+        }
+      }
+    }
+  }
+
+  try {
+    const response: AxiosResponse<SearchResponse> = await axios.post(
+      `${metadataCacheUri}/api/aquarius/assets/query`,
+      { ...query },
+      { cancelToken }
+    )
+    if (response?.status !== 200 || !response?.data) return
+    const { buckets }: { buckets: AggregatedTag[] } =
+      response.data.aggregations.tags
+
+    const tagsList = buckets
+      .filter((tag) => tag.key !== '')
+      .map((tag) => tag.key)
+
+    return tagsList.sort()
   } catch (error) {
     if (axios.isCancel(error)) {
       LoggerInstance.log(error.message)

@@ -5,7 +5,7 @@
   text-transform: uppercase;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 3);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 3);
   white-space: nowrap;
   background: var(--background-content);
   margin: 0;
@@ -38,6 +38,7 @@
 @media screen and (min-width: 42rem) {
   .button.initial span {
     display: inline;
+    margin-left: 0.2rem;
   }
 }
 
@@ -59,34 +60,12 @@
   }
 }
 
-.button svg {
-  width: 1em;
-  height: 1em;
-  fill: var(--border-color);
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: calc(var(--spacer) / 3);
-  transition: transform 0.2s ease-out;
-}
-
-[aria-expanded='true'] .button svg {
-  transform: rotate(180deg);
-}
-
 .status {
   margin-left: calc(var(--spacer) / 4);
   position: relative;
   top: 1px;
 }
 
-.caret,
-svg.caret {
-  display: none;
-}
-
-@media screen and (min-width: 42rem) {
-  .caret,
-  svg.caret {
-    display: inline-block;
-  }
+.caret {
+  composes: caret from '../Menu.module.css';
 }

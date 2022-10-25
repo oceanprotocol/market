@@ -6,6 +6,39 @@ import { useProfile } from '@context/Profile'
 
 const cx = classNames.bind(styles)
 
+function getLinkData(link: ProfileLink): { href: string; label: string } {
+  let href, label
+
+  switch (link.key) {
+    case 'url':
+      href = link.value
+      label = 'Website'
+      break
+    case 'com.twitter':
+      href = `https://twitter.com/${link.value}`
+      label = 'Twitter'
+      break
+    case 'com.github':
+      href = `https://github.com/${link.value}`
+      label = 'GitHub'
+      break
+    case 'org.telegram':
+      href = `https://telegram.org/${link.value}`
+      label = 'Telegram'
+      break
+    case 'com.discord':
+      href = `https://discordapp.com/users/${link.value}`
+      label = 'Discord'
+      break
+    case 'com.reddit':
+      href = `https://reddit.com/u/${link.value}`
+      label = 'Reddit'
+      break
+  }
+
+  return { href, label }
+}
+
 export default function PublisherLinks({
   className
 }: {
@@ -21,22 +54,17 @@ export default function PublisherLinks({
   return (
     <div className={styleClasses}>
       {' — '}
-      {profile?.links?.map((link) => {
-        const href =
-          link.name === 'Twitter'
-            ? `https://twitter.com/${link.value}`
-            : link.name === 'GitHub'
-            ? `https://github.com/${link.value}`
-            : link.value.includes('http') // safeguard against urls without protocol defined
-            ? link.value
-            : `//${link.value}`
-
-        return (
-          <a href={href} key={link.name} target="_blank" rel="noreferrer">
-            {link.name} <External className={styles.linksExternal} />
-          </a>
-        )
-      })}
+      {profile?.links?.map((link) => (
+        <a
+          href={getLinkData(link).href}
+          key={link.key}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {getLinkData(link).label}{' '}
+          <External className={styles.linksExternal} />
+        </a>
+      ))}
     </div>
   )
 }

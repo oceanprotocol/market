@@ -1,103 +1,103 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import React, { useEffect, useState, ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
-import { getAccountLiquidityInOwnAssets } from '@utils/subgraph'
 import Conversion from '@shared/Price/Conversion'
 import NumberUnit from './NumberUnit'
 import styles from './Stats.module.css'
 import { useProfile } from '@context/Profile'
-import { PoolShares_poolShares as PoolShare } from '../../../@types/subgraph/PoolShares'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
-import { calcSingleOutGivenPoolIn } from '@utils/pool'
-import Decimal from 'decimal.js'
-import { MAX_DECIMALS } from '@utils/constants'
-
-function getPoolSharesLiquidity(poolShares: PoolShare[]): string {
-  let liquidity = new Decimal(0)
-
-  for (const poolShare of poolShares) {
-    const poolUserLiquidity = calcSingleOutGivenPoolIn(
-      poolShare.pool.baseTokenLiquidity,
-      poolShare.pool.totalShares,
-      poolShare.shares
-    )
-    liquidity = liquidity.add(new Decimal(poolUserLiquidity))
-  }
-
-  return liquidity.toDecimalPlaces(MAX_DECIMALS).toString()
-}
+import { getLocked } from '@utils/veAllocation'
+import PriceUnit from '@shared/Price/PriceUnit'
+import Button from '@shared/atoms/Button'
+import { useWeb3 } from '@context/Web3'
 
 export default function Stats({
   accountId
 }: {
   accountId: string
 }): ReactElement {
+  const web3 = useWeb3()
   const { chainIds } = useUserPreferences()
-  const { poolShares, assets, assetsTotal, sales } = useProfile()
+  const { assets, assetsTotal, sales } = useProfile()
 
-  const [publisherTvl, setPublisherTvl] = useState('0')
-  const [totalTvl, setTotalTvl] = useState('0')
+  const [totalSales, setTotalSales] = useState(0)
+  const [lockedOcean, setLockedOcean] = useState(0)
 
   useEffect(() => {
-    if (!accountId || chainIds.length === 0) {
-      setPublisherTvl('0')
-      setTotalTvl('0')
+    async function getLockedOcean() {
+      if (!accountId) return
+      const locked = await getLocked(accountId, chainIds)
+      setLockedOcean(locked)
     }
+    getLockedOcean()
   }, [accountId, chainIds])
 
   useEffect(() => {
     if (!assets || !accountId || !chainIds) return
 
-    async function getPublisherLiquidity() {
+    async function getPublisherTotalSales() {
       try {
-        const accountPoolAdresses: string[] = []
         const assetsPrices = await getAccessDetailsForAssets(assets)
+        let count = 0
         for (const priceInfo of assetsPrices) {
-          if (priceInfo.accessDetails.type === 'dynamic') {
-            accountPoolAdresses.push(
-              priceInfo.accessDetails.addressOrId.toLowerCase()
-            )
+          if (priceInfo?.accessDetails?.price && priceInfo.stats.orders > 0) {
+            count +=
+              parseInt(priceInfo.accessDetails.price) * priceInfo.stats.orders
           }
         }
-        const userTvl = await getAccountLiquidityInOwnAssets(
-          accountId,
-          chainIds,
-          accountPoolAdresses
-        )
-        setPublisherTvl(userTvl)
+        setTotalSales(count)
       } catch (error) {
         LoggerInstance.error(error.message)
       }
     }
-    getPublisherLiquidity()
+    getPublisherTotalSales()
   }, [assets, accountId, chainIds])
-
-  useEffect(() => {
-    if (!poolShares) return
-
-    async function getTotalLiquidity() {
-      try {
-        const totalTvl = await getPoolSharesLiquidity(poolShares)
-        setTotalTvl(totalTvl)
-      } catch (error) {
-        LoggerInstance.error('Error fetching pool shares: ', error.message)
-      }
-    }
-    getTotalLiquidity()
-  }, [poolShares])
 
   return (
     <div className={styles.stats}>
       <NumberUnit
-        label="Liquidity in Own Assets"
-        value={<Conversion price={publisherTvl} hideApproximateSymbol />}
+        label="Total Sales"
+        value={
+          totalSales > 0 ? (
+            <Conversion
+              price={totalSales}
+              symbol={'ocean'}
+              hideApproximateSymbol
+            />
+          ) : (
+            '0'
+          )
+        }
       />
       <NumberUnit
-        label="Liquidity"
-        value={<Conversion price={totalTvl} hideApproximateSymbol />}
+        label={`Sale${sales === 1 ? '' : 's'}`}
+        value={sales < 0 ? 0 : sales}
       />
-      <NumberUnit label={`Sale${sales === 1 ? '' : 's'}`} value={sales} />
       <NumberUnit label="Published" value={assetsTotal} />
+      <NumberUnit
+        label={
+          lockedOcean === 0 && accountId === web3.accountId ? (
+            <Button
+              className={styles.link}
+              style="text"
+              href="https://df.oceandao.org"
+            >
+              Lock OCEAN
+            </Button>
+          ) : (
+            <>
+              <PriceUnit price={lockedOcean} symbol="OCEAN" /> locked
+            </>
+          )
+        }
+        value={
+          <Conversion
+            price={lockedOcean > 0 ? lockedOcean : 0}
+            symbol="OCEAN"
+            hideApproximateSymbol
+          />
+        }
+      />
     </div>
   )
 }

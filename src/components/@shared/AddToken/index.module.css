@@ -38,6 +38,10 @@
   transition: 0.2s ease-out;
 }
 
+.logo svg {
+  height: 100%;
+}
+
 .button:hover .logo,
 .button:focus .logo {
   border-color: var(--color-primary);

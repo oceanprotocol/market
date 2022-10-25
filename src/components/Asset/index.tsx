@@ -5,31 +5,27 @@ import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
 import { useAsset } from '@context/Asset'
 import AssetContent from './AssetContent'
-import { v3MarketUri } from 'app.config'
 
 export default function AssetDetails({ uri }: { uri: string }): ReactElement {
   const router = useRouter()
-  const { asset, title, error, isInPurgatory, loading, isV3Asset } = useAsset()
+  const { asset, title, error, isInPurgatory, loading } = useAsset()
   const [pageTitle, setPageTitle] = useState<string>()
 
   useEffect(() => {
-    if (isV3Asset) {
-      router.push(`${v3MarketUri}${uri}`)
-    }
     if (!asset || error) {
-      setPageTitle('Could not retrieve asset')
+      setPageTitle(title || 'Could not retrieve asset')
       return
     }
     setPageTitle(isInPurgatory ? '' : title)
-  }, [asset, error, isInPurgatory, isV3Asset, router, title, uri])
+  }, [asset, error, isInPurgatory, router, title, uri])
 
   return asset && pageTitle !== undefined && !loading ? (
     <Page title={pageTitle} uri={uri}>
       <AssetContent asset={asset} />
     </Page>
-  ) : error && isV3Asset === false ? (
+  ) : error ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
-      <Alert title={pageTitle} text={error} state="error" />
+      <Alert title={pageTitle} text={error} state={'error'} />
     </Page>
   ) : (
     <Page title={undefined} uri={uri}>

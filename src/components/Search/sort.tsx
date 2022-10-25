@@ -13,7 +13,10 @@ const cx = classNames.bind(styles)
 
 const sortItems = [
   { display: 'Relevance', value: SortTermOptions.Relevance },
-  { display: 'Published', value: SortTermOptions.Created }
+  { display: 'Published', value: SortTermOptions.Created },
+  { display: 'Sales', value: SortTermOptions.Orders },
+  { display: 'Total allocation', value: SortTermOptions.Allocated },
+  { display: 'Price', value: SortTermOptions.Price }
 ]
 
 export default function Sort({
