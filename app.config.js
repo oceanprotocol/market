@@ -5,9 +5,7 @@ module.exports = {
   // In components can be accessed with the useMarketMetadata hook:
   // const { appConfig } = useMarketMetadata()
   // return appConfig.metadataCacheUri
-  metadataCacheUri:
-    process.env.NEXT_PUBLIC_METADATACACHE_URI ||
-    'https://v4.aquarius.oceanprotocol.com',
+  metadataCacheUri: 'https://v4-2.aquarius.oceanprotocol.com',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
