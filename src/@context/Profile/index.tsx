@@ -29,6 +29,7 @@ interface ProfileProviderValue {
   downloadsTotal: number
   isDownloadsLoading: boolean
   sales: number
+  ownAccount: boolean
 }
 
 const ProfileContext = createContext({} as ProfileProviderValue)
@@ -46,17 +47,18 @@ const clearedProfile: Profile = {
 function ProfileProvider({
   accountId,
   accountEns,
+  ownAccount,
   children
 }: {
   accountId: string
   accountEns: string
+  ownAccount: boolean
   children: ReactNode
 }): ReactElement {
   const { chainIds } = useUserPreferences()
   const { appConfig } = useMarketMetadata()
 
   const [isEthAddress, setIsEthAddress] = useState<boolean>()
-
   //
   // Do nothing in all following effects
   // when accountId is no ETH address
@@ -111,7 +113,8 @@ function ProfileProvider({
         const result = await getPublishedAssets(
           accountId,
           chainIds,
-          cancelTokenSource.token
+          cancelTokenSource.token,
+          ownAccount
         )
         setAssets(result.results)
         setAssetsTotal(result.totalResults)
@@ -134,7 +137,13 @@ function ProfileProvider({
     return () => {
       cancelTokenSource.cancel()
     }
-  }, [accountId, appConfig.metadataCacheUri, chainIds, isEthAddress])
+  }, [
+    accountId,
+    appConfig.metadataCacheUri,
+    chainIds,
+    isEthAddress,
+    ownAccount
+  ])
 
   //
   // DOWNLOADS
@@ -154,11 +163,13 @@ function ProfileProvider({
       for (let i = 0; i < tokenOrders?.length; i++) {
         dtList.push(tokenOrders[i].datatoken.address)
       }
+
       const downloads = await getDownloadAssets(
         dtList,
         tokenOrders,
         chainIds,
-        cancelToken
+        cancelToken,
+        ownAccount
       )
       setDownloads(downloads)
       setDownloadsTotal(downloads.length)
@@ -167,7 +178,7 @@ function ProfileProvider({
         downloads
       )
     },
-    [accountId, chainIds]
+    [accountId, chainIds, ownAccount]
   )
 
   useEffect(() => {
@@ -230,6 +241,7 @@ function ProfileProvider({
         downloads,
         downloadsTotal,
         isDownloadsLoading,
+        ownAccount,
         sales
       }}
     >
