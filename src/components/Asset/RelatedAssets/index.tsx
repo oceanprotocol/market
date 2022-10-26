@@ -25,22 +25,36 @@ export default function RelatedAssets({
         size: 3
       },
       nestedQuery: {
-        must_not: [
-          {
-            query_string: {
-              query: `${dtAddress.toLowerCase()}`,
-              fields: ['datatokens.address']
-            }
+        must_not: {
+          term: {
+            'nftAddress.keyword': '0x08d2eF7c255834dBB7513e8b3E744D05748a7079'
           }
-        ],
-        must: [
-          {
-            query_string: {
-              query: modifiedSearchTerm,
-              fields: ['metadata.tags', 'nft.owner']
-            }
+        }
+      },
+      filters: [
+        {
+          terms: {
+            chainId: [1, 137, 56, 246, 1285]
           }
-        ]
+        },
+        {
+          terms: {
+            'metadata.tags.keyword': ['data-farming', 'ocean-market']
+          }
+        },
+        {
+          term: {
+            _index: 'aquarius'
+          }
+        },
+        {
+          term: {
+            'purgatory.state': false
+          }
+        }
+      ],
+      sort: {
+        'stats.orders': 'desc'
       },
       sortOptions: {
         sortBy: SortTermOptions.Orders
