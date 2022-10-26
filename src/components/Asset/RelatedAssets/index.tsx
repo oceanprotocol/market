@@ -6,18 +6,16 @@ import SectionQueryResult from '../../Home/SectionQueryResult'
 
 export default function RelatedAssets({
   tags,
-  dtAddress,
+  nftAddress,
   owner
 }: {
   tags: string[]
-  dtAddress: string
+  nftAddress: string
   owner: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
   const [queryRelatedAssets, setQueryRelatedAssets] = useState<SearchQuery>()
-  const modifiedSearchTerm =
-    tags.toString().split(',').join(' OR ') + ' OR ' + owner.toLowerCase()
-
+  console.log('nftAddress', nftAddress)
   useEffect(() => {
     const baseParamsSales = {
       chainIds,
@@ -27,7 +25,7 @@ export default function RelatedAssets({
       nestedQuery: {
         must_not: {
           term: {
-            'nftAddress.keyword': '0x08d2eF7c255834dBB7513e8b3E744D05748a7079'
+            'nftAddress.keyword': nftAddress
           }
         }
       },
@@ -39,7 +37,7 @@ export default function RelatedAssets({
         },
         {
           terms: {
-            'metadata.tags.keyword': ['data-farming', 'ocean-market']
+            'metadata.tags.keyword': tags
           }
         },
         {
@@ -61,7 +59,7 @@ export default function RelatedAssets({
       } as SortOptions
     } as BaseQueryParams
     setQueryRelatedAssets(generateBaseQuery(baseParamsSales))
-  }, [chainIds, dtAddress, modifiedSearchTerm])
+  }, [chainIds, nftAddress])
 
   return (
     <SectionQueryResult title="Related Assets" query={queryRelatedAssets} />

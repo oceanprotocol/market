@@ -81,7 +81,7 @@ export default function AssetContent({
           )}
           <RelatedAssets
             tags={asset?.metadata?.tags}
-            dtAddress={asset?.datatokens?.[0]?.address}
+            nftAddress={asset?.nftAddress}
             owner={asset?.nft?.owner}
           />
         </div>
