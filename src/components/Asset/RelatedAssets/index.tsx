@@ -1,8 +1,11 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { generateBaseQuery } from '@utils/aquarius'
+import { Asset } from '@oceanprotocol/lib'
+import { generateBaseQuery, queryMetadata } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
 import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
-import SectionQueryResult from '../../Home/SectionQueryResult'
+import styles from './index.module.css'
+import { useCancelToken } from '@hooks/useCancelToken'
+import Link from 'next/link'
 
 export default function RelatedAssets({
   tags,
@@ -14,42 +17,30 @@ export default function RelatedAssets({
   owner: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const [queryRelatedAssets, setQueryRelatedAssets] = useState<SearchQuery>()
-  console.log('nftAddress', nftAddress)
-  useEffect(() => {
-    const baseParamsSales = {
+  const newCancelToken = useCancelToken()
+  const [relatedAssets, setRelatedAssets] = useState<Asset[]>()
+
+  function generateQuery(
+    size: number,
+    tagFilter: boolean,
+    ownerFilter: boolean
+  ) {
+    return {
       chainIds,
       esPaginationOptions: {
-        size: 3
+        size
       },
       nestedQuery: {
         must_not: {
-          term: {
-            'nftAddress.keyword': nftAddress
-          }
+          term: { 'nftAddress.keyword': nftAddress }
         }
       },
       filters: [
-        {
-          terms: {
-            chainId: [1, 137, 56, 246, 1285]
-          }
-        },
-        {
-          terms: {
-            'metadata.tags.keyword': tags
-          }
-        },
-        {
-          term: {
-            _index: 'aquarius'
-          }
-        },
-        {
-          term: {
-            'purgatory.state': false
-          }
-        }
+        { terms: { chainId: chainIds } },
+        tagFilter && { terms: { 'metadata.tags.keyword': tags } },
+        ownerFilter && { term: { 'nft.owner.keyword': owner } },
+        { term: { _index: 'aquarius' } },
+        { term: { 'purgatory.state': false } }
       ],
       sort: {
         'stats.orders': 'desc'
@@ -58,10 +49,41 @@ export default function RelatedAssets({
         sortBy: SortTermOptions.Orders
       } as SortOptions
     } as BaseQueryParams
-    setQueryRelatedAssets(generateBaseQuery(baseParamsSales))
-  }, [chainIds, nftAddress])
+  }
+
+  useEffect(() => {
+    async function getAssets() {
+      const tagQuery = generateBaseQuery(generateQuery(3, true, false))
+      const tagResults = (await queryMetadata(tagQuery, newCancelToken()))
+        .results
+      console.log(tagResults, tagResults.length)
+      if (tagResults.length === 3) {
+        setRelatedAssets(tagResults)
+      } else {
+        const ownerQuery = generateBaseQuery(
+          generateQuery(3 - tagResults.length, false, true)
+        )
+        const ownerResults = (await queryMetadata(ownerQuery, newCancelToken()))
+          .results
+        const bothResults = tagResults.concat(ownerResults)
+        setRelatedAssets(bothResults)
+        console.log(tagResults, tagResults.length)
+      }
+    }
+    getAssets()
+  }, [chainIds, tags, nftAddress])
 
   return (
-    <SectionQueryResult title="Related Assets" query={queryRelatedAssets} />
+    <section className={styles.section}>
+      <h3>Related Assets</h3>
+      <ul>
+        {relatedAssets &&
+          relatedAssets.map((asset) => (
+            <li key={asset?.id}>
+              <Link href={`/asset/${asset?.id}`}>{asset.metadata.name}</Link>
+            </li>
+          ))}
+      </ul>
+    </section>
   )
 }
