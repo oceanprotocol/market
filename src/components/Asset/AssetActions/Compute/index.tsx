@@ -45,6 +45,7 @@ import { getComputeFeedback } from '@utils/feedback'
 import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
+import { useAsset } from '@context/Asset'
 
 const refreshInterval = 10000 // 10 sec.
 export default function Compute({
@@ -62,6 +63,8 @@ export default function Compute({
 }): ReactElement {
   const { accountId, web3, isSupportedOceanNetwork } = useWeb3()
   const { chainIds } = useUserPreferences()
+  const { isAssetNetwork } = useAsset()
+
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
 
@@ -146,8 +149,12 @@ export default function Compute({
 
       setInitializedProviderResponse(initializedProvider)
 
+      console.log('here')
+
       const feeAmount = await unitsToAmount(
-        !isSupportedOceanNetwork ? await getDummyWeb3(asset?.chainId) : web3,
+        !isSupportedOceanNetwork || !isAssetNetwork
+          ? await getDummyWeb3(asset?.chainId)
+          : web3,
         initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
         initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
       )

@@ -119,27 +119,28 @@ export default function FormStartCompute({
   useEffect(() => {
     if (!asset?.accessDetails || !selectedAlgorithmAsset?.accessDetails) return
 
-    setDatasetOrderPrice(
-      datasetOrderPriceAndFees?.price || asset.accessDetails.price
-    )
-
-    setAlgoOrderPrice(
-      algoOrderPriceAndFees?.price ||
-        selectedAlgorithmAsset?.accessDetails.price
-    )
     const priceDataset = new Decimal(
-      hasPreviousOrder || hasDatatoken
-        ? 0
+      isAssetNetwork
+        ? hasPreviousOrder || hasDatatoken
+          ? 0
+          : datasetOrderPriceAndFees?.price || asset.accessDetails.price
         : datasetOrderPriceAndFees?.price || asset.accessDetails.price
     ).toDecimalPlaces(MAX_DECIMALS)
 
-    const priceAlgo =
-      hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
-        ? new Decimal(0)
-        : new Decimal(
-            algoOrderPriceAndFees?.price ||
-              selectedAlgorithmAsset.accessDetails.price
-          ).toDecimalPlaces(MAX_DECIMALS)
+    setDatasetOrderPrice(priceDataset.toString())
+
+    const priceAlgo = new Decimal(
+      isAssetNetwork
+        ? hasPreviousOrderSelectedComputeAsset ||
+          hasDatatokenSelectedComputeAsset
+          ? 0
+          : algoOrderPriceAndFees?.price ||
+            selectedAlgorithmAsset.accessDetails.price
+        : algoOrderPriceAndFees?.price ||
+          selectedAlgorithmAsset.accessDetails.price
+    ).toDecimalPlaces(MAX_DECIMALS)
+
+    setAlgoOrderPrice(priceAlgo.toString())
 
     const providerFees = providerFeeAmount
       ? new Decimal(providerFeeAmount).toDecimalPlaces(MAX_DECIMALS)
@@ -160,7 +161,8 @@ export default function FormStartCompute({
     hasDatatokenSelectedComputeAsset,
     datasetOrderPriceAndFees,
     algoOrderPriceAndFees,
-    providerFeeAmount
+    providerFeeAmount,
+    isAssetNetwork
   ])
 
   useEffect(() => {
@@ -174,6 +176,8 @@ export default function FormStartCompute({
       compareAsBN(baseTokenBalance, `${totalPrice}`) || Number(dtBalance) >= 1
     )
   }, [totalPrice, balance, dtBalance, asset?.accessDetails?.baseToken?.symbol])
+
+  console.log(totalPrice, datasetOrderPrice, algoOrderPrice)
 
   return (
     <Form className={styles.form}>

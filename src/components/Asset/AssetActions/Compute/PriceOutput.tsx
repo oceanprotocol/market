@@ -5,6 +5,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
+import { useWeb3 } from '@context/Web3'
 
 interface PriceOutputProps {
   totalPrice: string
@@ -39,13 +40,21 @@ function Row({
   sign?: string
   type?: string
 }) {
+  const { isSupportedOceanNetwork } = useWeb3()
+
   return (
     <div className={styles.priceRow}>
       <div className={styles.sign}>{sign}</div>
       <div className={styles.type}>{type}</div>
       <div>
         <PriceUnit
-          price={hasPreviousOrder || hasDatatoken ? 0 : Number(price)}
+          price={
+            !isSupportedOceanNetwork
+              ? hasPreviousOrder || hasDatatoken
+                ? 0
+                : Number(price)
+              : Number(price)
+          }
           symbol={symbol}
           size="small"
           className={styles.price}
