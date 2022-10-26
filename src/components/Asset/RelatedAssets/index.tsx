@@ -64,6 +64,6 @@ export default function RelatedAssets({
   }, [chainIds, dtAddress, modifiedSearchTerm])
 
   return (
-    <SectionQueryResult title="Related Assets:" query={queryRelatedAssets} />
+    <SectionQueryResult title="Related Assets" query={queryRelatedAssets} />
   )
 }
