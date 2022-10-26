@@ -45,11 +45,15 @@ export default function Download({
   const [isPriceLoading, setIsPriceLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
+  const [isOrderDisabled, setIsOrderDisabled] = useState(false)
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
 
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
+  useEffect(() => {
+    Number(asset?.nft.state) === 4 && setIsOrderDisabled(true)
+  }, [asset?.nft.state])
   useEffect(() => {
     if (!asset?.accessDetails || isUnsupportedPricing) return
 
@@ -183,26 +187,36 @@ export default function Download({
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
     return (
       <div>
-        {isUnsupportedPricing ? (
+        {isOrderDisabled ? (
           <Alert
             className={styles.fieldWarning}
             state="info"
-            text={`No pricing schema available for this asset.`}
+            text={`The publisher temporarily disabled ordering for this asset`}
           />
         ) : (
           <>
-            {isPriceLoading ? (
-              <Loader message="Calculating full price (including fees)" />
-            ) : (
-              <Price
-                accessDetails={asset.accessDetails}
-                orderPriceAndFees={orderPriceAndFees}
-                conversion
-                size="large"
+            {isUnsupportedPricing ? (
+              <Alert
+                className={styles.fieldWarning}
+                state="info"
+                text={`No pricing schema available for this asset.`}
               />
-            )}
+            ) : (
+              <>
+                {isPriceLoading ? (
+                  <Loader message="Calculating full price (including fees)" />
+                ) : (
+                  <Price
+                    accessDetails={asset.accessDetails}
+                    orderPriceAndFees={orderPriceAndFees}
+                    conversion
+                    size="large"
+                  />
+                )}
 
-            {!isInPurgatory && <PurchaseButton />}
+                {!isInPurgatory && <PurchaseButton />}
+              </>
+            )}
           </>
         )}
       </div>
