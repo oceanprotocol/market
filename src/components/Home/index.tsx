@@ -95,7 +95,7 @@ export default function HomePage(): ReactElement {
         title="Most Viewed"
         query={queryMostViewed}
         queryData={mostViewedDids}
-        tooltip="Assets from all supported chains. It is not influenced by selected networks"
+        tooltip="Assets with the most traffic on all supported chains. It is not influenced by selected networks"
       />
 
       <TopSales title="Publishers With Most Sales" />
