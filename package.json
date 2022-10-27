@@ -17,7 +17,7 @@
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
     "type-check": "tsc --noEmit",
     "deploy:s3": "bash scripts/deploy-s3.sh",
-    "postinstall": "husky install && rm -r node_modules/apollo-language-server/node_modules/graphql",
+    "postinstall": "husky install",
     "codegen:apollo": "apollo client:codegen --endpoint=https://v4.subgraph.goerli.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/",
     "storybook": "cross-env NODE_ENV=test start-storybook -p 6006 --quiet",
     "storybook:build": "cross-env NODE_ENV=test build-storybook"
@@ -70,8 +70,8 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^6.5.12",
-    "@storybook/builder-webpack5": "^6.5.12",
+    "@storybook/addon-essentials": "^6.5.13",
+    "@storybook/builder-webpack5": "^6.5.13",
     "@storybook/manager-webpack5": "^6.5.13",
     "@storybook/react": "^6.5.13",
     "@svgr/webpack": "^6.5.1",
@@ -85,8 +85,8 @@
     "@types/react-modal": "^3.13.1",
     "@types/react-paginate": "^7.1.1",
     "@types/remove-markdown": "^0.3.1",
-    "@typescript-eslint/eslint-plugin": "^5.40.0",
-    "@typescript-eslint/parser": "^5.40.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
     "apollo": "^2.34.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.25.0",

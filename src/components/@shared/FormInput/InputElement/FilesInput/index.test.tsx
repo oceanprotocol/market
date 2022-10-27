@@ -85,4 +85,41 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
     render(<FilesInput {...props} />)
     expect(screen.getByText('https://hello.com')).toBeInTheDocument()
   })
+
+  it('renders fileinfo without contentType', () => {
+    ;(useField as jest.Mock).mockReturnValue([
+      {
+        value: [
+          {
+            valid: true,
+            url: 'https://hello.com',
+            contentLength: 100
+          }
+        ]
+      },
+      mockMeta,
+      mockHelpers
+    ])
+    render(<FilesInput {...props} />)
+  })
+
+  it('renders fileinfo placeholder when hideUrl is passed', () => {
+    ;(useField as jest.Mock).mockReturnValue([
+      {
+        value: [
+          {
+            valid: true,
+            url: 'https://hello.com',
+            type: 'hidden'
+          }
+        ]
+      },
+      mockMeta,
+      mockHelpers
+    ])
+    render(<FilesInput {...props} />)
+    expect(
+      screen.getByText('https://oceanprotocol/placeholder')
+    ).toBeInTheDocument()
+  })
 })
