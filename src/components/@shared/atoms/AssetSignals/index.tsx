@@ -44,7 +44,6 @@ export default function AssetSignals({
   const urls = assetSignalsUrls.map((item) => {
     return item + getURLParams(['assetId', dataTokenAddresses.join(',')])
   })
-  console.log(signalItems)
   const itemsClose = (index?: any) => {
     if (isLoading) return
     const itemsList = signalItems.map((item, index) => {
@@ -140,10 +139,6 @@ export default function AssetSignals({
       }
     })
     return sigs.flat()
-  }
-  const itemsOpen = (index: any) => {
-    console.log(signalDetails())
-    return signalDetails()
   }
   return (
     <>

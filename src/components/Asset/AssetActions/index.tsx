@@ -65,7 +65,6 @@ export default function AssetActions({
     assetSignalsUrls,
     'detailView'
   )
-  console.log(urls)
   const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
 
   const filteredSignals = getAssetSignalItems(
@@ -181,7 +180,6 @@ export default function AssetActions({
 
   const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
 
-  console.log(dataTokenAddresses)
   return (
     <>
       <Tabs items={tabs} className={styles.actions} />
