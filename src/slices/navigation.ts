@@ -9,18 +9,7 @@ import {
   UserCircle,
   Wallet,
   GearSix,
-  GraduationCap,
-  SwitchVertical,
-  Briefcase,
-  Users,
-  CurrencyDollar,
-  Library,
-  Heart,
-  LocationMarker,
-  Speakerphone,
-  LockClosed,
-  PaperAirplane,
-  Sun
+  GraduationCap
 } from '../assets/images/icons'
 
 export type NavigationItem = {
@@ -32,44 +21,37 @@ export type NavigationItem = {
     color: string
     text: string | number
   }
-  current: boolean
 }
 
 export type NavigationState = {
   main: NavigationItem[]
   user: NavigationItem[]
-  category: NavigationItem[]
 }
 
 const initialState: NavigationState = {
   main: [
-    { title: 'item_6', url: '#', icon: UserCircle, current: false },
-    { title: 'item_7', url: '#', icon: Wallet, current: false },
-    { title: 'item_1', url: '#', icon: AlignBottom, current: true },
-    { title: 'item_3', url: '#', icon: GridFour, current: false },
-    { title: 'item_4', url: '#', icon: SuitcaseSimple, current: false },
-    { title: 'item_2', url: '#', icon: FileText, current: false },
-    { title: 'item_9', url: '#', icon: GraduationCap, current: false },
-    { title: 'item_5', url: '#', icon: Support, current: false },
-    { title: 'item_8', url: '#', icon: GearSix, current: false }
+    { title: 'item_6', url: '/', icon: UserCircle },
+    { title: 'item_7', url: '/empty-page', icon: Wallet },
+    { title: 'item_1', url: '/discover', icon: AlignBottom },
+    { title: 'item_3', url: '/empty-page', icon: GridFour },
+    {
+      title: 'item_4',
+      url: '/empty-page',
+      icon: SuitcaseSimple
+    },
+    { title: 'item_2', url: '/empty-page', icon: FileText },
+    {
+      title: 'item_9',
+      url: '/empty-page',
+      icon: GraduationCap
+    },
+    { title: 'item_5', url: '/empty-page', icon: Support },
+    { title: 'item_8', url: '/empty-page', icon: GearSix }
   ],
   user: [
-    { title: 'Your Profile', url: '#', current: false },
-    { title: 'Settings', url: '#', current: false },
-    { title: 'Sign out', url: '#', current: true }
-  ],
-  category: [
-    { title: 'All', url: '#', icon: SwitchVertical, current: false },
-    { title: 'Business', url: '#', icon: Briefcase, current: false },
-    { title: 'Demographics', url: '#', icon: Users, current: true },
-    { title: 'Financial', url: '#', icon: CurrencyDollar, current: false },
-    { title: 'Government', url: '#', icon: Library, current: false },
-    { title: 'Health', url: '#', icon: Heart, current: false },
-    { title: 'Local', url: '#', icon: LocationMarker, current: false },
-    { title: 'Marketing', url: '#', icon: Speakerphone, current: false },
-    { title: 'Security', url: '#', icon: LockClosed, current: false },
-    { title: 'Travel', url: '#', icon: PaperAirplane, current: false },
-    { title: 'Weather', url: '#', icon: Sun, current: false }
+    { title: 'Your Profile', url: '#' },
+    { title: 'Settings', url: '#' },
+    { title: 'Sign out', url: '#' }
   ]
 }
 

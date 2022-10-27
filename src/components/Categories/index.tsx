@@ -1,23 +1,26 @@
 import React, { ReactElement } from 'react'
 
 import { useAppSelector } from '../../store'
-import CategoryItem from './item'
+import Category from './item'
+import { CategoryItem } from '../../slices/categories'
 
-export default function Categories(): ReactElement {
-  const categoryNavigation = useAppSelector(
-    (state) => state.navigation.category
-  )
+type CategoriesProps = {
+  categories: CategoryItem[]
+}
 
+export default function Categories({
+  categories
+}: CategoriesProps): ReactElement {
   return (
     <div className="flex">
-      <div className="flex p-2.5 flex-col w-full overflow-y-auto pt-5 pb-4">
+      <div className="flex flex-col w-full overflow-y-auto pt-5 pb-4">
         <div className="flex w-full">
-          <span className="pl-2 pb-3 text-gray-400">CATEGORIES</span>
+          <span className="pb-3 text-gray-400">CATEGORIES</span>
         </div>
 
         <nav className="">
-          {categoryNavigation.map((item) => (
-            <CategoryItem key={item.title} item={item} />
+          {categories.map((item) => (
+            <Category key={item.title} item={item} />
           ))}
         </nav>
       </div>

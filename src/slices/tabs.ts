@@ -1,37 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import {
-  AlignBottom,
-  FileText,
-  GridFour,
-  SuitcaseSimple,
-  Support,
-  UserCircle,
-  Wallet,
-  GearSix,
-  GraduationCap
-} from '../assets/images/icons'
-
 export type TabsItem = {
   title: string
   url?: string | undefined
   items?: TabsItem[]
   icon?: any
+  current?: boolean
   badge?: {
     color: string
     text: string | number
   }
-  current: boolean
 }
 
 export type TabsState = {
+  [key: string]: TabsItem[]
   discover: TabsItem[]
 }
 
 const initialState: TabsState = {
   discover: [
-    { title: 'Listings', url: '#', current: true },
-    { title: 'Request', url: '#', current: false }
+    { title: 'Listings', url: 'listings', current: true },
+    { title: 'Request', url: 'request' }
   ]
 }
 

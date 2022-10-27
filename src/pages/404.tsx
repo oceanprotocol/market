@@ -35,12 +35,7 @@ export default function Page404(): ReactElement {
           }
         `}</style>
       </Head>
-      <Page
-        title={title}
-        description={description}
-        uri={router.route}
-        headerCenter
-      >
+      <Page title={title} description={description} uri={router.route}>
         {actions.map((action: { title: string; url: string }) => (
           <Button style="primary" key={action.title} to={action.url}>
             {action.title}

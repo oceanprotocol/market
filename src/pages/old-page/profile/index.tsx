@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Page from '@shared/Page'
-import ProfilePage from '../../components/Profile'
+import ProfilePage from '../../../components/Profile'
 import { accountTruncate } from '@utils/web3'
 import { useWeb3 } from '@context/Web3'
 import ProfileProvider from '@context/Profile'

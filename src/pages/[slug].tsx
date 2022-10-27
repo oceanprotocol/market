@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react'
 import { getPageBySlug, getAllPages, PageData } from '@utils/markdownPages'
 import Page from '@shared/Page'
-import styles from '@shared/Page/PageMarkdown.module.css'
 import Container from '@shared/atoms/Container'
 import { useRouter } from 'next/router'
 import { markdownToHtml } from '@utils/markdown'
@@ -14,17 +13,9 @@ export default function PageMarkdown(page: PageData): ReactElement {
   const { content } = page
 
   return (
-    <Page
-      title={title}
-      description={description}
-      uri={router.asPath}
-      headerCenter
-    >
+    <Page title={title} description={description} uri={router.asPath}>
       <Container narrow>
-        <div
-          className={styles.content}
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
+        <div dangerouslySetInnerHTML={{ __html: content }} />
       </Container>
     </Page>
   )

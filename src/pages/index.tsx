@@ -9,12 +9,7 @@ export default function PageHome(): ReactElement {
   const router = useRouter()
 
   return (
-    <Page
-      title={siteContent?.siteTitle}
-      description={siteContent?.siteTagline}
-      uri={router.route}
-      headerCenter
-    >
+    <Page title={siteContent?.siteTitle} uri={router.route}>
       <Home />
     </Page>
   )

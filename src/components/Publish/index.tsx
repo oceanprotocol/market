@@ -282,10 +282,6 @@ export default function PublishPage({
     >
       {({ values }) => (
         <>
-          <PageHeader
-            title={<Title networkId={values.user.chainId} />}
-            description={content.description}
-          />
           <Form className={styles.form} ref={scrollToRef}>
             <Navigation />
             <Steps feedback={feedback} />

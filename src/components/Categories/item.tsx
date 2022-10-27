@@ -1,18 +1,16 @@
 import React, { ReactElement } from 'react'
 import Link from 'next/link'
-import { NavigationItem } from '../../slices/navigation'
+import { CategoryItem } from '../../slices/categories'
 
 function classNames(...classes: string[]): string {
   return classes.filter(Boolean).join(' ')
 }
 
 declare type CategoryItemProps = {
-  item: NavigationItem
+  item: CategoryItem
 }
 
-export default function CategoryItem({
-  item
-}: CategoryItemProps): ReactElement {
+export default function Category({ item }: CategoryItemProps): ReactElement {
   return (
     <Link key={item.title} href={item.url}>
       <a
@@ -20,7 +18,7 @@ export default function CategoryItem({
           item.current
             ? 'bg-gray-800 text-white'
             : 'text-white hover:bg-gray-600 hover:bg-opacity-75',
-          'flex w-64 flex-row px-2 py-3 font-medium rounded-md'
+          'flex w-64 flex-row py-3 font-medium rounded-md'
         )}
       >
         <div>

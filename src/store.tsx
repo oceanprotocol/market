@@ -4,13 +4,15 @@ import colorsReducer from './slices/colors'
 import configReducer from './slices/config'
 import navigationReducer from './slices/navigation'
 import tabsReducer from './slices/tabs'
+import categoriesReducer from './slices/categories'
 
 const store = configureStore({
   reducer: {
     colors: colorsReducer,
     config: configReducer,
     navigation: navigationReducer,
-    tabs: tabsReducer
+    tabs: tabsReducer,
+    categories: categoriesReducer
   }
 })
 

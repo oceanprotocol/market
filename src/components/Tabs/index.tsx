@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import Link from 'next/link'
 import { TabsItem } from '../../slices/tabs'
 import TabItem from './item'
 

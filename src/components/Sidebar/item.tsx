@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { NavigationItem } from '../../slices/navigation'
 
 function classNames(...classes: string[]): string {
@@ -11,11 +12,14 @@ declare type SidebarItemProps = {
 }
 
 export default function SidebarItem({ item }: SidebarItemProps): ReactElement {
+  const router = useRouter()
+  const isHighlight = router.asPath === item.url
+
   return (
     <Link key={item.title} href={item.url}>
       <a
         className={classNames(
-          item.current
+          isHighlight
             ? 'bg-blue-800 text-white'
             : 'text-white hover:bg-blue-600 hover:bg-opacity-75',
           'group w-10 h-10 flex items-center font-medium rounded-md'
