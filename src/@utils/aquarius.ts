@@ -55,13 +55,13 @@ export function generateBaseQuery(
           ...(baseQueryParams.filters || []),
           baseQueryParams.chainIds
             ? getFilterTerm('chainId', baseQueryParams.chainIds)
-            : [],
+            : '',
           getFilterTerm('_index', 'aquarius'),
           ...(baseQueryParams.ignorePurgatory
-            ? []
+            ? ''
             : [getFilterTerm('purgatory.state', false)]),
           ...(baseQueryParams.ignoreState
-            ? []
+            ? ''
             : [
                 {
                   bool: {
