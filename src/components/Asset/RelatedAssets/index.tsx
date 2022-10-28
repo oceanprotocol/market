@@ -5,7 +5,7 @@ import { useUserPreferences } from '@context/UserPreferences'
 import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
 import styles from './index.module.css'
 import { useCancelToken } from '@hooks/useCancelToken'
-import Link from 'next/link'
+import AssetList from '@shared/AssetList'
 
 export default function RelatedAssets({
   tags,
@@ -19,6 +19,7 @@ export default function RelatedAssets({
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
   const [relatedAssets, setRelatedAssets] = useState<Asset[]>()
+  const [isLoading, setIsLoading] = useState<boolean>()
 
   function generateQuery(
     size: number,
@@ -52,13 +53,14 @@ export default function RelatedAssets({
   }
 
   useEffect(() => {
+    setIsLoading(true)
     async function getAssets() {
       const tagQuery = generateBaseQuery(generateQuery(3, true, false))
       const tagResults = (await queryMetadata(tagQuery, newCancelToken()))
         .results
-      console.log(tagResults, tagResults.length)
       if (tagResults.length === 3) {
         setRelatedAssets(tagResults)
+        setIsLoading(false)
       } else {
         const ownerQuery = generateBaseQuery(
           generateQuery(3 - tagResults.length, false, true)
@@ -67,7 +69,7 @@ export default function RelatedAssets({
           .results
         const bothResults = tagResults.concat(ownerResults)
         setRelatedAssets(bothResults)
-        console.log(tagResults, tagResults.length)
+        setIsLoading(false)
       }
     }
     getAssets()
@@ -76,14 +78,14 @@ export default function RelatedAssets({
   return (
     <section className={styles.section}>
       <h3>Related Assets</h3>
-      <ul>
-        {relatedAssets &&
-          relatedAssets.map((asset) => (
-            <li key={asset?.id}>
-              <Link href={`/asset/${asset?.id}`}>{asset.metadata.name}</Link>
-            </li>
-          ))}
-      </ul>
+      {relatedAssets && (
+        <AssetList
+          assets={relatedAssets}
+          showPagination={false}
+          isLoading={isLoading}
+          minimal={true}
+        />
+      )}
     </section>
   )
 }
