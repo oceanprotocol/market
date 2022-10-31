@@ -27,14 +27,6 @@ const validationMetadata = {
     .required('Required')
     .isTrue('Please agree to the Terms and Conditions.')
 }
-function checkGoogle(value: string): boolean {
-  console.log('value', value)
-  if (value?.includes('google')) {
-    return true
-  } else {
-    return false
-  }
-}
 
 const validationService = {
   files: Yup.array<FileInfo[]>()
