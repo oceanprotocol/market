@@ -27,12 +27,30 @@ const validationMetadata = {
     .required('Required')
     .isTrue('Please agree to the Terms and Conditions.')
 }
+function checkGoogle(value: string): boolean {
+  console.log('value', value)
+  if (value?.includes('google')) {
+    return true
+  } else {
+    return false
+  }
+}
 
 const validationService = {
   files: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string().url('Must be a valid URL.').required('Required'),
+        url: Yup.string()
+          .test(
+            'GoogleNotSupported',
+            'Google drive is not a supported hosting service. Please use an alternative.',
+            (value) => {
+              return !value?.toString().includes('drive.google')
+            }
+          )
+          .url('Must be a valid URL.')
+          .required('Required'),
+
         valid: Yup.boolean().isTrue().required('File must be valid.')
       })
     )
@@ -41,7 +59,15 @@ const validationService = {
   links: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string().url('Must be a valid URL.'),
+        url: Yup.string()
+          .url('Must be a valid URL.')
+          .test(
+            'GoogleNotSupported',
+            'Google drive is not a supported hosting service. Please use an alternative.',
+            (value) => {
+              return !value?.toString().includes('drive.google')
+            }
+          ),
         // TODO: require valid file only when URL is given
         valid: Yup.boolean()
         // valid: Yup.boolean().isTrue('File must be valid.')
