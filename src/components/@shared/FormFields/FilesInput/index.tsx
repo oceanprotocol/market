@@ -14,16 +14,22 @@ export default function FilesInput(props: InputProps): ReactElement {
   const { values, setFieldError } = useFormikContext<FormPublishData>()
   const { asset } = useAsset()
 
+  const providerUrl = values?.services
+    ? values?.services[0].providerUrl.url
+    : asset.services[0].serviceEndpoint
+
+  const storageType = values?.services ? values?.services[0].storageType : null // TODO: understand which property to used here
+
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e?.preventDefault()
 
     try {
-      const providerUrl = values?.services
-        ? values?.services[0].providerUrl.url
-        : asset.services[0].serviceEndpoint
+      console.log('storage type: ', storageType)
+
       setIsLoading(true)
-      const checkedFile = await getFileUrlInfo(url, providerUrl)
+      const checkedFile = await getFileUrlInfo(url, providerUrl, storageType)
+      console.log('check file: ', checkedFile)
 
       // error if something's not right from response
       if (!checkedFile)
@@ -47,6 +53,8 @@ export default function FilesInput(props: InputProps): ReactElement {
     helpers.setValue(meta.initialValue)
   }
 
+  console.log(storageType)
+
   return (
     <>
       {field?.value?.[0]?.valid === true ||
@@ -58,7 +66,9 @@ export default function FilesInput(props: InputProps): ReactElement {
           {...props}
           name={`${field.name}[0].url`}
           isLoading={isLoading}
+          checkUrl={true}
           handleButtonClick={handleValidation}
+          storageType={storageType}
         />
       )}
     </>

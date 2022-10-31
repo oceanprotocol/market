@@ -58,6 +58,8 @@ export default function ServicesFields(): ReactElement {
     )
   }, [values.services[0].algorithmPrivacy, setFieldValue])
 
+  console.log(values.services)
+
   return (
     <>
       <Field
@@ -94,10 +96,31 @@ export default function ServicesFields(): ReactElement {
         name="services[0].providerUrl"
       />
       <Field
-        {...getFieldContent('files', content.services.fields)}
+        {...getFieldContent('storageType', content.services.fields)}
         component={Input}
-        name="services[0].files"
+        name="services[0].storageType"
       />
+      {values.services[0].storageType === 'url' && (
+        <Field
+          {...getFieldContent('files', content.services.fields)}
+          component={Input}
+          name="services[0].files"
+        />
+      )}
+      {values.services[0].storageType === 'ipfs' && (
+        <Field
+          {...getFieldContent('ipfs', content.services.fields)}
+          component={Input}
+          name="services[0].files"
+        />
+      )}
+      {values.services[0].storageType === 'arweave' && (
+        <Field
+          {...getFieldContent('arweave', content.services.fields)}
+          component={Input}
+          name="services[0].files"
+        />
+      )}
       <Field
         {...getFieldContent('links', content.services.fields)}
         component={Input}

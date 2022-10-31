@@ -13,6 +13,7 @@ export default function URLInput({
   isLoading,
   name,
   checkUrl,
+  storageType,
   ...props
 }: {
   submitText: string
@@ -20,6 +21,7 @@ export default function URLInput({
   isLoading: boolean
   name: string
   checkUrl?: boolean
+  storageType: string
 }): ReactElement {
   const [field, meta] = useField(name)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
@@ -27,10 +29,25 @@ export default function URLInput({
   useEffect(() => {
     if (!field?.value) return
 
+    const isCid = (value: string) => {
+      // check if url
+      if (isUrl(value)) return true
+
+      // regex cid. https://stackoverflow.com/questions/67176725/a-regex-json-schema-pattern-for-an-ipfs-cid
+      const cidRegex =
+        'Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}'
+
+      console.log(storageType, cidRegex.match(value))
+      return cidRegex.match(value)
+    }
+
+    console.log(field.value)
+
     setIsButtonDisabled(
       !field?.value ||
         field.value === '' ||
-        (checkUrl && !isUrl(field.value)) ||
+        (checkUrl && storageType === 'url' && !isUrl(field.value)) ||
+        (checkUrl && storageType === 'ipfs' && isCid(field.value)) ||
         field.value.includes('javascript:') ||
         meta?.error
     )

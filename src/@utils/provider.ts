@@ -1,9 +1,11 @@
 import {
+  Arweave,
   ComputeAlgorithm,
   ComputeAsset,
   ComputeEnvironment,
   downloadFileBrowser,
   FileInfo,
+  Ipfs,
   LoggerInstance,
   ProviderComputeInitializeResults,
   ProviderInstance,
@@ -85,16 +87,44 @@ export async function getFileDidInfo(
 
 export async function getFileUrlInfo(
   url: string,
-  providerUrl: string
-): Promise<FileInfo[]> {
+  providerUrl: string,
+  storageType: string
+): Promise<any[]> {
   try {
-    const fileUrl: UrlFile = {
-      type: 'url',
-      index: 0,
-      url,
-      method: 'get'
+    let response
+    switch (storageType) {
+      case 'ipfs':
+        // eslint-disable-next-line no-case-declarations
+        const fileIPFS: any = {
+          type: 'ipfs',
+          hash: url
+        }
+
+        response = await ProviderInstance.getFileInfo(fileIPFS, providerUrl)
+        console.log(response, fileIPFS)
+
+        break
+      case 'arweave':
+        // eslint-disable-next-line no-case-declarations
+        const fileArweave: Arweave = {
+          type: 'arweave',
+          transactionId: url
+        }
+
+        response = await ProviderInstance.getFileInfo(fileArweave, providerUrl)
+        break
+      default:
+        // eslint-disable-next-line no-case-declarations
+        const fileUrl: UrlFile = {
+          type: 'url',
+          index: 0,
+          url,
+          method: 'get'
+        }
+
+        response = await ProviderInstance.getFileInfo(fileUrl, providerUrl)
+        break
     }
-    const response = await ProviderInstance.getFileInfo(fileUrl, providerUrl)
     return response
   } catch (error) {
     LoggerInstance.error(error.message)

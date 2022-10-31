@@ -75,6 +75,9 @@ export default function ContainerInput(props: InputProps): ReactElement {
           name={`${field.name}[0].url`}
           checkUrl={false}
           isLoading={isLoading}
+          storageType={
+            'url' /* TODO: allow different storageType. https://github.com/oceanprotocol/market/issues/1711 */
+          }
           handleButtonClick={handleValidation}
         />
       )}
