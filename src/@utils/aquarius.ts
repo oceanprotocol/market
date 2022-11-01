@@ -483,6 +483,8 @@ export async function getDownloadAssets(
   }
 }
 
+// Later should use the did to get only the metas which has this did present. Right now we just parse
+// it in the code
 export async function getPublishedMeta(
   chainIds: number[],
   cancelToken: CancelToken,

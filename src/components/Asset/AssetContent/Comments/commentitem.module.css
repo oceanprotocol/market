@@ -1,0 +1,39 @@
+.avatar {
+  aspect-ratio: 1/1;
+  width: calc(var(--font-size-large) * 2) !important;
+  height: calc(var(--font-size-large) * 2) !important;
+  border-radius: 50%;
+  margin-left: 0;
+  margin-right: calc(var(--spacer) / 3);
+}
+
+.teaser {
+  composes: box from '@shared/atoms/Box.module.css';
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2);
+  color: var(--color-secondary);
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.place {
+  font-size: var(--font-size-large);
+  margin-right: calc(var(--spacer) / 2);
+}
+
+.name {
+  margin-bottom: 0;
+  font-size: var(--font-size-base);
+  padding-top: calc(var(--spacer) / 5);
+  color: var(--font-color-text);
+}
+
+.sales {
+  margin: 0;
+}
+
+.sales span {
+  font-weight: var(--font-weight-bold);
+  color: var(--font-color-text);
+}

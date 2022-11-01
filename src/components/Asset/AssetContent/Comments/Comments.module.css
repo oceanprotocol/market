@@ -1,0 +1,17 @@
+.metaItem {
+  font-size: var(--font-size-small);
+}
+
+.title {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  font-size: var(--font-size-small);
+  margin-bottom: calc(var(--spacer) / 4);
+  color: var(--color-secondary);
+  text-transform: uppercase;
+}
+
+.content {
+  word-wrap: break-word;
+  white-space: normal;
+}
