@@ -192,7 +192,7 @@ export async function getAssetsFromDidList(
   cancelToken: CancelToken
 ): Promise<PagedAssets> {
   try {
-    if (!(didList.length > 0)) return
+    if (!didList.length) return
 
     const baseParams = {
       chainIds,
@@ -214,7 +214,7 @@ export async function getAssetsFromDtList(
   cancelToken: CancelToken
 ): Promise<Asset[]> {
   try {
-    if (!(dtList.length > 0)) return
+    if (!dtList.length) return
 
     const baseParams = {
       chainIds,
