@@ -52,6 +52,13 @@ export default function ServicesFields(): ReactElement {
     }
   ]
 
+  useEffect(() => {
+    if (values.metadata.type === 'datastream') {
+      setFieldValue('services[0].timeout', 'see timed pricing')
+      // setFieldValue('pricing.amountDataToken', 1000)
+    }
+  }, [setFieldValue, values])
+
   // Auto-change access type based on algo privacy boolean.
   // Could be also done later in transformPublishFormToDdo().
   useEffect(() => {
@@ -65,7 +72,7 @@ export default function ServicesFields(): ReactElement {
       'services[0].access',
       values.services[0].algorithmPrivacy === true ? 'compute' : 'access'
     )
-  }, [values.services[0].algorithmPrivacy, setFieldValue])
+  }, [values, setFieldValue])
 
   return (
     <>

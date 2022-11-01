@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Download'
@@ -92,6 +93,7 @@ export default function AssetActions({
           asset.services[0].datatokenAddress,
           accountId
         )
+
         setDtBalance(dtBalance)
       } catch (e) {
         LoggerInstance.error(e.message)

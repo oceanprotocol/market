@@ -3,6 +3,37 @@ import styles from './Conversion.module.css'
 import { formatCurrency, isCrypto } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '@context/UserPreferences'
 import { usePrices, getCoingeckoTokenId } from '@context/Prices'
+import { useFormikContext } from 'formik'
+import { FormPublishData } from 'src/components/Publish/_types'
+
+export const UnformattedConvertedPrice = () => {
+  const { prices } = usePrices()
+  const { currency, locale } = useUserPreferences()
+  const [priceConverted, setPriceConverted] = useState(0.0)
+  const [priceConvertedJson, setPriceConvertedJson] = useState(null)
+  const { values, setFieldValue } = useFormikContext<FormPublishData>()
+
+  const symbol = values.pricing?.baseToken?.symbol
+  const priceTokenId = getCoingeckoTokenId(symbol)
+
+  useEffect(() => {
+    if (!prices || !symbol || !priceTokenId || !prices[priceTokenId]) {
+      return
+    }
+
+    const conversionValue = prices[priceTokenId][currency.toLowerCase()]
+    const convertedJson = {
+      price: prices[priceTokenId][currency.toLowerCase()],
+      priceTokenId,
+      currency: currency.toLowerCase(),
+      locale
+    }
+    setPriceConverted(conversionValue)
+    setPriceConvertedJson(convertedJson)
+  }, [prices, currency, priceTokenId, symbol])
+
+  return priceConvertedJson
+}
 
 export default function Conversion({
   price,
@@ -55,8 +86,18 @@ export default function Conversion({
       /([^.,0-9]+)/g,
       (match) => `<span>${match}</span>`
     )
+    console.log({
+      converted,
+      conversionValue,
+      convertedFormatted,
+      convertedFormattedHTMLstring
+    })
     setPriceConverted(convertedFormattedHTMLstring)
   }, [price, prices, currency, locale, isFiat, priceTokenId])
+
+  // useEffect(() => {
+  //   console.log({ price, prices, priceConverted })
+  // }, [price, prices, currency, locale, isFiat, priceTokenId])
 
   return Number(price) > 0 ? (
     <span

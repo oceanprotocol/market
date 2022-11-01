@@ -10,6 +10,8 @@ export default function Preview(): ReactElement {
   const [asset, setAsset] = useState<AssetExtended>()
   const { values } = useFormikContext<FormPublishData>()
 
+  const vals = [values.pricing.subsPrice]
+
   useEffect(() => {
     async function makeDdo() {
       const asset = (await transformPublishFormToDdo(values)) as AssetExtended
@@ -18,6 +20,7 @@ export default function Preview(): ReactElement {
         type: values.pricing.type,
         addressOrId: ZERO_ADDRESS,
         price: `${values.pricing.price}`,
+        subsPrice: vals.map((val, i) => val) as unknown as string,
         baseToken: {
           address: ZERO_ADDRESS,
           name: values.pricing?.baseToken?.symbol || 'OCEAN',

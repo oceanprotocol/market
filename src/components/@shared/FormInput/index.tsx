@@ -51,6 +51,7 @@ export interface InputProps {
   pattern?: string
   min?: string
   max?: string
+  hidden?: boolean
   disabled?: boolean
   readOnly?: boolean
   field?: FieldInputProps<any>

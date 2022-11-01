@@ -1,5 +1,6 @@
+/* eslint-disable prettier/prettier */
 import React from 'react'
-import { allowFixedPricing } from '../../../app.config.js'
+import { allowFixedPricing, allowTimedPricing } from '../../../app.config.js'
 import {
   FormPublishData,
   MetadataAlgorithmContainer,
@@ -87,10 +88,22 @@ export const initialValues: FormPublishData = {
       computeOptions
     }
   ],
+  // timedPrice: [
+  //   { id: '5', unit: '', time: '', price: '', conversion: ' ' },
+  // ],
+
   pricing: {
     baseToken: { address: '', name: '', symbol: 'OCEAN', decimals: 18 },
+    timedPrice: { unit: '', time: '', price: '', conversion: '' },
+    // timedPrice: { id: '5', unit: '', time: '', price: '', conversion: '' },
+    subsPrice: [],
     price: 0,
-    type: allowFixedPricing === 'true' ? 'fixed' : 'free',
+    type:
+      allowFixedPricing === 'true'
+        ? 'fixed'
+        : allowTimedPricing === 'true'
+        ? 'timed'
+        : 'free',
     freeAgreement: false
   }
 }

@@ -7,6 +7,7 @@ import styles from './Price.module.css'
 import { FormPublishData } from '../_types'
 import { getFieldContent } from '@utils/form'
 import CoinSelect from './CoinSelect'
+import FormHelp from '@shared/FormInput/Help'
 
 export default function Price({
   approvedBaseTokens,
@@ -19,17 +20,54 @@ export default function Price({
 
   const { values } = useFormikContext<FormPublishData>()
   const { dataTokenOptions } = values.services[0]
+  console.log({ _field: field, _meta: meta, _val: values })
 
   return (
     <div className={styles.price}>
       {values.pricing.type === 'free' ? (
         <div className={styles.free}>
           <Field
-            {...getFieldContent('freeAgreement', content.fields)}
+            {...getFieldContent('freeAgreement', content?.fields)}
             component={Input}
             name="pricing.freeAgreement"
           />
         </div>
+      ) : values.pricing.type === 'timed' ? (
+        <>
+          <h5 className={styles.priceRatio}>Price Ratio</h5>
+          <FormHelp className={styles.priceRatioHelp}>
+            {content?.create?.timed?.subsRatioInfo}
+          </FormHelp>
+          <div className={styles.grid}>
+            <div className={styles.form}>
+              <Input
+                type="number"
+                min="1"
+                max="1"
+                placeholder="0"
+                prefix={
+                  approvedBaseTokens?.length > 1 ? (
+                    <CoinSelect approvedBaseTokens={approvedBaseTokens} />
+                  ) : (
+                    values.pricing?.baseToken?.symbol
+                  )
+                }
+                {...field}
+              />
+              <Error meta={meta} />
+            </div>
+            <div className={styles.datatoken}>
+              <h4>
+                = <strong>1</strong> {dataTokenOptions.symbol}{' '}
+                <Conversion
+                  price={field.value}
+                  symbol={values.pricing?.baseToken?.symbol}
+                  className={styles.conversion}
+                />
+              </h4>
+            </div>
+          </div>
+        </>
       ) : (
         <>
           <div className={styles.grid}>

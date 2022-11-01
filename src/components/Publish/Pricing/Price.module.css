@@ -13,6 +13,21 @@
   border-radius: var(--border-radius);
 }
 
+.priceRatio {
+  font-size: var(--font-size-base);
+  margin-top: var(--spacer);
+  margin-bottom: 0;
+  padding-bottom: calc(var(--spacer) / 4);
+  padding-left: calc(var(--spacer) / 0.25);
+}
+.priceRatioHelp {
+  /* font-size: var(--font-size-base);
+  margin-top: var(--spacer);
+  margin-bottom: 0;
+  padding-bottom: calc(var(--spacer) / 4); */
+  padding-left: calc(var(--spacer) / 0.25);
+}
+
 .grid {
   display: grid;
   gap: calc(var(--spacer) / 2);
@@ -22,6 +37,21 @@
   margin-left: auto;
   margin-right: auto;
   align-items: center;
+}
+.subsgrid {
+  display: grid;
+  gap: calc(var(--spacer) / 2);
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  padding: calc(var(--spacer) / 2);
+  max-width: 30rem;
+  /* width: 12px; */
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+}
+
+.subsgrid input {
+  max-width: 5rem;
 }
 
 .fixed label {

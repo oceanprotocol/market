@@ -17,6 +17,7 @@ export interface AppConfig {
   consumeMarketFixedSwapFee: string
   currencies: string[]
   coingeckoTokenIds: string[]
+  allowTimedPricing: string
   allowFixedPricing: string
   allowFreePricing: string
   defaultPrivacyPolicySlug: string

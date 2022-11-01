@@ -64,7 +64,7 @@ const validationService = {
 
 const validationPricing = {
   type: Yup.string()
-    .matches(/fixed|free/g, { excludeEmptyString: true })
+    .matches(/timed|fixed|free/g, { excludeEmptyString: true })
     .required('Required'),
   // https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
 

@@ -25,7 +25,7 @@ declare global {
 
   /**
    * @interface AccessDetails
-   * @prop {'fixed' | 'free' | 'NOT_SUPPORTED'}  type
+   * @prop {'fixed' | 'free' | 'timed' | 'NOT_SUPPORTED'}  type
    * @prop {string} price can be either spotPrice/rate
    * @prop {string} addressOrId for fixed/free this is an id.
    * @prop {TokenInfo} baseToken
@@ -37,8 +37,9 @@ declare global {
    * @prop {FeeInfo} feeInfo  values of the relevant fees
    */
   interface AccessDetails {
-    type: 'fixed' | 'free' | 'NOT_SUPPORTED'
+    type: 'fixed' | 'free' | 'timed' | 'NOT_SUPPORTED'
     price: string
+    subsPrice: string
     addressOrId: string
     baseToken: TokenInfo
     datatoken: TokenInfo
@@ -49,9 +50,11 @@ declare global {
   }
 
   interface PricePublishOptions {
+    subsPrice: string[]
+    timedPrice: TimedPriceInfo
     price: number
     baseToken: TokenInfo
-    type: 'fixed' | 'free'
+    type: 'fixed' | 'free' | 'timed'
     freeAgreement: boolean
   }
 }

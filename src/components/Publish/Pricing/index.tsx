@@ -1,9 +1,11 @@
+/* eslint-disable prettier/prettier */
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useFormikContext } from 'formik'
 import Tabs from '@shared/atoms/Tabs'
 import { FormPublishData } from '../_types'
 import Fixed from './Fixed'
 import Free from './Free'
+import Timed from './Timed'
 import content from '../../../../content/price.json'
 import styles from './index.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
@@ -68,11 +70,24 @@ export default function PricingFields(): ReactElement {
             title: content.create.free.title,
             content: <Free content={content.create.free} />
           }
+        : undefined,
+
+      appConfig.allowTimedPricing === 'true'
+        ? {
+            title: content.create.timed.title,
+            content: (
+              <Timed
+                approvedBaseTokens={approvedBaseTokens}
+                content={content.create.timed}
+              />
+            )
+          }
         : undefined
     ].filter((tab) => tab !== undefined)
   }, [
     appConfig.allowFixedPricing,
     appConfig.allowFreePricing,
+    appConfig.allowTimedPricing,
     approvedBaseTokens
   ])
 
@@ -86,7 +101,7 @@ export default function PricingFields(): ReactElement {
     <Tabs
       items={tabs}
       handleTabChange={handleTabChange}
-      defaultIndex={type === 'free' ? 1 : 0}
+      defaultIndex={type === 'free' ? 0 : type === 'timed' ? 2 : 0}
       className={styles.pricing}
       showRadio
     />

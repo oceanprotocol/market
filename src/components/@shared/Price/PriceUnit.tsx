@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 import React, { ReactElement } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import Conversion from './Conversion'
 import styles from './PriceUnit.module.css'
 import { useUserPreferences } from '@context/UserPreferences'
-import Badge from '@shared/atoms/Badge'
+import SubsPriceUnit from './SubsPriceUnit'
 
 export function formatPrice(price: string, locale: string): string {
   return formatCurrency(Number(price), '', locale, false, {
@@ -35,6 +36,23 @@ export default function PriceUnit({
     <div className={`${styles.price} ${styles[size]} ${className}`}>
       {type === 'free' ? (
         <div>Free</div>
+      ) : type === 'timed' ? (
+        <>
+          <div>
+            {/* <div style={{ top: 32, bottom: 12 }}>
+      <h5 className={styles.symbol}>Pricing Benchmark Ratio</h5>
+    </div> */}
+            <div>
+              <h5 className={styles.symbol}>Subscription Options</h5>
+              {Number.isNaN(Number(price))
+                ? '-'
+                : formatPrice(price, locale)}{' '}
+              <span className={styles.symbol}>{symbol}</span>
+              {conversion && <Conversion price={price} symbol={symbol} />}
+            </div>
+          </div>
+          <SubsPriceUnit />
+        </>
       ) : (
         <>
           <div>

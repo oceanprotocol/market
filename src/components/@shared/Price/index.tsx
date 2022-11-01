@@ -15,7 +15,9 @@ export default function Price({
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
   const isSupported =
-    accessDetails?.type === 'fixed' || accessDetails?.type === 'free'
+    accessDetails?.type === 'fixed' ||
+    accessDetails?.type === 'free' ||
+    accessDetails?.type === 'timed'
 
   return isSupported ? (
     <PriceUnit
