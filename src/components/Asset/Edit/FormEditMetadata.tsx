@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { Field, Form, useField, useFormikContext } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
@@ -27,6 +27,7 @@ export default function FormEditMetadata({
 }): ReactElement {
   const { oceanConfig, asset } = useAsset()
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
+  const [storageType, setStorageType] = useState('url' || 'ipfs' || 'arweave')
 
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
@@ -56,9 +57,12 @@ export default function FormEditMetadata({
     const providerUrl = values?.services
       ? values?.services[0].providerUrl.url
       : asset.services[0].serviceEndpoint
+
+    console.log(values, asset)
+
     // if we have a sample file, we need to get the files' info before setting defaults links value
     asset?.metadata?.links?.[0] &&
-      getFileUrlInfo(asset.metadata.links[0], providerUrl).then(
+      getFileUrlInfo(asset.metadata.links[0], providerUrl, 'url').then(
         (checkedFile) => {
           console.log(checkedFile)
           // initiate link with values from asset metadata
@@ -72,10 +76,28 @@ export default function FormEditMetadata({
       )
   }, [])
 
+  useEffect(() => {
+    if (values.storageType !== storageType) {
+      setFieldValue('files', [{ url: '', type: '' }])
+    }
+
+    setStorageType(values.storageType)
+
+    console.log(values)
+
+    // TODO: add storageType from asset's metadata information
+  }, [values.storageType])
+
   return (
     <Form>
-      {data.map(
-        (field: InputProps) =>
+      {data.map((field: InputProps) => {
+        console.log(field.name, storageType)
+
+        if (field.name === 'files' && storageType !== 'url') return false
+        if (field.name === 'ipfs' && storageType !== 'ipfs') return false
+        if (field.name === 'arweave' && storageType !== 'arweave') return false
+
+        return (
           (!showPrice && field.name === 'price') || (
             <Field
               key={field.name}
@@ -89,7 +111,8 @@ export default function FormEditMetadata({
               prefix={field.name === 'price' && oceanConfig?.oceanTokenSymbol}
             />
           )
-      )}
+        )
+      })}
 
       <FormActions />
     </Form>

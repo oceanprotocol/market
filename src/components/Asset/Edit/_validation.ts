@@ -23,6 +23,7 @@ export const validationSchema = Yup.object().shape({
       })
     )
     .nullable(),
+  storageType: Yup.string().required('Required'),
   timeout: Yup.string().required('Required'),
   author: Yup.string().nullable(),
   tags: Yup.array<string[]>().nullable()

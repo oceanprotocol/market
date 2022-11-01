@@ -2,6 +2,7 @@ import { FileInfo, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
 export interface FormPublishService {
+  storageType: string
   files: FileInfo[]
   links?: FileInfo[]
   timeout: string
