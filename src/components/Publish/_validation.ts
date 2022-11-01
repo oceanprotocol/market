@@ -35,7 +35,7 @@ const validationService = {
         url: Yup.string()
           .test(
             'GoogleNotSupported',
-            'Google drive is not a supported hosting service. Please use an alternative.',
+            'Google Drive is not a supported hosting service. Please use an alternative.',
             (value) => {
               return !value?.toString().includes('drive.google')
             }
