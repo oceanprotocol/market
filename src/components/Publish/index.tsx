@@ -1,6 +1,10 @@
 import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik } from 'formik'
-import { initialPublishFeedback, initialValues } from './_constants'
+import {
+  initialPublishFeedback,
+  initialValues,
+  initialCommentValues
+} from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 import { useWeb3 } from '@context/Web3'
 import { createTokensAndPricing, transformPublishFormToDdo } from './_utils'
@@ -277,6 +281,20 @@ export default function PublishPage({
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         // kick off publishing
+        await handleSubmit(values)
+        console.log('Hi Umesh')
+        debugger
+        let comment =
+          'did:op:41e9e6709e9d190144cc54ced79ad94a55e4a82b867b56dccd0221666518f6cf | This is a comment,'
+
+        comment +=
+          'did:op:1bdde707851d1b2a67af49909c9cf78e675df07f3cb74007c4bbfbb09c9cbcb9 | This is another comment'
+        values.metadata.nft.description = comment
+        values.metadata.nft.name = 'CommentNFT'
+        values.metadata.name = 'CommentNFT'
+        values.metadata.description = comment
+        values.metadata.type = 'meta'
+
         await handleSubmit(values)
       }}
     >

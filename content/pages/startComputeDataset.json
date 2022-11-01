@@ -11,6 +11,16 @@
         "options": [],
         "sortOptions": false
       }
+    ],
+    "claimdata": [
+      {
+        "name": "claim",
+        "label": "Select a claim to run after the compute job",
+        "type": "assetSelection",
+        "value": false,
+        "options": [],
+        "sortOptions": false
+      }
     ]
   }
 }

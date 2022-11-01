@@ -131,6 +131,7 @@ export function getSearchQuery(
     filters
   } as BaseQueryParams
 
+  console.log('tripathi')
   const query = generateBaseQuery(baseQueryParams)
   return query
 }

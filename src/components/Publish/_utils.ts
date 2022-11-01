@@ -100,7 +100,7 @@ export async function transformPublishFormToDdo(
     additionalInformation: {
       termsAndConditions
     },
-    ...(type === 'algorithm' &&
+    ...((type === 'algorithm' || type === 'claims') &&
       dockerImage !== '' && {
         algorithm: {
           language: filesTransformed?.length
@@ -238,6 +238,11 @@ export async function createTokensAndPricing(
         '[publish] Creating fixed pricing with freParams',
         freParams
       )
+
+      console.log(accountId)
+      console.log(nftCreateData)
+      console.log(ercParams)
+      console.log(freParams)
 
       const result = await nftFactory.createNftWithDatatokenWithFixedRate(
         accountId,

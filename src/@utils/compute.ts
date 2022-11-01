@@ -23,7 +23,10 @@ import { fetchDataForMultipleChains } from './subgraph'
 import { getServiceById, getServiceByName } from './ddo'
 import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
-import { transformAssetToAssetSelection } from './assetConvertor'
+import {
+  transformAssetToAssetSelection,
+  transformClaimToAssetSelection
+} from './assetConvertor'
 import { ComputeEditForm } from 'src/components/Asset/Edit/_types'
 import { getFileDidInfo } from './provider'
 
@@ -171,6 +174,28 @@ export function getQueryString(
   return query
 }
 
+export function getQueryStringClaims(
+  trustedAlgorithmList: PublisherTrustedAlgorithm[],
+  trustedPublishersList: string[],
+  chainId?: number
+): SearchQuery {
+  const algorithmDidList = trustedAlgorithmList?.map((x) => x.did)
+
+  const baseParams = {
+    chainIds: [chainId],
+    sort: { sortBy: SortTermOptions.Created },
+    filters: [getFilterTerm('metadata.type', 'claims')]
+  } as BaseQueryParams
+  algorithmDidList?.length > 0 &&
+    baseParams.filters.push(getFilterTerm('_id', algorithmDidList))
+  trustedPublishersList?.length > 0 &&
+    baseParams.filters.push(getFilterTerm('nft.owner', trustedPublishersList))
+  const query = generateBaseQuery(baseParams)
+
+  console.log('Tripathi' + query)
+  return query
+}
+
 export async function getAlgorithmsForAsset(
   asset: Asset,
   token: CancelToken
@@ -208,6 +233,55 @@ export async function getAlgorithmAssetSelectionList(
     algorithmSelectionList = []
   } else {
     algorithmSelectionList = await transformAssetToAssetSelection(
+      computeService?.serviceEndpoint,
+      algorithms,
+      []
+    )
+  }
+  return algorithmSelectionList
+}
+
+export async function getClaimsForAsset(
+  asset: Asset,
+  token: CancelToken
+): Promise<Asset[]> {
+  const computeService: Service = getServiceByName(asset, 'compute')
+
+  if (
+    !computeService.compute ||
+    (computeService.compute.publisherTrustedAlgorithms?.length === 0 &&
+      computeService.compute.publisherTrustedAlgorithmPublishers?.length === 0)
+  ) {
+    return []
+  }
+
+  const gueryResults = await queryMetadata(
+    getQueryStringClaims(
+      computeService.compute.publisherTrustedAlgorithms,
+      computeService.compute.publisherTrustedAlgorithmPublishers,
+      asset.chainId
+    ),
+    token
+  )
+
+  const algorithms: Asset[] = gueryResults?.results
+  console.log('Tripathi')
+  console.log(algorithms)
+  return algorithms
+}
+
+export async function getClaimAssetSelectionList(
+  asset: Asset,
+  algorithms: Asset[]
+): Promise<AssetSelectionAsset[]> {
+  const computeService: Service = getServiceByName(asset, 'compute')
+  let algorithmSelectionList: AssetSelectionAsset[]
+  if (!computeService.compute) {
+    algorithmSelectionList = []
+  } else {
+    console.log('Hi')
+    console.log(algorithms)
+    algorithmSelectionList = await transformClaimToAssetSelection(
       computeService?.serviceEndpoint,
       algorithms,
       []

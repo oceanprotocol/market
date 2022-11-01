@@ -65,7 +65,8 @@ export default function ServicesFields(): ReactElement {
         component={Input}
         name="services[0].dataTokenOptions"
       />
-      {values.metadata.type === 'algorithm' ? (
+      {values.metadata.type === 'algorithm' ||
+      values.metadata.type === 'claims' ? (
         <Field
           {...getFieldContent('algorithmPrivacy', content.services.fields)}
           component={Input}

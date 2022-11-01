@@ -91,6 +91,9 @@ export function transformQueryResult(
     (hit) => hit._source as Asset
   )
 
+  // debugger
+  console.log('Values - Umesh')
+  console.log(result.results)
   result.aggregations = queryResult.aggregations
   result.totalResults = queryResult.hits.total.value
   result.totalPages =
@@ -334,7 +337,8 @@ export async function getPublishedAssets(
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseQueryParams)
-
+  console.log('Umesh query' + query)
+  console.log(query)
   try {
     const result = await queryMetadata(query, cancelToken)
     return result
@@ -470,6 +474,54 @@ export async function getDownloadAssets(
       .sort((a, b) => b.timestamp - a.timestamp)
 
     return downloadedAssets
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
+
+export async function getPublishedMeta(
+  chainIds: number[],
+  cancelToken: CancelToken,
+  page?: number,
+  accesType?: string,
+  did: string
+): Promise<PagedAssets> {
+  const filters: FilterTerm[] = []
+
+  // filters.push(getFilterTerm('metadata.desc', did))
+  filters.push(getFilterTerm('metadata.type', 'meta'))
+
+  const baseQueryParams = {
+    chainIds,
+    filters,
+    sortOptions: {
+      sortBy: SortTermOptions.Created,
+      sortDirection: SortDirectionOptions.Descending
+    },
+    aggs: {
+      totalOrders: {
+        sum: {
+          field: SortTermOptions.Stats
+        }
+      }
+    },
+    ignorePurgatory: true,
+    esPaginationOptions: {
+      from: (Number(page) - 1 || 0) * 9,
+      size: 9
+    }
+  } as BaseQueryParams
+
+  const query = generateBaseQuery(baseQueryParams)
+  console.log('Umesh query' + query)
+  console.log(query)
+  try {
+    const result = await queryMetadata(query, cancelToken)
+    return result
   } catch (error) {
     if (axios.isCancel(error)) {
       LoggerInstance.log(error.message)

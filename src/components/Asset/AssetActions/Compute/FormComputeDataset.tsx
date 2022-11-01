@@ -19,6 +19,7 @@ import { getTokenBalanceFromSymbol } from '@utils/web3'
 
 export default function FormStartCompute({
   algorithms,
+  claims,
   ddoListAlgorithms,
   selectedAlgorithmAsset,
   setSelectedAlgorithm,
@@ -45,6 +46,7 @@ export default function FormStartCompute({
   validUntil
 }: {
   algorithms: AssetSelectionAsset[]
+  claims: AssetSelectionAsset[]
   ddoListAlgorithms: Asset[]
   selectedAlgorithmAsset: AssetExtended
   setSelectedAlgorithm: React.Dispatch<React.SetStateAction<AssetExtended>>
@@ -185,6 +187,22 @@ export default function FormStartCompute({
             key={field.name}
             {...field}
             options={algorithms}
+            component={Input}
+            disabled={isLoading || isComputeButtonDisabled}
+          />
+        )
+      })}
+
+      {content.form.claimdata.map((field: FormFieldContent) => {
+        return (
+          <Field
+            key={field.name}
+            title="Hi2"
+            label="Hi3"
+            text="asd"
+            {...field}
+            name="claim"
+            options={claims}
             component={Input}
             disabled={isLoading || isComputeButtonDisabled}
           />

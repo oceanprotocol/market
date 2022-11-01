@@ -16,7 +16,9 @@ export enum SortTermOptions {
 
 export enum FilterByTypeOptions {
   Data = 'dataset',
-  Algorithm = 'algorithm'
+  Algorithm = 'algorithm',
+  Meta = 'meta',
+  Claims = 'claims'
 }
 
 export enum FilterByAccessOptions {

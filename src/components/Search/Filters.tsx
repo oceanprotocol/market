@@ -14,6 +14,8 @@ const cx = classNames.bind(styles)
 const clearFilters = [{ display: 'Clear', value: '' }]
 
 const serviceFilterItems = [
+  { display: 'meta', value: FilterByTypeOptions.Meta },
+  { display: 'claims', value: FilterByTypeOptions.Claims },
   { display: 'datasets', value: FilterByTypeOptions.Data },
   { display: 'algorithms', value: FilterByTypeOptions.Algorithm }
 ]

@@ -29,6 +29,8 @@ import {
   isOrderable,
   getAlgorithmAssetSelectionList,
   getAlgorithmsForAsset,
+  getClaimsForAsset,
+  getClaimAssetSelectionList,
   getComputeEnviroment
 } from '@utils/compute'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
@@ -69,6 +71,11 @@ export default function Compute({
   const [ddoAlgorithmList, setDdoAlgorithmList] = useState<Asset[]>()
   const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] =
     useState<AssetExtended>()
+
+  const [claimList, setClaimList] = useState<AssetSelectionAsset[]>()
+  const [ddoClaimList, setDdoClaimList] = useState<Asset[]>()
+  const [selectedClaimAsset, setSelectedClaimAsset] = useState<AssetExtended>()
+
   const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
   const [algorithmDTBalance, setAlgorithmDTBalance] = useState<string>()
 
@@ -243,6 +250,19 @@ export default function Compute({
     })
   }, [asset, isUnsupportedPricing])
 
+  useEffect(() => {
+    if (!asset?.accessDetails || isUnsupportedPricing) return
+
+    getClaimsForAsset(asset, newCancelToken()).then((claimAssets) => {
+      setDdoClaimList(claimAssets)
+      getClaimAssetSelectionList(asset, claimAssets).then(
+        (claimSelectionList) => {
+          setClaimList(claimSelectionList)
+        }
+      )
+    })
+  }, [asset, isUnsupportedPricing])
+
   // Output errors in toast UI
   useEffect(() => {
     const newError = error
@@ -398,6 +418,7 @@ export default function Compute({
         >
           <FormStartComputeDataset
             algorithms={algorithmList}
+            claims={claimList}
             ddoListAlgorithms={ddoAlgorithmList}
             selectedAlgorithmAsset={selectedAlgorithmAsset}
             setSelectedAlgorithm={setSelectedAlgorithmAsset}

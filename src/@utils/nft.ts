@@ -147,6 +147,9 @@ export async function setNFTMetadataAndTokenURI(
 
   // add final did to external_url and asset link to description in nftMetadata before encoding
   const externalUrl = `${nftMetadata.external_url}/asset/${asset.id}`
+  const x = `${nftMetadata.description}\n\nView on Ocean Market: ${externalUrl}`
+  console.log('Umesh nftMetadata.description} View on Ocean Market')
+  console.log(x)
   const encodedMetadata = Buffer.from(
     JSON.stringify({
       ...nftMetadata,

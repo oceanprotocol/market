@@ -93,6 +93,54 @@ export const initialValues: FormPublishData = {
   }
 }
 
+export const initialCommentValues: FormPublishData = {
+  user: {
+    stepCurrent: 1,
+    chainId: 1,
+    accountId: ''
+  },
+  metadata: {
+    nft: {
+      name: 'comment',
+      symbol: 'OCEAN-NFT',
+      description: '',
+      image_data: ''
+    },
+    transferable: true,
+    type: 'meta',
+    name: 'meta-um',
+    author: 'ut1',
+    description: 'this is a comment nft',
+    tags: '',
+    termsAndConditions: false,
+    dockerImage: '',
+    dockerImageCustom: '',
+    dockerImageCustomTag: '',
+    dockerImageCustomEntrypoint: ''
+  },
+  services: [
+    {
+      files: [{ url: '' }],
+      links: [{ url: '' }],
+      dataTokenOptions: { name: '', symbol: '' },
+      timeout: '',
+      access: 'access',
+      providerUrl: {
+        url: 'https://provider.mainnet.oceanprotocol.com',
+        valid: true,
+        custom: false
+      },
+      computeOptions
+    }
+  ],
+  pricing: {
+    baseToken: { address: '', name: '', symbol: 'OCEAN', decimals: 18 },
+    price: 0,
+    type: allowFixedPricing === 'true' ? 'fixed' : 'free',
+    freeAgreement: false
+  }
+}
+
 export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
   {
     image: 'node',
