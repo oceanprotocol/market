@@ -22,8 +22,10 @@ export function Assets({
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         .filter((signal) => signal.type === values?.type)
-        .map((signalOrigin: any, index: number) => (
-          <>
+        .map((signalOrigin: any, index: number) => {
+          const uuidDetailView = signalOrigin.id + signalOrigin.detailView.id
+          const uuidListView = signalOrigin.id + signalOrigin.listView.id
+          return (
             <>
               <li key={signalOrigin.id}>
                 <div className={styles.displaySignalTitleContainer}>
@@ -61,32 +63,26 @@ export function Assets({
                     </div>
                     <Field
                       type="checkbox"
-                      id={signalOrigin.id}
+                      id={uuidListView}
                       className={styles.displayCheck}
                       component={Input}
-                      name={signalOrigin.id + signalOrigin.listView.id}
+                      name={uuidListView}
                       options={[displayOptions[0]]}
-                      checked={
-                        values[signalOrigin.id + signalOrigin.listView.id]
-                      }
-                      onChange={(e) => {
-                        console.log('checked')
-                      }}
                     />
                     <Field
                       type="checkbox"
-                      id={signalOrigin.id}
+                      id={uuidDetailView}
                       className={styles.display}
                       component={Input}
-                      name={signalOrigin.id + signalOrigin.detailView.id}
+                      name={uuidDetailView}
                       options={[displayOptions[1]]}
                     />
                   </div>
                 </div>
               </li>
             </>
-          </>
-        ))
+          )
+        })
     )
   }
   const [settingsInputs, setSettingsInputs] = useState(

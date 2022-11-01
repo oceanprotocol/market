@@ -21,6 +21,30 @@ export function getURLParams(urlParams: SignalParams | string[]) {
   }
   return paramString
 }
+
+export function getURLParamsAssets({
+  uuids,
+  origin
+}: {
+  uuids: { label: string; value: string }[]
+  origin: string
+}) {
+  const urlPaths = new URL(origin).pathname.split('/')
+  const pathsObj = {}
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  urlPaths.forEach((path) => (pathsObj[path] = path))
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  uuids.forEach((uuid) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (pathsObj[uuid.label]) {
+      origin.replace(uuid.label, uuid.value)
+    }
+  })
+}
+
 export function getSignalUrls(signalOriginItem: SignalOriginItem) {
   // return signalOriginItem.origin + getURLParams(signalOriginItem.urlParams)
   return signalOriginItem.origin
