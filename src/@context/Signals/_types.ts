@@ -19,6 +19,12 @@ export interface AssetSignalItem {
    * @type {string}
    * @memberof SignalItem
    */
+  id: string
+  /**
+   * an identifier of the asset retrieved from the origin
+   * @type {string}
+   * @memberof SignalItem
+   */
   assetId: string
   /**
    * a name of the signal
@@ -52,7 +58,7 @@ export interface SignalOriginItem {
    * @type {string}
    * @memberof SignalOriginItem
    */
-  id: string
+  id?: string
   /**
    * a string describing the title for this specific signal type instance
    * @type {string}
@@ -64,7 +70,7 @@ export interface SignalOriginItem {
    * @type {string}
    * @memberof SignalOriginItem
    */
-  description: string
+  description?: string
   /**
    * @type {SignalParams} object describing the type of signal e.g account signal vs asset signal
    * @memberof SignalOriginItem
@@ -105,7 +111,7 @@ export interface SignalOriginItem {
    * @type {Boolean}
    * @memberof SignalSettingsItem
    */
-  isCustom: boolean
+  isCustom?: boolean
 }
 
 export interface SignalSettingsItem {

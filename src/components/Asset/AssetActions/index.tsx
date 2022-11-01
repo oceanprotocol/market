@@ -6,8 +6,6 @@ import { Datatoken, FileInfo, LoggerInstance } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import AssetSignals from '@shared/atoms/AssetSignals'
 import { compareAsBN } from '@utils/numbers'
-import Pool from './Pool'
-import Trade from './Trade'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import Web3Feedback from '@shared/Web3Feedback'
@@ -18,8 +16,12 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
 import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
-import { AssetExtended } from 'src/@types/AssetExtended'
-import PoolProvider from '@context/Pool'
+import { getTokenBalanceFromSymbol } from '@utils/web3'
+import AssetStats from './AssetStats'
+import { useSignalContext } from '@context/Signals'
+import useSignalsLoader, { useAssetListSignals } from '@hooks/useSignals'
+import { getAssetSignalItems } from '@hooks/useSignals/_util'
+import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
 
 export default function AssetActions({
   asset
@@ -45,6 +47,31 @@ export default function AssetActions({
     asset?.services.filter((service) => service.type === 'compute')[0]
   )
 
+  // Signals loading logic
+  // Get from AssetList component
+  const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>([
+    asset.datatokens.map((data) => data.address)
+  ])
+  const { assetSignalOriginItems, signals, assetSignalsUrls } =
+    useSignalContext()
+  const filterAssetSignals = () => {
+    return signals
+      .filter((signal) => signal.type === 1)
+      .filter((signal) => signal.detailView.value)
+  }
+  const { urls } = useAssetListSignals(
+    dataTokenAddresses,
+    signals,
+    assetSignalsUrls,
+    'detailView'
+  )
+  const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
+
+  const filteredSignals = getAssetSignalItems(
+    signalItems,
+    asset.datatokens.map((data: AssetDatatoken) => data.address),
+    filterAssetSignals()
+  )
   // Get and set file info
   useEffect(() => {
     const oceanConfig = getOceanConfig(asset?.chainId)
@@ -65,6 +92,18 @@ export default function AssetActions({
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
+
+        // set the content type in the Dataset Schema
+        const datasetSchema = document.scripts?.namedItem('datasetSchema')
+        if (datasetSchema) {
+          const datasetSchemaJSON = JSON.parse(datasetSchema.innerText)
+          if (datasetSchemaJSON?.distribution[0]['@type'] === 'DataDownload') {
+            const contentType = fileInfoResponse[0]?.contentType
+            datasetSchemaJSON.distribution[0].encodingFormat = contentType
+            datasetSchema.innerText = JSON.stringify(datasetSchemaJSON)
+          }
+        }
+
         setFileIsLoading(false)
       } catch (error) {
         LoggerInstance.error(error.message)
@@ -97,14 +136,19 @@ export default function AssetActions({
     if (asset?.accessDetails?.type === 'free') setIsBalanceSufficient(true)
     if (
       !asset?.accessDetails?.price ||
+      !asset?.accessDetails?.baseToken?.symbol ||
       !accountId ||
-      !balance?.ocean ||
+      !balance ||
       !dtBalance
     )
       return
 
+    const baseTokenBalance = getTokenBalanceFromSymbol(
+      balance,
+      asset?.accessDetails?.baseToken?.symbol
+    )
     setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${asset?.accessDetails.price}`) ||
+      compareAsBN(baseTokenBalance, `${asset?.accessDetails.price}`) ||
         Number(dtBalance) >= 1
     )
 
@@ -112,43 +156,46 @@ export default function AssetActions({
       setIsBalanceSufficient(false)
     }
   }, [balance, accountId, asset?.accessDetails, dtBalance])
-
-  const UseContent = isCompute ? (
-    <Compute
-      ddo={asset}
-      accessDetails={asset?.accessDetails}
-      dtBalance={dtBalance}
-      file={fileMetadata}
-      fileIsLoading={fileIsLoading}
-    />
-  ) : (
-    <Consume
-      asset={asset}
-      dtBalance={dtBalance}
-      isBalanceSufficient={isBalanceSufficient}
-      file={fileMetadata}
-      fileIsLoading={fileIsLoading}
-    />
+  const UseContent = (
+    <>
+      {isCompute ? (
+        <Compute
+          asset={asset}
+          dtBalance={dtBalance}
+          file={fileMetadata}
+          fileIsLoading={fileIsLoading}
+        />
+      ) : (
+        <Consume
+          asset={asset}
+          dtBalance={dtBalance}
+          isBalanceSufficient={isBalanceSufficient}
+          file={fileMetadata}
+          fileIsLoading={fileIsLoading}
+        />
+      )}
+      <AssetStats />
+    </>
   )
 
   const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
 
-  asset?.accessDetails?.type === 'dynamic' &&
-    tabs.push(
-      { title: 'Pool', content: <Pool /> },
-      { title: 'Trade', content: <Trade /> }
-    )
-
   return (
     <>
-      <PoolProvider>
-        <Tabs items={tabs} className={styles.actions} />
-        <AssetSignals className={styles.actions} asset={asset} />
-        <Web3Feedback
-          networkId={asset?.chainId}
-          isAssetNetwork={isAssetNetwork}
-        />
-      </PoolProvider>
+      <Tabs items={tabs} className={styles.actions} />
+      <AssetSignals
+        className={styles.actions}
+        asset={asset}
+        signalItems={filteredSignals}
+        isLoading={isFetchingSignals}
+      />
+      {/*{signalItems ? (*/}
+      {/*  <AssetTeaserSignals assetId={asset.id} signalItems={filteredSignals} />*/}
+      {/*) : null}*/}
+      <Web3Feedback
+        networkId={asset?.chainId}
+        isAssetNetwork={isAssetNetwork}
+      />
     </>
   )
 }

@@ -11,6 +11,11 @@
     calc(var(--spacer) * 1.5);
 }
 
+.warning {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
 .feedback {
   width: 100%;
   margin-top: calc(var(--spacer) / 2);

@@ -33,7 +33,8 @@ function Asset({
         </a>
       </h3>
       <p className={styles.assetMeta}>
-        {symbol} | <code>{did}</code>
+        <span className={styles.assetMeta}> {`${symbol} | `}</span>
+        <code className={styles.assetMeta}>{did}</code>
       </p>
     </div>
   )
@@ -41,9 +42,11 @@ function Asset({
 
 function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
   const { appConfig } = useMarketMetadata()
+  const newCancelToken = useCancelToken()
+
   const [algoName, setAlgoName] = useState<string>()
   const [algoDtSymbol, setAlgoDtSymbol] = useState<string>()
-  const newCancelToken = useCancelToken()
+
   useEffect(() => {
     async function getAlgoMetadata() {
       const ddo = await retrieveAsset(job.algoDID, newCancelToken())
@@ -51,7 +54,7 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
       setAlgoName(ddo?.metadata.name)
     }
     getAlgoMetadata()
-  }, [appConfig.metadataCacheUri, job.algoDID])
+  }, [appConfig.metadataCacheUri, job.algoDID, newCancelToken])
 
   return (
     <>
@@ -97,12 +100,6 @@ export default function Details({
             />
           )}
           <MetaItem title="Job ID" content={<code>{job.jobId}</code>} />
-          {/* {job.resultsDid && (
-            <MetaItem
-              title="Published Results DID"
-              content={<code>{job.resultsDid}</code>}
-            />
-          )} */}
         </div>
       </Modal>
     </>

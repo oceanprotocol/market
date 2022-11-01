@@ -61,6 +61,8 @@ export default function AssetSignalsTab(props: {
     removeSignalSetting(signalOriginId)
   }
 
+  function handleDisplayToggle(toggle: boolean) {}
+
   return (
     <div className={styles.submission}>
       <Formik

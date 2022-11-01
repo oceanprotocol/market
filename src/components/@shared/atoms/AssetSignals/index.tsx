@@ -7,14 +7,16 @@ import Source from '@images/source.svg'
 import Loader from '@shared/atoms/Loader'
 import { useSignalContext } from '@context/Signals'
 import { getURLParams } from '@hooks/useSignals/_util'
-import useSignalsLoader from '@hooks/useSignals'
+// @ts-ignore
 import { AssetExtended } from '../../../../@types/AssetExtended'
+import { SignalOriginItem } from '@context/Signals/_types'
 
 export interface TabsProps {
   className?: string
   defaultIndex?: number
   isLoading?: boolean
   asset?: AssetExtended
+  signalItems?: SignalOriginItem[]
 }
 
 function LoaderArea() {
@@ -29,95 +31,114 @@ export default function AssetSignals({
   className,
   defaultIndex,
   isLoading,
-  asset
+  asset,
+  signalItems
 }: TabsProps): ReactElement {
   const [openUp, setOpenUp] = useState(false)
-  const [loading, setLoading] = useState<boolean>(isLoading)
   const { datatokens } = asset
   const { assetSignalsUrls, signals } = useSignalContext()
-  const assetSignalOrigins = signals.filter((signal) => signal.type === 1)
-  const dataTokenAddresses = datatokens.map((data) => data.address)
+  const assetSignalOrigins = signals
+    .filter((signal) => signal.type === 1)
+    .filter((signal) => signal.detailView.value)
+  const dataTokenAddresses = datatokens.map((data: any) => data.address)
   const urls = assetSignalsUrls.map((item) => {
     return item + getURLParams(['assetId', dataTokenAddresses.join(',')])
   })
-  const { signalItems, loading: isFetching } = useSignalsLoader(urls)
-
-  const itemsClose = (index: any) => {
-    return assetSignalOrigins.map((item, index) => {
-      return (
-        <>
-          <>
-            {item.title ? (
-              <li key={index}>
-                {!loading ? (
-                  <div className={styles.assetListTitle}>
-                    <div className={styles.assetListTitleName}>
-                      <p>
-                        <UtuIcon className={styles.assetListIcon} />
-                      </p>
-                      <p> {item.title} </p>
-                    </div>
-                    <div className={styles.assetListTitleNumber}>
-                      {signalItems[index] ? signalItems[index][0].value : 'N/A'}
-                    </div>
+  const itemsClose = (index?: any) => {
+    if (isLoading) return
+    const itemsList = signalItems.map((item, index) => {
+      if (item.signals.length > 1) {
+        return item.signals.map((sig) => {
+          return (
+            <li key={sig.id + item.title}>
+              {sig ? (
+                <div className={styles.assetListTitle}>
+                  <div className={styles.assetListTitleName}>
+                    <p>
+                      <UtuIcon className={styles.assetListIcon} />
+                    </p>
+                    <p> {item.title} </p>
                   </div>
-                ) : (
-                  <LoaderArea />
-                )}
-              </li>
-            ) : null}
-          </>
-        </>
-      )
+                  <div className={styles.assetListTitleNumber}>
+                    {sig.value ? sig.value : 'N/A'}
+                  </div>
+                </div>
+              ) : (
+                <LoaderArea />
+              )}
+            </li>
+          )
+        })
+      }
+      if (item.signals.length === 1)
+        return item.title ? (
+          <li key={index}>
+            {item.signals ? (
+              <div className={styles.assetListTitle}>
+                <div className={styles.assetListTitleName}>
+                  <p>
+                    <UtuIcon className={styles.assetListIcon} />
+                  </p>
+                  <p> {item.title} </p>
+                </div>
+                <div className={styles.assetListTitleNumber}>
+                  {item.signals.length > 0 ? item.signals[0].value : 'N/A'}
+                </div>
+              </div>
+            ) : (
+              <LoaderArea />
+            )}
+          </li>
+        ) : null
     })
+    return itemsList
   }
-
   const signalDetails = () => {
-    return assetSignalOrigins.map((item, index) => {
-      return (
-        <>
-          <>
-            {item.title ? (
-              <li key={index}>
-                {!loading ? (
-                  <div className={styles.assetListTitle}>
-                    <div className={styles.assetListTitleName}>
-                      <p>
-                        <UtuIcon className={styles.assetListIcon} />
-                      </p>
-                      <p> {item.title} </p>
-                    </div>
-                    <div className={styles.assetListTitleNumber}>
-                      {signalItems[index] ? signalItems[index][0].value : 'N/A'}
-                    </div>
+    if (isLoading) return
+    // return array of [ [SignalsItem, SignalsItem], SignalsItem]
+    const sigs = signalItems.map((item, index) => {
+      if (item.signals.length > 1) {
+        // return @SignalsItem[]
+        return item.signals.map((sig) => {
+          // Return @SignalsItem
+          return (
+            <li key={index}>
+              {item.signals.length > 0 ? (
+                <div className={styles.assetListTitle}>
+                  <div className={styles.assetListTitleName}>
+                    <p>
+                      <UtuIcon className={styles.assetListIcon} />
+                    </p>
+                    <p> {item.title} </p>
                   </div>
-                ) : (
-                  <LoaderArea />
-                )}
-
-                {!loading ? <p>{item.description}</p> : <LoaderArea />}
-
-                {!loading ? (
-                  <div href={item.origin} className={styles.displaySource}>
-                    <p>Source</p>
-                    {item.origin != null ? (
-                      <a target={'_blank'} href={item.origin} rel="noreferrer">
-                        <Source className={styles.sourceIcon} />
-                      </a>
-                    ) : null}
+                  <div className={styles.assetListTitleNumber}>
+                    {sig ? sig.value : 'N/A'}
                   </div>
-                ) : (
-                  <LoaderArea />
-                )}
-              </li>
-            ) : null}
-          </>
-        </>
-      )
+                </div>
+              ) : (
+                <LoaderArea />
+              )}
+
+              {!isLoading ? <p>{item.description}</p> : <LoaderArea />}
+
+              {!isLoading ? (
+                <div className={styles.displaySource}>
+                  <p>Source</p>
+                  {item.origin != null ? (
+                    <a target={'_blank'} href={item.origin} rel="noreferrer">
+                      <Source className={styles.sourceIcon} />
+                    </a>
+                  ) : null}
+                </div>
+              ) : (
+                <LoaderArea />
+              )}
+            </li>
+          )
+        })
+      }
     })
-  }
-  const itemsOpen = (index: any) => {
-    return signalDetails()
+    return sigs.flat()
   }
   return (
     <>
@@ -145,9 +166,17 @@ export default function AssetSignals({
             </h3>
           </div>
           <div>
-            {' '}
-            <ol className={styles.assets}>
-              {openUp ? itemsOpen(!openUp) : itemsClose(!openUp)}
+            <ol
+              style={{ display: openUp ? 'block' : 'none' }}
+              className={styles.assets}
+            >
+              {signalDetails()}
+            </ol>
+            <ol
+              style={{ display: !openUp ? 'block' : 'none' }}
+              className={styles.assets}
+            >
+              {itemsClose()}
             </ol>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { Field, useFormikContext } from 'formik'
 import Input from '@shared/FormInput'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { FormSettingsData } from '../_types'
 import styles from './Asset.module.css'
 import Source from '@images/source.svg'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -14,7 +13,7 @@ export function Assets({
 }: {
   handleRemoveSignal(id: string): void
 }): ReactElement {
-  const { values } = useFormikContext<FormSettingsData>()
+  const { values } = useFormikContext<any>()
   const { signals } = useUserPreferences()
   const [checked, setChecked] = useState<boolean>()
   const getSignalPageViewOptions = () => {
@@ -23,8 +22,10 @@ export function Assets({
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         .filter((signal) => signal.type === values?.type)
-        .map((signalOrigin: any, index: number) => (
-          <>
+        .map((signalOrigin: any, index: number) => {
+          const uuidDetailView = signalOrigin.id + signalOrigin.detailView.id
+          const uuidListView = signalOrigin.id + signalOrigin.listView.id
+          return (
             <>
               <li key={signalOrigin.id}>
                 <div className={styles.displaySignalTitleContainer}>
@@ -62,26 +63,26 @@ export function Assets({
                     </div>
                     <Field
                       type="checkbox"
-                      id={signalOrigin.id}
+                      id={uuidListView}
                       className={styles.displayCheck}
                       component={Input}
-                      name={signalOrigin.id + signalOrigin.listView.id}
+                      name={uuidListView}
                       options={[displayOptions[0]]}
                     />
                     <Field
                       type="checkbox"
-                      id={signalOrigin.id}
+                      id={uuidDetailView}
                       className={styles.display}
                       component={Input}
-                      name={signalOrigin.id + signalOrigin.detailView.id}
+                      name={uuidDetailView}
                       options={[displayOptions[1]]}
                     />
                   </div>
                 </div>
               </li>
             </>
-          </>
-        ))
+          )
+        })
     )
   }
   const [settingsInputs, setSettingsInputs] = useState(

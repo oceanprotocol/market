@@ -2,33 +2,14 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '@shared/AssetList'
 import Button from '@shared/atoms/Button'
 import Bookmarks from './Bookmarks'
-import {
-  generateBaseQuery,
-  getFilterTerm,
-  queryMetadata
-} from '@utils/aquarius'
-import { getHighestLiquidityDatatokens } from '@utils/subgraph'
+import { generateBaseQuery, queryMetadata } from '@utils/aquarius'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
 import styles from './index.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
-
-async function getQueryHighest(
-  chainIds: number[]
-): Promise<[SearchQuery, string[]]> {
-  const dtList = await getHighestLiquidityDatatokens(chainIds)
-  const baseQueryParams = {
-    chainIds,
-    esPaginationOptions: {
-      size: dtList.length > 0 ? dtList.length : 1
-    },
-    filters: [getFilterTerm('services.datatokenAddress', dtList)]
-  } as BaseQueryParams
-  const queryHighest = generateBaseQuery(baseQueryParams)
-  return [queryHighest, dtList]
-}
+import PublishersWithMostSales from './PublishersWithMostSales'
 
 function sortElements(items: Asset[], sorted: string[]) {
   items.sort(function (a, b) {
@@ -65,7 +46,8 @@ function SectionQueryResult({
           results: [],
           page: 0,
           totalPages: 0,
-          totalResults: 0
+          totalResults: 0,
+          aggregations: undefined
         }
         setResult(result)
         setLoading(false)
@@ -106,15 +88,11 @@ function SectionQueryResult({
 }
 
 export default function HomePage(): ReactElement {
-  const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string[]]>()
   const [queryLatest, setQueryLatest] = useState<SearchQuery>()
+  const [queryMostSales, setQueryMostSales] = useState<SearchQuery>()
   const { chainIds } = useUserPreferences()
 
   useEffect(() => {
-    getQueryHighest(chainIds).then((results) => {
-      setQueryAndDids(results)
-    })
-
     const baseParams = {
       chainIds,
       esPaginationOptions: {
@@ -125,6 +103,17 @@ export default function HomePage(): ReactElement {
       } as SortOptions
     } as BaseQueryParams
     setQueryLatest(generateBaseQuery(baseParams))
+
+    const baseParamsSales = {
+      chainIds,
+      esPaginationOptions: {
+        size: 9
+      },
+      sortOptions: {
+        sortBy: SortTermOptions.Stats
+      } as SortOptions
+    } as BaseQueryParams
+    setQueryMostSales(generateBaseQuery(baseParamsSales))
   }, [chainIds])
 
   return (
@@ -134,11 +123,7 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
-      <SectionQueryResult
-        title="Highest Liquidity"
-        query={queryAndDids?.[0]}
-        queryData={queryAndDids?.[1]}
-      />
+      <SectionQueryResult title="Most Sales" query={queryMostSales} />
 
       <SectionQueryResult
         title="Recently Published"
@@ -147,13 +132,15 @@ export default function HomePage(): ReactElement {
           <>
             {/* <Button
               style="text"
-              to="/search?sort=metadata.created&sortOrder=desc"
-            >
+              to="/search?sort=nft.created&sortOrder=desc">
+
               All data sets and algorithms →
             </Button> */}
           </>
         }
       />
+
+      <PublishersWithMostSales title="Publishers With Most Sales" />
     </>
   )
 }

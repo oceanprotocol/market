@@ -33,9 +33,6 @@ module.exports = {
   // publisher market fee that is taken upon ordering an asset, it is an absolute value, it is declared on erc20 creation
   publisherMarketOrderFee:
     process.env.NEXT_PUBLIC_PUBLISHER_MARKET_ORDER_FEE || '0',
-  // fee recieved by the publisher market when a dt is swaped from a pool, percent
-  publisherMarketPoolSwapFee:
-    process.env.NEXT_PUBLIC_PUBLISHER_MARKET_POOL_SWAP_FEE || '0',
   // fee recieved by the publisher market when a dt is bought from a fixed rate exchange, percent
   publisherMarketFixedSwapFee:
     process.env.NEXT_PUBLIC_PUBLISHER_MARKET_FIXED_SWAP_FEE || '0',
@@ -43,9 +40,6 @@ module.exports = {
   // consume market fee that is taken upon ordering an asset, it is an absolute value, it is specified on order
   consumeMarketOrderFee:
     process.env.NEXT_PUBLIC_CONSUME_MARKET_ORDER_FEE || '0',
-  // fee recieved by the consume market when a dt is swaped from a pool, percent
-  consumeMarketPoolSwapFee:
-    process.env.NEXT_PUBLIC_CONSUME_MARKET_POOL_SWAP_FEE || '0',
   // fee recieved by the consume market when a dt is bought from a fixed rate exchange, percent
   consumeMarketFixedSwapFee:
     process.env.NEXT_PUBLIC_CONSUME_MARKET_FIXED_SWAP_FEE || '0',
@@ -68,6 +62,10 @@ module.exports = {
     'LINK'
   ],
 
+  // Tokens to fetch the spot prices from coingecko, against above currencies.
+  // Refers to Coingecko API tokenIds.
+  coingeckoTokenIds: ['ocean-protocol', 'h2o', 'ethereum', 'matic-network'],
+
   // Config for https://github.com/donavon/use-dark-mode
   darkModeConfig: {
     classNameDark: 'dark',
@@ -75,13 +73,9 @@ module.exports = {
     storageKey: 'oceanDarkMode'
   },
 
-  // Wallets
-  portisId: process.env.NEXT_PUBLIC_PORTIS_ID || 'xxx',
-
-  // Used to show or hide the fixed, dynamic or free price options
+  // Used to show or hide the fixed or free price options
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.NEXT_PUBLIC_ALLOW_FIXED_PRICING || 'true',
-  allowDynamicPricing: process.env.NEXT_PUBLIC_ALLOW_DYNAMIC_PRICING || 'true',
   allowFreePricing: process.env.NEXT_PUBLIC_ALLOW_FREE_PRICING || 'true',
 
   // Set the default privacy policy to initially display
@@ -109,7 +103,7 @@ module.exports = {
         description:
           'Qualitative signal helps you make better investment decisions',
         origin:
-          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/',
+          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/id',
         isCustom: false,
         signals: [],
         type: 1,
@@ -135,7 +129,7 @@ module.exports = {
         description:
           'Qualitative signal helps you make better investment decisions',
         origin:
-          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/',
+          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/id',
         isCustom: false,
         signals: [],
         type: 1,
@@ -155,32 +149,32 @@ module.exports = {
           userAddresses: []
         }
       },
-      {
-        id: 'sample_defi_signal',
-        title: 'Sushi Defi Signal',
-        description:
-          'Sushi defi signal helps you make better investment decisions',
-        origin:
-          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi/',
-        isCustom: false,
-        signals: [],
-        type: 2,
-        listView: {
-          id: 'listView',
-          value: true,
-          name: 'List View'
-        },
-        detailView: {
-          id: 'detailView',
-          value: true,
-          name: 'Details View'
-        },
-        urlParams: {
-          assetIds: [],
-          publisherIds: [],
-          userAddresses: []
-        }
-      },
+      // {
+      //   id: 'sample_defi_signal',
+      //   title: 'Sushi Defi Signal',
+      //   description:
+      //     'Sushi defi signal helps you make better investment decisions',
+      //   origin:
+      //     'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi/id',
+      //   isCustom: false,
+      //   signals: [],
+      //   type: 2,
+      //   listView: {
+      //     id: 'listView',
+      //     value: true,
+      //     name: 'List View'
+      //   },
+      //   detailView: {
+      //     id: 'detailView',
+      //     value: true,
+      //     name: 'Details View'
+      //   },
+      //   urlParams: {
+      //     assetIds: [],
+      //     publisherIds: [],
+      //     userAddresses: []
+      //   }
+      // },
       {
         id: 'sample_utu_signal',
         title: 'UTU Ocean Signals',
@@ -206,31 +200,31 @@ module.exports = {
           publisherIds: [],
           userAddresses: []
         }
-      },
-      {
-        id: 'sample_utu-ranking_signal',
-        title: 'UTU Ranking Signal',
-        description: 'UTU Ranking signal helps you make better data reviews',
-        origin: 'https://stage-api.ututrust.com/core-api/ocean/ranking',
-        isCustom: false,
-        signals: [],
-        type: 1,
-        listView: {
-          id: 'listView',
-          value: true,
-          name: 'List View'
-        },
-        detailView: {
-          id: 'detailView',
-          value: true,
-          name: 'Details View'
-        },
-        urlParams: {
-          assetIds: [],
-          publisherIds: [],
-          userAddresses: []
-        }
       }
+      // {
+      //   id: 'sample_utu-ranking_signal',
+      //   title: 'UTU Ranking Signal',
+      //   description: 'UTU Ranking signal helps you make better data reviews',
+      //   origin: 'https://stage-api.ututrust.com/core-api/ocean/ranking',
+      //   isCustom: false,
+      //   signals: [],
+      //   type: 1,
+      //   listView: {
+      //     id: 'listView',
+      //     value: true,
+      //     name: 'List View'
+      //   },
+      //   detailView: {
+      //     id: 'detailView',
+      //     value: true,
+      //     name: 'Details View'
+      //   },
+      //   urlParams: {
+      //     assetIds: [],
+      //     publisherIds: [],
+      //     userAddresses: []
+      //   }
+      // }
     ],
     enabled: true
   }

@@ -1,5 +1,5 @@
 .preferences {
-  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 3);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 3);
   cursor: pointer;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
@@ -13,25 +13,8 @@
   vertical-align: middle;
 }
 
-.preferences[aria-expanded='true'] svg {
-  transform: rotate(180deg);
-}
-
-.caret,
-svg.caret {
-  width: var(--font-size-small);
-  height: var(--font-size-small);
-  fill: var(--border-color);
-  margin-left: calc(var(--spacer) / 4);
-  transition: transform 0.2s ease-out;
-  display: none;
-}
-
-@media screen and (min-width: 42rem) {
-  .caret,
-  svg.caret {
-    display: inline-block;
-  }
+.caret {
+  composes: caret from '../Menu.module.css';
 }
 
 .icon {

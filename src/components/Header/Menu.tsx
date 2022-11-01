@@ -11,6 +11,8 @@ import { useRouter } from 'next/router'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Tooltip from '@shared/atoms/Tooltip'
 import Caret from '@images/caret.svg'
+import SignalPreferences from './SignalPreferences'
+
 const Wallet = loadable(() => import('./Wallet'))
 
 declare type MenuItem = {
@@ -46,7 +48,7 @@ export default function Menu(): ReactElement {
       </Link>
 
       <Tooltip
-        className={styles.tooltip}
+        className={styles.badgeWrap}
         content={
           <div className={styles.versions}>
             <a className={styles.link} href={appConfig.v3MarketUri}>
@@ -69,6 +71,7 @@ export default function Menu(): ReactElement {
           }
         />
       </Tooltip>
+
       <ul className={styles.navigation}>
         {siteContent?.menu.map((item: MenuItem) => (
           <li key={item.name}>
@@ -79,6 +82,7 @@ export default function Menu(): ReactElement {
 
       <div className={styles.actions}>
         <SearchBar />
+        <SignalPreferences />
         <Networks />
         <Wallet />
         <UserPreferences />

@@ -22,6 +22,13 @@ export function Steps({
     setFieldValue('user.accountId', accountId)
   }, [chainId, accountId, setFieldValue])
 
+  // Reset the selected baseToken on chainId change
+  useEffect(() => {
+    if (!chainId) return
+
+    setFieldValue('pricing.baseToken', null)
+  }, [chainId, setFieldValue])
+
   // auto-sync publish feedback into form data values
   useEffect(() => {
     setFieldValue('feedback', feedback)
@@ -33,14 +40,8 @@ export function Steps({
       ...feedback,
       '1': {
         ...feedback['1'],
-        txCount: values.pricing.type === 'dynamic' ? 2 : 1,
-        description:
-          values.pricing.type === 'dynamic'
-            ? feedback['1'].description.replace(
-                'a single transaction',
-                'a single transaction, after an initial approve transaction'
-              )
-            : initialPublishFeedback['1'].description
+        txCount: 1,
+        description: initialPublishFeedback['1'].description
       }
     })
   }, [values.pricing.type, feedback, setFieldValue])

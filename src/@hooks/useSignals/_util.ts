@@ -21,6 +21,30 @@ export function getURLParams(urlParams: SignalParams | string[]) {
   }
   return paramString
 }
+
+export function getURLParamsAssets({
+  uuids,
+  origin
+}: {
+  uuids: { label: string; value: string }[]
+  origin: string
+}) {
+  const urlPaths = new URL(origin).pathname.split('/')
+  const pathsObj = {}
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  urlPaths.forEach((path) => (pathsObj[path] = path))
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  uuids.forEach((uuid) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (pathsObj[uuid.label]) {
+      origin.replace(uuid.label, uuid.value)
+    }
+  })
+}
+
 export function getSignalUrls(signalOriginItem: SignalOriginItem) {
   // return signalOriginItem.origin + getURLParams(signalOriginItem.urlParams)
   return signalOriginItem.origin
@@ -32,7 +56,6 @@ export function getSignalUrls(signalOriginItem: SignalOriginItem) {
  * @memberOf useSignalsLoader
  * */
 export async function fetchSignals(url: string): Promise<any[]> {
-  console.log('url', url)
   if (url.length === 0) throw Error('empty url')
   try {
     return await fetchData(url)
@@ -68,4 +91,46 @@ export function arrayEqual(a1: any[], a2: any[]) {
     }
   }
   return true
+}
+
+function _appendSignalDetails(
+  detailedItems: SignalOriginItem[],
+  compArray: SignalOriginItem[]
+) {
+  return detailedItems.map((signalOrigin, index) => {
+    return {
+      description: compArray[index]?.description || '',
+      title: compArray[index]?.title || '',
+      id: compArray[index]?.id || '',
+      ...signalOrigin
+    } as SignalOriginItem
+  })
+}
+
+export function getAssetSignalItems(
+  signalItems: SignalOriginItem[] | SignalOriginItem,
+  compareIds: string[],
+  assetSignalOrigins: SignalOriginItem[]
+) {
+  let detailedItems
+  if (!Array.isArray(signalItems)) {
+    detailedItems = [signalItems]
+    detailedItems = _appendSignalDetails(detailedItems, assetSignalOrigins)
+  } else {
+    detailedItems = [...signalItems]
+    detailedItems = _appendSignalDetails(detailedItems, assetSignalOrigins)
+  }
+  return detailedItems.map((signalItem) => {
+    if (signalItem) {
+      return {
+        ...signalItem,
+        signals: signalItem.signals
+          ? signalItem.signals.filter((signal) =>
+              compareIds.includes(signal.assetId)
+            )
+          : []
+      }
+    }
+    return null
+  })
 }
