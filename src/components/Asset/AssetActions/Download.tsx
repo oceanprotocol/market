@@ -183,6 +183,7 @@ export default function Download({
       consumableFeedback={consumableFeedback}
     />
   )
+  console.log('asset.services', asset.services)
 
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
     return (
@@ -195,7 +196,7 @@ export default function Download({
           />
         ) : (
           <>
-            {isUnsupportedPricing ? (
+            {isUnsupportedPricing || !asset.services.length ? (
               <Alert
                 className={styles.fieldWarning}
                 state="info"
