@@ -37,11 +37,8 @@ export default function RelatedAssets({
         }
       },
       filters: [
-        { terms: { chainId: chainIds } },
         tagFilter && { terms: { 'metadata.tags.keyword': tags } },
-        ownerFilter && { term: { 'nft.owner.keyword': owner } },
-        { term: { _index: 'aquarius' } },
-        { term: { 'purgatory.state': false } }
+        ownerFilter && { term: { 'nft.owner.keyword': owner } }
       ],
       sort: {
         'stats.orders': 'desc'
