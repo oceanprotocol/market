@@ -80,7 +80,7 @@ export default function RelatedAssets({
           assets={relatedAssets}
           showPagination={false}
           isLoading={isLoading}
-          minimal={true}
+          noDescription={true}
         />
       )}
     </section>

@@ -14,13 +14,13 @@ import { useUserPreferences } from '@context/UserPreferences'
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
-  minimal?: boolean
+  noDescription?: boolean
 }
 
 export default function AssetTeaser({
   asset,
   noPublisher,
-  minimal
+  noDescription
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
@@ -53,9 +53,9 @@ export default function AssetTeaser({
             <Dotdotdot tagName="h1" clamp={3} className={styles.title}>
               {name.slice(0, 200)}
             </Dotdotdot>
-            {!noPublisher && !minimal && <Publisher account={owner} minimal />}
+            {!noPublisher && !noDescription && <Publisher account={owner} />}
           </header>
-          {!minimal && (
+          {!noDescription && (
             <div className={styles.content}>
               <Dotdotdot tagName="p" clamp={3}>
                 {removeMarkdown(description?.substring(0, 300) || '')}

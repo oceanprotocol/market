@@ -28,7 +28,7 @@ declare type AssetListProps = {
   onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
   noPublisher?: boolean
-  minimal?: boolean
+  noDescription?: boolean
 }
 
 export default function AssetList({
@@ -40,7 +40,7 @@ export default function AssetList({
   onPageChange,
   className,
   noPublisher,
-  minimal
+  noDescription
 }: AssetListProps): ReactElement {
   const { chainIds } = useUserPreferences()
   const { accountId } = useWeb3()
@@ -87,7 +87,7 @@ export default function AssetList({
               asset={assetWithPrice}
               key={assetWithPrice.id}
               noPublisher={noPublisher}
-              minimal={minimal}
+              noDescription={noDescription}
             />
           ))
         ) : (
