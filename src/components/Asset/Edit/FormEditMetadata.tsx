@@ -83,8 +83,6 @@ export default function FormEditMetadata({
 
     setStorageType(values.storageType)
 
-    console.log(values)
-
     // TODO: add storageType from asset's metadata information
   }, [values.storageType])
 

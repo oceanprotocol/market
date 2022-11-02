@@ -14,6 +14,7 @@ export interface FormPublishService {
 }
 
 export interface FormPublishData {
+  storageType?: string
   user: {
     stepCurrent: number
     accountId: string

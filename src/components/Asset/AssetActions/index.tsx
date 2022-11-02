@@ -57,7 +57,8 @@ export default function AssetActions({
           .url
           ? await getFileUrlInfo(
               formikState?.values?.services?.[0].files?.[0].url,
-              providerUrl
+              providerUrl,
+              'url'
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])

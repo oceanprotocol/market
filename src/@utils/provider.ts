@@ -95,7 +95,7 @@ export async function getFileUrlInfo(
     switch (storageType) {
       case 'ipfs':
         // eslint-disable-next-line no-case-declarations
-        const fileIPFS: Ipfs = {
+        const fileIPFS: any = {
           type: 'ipfs',
           hash: url
         }
