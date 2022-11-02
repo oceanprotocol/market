@@ -1,4 +1,5 @@
-import React, { FormEvent, ReactElement } from 'react'
+import React, { FormEvent, ReactElement, useState } from 'react'
+import { toast } from 'react-toastify'
 import Button from '../atoms/Button'
 import styles from './index.module.css'
 import Loader from '../atoms/Loader'
@@ -133,21 +134,35 @@ export default function ButtonBuy({
   isAlgorithmConsumable,
   hasProviderFee
 }: ButtonBuyProps): ReactElement {
-  const buttonText =
-    action === 'download'
-      ? hasPreviousOrder
-        ? 'Download'
-        : priceType === 'free'
-        ? 'Get'
-        : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
-      : hasPreviousOrder &&
-        hasPreviousOrderSelectedComputeAsset &&
-        !hasProviderFee
-      ? 'Start Compute Job'
-      : priceType === 'free' && algorithmPriceType === 'free'
-      ? 'Order Compute Job'
-      : `Buy Compute Job`
+  const [retry, setRetry] = useState<boolean>(false)
 
+  const buttonText = retry
+    ? 'Retry'
+    : action === 'download'
+    ? hasPreviousOrder
+      ? 'Download'
+      : priceType === 'free'
+      ? 'Get'
+      : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
+    : hasPreviousOrder &&
+      hasPreviousOrderSelectedComputeAsset &&
+      !hasProviderFee
+    ? 'Start Compute Job'
+    : priceType === 'free' && algorithmPriceType === 'free'
+    ? 'Order Compute Job'
+    : `Buy Compute Job`
+
+  function buttonClick(e: React.FormEvent<HTMLButtonElement>) {
+    try {
+      onClick(e)
+    } catch (error) {
+      toast.error(
+        'An error occurred, please retry. Details on the error are available in the console. '
+      )
+      console.error('Error:', error)
+      setRetry(true)
+    }
+  }
   return (
     <div className={styles.actions}>
       {isLoading ? (
@@ -157,7 +172,7 @@ export default function ButtonBuy({
           <Button
             style="primary"
             type={type}
-            onClick={onClick}
+            onClick={buttonClick}
             disabled={disabled}
             className={action === 'compute' ? styles.actionsCenter : ''}
           >
