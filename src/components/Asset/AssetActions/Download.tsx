@@ -183,7 +183,6 @@ export default function Download({
       consumableFeedback={consumableFeedback}
     />
   )
-  console.log('asset.services', asset.services)
 
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
     return (

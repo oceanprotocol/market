@@ -27,8 +27,7 @@ export default function FileIcon({
   const styleClasses = `${styles.file} ${small ? styles.small : ''} ${
     className || ''
   }`
-  console.log('isLoading', isLoading)
-  console.log('file', file)
+
   return (
     <ul className={styleClasses}>
       {!isLoading ? (
