@@ -169,7 +169,7 @@ export default function Download({
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
       onClick={handleOrderOrDownload}
-      assetTimeout={secondsToString(asset.services[0].timeout)}
+      assetTimeout={secondsToString(asset?.services?.[0]?.timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
       isLoading={isLoading}
