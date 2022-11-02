@@ -120,12 +120,12 @@ function AssetProvider({
   // Helper: Get and set asset access details
   // -----------------------------------
   const fetchAccessDetails = useCallback(async (): Promise<void> => {
-    if (!asset?.chainId || !asset?.services) return
+    if (!asset?.chainId || !asset?.services?.length) return
 
     const accessDetails = await getAccessDetails(
       asset.chainId,
-      asset.services?.[0]?.datatokenAddress,
-      asset.services?.[0]?.timeout,
+      asset.services[0].datatokenAddress,
+      asset.services[0].timeout,
       accountId
     )
     setAsset((prevState) => ({
