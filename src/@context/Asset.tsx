@@ -124,8 +124,8 @@ function AssetProvider({
 
     const accessDetails = await getAccessDetails(
       asset.chainId,
-      asset.services[0].datatokenAddress,
-      asset.services[0].timeout,
+      asset.services?.[0]?.datatokenAddress,
+      asset.services?.[0]?.timeout,
       accountId
     )
     setAsset((prevState) => ({
