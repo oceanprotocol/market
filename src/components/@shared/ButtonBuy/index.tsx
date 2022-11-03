@@ -1,5 +1,4 @@
-import React, { FormEvent, ReactElement, useState } from 'react'
-import { toast } from 'react-toastify'
+import React, { FormEvent, ReactElement } from 'react'
 import Button from '../atoms/Button'
 import styles from './index.module.css'
 import Loader from '../atoms/Loader'
