@@ -1,4 +1,4 @@
-import styles from '@shared/AssetTeaser/AssetTeaser.module.css'
+import styles from '@shared/AssetTeaser/index.module.css'
 import UtuIcon from '@images/utu-logo.svg'
 import React from 'react'
 import { SignalOriginItem } from '@context/Signals/_types'

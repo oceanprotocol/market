@@ -2,9 +2,9 @@ import React, { ReactElement } from 'react'
 import Cog from '@images/signalPreferences.svg'
 import preferenceStyles from '../UserPreferences/index.module.css'
 import Caret from '@images/caret.svg'
-import useDarkMode from 'use-dark-mode'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Link from 'next/link'
+import useDarkMode from '@oceanprotocol/use-dark-mode'
 
 export default function SignalPreferences(): ReactElement {
   const { appConfig } = useMarketMetadata()

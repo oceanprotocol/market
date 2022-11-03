@@ -6,7 +6,7 @@ import removeMarkdown from 'remove-markdown'
 import Publisher from '@shared/Publisher'
 import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
-import styles from '../AssetTeaser/AssetTeaser.module.css'
+import styles from '../AssetTeaser/index.module.css'
 import { getServiceByName } from '@utils/ddo'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -86,7 +86,6 @@ export default function SignalAssetTeaser({
             type={type}
             accessType={accessType}
             className={styles.typeDetails}
-            totalSales={orders}
           />
 
           <div className={styles.content}>

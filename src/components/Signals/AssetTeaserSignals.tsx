@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import styles from '@shared/SignalAssetTeaser/SignalAssetTeaser.module.css'
-import assetStyles from '@shared/AssetTeaser/AssetTeaser.module.css'
+import assetStyles from '@shared/AssetTeaser/index.module.css'
 import PolygonIcon from '@images/polygon.svg'
 import Tooltip from '@shared/atoms/Tooltip'
 import ToolTipSignals from './ToolTipSignals'
