@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, {ReactElement, useEffect} from 'react'
 import Link from 'next/link'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '@shared/Price'
@@ -6,14 +6,14 @@ import removeMarkdown from 'remove-markdown'
 import Publisher from '@shared/Publisher'
 import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
-import styles from './AssetTeaser.module.css'
-import { getServiceByName } from '@utils/ddo'
-import { AssetExtended } from 'src/@types/AssetExtended'
-import { useSignalContext } from '@context/Signals'
-import { getAssetSignalItems } from '@hooks/useSignals/_util'
+import styles from './index.module.css'
+import {getServiceByName} from '@utils/ddo'
+import {AssetExtended} from 'src/@types/AssetExtended'
+import {useSignalContext} from '@context/Signals'
+import {getAssetSignalItems} from '@hooks/useSignals/_util'
 import Loader from '@shared/atoms/Loader'
-import { SignalOriginItem } from '@context/Signals/_types'
-import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
+import {SignalOriginItem} from '@context/Signals/_types'
+import {AssetDatatoken} from '@oceanprotocol/lib/dist/src/@types/Asset'
 import AssetTeaserSignals from '../../Signals/AssetTeaserSignals'
 
 declare type AssetTeaserProps = {
@@ -31,17 +31,17 @@ function LoaderArea() {
   )
 }
 
-export default function AssetTeaser({
-  asset,
-  noPublisher,
-  isLoading,
-  signalItems
-}: AssetTeaserProps): ReactElement {
-  const { datatokens } = asset
-  const { signals, assetSignalsUrls } = useSignalContext()
+export default function OldAssetTeaser({
+                                         asset,
+                                         noPublisher,
+                                         isLoading,
+                                         signalItems
+                                       }: AssetTeaserProps): ReactElement {
+  const {datatokens} = asset
+  const {signals, assetSignalsUrls} = useSignalContext()
   const filterAssetSignals = () => {
     return signals
-      .filter((signal) => signal.type === 1)
+        .filter((signal) => signal.type === 1)
       .filter((signal) => signal.listView.value)
   }
 
