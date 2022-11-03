@@ -20,6 +20,7 @@ import FormHelp from './Help'
 const cx = classNames.bind(styles)
 
 export interface InputProps {
+  textVisible?: boolean
   name: string
   label?: string | ReactNode
   placeholder?: string
@@ -110,6 +111,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   })
 
   const [disclaimerVisible, setDisclaimerVisible] = useState(true)
+  const [textVisible, setTextVisible] = useState<boolean>(false)
 
   useEffect(() => {
     if (!isFormikField) return
@@ -120,6 +122,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
           props.form?.values[parsedFieldName[0]]?.[parsedFieldName[1]]
         )
       )
+      setTextVisible(textVisible)
     }
   }, [isFormikField, props.form?.values])
 
@@ -136,19 +139,24 @@ export default function Input(props: Partial<InputProps>): ReactElement {
           <Tooltip content={<Markdown text={help} />} />
         )}
       </Label>
-      <InputElement size={size} {...field} {...props} />
-      {help && prominentHelp && <FormHelp>{help}</FormHelp>}
+      <div>
+        <InputElement size={size} {...field} {...props} />
+        {help && prominentHelp && <FormHelp>{help}</FormHelp>}
 
-      {field?.name !== 'files' && isFormikField && hasFormikError && (
-        <div className={styles.error}>
-          <ErrorMessage name={field.name} />
-        </div>
-      )}
+        {field?.name !== 'files' && isFormikField && hasFormikError && (
+          <div className={styles.error}>
+            <ErrorMessage name={field.name} />
+          </div>
+        )}
 
-      {disclaimer && (
-        <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>
-      )}
-      {additionalComponent && additionalComponent}
+        {disclaimer && (
+          <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>
+        )}
+        {additionalComponent && additionalComponent}
+        {textVisible ? (
+          <FormHelp>Defaults to your OS setting, select to override.</FormHelp>
+        ) : null}
+      </div>
     </div>
   )
 }

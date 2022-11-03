@@ -1,0 +1,86 @@
+.custom {
+  padding: 0;
+  margin: 0 auto;
+  max-width: 40rem;
+  padding-top: var(--spacer);
+}
+
+.custom li {
+  display: block;
+  padding-bottom: var(--spacer);
+  margin-bottom: var(--spacer);
+  counter-increment: list-number;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.custom .active:before {
+  color: var(--background-content);
+  border-color: var(--brand-purple);
+  border-top-color: var(--brand-violet);
+  animation: loader 0.6s linear infinite;
+}
+
+.custom .success:before {
+  content: '✓';
+  color: var(--brand-white);
+  background: var(--brand-alert-green);
+  border-color: transparent;
+}
+
+.custom .error:before {
+  content: '✕';
+  color: var(--brand-white);
+  background: var(--brand-alert-red);
+  border-color: transparent;
+}
+
+.customTitle > * {
+  display: flex;
+  justify-content: center;
+  color: var(--color-primary);
+  font-size: var(--font-size-base);
+  margin-bottom: 0;
+}
+
+.section {
+  display: flex;
+  justify-content: space-around;
+}
+
+.sectionElements {
+  justify-content: start;
+  width: 30%;
+}
+
+.sectionElementsRight {
+  width: 70%;
+}
+
+.sectionElementsRight p {
+  color: var(--color-secondary);
+}
+
+.sectionElementsBtn {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sectionElementsBtn:first-child {
+  justify-content: start;
+  margin-right: 9rem;
+}
+
+.btnCancel {
+  background: var(--background-body-transparent);
+  color: var(--color-primary);
+}
+
+.sectionElementsCode {
+  font-family: var(--font-family-monospace);
+}
+
+.sectionElementsRight p > * {
+  font-family: var(--font-family-monospace);
+  color: white;
+  margin-bottom: 0;
+}

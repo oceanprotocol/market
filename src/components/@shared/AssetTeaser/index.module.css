@@ -3,6 +3,10 @@
   height: 100%;
 }
 
+.signalLoaderText {
+  padding: calc(var(--spacer) / 8);
+}
+
 .link {
   composes: box from '@shared/atoms/Box.module.css';
   font-size: var(--font-size-small);
@@ -14,6 +18,43 @@
   /* for sticking footer to bottom */
   display: flex;
   flex-direction: column;
+}
+
+.signalContainer {
+  /*composes: box from '@shared/atoms/Box.module.css';*/
+  font-size: var(--font-size-small);
+  height: 4rem;
+  color: var(--color-secondary);
+  /* for sticking footer to bottom */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 0.3rem;
+
+  border-radius: var(--border-radius);
+  border-top: 1px solid var(--border-color);
+}
+
+.signal {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.signal > * {
+  padding-right: 2.5rem;
+}
+
+.signalTooltip {
+  min-width: 1.3rem;
+  display: flex;
+  align-items: center;
+}
+
+.symbol2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .algorithm .link {
@@ -59,4 +100,71 @@
   border-left: none;
   padding-left: 0;
   margin-left: 0;
+}
+
+.assets {
+  padding: 0;
+  margin: 0 auto;
+  max-width: 20rem;
+  width: 40rem;
+  padding-top: var(--spacer);
+}
+
+.assets li {
+  display: block;
+  justify-content: space-between;
+  padding-bottom: var(--spacer);
+  margin-bottom: var(--spacer);
+  counter-increment: list-number;
+  padding-left: var(--spacer);
+  padding-right: var(--spacer);
+}
+
+.assets li:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.assets li:last-child {
+  margin-bottom: 0;
+}
+
+.assetListTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: var(--color-secondary);
+}
+
+.assetListTitleName {
+  display: flex;
+}
+
+.assets .active:before {
+  color: var(--background-content);
+  border-color: var(--brand-purple);
+  border-top-color: var(--brand-violet);
+  animation: loader 0.6s linear infinite;
+}
+
+.assets .success:before {
+  content: '✓';
+  color: var(--brand-white);
+  background: var(--brand-alert-green);
+  border-color: transparent;
+}
+
+.assets .error:before {
+  content: '✕';
+  color: var(--bra0 0.3 remnd-white);
+  background: var(--brand-alert-red);
+  border-color: transparent;
+}
+
+.signalUnit {
+  display: inline;
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-base);
+  padding: calc(var(--spacer) / 8);
+  color: var(--font-color-text);
+  line-height: 1.2;
 }

@@ -272,28 +272,30 @@ export default function PublishPage({
   }
 
   return isInPurgatory && purgatoryData ? null : (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={async (values) => {
-        // kick off publishing
-        await handleSubmit(values)
-      }}
-    >
-      {({ values }) => (
-        <>
-          <PageHeader
-            title={<Title networkId={values.user.chainId} />}
-            description={content.description}
-          />
-          <Form className={styles.form} ref={scrollToRef}>
-            <Navigation />
-            <Steps feedback={feedback} />
-            <Actions scrollToRef={scrollToRef} did={did} />
-          </Form>
-          {debug && <Debug />}
-        </>
-      )}
-    </Formik>
+    <>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={async (values) => {
+          // kick off publishing
+          await handleSubmit(values)
+        }}
+      >
+        {({ values }) => (
+          <>
+            <PageHeader
+              title={<Title networkId={values.user.chainId} />}
+              description={content.description}
+            />
+            <Form className={styles.form} ref={scrollToRef}>
+              <Navigation />
+              <Steps feedback={feedback} />
+              <Actions scrollToRef={scrollToRef} did={did} />
+            </Form>
+            {debug && <Debug />}
+          </>
+        )}
+      </Formik>
+    </>
   )
 }

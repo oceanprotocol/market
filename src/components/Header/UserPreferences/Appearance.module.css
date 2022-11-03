@@ -34,3 +34,14 @@
 .appearances div[class*='boxSelectionsWrapper'] {
   padding-bottom: calc(var(--spacer) / 8);
 }
+
+.appearanceList {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.appearanceBox {
+  display: flex;
+  flex-direction: column;
+}

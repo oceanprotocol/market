@@ -1,8 +1,10 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+/* eslint-disable react/no-children-prop */
+import React, { ReactElement, useEffect, useState } from 'react'
 import Compute from './Compute'
 import Consume from './Download'
-import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
+import { Datatoken, FileInfo, LoggerInstance } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
+import AssetSignals from '@shared/atoms/AssetSignals'
 import { compareAsBN } from '@utils/numbers'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
@@ -16,6 +18,10 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
+import { useSignalContext } from '@context/Signals'
+import useSignalsLoader, { useAssetListSignals } from '@hooks/useSignals'
+import { getAssetSignalItems } from '@hooks/useSignals/_util'
+import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
 
 export default function AssetActions({
   asset
@@ -41,6 +47,31 @@ export default function AssetActions({
     asset?.services.filter((service) => service.type === 'compute')[0]
   )
 
+  // Signals loading logic
+  // Get from AssetList component
+  const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>([
+    asset.datatokens.map((data) => data.address)
+  ])
+  const { assetSignalOriginItems, signals, assetSignalsUrls } =
+    useSignalContext()
+  const filterAssetSignals = () => {
+    return signals
+      .filter((signal) => signal.type === 1)
+      .filter((signal) => signal.detailView.value)
+  }
+  const { urls } = useAssetListSignals(
+    dataTokenAddresses,
+    signals,
+    assetSignalsUrls,
+    'detailView'
+  )
+  const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
+
+  const filteredSignals = getAssetSignalItems(
+    signalItems,
+    asset.datatokens.map((data: AssetDatatoken) => data.address),
+    filterAssetSignals()
+  )
   // Get and set file info
   useEffect(() => {
     const oceanConfig = getOceanConfig(asset?.chainId)
@@ -125,7 +156,6 @@ export default function AssetActions({
       setIsBalanceSufficient(false)
     }
   }, [balance, accountId, asset?.accessDetails, dtBalance])
-
   const UseContent = (
     <>
       {isCompute ? (
@@ -153,6 +183,15 @@ export default function AssetActions({
   return (
     <>
       <Tabs items={tabs} className={styles.actions} />
+      <AssetSignals
+        className={styles.actions}
+        asset={asset}
+        signalItems={filteredSignals}
+        isLoading={isFetchingSignals}
+      />
+      {/*{signalItems ? (*/}
+      {/*  <AssetTeaserSignals assetId={asset.id} signalItems={filteredSignals} />*/}
+      {/*) : null}*/}
       <Web3Feedback
         networkId={asset?.chainId}
         isAssetNetwork={isAssetNetwork}
