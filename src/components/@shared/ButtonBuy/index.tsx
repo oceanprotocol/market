@@ -30,6 +30,7 @@ interface ButtonBuyProps {
   algorithmPriceType?: string
   isAlgorithmConsumable?: boolean
   hasProviderFee?: boolean
+  retry?: boolean
 }
 
 // TODO: we need to take a look at these messages
@@ -132,10 +133,9 @@ export default function ButtonBuy({
   priceType,
   algorithmPriceType,
   isAlgorithmConsumable,
-  hasProviderFee
+  hasProviderFee,
+  retry
 }: ButtonBuyProps): ReactElement {
-  const [retry, setRetry] = useState<boolean>(false)
-
   const buttonText = retry
     ? 'Retry'
     : action === 'download'
@@ -152,17 +152,6 @@ export default function ButtonBuy({
     ? 'Order Compute Job'
     : `Buy Compute Job`
 
-  function buttonClick(e: React.FormEvent<HTMLButtonElement>) {
-    try {
-      onClick(e)
-    } catch (error) {
-      toast.error(
-        'An error occurred, please retry. Details on the error are available in the console. '
-      )
-      console.error('Error:', error)
-      setRetry(true)
-    }
-  }
   return (
     <div className={styles.actions}>
       {isLoading ? (
@@ -172,7 +161,7 @@ export default function ButtonBuy({
           <Button
             style="primary"
             type={type}
-            onClick={buttonClick}
+            onClick={onClick}
             disabled={disabled}
             className={action === 'compute' ? styles.actionsCenter : ''}
           >
