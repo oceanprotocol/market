@@ -30,9 +30,9 @@ export default function FileIcon({
 
   return (
     <ul className={styleClasses}>
-      {!isLoading && file ? (
+      {!isLoading ? (
         <>
-          {file.contentType || file.contentLength ? (
+          {file?.contentType || file?.contentLength ? (
             <>
               <li>{cleanupContentType(file.contentType)}</li>
               <li>
