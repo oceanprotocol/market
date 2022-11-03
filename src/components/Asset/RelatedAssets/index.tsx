@@ -81,6 +81,7 @@ export default function RelatedAssets({
           showPagination={false}
           isLoading={isLoading}
           noDescription={true}
+          noPublisher={true}
         />
       )}
     </section>
