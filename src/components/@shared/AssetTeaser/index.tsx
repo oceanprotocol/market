@@ -62,7 +62,7 @@ export default function AssetTeaser({
               </Dotdotdot>
             </div>
           )}
-          {isUnsupportedPricing ? (
+          {isUnsupportedPricing || !asset.services.length ? (
             <strong>No pricing schema available</strong>
           ) : (
             <Price accessDetails={asset.accessDetails} size="small" />

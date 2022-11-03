@@ -11,7 +11,7 @@ export function getInitialValues(
     name: metadata?.name,
     description: metadata?.description,
     price,
-    links: metadata?.links as any,
+    links: [{ url: '', type: '' }],
     files: [{ url: '', type: '' }],
     timeout: secondsToString(timeout),
     author: metadata?.author,
