@@ -103,7 +103,7 @@ module.exports = {
         description:
           'Qualitative signal helps you make better investment decisions',
         origin:
-          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/id',
+          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/$assetId',
         isCustom: false,
         signals: [],
         type: 1,
@@ -129,7 +129,7 @@ module.exports = {
         description:
           'Qualitative signal helps you make better investment decisions',
         origin:
-          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/id',
+          'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/id?assetId=$assetId',
         isCustom: false,
         signals: [],
         type: 1,
@@ -155,7 +155,7 @@ module.exports = {
       //   description:
       //     'Sushi defi signal helps you make better investment decisions',
       //   origin:
-      //     'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi/id',
+      //     'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/defi?assetId=$assetId',
       //   isCustom: false,
       //   signals: [],
       //   type: 2,
@@ -181,7 +181,7 @@ module.exports = {
         description:
           'UTU Ocean signal helps you make better data market decisions',
         origin:
-          'https://stage-api.ututrust.com/core-api/ocean/interactionSummary',
+          'https://stage-api.ututrust.com/core-api/ocean/interactionSummary/id?assetId=$assetId&userAccount=$userAccount',
         isCustom: false,
         signals: [],
         type: 1,

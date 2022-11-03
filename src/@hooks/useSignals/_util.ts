@@ -29,20 +29,15 @@ export function getURLParamsAssets({
   uuids: { label: string; value: string }[]
   origin: string
 }) {
-  const urlPaths = new URL(origin).pathname.split('/')
-  const pathsObj = {}
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  urlPaths.forEach((path) => (pathsObj[path] = path))
+  let originCopy = `${origin}`
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   uuids.forEach((uuid) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    if (pathsObj[uuid.label]) {
-      origin.replace(uuid.label, uuid.value)
-    }
+    originCopy = originCopy.replace(uuid.label, uuid.value)
   })
+  return originCopy
 }
 
 export function getSignalUrls(signalOriginItem: SignalOriginItem) {

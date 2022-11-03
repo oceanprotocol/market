@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import {
   fetcher,
-  getURLParams,
+  getURLParamsAssets,
   onError,
   onSuccess
 } from '@hooks/useSignals/_util'
 import { UseSignals } from '@hooks/useSignals/_types'
+import { useWeb3 } from '@context/Web3'
 // Reusable state and fetch logic for loading signal data to any page, context or component
 // A hook to fetch signals for all available in a particular signal type list e.g asset list or publisher list
 export default function useSignalsLoader(
@@ -58,7 +59,7 @@ export function useAssetListSignals(
   const [assetSignalOrigins, setAssetSignalOrigins] = useState<any[]>([])
   const [datatokensStringsArray, setDatatokensStringsArray] = useState([])
   const [urls, setUrls] = useState<any[]>()
-
+  const { accountId } = useWeb3()
   useEffect(() => {
     if (dataTokenAddresses && dataTokenAddresses.length > 0) {
       // Get only those asset signals that are for the list view and for asset types only
@@ -80,11 +81,21 @@ export function useAssetListSignals(
       setUrls(
         assetSignalsUrls.map((item) => {
           console.log(
-            item + getURLParams(['assetId', datatokensStringsArray.join(',')])
+            getURLParamsAssets({
+              uuids: [
+                { label: '$assetId', value: datatokensStringsArray.join(',') },
+                { label: '$userAccount', value: accountId }
+              ],
+              origin: item
+            })
           )
-          return (
-            item + getURLParams(['assetId', datatokensStringsArray.join(',')])
-          )
+          return getURLParamsAssets({
+            uuids: [
+              { label: '$assetId', value: datatokensStringsArray.join(',') },
+              { label: '$userAccount', value: accountId }
+            ],
+            origin: item
+          })
         })
       )
     }
