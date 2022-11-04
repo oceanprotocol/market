@@ -2,20 +2,14 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { Asset } from '@oceanprotocol/lib'
 import { generateBaseQuery, queryMetadata } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
+import { useAsset } from '@context/Asset'
 import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
 import styles from './index.module.css'
 import { useCancelToken } from '@hooks/useCancelToken'
 import AssetList from '@shared/AssetList'
 
-export default function RelatedAssets({
-  tags,
-  nftAddress,
-  owner
-}: {
-  tags: string[]
-  nftAddress: string
-  owner: string
-}): ReactElement {
+export default function RelatedAssets(): ReactElement {
+  const { asset } = useAsset()
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
   const [relatedAssets, setRelatedAssets] = useState<Asset[]>()
@@ -33,12 +27,14 @@ export default function RelatedAssets({
       },
       nestedQuery: {
         must_not: {
-          term: { 'nftAddress.keyword': nftAddress }
+          term: { 'nftAddress.keyword': asset.nftAddress }
         }
       },
       filters: [
-        tagFilter && { terms: { 'metadata.tags.keyword': tags } },
-        ownerFilter && { term: { 'nft.owner.keyword': owner } }
+        tagFilter && {
+          terms: { 'metadata.tags.keyword': asset.metadata.tags }
+        },
+        ownerFilter && { term: { 'nft.owner.keyword': asset.nftAddress } }
       ],
       sort: {
         'stats.orders': 'desc'

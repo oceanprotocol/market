@@ -79,11 +79,7 @@ export default function AssetContent({
               </Button>
             </div>
           )}
-          <RelatedAssets
-            tags={asset?.metadata?.tags}
-            nftAddress={asset?.nftAddress}
-            owner={asset?.nft?.owner}
-          />
+          <RelatedAssets />
         </div>
       </article>
     </>
