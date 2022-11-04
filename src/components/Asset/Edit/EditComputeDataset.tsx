@@ -41,10 +41,12 @@ export default function EditComputeDataset({
 
   async function handleSubmit(values: ComputeEditForm, resetForm: () => void) {
     try {
-      if (asset?.accessDetails?.type === 'free') {
+      if (
+        asset?.accessDetails?.type === 'free' &&
+        asset?.accessDetails?.isPurchasable
+      ) {
         const tx = await setMinterToPublisher(
           web3,
-          asset?.accessDetails?.addressOrId,
           asset?.accessDetails?.datatoken?.address,
           accountId,
           setError

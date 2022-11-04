@@ -1,8 +1,10 @@
-import React, { ReactElement } from 'react'
-import { Field, Form } from 'formik'
+import React, { ReactElement, useEffect } from 'react'
+import { Field, Form, useField, useFormikContext } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
 import { useAsset } from '@context/Asset'
+import { FormPublishData } from 'src/components/Publish/_types'
+import { getFileUrlInfo } from '@utils/provider'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,
@@ -23,7 +25,8 @@ export default function FormEditMetadata({
   showPrice: boolean
   isComputeDataset: boolean
 }): ReactElement {
-  const { oceanConfig } = useAsset()
+  const { oceanConfig, asset } = useAsset()
+  const { values, setFieldValue } = useFormikContext<FormPublishData>()
 
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
@@ -40,6 +43,34 @@ export default function FormEditMetadata({
   } else if (!isComputeDataset && !timeoutOptionsArray.includes('Forever')) {
     timeoutOptionsArray.push('Forever')
   }
+
+  useEffect(() => {
+    // let's initiate files with empty url (we can't access the asset url) with type hidden (for UI frontend)
+    setFieldValue('files', [
+      {
+        url: '',
+        type: 'hidden'
+      }
+    ])
+
+    const providerUrl = values?.services
+      ? values?.services[0].providerUrl.url
+      : asset.services[0].serviceEndpoint
+    // if we have a sample file, we need to get the files' info before setting defaults links value
+    asset?.metadata?.links?.[0] &&
+      getFileUrlInfo(asset.metadata.links[0], providerUrl).then(
+        (checkedFile) => {
+          console.log(checkedFile)
+          // initiate link with values from asset metadata
+          setFieldValue('links', [
+            {
+              url: asset.metadata.links[0],
+              ...checkedFile[0]
+            }
+          ])
+        }
+      )
+  }, [])
 
   return (
     <Form>

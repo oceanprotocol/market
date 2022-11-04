@@ -8,7 +8,6 @@ import Decimal from 'decimal.js'
 import { useWeb3 } from '@context/Web3'
 
 interface PriceOutputProps {
-  totalPrice: string
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   symbol: string
@@ -16,11 +15,13 @@ interface PriceOutputProps {
   hasPreviousOrderSelectedComputeAsset: boolean
   hasDatatokenSelectedComputeAsset: boolean
   algorithmConsumeDetails: AccessDetails
+  algorithmSymbol: string
   selectedComputeAssetTimeout: string
   datasetOrderPrice?: string
   algoOrderPrice?: string
   providerFeeAmount?: string
   validUntil?: string
+  totalPrices?: totalPriceMap[]
 }
 
 function Row({
@@ -71,7 +72,6 @@ function Row({
 }
 
 export default function PriceOutput({
-  totalPrice,
   hasPreviousOrder,
   hasDatatoken,
   assetTimeout,
@@ -79,18 +79,30 @@ export default function PriceOutput({
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
   algorithmConsumeDetails,
+  algorithmSymbol,
   selectedComputeAssetTimeout,
   datasetOrderPrice,
   algoOrderPrice,
   providerFeeAmount,
-  validUntil
+  validUntil,
+  totalPrices
 }: PriceOutputProps): ReactElement {
   const { asset } = useAsset()
 
   return (
     <div className={styles.priceComponent}>
       You will pay{' '}
-      <PriceUnit price={Number(totalPrice)} symbol={symbol} size="small" />
+      {totalPrices.map((item, index) => (
+        <div key={item.symbol}>
+          <PriceUnit
+            price={Number(item.value)}
+            symbol={
+              index < totalPrices.length - 1 ? `${item.symbol} & ` : item.symbol
+            }
+            size="small"
+          />
+        </div>
+      ))}
       <Tooltip
         content={
           <div className={styles.calculation}>
@@ -115,18 +127,25 @@ export default function PriceOutput({
                 .toDecimalPlaces(MAX_DECIMALS)
                 .toString()}
               timeout={selectedComputeAssetTimeout}
-              symbol={symbol}
+              symbol={algorithmSymbol}
               sign="+"
               type="ALGORITHM"
             />
             <Row
               price={providerFeeAmount} // initializeCompute.provider fee amount
               timeout={`${validUntil} seconds`} // valid until value
-              symbol={symbol}
+              symbol={'OCEAN'} // we assume that provider fees will always be in OCEAN token
               sign="+"
               type="C2D RESOURCES"
             />
-            <Row price={totalPrice} symbol={symbol} sign="=" />
+            {totalPrices.map((item, index) => (
+              <Row
+                price={item.value}
+                symbol={item.symbol}
+                sign={index === 0 ? '=' : '&'}
+                key={item.symbol}
+              />
+            ))}
           </div>
         }
       />
