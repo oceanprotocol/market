@@ -14,6 +14,9 @@ export default function RelatedAssets(): ReactElement {
   const newCancelToken = useCancelToken()
   const [relatedAssets, setRelatedAssets] = useState<Asset[]>()
   const [isLoading, setIsLoading] = useState<boolean>()
+  const { nftAddress } = asset
+  const { owner } = asset.nft
+  const { tags } = asset.metadata
 
   function generateQuery(
     size: number,
@@ -27,14 +30,14 @@ export default function RelatedAssets(): ReactElement {
       },
       nestedQuery: {
         must_not: {
-          term: { 'nftAddress.keyword': asset.nftAddress }
+          term: { 'nftAddress.keyword': nftAddress }
         }
       },
       filters: [
         tagFilter && {
-          terms: { 'metadata.tags.keyword': asset.metadata.tags }
+          terms: { 'metadata.tags.keyword': tags }
         },
-        ownerFilter && { term: { 'nft.owner.keyword': asset.nftAddress } }
+        ownerFilter && { term: { 'nft.owner.keyword': owner } }
       ],
       sort: {
         'stats.orders': 'desc'
