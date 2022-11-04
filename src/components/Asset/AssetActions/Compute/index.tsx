@@ -149,8 +149,6 @@ export default function Compute({
 
       setInitializedProviderResponse(initializedProvider)
 
-      console.log('here')
-
       const feeAmount = await unitsToAmount(
         !isSupportedOceanNetwork || !isAssetNetwork
           ? await getDummyWeb3(asset?.chainId)

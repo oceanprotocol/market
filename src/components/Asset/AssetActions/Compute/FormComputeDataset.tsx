@@ -204,7 +204,12 @@ export default function FormStartCompute({
     datasetOrderPriceAndFees,
     algoOrderPriceAndFees,
     providerFeeAmount,
-    isAssetNetwork
+    isAssetNetwork,
+    selectedAlgorithmAsset?.accessDetails,
+    datasetOrderPrice,
+    algoOrderPrice,
+    algorithmSymbol,
+    datasetSymbol
   ])
 
   useEffect(() => {
@@ -214,12 +219,13 @@ export default function FormStartCompute({
         setIsBalanceSufficient(false)
         return
       }
+
       // if one comparison of baseTokenBalance and token price comparison is false then the state will be false
       setIsBalanceSufficient(
-        isBalanceSufficient && compareAsBN(baseTokenBalance, `${price.value}`)
+        baseTokenBalance && compareAsBN(baseTokenBalance, `${price.value}`)
       )
     })
-  }, [balance, dtBalance, datasetSymbol, algorithmSymbol])
+  }, [balance, dtBalance, datasetSymbol, algorithmSymbol, totalPrices])
 
   return (
     <Form className={styles.form}>
