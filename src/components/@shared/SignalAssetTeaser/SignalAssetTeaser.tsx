@@ -82,6 +82,13 @@ export default function SignalAssetTeaser({
               type={type}
               accessType={accessType}
             />
+            <span className={styles.typeLabel}>
+              {datatokens[0]?.symbol.substring(0, 9)}
+            </span>
+            <NetworkName
+              networkId={asset.chainId}
+              className={styles.typeLabel}
+            />
           </aside>
           <header className={styles.header}>
             <div className={styles.symbol}>{datatokens[0]?.symbol}</div>
@@ -90,6 +97,13 @@ export default function SignalAssetTeaser({
             </Dotdotdot>
             {!noPublisher && <Publisher account={owner} minimal />}
           </header>
+
+          {/* <AssetType */}
+          {/*  type={type} */}
+          {/*  accessType={accessType} */}
+          {/*  className={styles.typeDetails} */}
+          {/* /> */}
+
           <div className={styles.content}>
             <Dotdotdot tagName="p" clamp={3}>
               {removeMarkdown(description?.substring(0, 300) || '')}
@@ -116,12 +130,6 @@ export default function SignalAssetTeaser({
               </span>
             ) : null}
           </footer>
-          <div className={styles.networkLine}>
-            <NetworkName
-              networkId={asset.chainId}
-              className={styles.typeLabel}
-            />
-          </div>
         </a>
       </Link>
       {signalItems ? (

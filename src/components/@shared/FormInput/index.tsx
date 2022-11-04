@@ -111,7 +111,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   })
 
   const [disclaimerVisible, setDisclaimerVisible] = useState(true)
-  const [textVisible, setTextVisible] = useState<boolean>(false)
+  const [textVisible, setTextVisible] = useState<boolean>(true)
 
   useEffect(() => {
     if (!isFormikField) return
