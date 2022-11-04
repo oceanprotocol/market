@@ -32,7 +32,7 @@ export async function getTopTags(
   try {
     const result = await queryMetadata(query, cancelToken)
     const tagsList = result?.aggregations?.topTags?.buckets.map(
-      (x: { key: any }) => x.key
+      (x: { key: string }) => x.key
     )
     return tagsList
   } catch (error) {
