@@ -58,3 +58,13 @@
   height: 1.4rem;
   margin-right: 0.5rem;
 }
+
+.detailLine {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.networkLine {
+  display: flex;
+  justify-content: flex-end;
+}
