@@ -337,7 +337,7 @@ export async function getPublishedAssets(
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseQueryParams)
-  console.log('Umesh query' + query)
+  console.log('Umesh query')
   console.log(query)
   try {
     const result = await queryMetadata(query, cancelToken)
@@ -486,6 +486,7 @@ export async function getDownloadAssets(
 // Later should use the did to get only the metas which has this did present. Right now we just parse
 // it in the code
 export async function getPublishedMeta(
+  accountId: string,
   chainIds: number[],
   cancelToken: CancelToken,
   page?: number,
@@ -496,6 +497,7 @@ export async function getPublishedMeta(
 
   // filters.push(getFilterTerm('metadata.desc', did))
   filters.push(getFilterTerm('metadata.type', 'meta'))
+  filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
 
   const baseQueryParams = {
     chainIds,

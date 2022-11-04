@@ -3,13 +3,10 @@ import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import Comments from 'src/components/Asset/AssetContent/Comments'
-import {
-  getPublishedMeta,
-  getPublishedAssets,
-  getUserSales
-} from '@utils/aquarius'
+import { getPublishedMeta } from '@utils/aquarius'
+
 import { useUserPreferences } from '@context/UserPreferences'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
@@ -31,7 +28,14 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
 
       try {
         const assets: Asset[] = []
-        const result = await getPublishedMeta(chainIds, null, 1, null, ddo?.id)
+        const result = await getPublishedMeta(
+          null,
+          chainIds,
+          null,
+          1,
+          null,
+          ddo?.id
+        )
         setAssets(result.results)
         console.log(assets)
         setLoading(false)

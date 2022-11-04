@@ -25,6 +25,7 @@ import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '@shared/SuccessConfetti'
 import { getServiceByName, secondsToString } from '@utils/ddo'
+import { getPublishedMeta, getPublishedAssets } from '@utils/aquarius'
 import {
   isOrderable,
   getAlgorithmAssetSelectionList,
@@ -46,6 +47,9 @@ import { getComputeFeedback } from '@utils/feedback'
 import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
 
+import { useUserPreferences } from '@context/UserPreferences'
+import { setNftMetadata } from '@utils/nft'
+
 export default function Compute({
   asset,
   dtBalance,
@@ -60,8 +64,10 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
+  const { chainIds } = useUserPreferences()
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
+  const [assets, setAssets] = useState<Asset[]>()
 
   const [isOrdering, setIsOrdering] = useState(false)
   const [isOrdered, setIsOrdered] = useState(false)
@@ -122,6 +128,68 @@ export default function Compute({
     const hasAlgoDt = Number(dtBalance) >= 1
     setHasAlgoAssetDatatoken(hasAlgoDt)
     return hasAlgoDt
+  }
+
+  function getCommentString() {
+    LoggerInstance.log('[compute] getCommentsString')
+    console.log(selectedClaimAsset)
+    console.log(selectedAlgorithmAsset)
+    console.log(asset)
+    return (
+      selectedAlgorithmAsset.id +
+      '|' +
+      'Claim ' +
+      selectedClaimAsset.nft.name +
+      ' is executed after execution of algorithm ' +
+      selectedAlgorithmAsset.nft.name +
+      ' on dataset ' +
+      asset.nft.name +
+      ','
+    )
+  }
+
+  // Umesh initialize claim
+  async function setMetaForClaimNFT() {
+    try {
+      debugger
+
+      const result = await getPublishedMeta(
+        accountId,
+        chainIds,
+        null,
+        1,
+        null,
+        null
+      )
+
+      console.log(result.results)
+      setAssets(result.results)
+
+      // If it does not exist create here
+      const metaNFT = result.results[0]
+      console.log(metaNFT)
+
+      metaNFT.metadata.description += getCommentString()
+      LoggerInstance.log(
+        '[compute] New Meta Description ' + metaNFT.metadata.description
+      )
+
+      const setMetadataTx = await setNftMetadata(
+        metaNFT,
+        accountId,
+        web3,
+        newAbortController()
+      )
+
+      LoggerInstance.log('[compute] setMetadata result', setMetadataTx)
+
+      if (!setMetadataTx) {
+        LoggerInstance.error('Error setting metadata')
+        return
+      }
+    } catch (error) {
+      LoggerInstance.error('Error setMetaForClaimNFT', error.message)
+    }
   }
 
   async function initPriceAndFees() {
@@ -293,6 +361,7 @@ export default function Compute({
         )
 
       await initPriceAndFees()
+      await setMetaForClaimNFT()
 
       setComputeStatusText(
         getComputeFeedback(
@@ -301,6 +370,7 @@ export default function Compute({
           selectedAlgorithmAsset.metadata.type
         )[selectedAlgorithmAsset.accessDetails?.type === 'fixed' ? 2 : 3]
       )
+      // Umesh here change
 
       const algorithmOrderTx = await handleComputeOrder(
         web3,
@@ -413,15 +483,19 @@ export default function Compute({
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             if (!values.algorithm) return
-            await startJob()
+            // await startJob()
+            await setMetaForClaimNFT()
           }}
         >
           <FormStartComputeDataset
             algorithms={algorithmList}
             claims={claimList}
             ddoListAlgorithms={ddoAlgorithmList}
+            ddoListClaims={ddoClaimList}
             selectedAlgorithmAsset={selectedAlgorithmAsset}
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
+            selectedClaimAsset={selectedClaimAsset}
+            setSelectedClaim={setSelectedClaimAsset}
             isLoading={isOrdering || isRequestingAlgoOrderPrice}
             isComputeButtonDisabled={isComputeButtonDisabled}
             hasPreviousOrder={validOrderTx !== undefined}

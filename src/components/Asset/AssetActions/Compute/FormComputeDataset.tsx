@@ -21,8 +21,11 @@ export default function FormStartCompute({
   algorithms,
   claims,
   ddoListAlgorithms,
+  ddoListClaims,
   selectedAlgorithmAsset,
   setSelectedAlgorithm,
+  selectedClaimAsset,
+  setSelectedClaim,
   isLoading,
   isComputeButtonDisabled,
   hasPreviousOrder,
@@ -48,8 +51,11 @@ export default function FormStartCompute({
   algorithms: AssetSelectionAsset[]
   claims: AssetSelectionAsset[]
   ddoListAlgorithms: Asset[]
+  ddoListClaims: Asset[]
   selectedAlgorithmAsset: AssetExtended
   setSelectedAlgorithm: React.Dispatch<React.SetStateAction<AssetExtended>>
+  selectedClaimAsset: AssetExtended
+  setSelectedClaim: React.Dispatch<React.SetStateAction<AssetExtended>>
   isLoading: boolean
   isComputeButtonDisabled: boolean
   hasPreviousOrder: boolean
@@ -74,7 +80,10 @@ export default function FormStartCompute({
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
   const { accountId, balance } = useWeb3()
-  const { isValid, values }: FormikContextType<{ algorithm: string }> =
+  const {
+    isValid,
+    values
+  }: FormikContextType<{ algorithm: string; claim: string }> =
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
 
@@ -95,10 +104,20 @@ export default function FormStartCompute({
     return assetDdo
   }
 
+  function getClaimAsset(claimId: string): Asset {
+    debugger
+    let assetDdo = null
+    ddoListClaims.forEach((ddo: Asset) => {
+      if (ddo.id === claimId) assetDdo = ddo
+    })
+    return assetDdo
+  }
+
   useEffect(() => {
     if (!values.algorithm || !accountId || !isConsumable) return
 
     async function fetchAlgorithmAssetExtended() {
+      debugger
       const algorithmAsset = getAlgorithmAsset(values.algorithm)
       const accessDetails = await getAccessDetails(
         algorithmAsset.chainId,
@@ -113,6 +132,31 @@ export default function FormStartCompute({
       setSelectedAlgorithm(extendedAlgoAsset)
     }
     fetchAlgorithmAssetExtended()
+  }, [values.algorithm, accountId, isConsumable])
+
+  useEffect(() => {
+    if (!values.algorithm || !accountId || !isConsumable) return
+
+    async function fetchClaimAssetExtended() {
+      debugger
+      const algorithmAsset = getClaimAsset(values.claim)
+      // const algorithmAsset = getAlgorithmAsset(values.algorithm)
+      // const accessDetails = await getAccessDetails(
+      //   algorithmAsset.chainId,
+      //   algorithmAsset.services[0].datatokenAddress,
+      //   algorithmAsset.services[0].timeout,
+      //   accountId
+      // )
+      // const extendedAlgoAsset: AssetExtended = {
+      //   ...algorithmAsset,
+      //   accessDetails
+      // }
+
+      // selectedClaimAsset = extendedAlgoAsset
+
+      setSelectedClaim(algorithmAsset)
+    }
+    fetchClaimAssetExtended()
   }, [values.algorithm, accountId, isConsumable])
 
   //

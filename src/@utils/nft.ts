@@ -99,6 +99,7 @@ export async function setNftMetadata(
   web3: Web3,
   signal: AbortSignal
 ): Promise<TransactionReceipt> {
+  debugger
   const encryptedDdo = await ProviderInstance.encrypt(
     asset,
     asset.services[0].serviceEndpoint,
