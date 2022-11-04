@@ -32,7 +32,7 @@ import {
   getComputeEnviroment,
   getComputeJobs
 } from '@utils/compute'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
 import ComputeHistory from './History'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'

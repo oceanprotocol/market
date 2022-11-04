@@ -16,6 +16,8 @@ import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import FormHelp from './Help'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
+import { BoxSelectionOption } from '@shared/FormInput/InputElement/BoxSelection'
 
 const cx = classNames.bind(styles)
 
@@ -28,7 +30,7 @@ export interface InputProps {
   prominentHelp?: boolean
   tag?: string
   type?: string
-  options?: string[]
+  options?: string[] | AssetSelectionAsset[] | BoxSelectionOption[]
   sortOptions?: boolean
   additionalComponent?: ReactElement
   value?: string | number

@@ -21,10 +21,10 @@ import {
 } from './aquarius'
 import { fetchDataForMultipleChains } from './subgraph'
 import { getServiceById, getServiceByName } from './ddo'
-import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { SortTermOptions } from '../@types/aquarius/SearchQuery'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { transformAssetToAssetSelection } from './assetConvertor'
-import { ComputeEditForm } from 'src/components/Asset/Edit/_types'
+import { ComputeEditForm } from '../components/Asset/Edit/_types'
 import { getFileDidInfo } from './provider'
 
 const getComputeOrders = gql`
