@@ -106,7 +106,7 @@
         "label": "Storage Type",
         "help": "Define which storage provider you're using.",
         "type": "select",
-        "options": ["url", "ipfs", "arweave"],
+        "options": ["url", "ipfs", "arweave", "graphql", "smartcontract"],
         "sortOptions": false,
         "required": true
       },
@@ -122,6 +122,24 @@
       {
         "name": "arweave",
         "label": "Transaction ID",
+        "placeholder": "e.g. bafkreidgvpkjawlxz6sffxzwgooowe5yt7i6wsyg236mfoks77nywkptdq",
+        "help": "This Transaction ID will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+        "prominentHelp": true,
+        "type": "files",
+        "required": true
+      },
+      {
+        "name": "graphql",
+        "label": "GraphQL",
+        "placeholder": "e.g. bafkreidgvpkjawlxz6sffxzwgooowe5yt7i6wsyg236mfoks77nywkptdq",
+        "help": "This Transaction ID will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+        "prominentHelp": true,
+        "type": "files",
+        "required": true
+      },
+      {
+        "name": "smartcontract",
+        "label": "Smart Contract",
         "placeholder": "e.g. bafkreidgvpkjawlxz6sffxzwgooowe5yt7i6wsyg236mfoks77nywkptdq",
         "help": "This Transaction ID will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
         "prominentHelp": true,

@@ -6,9 +6,11 @@ import {
   downloadFileBrowser,
   FileInfo,
   Ipfs,
+  GraphqlQuery,
   LoggerInstance,
   ProviderComputeInitializeResults,
   ProviderInstance,
+  Smartcontract,
   UrlFile
 } from '@oceanprotocol/lib'
 import Web3 from 'web3'
@@ -112,6 +114,44 @@ export async function getFileUrlInfo(
         }
 
         response = await ProviderInstance.getFileInfo(fileArweave, providerUrl)
+        break
+      case 'graphql':
+        // eslint-disable-next-line no-case-declarations
+        const fileGraphql: GraphqlQuery = {
+          type: 'graphql',
+          url: 'http://172.15.0.15:8000/subgraphs/name/oceanprotocol/ocean-subgraph',
+          query: `
+            query{
+              nfts(orderBy: createdTimestamp,orderDirection:desc){
+                  id
+                  symbol
+                  createdTimestamp
+              }
+            }
+          `
+        }
+
+        response = await ProviderInstance.getFileInfo(fileGraphql, providerUrl)
+        break
+      case 'smartcontract':
+        // eslint-disable-next-line no-case-declarations
+        const fileSmartcontract: Smartcontract = {
+          type: 'smartcontract',
+          address: '0x8149276f275EEFAc110D74AFE8AFECEaeC7d1593',
+          chainId: 0,
+          abi: {
+            inputs: [],
+            name: 'swapOceanFee',
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            stateMutability: 'view',
+            type: 'function'
+          }
+        }
+
+        response = await ProviderInstance.getFileInfo(
+          fileSmartcontract,
+          providerUrl
+        )
         break
       default:
         // eslint-disable-next-line no-case-declarations

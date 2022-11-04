@@ -72,7 +72,7 @@ export const initialValues: FormPublishData = {
   },
   services: [
     {
-      storageType: 'url' || 'ipfs' || 'arweave',
+      storageType: 'url' || 'ipfs' || 'arweave' || 'graphql' || 'smartcontract',
       files: [{ url: '', type: '' }],
       links: [{ url: '', type: '' }],
       dataTokenOptions: { name: '', symbol: '' },

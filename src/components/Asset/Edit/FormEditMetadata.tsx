@@ -27,7 +27,9 @@ export default function FormEditMetadata({
 }): ReactElement {
   const { oceanConfig, asset } = useAsset()
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
-  const [storageType, setStorageType] = useState('url' || 'ipfs' || 'arweave')
+  const [storageType, setStorageType] = useState(
+    'url' || 'ipfs' || 'arweave' || 'graphql' || 'smartcontract'
+  )
 
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
@@ -94,6 +96,9 @@ export default function FormEditMetadata({
         if (field.name === 'files' && storageType !== 'url') return false
         if (field.name === 'ipfs' && storageType !== 'ipfs') return false
         if (field.name === 'arweave' && storageType !== 'arweave') return false
+        if (field.name === 'graphql' && storageType !== 'graphql') return false
+        if (field.name === 'smartcontract' && storageType !== 'smartcontract')
+          return false
 
         return (
           (!showPrice && field.name === 'price') || (
