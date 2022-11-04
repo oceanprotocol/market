@@ -253,7 +253,7 @@ export default function NetworkName(): ReactElement {
   const { networkId, isTestnet } = useWeb3()
   const { networksList } = useNetworkMetadata()
   const networkData = getNetworkDataById(networksList, networkId)
-  const networkName = getNetworkDisplayName(networkData, networkId)
+  const networkName = getNetworkDisplayName(networkData)
 
   return (
     <>
