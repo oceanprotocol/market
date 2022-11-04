@@ -12,7 +12,7 @@ import FormHelp from '@shared/FormInput/Help'
 import content from '../../../../../content/pages/history.json'
 import { useWeb3 } from '@context/Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { retrieveAsset } from '@utils/aquarius'
+import { getAsset } from '@utils/aquarius'
 
 export default function Results({
   job
@@ -29,7 +29,7 @@ export default function Results({
 
   useEffect(() => {
     async function getAssetMetadata() {
-      const ddo = await retrieveAsset(job.inputDID[0], newCancelToken())
+      const ddo = await getAsset(job.inputDID[0], newCancelToken())
       setDatasetProvider(ddo.services[0].serviceEndpoint)
     }
     getAssetMetadata()
