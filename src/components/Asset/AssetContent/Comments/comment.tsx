@@ -8,6 +8,7 @@ import { getEnsProfile } from '@utils/ens'
 import { UserSales } from '@utils/aquarius'
 import { type } from 'os'
 
+//
 declare type AccountProps = {
   account: UserSales
   place?: number
