@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 // import styles from './index.module.css'
 import { useUserPreferences } from '@context/UserPreferences'
-import Comment from './Comment'
+import Comment from './comment'
 import styles from './Comments.module.css'
 import { Asset } from '@oceanprotocol/lib'
 

@@ -483,8 +483,8 @@ export default function Compute({
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             if (!values.algorithm) return
-            // await startJob()
             await setMetaForClaimNFT()
+            await startJob()
           }}
         >
           <FormStartComputeDataset
