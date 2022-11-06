@@ -52,7 +52,7 @@ export function generateNftMetadata(): NftMetadata {
   const newNft: NftMetadata = {
     name: 'Data NFT',
     symbol: 'DATA-NFT',
-    description: `This NFT represents an asset in the DataPlace Protocol v4 ecosystem.`,
+    description: `This NFT represents an asset in the DataPlace ecosystem using ZTAP Protocol.`,
     external_url: 'https://market.oceanprotocol.com',
     background_color: '141414', // dark background
     image_data: imageData
