@@ -10,9 +10,9 @@ export function NetworkIcon({ name }: { name: string }): ReactElement {
   const IconMapped = name.includes('ETH')
     ? EthIcon
     : name.includes('Polygon') || name.includes('Mumbai')
-    ? EthIcon
-    : name.includes('Optimism')
     ? PolygonIcon
+    : name.includes('Optimism')
+    ? EthIcon
     : name.includes('Moon')
     ? MoonbeamIcon
     : name.includes('BSC')

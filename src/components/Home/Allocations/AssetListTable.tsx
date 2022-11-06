@@ -40,7 +40,7 @@ export default function AssetListTable({
       defaultSortFieldId={3}
       sortAsc={false}
       isLoading={isLoading}
-      emptyMessage={`Your allocated assets will appear here. [Lock your OCEAN](https://df.oceandao.org) to get started.`}
+      emptyMessage={`Your allocated assets will appear here. [Lock your DATA](https://df.oceandao.org) to get started.`}
       noTableHead
     />
   )
