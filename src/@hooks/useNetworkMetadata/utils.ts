@@ -34,6 +34,9 @@ export function getNetworkDisplayName(
     case 420:
       displayName = 'Optimism'
       break
+    case 647426021:
+      displayName = 'SKALE'
+      break
     case 1287:
       displayName = 'Moonbase'
       break
