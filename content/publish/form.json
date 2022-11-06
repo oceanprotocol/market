@@ -138,10 +138,26 @@
       },
       {
         "name": "control",
-        "label": "Access Control",
-        "help": "Define how long buyers should be able to download the dataset again after the initial purchase.",
+        "label": "Access Control - Offchain",
+        "help": "Define what off-chain attributes can access this data token.",
         "type": "select",
-        "options": ["HR", "Finance", "Operations", "Legal", "Engineering"],
+        "options": ["0-20", "21-40", "41-60", "61-80", "81-100"],
+        "sortOptions": false,
+        "required": true
+      },
+      {
+        "name": "reputation",
+        "label": "Access Control - Onchain",
+        "help": "Define what onchain attributes are needed to access this data token",
+        "type": "select",
+        "options": [
+          "HR",
+          "Finance",
+          "Operations",
+          "Legal",
+          "Engineering",
+          "Custom"
+        ],
         "sortOptions": false,
         "required": true
       },

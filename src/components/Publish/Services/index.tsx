@@ -109,6 +109,11 @@ export default function ServicesFields(): ReactElement {
         name="services[0].control"
       />
       <Field
+        {...getFieldContent('reputation', content.services.fields)}
+        component={Input}
+        name="services[0].reputation"
+      />
+      <Field
         {...getFieldContent('timeout', content.services.fields)}
         component={Input}
         name="services[0].timeout"
