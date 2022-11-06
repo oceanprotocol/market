@@ -7,6 +7,7 @@ import ProfileProvider from '@context/Profile'
 import { getEnsAddress, getEnsName } from '@utils/ens'
 import { useRouter } from 'next/router'
 import web3 from 'web3'
+import { Chat } from '@pushprotocol/uiweb'
 
 export default function PageProfile(): ReactElement {
   const router = useRouter()
@@ -76,6 +77,12 @@ export default function PageProfile(): ReactElement {
       >
         <ProfilePage accountId={finalAccountId} />
       </ProfileProvider>
+      <Chat
+        account="0xBf4d452Be8b6c0Bf38525292A59e156CC60A7B22" // user address
+        supportAddress="0x1Fc2BC9B9726aa914b396001f2312876aaB2b970" // support address
+        apiKey="9uYRhy0hol.fDp4IHD7auZOFpNDDtz2Ql4i2W9RYj2tpA9TLWyuX4AmVIC3Ge9MtyAHJAWOB6je"
+        env="staging"
+      />
     </Page>
   )
 }
