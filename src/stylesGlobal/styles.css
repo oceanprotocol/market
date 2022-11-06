@@ -38,7 +38,7 @@ body {
 
 a {
   text-decoration: none;
-  color: var(--brand-pink);
+  color: rgba(#26a69a);
   transition: 0.2s ease-out;
 }
 
@@ -122,7 +122,7 @@ ul li {
 }
 
 ::selection {
-  background: var(--font-color-heading);
+  background: rgba(#26a69a);
   color: var(--background-body);
 }
 
