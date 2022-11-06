@@ -137,6 +137,15 @@
         "disclaimerValues": ["Download"]
       },
       {
+        "name": "control",
+        "label": "Access Control",
+        "help": "Define how long buyers should be able to download the dataset again after the initial purchase.",
+        "type": "select",
+        "options": ["HR", "Finance", "Operations", "Legal", "Engineering"],
+        "sortOptions": false,
+        "required": true
+      },
+      {
         "name": "timeout",
         "label": "Timeout",
         "help": "Define how long buyers should be able to download the dataset again after the initial purchase.",
