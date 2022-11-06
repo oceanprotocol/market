@@ -19,6 +19,10 @@ describe('@shared/NetworkName', () => {
     render(<NetworkName networkId={56} />)
   })
 
+  it('renders Optimism', () => {
+    render(<NetworkName networkId={420} />)
+  })
+
   it('renders Energy Web', () => {
     render(<NetworkName networkId={246} />)
   })
