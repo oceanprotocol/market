@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import Time from '@shared/atoms/Time'
-import AssetTitle from '@shared/AssetList/AssetListTitle'
+import AssetTitle from '@shared/AssetListTitle'
 import NetworkName from '@shared/NetworkName'
 import { useProfile } from '@context/Profile'
 import { useUserPreferences } from '@context/UserPreferences'

@@ -17,7 +17,7 @@
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
     "type-check": "tsc --noEmit",
     "deploy:s3": "bash scripts/deploy-s3.sh",
-    "postinstall": "husky install && rm -r node_modules/apollo-language-server/node_modules/graphql",
+    "postinstall": "husky install",
     "codegen:apollo": "apollo client:codegen --endpoint=https://v4.subgraph.goerli.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/",
     "storybook": "cross-env NODE_ENV=test start-storybook -p 6006 --quiet",
     "storybook:build": "cross-env NODE_ENV=test build-storybook"
@@ -43,8 +43,6 @@
     "gray-matter": "^4.0.3",
     "is-url-superb": "^6.1.0",
     "js-cookie": "^3.0.1",
-    "lodash.debounce": "^4.0.8",
-    "lodash.omit": "^4.5.0",
     "match-sorter": "^6.3.1",
     "myetherwallet-blockies": "^0.1.1",
     "next": "12.3.1",
@@ -72,8 +70,8 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^6.5.12",
-    "@storybook/builder-webpack5": "^6.5.12",
+    "@storybook/addon-essentials": "^6.5.13",
+    "@storybook/builder-webpack5": "^6.5.13",
     "@storybook/manager-webpack5": "^6.5.13",
     "@storybook/react": "^6.5.13",
     "@svgr/webpack": "^6.5.1",
@@ -81,26 +79,24 @@
     "@testing-library/react": "^13.4.0",
     "@types/js-cookie": "^3.0.2",
     "@types/loadable__component": "^5.13.4",
-    "@types/lodash.debounce": "^4.0.7",
-    "@types/lodash.omit": "^4.5.7",
-    "@types/node": "^18.7.18",
+    "@types/node": "^18.8.5",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.5",
     "@types/react-modal": "^3.13.1",
     "@types/react-paginate": "^7.1.1",
     "@types/remove-markdown": "^0.3.1",
-    "@typescript-eslint/eslint-plugin": "^5.38.1",
-    "@typescript-eslint/parser": "^5.38.1",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
     "apollo": "^2.34.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.23.1",
+    "eslint": "^8.25.0",
     "eslint-config-oceanprotocol": "^2.0.4",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest-dom": "^4.0.2",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-testing-library": "^5.7.0",
+    "eslint-plugin-testing-library": "^5.7.2",
     "https-browserify": "^1.0.0",
     "husky": "^8.0.1",
     "jest": "^29.1.2",
@@ -111,14 +107,17 @@
     "serve": "^14.0.1",
     "stream-http": "^3.2.0",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
-    "typescript": "^4.8.3"
+    "typescript": "^4.8.4"
+  },
+  "overrides": {
+    "graphql": "15.8.0"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/oceanprotocol/market"
   },
   "engines": {
-    "node": ">=14"
+    "node": "16"
   },
   "browserslist": [
     ">0.2%",

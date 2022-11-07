@@ -7,7 +7,7 @@ const account = '0x0000000000000000000000000000000000000000'
 
 jest.mock('axios')
 
-describe('Publisher', () => {
+describe('@shared/Publisher', () => {
   test('should return correct markup by default', async () => {
     ;(axios as any).get.mockImplementationOnce(() =>
       Promise.resolve({ data: { name: 'jellymcjellyfish.eth' } })
