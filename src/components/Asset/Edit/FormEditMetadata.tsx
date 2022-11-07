@@ -35,7 +35,7 @@ export default function FormEditMetadata({
 
   const timeoutOptionsArray = data.filter(
     (field) => field.name === 'timeout'
-  )[0].options
+  )[0].options as string[]
 
   if (isComputeDataset && timeoutOptionsArray.includes('Forever')) {
     const foreverOptionIndex = timeoutOptionsArray.indexOf('Forever')

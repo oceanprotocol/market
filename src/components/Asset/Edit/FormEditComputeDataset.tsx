@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '@shared/FormInput'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import stylesIndex from './index.module.css'
 import {
   generateBaseQuery,
