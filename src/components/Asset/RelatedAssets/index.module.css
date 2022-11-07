@@ -2,13 +2,7 @@
   margin-top: calc(var(--spacer) * 2);
 }
 
-.section h3 {
+.section > h3 {
   font-size: var(--font-size-large);
   color: var(--color-secondary);
-}
-
-.empty {
-  font-size: var(--font-size-small);
-  color: var(--color-secondary);
-  font-style: italic;
 }
