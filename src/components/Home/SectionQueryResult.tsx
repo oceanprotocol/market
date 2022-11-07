@@ -6,15 +6,9 @@ import AssetList from '@shared/AssetList'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import { queryMetadata } from '@utils/aquarius'
+import { sortAssets } from '@utils/index'
 import React, { ReactElement, useState, useEffect } from 'react'
 import styles from './index.module.css'
-
-function sortElements(items: Asset[], sorted: string[]) {
-  items.sort(function (a, b) {
-    return sorted.indexOf(a.id) - sorted.indexOf(b.id)
-  })
-  return items
-}
 
 export default function SectionQueryResult({
   title,
@@ -56,7 +50,7 @@ export default function SectionQueryResult({
           const result = await queryMetadata(query, newCancelToken())
           if (!isMounted()) return
           if (queryData && result?.totalResults > 0) {
-            const sortedAssets = sortElements(result.results, queryData)
+            const sortedAssets = sortAssets(result.results, queryData)
             const overflow = sortedAssets.length - 6
             sortedAssets.splice(sortedAssets.length - overflow, overflow)
             result.results = sortedAssets
