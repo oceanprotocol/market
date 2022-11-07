@@ -14,11 +14,12 @@ export async function transformAssetToAssetSelection(
   const algorithmList: AssetSelectionAsset[] = []
 
   for (const asset of extendedAssets) {
-    const algoComputeService = getServiceByName(asset, 'compute')
+    const algoService =
+      getServiceByName(asset, 'compute') || getServiceByName(asset, 'access')
 
     if (
       asset?.accessDetails?.price &&
-      algoComputeService?.serviceEndpoint === datasetProviderEndpoint
+      algoService?.serviceEndpoint === datasetProviderEndpoint
     ) {
       let selected = false
       selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {

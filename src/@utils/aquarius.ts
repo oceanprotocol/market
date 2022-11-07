@@ -291,7 +291,7 @@ export async function getAlgorithmDatasetsForCompute(
       must: {
         match: {
           'services.compute.publisherTrustedAlgorithms.did': {
-            query: escapeEsReservedCharacters(algorithmId)
+            query: algorithmId
           }
         }
       }
@@ -304,7 +304,6 @@ export async function getAlgorithmDatasetsForCompute(
 
   const query = generateBaseQuery(baseQueryParams)
   const computeDatasets = await queryMetadata(query, cancelToken)
-
   if (computeDatasets?.totalResults === 0) return []
 
   const datasets = await transformAssetToAssetSelection(
