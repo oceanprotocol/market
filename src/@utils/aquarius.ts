@@ -1,5 +1,5 @@
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../app.config'
@@ -60,7 +60,22 @@ export function generateBaseQuery(
           getFilterTerm('_index', 'aquarius'),
           ...(baseQueryParams.ignorePurgatory
             ? []
-            : [getFilterTerm('purgatory.state', false)])
+            : [getFilterTerm('purgatory.state', false)]),
+          ...(baseQueryParams.ignoreState
+            ? []
+            : [
+                {
+                  bool: {
+                    must_not: [
+                      {
+                        term: {
+                          'nft.state': 5
+                        }
+                      }
+                    ]
+                  }
+                }
+              ])
         ]
       }
     }
@@ -203,7 +218,7 @@ export async function getAssetsFromDidList(
   cancelToken: CancelToken
 ): Promise<PagedAssets> {
   try {
-    if (!(didList.length > 0)) return
+    if (!didList.length) return
 
     const baseParams = {
       chainIds,
@@ -225,7 +240,7 @@ export async function getAssetsFromDtList(
   cancelToken: CancelToken
 ): Promise<Asset[]> {
   try {
-    if (!(dtList.length > 0)) return
+    if (!dtList.length) return
 
     const baseParams = {
       chainIds,
@@ -302,7 +317,7 @@ export async function getAlgorithmDatasetsForCompute(
       must: {
         match: {
           'services.compute.publisherTrustedAlgorithms.did': {
-            query: escapeEsReservedCharacters(algorithmId)
+            query: algorithmId
           }
         }
       }
@@ -315,7 +330,6 @@ export async function getAlgorithmDatasetsForCompute(
 
   const query = generateBaseQuery(baseQueryParams)
   const computeDatasets = await queryMetadata(query, cancelToken)
-
   if (computeDatasets?.totalResults === 0) return []
 
   const datasets = await transformAssetToAssetSelection(
@@ -330,6 +344,7 @@ export async function getPublishedAssets(
   accountId: string,
   chainIds: number[],
   cancelToken: CancelToken,
+  ignoreState = false,
   page?: number,
   type?: string,
   accesType?: string
@@ -358,6 +373,7 @@ export async function getPublishedAssets(
       }
     },
     ignorePurgatory: true,
+    ignoreState,
     esPaginationOptions: {
       from: (Number(page) - 1 || 0) * 9,
       size: 9
@@ -471,14 +487,17 @@ export async function getDownloadAssets(
   dtList: string[],
   tokenOrders: OrdersData[],
   chainIds: number[],
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
+  ignoreState = false
 ): Promise<DownloadedAsset[]> {
   const baseQueryparams = {
     chainIds,
     filters: [
       getFilterTerm('services.datatokenAddress', dtList),
       getFilterTerm('services.type', 'access')
-    ]
+    ],
+    ignorePurgatory: true,
+    ignoreState
   } as BaseQueryParams
   const query = generateBaseQuery(baseQueryparams)
   try {

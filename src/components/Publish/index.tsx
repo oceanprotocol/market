@@ -27,9 +27,6 @@ import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
-// TODO: restore FormikPersist, add back clear form action
-// const formName = 'ocean-publish-form'
-
 export default function PublishPage({
   content
 }: {

@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import styles from './index.module.css'
-import InputRadio from '@shared/FormInput/InputRadio'
+import InputRadio from '@shared/FormInput/InputElement/Radio'
 
 export interface TabsItem {
   title: string
