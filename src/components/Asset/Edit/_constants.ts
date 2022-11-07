@@ -11,7 +11,7 @@ export function getInitialValues(
     name: metadata?.name,
     description: metadata?.description,
     price,
-    storageType: 'url' || 'ipfs' || 'arweave' || 'graphql' || 'smartcontract',
+    storageType: 'url' || 'ipfs' || 'arweave',
     links: [{ url: '', type: '' }],
     files: [{ url: '', type: '' }],
     timeout: secondsToString(timeout),

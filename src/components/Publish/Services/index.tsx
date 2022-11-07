@@ -121,20 +121,6 @@ export default function ServicesFields(): ReactElement {
           name="services[0].files"
         />
       )}
-      {values.services[0].storageType === 'graphql' && (
-        <Field
-          {...getFieldContent('graphql', content.services.fields)}
-          component={Input}
-          name="services[0].files"
-        />
-      )}
-      {values.services[0].storageType === 'smartcontract' && (
-        <Field
-          {...getFieldContent('smartcontract', content.services.fields)}
-          component={Input}
-          name="services[0].files"
-        />
-      )}
       <Field
         {...getFieldContent('links', content.services.fields)}
         component={Input}
