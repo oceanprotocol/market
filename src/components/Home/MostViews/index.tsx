@@ -65,7 +65,7 @@ export default function MostViews(): ReactElement {
   return (
     <section className={styles.section}>
       <h3>
-        Most Viewes
+        Most Views
         <Tooltip
           className={styles.info}
           content={
