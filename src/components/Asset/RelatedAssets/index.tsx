@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { generateBaseQuery, queryMetadata } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useAsset } from '@context/Asset'
@@ -22,37 +22,43 @@ export default function RelatedAssets(): ReactElement {
 
     async function getAssets() {
       setIsLoading(true)
-      const tagQuery = generateBaseQuery(
-        generateQuery(chainIds, asset.nftAddress, 4, asset.metadata.tags)
-      )
-      const tagResults = (await queryMetadata(tagQuery, newCancelToken()))
-        .results
 
-      if (tagResults.length === 4) {
-        setRelatedAssets(tagResults)
-        setIsLoading(false)
-      } else {
-        const ownerQuery = generateBaseQuery(
-          generateQuery(
-            chainIds,
-            asset.nftAddress,
-            4 - tagResults.length,
-            null,
-            asset.nft.owner
-          )
+      try {
+        const tagQuery = generateBaseQuery(
+          generateQuery(chainIds, asset.nftAddress, 4, asset.metadata.tags)
         )
+        const tagResults = (await queryMetadata(tagQuery, newCancelToken()))
+          ?.results
 
-        const ownerResults = (await queryMetadata(ownerQuery, newCancelToken()))
-          .results
-
-        // combine both results, and filter out duplicates
-        // stolen from: https://stackoverflow.com/a/70326769/733677
-        const bothResults = tagResults.concat(
-          ownerResults.filter(
-            (asset2) => !tagResults.find((asset1) => asset1.id === asset2.id)
+        if (tagResults.length === 4) {
+          setRelatedAssets(tagResults)
+        } else {
+          const ownerQuery = generateBaseQuery(
+            generateQuery(
+              chainIds,
+              asset.nftAddress,
+              4 - tagResults.length,
+              null,
+              asset.nft.owner
+            )
           )
-        )
-        setRelatedAssets(bothResults)
+
+          const ownerResults = (
+            await queryMetadata(ownerQuery, newCancelToken())
+          )?.results
+
+          // combine both results, and filter out duplicates
+          // stolen from: https://stackoverflow.com/a/70326769/733677
+          const bothResults = tagResults.concat(
+            ownerResults.filter(
+              (asset2) => !tagResults.find((asset1) => asset1.id === asset2.id)
+            )
+          )
+          setRelatedAssets(bothResults)
+        }
+      } catch (error) {
+        LoggerInstance.error(error.message)
+      } finally {
         setIsLoading(false)
       }
     }
