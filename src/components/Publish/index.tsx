@@ -20,9 +20,6 @@ import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
 
-// TODO: restore FormikPersist, add back clear form action
-// const formName = 'ocean-publish-form'
-
 export default function PublishPage({
   content
 }: {
