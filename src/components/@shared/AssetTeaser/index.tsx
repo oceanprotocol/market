@@ -11,7 +11,7 @@ import { getServiceByName } from '@utils/ddo'
 import { formatPrice } from '@shared/Price/PriceUnit'
 import { useUserPreferences } from '@context/UserPreferences'
 
-declare type AssetTeaserProps = {
+export declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
 }
@@ -58,7 +58,7 @@ export default function AssetTeaser({
               {removeMarkdown(description?.substring(0, 300) || '')}
             </Dotdotdot>
           </div>
-          {isUnsupportedPricing ? (
+          {isUnsupportedPricing || !asset.services.length ? (
             <strong>No pricing schema available</strong>
           ) : (
             <Price accessDetails={asset.accessDetails} size="small" />
