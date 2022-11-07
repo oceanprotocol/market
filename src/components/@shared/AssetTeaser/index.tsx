@@ -11,7 +11,7 @@ import { getServiceByName } from '@utils/ddo'
 import { formatPrice } from '@shared/Price/PriceUnit'
 import { useUserPreferences } from '@context/UserPreferences'
 
-declare type AssetTeaserProps = {
+export declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
 }

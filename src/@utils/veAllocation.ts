@@ -13,7 +13,7 @@ import {
 } from '@hooks/useNetworkMetadata'
 import { getAssetsFromNftList } from './aquarius'
 import { chainIdsSupported } from 'app.config'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { Asset } from '@oceanprotocol/lib'
 
 const AllLocked = gql`
   query AllLocked {
@@ -42,7 +42,7 @@ const NftOwnAllocation = gql`
   }
 `
 const OceanLocked = gql`
-  query OceanLocked($address: String) {
+  query OceanLocked($address: ID!) {
     veOCEAN(id: $address) {
       id
       lockedAmount

@@ -4,16 +4,12 @@ import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
-import classNames from 'classnames/bind'
 import Loader from '@shared/atoms/Loader'
-import { useUserPreferences } from '@context/UserPreferences'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useWeb3 } from '@context/Web3'
 import { retrieveAsset } from '@utils/aquarius'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useCancelToken } from '@hooks/useCancelToken'
-
-const cx = classNames.bind(styles)
 
 function LoaderArea() {
   return (
@@ -23,7 +19,7 @@ function LoaderArea() {
   )
 }
 
-declare type AssetListProps = {
+export declare type AssetListProps = {
   assets: AssetExtended[]
   showPagination: boolean
   page?: number
@@ -44,15 +40,15 @@ export default function AssetList({
   className,
   noPublisher
 }: AssetListProps): ReactElement {
-  const { chainIds } = useUserPreferences()
   const { accountId } = useWeb3()
-  const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
+  const [assetsWithPrices, setAssetsWithPrices] =
+    useState<AssetExtended[]>(assets)
   const [loading, setLoading] = useState<boolean>(isLoading)
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
 
   useEffect(() => {
-    if (!assets) return
+    if (!assets || !assets.length) return
 
     setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
@@ -75,17 +71,9 @@ export default function AssetList({
     onPageChange(selected + 1)
   }
 
-  const styleClasses = cx({
-    assetList: true,
-    [className]: className
-  })
-  console.log('assetsWithPrices', assetsWithPrices)
+  const styleClasses = `${styles.assetList} ${className || ''}`
 
-  return chainIds.length === 0 ? (
-    <div className={styleClasses}>
-      <div className={styles.empty}>No network selected</div>
-    </div>
-  ) : assetsWithPrices && !loading ? (
+  return assetsWithPrices && !loading ? (
     <>
       <div className={styleClasses}>
         {assetsWithPrices.length > 0 ? (
