@@ -21,7 +21,7 @@
 }
 
 .detailLine {
-  margin-bottom: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer) / 4);
 }
 
 .content {
@@ -43,8 +43,12 @@
   overflow-wrap: break-word;
 }
 
+.price {
+  margin-top: calc(var(--spacer) / 12);
+}
+
 .footer {
-  margin-top: calc(var(--spacer) / 4);
+  margin-top: calc(var(--spacer) / 12);
 }
 
 .typeLabel {
