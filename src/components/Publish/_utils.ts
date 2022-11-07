@@ -27,20 +27,24 @@ import {
   defaultDatatokenTemplateIndex
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
+import { getContainerChecksum } from '@utils/docker'
 
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
   return splittedFileUrl[splittedFileUrl.length - 1]
 }
 
-function getAlgorithmContainerPreset(
+async function getAlgorithmContainerPreset(
   dockerImage: string
-): MetadataAlgorithmContainer {
+): Promise<MetadataAlgorithmContainer> {
   if (dockerImage === '') return
 
   const preset = algorithmContainerPresets.find(
     (preset) => `${preset.image}:${preset.tag}` === dockerImage
   )
+  preset.checksum = await (
+    await getContainerChecksum(preset.image, preset.tag)
+  ).checksum
   return preset
 }
 
@@ -81,6 +85,11 @@ export async function transformPublishFormToDdo(
   const currentTime = dateToStringNoMS(new Date())
   const isPreview = !datatokenAddress && !nftAddress
 
+  const algorithmContainerPresets =
+    type === 'algorithm' && dockerImage !== '' && dockerImage !== 'custom'
+      ? await getAlgorithmContainerPreset(dockerImage)
+      : null
+
   // Transform from files[0].url to string[] assuming only 1 file
   const filesTransformed = files?.length &&
     files[0].valid && [sanitizeUrl(files[0].url)]
@@ -111,20 +120,19 @@ export async function transformPublishFormToDdo(
             entrypoint:
               dockerImage === 'custom'
                 ? dockerImageCustomEntrypoint
-                : getAlgorithmContainerPreset(dockerImage).entrypoint,
+                : algorithmContainerPresets.entrypoint,
             image:
               dockerImage === 'custom'
                 ? dockerImageCustom
-                : getAlgorithmContainerPreset(dockerImage).image,
+                : algorithmContainerPresets.image,
             tag:
               dockerImage === 'custom'
                 ? dockerImageCustomTag
-                : getAlgorithmContainerPreset(dockerImage).tag,
+                : algorithmContainerPresets.tag,
             checksum:
               dockerImage === 'custom'
-                ? // ? dockerImageCustomChecksum
-                  ''
-                : getAlgorithmContainerPreset(dockerImage).checksum
+                ? dockerImageCustomChecksum
+                : algorithmContainerPresets.checksum
           }
         }
       })

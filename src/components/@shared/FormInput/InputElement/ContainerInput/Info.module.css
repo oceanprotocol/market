@@ -1,0 +1,48 @@
+.info {
+  border-radius: var(--border-radius);
+  padding: calc(var(--spacer) / 2);
+  border: 1px solid var(--border-color);
+  background-color: var(--background-highlight);
+  position: relative;
+}
+
+.info ul {
+  margin: 0;
+}
+
+.info li {
+  display: inline-block;
+  font-size: var(--font-size-small);
+  margin-right: calc(var(--spacer) / 2);
+  color: var(--color-secondary);
+}
+
+.info li.success {
+  color: var(--brand-alert-green);
+}
+
+.info li.error {
+  color: var(--brand-alert-red);
+}
+
+.contianer {
+  margin: 0;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  padding-right: calc(var(--spacer) / 2);
+}
+
+.removeButton {
+  cursor: pointer;
+  border: none;
+  position: absolute;
+  top: -0.2rem;
+  right: 0;
+  font-size: var(--font-size-h3);
+  cursor: pointer;
+  color: var(--font-color-text);
+  background-color: transparent;
+}

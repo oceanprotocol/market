@@ -32,22 +32,25 @@ export function getNetworkDisplayName(
       displayName = 'Polygon'
       break
     case 1287:
-      displayName = 'Moonbase Alpha'
+      displayName = 'Moonbase'
       break
     case 1285:
       displayName = 'Moonriver'
       break
     case 80001:
-      displayName = 'Polygon Mumbai'
+      displayName = 'Mumbai'
       break
     case 8996:
       displayName = 'Development'
       break
     case 3:
-      displayName = 'ETH Ropsten'
+      displayName = 'Ropsten'
+      break
+    case 5:
+      displayName = 'Görli'
       break
     case 2021000:
-      displayName = 'GAIA-X Testnet'
+      displayName = 'GAIA-X'
       break
     default:
       displayName = data
