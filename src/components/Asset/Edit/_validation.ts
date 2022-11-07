@@ -1,5 +1,5 @@
 import { FileInfo } from '@oceanprotocol/lib'
-import { isCID } from '@utils/url'
+import { isCID } from '@utils/ipfs'
 import isUrl from 'is-url-superb'
 import * as Yup from 'yup'
 

@@ -2,7 +2,7 @@ import { MAX_DECIMALS } from '@utils/constants'
 import * as Yup from 'yup'
 import { getMaxDecimalsValidation } from '@utils/numbers'
 import { FileInfo } from '@oceanprotocol/lib'
-import { isCID } from '@utils/url'
+import { isCID } from '@utils/ipfs'
 import isUrl from 'is-url-superb'
 
 // TODO: conditional validation
