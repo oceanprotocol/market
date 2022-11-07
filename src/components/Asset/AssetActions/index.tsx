@@ -156,6 +156,7 @@ export default function AssetActions({
       <Tabs items={tabs} className={styles.actions} />
       <Web3Feedback
         networkId={asset?.chainId}
+        accountId={accountId}
         isAssetNetwork={isAssetNetwork}
       />
     </>

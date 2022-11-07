@@ -1,5 +1,5 @@
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../app.config'
