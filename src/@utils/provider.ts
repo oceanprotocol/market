@@ -89,12 +89,11 @@ export async function getFileUrlInfo(
   url: string,
   providerUrl: string,
   storageType: string
-): Promise<any[]> {
+): Promise<FileInfo[]> {
   try {
     let response
     switch (storageType) {
-      case 'ipfs':
-        // eslint-disable-next-line no-case-declarations
+      case 'ipfs': {
         const fileIPFS: Ipfs = {
           type: 'ipfs',
           hash: url
@@ -104,8 +103,8 @@ export async function getFileUrlInfo(
         console.log(response, fileIPFS)
 
         break
-      case 'arweave':
-        // eslint-disable-next-line no-case-declarations
+      }
+      case 'arweave': {
         const fileArweave: Arweave = {
           type: 'arweave',
           transactionId: url
@@ -113,8 +112,8 @@ export async function getFileUrlInfo(
 
         response = await ProviderInstance.getFileInfo(fileArweave, providerUrl)
         break
-      default:
-        // eslint-disable-next-line no-case-declarations
+      }
+      default: {
         const fileUrl: UrlFile = {
           type: 'url',
           index: 0,
@@ -124,6 +123,7 @@ export async function getFileUrlInfo(
 
         response = await ProviderInstance.getFileInfo(fileUrl, providerUrl)
         break
+      }
     }
     return response
   } catch (error) {
