@@ -26,19 +26,18 @@ async function initializeProvider(
   accountId: string,
   providerFees?: ProviderFees
 ): Promise<ProviderInitialize> {
-  if (!providerFees) {
-    try {
-      const provider = await ProviderInstance.initialize(
-        asset.id,
-        asset.services[0].id,
-        0,
-        accountId,
-        asset.services[0].serviceEndpoint
-      )
-      return provider
-    } catch (error) {
-      LoggerInstance.log('[Initialize Provider] Error:', error)
-    }
+  if (providerFees) return
+  try {
+    const provider = await ProviderInstance.initialize(
+      asset.id,
+      asset.services[0].id,
+      0,
+      accountId,
+      asset.services[0].serviceEndpoint
+    )
+    return provider
+  } catch (error) {
+    LoggerInstance.log('[Initialize Provider] Error:', error)
   }
 }
 
