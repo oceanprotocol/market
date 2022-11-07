@@ -85,7 +85,7 @@ export async function getFileDidInfo(
   }
 }
 
-export async function getFileUrlInfo(
+export async function getFileInfo(
   url: string,
   providerUrl: string,
   storageType: string
@@ -100,7 +100,6 @@ export async function getFileUrlInfo(
         }
 
         response = await ProviderInstance.getFileInfo(fileIPFS, providerUrl)
-        console.log(response, fileIPFS)
 
         break
       }

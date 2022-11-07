@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import React from 'react'
 import FilesInput from './index'
 import { useField } from 'formik'
-import { getFileUrlInfo } from '@utils/provider'
+import { getFileInfo } from '@utils/provider'
 
 jest.mock('formik')
 jest.mock('@utils/provider')
@@ -48,7 +48,7 @@ const mockForm = {
 describe('@shared/FormInput/InputElement/FilesInput', () => {
   it('renders without crashing', async () => {
     ;(useField as jest.Mock).mockReturnValue([mockField, mockMeta, mockHelpers])
-    ;(getFileUrlInfo as jest.Mock).mockReturnValue([
+    ;(getFileInfo as jest.Mock).mockReturnValue([
       {
         valid: true,
         url: 'https://hello.com',

@@ -4,7 +4,7 @@ import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
 import { useAsset } from '@context/Asset'
 import { FormPublishData } from 'src/components/Publish/_types'
-import { getFileUrlInfo } from '@utils/provider'
+import { getFileInfo } from '@utils/provider'
 import { getFieldContent } from '@utils/form'
 
 export function checkIfTimeoutInPredefinedValues(
@@ -61,7 +61,7 @@ export default function FormEditMetadata({
 
     // if we have a sample file, we need to get the files' info before setting defaults links value
     asset?.metadata?.links?.[0] &&
-      getFileUrlInfo(asset.metadata.links[0], providerUrl, 'url').then(
+      getFileInfo(asset.metadata.links[0], providerUrl, 'url').then(
         (checkedFile) => {
           console.log(checkedFile)
           // initiate link with values from asset metadata

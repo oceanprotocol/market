@@ -7,7 +7,7 @@ import { compareAsBN } from '@utils/numbers'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import Web3Feedback from '@shared/Web3Feedback'
-import { getFileDidInfo, getFileUrlInfo } from '@utils/provider'
+import { getFileDidInfo, getFileInfo } from '@utils/provider'
 import { getOceanConfig } from '@utils/ocean'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
@@ -58,7 +58,7 @@ export default function AssetActions({
       try {
         const fileInfoResponse = formikState?.values?.services?.[0].files?.[0]
           .url
-          ? await getFileUrlInfo(
+          ? await getFileInfo(
               formikState?.values?.services?.[0].files?.[0].url,
               providerUrl,
               storageType

@@ -3,7 +3,7 @@ import { useField } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
-import { getFileUrlInfo } from '@utils/provider'
+import { getFileInfo } from '@utils/provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 
@@ -33,7 +33,7 @@ export default function FilesInput(props: InputProps): ReactElement {
 
     try {
       setIsLoading(true)
-      const checkedFile = await getFileUrlInfo(url, providerUrl, storageType)
+      const checkedFile = await getFileInfo(url, providerUrl, storageType)
       // error if something's not right from response
       if (!checkedFile)
         throw Error('Could not fetch file info. Is your network down?')
