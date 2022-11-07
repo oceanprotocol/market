@@ -14,11 +14,15 @@ import { useUserPreferences } from '@context/UserPreferences'
 export declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
+  noDescription?: boolean
+  noPrice?: boolean
 }
 
 export default function AssetTeaser({
   asset,
-  noPublisher
+  noPublisher,
+  noDescription,
+  noPrice
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
@@ -53,16 +57,23 @@ export default function AssetTeaser({
             </Dotdotdot>
             {!noPublisher && <Publisher account={owner} minimal />}
           </header>
-          <div className={styles.content}>
-            <Dotdotdot tagName="p" clamp={3}>
-              {removeMarkdown(description?.substring(0, 300) || '')}
-            </Dotdotdot>
-          </div>
-          {isUnsupportedPricing || !asset.services.length ? (
-            <strong>No pricing schema available</strong>
-          ) : (
-            <Price accessDetails={asset.accessDetails} size="small" />
+          {!noDescription && (
+            <div className={styles.content}>
+              <Dotdotdot tagName="p" clamp={3}>
+                {removeMarkdown(description?.substring(0, 300) || '')}
+              </Dotdotdot>
+            </div>
           )}
+          {!noPrice && (
+            <div className={styles.price}>
+              {isUnsupportedPricing || !asset.services.length ? (
+                <strong>No pricing schema available</strong>
+              ) : (
+                <Price accessDetails={asset.accessDetails} size="small" />
+              )}
+            </div>
+          )}
+
           <footer className={styles.footer}>
             {allocated && allocated > 0 ? (
               <span className={styles.typeLabel}>
