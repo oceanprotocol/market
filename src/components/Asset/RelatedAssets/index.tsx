@@ -44,7 +44,14 @@ export default function RelatedAssets(): ReactElement {
 
         const ownerResults = (await queryMetadata(ownerQuery, newCancelToken()))
           .results
-        const bothResults = tagResults.concat(ownerResults)
+
+        // combine both results, and filter out duplicates
+        // stolen from: https://stackoverflow.com/a/70326769/733677
+        const bothResults = tagResults.concat(
+          ownerResults.filter(
+            (asset2) => !tagResults.find((asset1) => asset1.id === asset2.id)
+          )
+        )
         setRelatedAssets(bothResults)
         setIsLoading(false)
       }
