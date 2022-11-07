@@ -1,6 +1,6 @@
 import AssetTeaser from '@shared/AssetTeaser'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { Asset } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
@@ -8,7 +8,6 @@ import Loader from '@shared/atoms/Loader'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useWeb3 } from '@context/Web3'
 import { retrieveAsset } from '@utils/aquarius'
-import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useCancelToken } from '@hooks/useCancelToken'
 
 function LoaderArea() {
@@ -52,7 +51,6 @@ export default function AssetList({
 
     setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
-    console.log('assets', assets)
 
     async function fetchPrices(token?: CancelToken) {
       const assetsWithPrices: Asset[] = []
