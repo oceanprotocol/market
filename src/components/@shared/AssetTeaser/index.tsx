@@ -15,12 +15,14 @@ export declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
   noDescription?: boolean
+  noPrice?: boolean
 }
 
 export default function AssetTeaser({
   asset,
   noPublisher,
-  noDescription
+  noDescription,
+  noPrice
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
@@ -62,11 +64,16 @@ export default function AssetTeaser({
               </Dotdotdot>
             </div>
           )}
-          {isUnsupportedPricing || !asset.services.length ? (
-            <strong>No pricing schema available</strong>
-          ) : (
-            <Price accessDetails={asset.accessDetails} size="small" />
+          {!noPrice && (
+            <div className={styles.price}>
+              {isUnsupportedPricing || !asset.services.length ? (
+                <strong>No pricing schema available</strong>
+              ) : (
+                <Price accessDetails={asset.accessDetails} size="small" />
+              )}
+            </div>
           )}
+
           <footer className={styles.footer}>
             {allocated && allocated > 0 ? (
               <span className={styles.typeLabel}>

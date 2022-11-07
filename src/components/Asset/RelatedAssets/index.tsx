@@ -3,64 +3,45 @@ import { Asset } from '@oceanprotocol/lib'
 import { generateBaseQuery, queryMetadata } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useAsset } from '@context/Asset'
-import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
 import styles from './index.module.css'
 import { useCancelToken } from '@hooks/useCancelToken'
 import AssetList from '@shared/AssetList'
+import { generateQuery } from './_utils'
 
 export default function RelatedAssets(): ReactElement {
   const { asset } = useAsset()
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
+
   const [relatedAssets, setRelatedAssets] = useState<Asset[]>()
   const [isLoading, setIsLoading] = useState<boolean>()
-  const { nftAddress } = asset
-  const { owner } = asset.nft
-  const { tags } = asset.metadata
-
-  function generateQuery(
-    size: number,
-    tagFilter: boolean,
-    ownerFilter: boolean
-  ) {
-    return {
-      chainIds,
-      esPaginationOptions: {
-        size
-      },
-      nestedQuery: {
-        must_not: {
-          term: { 'nftAddress.keyword': nftAddress }
-        }
-      },
-      filters: [
-        tagFilter && {
-          terms: { 'metadata.tags.keyword': tags }
-        },
-        ownerFilter && { term: { 'nft.owner.keyword': owner } }
-      ],
-      sort: {
-        'stats.orders': 'desc'
-      },
-      sortOptions: {
-        sortBy: SortTermOptions.Orders
-      } as SortOptions
-    } as BaseQueryParams
-  }
 
   useEffect(() => {
-    setIsLoading(true)
+    if (!chainIds || !asset?.nftAddress || !asset?.nft || !asset?.metadata)
+      return
+
     async function getAssets() {
-      const tagQuery = generateBaseQuery(generateQuery(3, true, false))
+      setIsLoading(true)
+      const tagQuery = generateBaseQuery(
+        generateQuery(chainIds, asset.nftAddress, 4, asset.metadata.tags)
+      )
       const tagResults = (await queryMetadata(tagQuery, newCancelToken()))
         .results
-      if (tagResults.length === 3) {
+
+      if (tagResults.length === 4) {
         setRelatedAssets(tagResults)
         setIsLoading(false)
       } else {
         const ownerQuery = generateBaseQuery(
-          generateQuery(3 - tagResults.length, false, true)
+          generateQuery(
+            chainIds,
+            asset.nftAddress,
+            4 - tagResults.length,
+            null,
+            asset.nft.owner
+          )
         )
+
         const ownerResults = (await queryMetadata(ownerQuery, newCancelToken()))
           .results
         const bothResults = tagResults.concat(ownerResults)
@@ -69,20 +50,19 @@ export default function RelatedAssets(): ReactElement {
       }
     }
     getAssets()
-  }, [chainIds, tags, nftAddress])
+  }, [chainIds, asset, newCancelToken])
 
   return (
     <section className={styles.section}>
       <h3>Related Assets</h3>
-      {relatedAssets && (
-        <AssetList
-          assets={relatedAssets}
-          showPagination={false}
-          isLoading={isLoading}
-          noDescription={true}
-          noPublisher={true}
-        />
-      )}
+      <AssetList
+        assets={relatedAssets}
+        showPagination={false}
+        isLoading={isLoading}
+        noDescription
+        noPublisher
+        noPrice
+      />
     </section>
   )
 }
