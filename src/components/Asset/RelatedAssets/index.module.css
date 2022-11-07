@@ -1,0 +1,8 @@
+.section {
+  margin-top: calc(var(--spacer) * 2);
+}
+
+.section > h3 {
+  font-size: var(--font-size-large);
+  color: var(--color-secondary);
+}
