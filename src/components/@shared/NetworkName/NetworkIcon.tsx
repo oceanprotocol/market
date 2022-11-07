@@ -19,5 +19,5 @@ export function NetworkIcon({ name }: { name: string }): ReactElement {
     ? EnergywebIcon
     : EthIcon // ETH icon as fallback
 
-  return IconMapped ? <IconMapped className={styles.icon} /> : null
+  return <IconMapped className={styles.icon} />
 }

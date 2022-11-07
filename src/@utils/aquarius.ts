@@ -1,5 +1,5 @@
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../app.config'
@@ -192,7 +192,7 @@ export async function getAssetsFromDidList(
   cancelToken: CancelToken
 ): Promise<PagedAssets> {
   try {
-    if (!(didList.length > 0)) return
+    if (!didList.length) return
 
     const baseParams = {
       chainIds,
@@ -214,7 +214,7 @@ export async function getAssetsFromDtList(
   cancelToken: CancelToken
 ): Promise<Asset[]> {
   try {
-    if (!(dtList.length > 0)) return
+    if (!dtList.length) return
 
     const baseParams = {
       chainIds,

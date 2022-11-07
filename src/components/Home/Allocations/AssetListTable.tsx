@@ -1,6 +1,6 @@
 import React from 'react'
 import Table, { TableOceanColumn } from '@shared/atoms/Table'
-import AssetTitle from '@shared/AssetList/AssetListTitle'
+import AssetTitle from '@shared/AssetListTitle'
 import { AssetWithOwnAllocation } from '@utils/veAllocation'
 
 const columns: TableOceanColumn<AssetWithOwnAllocation>[] = [

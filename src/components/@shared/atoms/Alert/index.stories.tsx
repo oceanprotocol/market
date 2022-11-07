@@ -28,7 +28,7 @@ Full.args = {
   state: 'info',
   action: {
     name: 'Action',
-    handleAction: () => null as any
+    handleAction: () => null
   },
   badge: 'Hello',
   onDismiss: () => {

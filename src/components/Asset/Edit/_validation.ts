@@ -10,7 +10,15 @@ export const validationSchema = Yup.object().shape({
   files: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string().url('Must be a valid URL.'),
+        url: Yup.string()
+          .url('Must be a valid URL.')
+          .test(
+            'GoogleNotSupported',
+            'Google Drive is not a supported hosting service. Please use an alternative.',
+            (value) => {
+              return !value?.toString().includes('drive.google')
+            }
+          ),
         valid: Yup.boolean().isTrue()
       })
     )
@@ -18,7 +26,15 @@ export const validationSchema = Yup.object().shape({
   links: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string().url('Must be a valid URL.'),
+        url: Yup.string()
+          .url('Must be a valid URL.')
+          .test(
+            'GoogleNotSupported',
+            'Google Drive is not a supported hosting service. Please use an alternative.',
+            (value) => {
+              return !value?.toString().includes('drive.google')
+            }
+          ),
         valid: Yup.boolean().isTrue()
       })
     )

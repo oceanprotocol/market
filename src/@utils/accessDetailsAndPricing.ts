@@ -323,7 +323,7 @@ export async function getAccessDetailsForAssets(
         },
         queryContext
       )
-      tokenQueryResult.data?.tokens.forEach((token) => {
+      tokenQueryResult?.data?.tokens?.forEach((token) => {
         const currentAsset = assetsExtended.find(
           (asset) =>
             asset.services[0].datatokenAddress.toLowerCase() === token.id
