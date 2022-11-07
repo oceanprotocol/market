@@ -14,7 +14,8 @@ export async function transformAssetToAssetSelection(
   const algorithmList: AssetSelectionAsset[] = []
 
   for (const asset of extendedAssets) {
-    const algoComputeService = getServiceByName(asset, 'compute')
+    const algoComputeService =
+      getServiceByName(asset, 'compute') || getServiceByName(asset, 'access')
 
     if (
       asset?.accessDetails?.price &&
