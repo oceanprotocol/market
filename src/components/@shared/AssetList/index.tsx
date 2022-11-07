@@ -1,13 +1,17 @@
 import AssetTeaser from '@shared/AssetTeaser'
 import React, { ReactElement, useEffect, useState } from 'react'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { CancelToken } from 'axios'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import Loader from '@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useIsMounted } from '@hooks/useIsMounted'
-import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
+import { retrieveAsset } from '@utils/aquarius'
+import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
+import { useCancelToken } from '@hooks/useCancelToken'
 
 const cx = classNames.bind(styles)
 
@@ -45,22 +49,26 @@ export default function AssetList({
   const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
   const [loading, setLoading] = useState<boolean>(isLoading)
   const isMounted = useIsMounted()
+  const newCancelToken = useCancelToken()
 
   useEffect(() => {
     if (!assets) return
 
     setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
-    async function fetchPrices() {
-      const assetsWithPrices = await getAccessDetailsForAssets(
-        assets,
-        accountId || ''
-      )
+    console.log('assets', assets)
+
+    async function fetchPrices(token?: CancelToken) {
+      const assetsWithPrices: Asset[] = []
+      for (let i = 0; i < assets.length; i++) {
+        const asseetWithPrice = await retrieveAsset(assets[i].id, token)
+        assetsWithPrices.push(asseetWithPrice)
+      }
       if (!isMounted() || !assetsWithPrices) return
       setAssetsWithPrices([...assetsWithPrices])
     }
-    fetchPrices()
-  }, [assets, isMounted, accountId])
+    fetchPrices(newCancelToken())
+  }, [assets, isMounted, accountId, newCancelToken])
 
   // // This changes the page field inside the query
   function handlePageChange(selected: number) {
@@ -71,6 +79,7 @@ export default function AssetList({
     assetList: true,
     [className]: className
   })
+  console.log('assetsWithPrices', assetsWithPrices)
 
   return chainIds.length === 0 ? (
     <div className={styleClasses}>
