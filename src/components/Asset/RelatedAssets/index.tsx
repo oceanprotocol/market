@@ -17,8 +17,15 @@ export default function RelatedAssets(): ReactElement {
   const [isLoading, setIsLoading] = useState<boolean>()
 
   useEffect(() => {
-    if (!chainIds || !asset?.nftAddress || !asset?.nft || !asset?.metadata)
+    if (
+      !chainIds?.length ||
+      !asset?.nftAddress ||
+      !asset?.nft ||
+      !asset?.metadata
+    ) {
+      setIsLoading(false)
       return
+    }
 
     async function getAssets() {
       setIsLoading(true)
