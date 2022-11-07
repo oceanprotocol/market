@@ -3,7 +3,7 @@ import FileIcon from '@shared/FileIcon'
 import Price from '@shared/Price'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
-import ButtonBuy from '@shared/ButtonBuy'
+import ButtonBuy from './ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
@@ -173,7 +173,7 @@ export default function Download({
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
       onClick={handleOrderOrDownload}
-      assetTimeout={secondsToString(asset.services[0].timeout)}
+      assetTimeout={secondsToString(asset?.services?.[0]?.timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
       isLoading={isLoading}
@@ -195,7 +195,7 @@ export default function Download({
           />
         ) : (
           <>
-            {isUnsupportedPricing ? (
+            {isUnsupportedPricing || !asset.services.length ? (
               <Alert
                 className={styles.fieldWarning}
                 state="info"

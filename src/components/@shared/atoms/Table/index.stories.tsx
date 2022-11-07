@@ -1,6 +1,26 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Table, { TableOceanProps } from '@shared/atoms/Table'
+import { columns, data } from '../../../../../.jest/__fixtures__/table'
+
+export const args: TableOceanProps<any> = { columns, data }
+
+export const argsWithPagination: TableOceanProps<any> = {
+  columns,
+  data: data.flatMap((i) => [i, i, i])
+}
+
+export const argsLoading: TableOceanProps<any> = {
+  isLoading: true,
+  columns: [],
+  data: []
+}
+
+export const argsEmpty: TableOceanProps<any> = {
+  emptyMessage: 'I am empty',
+  columns: [],
+  data: []
+}
 
 export default {
   title: 'Component/@shared/atoms/Table',
@@ -13,70 +33,14 @@ interface Props {
   args: TableOceanProps<any>
 }
 
-const columns = [
-  {
-    name: 'Name',
-    selector: (row: any) => row.name,
-    maxWidth: '45rem',
-    grow: 1
-  },
-  {
-    name: 'Symbol',
-    selector: (row: any) => row.symbol,
-    maxWidth: '10rem'
-  },
-  {
-    name: 'Price',
-    selector: (row: any) => row.price,
-    right: true
-  }
-]
-
-const data = [
-  {
-    name: 'Title asset',
-    symbol: 'DATA-70',
-    price: '1.011'
-  },
-  {
-    name: 'Title asset Title asset Title asset Title asset Title asset',
-    symbol: 'DATA-71',
-    price: '1.011'
-  },
-  {
-    name: 'Title asset',
-    symbol: 'DATA-72',
-    price: '1.011'
-  },
-  {
-    name: 'Title asset Title asset Title asset Title asset Title asset Title asset Title asset Title asset Title asset Title asset',
-    symbol: 'DATA-71',
-    price: '1.011'
-  }
-]
-
 export const WithData: Props = Template.bind({})
-WithData.args = {
-  columns,
-  data
-}
+WithData.args = args
 
 export const WithPagination: Props = Template.bind({})
-WithPagination.args = {
-  columns,
-  data: data.flatMap((i) => [i, i, i])
-}
+WithPagination.args = argsWithPagination
 
 export const Loading: Props = Template.bind({})
-Loading.args = {
-  isLoading: true,
-  columns: [],
-  data: []
-}
+Loading.args = argsLoading
 
 export const Empty: Props = Template.bind({})
-Empty.args = {
-  emptyMessage: 'I am empty',
-  columns: [],
-  data: []
-}
+Empty.args = argsEmpty

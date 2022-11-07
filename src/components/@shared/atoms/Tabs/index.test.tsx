@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Default } from './index.stories'
+import { Default, WithRadio } from './index.stories'
 
 describe('Tabs', () => {
   test('should be able to change', async () => {
@@ -17,5 +17,9 @@ describe('Tabs', () => {
 
     fireEvent.click(screen.getByText('Second tab'))
     expect(handler).toBeCalledTimes(1)
+  })
+
+  test('renders WithRadio', () => {
+    render(<Default {...WithRadio.args} />)
   })
 })

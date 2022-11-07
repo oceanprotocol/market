@@ -32,7 +32,7 @@ import {
   getComputeEnviroment,
   getComputeJobs
 } from '@utils/compute'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
 import ComputeHistory from './History'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
@@ -456,8 +456,8 @@ export default function Compute({
               validAlgorithmOrderTx !== undefined
             }
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
-            oceanSymbol={
-              asset?.accessDetails?.baseToken?.symbol ||
+            datasetSymbol={asset?.accessDetails?.baseToken?.symbol || 'OCEAN'}
+            algorithmSymbol={
               selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol ||
               'OCEAN'
             }

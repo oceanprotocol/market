@@ -1,0 +1,126 @@
+.selection {
+  padding: 0;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-highlight);
+  border-radius: var(--border-radius);
+  margin-bottom: calc(var(--spacer) / 2);
+  font-size: var(--font-size-small);
+  min-height: 200px;
+}
+
+.disabled {
+  opacity: 0.5;
+}
+
+.selection [class*='loaderWrap'] {
+  margin: calc(var(--spacer) / 3);
+}
+
+.scroll {
+  border-top: 1px solid var(--border-color);
+  margin-top: calc(var(--spacer) / 4);
+  min-height: fit-content;
+  max-height: 50vh;
+  position: relative;
+  /* smooth overflow scrolling for pre-iOS 13 */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: calc(var(--spacer) / 10);
+}
+
+.label {
+  display: block;
+  width: 100%;
+}
+
+.input {
+  min-width: 1.2rem;
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: calc(var(--spacer) / 3);
+}
+
+.radio {
+  composes: radio from '@shared/FormInput/InputElement/Radio/index.module.css';
+}
+
+.checkbox {
+  composes: checkbox from '@shared/FormInput/InputElement/Radio/index.module.css';
+}
+
+.title {
+  font-size: var(--font-size-small);
+  margin-top: calc(var(--spacer) / 12);
+  margin-bottom: 0;
+}
+
+.link {
+  display: inline-block;
+  margin-left: calc(var(--spacer) / 8);
+}
+
+.link svg {
+  margin: 0;
+  fill: var(--color-primary);
+  width: 0.7em;
+  height: 0.7em;
+}
+
+.footer {
+  display: flex;
+  gap: var(--spacer);
+  justify-content: space-between;
+  margin-top: calc(var(--spacer) / 12);
+}
+
+.price {
+  white-space: pre;
+  font-size: calc(var(--font-size-small) / 1.1) !important;
+  padding-left: calc(var(--spacer) / 4);
+}
+
+.price [class*='symbol'] {
+  font-size: calc(var(--font-size-small) / 1.2) !important;
+}
+
+.search {
+  margin: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
+  width: calc(100% - var(--spacer));
+}
+
+.did {
+  padding: 0;
+  /* font-size: var(--font-size-mini); */
+  /* hack to make DotDotDot clamp work in Safari*/
+  font-size: 0.63rem;
+  display: block;
+  text-align: left;
+  color: var(--color-secondary);
+  /* makes sure DotDotDot will kick in */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.empty {
+  padding: var(--spacer) calc(var(--spacer) / 2);
+  text-align: center;
+  color: var(--color-secondary);
+}
