@@ -6,6 +6,7 @@ import styles from './index.module.css'
 import InputGroup from '@shared/FormInput/InputGroup'
 import InputElement from '@shared/FormInput/InputElement'
 import isUrl from 'is-url-superb'
+import { isCID } from '@utils/url'
 
 export interface URLInputProps {
   submitText: string
@@ -31,22 +32,11 @@ export default function URLInput({
   useEffect(() => {
     if (!field?.value) return
 
-    const isCid = (value: string) => {
-      // check if url
-      if (isUrl(value)) return true
-
-      // regex cid. https://stackoverflow.com/questions/67176725/a-regex-json-schema-pattern-for-an-ipfs-cid
-      const cidRegex =
-        'Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}'
-
-      return cidRegex.match(value)
-    }
-
     setIsButtonDisabled(
       !field?.value ||
         field.value === '' ||
         (checkUrl && storageType === 'url' && !isUrl(field.value)) ||
-        (checkUrl && storageType === 'ipfs' && isCid(field.value)) ||
+        (checkUrl && storageType === 'ipfs' && !isCID(field.value)) ||
         field.value.includes('javascript:') ||
         meta?.error
     )

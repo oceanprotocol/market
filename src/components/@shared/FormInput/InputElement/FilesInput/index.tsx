@@ -16,9 +16,16 @@ export default function FilesInput(props: InputProps): ReactElement {
     ? props.form?.values?.services[0].providerUrl.url
     : asset.services[0].serviceEndpoint
 
-  const storageType = props.form?.values?.services
+  let storageType = props.form?.values?.services
     ? props.form?.values?.services[0].storageType
     : null // TODO: understand which property to used here
+
+  if (!storageType) {
+    // edit mode
+    storageType = props?.form?.values?.storageType
+      ? props.form?.values.storageType
+      : 'url' // default value
+  }
 
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
@@ -27,8 +34,6 @@ export default function FilesInput(props: InputProps): ReactElement {
     try {
       setIsLoading(true)
       const checkedFile = await getFileUrlInfo(url, providerUrl, storageType)
-      // console.log('check file: ', checkedFile)
-
       // error if something's not right from response
       if (!checkedFile)
         throw Error('Could not fetch file info. Is your network down?')

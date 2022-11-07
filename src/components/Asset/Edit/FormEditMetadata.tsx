@@ -5,6 +5,7 @@ import FormActions from './FormActions'
 import { useAsset } from '@context/Asset'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { getFileUrlInfo } from '@utils/provider'
+import { getFieldContent } from '@utils/form'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,
@@ -21,11 +22,11 @@ export default function FormEditMetadata({
   showPrice,
   isComputeDataset
 }: {
-  data: InputProps[]
+  data: FormFieldContent[]
   showPrice: boolean
   isComputeDataset: boolean
 }): ReactElement {
-  const { oceanConfig, asset } = useAsset()
+  const { asset } = useAsset()
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const [storageType, setStorageType] = useState('url' || 'ipfs' || 'arweave')
 
@@ -58,8 +59,6 @@ export default function FormEditMetadata({
       ? values?.services[0].providerUrl.url
       : asset.services[0].serviceEndpoint
 
-    console.log(values, asset)
-
     // if we have a sample file, we need to get the files' info before setting defaults links value
     asset?.metadata?.links?.[0] &&
       getFileUrlInfo(asset.metadata.links[0], providerUrl, 'url').then(
@@ -78,39 +77,78 @@ export default function FormEditMetadata({
 
   useEffect(() => {
     if (values.storageType !== storageType) {
-      setFieldValue('files', [{ url: '', type: '' }])
+      setFieldValue('files', [{ url: '', type: values.storageType }])
     }
-
     setStorageType(values.storageType)
-
-    // TODO: add storageType from asset's metadata information
   }, [values.storageType])
 
   return (
     <Form>
-      {data.map((field: InputProps) => {
-        console.log(field.name, storageType)
+      <Field {...getFieldContent('name', data)} component={Input} name="name" />
 
-        if (field.name === 'files' && storageType !== 'url') return false
-        if (field.name === 'ipfs' && storageType !== 'ipfs') return false
-        if (field.name === 'arweave' && storageType !== 'arweave') return false
+      <Field
+        {...getFieldContent('description', data)}
+        component={Input}
+        name="description"
+      />
 
-        return (
-          (!showPrice && field.name === 'price') || (
-            <Field
-              key={field.name}
-              options={
-                field.name === 'timeout' && isComputeDataset === true
-                  ? timeoutOptionsArray
-                  : field.options
-              }
-              {...field}
-              component={Input}
-              prefix={field.name === 'price' && oceanConfig?.oceanTokenSymbol}
-            />
-          )
-        )
-      })}
+      {showPrice && (
+        <Field
+          {...getFieldContent('price', data)}
+          component={Input}
+          name="price"
+        />
+      )}
+
+      <Field
+        {...getFieldContent('storageType', data)}
+        component={Input}
+        name="storageType"
+      />
+
+      {storageType === 'ipfs' && (
+        <Field
+          {...getFieldContent('ipfs', data)}
+          component={Input}
+          name="files"
+        />
+      )}
+
+      {storageType === 'arweave' && (
+        <Field
+          {...getFieldContent('arweave', data)}
+          component={Input}
+          name="files"
+        />
+      )}
+
+      {storageType === 'url' && (
+        <Field
+          {...getFieldContent('files', data)}
+          component={Input}
+          name="files"
+        />
+      )}
+
+      <Field
+        {...getFieldContent('links', data)}
+        component={Input}
+        name="links"
+      />
+
+      <Field
+        {...getFieldContent('timeout', data)}
+        component={Input}
+        name="timeout"
+      />
+
+      <Field
+        {...getFieldContent('author', data)}
+        component={Input}
+        name="author"
+      />
+
+      <Field {...getFieldContent('tags', data)} component={Input} name="tags" />
 
       <FormActions />
     </Form>

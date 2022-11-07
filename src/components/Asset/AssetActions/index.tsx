@@ -52,15 +52,19 @@ export default function AssetActions({
         formikState?.values?.services[0].providerUrl.url ||
         asset?.services[0]?.serviceEndpoint
 
+      const storageType = formikState?.values?.services
+        ? formikState?.values?.services[0].storageType
+        : null
       try {
         const fileInfoResponse = formikState?.values?.services?.[0].files?.[0]
           .url
           ? await getFileUrlInfo(
               formikState?.values?.services?.[0].files?.[0].url,
               providerUrl,
-              'url'
+              storageType
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
+
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
 
         // set the content type in the Dataset Schema

@@ -58,7 +58,10 @@ export default function ServicesFields(): ReactElement {
     )
   }, [values.services[0].algorithmPrivacy, setFieldValue])
 
-  console.log(values.services)
+  // Auto-change storage type
+  useEffect(() => {
+    values.services[0].files[0].type = values.services[0].storageType
+  }, [values.services])
 
   return (
     <>
