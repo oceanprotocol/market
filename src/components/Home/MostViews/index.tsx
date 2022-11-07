@@ -16,7 +16,7 @@ import { sortAssets } from '@utils/index'
 
 export default function MostViews(): ReactElement {
   const [loading, setLoading] = useState<boolean>()
-  const [mostViewed, setMostViewed] = useState<AssetExtended[]>()
+  const [mostViewed, setMostViewed] = useState<AssetExtended[]>([])
   const newCancelToken = useCancelToken()
   const newAbortController = useAbortController()
 
