@@ -5,7 +5,7 @@ export const assetAquarius: Asset = {
   id: 'did:op:6654b0793765b269696cec8d2f0d077d9bbcdd3c4f033d941ab9684e8ad06630',
   nftAddress: '0xbA5BA7B09e2FA1eb0258f647503F81D2Af5cb07d',
   version: '4.1.0',
-  chainId: 5,
+  chainId: 1,
   metadata: {
     created: '2022-09-29T11:30:26Z',
     updated: '2022-09-29T11:30:26Z',

@@ -7,7 +7,6 @@ import {
 } from '@utils/aquarius'
 import { useCancelToken } from '@hooks/useCancelToken'
 import Tooltip from '@shared/atoms/Tooltip'
-import Markdown from '@shared/Markdown'
 import AssetList from '@shared/AssetList'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { sortAssets } from '@utils/index'
@@ -19,9 +18,9 @@ export default function MostViews(): ReactElement {
   const newCancelToken = useCancelToken()
 
   const getMostViewed = useCallback(async () => {
-    setLoading(true)
     try {
-      const response: AxiosResponse<PageViews[]> = await axios(
+      setLoading(true)
+      const response: AxiosResponse<PageViews[]> = await axios.get(
         'https://market-analytics.oceanprotocol.com/pages?limit=6',
         { cancelToken: newCancelToken() }
       )
@@ -41,16 +40,16 @@ export default function MostViews(): ReactElement {
         sortedAssets.forEach((asset) => {
           assetsWithViews.push({
             ...asset,
-            views: response.data.filter((x) => x.did === asset.id)[0].count
+            views: response.data.filter((x) => x.did === asset.id)?.[0]?.count
           })
         })
         setMostViewed(assetsWithViews)
       }
     } catch (error) {
       LoggerInstance.error(error.message)
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }, [newCancelToken])
 
   useEffect(() => {
@@ -61,15 +60,7 @@ export default function MostViews(): ReactElement {
     <section className={styles.section}>
       <h3>
         Most Views
-        <Tooltip
-          className={styles.info}
-          content={
-            <Markdown
-              className={styles.note}
-              text="Assets from all supported chains. It is not influenced by selected networks"
-            />
-          }
-        />
+        <Tooltip content="Assets from all supported chains. It is not influenced by selected networks" />
       </h3>
 
       <AssetList

@@ -1,7 +1,7 @@
 import { useUserPreferences } from '@context/UserPreferences'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import AssetList from '@shared/AssetList'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
@@ -68,13 +68,7 @@ export default function SectionQueryResult({
   return (
     <section className={styles.section}>
       <h3>
-        {title}{' '}
-        {tooltip && (
-          <Tooltip
-            className={styles.info}
-            content={<Markdown className={styles.note} text={tooltip} />}
-          />
-        )}
+        {title} {tooltip && <Tooltip content={<Markdown text={tooltip} />} />}
       </h3>
 
       <AssetList
