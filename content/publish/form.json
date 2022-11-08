@@ -146,7 +146,7 @@
           "1 week",
           "1 month",
           "1 year",
-          "see timed pricing"
+          "Use timed pricing"
         ],
         "sortOptions": false,
         "required": true
