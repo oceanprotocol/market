@@ -4,7 +4,7 @@ import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import appConfig from 'app.config'
+import appConfig from '../../app.config'
 
 const UserTokenOrders = gql`
   query OrdersData($user: String!) {
