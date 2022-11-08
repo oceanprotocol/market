@@ -1,7 +1,5 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import styles from '../index.module.css'
-import { useAbortController } from '@hooks/useAbortController'
-import fetch from 'cross-fetch'
 import {
   generateBaseQuery,
   getFilterTerm,
@@ -13,27 +11,24 @@ import Markdown from '@shared/Markdown'
 import AssetList from '@shared/AssetList'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { sortAssets } from '@utils/index'
+import axios, { AxiosResponse } from 'axios'
 
 export default function MostViews(): ReactElement {
   const [loading, setLoading] = useState<boolean>()
   const [mostViewed, setMostViewed] = useState<AssetExtended[]>([])
   const newCancelToken = useCancelToken()
-  const newAbortController = useAbortController()
 
   const getMostViewed = useCallback(async () => {
     setLoading(true)
     try {
-      const reponse = await fetch(
+      const response: AxiosResponse<PageViews[]> = await axios(
         'https://market-analytics.oceanprotocol.com/pages?limit=6',
-        { signal: newAbortController() }
+        { cancelToken: newCancelToken() }
       )
-      const views = (await reponse.json()) as PageViews[]
-      const dids = views.map((x: PageViews) => x.did)
+      const dids = response?.data?.map((x: PageViews) => x.did)
       const assetsWithViews: AssetExtended[] = []
       const baseParams = {
-        esPaginationOptions: {
-          size: 6
-        },
+        esPaginationOptions: { size: 6 },
         filters: [getFilterTerm('_id', dids)]
       } as BaseQueryParams
       const query = generateBaseQuery(baseParams)
@@ -46,7 +41,7 @@ export default function MostViews(): ReactElement {
         sortedAssets.forEach((asset) => {
           assetsWithViews.push({
             ...asset,
-            views: views.filter((x) => x.did === asset.id)[0].count
+            views: response.data.filter((x) => x.did === asset.id)[0].count
           })
         })
         setMostViewed(assetsWithViews)
@@ -56,7 +51,7 @@ export default function MostViews(): ReactElement {
     }
 
     setLoading(false)
-  }, [newAbortController, newCancelToken])
+  }, [newCancelToken])
 
   useEffect(() => {
     getMostViewed()
