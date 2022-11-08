@@ -59,8 +59,8 @@ export default function MostViews(): ReactElement {
   return (
     <section className={styles.section}>
       <h3>
-        Most Views
-        <Tooltip content="Assets from all supported chains. It is not influenced by selected networks" />
+        Most Views <span>last 30 days</span>
+        <Tooltip content="Assets from all supported chains. Not affected by your selected networks." />
       </h3>
 
       <AssetList
