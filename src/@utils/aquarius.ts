@@ -1,5 +1,5 @@
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../app.config'
@@ -291,7 +291,7 @@ export async function getAlgorithmDatasetsForCompute(
       must: {
         match: {
           'services.compute.publisherTrustedAlgorithms.did': {
-            query: escapeEsReservedCharacters(algorithmId)
+            query: algorithmId
           }
         }
       }
@@ -304,7 +304,6 @@ export async function getAlgorithmDatasetsForCompute(
 
   const query = generateBaseQuery(baseQueryParams)
   const computeDatasets = await queryMetadata(query, cancelToken)
-
   if (computeDatasets?.totalResults === 0) return []
 
   const datasets = await transformAssetToAssetSelection(
