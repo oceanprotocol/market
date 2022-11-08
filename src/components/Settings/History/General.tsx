@@ -27,14 +27,16 @@ export default function GeneralTab(): ReactElement {
           }, 1000)
         }}
       >
-        <Form>
-          <ul className={styles.generalDetails}>
-            <Currency textVisible={textVisible} />
-            <TokenApproval />
-            <Appearance darkMode={darkMode} />
-            <Debug />
-          </ul>
-        </Form>
+        <div className={styles.generalForm}>
+          <Form>
+            <ul className={styles.generalDetails}>
+              <Currency textVisible={textVisible} />
+              <TokenApproval />
+              <Appearance darkMode={darkMode} />
+              <Debug />
+            </ul>
+          </Form>
+        </div>
       </Formik>
     </>
   )

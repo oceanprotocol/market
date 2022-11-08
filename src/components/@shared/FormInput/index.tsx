@@ -16,6 +16,7 @@ import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import FormHelp from './Help'
+import content from '../../../../content/settings/general.json'
 
 const cx = classNames.bind(styles)
 
@@ -33,6 +34,7 @@ export interface InputProps {
   sortOptions?: boolean
   additionalComponent?: ReactElement
   value?: string | number
+  content: string
   onChange?(
     e:
       | FormEvent<HTMLInputElement>
@@ -93,7 +95,8 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     form,
     field,
     disclaimer,
-    disclaimerValues
+    disclaimerValues,
+    content
   } = props
 
   const isFormikField = typeof field !== 'undefined'
@@ -139,7 +142,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
           <Tooltip content={<Markdown text={help} />} />
         )}
       </Label>
-      <div>
+      <div className="test">
         <InputElement size={size} {...field} {...props} />
         {help && prominentHelp && <FormHelp>{help}</FormHelp>}
 
@@ -153,9 +156,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
           <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>
         )}
         {additionalComponent && additionalComponent}
-        {textVisible ? (
-          <FormHelp>Defaults to your OS setting, select to override.</FormHelp>
-        ) : null}
+        {textVisible ? <FormHelp>{content}</FormHelp> : null}
       </div>
     </div>
   )

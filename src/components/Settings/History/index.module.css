@@ -64,5 +64,14 @@
 }
 
 .generalDetails > * > * > :last-child {
-  width: 70vw;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+
+.generalForm {
+  display: flex;
+  justify-content: center;
+  max-width: 70rem;
 }

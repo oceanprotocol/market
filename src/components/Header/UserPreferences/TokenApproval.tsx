@@ -13,6 +13,7 @@ export default function TokenApproval(): ReactElement {
         help="Use infinite amount when approving tokens in _Use_."
         name="infiniteApproval"
         type="checkbox"
+        content="Use infinite amount when approving tokens in Use, Pool, or Trade"
         options={['Allow infinite amount']}
         defaultChecked={infiniteApproval === true}
         onChange={() => setInfiniteApproval(!infiniteApproval)}

@@ -45,3 +45,7 @@
 .hasError [class*='postfix'] {
   border-color: var(--brand-alert-red);
 }
+
+.test {
+  width: 2rem;
+}
