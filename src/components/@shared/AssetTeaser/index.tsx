@@ -89,6 +89,13 @@ export default function AssetTeaser({
                   : `${orders} ${orders === 1 ? 'sale' : 'sales'}`}
               </span>
             ) : null}
+            {asset.views && asset.views > 0 ? (
+              <span className={styles.typeLabel}>
+                {asset.views < 0
+                  ? 'N/A'
+                  : `${asset.views} ${asset.views === 1 ? 'view' : 'views'}`}
+              </span>
+            ) : null}
           </footer>
         </a>
       </Link>
