@@ -7,7 +7,8 @@ import {
   Asset,
   Service
 } from '@oceanprotocol/lib'
-import { validationSchema, getInitialValues } from './_constants'
+import { validationSchema } from './_validation'
+import { getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
 import { useWeb3 } from '@context/Web3'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -72,7 +73,8 @@ export default function Edit({
         name: values.name,
         description: values.description,
         links: linksTransformed,
-        author: values.author
+        author: values.author,
+        tags: values.tags
       }
 
       asset?.accessDetails?.type === 'fixed' &&
@@ -180,6 +182,7 @@ export default function Edit({
 
             <Web3Feedback
               networkId={asset?.chainId}
+              accountId={accountId}
               isAssetNetwork={isAssetNetwork}
             />
 

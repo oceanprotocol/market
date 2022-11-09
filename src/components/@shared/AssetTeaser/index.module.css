@@ -1,0 +1,66 @@
+.teaser {
+  max-width: 40rem;
+  height: 100%;
+}
+
+.link {
+  composes: box from '@shared/atoms/Box.module.css';
+  font-size: var(--font-size-small);
+  height: 100%;
+  color: var(--color-secondary);
+  position: relative;
+  padding-top: calc(var(--spacer) / 2);
+  padding-bottom: calc(var(--spacer) / 2);
+  /* for sticking footer to bottom */
+  display: flex;
+  flex-direction: column;
+}
+
+.algorithm .link {
+  background-color: var(--background-body);
+}
+
+.detailLine {
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.content {
+  margin-top: calc(var(--spacer) / 3);
+  overflow-wrap: break-word;
+  hyphens: auto;
+  /* for sticking footer to bottom */
+  flex: 1;
+}
+
+.content p {
+  margin-bottom: calc(var(--spacer) / 3);
+}
+
+.title {
+  font-size: var(--font-size-large);
+  margin: 0;
+  padding-bottom: calc(var(--spacer) / 6);
+  overflow-wrap: break-word;
+}
+
+.price {
+  margin-top: calc(var(--spacer) / 12);
+}
+
+.footer {
+  margin-top: calc(var(--spacer) / 24);
+}
+
+.typeLabel {
+  font-size: var(--font-size-mini);
+  display: inline-block;
+  border-left: 1px solid var(--border-color);
+  padding-left: calc(var(--spacer) / 4);
+  margin-left: calc(var(--spacer) / 4);
+}
+
+.typeLabel:first-child {
+  border-left: none;
+  padding-left: 0;
+  margin-left: 0;
+}

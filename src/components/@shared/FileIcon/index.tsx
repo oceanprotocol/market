@@ -1,12 +1,9 @@
 import React, { ReactElement } from 'react'
-import filesize from 'filesize'
-import classNames from 'classnames/bind'
+import { filesize } from 'filesize'
 import cleanupContentType from '@utils/cleanupContentType'
 import styles from './index.module.css'
 import Loader from '@shared/atoms/Loader'
 import { FileInfo } from '@oceanprotocol/lib'
-
-const cx = classNames.bind(styles)
 
 function LoaderArea() {
   return (
@@ -27,22 +24,20 @@ export default function FileIcon({
   small?: boolean
   isLoading?: boolean
 }): ReactElement {
-  const styleClasses = cx({
-    file: true,
-    small,
-    [className]: className
-  })
+  const styleClasses = `${styles.file} ${small ? styles.small : ''} ${
+    className || ''
+  }`
 
   return (
     <ul className={styleClasses}>
-      {!isLoading && file ? (
+      {!isLoading ? (
         <>
-          {file.contentType || file.contentLength ? (
+          {file?.contentType || file?.contentLength ? (
             <>
               <li>{cleanupContentType(file.contentType)}</li>
               <li>
                 {file.contentLength && file.contentLength !== '0'
-                  ? filesize(Number(file.contentLength))
+                  ? filesize(Number(file.contentLength)).toString()
                   : ''}
               </li>
             </>

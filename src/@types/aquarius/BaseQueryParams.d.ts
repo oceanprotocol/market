@@ -12,4 +12,5 @@ interface BaseQueryParams {
   aggs?: any
   filters?: FilterTerm[]
   ignorePurgatory?: boolean
+  ignoreState?: boolean
 }

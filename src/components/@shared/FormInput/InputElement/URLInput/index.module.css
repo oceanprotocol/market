@@ -1,0 +1,12 @@
+.input {
+  composes: input from '@shared/FormInput/InputElement/index.module.css';
+}
+
+.hasError {
+  color: var(--brand-alert-red);
+  border-color: var(--brand-alert-red);
+}
+
+.error {
+  composes: error from '@shared/FormInput/index.module.css';
+}

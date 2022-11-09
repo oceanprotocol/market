@@ -9,7 +9,7 @@
 .number {
   white-space: nowrap;
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   line-height: 1;
 }
 

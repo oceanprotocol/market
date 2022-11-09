@@ -1,0 +1,8 @@
+.avatar {
+  width: var(--font-size-large);
+  height: var(--font-size-large);
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}

@@ -12,10 +12,8 @@ import { useUserPreferences } from '@context/UserPreferences'
 import styles from './index.module.css'
 import Web3Feedback from '@shared/Web3Feedback'
 import { useCancelToken } from '@hooks/useCancelToken'
-import {
-  getComputeSettingsInitialValues,
-  computeSettingsValidationSchema
-} from './_constants'
+import { getComputeSettingsInitialValues } from './_constants'
+import { computeSettingsValidationSchema } from './_validation'
 import content from '../../../../content/pages/editComputeDataset.json'
 import { getServiceByName } from '@utils/ddo'
 import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
@@ -43,10 +41,12 @@ export default function EditComputeDataset({
 
   async function handleSubmit(values: ComputeEditForm, resetForm: () => void) {
     try {
-      if (asset?.accessDetails?.type === 'free') {
+      if (
+        asset?.accessDetails?.type === 'free' &&
+        asset?.accessDetails?.isPurchasable
+      ) {
         const tx = await setMinterToPublisher(
           web3,
-          asset?.accessDetails?.addressOrId,
           asset?.accessDetails?.datatoken?.address,
           accountId,
           setError
@@ -148,6 +148,7 @@ export default function EditComputeDataset({
             <FormEditComputeDataset />
             <Web3Feedback
               networkId={asset?.chainId}
+              accountId={accountId}
               isAssetNetwork={isAssetNetwork}
             />
             {debug === true && (

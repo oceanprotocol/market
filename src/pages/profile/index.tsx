@@ -13,7 +13,7 @@ export default function PageProfile(): ReactElement {
   const { accountId, accountEns } = useWeb3()
   const [finalAccountId, setFinalAccountId] = useState<string>()
   const [finalAccountEns, setFinalAccountEns] = useState<string>()
-
+  const [ownAccount, setOwnAccount] = useState(false)
   // Have accountId in path take over, if not present fall back to web3
   useEffect(() => {
     async function init() {
@@ -23,13 +23,15 @@ export default function PageProfile(): ReactElement {
       if (router.asPath === '/profile') {
         setFinalAccountEns(accountEns)
         setFinalAccountId(accountId)
+        setOwnAccount(true)
         return
       }
 
       const pathAccount = router.query.account as string
 
-      // Path has ETH addreess
+      // Path has ETH address
       if (web3.utils.isAddress(pathAccount)) {
+        setOwnAccount(pathAccount === accountId)
         const finalAccountId = pathAccount || accountId
         setFinalAccountId(finalAccountId)
 
@@ -40,6 +42,12 @@ export default function PageProfile(): ReactElement {
         // Path has ENS name
         setFinalAccountEns(pathAccount)
         const resolvedAccountId = await getEnsAddress(pathAccount)
+        if (
+          !resolvedAccountId ||
+          resolvedAccountId === '0x0000000000000000000000000000000000000000'
+        )
+          return
+        setOwnAccount(resolvedAccountId === accountId)
         setFinalAccountId(resolvedAccountId)
       }
     }
@@ -61,7 +69,11 @@ export default function PageProfile(): ReactElement {
       title={accountTruncate(finalAccountId)}
       noPageHeader
     >
-      <ProfileProvider accountId={finalAccountId} accountEns={finalAccountEns}>
+      <ProfileProvider
+        accountId={finalAccountId}
+        accountEns={finalAccountEns}
+        ownAccount={ownAccount}
+      >
         <ProfilePage accountId={finalAccountId} />
       </ProfileProvider>
     </Page>

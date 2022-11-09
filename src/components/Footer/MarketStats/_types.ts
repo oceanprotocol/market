@@ -6,4 +6,6 @@ export interface StatsTotal {
   nfts: number
   datatokens: number
   orders: number
+  veAllocated: number
+  veLocked: number
 }

@@ -63,7 +63,7 @@ export const initialValues: FormPublishData = {
     name: '',
     author: '',
     description: '',
-    tags: '',
+    tags: [],
     termsAndConditions: false,
     dockerImage: '',
     dockerImageCustom: '',
@@ -72,8 +72,8 @@ export const initialValues: FormPublishData = {
   },
   services: [
     {
-      files: [{ url: '' }],
-      links: [{ url: '' }],
+      files: [{ url: '', type: '' }],
+      links: [{ url: '', type: '' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: 'access',
@@ -96,17 +96,15 @@ export const initialValues: FormPublishData = {
 export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
   {
     image: 'node',
-    tag: '18.6.0', // TODO: Put this back to latest once merging the PR that fetches the container digest from docker hub via dockerhub-proxy
+    tag: 'latest',
     entrypoint: 'node $ALGO',
-    checksum:
-      'sha256:c60726646352202d95de70d9e8393c15f382f8c6074afc5748b7e570ccd5995f'
+    checksum: ''
   },
   {
     image: 'python',
-    tag: '3.10.5', // TODO: Put this back to latest once merging the PR that fetches the container digest from docker hub via dockerhub-proxy
+    tag: 'latest',
     entrypoint: 'python $ALGO',
-    checksum:
-      'sha256:607635763e54907fd75397fedfeb83890e62a0f9b54a1d99d27d748c5d269be4'
+    checksum: ''
   }
 ]
 

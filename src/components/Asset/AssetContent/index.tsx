@@ -16,6 +16,7 @@ import content from '../../../../content/purgatory.json'
 import Web3 from 'web3'
 import Button from '@shared/atoms/Button'
 import Comment from '../../@shared/Orbis/Comment'
+import RelatedAssets from '../RelatedAssets'
 
 export default function AssetContent({
   asset
@@ -81,6 +82,7 @@ export default function AssetContent({
               </Button>
             </div>
           )}
+          <RelatedAssets />
         </div>
       </article>
     </>

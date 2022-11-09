@@ -1,0 +1,11 @@
+.list {
+  composes: assetList from '@shared/AssetList/index.module.css';
+}
+
+.loaderWrap {
+  composes: loaderWrap from '@shared/AssetList/index.module.css';
+}
+
+.empty {
+  composes: empty from '@shared/AssetList/index.module.css';
+}

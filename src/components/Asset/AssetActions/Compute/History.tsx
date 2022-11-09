@@ -5,14 +5,17 @@ import Caret from '@images/caret.svg'
 
 export default function ComputeHistory({
   title,
-  children
+  children,
+  refetchJobs
 }: {
   title: string
   children: ReactNode
+  refetchJobs?: any
 }): ReactElement {
   const [open, setOpen] = useState(false)
 
-  function handleClick() {
+  async function handleClick() {
+    await refetchJobs(true)
     setOpen(!open)
   }
 

@@ -27,4 +27,9 @@ declare global {
     computeJobs: ComputeJobMetaData[]
     isLoaded: boolean
   }
+
+  interface totalPriceMap {
+    value: string
+    symbol: string
+  }
 }

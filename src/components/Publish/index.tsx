@@ -13,15 +13,12 @@ import Navigation from './Navigation'
 import { Steps } from './Steps'
 import { FormPublishData } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
-import useNftFactory from '@hooks/contracts/useNftFactory'
+import useNftFactory from '@hooks/useNftFactory'
 import { ProviderInstance, LoggerInstance, DDO } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
-
-// TODO: restore FormikPersist, add back clear form action
-// const formName = 'ocean-publish-form'
 
 export default function PublishPage({
   content
