@@ -191,9 +191,3 @@ export async function getOwnAssetsWithAllocation(
 
   return assets
 }
-
-export function formatVeOcean(veocean: number, locale: string): string {
-  return new Intl.NumberFormat(locale, {
-    maximumFractionDigits: 0
-  }).format(veocean)
-}

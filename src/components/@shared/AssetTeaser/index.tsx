@@ -9,7 +9,7 @@ import NetworkName from '@shared/NetworkName'
 import styles from './index.module.css'
 import { getServiceByName } from '@utils/ddo'
 import { useUserPreferences } from '@context/UserPreferences'
-import { formatVeOcean } from '@utils/veAllocation'
+import { formatNumber } from '@utils/numbers'
 
 export declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -81,7 +81,8 @@ export default function AssetTeaser({
                   ''
                 ) : (
                   <>
-                    <strong>{formatVeOcean(allocated, locale)}</strong> veOCEAN
+                    <strong>{formatNumber(allocated, locale, '0')}</strong>{' '}
+                    veOCEAN
                   </>
                 )}
               </span>

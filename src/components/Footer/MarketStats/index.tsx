@@ -124,8 +124,19 @@ export default function MarketStats(): ReactElement {
         />
       </div>
       <div>
-        <PriceUnit price={total.veLocked} symbol="OCEAN" size="small" /> locked.{' '}
-        <PriceUnit price={total.veAllocated} symbol="veOCEAN" size="small" />{' '}
+        <PriceUnit
+          decimals="0"
+          price={total.veLocked}
+          symbol="OCEAN"
+          size="small"
+        />{' '}
+        locked.{' '}
+        <PriceUnit
+          decimals="0"
+          price={total.veAllocated}
+          symbol="veOCEAN"
+          size="small"
+        />{' '}
         allocated.
       </div>
     </div>
