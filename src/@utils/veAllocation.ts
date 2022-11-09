@@ -1,7 +1,7 @@
 import { AllLockedQuery } from 'src/@types/subgraph/AllLockedQuery'
-import { OwnAllocations } from 'src/@types/subgraph/OwnAllocations'
-import { NftOwnAllocation } from 'src/@types/subgraph/NftOwnAllocation'
-import { OceanLocked } from 'src/@types/subgraph/OceanLocked'
+import { OwnAllocationsQuery } from 'src/@types/subgraph/OwnAllocationsQuery'
+import { NftOwnAllocationQuery } from 'src/@types/subgraph/NftOwnAllocationQuery'
+import { OceanLockedQuery } from 'src/@types/subgraph/OceanLockedQuery'
 import { gql, OperationResult } from 'urql'
 import { fetchData, getQueryContext } from './subgraph'
 import axios from 'axios'
@@ -24,7 +24,7 @@ const AllLocked = gql`
 `
 
 const OwnAllocations = gql`
-  query OwnAllocations($address: String) {
+  query OwnAllocationsQuery($address: String) {
     veAllocations(where: { allocationUser: $address }) {
       id
       nftAddress
@@ -33,7 +33,7 @@ const OwnAllocations = gql`
   }
 `
 const NftOwnAllocation = gql`
-  query NftOwnAllocation($address: String, $nftAddress: String) {
+  query NftOwnAllocationQuery($address: String, $nftAddress: String) {
     veAllocations(
       where: { allocationUser: $address, nftAddress: $nftAddress }
     ) {
@@ -42,7 +42,7 @@ const NftOwnAllocation = gql`
   }
 `
 const OceanLocked = gql`
-  query OceanLocked($address: ID!) {
+  query OceanLockedQuery($address: ID!) {
     veOCEAN(id: $address) {
       id
       lockedAmount
@@ -87,7 +87,7 @@ export async function getNftOwnAllocation(
 ): Promise<number> {
   const veNetworkId = getVeChainNetworkId(networkId)
   const queryContext = getQueryContext(veNetworkId)
-  const fetchedAllocation: OperationResult<NftOwnAllocation, any> =
+  const fetchedAllocation: OperationResult<NftOwnAllocationQuery, any> =
     await fetchData(
       NftOwnAllocation,
       {
@@ -136,11 +136,12 @@ export async function getLocked(
   const veNetworkIds = getVeChainNetworkIds(networkIds)
   for (let i = 0; i < veNetworkIds.length; i++) {
     const queryContext = getQueryContext(veNetworkIds[i])
-    const fetchedLocked: OperationResult<OceanLocked, any> = await fetchData(
-      OceanLocked,
-      { address: userAddress.toLowerCase() },
-      queryContext
-    )
+    const fetchedLocked: OperationResult<OceanLockedQuery, any> =
+      await fetchData(
+        OceanLocked,
+        { address: userAddress.toLowerCase() },
+        queryContext
+      )
 
     fetchedLocked.data?.veOCEAN?.lockedAmount &&
       (total += Number(fetchedLocked.data?.veOCEAN?.lockedAmount))
@@ -157,7 +158,7 @@ export async function getOwnAllocations(
   const veNetworkIds = getVeChainNetworkIds(networkIds)
   for (let i = 0; i < veNetworkIds.length; i++) {
     const queryContext = getQueryContext(veNetworkIds[i])
-    const fetchedAllocations: OperationResult<OwnAllocations, any> =
+    const fetchedAllocations: OperationResult<OwnAllocationsQuery, any> =
       await fetchData(
         OwnAllocations,
         { address: userAddress.toLowerCase() },
