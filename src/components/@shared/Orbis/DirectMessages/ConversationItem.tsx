@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useOrbis } from '@context/Orbis'
 import { accountTruncate } from '@utils/web3'
-import get3BoxProfile from '@utils/profile'
 import { didToAddress } from '@utils/orbis'
-import Blockies from '@shared/atoms/Blockies'
+import Avatar from '@shared/atoms/Avatar'
 import Time from '@shared/atoms/Time'
 import styles from './ConversationItem.module.css'
 
@@ -23,7 +22,6 @@ export default function ConversationItem({
 
   const [name, setName] = useState(null)
   const [address, setAddress] = useState(null)
-  const [image, setImage] = useState(null)
 
   useEffect(() => {
     const getProfile = async () => {
@@ -41,10 +39,6 @@ export default function ConversationItem({
       } else {
         setName(accountTruncate(_address))
       }
-
-      const profile = await get3BoxProfile(_address, newCancelToken())
-
-      setImage(profile?.image)
     }
 
     if (conversation && account) {
@@ -58,11 +52,7 @@ export default function ConversationItem({
       onClick={() => setConversationId(conversation.stream_id)}
     >
       <div className={styles.accountAvatarSet}>
-        <Blockies
-          accountId={address}
-          className={styles.accountAvatar}
-          image={image}
-        />
+        <Avatar accountId={address} className={styles.accountAvatar} />
         {unreads > 0 && (
           <div className={styles.notificationCount}>{unreads}</div>
         )}

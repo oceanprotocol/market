@@ -2,10 +2,8 @@ import React, { useState, useEffect, ReactNode } from 'react'
 import Link from 'next/link'
 import { accountTruncate } from '@utils/web3'
 import { didToAddress, formatMessage } from '@utils/orbis'
-import get3BoxProfile from '@utils/profile'
-import Blockies from '@shared/atoms/Blockies'
+import Avatar from '@shared/atoms/Avatar'
 import Time from '@shared/atoms/Time'
-import { useCancelToken } from '@hooks/useCancelToken'
 import { useOrbis } from '@context/Orbis'
 import styles from './Post.module.css'
 
@@ -24,11 +22,8 @@ export default function Post({
 
   const [address, setAddress] = useState('')
   const [name, setName] = useState('')
-  const [profile, setProfile] = useState<Profile>()
   const [parsedBody, setParsedBody] = useState<ReactNode>()
   const [reacted, setReacted] = useState('')
-
-  const newCancelToken = useCancelToken()
 
   const reactions = [
     // {
@@ -103,13 +98,6 @@ export default function Post({
       setName(accountTruncate(address))
     }
 
-    async function getProfileData() {
-      const profile = await get3BoxProfile(address, newCancelToken())
-      if (!profile) return
-      setProfile(profile)
-    }
-    getProfileData()
-
     setParsedBody(formatMessage(post.content))
 
     getUserReaction()
@@ -121,11 +109,7 @@ export default function Post({
 
   return (
     <div className={styles.post}>
-      <Blockies
-        accountId={address}
-        className={styles.blockies}
-        image={profile?.image}
-      />
+      <Avatar accountId={address} className={styles.blockies} />
       <div className={styles.content}>
         {showProfile && (
           <div className={styles.profile}>

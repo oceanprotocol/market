@@ -7,8 +7,6 @@ import Account from './Account'
 import styles from './index.module.css'
 import { useProfile } from '@context/Profile'
 import { useOrbis } from '@context/Orbis'
-import { Context } from 'urql'
-import { filter } from 'lodash'
 import { sleep } from '@utils/index'
 
 const isDescriptionTextClamped = () => {
@@ -30,42 +28,12 @@ export default function AccountHeader({
   accountId: string
 }): ReactElement {
   const { profile } = useProfile()
-  const {
-    orbis,
-    account,
-    convOpen,
-    setConvOpen,
-    conversationId,
-    setConversationId,
-    conversations
-  } = useOrbis()
+  const { orbis, setConvOpen, setConversationId, conversations } = useOrbis()
   const [isShowMore, setIsShowMore] = useState(false)
   const [userDid, setUserDid] = useState<string>()
 
   const toogleShowMore = () => {
     setIsShowMore(!isShowMore)
-  }
-
-  const getDid = async () => {
-    const { data, error } = await orbis.getDids(accountId)
-    console.log(data)
-    if (data) {
-      if (data.length > 0) {
-        console.log(data[0].did)
-        setUserDid(data[0].did)
-      } else if (accountId) {
-        console.log(accountId)
-        setUserDid('did:pkh:eip155:1:' + accountId?.toLocaleLowerCase())
-      } else {
-        console.log('try again')
-        await sleep(1000)
-        getDid()
-      }
-    }
-
-    if (error) {
-      console.log(error)
-    }
   }
 
   const createConversation = async () => {
@@ -84,18 +52,32 @@ export default function AccountHeader({
   }
 
   useEffect(() => {
+    const getDid = async () => {
+      const { data, error } = await orbis.getDids(accountId)
+      console.log(data)
+      if (data) {
+        if (data.length > 0) {
+          console.log(data[0].did)
+          setUserDid(data[0].did)
+        } else if (accountId) {
+          console.log(accountId)
+          setUserDid('did:pkh:eip155:1:' + accountId?.toLocaleLowerCase())
+        } else {
+          console.log('try again')
+          await sleep(1000)
+          getDid()
+        }
+      }
+
+      if (error) {
+        console.log(error)
+      }
+    }
+
     if (orbis && accountId) {
       getDid()
-      // console.log(userDid)
     }
-  }, [accountId])
-
-  const clickHandler = () => {
-    console.log(accountId)
-    console.log(account)
-    getDid()
-    createConversation()
-  }
+  }, [orbis, accountId])
 
   const checkConversation = () => {
     const filtered = conversations.filter(
