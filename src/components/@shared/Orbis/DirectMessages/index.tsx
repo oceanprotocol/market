@@ -21,26 +21,7 @@ export default function DirectMessages() {
   } = useOrbis()
 
   const [messages, setMessages] = useState<OrbisPostInterface[]>([])
-  // const [conversationTitle, setConversationTitle] = useState(null)
   const [unreads, setUnreads] = useState([])
-
-  const getNotifications = async () => {
-    const { data, error } = await orbis.api.rpc('orbis_f_notifications', {
-      user_did: account?.did || 'none',
-      notif_type: 'messages'
-    })
-
-    if (error) {
-      console.log(error)
-    }
-
-    if (data.length > 0) {
-      const _unreads = data.filter((o: OrbisNotificationInterface) => {
-        return o.status === 'new'
-      })
-      setUnreads(_unreads)
-    }
-  }
 
   const getConversationUnreads = (conversationId: string) => {
     const _unreads = unreads.filter(
@@ -50,31 +31,28 @@ export default function DirectMessages() {
   }
 
   useEffect(() => {
+    const getNotifications = async () => {
+      const { data, error } = await orbis.api.rpc('orbis_f_notifications', {
+        user_did: account?.did || 'none',
+        notif_type: 'messages'
+      })
+
+      if (error) {
+        console.log(error)
+      }
+
+      if (data.length > 0) {
+        const _unreads = data.filter((o: OrbisNotificationInterface) => {
+          return o.status === 'new'
+        })
+        setUnreads(_unreads)
+      }
+    }
+
     if (orbis && account) {
       getNotifications()
     }
   }, [orbis, account])
-
-  const getMessages = async (id: string) => {
-    const { data, error } = await orbis.getMessages(id)
-
-    if (data) {
-      data.reverse()
-      // const _messages = [...messages, ...data]
-      setMessages(data)
-    }
-    if (error) {
-      console.log(error)
-    }
-  }
-
-  function openConversation(conversation: OrbisConversationInterface | null) {
-    if (!conversation) {
-      setConversationId(null)
-    } else {
-      setConversationId(conversation.stream_id)
-    }
-  }
 
   const callbackMessage = (nMessage: OrbisPostInterface) => {
     if (nMessage.stream_id) {
@@ -94,17 +72,25 @@ export default function DirectMessages() {
   }
 
   useEffect(() => {
-    if (conversationId) {
+    const getMessages = async (id: string) => {
+      const { data, error } = await orbis.getMessages(id)
+
+      if (data) {
+        data.reverse()
+        // const _messages = [...messages, ...data]
+        setMessages(data)
+      }
+      if (error) {
+        console.log(error)
+      }
+    }
+
+    if (conversationId && orbis) {
       getMessages(conversationId)
-      // Get conversation title
-      // const recipient = conversation.recipients_details.find(
-      //   (o) => o.did !== account.did
-      // )
-      // setConversationTitle(recipient?.metadata?.ensName)
     } else {
       setMessages([])
     }
-  }, [conversationId])
+  }, [conversationId, orbis])
 
   return (
     <div className={`${styles.wrapper} ${!convOpen && styles.isClosed}`}>
@@ -135,7 +121,7 @@ export default function DirectMessages() {
                   key={index}
                   conversation={conversation}
                   unreads={getConversationUnreads(conversation.stream_id)}
-                  onClick={() => openConversation(conversation)}
+                  setConversationId={setConversationId}
                 />
               )
             )}
@@ -147,7 +133,7 @@ export default function DirectMessages() {
                 type="button"
                 aria-label="button"
                 className={styles.btnBack}
-                onClick={() => openConversation(null)}
+                onClick={() => setConversationId(null)}
               >
                 <ArrowBack
                   role="img"

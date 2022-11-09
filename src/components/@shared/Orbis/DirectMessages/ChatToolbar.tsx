@@ -3,7 +3,7 @@ import styles from './ChatToolbar.module.css'
 import SendIcon from '@images/send.svg'
 import Input from '@shared/FormInput'
 import { useOrbis } from '@context/Orbis'
-import EmojiPicker from './EmojiPicker'
+import EmojiPicker from '../EmojiPicker'
 import { EmojiClickData } from 'emoji-picker-react'
 
 export default function ChatToolbar({

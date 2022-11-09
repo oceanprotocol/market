@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './Postbox.module.css'
 import { useOrbis } from '@context/Orbis'
+import EmojiPicker from '../EmojiPicker'
+import { EmojiClickData } from 'emoji-picker-react'
 
 export default function Postbox({
   assetId,
@@ -13,9 +15,34 @@ export default function Postbox({
   callbackPost: (post: OrbisPostInterface) => void
 }) {
   const [post, setPost] = useState('')
+  const [focusOffset, setFocusOffset] = useState(null)
+  const [focusNode, setFocusNode] = useState(null)
 
   const postBoxArea = useRef(null)
   const { orbis, account } = useOrbis()
+
+  const saveCaretPos = (_sel: any) => {
+    setFocusOffset(_sel.focusOffset)
+    setFocusNode(_sel.focusNode)
+  }
+
+  const restoreCaretPos = () => {
+    postBoxArea.current.focus()
+    const sel = document.getSelection()
+    sel.collapse(focusNode, focusOffset)
+  }
+
+  const handleInput = (e: any) => {
+    setPost(e.currentTarget.innerText)
+    saveCaretPos(document.getSelection())
+  }
+
+  const onEmojiClick = (emojiData: EmojiClickData) => {
+    restoreCaretPos()
+    document.execCommand('insertHTML', false, emojiData.emoji)
+    // setPost((prevInput) => prevInput + emojiData.emoji)
+    // postBoxArea.current.innerText += emojiData.emoji
+  }
 
   const createPost = async () => {
     // console.log(post)
@@ -64,14 +91,17 @@ export default function Postbox({
   return (
     <>
       <div className={styles.postbox}>
-        <div
-          id="postbox-area"
-          ref={postBoxArea}
-          className={styles.editable}
-          contentEditable={true}
-          data-placeholder={placeholder}
-          onInput={(e) => setPost(e.currentTarget.innerText)}
-        ></div>
+        <div className={styles.postboxInput}>
+          <div
+            id="postbox-area"
+            ref={postBoxArea}
+            className={styles.editable}
+            contentEditable={true}
+            data-placeholder={placeholder}
+            onInput={handleInput}
+          />
+          <EmojiPicker onEmojiClick={onEmojiClick} />
+        </div>
         <div className={styles.sendButtonWrap}>
           <Button
             style="primary"

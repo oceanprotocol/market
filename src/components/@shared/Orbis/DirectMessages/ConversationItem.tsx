@@ -11,11 +11,11 @@ import styles from './ConversationItem.module.css'
 export default function ConversationItem({
   conversation,
   unreads,
-  onClick
+  setConversationId
 }: {
   conversation: OrbisConversationInterface
   unreads: number
-  onClick: (param: OrbisConversationInterface | null) => void
+  setConversationId: (value: string) => void
 }) {
   const { account } = useOrbis()
 
@@ -55,7 +55,7 @@ export default function ConversationItem({
   return (
     <div
       className={styles.conversationItem}
-      onClick={() => onClick(conversation)}
+      onClick={() => setConversationId(conversation.stream_id)}
     >
       <div className={styles.accountAvatarSet}>
         <Blockies

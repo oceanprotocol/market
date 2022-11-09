@@ -12,9 +12,14 @@
 
 .postbox .editable:empty:before {
   content: attr(data-placeholder);
-  color: var(--font-color-text);
+  color: var(--color-secondary);
+  pointer-events: none;
 }
 
 .postbox .sendButtonWrap {
   text-align: right;
+}
+
+.postbox .postboxInput {
+  position: relative;
 }

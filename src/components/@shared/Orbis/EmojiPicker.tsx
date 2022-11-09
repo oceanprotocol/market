@@ -28,9 +28,7 @@ export default function EmojiPicker({ onEmojiClick }: { onEmojiClick: any }) {
       placement={'top-end'}
       className={styles.emojiToolTip}
     >
-      <>
-        <EmojiIcon className={styles.icon} />
-      </>
+      <EmojiIcon className={styles.icon} />
     </Tooltip>
   )
 }
