@@ -30,6 +30,9 @@ export default function Tags({
   className,
   noLinks
 }: TagsProps): ReactElement {
+  // safeguard against faults in the metadata
+  if (!(items instanceof Array)) return null
+
   max = max || items.length
   const remainder = items.length - max
   // filter out empty array items, and restrict to `max`

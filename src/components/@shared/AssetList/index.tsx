@@ -69,11 +69,13 @@ export default function AssetList({
 
   const styleClasses = `${styles.assetList} ${className || ''}`
 
-  return assetsWithPrices && !loading ? (
+  return loading ? (
+    <LoaderArea />
+  ) : (
     <>
       <div className={styleClasses}>
-        {assetsWithPrices.length > 0 ? (
-          assetsWithPrices.map((assetWithPrice) => (
+        {assetsWithPrices?.length > 0 ? (
+          assetsWithPrices?.map((assetWithPrice) => (
             <AssetTeaser
               asset={assetWithPrice}
               key={assetWithPrice.id}
@@ -95,7 +97,5 @@ export default function AssetList({
         />
       )}
     </>
-  ) : (
-    <LoaderArea />
   )
 }
