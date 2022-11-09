@@ -1,15 +1,16 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import * as axios from 'axios'
+import axios from 'axios'
 import Publisher from './'
 
 const account = '0x0000000000000000000000000000000000000000'
 
 jest.mock('axios')
+const axiosMock = axios as jest.Mocked<typeof axios>
 
 describe('@shared/Publisher', () => {
   test('should return correct markup by default', async () => {
-    ;(axios as any).get.mockImplementationOnce(() =>
+    axiosMock.get.mockImplementationOnce(() =>
       Promise.resolve({ data: { name: 'jellymcjellyfish.eth' } })
     )
 
@@ -22,7 +23,7 @@ describe('@shared/Publisher', () => {
   })
 
   test('should truncate account by default', async () => {
-    ;(axios as any).get.mockImplementationOnce(() =>
+    axiosMock.get.mockImplementationOnce(() =>
       Promise.resolve({ data: { name: null } })
     )
 
@@ -33,7 +34,7 @@ describe('@shared/Publisher', () => {
   })
 
   test('should return correct markup in minimal state', async () => {
-    ;(axios as any).get.mockImplementationOnce(() =>
+    axiosMock.get.mockImplementationOnce(() =>
       Promise.resolve({ data: { name: null } })
     )
 
@@ -44,7 +45,7 @@ describe('@shared/Publisher', () => {
   })
 
   test('should return markup with empty account', async () => {
-    ;(axios as any).get.mockImplementationOnce(() =>
+    axiosMock.get.mockImplementationOnce(() =>
       Promise.resolve({ data: { name: null } })
     )
 

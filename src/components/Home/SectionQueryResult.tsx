@@ -1,29 +1,27 @@
 import { useUserPreferences } from '@context/UserPreferences'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import AssetList from '@shared/AssetList'
+import Tooltip from '@shared/atoms/Tooltip'
+import Markdown from '@shared/Markdown'
 import { queryMetadata } from '@utils/aquarius'
+import { sortAssets } from '@utils/index'
 import React, { ReactElement, useState, useEffect } from 'react'
 import styles from './index.module.css'
-
-function sortElements(items: Asset[], sorted: string[]) {
-  items.sort(function (a, b) {
-    return sorted.indexOf(a.nftAddress) - sorted.indexOf(b.nftAddress)
-  })
-  return items
-}
 
 export default function SectionQueryResult({
   title,
   query,
   action,
-  queryData
+  queryData,
+  tooltip
 }: {
   title: ReactElement | string
   query: SearchQuery
   action?: ReactElement
   queryData?: string[]
+  tooltip?: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
   const [result, setResult] = useState<PagedAssets>()
@@ -52,7 +50,7 @@ export default function SectionQueryResult({
           const result = await queryMetadata(query, newCancelToken())
           if (!isMounted()) return
           if (queryData && result?.totalResults > 0) {
-            const sortedAssets = sortElements(result.results, queryData)
+            const sortedAssets = sortAssets(result.results, queryData)
             const overflow = sortedAssets.length - 6
             sortedAssets.splice(sortedAssets.length - overflow, overflow)
             result.results = sortedAssets
@@ -69,7 +67,9 @@ export default function SectionQueryResult({
 
   return (
     <section className={styles.section}>
-      <h3>{title}</h3>
+      <h3>
+        {title} {tooltip && <Tooltip content={<Markdown text={tooltip} />} />}
+      </h3>
 
       <AssetList
         assets={result?.results}

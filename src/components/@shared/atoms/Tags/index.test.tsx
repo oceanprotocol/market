@@ -24,4 +24,9 @@ describe('Tags', () => {
   it('renders WithoutLinks', () => {
     render(<Tags {...argsWithoutLinks} />)
   })
+
+  it('renders with faulty tags', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    render(<Tags items={'tags' as any} />)
+  })
 })
