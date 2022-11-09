@@ -32,7 +32,7 @@ describe('components/Home/MostViews', () => {
     )
     queryMetadataMock.mockResolvedValue(queryMetadataBaseReturn)
     render(<MostViews />)
-    await screen.findByText('666 views')
+    await screen.findByText('666')
   })
 
   it('catches errors', async () => {

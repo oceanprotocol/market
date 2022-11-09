@@ -8,8 +8,8 @@ import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './index.module.css'
 import { getServiceByName } from '@utils/ddo'
-import { formatPrice } from '@shared/Price/PriceUnit'
 import { useUserPreferences } from '@context/UserPreferences'
+import { formatNumber } from '@utils/numbers'
 
 export declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -77,23 +77,37 @@ export default function AssetTeaser({
           <footer className={styles.footer}>
             {allocated && allocated > 0 ? (
               <span className={styles.typeLabel}>
-                {allocated < 0
-                  ? ''
-                  : `${formatPrice(allocated, locale)} veOCEAN`}
+                {allocated < 0 ? (
+                  ''
+                ) : (
+                  <>
+                    <strong>{formatNumber(allocated, locale, '0')}</strong>{' '}
+                    veOCEAN
+                  </>
+                )}
               </span>
             ) : null}
             {orders && orders > 0 ? (
               <span className={styles.typeLabel}>
-                {orders < 0
-                  ? 'N/A'
-                  : `${orders} ${orders === 1 ? 'sale' : 'sales'}`}
+                {orders < 0 ? (
+                  'N/A'
+                ) : (
+                  <>
+                    <strong>{orders}</strong> {orders === 1 ? 'sale' : 'sales'}
+                  </>
+                )}
               </span>
             ) : null}
             {asset.views && asset.views > 0 ? (
               <span className={styles.typeLabel}>
-                {asset.views < 0
-                  ? 'N/A'
-                  : `${asset.views} ${asset.views === 1 ? 'view' : 'views'}`}
+                {asset.views < 0 ? (
+                  'N/A'
+                ) : (
+                  <>
+                    <strong>{asset.views}</strong>{' '}
+                    {asset.views === 1 ? 'view' : 'views'}
+                  </>
+                )}
               </span>
             ) : null}
           </footer>
