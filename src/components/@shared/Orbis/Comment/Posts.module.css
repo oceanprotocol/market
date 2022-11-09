@@ -16,3 +16,8 @@
   padding: calc(var(--spacer) / 2) var(--spacer);
   border-top: 1px solid var(--border-color);
 }
+
+.noComment {
+  padding: calc(var(--spacer) / 2) var(--spacer);
+  text-align: center;
+}

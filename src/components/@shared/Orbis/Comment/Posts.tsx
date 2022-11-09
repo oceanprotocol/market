@@ -22,10 +22,14 @@ export default function Posts({
           posts.map((post, index) => <Post key={index} post={post} />)}
       </div>
 
-      {loading && (
+      {loading ? (
         <div className={styles.loader}>
           <Loader />
         </div>
+      ) : (
+        !posts.length && (
+          <div className={styles.noComment}>No comment yet...</div>
+        )
       )}
 
       {!loading && hasMore && (

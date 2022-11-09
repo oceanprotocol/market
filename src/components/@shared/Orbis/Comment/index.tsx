@@ -22,7 +22,7 @@ export default function Comment({ asset }: { asset: AssetExtended }) {
     if (error) {
       console.log(error)
     }
-    if (data) {
+    if (data && data.length) {
       const newPosts = posts.concat(data)
       setPosts(newPosts)
 
