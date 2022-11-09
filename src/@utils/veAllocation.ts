@@ -12,7 +12,7 @@ import {
   NetworkType
 } from '@hooks/useNetworkMetadata'
 import { getAssetsFromNftList } from './aquarius'
-import { chainIdsSupported } from 'app.config'
+import { chainIdsSupported } from '../../app.config'
 import { Asset } from '@oceanprotocol/lib'
 
 const AllLocked = gql`
