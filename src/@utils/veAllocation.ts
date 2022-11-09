@@ -1,4 +1,4 @@
-import { AllLocked } from 'src/@types/subgraph/AllLocked'
+import { AllLockedQuery } from 'src/@types/subgraph/AllLockedQuery'
 import { OwnAllocations } from 'src/@types/subgraph/OwnAllocations'
 import { NftOwnAllocation } from 'src/@types/subgraph/NftOwnAllocation'
 import { OceanLocked } from 'src/@types/subgraph/OceanLocked'
@@ -16,7 +16,7 @@ import { chainIdsSupported } from '../../app.config'
 import { Asset } from '@oceanprotocol/lib'
 
 const AllLocked = gql`
-  query AllLocked {
+  query AllLockedQuery {
     veOCEANs(first: 1000) {
       lockedAmount
     }
@@ -115,7 +115,7 @@ export async function getTotalAllocatedAndLocked(): Promise<TotalVe> {
     0
   )
 
-  const fetchedLocked: OperationResult<AllLocked, any> = await fetchData(
+  const fetchedLocked: OperationResult<AllLockedQuery, any> = await fetchData(
     AllLocked,
     null,
     queryContext
