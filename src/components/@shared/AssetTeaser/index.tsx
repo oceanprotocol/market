@@ -8,8 +8,8 @@ import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './index.module.css'
 import { getServiceByName } from '@utils/ddo'
-import { formatPrice } from '@shared/Price/PriceUnit'
 import { useUserPreferences } from '@context/UserPreferences'
+import { formatVeOcean } from '@utils/veAllocation'
 
 export declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -79,7 +79,7 @@ export default function AssetTeaser({
               <span className={styles.typeLabel}>
                 {allocated < 0
                   ? ''
-                  : `${formatPrice(allocated, locale)} veOCEAN`}
+                  : `${formatVeOcean(allocated, locale)} veOCEAN`}
               </span>
             ) : null}
             {orders && orders > 0 ? (
