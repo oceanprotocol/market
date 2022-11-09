@@ -21,7 +21,7 @@ export default function Postbox({
   const postBoxArea = useRef(null)
   const { orbis, account } = useOrbis()
 
-  const saveCaretPos = (_sel: any) => {
+  const saveCaretPos = (_sel: { focusOffset: number; focusNode: Node }) => {
     setFocusOffset(_sel.focusOffset)
     setFocusNode(_sel.focusNode)
   }
