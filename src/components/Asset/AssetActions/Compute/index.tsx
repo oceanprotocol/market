@@ -292,7 +292,8 @@ export default function Compute({
   useEffect(() => {
     const newError = error
     if (!newError) return
-    toast.error(newError)
+    const errorMsg = newError + '. Please retry.'
+    toast.error(errorMsg)
   }, [error])
 
   async function startJob(): Promise<void> {
@@ -388,9 +389,6 @@ export default function Compute({
     } catch (error) {
       setError(error.message)
       setRetry(true)
-      toast.error(
-        'An error occurred, please retry. Check console for more information.'
-      )
       LoggerInstance.error(`[compute] ${error.message} `)
     } finally {
       setIsOrdering(false)
