@@ -6,7 +6,11 @@ import useDarkMode from '@oceanprotocol/use-dark-mode'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Tooltip from '@shared/atoms/Tooltip'
 
-export default function EmojiPicker({ onEmojiClick }: { onEmojiClick: any }) {
+export default function EmojiPicker({
+  onEmojiClick
+}: {
+  onEmojiClick: () => void
+}) {
   const { appConfig } = useMarketMetadata()
   const darkMode = useDarkMode(false, appConfig?.darkModeConfig)
 
