@@ -77,23 +77,36 @@ export default function AssetTeaser({
           <footer className={styles.footer}>
             {allocated && allocated > 0 ? (
               <span className={styles.typeLabel}>
-                {allocated < 0
-                  ? ''
-                  : `${formatVeOcean(allocated, locale)} veOCEAN`}
+                {allocated < 0 ? (
+                  ''
+                ) : (
+                  <>
+                    <strong>{formatVeOcean(allocated, locale)}</strong> veOCEAN
+                  </>
+                )}
               </span>
             ) : null}
             {orders && orders > 0 ? (
               <span className={styles.typeLabel}>
-                {orders < 0
-                  ? 'N/A'
-                  : `${orders} ${orders === 1 ? 'sale' : 'sales'}`}
+                {orders < 0 ? (
+                  'N/A'
+                ) : (
+                  <>
+                    <strong>{orders}</strong> {orders === 1 ? 'sale' : 'sales'}
+                  </>
+                )}
               </span>
             ) : null}
             {asset.views && asset.views > 0 ? (
               <span className={styles.typeLabel}>
-                {asset.views < 0
-                  ? 'N/A'
-                  : `${asset.views} ${asset.views === 1 ? 'view' : 'views'}`}
+                {asset.views < 0 ? (
+                  'N/A'
+                ) : (
+                  <>
+                    <strong>{asset.views}</strong>{' '}
+                    {asset.views === 1 ? 'view' : 'views'}
+                  </>
+                )}
               </span>
             ) : null}
           </footer>
