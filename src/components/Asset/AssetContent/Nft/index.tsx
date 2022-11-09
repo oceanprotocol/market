@@ -48,6 +48,7 @@ export default function Nft({
           content={
             <NftTooltip
               nft={nftMetadata}
+              nftImage={nftImage}
               address={asset?.nftAddress}
               chainId={asset?.chainId}
               isBlockscoutExplorer={isBlockscoutExplorer}
