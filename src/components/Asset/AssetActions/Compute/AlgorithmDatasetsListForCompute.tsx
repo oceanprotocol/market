@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './AlgorithmDatasetsListForCompute.module.css'
 import { getAlgorithmDatasetsForCompute } from '@utils/aquarius'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
-import AssetComputeList from '@shared/AssetList/AssetComputeList'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
+import AssetComputeList from './AssetComputeList'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getServiceByName } from '@utils/ddo'
 

@@ -2,14 +2,10 @@ import AssetTeaser from '@shared/AssetTeaser'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
-import classNames from 'classnames/bind'
 import Loader from '@shared/atoms/Loader'
-import { useUserPreferences } from '@context/UserPreferences'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
-
-const cx = classNames.bind(styles)
 
 function LoaderArea() {
   return (
@@ -19,7 +15,7 @@ function LoaderArea() {
   )
 }
 
-declare type AssetListProps = {
+export declare type AssetListProps = {
   assets: AssetExtended[]
   showPagination: boolean
   page?: number
@@ -28,6 +24,8 @@ declare type AssetListProps = {
   onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
   noPublisher?: boolean
+  noDescription?: boolean
+  noPrice?: boolean
 }
 
 export default function AssetList({
@@ -38,16 +36,18 @@ export default function AssetList({
   isLoading,
   onPageChange,
   className,
-  noPublisher
+  noPublisher,
+  noDescription,
+  noPrice
 }: AssetListProps): ReactElement {
-  const { chainIds } = useUserPreferences()
   const { accountId } = useWeb3()
-  const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
+  const [assetsWithPrices, setAssetsWithPrices] =
+    useState<AssetExtended[]>(assets)
   const [loading, setLoading] = useState<boolean>(isLoading)
   const isMounted = useIsMounted()
 
   useEffect(() => {
-    if (!assets) return
+    if (!assets || !assets.length) return
 
     setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
@@ -67,16 +67,9 @@ export default function AssetList({
     onPageChange(selected + 1)
   }
 
-  const styleClasses = cx({
-    assetList: true,
-    [className]: className
-  })
+  const styleClasses = `${styles.assetList} ${className || ''}`
 
-  return chainIds.length === 0 ? (
-    <div className={styleClasses}>
-      <div className={styles.empty}>No network selected</div>
-    </div>
-  ) : assetsWithPrices && !loading ? (
+  return assetsWithPrices && !loading ? (
     <>
       <div className={styleClasses}>
         {assetsWithPrices.length > 0 ? (
@@ -85,6 +78,8 @@ export default function AssetList({
               asset={assetWithPrice}
               key={assetWithPrice.id}
               noPublisher={noPublisher}
+              noDescription={noDescription}
+              noPrice={noPrice}
             />
           ))
         ) : (

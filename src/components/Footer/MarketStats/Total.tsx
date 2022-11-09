@@ -11,10 +11,7 @@ export default function MarketStatsTotal({
     <>
       <PriceUnit price={total.orders} size="small" /> orders across{' '}
       <PriceUnit price={total.nfts} size="small" /> assets with{' '}
-      <PriceUnit price={total.datatokens} size="small" /> different datatokens.{' '}
-      <PriceUnit price={total.veAllocated} symbol="veOCEAN" size="small" />{' '}
-      allocated.{' '}
-      <PriceUnit price={total.veLocked} symbol="OCEAN" size="small" /> locked.
+      <PriceUnit price={total.datatokens} size="small" /> different datatokens.
     </>
   )
 }

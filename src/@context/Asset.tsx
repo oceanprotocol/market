@@ -77,8 +77,8 @@ function AssetProvider({
         return
       }
 
-      if (asset.nft.state) {
-        // handle nft states as documented in https://docs.oceanprotocol.com/concepts/did-ddo/#state
+      if ([1, 2, 3].includes(asset.nft.state)) {
+        // handle nft states as documented in https://docs.oceanprotocol.com/core-concepts/did-ddo/#state
         let state
         switch (asset.nft.state) {
           case 1:
@@ -120,7 +120,7 @@ function AssetProvider({
   // Helper: Get and set asset access details
   // -----------------------------------
   const fetchAccessDetails = useCallback(async (): Promise<void> => {
-    if (!asset?.chainId || !asset?.services) return
+    if (!asset?.chainId || !asset?.services?.length) return
 
     const accessDetails = await getAccessDetails(
       asset.chainId,

@@ -6,7 +6,8 @@ import {
   FileInfo,
   LoggerInstance,
   ProviderComputeInitializeResults,
-  ProviderInstance
+  ProviderInstance,
+  UrlFile
 } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getValidUntilTime } from './compute'
@@ -99,7 +100,13 @@ export async function getFileUrlInfo(
     if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
       providerUrl = 'http://127.0.0.1:8030'
     }
-    const response = await ProviderInstance.checkFileUrl(url, providerUrl)
+    const fileUrl: UrlFile = {
+      type: 'url',
+      index: 0,
+      url,
+      method: 'get'
+    }
+    const response = await ProviderInstance.getFileInfo(fileUrl, providerUrl)
     return response
   } catch (error) {
     LoggerInstance.error(error.message)

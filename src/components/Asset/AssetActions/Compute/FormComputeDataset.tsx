@@ -2,20 +2,20 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './FormComputeDataset.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '@shared/FormInput'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { compareAsBN } from '@utils/numbers'
-import ButtonBuy from '@shared/ButtonBuy'
+import ButtonBuy from '../ButtonBuy'
 import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset } from '@oceanprotocol/lib'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
-import Decimal from 'decimal.js'
-import { MAX_DECIMALS } from '@utils/constants'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
+import { MAX_DECIMALS } from '@utils/constants'
+import Decimal from 'decimal.js'
 
 export default function FormStartCompute({
   algorithms,
@@ -31,7 +31,8 @@ export default function FormStartCompute({
   assetTimeout,
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
-  oceanSymbol,
+  datasetSymbol,
+  algorithmSymbol,
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
   selectedComputeAssetType,
@@ -57,7 +58,8 @@ export default function FormStartCompute({
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset?: boolean
   hasDatatokenSelectedComputeAsset?: boolean
-  oceanSymbol?: string
+  datasetSymbol?: string
+  algorithmSymbol?: string
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
   selectedComputeAssetType?: string
@@ -76,14 +78,14 @@ export default function FormStartCompute({
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
 
-  const [totalPrice, setTotalPrice] = useState('0')
   const [datasetOrderPrice, setDatasetOrderPrice] = useState(
     asset?.accessDetails?.price
   )
   const [algoOrderPrice, setAlgoOrderPrice] = useState(
     selectedAlgorithmAsset?.accessDetails?.price
   )
-  const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
+  const [totalPrices, setTotalPrices] = useState([])
+  const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(true)
 
   function getAlgorithmAsset(algorithmId: string): Asset {
     let assetDdo = null
@@ -126,28 +128,73 @@ export default function FormStartCompute({
       algoOrderPriceAndFees?.price ||
         selectedAlgorithmAsset?.accessDetails.price
     )
+    const totalPrices: totalPriceMap[] = []
     const priceDataset =
-      hasPreviousOrder || hasDatatoken
+      !datasetOrderPrice || hasPreviousOrder || hasDatatoken
         ? new Decimal(0)
-        : new Decimal(
-            datasetOrderPriceAndFees?.price || asset.accessDetails.price
-          ).toDecimalPlaces(MAX_DECIMALS)
+        : new Decimal(datasetOrderPrice).toDecimalPlaces(MAX_DECIMALS)
     const priceAlgo =
-      hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
+      !algoOrderPrice ||
+      hasPreviousOrderSelectedComputeAsset ||
+      hasDatatokenSelectedComputeAsset
         ? new Decimal(0)
-        : new Decimal(
-            algoOrderPriceAndFees?.price ||
-              selectedAlgorithmAsset.accessDetails.price
-          ).toDecimalPlaces(MAX_DECIMALS)
+        : new Decimal(algoOrderPrice).toDecimalPlaces(MAX_DECIMALS)
     const providerFees = providerFeeAmount
       ? new Decimal(providerFeeAmount).toDecimalPlaces(MAX_DECIMALS)
       : new Decimal(0)
-    const totalPrice = priceDataset
-      .plus(priceAlgo)
-      .plus(providerFees)
-      .toDecimalPlaces(MAX_DECIMALS)
-      .toString()
-    setTotalPrice(totalPrice)
+
+    if (algorithmSymbol === 'OCEAN') {
+      let sum = providerFees.add(priceAlgo)
+      totalPrices.push({
+        value: sum.toDecimalPlaces(MAX_DECIMALS).toString(),
+        symbol: algorithmSymbol
+      })
+      if (algorithmSymbol === datasetSymbol) {
+        sum = sum.add(priceDataset)
+        totalPrices[0].value = sum.toDecimalPlaces(MAX_DECIMALS).toString()
+      } else {
+        totalPrices.push({
+          value: priceDataset.toDecimalPlaces(MAX_DECIMALS).toString(),
+          symbol: datasetSymbol
+        })
+      }
+    } else {
+      if (datasetSymbol === 'OCEAN') {
+        const sum = providerFees.add(priceDataset)
+        totalPrices.push({
+          value: sum.toDecimalPlaces(MAX_DECIMALS).toString(),
+          symbol: datasetSymbol
+        })
+        totalPrices.push({
+          value: priceAlgo.toDecimalPlaces(MAX_DECIMALS).toString(),
+          symbol: algorithmSymbol
+        })
+      } else if (datasetSymbol === algorithmSymbol) {
+        const sum = priceAlgo.add(priceDataset)
+        totalPrices.push({
+          value: sum.toDecimalPlaces(MAX_DECIMALS).toString(),
+          symbol: algorithmSymbol
+        })
+        totalPrices.push({
+          value: providerFees.toDecimalPlaces(MAX_DECIMALS).toString(),
+          symbol: 'OCEAN'
+        })
+      } else {
+        totalPrices.push({
+          value: priceDataset.toDecimalPlaces(MAX_DECIMALS).toString(),
+          symbol: datasetSymbol
+        })
+        totalPrices.push({
+          value: providerFees.toDecimalPlaces(MAX_DECIMALS).toString(),
+          symbol: 'OCEAN'
+        })
+        totalPrices.push({
+          value: priceAlgo.toDecimalPlaces(MAX_DECIMALS).toString(),
+          symbol: algorithmSymbol
+        })
+      }
+    }
+    setTotalPrices(totalPrices)
   }, [
     asset?.accessDetails,
     selectedAlgorithmAsset?.accessDetails,
@@ -161,16 +208,18 @@ export default function FormStartCompute({
   ])
 
   useEffect(() => {
-    const baseTokenBalance = getTokenBalanceFromSymbol(
-      balance,
-      asset?.accessDetails?.baseToken?.symbol
-    )
-
-    if (!totalPrice || !baseTokenBalance || !dtBalance) return
-    setIsBalanceSufficient(
-      compareAsBN(baseTokenBalance, `${totalPrice}`) || Number(dtBalance) >= 1
-    )
-  }, [totalPrice, balance, dtBalance, asset?.accessDetails?.baseToken?.symbol])
+    totalPrices.forEach((price) => {
+      const baseTokenBalance = getTokenBalanceFromSymbol(balance, price.symbol)
+      if (!baseTokenBalance) {
+        setIsBalanceSufficient(false)
+        return
+      }
+      // if one comparison of baseTokenBalance and token price comparison is false then the state will be false
+      setIsBalanceSufficient(
+        isBalanceSufficient && compareAsBN(baseTokenBalance, `${price.value}`)
+      )
+    })
+  }, [balance, dtBalance, datasetSymbol, algorithmSymbol])
 
   return (
     <Form className={styles.form}>
@@ -201,12 +250,13 @@ export default function FormStartCompute({
         selectedComputeAssetTimeout={selectedComputeAssetTimeout}
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         algorithmConsumeDetails={selectedAlgorithmAsset?.accessDetails}
-        symbol={oceanSymbol}
-        totalPrice={totalPrice}
+        symbol={datasetSymbol}
+        algorithmSymbol={algorithmSymbol}
         datasetOrderPrice={datasetOrderPrice}
         algoOrderPrice={algoOrderPrice}
         providerFeeAmount={providerFeeAmount}
         validUntil={validUntil}
+        totalPrices={totalPrices}
       />
 
       <ButtonBuy

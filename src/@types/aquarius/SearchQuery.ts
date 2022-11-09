@@ -7,7 +7,8 @@ export enum SortTermOptions {
   Created = 'nft.created',
   Relevance = '_score',
   Orders = 'stats.orders',
-  Allocated = 'stats.allocated'
+  Allocated = 'stats.allocated',
+  Price = 'stats.price.value'
 }
 
 // Note: could not figure out how to get `enum` to be ambiant

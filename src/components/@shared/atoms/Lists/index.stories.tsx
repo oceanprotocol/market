@@ -2,6 +2,15 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { ListItem } from '@shared/atoms/Lists'
 
+export const items = [
+  'List item short',
+  'List item long ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquam facilisis molestie',
+  'List item long ipsum dolor sit amet, consectetur adipiscing elit',
+  'List item short',
+  'List item long ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquam facilisis molestie',
+  'List item long ipsum dolor sit amet, consectetur adipiscing elit'
+]
+
 export default {
   title: 'Component/@shared/atoms/Lists',
   component: ListItem
@@ -10,15 +19,6 @@ export default {
 const Template: ComponentStory<typeof ListItem> = (args) => (
   <ListItem {...args} />
 )
-
-const items = [
-  'List item short',
-  'List item long ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquam facilisis molestie',
-  'List item long ipsum dolor sit amet, consectetur adipiscing elit',
-  'List item short',
-  'List item long ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquam facilisis molestie',
-  'List item long ipsum dolor sit amet, consectetur adipiscing elit'
-]
 
 export const Unordered = Template.bind({})
 Unordered.decorators = [

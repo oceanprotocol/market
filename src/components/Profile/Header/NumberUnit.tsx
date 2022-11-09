@@ -4,7 +4,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import styles from './NumberUnit.module.css'
 
 interface NumberUnitProps {
-  label: string
+  label: string | ReactElement
   value: number | string | Element | ReactElement
   small?: boolean
   icon?: Element | ReactElement
