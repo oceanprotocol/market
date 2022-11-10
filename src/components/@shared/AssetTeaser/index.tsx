@@ -58,7 +58,7 @@ export default function AssetTeaser({
               {removeMarkdown(description?.substring(0, 300) || '')}
             </Dotdotdot>
           </div>
-          {isUnsupportedPricing ? (
+          {isUnsupportedPricing || !asset.services.length ? (
             <strong>No pricing schema available</strong>
           ) : (
             <Price accessDetails={asset.accessDetails} size="small" />

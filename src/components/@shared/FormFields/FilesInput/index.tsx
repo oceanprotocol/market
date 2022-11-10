@@ -16,7 +16,7 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
-    e.preventDefault()
+    e?.preventDefault()
 
     try {
       const providerUrl = values?.services
@@ -43,13 +43,14 @@ export default function FilesInput(props: InputProps): ReactElement {
   }
 
   function handleClose() {
-    helpers.setValue(meta.initialValue)
     helpers.setTouched(false)
+    helpers.setValue(meta.initialValue)
   }
 
   return (
     <>
-      {field?.value?.[0]?.valid === true ? (
+      {field?.value?.[0]?.valid === true ||
+      field?.value?.[0]?.type === 'hidden' ? (
         <FileInfo file={field.value[0]} handleClose={handleClose} />
       ) : (
         <UrlInput

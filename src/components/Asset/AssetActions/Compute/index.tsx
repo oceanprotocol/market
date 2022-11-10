@@ -456,8 +456,8 @@ export default function Compute({
               validAlgorithmOrderTx !== undefined
             }
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
-            oceanSymbol={
-              asset?.accessDetails?.baseToken?.symbol ||
+            datasetSymbol={asset?.accessDetails?.baseToken?.symbol || 'OCEAN'}
+            algorithmSymbol={
               selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol ||
               'OCEAN'
             }

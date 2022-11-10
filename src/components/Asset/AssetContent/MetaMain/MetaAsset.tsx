@@ -30,8 +30,8 @@ export default function MetaAsset({
           networkId={asset?.chainId}
           path={
             isBlockscoutExplorer
-              ? `tokens/${asset?.services[0].datatokenAddress}`
-              : `token/${asset?.services[0].datatokenAddress}`
+              ? `tokens/${asset?.services?.[0]?.datatokenAddress}`
+              : `token/${asset?.services?.[0]?.datatokenAddress}`
           }
         >
           {`Accessed with ${dataTokenSymbol}`}
