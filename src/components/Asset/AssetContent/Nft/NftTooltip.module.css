@@ -7,7 +7,7 @@
 .wrapper img {
   margin: 0;
   width: 128px;
-  height: 128px;
+  height: auto;
 }
 
 .info {

@@ -48,7 +48,7 @@
 }
 
 .footer {
-  margin-top: calc(var(--spacer) / 12);
+  margin-top: calc(var(--spacer) / 24);
 }
 
 .typeLabel {
