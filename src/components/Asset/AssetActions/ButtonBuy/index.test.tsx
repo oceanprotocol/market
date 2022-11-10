@@ -10,9 +10,6 @@ const downloadProps: ButtonBuyProps = {
   btSymbol: 'btSymbol',
   dtSymbol: 'dtSymbol',
   dtBalance: '100000000000',
-  onClick: () => {
-    console.log('TEST')
-  },
   assetTimeout: '1 day',
   assetType: 'Dataset',
   stepText: 'TEST',
@@ -20,6 +17,34 @@ const downloadProps: ButtonBuyProps = {
   isConsumable: true,
   isBalanceSufficient: true,
   consumableFeedback: 'TEST: consumableFeedback'
+}
+
+const computeProps: ButtonBuyProps = {
+  action: 'compute',
+  disabled: false,
+  hasPreviousOrder: false,
+  hasDatatoken: true,
+  btSymbol: 'btSymbol',
+  dtSymbol: 'dtSymbol',
+  dtBalance: '100000000000',
+  assetTimeout: '1 day',
+  assetType: 'algorithm',
+  hasPreviousOrderSelectedComputeAsset: false,
+  hasDatatokenSelectedComputeAsset: true,
+  dtSymbolSelectedComputeAsset: 'dtSymbol',
+  dtBalanceSelectedComputeAsset: 'dtBalance',
+  selectedComputeAssetType: 'selectedComputeAssetType',
+  stepText: ' ',
+  isLoading: false,
+  type: 'submit',
+  priceType: 'fixed',
+  algorithmPriceType: 'free',
+  isBalanceSufficient: true,
+  isConsumable: true,
+  consumableFeedback: 'consumableFeedback',
+  isAlgorithmConsumable: true,
+  hasProviderFee: false,
+  retry: false
 }
 
 describe('Asset/AssetActions/ButtonBuy', () => {
@@ -85,35 +110,7 @@ describe('Asset/AssetActions/ButtonBuy', () => {
   // TESTS FOR COMPUTE
 
   it('Renders "Buy Compute Job" button for compute without crashing', async () => {
-    render(
-      <ButtonBuy
-        action="compute"
-        disabled={false}
-        hasPreviousOrder={false}
-        hasDatatoken={true}
-        btSymbol="btSymbol"
-        dtSymbol="dtSymbol"
-        dtBalance="100000000000"
-        assetTimeout="1 day"
-        assetType="algorithm"
-        hasPreviousOrderSelectedComputeAsset={false}
-        hasDatatokenSelectedComputeAsset={true}
-        dtSymbolSelectedComputeAsset="dtSymbol"
-        dtBalanceSelectedComputeAsset="dtBalance"
-        selectedComputeAssetType="selectedComputeAssetType"
-        stepText=" "
-        isLoading={false}
-        type="submit"
-        priceType="fixed"
-        algorithmPriceType="free"
-        isBalanceSufficient={true}
-        isConsumable={true}
-        consumableFeedback="consumableFeedback"
-        isAlgorithmConsumable={true}
-        hasProviderFee={false}
-        retry={false}
-      />
-    )
+    render(<ButtonBuy {...computeProps} />)
 
     const button = screen.getByText('Buy Compute Job')
     expect(button).toContainHTML('<button')
