@@ -109,7 +109,7 @@ export default function AccountHeader({
               disabled={!userDid}
               onClick={checkConversation}
             >
-              Send Messages
+              Send Direct Messages
             </Button>
           </div>
         )}

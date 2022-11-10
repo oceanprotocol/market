@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useOrbis } from '@context/Orbis'
 import Time from '@shared/atoms/Time'
 import DecryptedMessage from './DecryptedMessage'
@@ -11,6 +11,8 @@ export default function DmConversation({
 }) {
   const { account } = useOrbis()
 
+  const conversationBox = useRef(null)
+
   const showTime = (index: number): boolean => {
     const nextMessage = messages[index + 1]
     if (!nextMessage || messages[index].creator !== nextMessage.creator)
@@ -21,13 +23,19 @@ export default function DmConversation({
 
   useEffect(() => {
     console.log(messages)
-    // messages.forEach((message) => {
-    //   decryptMessage(message?.content)
-    // })
-  }, [messages])
+    if (messages.length && conversationBox) {
+      setTimeout(() => {
+        console.log(
+          conversationBox.current.scrollTop,
+          conversationBox.current.scrollHeight
+        )
+        conversationBox.current.scrollTop = conversationBox.current.scrollHeight
+      }, 100)
+    }
+  }, [messages, conversationBox])
 
   return (
-    <div className={styles.conversationBox}>
+    <div ref={conversationBox} className={styles.conversationBox}>
       {messages.map((message, index) => (
         <div
           key={index}
