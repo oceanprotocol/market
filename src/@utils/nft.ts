@@ -144,14 +144,14 @@ export async function setNFTMetadataAndTokenURI(
   // TODO: remove this harcoded value after fixing issue on oceanjs
   let providerUrl
   if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
-    providerUrl = 'http://127.0.0.1:8030'
+    providerUrl = 'http://172.15.0.4:8030'
     asset.services[0].serviceEndpoint = providerUrl
   } else {
     providerUrl = asset.services[0].serviceEndpoint
   }
   const encryptedDdo = await ProviderInstance.encrypt(
     asset,
-    providerUrl,
+    'http://127.0.0.1:8030',
     signal
   )
   LoggerInstance.log(

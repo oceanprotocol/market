@@ -141,7 +141,7 @@ export default function PublishPage({
       let providerUrl
       // TODO: remove this harcoded value after fixing issue on oceanjs
       if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
-        providerUrl = 'http://127.0.0.1:8030'
+        providerUrl = 'http://172.15.0.4:8030:8030'
         values.services[0].providerUrl.url = providerUrl
       } else {
         providerUrl = values.services[0].providerUrl.url
@@ -149,7 +149,7 @@ export default function PublishPage({
 
       const ddoEncrypted = await ProviderInstance.encrypt(
         ddo,
-        providerUrl,
+        'http://localhost:8030',
         newAbortController()
       )
 
@@ -166,7 +166,7 @@ export default function PublishPage({
           status: 'success'
         }
       }))
-
+      console.log('DDO == ', ddo)
       return { ddo, ddoEncrypted }
     } catch (error) {
       LoggerInstance.error('[publish] error', error.message)
