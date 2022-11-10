@@ -86,7 +86,7 @@ export async function getFileDidInfo(
 }
 
 export async function getFileInfo(
-  url: string,
+  file: string,
   providerUrl: string,
   storageType: string
 ): Promise<FileInfo[]> {
@@ -96,7 +96,7 @@ export async function getFileInfo(
       case 'ipfs': {
         const fileIPFS: Ipfs = {
           type: 'ipfs',
-          hash: url
+          hash: file
         }
 
         response = await ProviderInstance.getFileInfo(fileIPFS, providerUrl)
@@ -106,7 +106,7 @@ export async function getFileInfo(
       case 'arweave': {
         const fileArweave: Arweave = {
           type: 'arweave',
-          transactionId: url
+          transactionId: file
         }
 
         response = await ProviderInstance.getFileInfo(fileArweave, providerUrl)
@@ -116,7 +116,7 @@ export async function getFileInfo(
         const fileUrl: UrlFile = {
           type: 'url',
           index: 0,
-          url,
+          url: file,
           method: 'get'
         }
 
