@@ -27,7 +27,7 @@ export default function AccountHeader({
 }: {
   accountId: string
 }): ReactElement {
-  const { profile } = useProfile()
+  const { profile, ownAccount } = useProfile()
   const { orbis, setConvOpen, setConversationId, conversations } = useOrbis()
   const [isShowMore, setIsShowMore] = useState(false)
   const [userDid, setUserDid] = useState<string>()
@@ -49,6 +49,19 @@ export default function AccountHeader({
       setConvOpen(true)
     }
     console.log('clicked')
+  }
+
+  const checkConversation = () => {
+    const filtered = conversations.filter(
+      (conversation: OrbisConversationInterface) => {
+        // console.log(conversation)
+        console.log(userDid)
+        return conversation.recipients.includes(userDid)
+      }
+    )
+    if (!filtered.length && userDid) {
+      createConversation()
+    }
   }
 
   useEffect(() => {
@@ -79,21 +92,6 @@ export default function AccountHeader({
     }
   }, [orbis, accountId])
 
-  const checkConversation = () => {
-    const filtered = conversations.filter(
-      (conversation: OrbisConversationInterface) => {
-        // console.log(conversation)
-        console.log(userDid)
-        return conversation.recipients.includes(userDid)
-      }
-    )
-    if (!filtered.length) {
-      if (userDid) {
-        createConversation()
-      }
-    }
-  }
-
   return (
     <div className={styles.grid}>
       <div>
@@ -102,17 +100,19 @@ export default function AccountHeader({
       </div>
 
       <div>
-        <div className={styles.buttonWrap}>
-          <Button
-            style="primary"
-            size="small"
-            className={styles.sendMessage}
-            disabled={!userDid}
-            onClick={checkConversation}
-          >
-            Send Messages
-          </Button>
-        </div>
+        {!ownAccount && (
+          <div className={styles.buttonWrap}>
+            <Button
+              style="primary"
+              size="small"
+              className={styles.sendMessage}
+              disabled={!userDid}
+              onClick={checkConversation}
+            >
+              Send Messages
+            </Button>
+          </div>
+        )}
         <Markdown text={profile?.description} className={styles.description} />
         {isDescriptionTextClamped() ? (
           <span className={styles.more} onClick={toogleShowMore}>
