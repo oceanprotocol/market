@@ -34,7 +34,6 @@ function MarketMetadataProvider({
           null,
           getQueryContext(appConfig.chainIdsSupported[i])
         )
-        console.log('response.data', response.data)
         opcData.push({
           chainId: appConfig.chainIdsSupported[i],
           approvedTokens: response.data?.opc?.approvedTokens?.map(

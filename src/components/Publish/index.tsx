@@ -138,18 +138,9 @@ export default function PublishPage({
       setDdo(ddo)
       LoggerInstance.log('[publish] Got new DDO', ddo)
 
-      let providerUrl
-      // TODO: remove this harcoded value after fixing issue on oceanjs
-      if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
-        providerUrl = 'http://172.15.0.4:8030:8030'
-        values.services[0].providerUrl.url = providerUrl
-      } else {
-        providerUrl = values.services[0].providerUrl.url
-      }
-
       const ddoEncrypted = await ProviderInstance.encrypt(
         ddo,
-        'http://localhost:8030',
+        values.services[0].providerUrl.url, // add readme msg to use 'http://localhost:8030' if on macOs
         newAbortController()
       )
 
@@ -166,7 +157,6 @@ export default function PublishPage({
           status: 'success'
         }
       }))
-      console.log('DDO == ', ddo)
       return { ddo, ddoEncrypted }
     } catch (error) {
       LoggerInstance.error('[publish] error', error.message)

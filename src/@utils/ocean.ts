@@ -5,9 +5,7 @@ export function getDevelopmentConfig(): Config {
   return {
     nodeUri: process.env.NEXT_PUBLIC_RBAC_URL,
     subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI,
-    providerUri: 'http://localhost:8030',
     metadataCacheUri: process.env.NEXT_PUBLIC_METADATACACHE_URI,
-    chainId: 8996,
     fixedRateExchangeAddress:
       process.env.NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS,
     dispenserAddress: process.env.NEXT_PUBLIC_DISPENSER_ADDRESS,
@@ -27,15 +25,12 @@ export function getOceanConfig(network: string | number): Config {
       network === 56 ||
       network === 'gaiaxtestnet' ||
       network === 2021000 ||
-      network === 8996 // barge
+      network === 8996
       ? undefined
       : process.env.NEXT_PUBLIC_INFURA_PROJECT_ID
   ) as Config
-  // console.log('config 1 ', config)
-  // TODO: remove after fixing in ocean.js
   if (network === 8996) {
     config = { ...config, ...getDevelopmentConfig() }
-    // console.log('dev config', config)
   }
   return config as Config
 }
