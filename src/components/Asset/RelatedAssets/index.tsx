@@ -23,7 +23,6 @@ export default function RelatedAssets(): ReactElement {
       !asset?.nft ||
       !asset?.metadata
     ) {
-      setIsLoading(false)
       return
     }
 
