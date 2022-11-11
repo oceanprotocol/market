@@ -97,6 +97,7 @@ export default function Compute({
   const [refetchJobs, setRefetchJobs] = useState(false)
   const [isLoadingJobs, setIsLoadingJobs] = useState(false)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
+  const [retry, setRetry] = useState<boolean>(false)
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
@@ -291,7 +292,8 @@ export default function Compute({
   useEffect(() => {
     const newError = error
     if (!newError) return
-    toast.error(newError)
+    const errorMsg = newError + '. Please retry.'
+    toast.error(errorMsg)
   }, [error])
 
   async function startJob(): Promise<void> {
@@ -386,6 +388,7 @@ export default function Compute({
       initPriceAndFees()
     } catch (error) {
       setError(error.message)
+      setRetry(true)
       LoggerInstance.error(`[compute] ${error.message} `)
     } finally {
       setIsOrdering(false)
@@ -477,6 +480,7 @@ export default function Compute({
             algoOrderPriceAndFees={algoOrderPriceAndFees}
             providerFeeAmount={providerFeeAmount}
             validUntil={computeValidUntil}
+            retry={retry}
           />
         </Formik>
       )}
