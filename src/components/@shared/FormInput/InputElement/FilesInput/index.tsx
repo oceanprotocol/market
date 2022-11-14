@@ -16,16 +16,7 @@ export default function FilesInput(props: InputProps): ReactElement {
     ? props.form?.values?.services[0].providerUrl.url
     : asset.services[0].serviceEndpoint
 
-  let storageType = props.form?.values?.services
-    ? props.form?.values?.services[0].files[0].type
-    : null // TODO: understand which property to used here
-
-  if (!storageType) {
-    // edit mode
-    storageType = props?.form?.values?.storageType
-      ? props.form?.values.storageType
-      : 'url' // default value
-  }
+  const storageType = field.value[0].type
 
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
@@ -53,8 +44,12 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   function handleClose() {
     helpers.setTouched(false)
-    helpers.setValue([{ url: '', type: storageType }])
+    helpers.setValue([
+      { url: '', type: storageType === 'hidden' ? 'ipfs' : storageType }
+    ])
   }
+
+  console.log(field.value[0].type, props)
 
   return (
     <>

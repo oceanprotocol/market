@@ -28,7 +28,6 @@ export default function FormEditMetadata({
 }): ReactElement {
   const { asset } = useAsset()
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
-  const [storageType, setStorageType] = useState('url' || 'ipfs' || 'arweave')
 
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
@@ -94,34 +93,10 @@ export default function FormEditMetadata({
       )}
 
       <Field
-        {...getFieldContent('storageType', data)}
+        {...getFieldContent('files', data)}
         component={Input}
-        name="storageType"
+        name="files"
       />
-
-      {storageType === 'ipfs' && (
-        <Field
-          {...getFieldContent('ipfs', data)}
-          component={Input}
-          name="files"
-        />
-      )}
-
-      {storageType === 'arweave' && (
-        <Field
-          {...getFieldContent('arweave', data)}
-          component={Input}
-          name="files"
-        />
-      )}
-
-      {storageType === 'url' && (
-        <Field
-          {...getFieldContent('files', data)}
-          component={Input}
-          name="files"
-        />
-      )}
 
       <Field
         {...getFieldContent('links', data)}
