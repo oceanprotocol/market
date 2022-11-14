@@ -69,7 +69,7 @@ cd barge
 ./start_ocean.sh --the-graph
 ```
 
-Barge will deploy contracts to the local Ganache node which will take some time. At the end the compiled artifacts need to be copied over to this project into `node_modules/@oceanprotocol/contracts/artifacts`. The `npm run start:local` script will do that for you and set the env variables to use this local connection in `.env` in the app.
+Barge will deploy contracts to the local Ganache node which will take some time. At the end the compiled artifacts need to imported over to this project as environment variables. The `set-barge-env` script will do that for you and set the env variables to use this local connection in `.env` in the app.
 
 If you are using `macOS` operating system you should also make same changes to the provider url since the default barge ip can not be accessed due to some network constraints on `macOs`. So we should be using the `127.0.0.1:8030` (if you have changed the provider port please use that here as well) for each direct call from the market to provider, but we should keep the internal barge url `http://172.15.0.4:8030/` (this is the default ip:port for provider in barge, if changed please use the according url). So on inside `src/@utils/provider.ts` if on `macOS` use the
 `127.0.0.1:8030` for all the methods that call `ProviderInstance` methods. (eg: `getEncryptedFiles`, `getFileDidInfo`, `downloadFile` etc). You should use the same provider url for `src/@utils/nft.ts` inside `setNFTMetadataAndTokenURI` and `setNftMetadata` and `src/components/Publish/index.tsx` inisde `encrypt` method.
@@ -77,6 +77,7 @@ If you are using `macOS` operating system you should also make same changes to t
 If you are using the `subgraph` inside `barge` as well and there are not approved tokens inside the subgraph you should insert them or harcode the ocean token address from this env variable `process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS` inside `src/components/Publish/_utils.ts` as feeToken and also the `baseTokenDecimals` to `18`
 
 ```bash
+npm run set-barge-env
 npm run start:local
 ```
 

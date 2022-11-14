@@ -29,10 +29,14 @@ envVars.push(
 )
 envVars.push(`NEXT_PUBLIC_DISPENSER_ADDRESS='${addresses.Dispenser}'`)
 envVars.push(`NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS='${addresses.Ocean}'`)
-envVars.push(`NEXT_PUBLIC_METADATACACHE_URI='http://localhost:5000'`)
-envVars.push(`NEXT_PUBLIC_SUBGRAPH_URI='http://localhost:9000'`)
-envVars.push(`NEXT_RBAC_URL='http://localhost:3000'`)
 envVars.push(`NEXT_PUBLIC_MARKET_DEVELOPMENT='true'`)
+
+/*
+ check this on oceanjs and move thinks there as well if not exposed
+*/
+envVars.push(`NEXT_PUBLIC_METADATACACHE_URI='http://127.0.0.1:5000'`)
+envVars.push(`NEXT_PUBLIC_SUBGRAPH_URI='http://127.0.0.1:9000'`)
+envVars.push(`NEXT_RBAC_URL='http://127.0.0.1:3000'`)
 
 var stream = fs.createWriteStream('.env', { flags: 'a' })
 
