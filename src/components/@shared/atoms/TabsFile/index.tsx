@@ -24,7 +24,7 @@ export default function TabsFile({
   items,
   className
 }: TabsProps): ReactElement {
-  const { setFieldValue } = useFormikContext<FormPublishData>()
+  const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const [tabIndex, setTabIndex] = useState(0)
   // hide tabs if are hidden
   const isHidden = items[tabIndex].props.value[0].type === 'hidden'
@@ -43,6 +43,13 @@ export default function TabsFile({
 
   const handleTabChange = (tabName: string) => {
     setIndex(tabName)
+  }
+
+  console.log(values)
+
+  let textToolTip = false
+  if (values?.services) {
+    textToolTip = values.services[0].access === 'compute'
   }
 
   return (
@@ -83,7 +90,15 @@ export default function TabsFile({
                       </span>
                     )}
                     {item.field.help && item.field.prominentHelp && (
-                      <Tooltip content={<Markdown text={item.field.help} />} />
+                      <Tooltip
+                        content={
+                          <Markdown
+                            text={`${item.field.help} ${
+                              textToolTip ? item.field.computeHelp : ''
+                            }`}
+                          />
+                        }
+                      />
                     )}
                   </label>
                 )}
