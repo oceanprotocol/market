@@ -14,11 +14,13 @@ const openSeaTestNetworks = [4]
 
 export default function NftTooltip({
   nft,
+  nftImage,
   address,
   chainId,
   isBlockscoutExplorer
 }: {
   nft: NftMetadata
+  nftImage: string
   address: string
   chainId: number
   isBlockscoutExplorer: boolean
@@ -39,7 +41,7 @@ export default function NftTooltip({
 
   return (
     <div className={styles.wrapper}>
-      {nft && <img src={nft.image_data || nft.image} alt={nft?.name} />}
+      {nftImage && <img src={nftImage} alt={nft?.name} />}
       <div className={styles.info}>
         {nft && <h5>{nft.name}</h5>}
         {address && (

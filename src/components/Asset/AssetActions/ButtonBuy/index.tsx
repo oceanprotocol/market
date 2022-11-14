@@ -3,7 +3,7 @@ import Button from '../../../@shared/atoms/Button'
 import styles from './index.module.css'
 import Loader from '../../../@shared/atoms/Loader'
 
-interface ButtonBuyProps {
+export interface ButtonBuyProps {
   action: 'download' | 'compute'
   disabled: boolean
   hasPreviousOrder: boolean
@@ -29,6 +29,7 @@ interface ButtonBuyProps {
   algorithmPriceType?: string
   isAlgorithmConsumable?: boolean
   hasProviderFee?: boolean
+  retry?: boolean
 }
 
 // TODO: we need to take a look at these messages
@@ -131,22 +132,24 @@ export default function ButtonBuy({
   priceType,
   algorithmPriceType,
   isAlgorithmConsumable,
-  hasProviderFee
+  hasProviderFee,
+  retry
 }: ButtonBuyProps): ReactElement {
-  const buttonText =
-    action === 'download'
-      ? hasPreviousOrder
-        ? 'Download'
-        : priceType === 'free'
-        ? 'Get'
-        : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
-      : hasPreviousOrder &&
-        hasPreviousOrderSelectedComputeAsset &&
-        !hasProviderFee
-      ? 'Start Compute Job'
-      : priceType === 'free' && algorithmPriceType === 'free'
-      ? 'Order Compute Job'
-      : `Buy Compute Job`
+  const buttonText = retry
+    ? 'Retry'
+    : action === 'download'
+    ? hasPreviousOrder
+      ? 'Download'
+      : priceType === 'free'
+      ? 'Get'
+      : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
+    : hasPreviousOrder &&
+      hasPreviousOrderSelectedComputeAsset &&
+      !hasProviderFee
+    ? 'Start Compute Job'
+    : priceType === 'free' && algorithmPriceType === 'free'
+    ? 'Order Compute Job'
+    : `Buy Compute Job`
 
   return (
     <div className={styles.actions}>

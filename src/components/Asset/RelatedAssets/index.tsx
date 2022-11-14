@@ -23,7 +23,6 @@ export default function RelatedAssets(): ReactElement {
       !asset?.nft ||
       !asset?.metadata
     ) {
-      setIsLoading(false)
       return
     }
 
@@ -31,11 +30,17 @@ export default function RelatedAssets(): ReactElement {
       setIsLoading(true)
 
       try {
-        const tagQuery = generateBaseQuery(
-          generateQuery(chainIds, asset.nftAddress, 4, asset.metadata.tags)
-        )
-        const tagResults = (await queryMetadata(tagQuery, newCancelToken()))
-          ?.results
+        let tagResults: Asset[] = []
+
+        // safeguard against faults in the metadata
+        if (asset.metadata.tags instanceof Array) {
+          const tagQuery = generateBaseQuery(
+            generateQuery(chainIds, asset.nftAddress, 4, asset.metadata.tags)
+          )
+
+          tagResults = (await queryMetadata(tagQuery, newCancelToken()))
+            ?.results
+        }
 
         if (tagResults.length === 4) {
           setRelatedAssets(tagResults)

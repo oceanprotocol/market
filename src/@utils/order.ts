@@ -8,7 +8,8 @@ import {
   OrderParams,
   ProviderComputeInitialize,
   ProviderFees,
-  ProviderInstance
+  ProviderInstance,
+  ProviderInitialize
 } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
@@ -19,6 +20,26 @@ import {
   consumeMarketFixedSwapFee
 } from '../../app.config'
 import { toast } from 'react-toastify'
+
+async function initializeProvider(
+  asset: AssetExtended,
+  accountId: string,
+  providerFees?: ProviderFees
+): Promise<ProviderInitialize> {
+  if (providerFees) return
+  try {
+    const provider = await ProviderInstance.initialize(
+      asset.id,
+      asset.services[0].id,
+      0,
+      accountId,
+      asset.services[0].serviceEndpoint
+    )
+    return provider
+  } catch (error) {
+    LoggerInstance.log('[Initialize Provider] Error:', error)
+  }
+}
 
 /**
  * @param web3
@@ -40,15 +61,11 @@ export async function order(
   const datatoken = new Datatoken(web3)
   const config = getOceanConfig(asset.chainId)
 
-  const initializeData =
-    !providerFees &&
-    (await ProviderInstance.initialize(
-      asset.id,
-      asset.services[0].id,
-      0,
-      accountId,
-      asset.services[0].serviceEndpoint
-    ))
+  const initializeData = await initializeProvider(
+    asset,
+    accountId,
+    providerFees
+  )
 
   const orderParams = {
     consumer: computeConsumerAddress || accountId,
@@ -130,15 +147,11 @@ export async function reuseOrder(
   providerFees?: ProviderFees
 ): Promise<TransactionReceipt> {
   const datatoken = new Datatoken(web3)
-  const initializeData =
-    !providerFees &&
-    (await ProviderInstance.initialize(
-      asset.id,
-      asset.services[0].id,
-      0,
-      accountId,
-      asset.services[0].serviceEndpoint
-    ))
+  const initializeData = await initializeProvider(
+    asset,
+    accountId,
+    providerFees
+  )
 
   const tx = await datatoken.reuseOrder(
     asset.accessDetails.datatoken.address,
