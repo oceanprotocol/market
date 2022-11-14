@@ -55,17 +55,6 @@ export default function AssetList({
 
     setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
-
-    async function fetchPrices(token?: CancelToken) {
-      const assetsWithPrices: Asset[] = []
-      for (let i = 0; i < assets.length; i++) {
-        const asseetWithPrice = await retrieveAsset(assets[i].id, token)
-        assetsWithPrices.push(asseetWithPrice)
-      }
-      if (!isMounted() || !assetsWithPrices) return
-      setAssetsWithPrices([...assetsWithPrices])
-    }
-    fetchPrices(newCancelToken())
   }, [assets, isMounted, accountId, newCancelToken])
 
   // // This changes the page field inside the query
