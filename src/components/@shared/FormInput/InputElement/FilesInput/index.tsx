@@ -49,8 +49,6 @@ export default function FilesInput(props: InputProps): ReactElement {
     ])
   }
 
-  console.log(field.value[0].type, props)
-
   return (
     <>
       {field?.value?.[0]?.valid === true ||
