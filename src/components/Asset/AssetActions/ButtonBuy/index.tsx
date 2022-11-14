@@ -5,7 +5,7 @@ import Loader from '../../../@shared/atoms/Loader'
 import { useWeb3 } from '@context/Web3'
 import Web3 from 'web3'
 
-interface ButtonBuyProps {
+export interface ButtonBuyProps {
   action: 'download' | 'compute'
   disabled: boolean
   hasPreviousOrder: boolean
@@ -32,6 +32,7 @@ interface ButtonBuyProps {
   isAlgorithmConsumable?: boolean
   isSupportedOceanNetwork?: boolean
   hasProviderFee?: boolean
+  retry?: boolean
 }
 
 function getConsumeHelpText(
@@ -168,24 +169,26 @@ export default function ButtonBuy({
   priceType,
   algorithmPriceType,
   isAlgorithmConsumable,
-  isSupportedOceanNetwork,
-  hasProviderFee
+  hasProviderFee,
+  retry,
+  isSupportedOceanNetwork
 }: ButtonBuyProps): ReactElement {
   const { web3 } = useWeb3()
-  const buttonText =
-    action === 'download'
-      ? hasPreviousOrder
-        ? 'Download'
-        : priceType === 'free'
-        ? 'Get'
-        : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
-      : hasPreviousOrder &&
-        hasPreviousOrderSelectedComputeAsset &&
-        !hasProviderFee
-      ? 'Start Compute Job'
-      : priceType === 'free' && algorithmPriceType === 'free'
-      ? 'Order Compute Job'
-      : `Buy Compute Job`
+  const buttonText = retry
+    ? 'Retry'
+    : action === 'download'
+    ? hasPreviousOrder
+      ? 'Download'
+      : priceType === 'free'
+      ? 'Get'
+      : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
+    : hasPreviousOrder &&
+      hasPreviousOrderSelectedComputeAsset &&
+      !hasProviderFee
+    ? 'Start Compute Job'
+    : priceType === 'free' && algorithmPriceType === 'free'
+    ? 'Order Compute Job'
+    : `Buy Compute Job`
 
   return (
     <div className={styles.actions}>

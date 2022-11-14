@@ -43,7 +43,8 @@ export default function FormStartCompute({
   datasetOrderPriceAndFees,
   algoOrderPriceAndFees,
   providerFeeAmount,
-  validUntil
+  validUntil,
+  retry
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: Asset[]
@@ -71,6 +72,7 @@ export default function FormStartCompute({
   algoOrderPriceAndFees?: OrderPriceAndFees
   providerFeeAmount?: string
   validUntil?: string
+  retry: boolean
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
   const { accountId, balance, isSupportedOceanNetwork } = useWeb3()
@@ -301,6 +303,7 @@ export default function FormStartCompute({
         }
         isSupportedOceanNetwork={isSupportedOceanNetwork}
         hasProviderFee={providerFeeAmount && providerFeeAmount !== '0'}
+        retry={retry}
       />
     </Form>
   )
