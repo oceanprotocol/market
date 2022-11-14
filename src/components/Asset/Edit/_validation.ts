@@ -68,37 +68,42 @@ export const validationSchema = Yup.object().shape({
     .nullable(),
   links: Yup.array<FileInfo[]>().of(
     Yup.object().shape({
-      url: Yup.string()
-        .test((value, context) => {
-          const { type } = context.parent
-          let validField
-          let errorMessage
+      url: Yup.string().test((value, context) => {
+        const { type, valid } = context.parent
+        let validField
+        let errorMessage
 
-          switch (type) {
-            case 'url':
-              validField = isUrl(value?.toString() || '')
-              if (!validField) {
-                errorMessage = 'Must be a valid url.'
-              } else {
-                if (value?.toString().includes('drive.google')) {
-                  validField = false
-                  errorMessage =
-                    'Google Drive is not a supported hosting service. Please use an alternative.'
-                }
+        switch (type) {
+          case 'url':
+            validField = isUrl(value?.toString() || '')
+            if (!validField) {
+              errorMessage = 'Must be a valid url.'
+            } else {
+              if (value?.toString().includes('drive.google')) {
+                validField = false
+                errorMessage =
+                  'Google Drive is not a supported hosting service. Please use an alternative.'
               }
-              break
-          }
+            }
+            break
+        }
 
-          if (value && !validField) {
-            return context.createError({
-              message: errorMessage
-            })
-          }
+        if (value && !validField) {
+          return context.createError({
+            message: errorMessage
+          })
+        }
 
-          return true
+        return true
+      }),
+      valid: Yup.boolean()
+        .test((value, context) => {
+          // allow user to submit if the value is null
+          const { valid } = context.parent
+
+          return valid || false
         })
-        .nullable(),
-      valid: Yup.boolean().isTrue()
+        .isTrue()
     })
   ),
   timeout: Yup.string().required('Required'),
