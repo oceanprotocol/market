@@ -25,8 +25,9 @@ export default function TabsFile({
   className
 }: TabsProps): ReactElement {
   const { setFieldValue } = useFormikContext<FormPublishData>()
-
   const [tabIndex, setTabIndex] = useState(0)
+  // hide tabs if are hidden
+  const isHidden = items[tabIndex].props.value[0].type === 'hidden'
 
   const setIndex = (tabName: string) => {
     const index = items.findIndex((tab: any) => {
@@ -48,18 +49,24 @@ export default function TabsFile({
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
-          {items.map((item, index) => (
-            <Tab
-              className={styles.tab}
-              key={index}
-              onClick={
-                handleTabChange ? () => handleTabChange(item.title) : null
-              }
-              disabled={item.disabled}
-            >
-              {item.title}
-            </Tab>
-          ))}
+          {items.map((item, index) => {
+            console.log(items[tabIndex].props.value[0].type)
+
+            if (isHidden) return null
+
+            return (
+              <Tab
+                className={styles.tab}
+                key={index}
+                onClick={
+                  handleTabChange ? () => handleTabChange(item.title) : null
+                }
+                disabled={item.disabled}
+              >
+                {item.title}
+              </Tab>
+            )
+          })}
         </TabList>
       </div>
       <div className={styles.tabContent}>
@@ -67,17 +74,19 @@ export default function TabsFile({
           return (
             <>
               <TabPanel key={index}>
-                <label className={styles.tabLabel}>
-                  {item.field.label}
-                  {item.field.required && (
-                    <span title="Required" className={styles.required}>
-                      *
-                    </span>
-                  )}
-                  {item.field.help && item.field.prominentHelp && (
-                    <Tooltip content={<Markdown text={item.field.help} />} />
-                  )}
-                </label>
+                {!isHidden && (
+                  <label className={styles.tabLabel}>
+                    {item.field.label}
+                    {item.field.required && (
+                      <span title="Required" className={styles.required}>
+                        *
+                      </span>
+                    )}
+                    {item.field.help && item.field.prominentHelp && (
+                      <Tooltip content={<Markdown text={item.field.help} />} />
+                    )}
+                  </label>
+                )}
                 {item.content}
               </TabPanel>
             </>

@@ -69,7 +69,7 @@ export const validationSchema = Yup.object().shape({
   links: Yup.array<FileInfo[]>().of(
     Yup.object().shape({
       url: Yup.string().test((value, context) => {
-        const { type, valid } = context.parent
+        const { type } = context.parent
         let validField
         let errorMessage
 
@@ -96,14 +96,15 @@ export const validationSchema = Yup.object().shape({
 
         return true
       }),
-      valid: Yup.boolean()
-        .test((value, context) => {
-          // allow user to submit if the value is null
-          const { valid } = context.parent
+      valid: Yup.boolean().test((value, context) => {
+        // allow user to submit if the value is null
+        const { valid, url } = context.parent
 
-          return valid || false
-        })
-        .isTrue()
+        // allow user to continue if the file is empty
+        if (!url) return true
+
+        return valid
+      })
     })
   ),
   timeout: Yup.string().required('Required'),
