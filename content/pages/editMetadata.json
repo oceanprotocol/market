@@ -66,6 +66,12 @@
         "type": "tags",
         "placeholder": "e.g. logistics",
         "required": false
+      },
+      {
+        "name": "paymentCollector",
+        "label": "Payment Collector Address",
+        "placeholder": "e.g. 0X123ABC...",
+        "required": false
       }
     ]
   }
