@@ -75,13 +75,6 @@ export default function FormEditMetadata({
       )
   }, [])
 
-  useEffect(() => {
-    if (values.storageType !== storageType) {
-      setFieldValue('files', [{ url: '', type: values.storageType }])
-    }
-    setStorageType(values.storageType)
-  }, [values.storageType])
-
   return (
     <Form>
       <Field {...getFieldContent('name', data)} component={Input} name="name" />

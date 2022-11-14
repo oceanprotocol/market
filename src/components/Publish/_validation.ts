@@ -31,7 +31,6 @@ const validationMetadata = {
 }
 
 const validationService = {
-  storageType: Yup.string().required('Required'),
   files: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
@@ -40,6 +39,7 @@ const validationService = {
             const { type } = context.parent
             let validField
             let errorMessage
+
             switch (type) {
               case 'url':
                 validField = isUrl(value?.toString() || '')
@@ -85,16 +85,34 @@ const validationService = {
   links: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string()
-          .url('Must be a valid URL.')
-          .test(
-            'GoogleNotSupported',
-            'Google Drive is not a supported hosting service. Please use an alternative.',
-            (value) => {
-              return !value?.toString().includes('drive.google')
-            }
-          ),
-        // TODO: require valid file only when URL is given
+        url: Yup.string().test((value, context) => {
+          const { type } = context.parent
+          let validField
+          let errorMessage
+
+          switch (type) {
+            case 'url':
+              validField = isUrl(value?.toString() || '')
+              if (!validField) {
+                errorMessage = 'Must be a valid url.'
+              } else {
+                if (value?.toString().includes('drive.google')) {
+                  validField = false
+                  errorMessage =
+                    'Google Drive is not a supported hosting service. Please use an alternative.'
+                }
+              }
+              break
+          }
+
+          if (!validField) {
+            return context.createError({
+              message: errorMessage
+            })
+          }
+
+          return true
+        }),
         valid: Yup.boolean()
         // valid: Yup.boolean().isTrue('File must be valid.')
       })

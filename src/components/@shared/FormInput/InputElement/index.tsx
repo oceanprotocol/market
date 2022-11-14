@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useCallback, useState } from 'react'
 import styles from './index.module.css'
 import { InputProps } from '..'
 import FilesInput from './FilesInput'
@@ -11,6 +11,7 @@ import Nft from './Nft'
 import InputRadio from './Radio'
 import ContainerInput from '@shared/FormInput/InputElement/ContainerInput'
 import TagsAutoComplete from './TagsAutoComplete'
+import TabsFile from '@shared/atoms/TabsFile'
 
 const cx = classNames.bind(styles)
 
@@ -55,6 +56,8 @@ export default function InputElement({
   ...props
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
+  const [tabIndex, setTabIndex] = useState(0)
+
   switch (props.type) {
     case 'select': {
       const sortedOptions =
@@ -78,6 +81,38 @@ export default function InputElement({
               </option>
             ))}
         </select>
+      )
+    }
+    case 'tabs': {
+      const tabs: any = []
+      props.fields.map((field: any) => {
+        return tabs.push({
+          title: field.title,
+          field,
+          props,
+          content: <FilesInput {...field} form={form} {...props} />
+        })
+      })
+
+      const setIndex = (tabName: string) => {
+        const index = tabs.findIndex((tab: any) => {
+          if (tab.title !== tabName) return false
+          return tab
+        })
+        setTabIndex(index)
+      }
+
+      const handleTabChange = (tabName: string) => {
+        setIndex(tabName)
+      }
+
+      return (
+        <TabsFile
+          items={tabs}
+          handleTabChange={handleTabChange}
+          defaultIndex={tabIndex}
+          className={styles.pricing}
+        />
       )
     }
     case 'textarea':

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useField } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
@@ -17,7 +17,7 @@ export default function FilesInput(props: InputProps): ReactElement {
     : asset.services[0].serviceEndpoint
 
   let storageType = props.form?.values?.services
-    ? props.form?.values?.services[0].storageType
+    ? props.form?.values?.services[0].files[0].type
     : null // TODO: understand which property to used here
 
   if (!storageType) {
@@ -42,7 +42,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         throw Error('✗ No valid file detected. Check your URL and try again.')
 
       // if all good, add file to formik state
-      helpers.setValue([{ url, ...checkedFile[0] }])
+      helpers.setValue([{ url, type: storageType, ...checkedFile[0] }])
     } catch (error) {
       props.form.setFieldError(`${field.name}[0].url`, error.message)
       LoggerInstance.error(error.message)
@@ -53,7 +53,7 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   function handleClose() {
     helpers.setTouched(false)
-    helpers.setValue(meta.initialValue)
+    helpers.setValue([{ url: '', type: storageType }])
   }
 
   return (
