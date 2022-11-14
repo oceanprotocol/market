@@ -56,7 +56,6 @@ export default function InputElement({
   ...props
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
-  const [tabIndex, setTabIndex] = useState(0)
 
   switch (props.type) {
     case 'select': {
@@ -94,26 +93,7 @@ export default function InputElement({
         })
       })
 
-      const setIndex = (tabName: string) => {
-        const index = tabs.findIndex((tab: any) => {
-          if (tab.title !== tabName) return false
-          return tab
-        })
-        setTabIndex(index)
-      }
-
-      const handleTabChange = (tabName: string) => {
-        setIndex(tabName)
-      }
-
-      return (
-        <TabsFile
-          items={tabs}
-          handleTabChange={handleTabChange}
-          defaultIndex={tabIndex}
-          className={styles.pricing}
-        />
-      )
+      return <TabsFile items={tabs} className={styles.pricing} />
     }
     case 'textarea':
       return <textarea id={props.name} className={styles.textarea} {...props} />

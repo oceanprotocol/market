@@ -1,7 +1,7 @@
 import Label from '@shared/FormInput/Label'
 import Markdown from '@shared/Markdown'
 import { useFormikContext } from 'formik'
-import React, { ReactElement, ReactNode, useEffect } from 'react'
+import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import { FormPublishData } from 'src/components/Publish/_types'
 import Tooltip from '../Tooltip'
@@ -18,29 +18,34 @@ export interface TabsItem {
 export interface TabsProps {
   items: TabsItem[]
   className?: string
-  handleTabChange?: (tabName: string) => void
-  defaultIndex?: number
 }
 
 export default function TabsFile({
   items,
-  className,
-  handleTabChange,
-  defaultIndex
+  className
 }: TabsProps): ReactElement {
   const { setFieldValue } = useFormikContext<FormPublishData>()
 
-  useEffect(() => {
-    console.log(items[defaultIndex].props.name, items[defaultIndex].field.value)
+  const [tabIndex, setTabIndex] = useState(0)
 
-    setFieldValue(`${items[defaultIndex].props.name}[0]`, {
-      url: '',
-      type: items[defaultIndex].field.value
+  const setIndex = (tabName: string) => {
+    const index = items.findIndex((tab: any) => {
+      if (tab.title !== tabName) return false
+      return tab
     })
-  }, [defaultIndex])
+    setTabIndex(index)
+    setFieldValue(`${items[index].props.name}[0]`, {
+      url: '',
+      type: items[index].field.value
+    })
+  }
+
+  const handleTabChange = (tabName: string) => {
+    setIndex(tabName)
+  }
 
   return (
-    <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
+    <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
           {items.map((item, index) => (

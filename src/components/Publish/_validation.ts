@@ -105,7 +105,7 @@ const validationService = {
               break
           }
 
-          if (!validField) {
+          if (value && !validField) {
             return context.createError({
               message: errorMessage
             })
