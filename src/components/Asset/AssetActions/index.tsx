@@ -53,8 +53,9 @@ export default function AssetActions({
         asset?.services[0]?.serviceEndpoint
 
       const storageType = formikState?.values?.services
-        ? formikState?.values?.services[0].storageType
+        ? formikState?.values?.services[0].files[0].type
         : null
+
       try {
         const fileInfoResponse = formikState?.values?.services?.[0].files?.[0]
           .url
