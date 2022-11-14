@@ -67,6 +67,7 @@ export default function FormEditMetadata({
           setFieldValue('links', [
             {
               url: asset.metadata.links[0],
+              type: 'url',
               ...checkedFile[0]
             }
           ])
