@@ -104,7 +104,7 @@ export async function setNftMetadata(
 ): Promise<TransactionReceipt> {
   const encryptedDdo = await ProviderInstance.encrypt(
     asset,
-    asset.services[0].serviceEndpoint, // if on macOs use 'http://127.0.0.1:8030'
+    asset.services[0].serviceEndpoint,
     signal
   )
   LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
@@ -138,7 +138,7 @@ export async function setNFTMetadataAndTokenURI(
 ): Promise<TransactionReceipt> {
   const encryptedDdo = await ProviderInstance.encrypt(
     asset,
-    asset.services[0].serviceEndpoint, // if on mac os 'http://127.0.0.1:8030'
+    asset.services[0].serviceEndpoint,
     signal
   )
   LoggerInstance.log(

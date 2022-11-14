@@ -215,7 +215,7 @@ export async function createTokensAndPricing(
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
-    feeToken: values.pricing.baseToken.address, // if not found try to doc using process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
+    feeToken: values.pricing.baseToken.address,
     feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
@@ -234,7 +234,7 @@ export async function createTokensAndPricing(
         baseTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
-        baseTokenDecimals: values.pricing.baseToken.decimals, // if not available try hardcode 18,
+        baseTokenDecimals: values.pricing.baseToken.decimals,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
         marketFee: publisherMarketFixedSwapFee,

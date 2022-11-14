@@ -140,7 +140,7 @@ export default function PublishPage({
 
       const ddoEncrypted = await ProviderInstance.encrypt(
         ddo,
-        values.services[0].providerUrl.url, // add readme msg to use 'http://localhost:8030' if on macOs
+        values.services[0].providerUrl.url,
         newAbortController()
       )
 
