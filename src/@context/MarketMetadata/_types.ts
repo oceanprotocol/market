@@ -1,4 +1,4 @@
-import { SignalSettingsItem } from '@context/Signals/_types'
+import {SignalSettingsItem} from '@context/Signals/_types'
 
 export interface OpcFee {
   chainId: number
@@ -28,9 +28,7 @@ export interface AppConfig {
     classNameLight: string
     storageKey: string
   }
-  v3MetadataCacheUri: string
-  v3MarketUri: string
-  signalSettings: SignalSettingsItem
+  signalSettings?: SignalSettingsItem
 }
 export interface SiteContent {
   siteTitle: string

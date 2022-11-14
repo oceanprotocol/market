@@ -1,17 +1,17 @@
 import Link from 'next/link'
 import styles from '@shared/SignalAssetTeaser/SignalAssetTeaser.module.css'
 import assetStyles from '@shared/AssetTeaser/index.module.css'
-import PolygonIcon from '@images/polygon.svg'
+import PolygonIcon from '@images/utu-logo.svg'
 import Tooltip from '@shared/atoms/Tooltip'
 import ToolTipSignals from './ToolTipSignals'
 import React from 'react'
-import { SignalOriginItem } from '@context/Signals/_types'
-import { LoaderArea } from '@shared/AssetList'
+import {SignalOriginItem} from '@context/Signals/_types'
+import {LoaderArea} from '@shared/AssetList'
 
 export default function AssetTeaserSignals({
-  assetId,
-  signalItems
-}: {
+                                             assetId,
+                                             signalItems
+                                           }: {
   assetId: string
   signalItems: SignalOriginItem[]
 }) {

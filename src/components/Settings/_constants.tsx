@@ -1,15 +1,8 @@
 import React from 'react'
-import {
-  allowDynamicPricing,
-  allowFixedPricing,
-  signalSettings
-} from '../../../app.config.js'
-import { FormSettingsData } from './_types'
-import { ServiceComputeOptions } from '@oceanprotocol/lib'
-import {
-  SignalOriginItem,
-  SignalSettingsItem
-} from '../../@context/Signals/_types'
+import {signalSettings} from '../../../app.config.js'
+import {FormSettingsData} from './_types'
+import {ServiceComputeOptions} from '@oceanprotocol/lib'
+import {SignalOriginItem, SignalSettingsItem} from '../../@context/Signals/_types'
 
 const computeOptions: ServiceComputeOptions = {
   allowRawAlgorithm: false,
@@ -54,22 +47,7 @@ export const initialValues: FormSettingsData = {
       },
       computeOptions
     }
-  ],
-  pricing: {
-    price: 0,
-    type:
-      allowDynamicPricing === 'true'
-        ? 'dynamic'
-        : allowFixedPricing === 'true'
-        ? 'fixed'
-        : 'free',
-    amountDataToken: allowDynamicPricing === 'true' ? 100 : 1000,
-    amountOcean: 100,
-    weightOnOcean: '5', // 50% on OCEAN
-    weightOnDataToken: '5', // 50% on datatoken
-    swapFee: 0.1, // in %
-    freeAgreement: false
-  }
+  ]
 }
 
 export const initialSettingsAssets: SignalSettingsItem = signalSettings

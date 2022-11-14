@@ -19,7 +19,7 @@ export interface AssetSignalItem {
    * @type {string}
    * @memberof SignalItem
    */
-  id: string
+  id?: string
   /**
    * an identifier of the asset retrieved from the origin
    * @type {string}

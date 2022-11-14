@@ -1,25 +1,24 @@
-import AssetTeaser from '@shared/AssetTeaser'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, {ReactElement, useEffect, useState} from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import Loader from '@shared/atoms/Loader'
-import { useUserPreferences } from '@context/UserPreferences'
-import { useIsMounted } from '@hooks/useIsMounted'
-import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
-import { useWeb3 } from '@context/Web3'
-import { AssetSignalItem } from '@context/Signals/_types'
-import useSignalsLoader, { useAssetListSignals } from '@hooks/useSignals'
-import { useSignalContext } from '@context/Signals'
+import {useUserPreferences} from '@context/UserPreferences'
+import {useIsMounted} from '@hooks/useIsMounted'
+import {getAccessDetailsForAssets} from '@utils/accessDetailsAndPricing'
+import {useWeb3} from '@context/Web3'
+import {AssetSignalItem} from '@context/Signals/_types'
+import useSignalsLoader, {useAssetListSignals} from '@hooks/useSignals'
+import {useSignalContext} from '@context/Signals'
 import SignalAssetTeaser from '@shared/SignalAssetTeaser/SignalAssetTeaser'
 
 const cx = classNames.bind(styles)
 
 export function LoaderArea() {
   return (
-    <div className={styles.loaderWrap}>
-      <Loader />
-    </div>
+      <div className={styles.loaderWrap}>
+        <Loader/>
+      </div>
   )
 }
 
@@ -33,7 +32,6 @@ declare type AssetListProps = {
   className?: string
   noPublisher?: boolean
   signalItems?: AssetSignalItem[]
-  help: any
 }
 
 export default function AssetList({
@@ -44,32 +42,29 @@ export default function AssetList({
   isLoading,
   onPageChange,
   className,
-  noPublisher,
-  help
+                                    noPublisher
 }: AssetListProps): ReactElement {
   const { chainIds, signals: settingsSignals } = useUserPreferences()
   const { accountId } = useWeb3()
   const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
   const [loading, setLoading] = useState<boolean>(isLoading)
   const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>(
-    assetsWithPrices
-      ? assetsWithPrices.map((asset) =>
-          asset.datatokens.map((data) => data.address)
-        )
-      : null
+      assetsWithPrices
+          ? assetsWithPrices.map((asset) =>
+              asset.datatokens.map((data) => data.address)
+          )
+          : null
   )
   const isMounted = useIsMounted()
   // Signals loading logic
   // Get from AssetList component
-  const { assetSignalOriginItems, signals, assetSignalsUrls } =
-    useSignalContext()
-  const { assetSignalOrigins, urls } = useAssetListSignals(
-    dataTokenAddresses,
-    signals,
-    assetSignalsUrls
+  const {signals, assetSignalsUrls} = useSignalContext()
+  const {urls} = useAssetListSignals(
+      dataTokenAddresses,
+      signals,
+      assetSignalsUrls
   )
-  const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
-  // console.log(signals)
+  const {signalItems, loading: isFetchingSignals} = useSignalsLoader(urls)
   useEffect(() => {
     if (!assets) return
     setAssetsWithPrices(assets as AssetExtended[])

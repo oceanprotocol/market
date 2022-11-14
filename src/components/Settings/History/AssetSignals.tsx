@@ -1,12 +1,12 @@
-import React, { ReactElement, useEffect, useState } from 'react'
-import { Form, Formik } from 'formik'
-import { Assets } from './Assets'
-import { Custom } from './Custom'
+import React, {ReactElement, useEffect, useState} from 'react'
+import {Form, Formik} from 'formik'
+import {Assets} from './Assets'
+import {Custom} from './Custom'
 import isUrl from 'is-url-superb'
 import styles from './index.module.css'
-import { DEFAULT_NEW_CUSTOM_SIGNAL } from '../_constants'
-import { useUserPreferences } from '../../../@context/UserPreferences'
-import { SignalOriginItem } from '../../../@context/Signals/_types'
+import {DEFAULT_NEW_CUSTOM_SIGNAL} from '../_constants'
+import {useUserPreferences} from '../../../@context/UserPreferences'
+import {SignalOriginItem} from '../../../@context/Signals/_types'
 import slugify from 'slugify'
 
 export default function AssetSignalsTab(props: {
@@ -15,8 +15,8 @@ export default function AssetSignalsTab(props: {
 }): ReactElement {
   // This `feedback` state is auto-synced into Formik context under `values.feedback`
   // for use in other components. Syncing defined in ./Steps.tsx child component.
-  const { addSignalSetting, removeSignalSetting, signalSettings } =
-    useUserPreferences()
+  const {addSignalSetting, removeSignalSetting, signalSettings} =
+      useUserPreferences()
 
   const signalSettingsDisplayValues: {
     [key: string]: string | boolean | number
@@ -74,11 +74,15 @@ export default function AssetSignalsTab(props: {
             ).pathname.split('/')
             const assetId = urlPaths[urlPaths.length - 1]
             setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
+              alert(
+                  JSON.stringify(
+                      'Added ' + values.title + ' to custom asset signals'
+                  )
+              )
               const signalOrigin = {
                 ...DEFAULT_NEW_CUSTOM_SIGNAL,
                 id: `custom-signal-${slugify(values.title.toLowerCase())}-${
-                  props.signalSettings.length + 1
+                    props.signalSettings.length + 1
                 }`,
                 type: 1,
                 title: values.title,

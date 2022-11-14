@@ -1,22 +1,13 @@
-import React, {
-  ChangeEvent,
-  FormEvent,
-  KeyboardEvent,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useState
-} from 'react'
+import React, {ChangeEvent, FormEvent, KeyboardEvent, ReactElement, ReactNode, useEffect, useState} from 'react'
 import InputElement from './InputElement'
 import Label from './Label'
 import styles from './index.module.css'
-import { ErrorMessage, FieldInputProps } from 'formik'
+import {ErrorMessage, FieldInputProps} from 'formik'
 import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import FormHelp from './Help'
-import content from '../../../../content/settings/general.json'
 
 const cx = classNames.bind(styles)
 
@@ -34,7 +25,7 @@ export interface InputProps {
   sortOptions?: boolean
   additionalComponent?: ReactElement
   value?: string | number
-  content: string
+  content?: string
   onChange?(
     e:
       | FormEvent<HTMLInputElement>

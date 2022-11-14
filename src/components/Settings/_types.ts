@@ -1,6 +1,4 @@
-import { ServiceComputeOptions } from '@oceanprotocol/lib'
-import { NftMetadata } from '@utils/nft'
-import { PriceOptions } from 'src/@types/Price'
+import {ServiceComputeOptions} from '@oceanprotocol/lib'
 
 interface FileInfo {
   url: string
@@ -26,24 +24,8 @@ export interface FormSettingsData {
     accountId: string
     chainId: number
   }
-  metadata: {
-    nft: NftMetadata
-    transferable: boolean
-    type: 'dataset' | 'algorithm'
-    name: string
-    description: string
-    author: string
-    status: string
-    termsAndConditions: boolean
-    tags?: string
-    dockerImage?: string
-    dockerImageCustom?: string
-    dockerImageCustomTag?: string
-    dockerImageCustomEntrypoint?: string
-    dockerImageCustomChecksum?: string
-  }
-  services: FormSettingsService[]
-  pricing: PriceOptions
+
+  [key: string]: any
   assets?: SettingsAssets
 }
 

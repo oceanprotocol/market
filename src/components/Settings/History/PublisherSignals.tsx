@@ -1,23 +1,20 @@
-import React, { ReactElement, useEffect, useState } from 'react'
-import { Form, Formik } from 'formik'
-import { Assets } from './Assets'
+import React, {ReactElement, useEffect, useState} from 'react'
+import {Form, Formik} from 'formik'
+import {Assets} from './Assets'
 import styles from './index.module.css'
-import { DEFAULT_NEW_CUSTOM_SIGNAL } from '../_constants'
-import { useUserPreferences } from '@context/UserPreferences'
-import {
-  SignalOriginItem,
-  SignalSettingsDisplayValues
-} from '@context/Signals/_types'
+import {DEFAULT_NEW_CUSTOM_SIGNAL} from '../_constants'
+import {useUserPreferences} from '@context/UserPreferences'
+import {SignalOriginItem, SignalSettingsDisplayValues} from '@context/Signals/_types'
 import isUrl from 'is-url-superb'
 import slugify from 'slugify'
-import { Custom } from './Custom'
+import {Custom} from './Custom'
 
 export default function PublisherSignalsTab(props: {
   accountId: string
   signalSettings: SignalOriginItem[]
 }): ReactElement {
-  const { addSignalSetting, removeSignalSetting, signalSettings } =
-    useUserPreferences()
+  const {addSignalSetting, removeSignalSetting, signalSettings} =
+      useUserPreferences()
 
   const signalSettingsDisplayValues: SignalSettingsDisplayValues = {}
   props.signalSettings.forEach((signalOrigin) => {
@@ -71,11 +68,15 @@ export default function PublisherSignalsTab(props: {
             ).pathname.split('/')
             const publisherId = urlPaths[urlPaths.length - 1]
             setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
+              alert(
+                  JSON.stringify(
+                      'Added ' + values.title + ' to custom publisher signals'
+                  )
+              )
               const signalOrigin = {
                 ...DEFAULT_NEW_CUSTOM_SIGNAL,
                 id: `custom-signal-${slugify(values.title.toLowerCase())}-${
-                  props.signalSettings.length + 1
+                    props.signalSettings.length + 1
                 }`,
                 type: 2,
                 title: values.title,
