@@ -1,13 +1,10 @@
 import AssetTeaser from '@shared/AssetTeaser'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Asset } from '@oceanprotocol/lib'
-import { CancelToken } from 'axios'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
 import Loader from '@shared/atoms/Loader'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useWeb3 } from '@context/Web3'
-import { retrieveAsset } from '@utils/aquarius'
 import { useCancelToken } from '@hooks/useCancelToken'
 
 function LoaderArea() {
@@ -36,44 +33,27 @@ export default function AssetList({
   showPagination,
   page,
   totalPages,
-  isLoading,
   onPageChange,
   className,
   noPublisher,
   noDescription,
   noPrice
 }: AssetListProps): ReactElement {
-  const { accountId } = useWeb3()
-  const [assetsWithPrices, setAssetsWithPrices] =
-    useState<AssetExtended[]>(assets)
-  const [loading, setLoading] = useState<boolean>(isLoading)
-  const isMounted = useIsMounted()
-  const newCancelToken = useCancelToken()
-
-  useEffect(() => {
-    if (!assets || !assets.length) return
-
-    setAssetsWithPrices(assets as AssetExtended[])
-    setLoading(false)
-  }, [assets, isMounted, accountId, newCancelToken])
-
-  // // This changes the page field inside the query
+  // This changes the page field inside the query
   function handlePageChange(selected: number) {
     onPageChange(selected + 1)
   }
 
   const styleClasses = `${styles.assetList} ${className || ''}`
 
-  return loading ? (
-    <LoaderArea />
-  ) : (
+  return (
     <>
       <div className={styleClasses}>
-        {assetsWithPrices?.length > 0 ? (
-          assetsWithPrices?.map((assetWithPrice) => (
+        {assets?.length > 0 ? (
+          assets?.map((asset) => (
             <AssetTeaser
-              asset={assetWithPrice}
-              key={assetWithPrice.id}
+              asset={asset}
+              key={asset.id}
               noPublisher={noPublisher}
               noDescription={noDescription}
               noPrice={noPrice}

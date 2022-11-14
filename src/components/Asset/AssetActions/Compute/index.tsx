@@ -409,12 +409,7 @@ export default function Compute({
             state="info"
           />
         ) : (
-          <Price
-            accessDetails={asset?.accessDetails}
-            orderPriceAndFees={datasetOrderPriceAndFees}
-            conversion
-            size="large"
-          />
+          <Price price={asset?.stats.price} conversion size="large" />
         )}
       </div>
 

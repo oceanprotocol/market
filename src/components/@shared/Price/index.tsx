@@ -1,31 +1,32 @@
 import React, { ReactElement } from 'react'
 import PriceUnit from './PriceUnit'
 
+interface Price {
+  value: number
+  tokenSymbol?: string
+  tokenAddress?: string
+}
+
 export default function Price({
-  accessDetails,
-  orderPriceAndFees,
+  price,
   className,
   size,
   conversion
 }: {
-  accessDetails: AccessDetails
-  orderPriceAndFees?: OrderPriceAndFees
+  price: Price
   className?: string
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
-  const isSupported =
-    accessDetails?.type === 'fixed' || accessDetails?.type === 'free'
-  const price = `${orderPriceAndFees?.price || accessDetails?.price}`
+  console.log('price.value', price.value)
 
-  return isSupported ? (
+  return price.value ? (
     <PriceUnit
       price={Number(price)}
-      symbol={accessDetails.baseToken?.symbol}
+      symbol={price.tokenSymbol}
       className={className}
       size={size}
       conversion={conversion}
-      type={accessDetails.type}
     />
   ) : null
 }

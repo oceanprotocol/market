@@ -24,12 +24,13 @@ export default function AssetTeaser({
   noDescription,
   noPrice
 }: AssetTeaserProps): ReactElement {
+  console.log(asset)
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
-  const { orders, allocated } = asset.stats
+  const { orders, allocated, price } = asset.stats
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
   const { locale } = useUserPreferences()
 
@@ -69,7 +70,7 @@ export default function AssetTeaser({
               {isUnsupportedPricing || !asset.services.length ? (
                 <strong>No pricing schema available</strong>
               ) : (
-                <Price accessDetails={asset.accessDetails} size="small" />
+                <Price price={price} size="small" />
               )}
             </div>
           )}
