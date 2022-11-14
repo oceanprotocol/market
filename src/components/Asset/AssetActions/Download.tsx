@@ -48,6 +48,7 @@ export default function Download({
   const [isOrderDisabled, setIsOrderDisabled] = useState(false)
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+  const [retry, setRetry] = useState<boolean>(false)
 
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
@@ -155,9 +156,10 @@ export default function Download({
       }
     } catch (error) {
       LoggerInstance.error(error)
+      setRetry(true)
       const message = isOwned
         ? 'Failed to download file!'
-        : 'An error occurred. Check console for more information.'
+        : 'An error occurred, please retry. Check console for more information.'
       toast.error(message)
     }
     setIsLoading(false)
@@ -181,6 +183,7 @@ export default function Download({
       isConsumable={asset.accessDetails?.isPurchasable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
+      retry={retry}
     />
   )
 
