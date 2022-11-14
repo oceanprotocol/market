@@ -1,19 +1,7 @@
 import AssetTeaser from '@shared/AssetTeaser'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
-import Loader from '@shared/atoms/Loader'
-import { useIsMounted } from '@hooks/useIsMounted'
-import { useWeb3 } from '@context/Web3'
-import { useCancelToken } from '@hooks/useCancelToken'
-
-function LoaderArea() {
-  return (
-    <div className={styles.loaderWrap}>
-      <Loader />
-    </div>
-  )
-}
 
 export declare type AssetListProps = {
   assets: AssetExtended[]
