@@ -52,13 +52,12 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
       {
         valid: true,
         url: 'https://hello.com',
-        type: 'url',
         contentType: 'text/html',
         contentLength: 100
       }
     ])
 
-    render(<FilesInput form={mockForm} field={mockField} {...props} />)
+    render(<FilesInput form={mockForm} {...props} />)
     expect(screen.getByText('Validate')).toBeInTheDocument()
     fireEvent.click(screen.getByText('Validate'))
 
@@ -68,14 +67,13 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
     expect(mockHelpers.setValue).toHaveBeenCalled()
   })
 
-  it('renders fileinfo when file url is valid', () => {
+  it('renders fileinfo when file is valid', () => {
     ;(useField as jest.Mock).mockReturnValue([
       {
         value: [
           {
             valid: true,
             url: 'https://hello.com',
-            type: 'url',
             contentType: 'text/html',
             contentLength: 100
           }
@@ -84,50 +82,8 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
       mockMeta,
       mockHelpers
     ])
-    render(<FilesInput {...props} field={mockField} />)
+    render(<FilesInput {...props} />)
     expect(screen.getByText('https://hello.com')).toBeInTheDocument()
-  })
-
-  it('renders fileinfo when ipfs is valid', () => {
-    ;(useField as jest.Mock).mockReturnValue([
-      {
-        value: [
-          {
-            valid: true,
-            hash: 'bafkreicxccbk4blsx5qtovqfgsuutxjxom47dvyzyz3asi2ggjg5ipwlc4',
-            type: 'ipfs',
-            contentLength: '40492',
-            contentType: 'text/csv',
-            index: 0
-          }
-        ]
-      },
-      mockMeta,
-      mockHelpers
-    ])
-    render(<FilesInput {...props} field={mockField} />)
-    expect(screen.getByText('✓ URL confirmed')).toBeInTheDocument()
-  })
-
-  it('renders fileinfo when arweave is valid', () => {
-    ;(useField as jest.Mock).mockReturnValue([
-      {
-        value: [
-          {
-            valid: true,
-            transactionId: 'T6NL8Zc0LCbT3bF9HacAGQC4W0_hW7b3tXbm8OtWtlA',
-            type: 'arweave',
-            contentLength: '57043',
-            contentType: 'image/jpeg',
-            index: 0
-          }
-        ]
-      },
-      mockMeta,
-      mockHelpers
-    ])
-    render(<FilesInput {...props} field={mockField} />)
-    expect(screen.getByText('✓ URL confirmed')).toBeInTheDocument()
   })
 
   it('renders fileinfo without contentType', () => {
@@ -144,7 +100,7 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
       mockMeta,
       mockHelpers
     ])
-    render(<FilesInput {...props} field={mockField} />)
+    render(<FilesInput {...props} />)
   })
 
   it('renders fileinfo placeholder when hideUrl is passed', () => {
@@ -161,7 +117,7 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
       mockMeta,
       mockHelpers
     ])
-    render(<FilesInput {...props} field={mockField} />)
+    render(<FilesInput {...props} />)
     expect(
       screen.getByText('https://oceanprotocol/placeholder')
     ).toBeInTheDocument()
