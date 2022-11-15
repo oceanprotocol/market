@@ -4,4 +4,5 @@
 
 .assets {
   margin-top: calc(var(--spacer) / 3);
+  padding-bottom: 3rem;
 }
