@@ -7,10 +7,13 @@ import {
   ComputeAlgorithm,
   DDO,
   Service,
-  ProviderInstance,
+  // ProviderInstance,
   ComputeEnvironment,
   ComputeJob
 } from '@oceanprotocol/lib'
+
+import { ProviderInstance } from './providerUpdated'
+
 import { CancelToken } from 'axios'
 import { gql } from 'urql'
 import {

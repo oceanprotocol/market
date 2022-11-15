@@ -157,7 +157,7 @@ export default function FormStartCompute({
       setSelectedClaim(algorithmAsset)
     }
     fetchClaimAssetExtended()
-  }, [values.algorithm, accountId, isConsumable])
+  }, [values.claim, accountId, isConsumable])
 
   //
   // Set price for calculation output

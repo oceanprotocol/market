@@ -1,10 +1,10 @@
 import React, { useState, ReactElement, useEffect } from 'react'
+import { ProviderInstance } from '@utils/providerUpdated'
 import {
   Asset,
   DDO,
   FileInfo,
   Datatoken,
-  ProviderInstance,
   ComputeAsset,
   ZERO_ADDRESS,
   ComputeEnvironment,
@@ -348,6 +348,14 @@ export default function Compute({
         documentId: selectedAlgorithmAsset.id,
         serviceId: selectedAlgorithmAsset.services[0].id
       }
+
+      console.log('job starting')
+      console.log(selectedClaimAsset)
+      const computeClaim: ComputeAlgorithm = {
+        documentId: selectedClaimAsset.id,
+        serviceId: null
+      }
+
       const allowed = await isOrderable(
         asset,
         computeService.id,
@@ -361,7 +369,7 @@ export default function Compute({
         )
 
       await initPriceAndFees()
-      await setMetaForClaimNFT()
+      // await setMetaForClaimNFT()
 
       setComputeStatusText(
         getComputeFeedback(
@@ -420,6 +428,7 @@ export default function Compute({
         computeEnv?.id,
         computeAsset,
         computeAlgorithm,
+        computeClaim,
         newAbortController(),
         null,
         output
