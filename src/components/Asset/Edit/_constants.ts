@@ -1,7 +1,6 @@
-import { Metadata, ServiceComputeOptions, Datatoken } from '@oceanprotocol/lib'
+import { Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { secondsToString } from '@utils/ddo'
 import { ComputeEditForm, MetadataEditForm } from './_types'
-import Web3 from 'web3'
 
 export function getInitialValues(
   metadata: Metadata,
