@@ -1,11 +1,12 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import { Formik } from 'formik'
 import {
   LoggerInstance,
   Metadata,
   FixedRateExchange,
   Asset,
-  Service
+  Service,
+  Datatoken
 } from '@oceanprotocol/lib'
 import { validationSchema } from './_validation'
 import { getInitialValues } from './_constants'
@@ -36,9 +37,29 @@ export default function Edit({
   const { accountId, web3 } = useWeb3()
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
+  const [paymentCollector, setPaymentCollector] = useState<string>()
   const [error, setError] = useState<string>()
   const isComputeType = asset?.services[0]?.type === 'compute'
   const hasFeedback = error || success
+
+  useEffect(() => {
+    async function getInitialPaymentCollector() {
+      let paymentCollector
+      try {
+        console.log('owner', asset?.nft.owner)
+        const datatoken = new Datatoken(web3)
+        console.log('datatoken', datatoken)
+        paymentCollector = await datatoken.getPaymentCollector(
+          asset?.datatokens[0].address
+        )
+        console.log('paymentCollector', paymentCollector)
+        setPaymentCollector(paymentCollector)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getInitialPaymentCollector()
+  }, [asset])
 
   async function updateFixedPrice(newPrice: string) {
     const config = getOceanConfig(asset.chainId)
@@ -145,10 +166,10 @@ export default function Edit({
     <Formik
       enableReinitialize
       initialValues={getInitialValues(
-        asset?.nft.owner,
         asset?.metadata,
         asset?.services[0]?.timeout,
-        asset?.accessDetails?.price
+        asset?.accessDetails?.price,
+        paymentCollector
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {

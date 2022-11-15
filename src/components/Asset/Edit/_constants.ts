@@ -1,18 +1,14 @@
-import {
-  Metadata,
-  ServiceComputeOptions,
-  getPaymentCollector
-} from '@oceanprotocol/lib'
+import { Metadata, ServiceComputeOptions, Datatoken } from '@oceanprotocol/lib'
 import { secondsToString } from '@utils/ddo'
 import { ComputeEditForm, MetadataEditForm } from './_types'
+import Web3 from 'web3'
 
-export async function getInitialValues(
-  owner: string,
+export function getInitialValues(
   metadata: Metadata,
   timeout: number,
-  price: string
-): Promise<Partial<MetadataEditForm>> {
-  const paymentCollector = await getPaymentCollector(owner)
+  price: string,
+  paymentCollector: string
+): Partial<MetadataEditForm> {
   return {
     name: metadata?.name,
     description: metadata?.description,
