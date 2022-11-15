@@ -12,12 +12,6 @@ function getLocalAddresses() {
   return data.development
 }
 
-fs.readFileSync('.env', 'utf8', function (err, data) {
-  if (err) console.log('read error', err)
-  // Display the file content
-  console.log('read file data: ', data)
-})
-
 const addresses = getLocalAddresses()
 const envVars = []
 envVars.push(`NEXT_PUBLIC_NFT_FACTORY_ADDRESS='${addresses.ERC721Factory}'`)
@@ -41,6 +35,6 @@ envVars.push(`NEXT_RBAC_URL='http://127.0.0.1:3000'`)
 var stream = fs.createWriteStream('.env', { flags: 'a' })
 
 envVars.forEach((envVar) => {
-  stream.write(envVar + '\n')
+  stream.write('\n' + envVar)
 })
 stream.end()
