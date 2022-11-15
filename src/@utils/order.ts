@@ -3,6 +3,8 @@ import {
   approve,
   approveWei,
   Datatoken,
+  Dispenser,
+  FixedRateExchange,
   FreOrderParams,
   LoggerInstance,
   OrderParams,
@@ -83,22 +85,6 @@ export async function order(
   switch (asset.accessDetails?.type) {
     case 'fixed': {
       // this assumes all fees are in ocean
-      const txApprove = await approve(
-        web3,
-        config,
-        accountId,
-        asset.accessDetails.baseToken.address,
-        asset.accessDetails.datatoken.address,
-        await amountToUnits(
-          web3,
-          asset?.accessDetails?.baseToken?.address,
-          orderPriceAndFees.price
-        ),
-        false
-      )
-      if (!txApprove) {
-        return
-      }
 
       const freParams = {
         exchangeContract: config.fixedRateExchangeAddress,
@@ -109,23 +95,96 @@ export async function order(
         swapMarketFee: consumeMarketFixedSwapFee,
         marketFeeAddress
       } as FreOrderParams
-      const tx = await datatoken.buyFromFreAndOrder(
-        asset.accessDetails.datatoken.address,
-        accountId,
-        orderParams,
-        freParams
-      )
 
-      return tx
+      if (asset.accessDetails.templateId === 1) {
+        // buy datatoken
+        const txApprove = await approve(
+          web3,
+          config,
+          accountId,
+          asset.accessDetails.baseToken.address,
+          config.fixedRateExchangeAddress,
+          await amountToUnits(
+            web3,
+            asset?.accessDetails?.baseToken?.address,
+            orderPriceAndFees.price
+          ),
+          false
+        )
+        if (!txApprove) {
+          return
+        }
+        const fre = new FixedRateExchange(config.fixedRateExchangeAddress, web3)
+        const freTx = await fre.buyDatatokens(
+          accountId,
+          asset.accessDetails?.addressOrId,
+          '1',
+          orderPriceAndFees.price,
+          marketFeeAddress,
+          consumeMarketFixedSwapFee
+        )
+
+        return await datatoken.startOrder(
+          asset.accessDetails.datatoken.address,
+          accountId,
+          orderParams.consumer,
+          orderParams.serviceIndex,
+          orderParams._providerFee,
+          orderParams._consumeMarketFee
+        )
+      }
+      if (asset.accessDetails.templateId === 2) {
+        const txApprove = await approve(
+          web3,
+          config,
+          accountId,
+          asset.accessDetails.baseToken.address,
+          asset.accessDetails.datatoken.address,
+          await amountToUnits(
+            web3,
+            asset?.accessDetails?.baseToken?.address,
+            orderPriceAndFees.price
+          ),
+          false
+        )
+        if (!txApprove) {
+          return
+        }
+        return await datatoken.buyFromFreAndOrder(
+          asset.accessDetails.datatoken.address,
+          accountId,
+          orderParams,
+          freParams
+        )
+      }
+      break
     }
     case 'free': {
-      const tx = await datatoken.buyFromDispenserAndOrder(
-        asset.services[0].datatokenAddress,
-        accountId,
-        orderParams,
-        config.dispenserAddress
-      )
-      return tx
+      if (asset.accessDetails.templateId === 1) {
+        const dispenser = new Dispenser(config.dispenserAddress, web3)
+        const dispenserTx = await dispenser.dispense(
+          asset.accessDetails?.datatoken.address,
+          accountId,
+          '1',
+          accountId
+        )
+        return await datatoken.startOrder(
+          asset.accessDetails.datatoken.address,
+          accountId,
+          orderParams.consumer,
+          orderParams.serviceIndex,
+          orderParams._providerFee,
+          orderParams._consumeMarketFee
+        )
+      }
+      if (asset.accessDetails.templateId === 2) {
+        return await datatoken.buyFromDispenserAndOrder(
+          asset.services[0].datatokenAddress,
+          accountId,
+          orderParams,
+          config.dispenserAddress
+        )
+      }
     }
   }
 }
