@@ -9,7 +9,7 @@ import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
@@ -75,7 +75,7 @@ export default function FormStartCompute({
   retry: boolean
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
-  const { accountId, balance } = useWeb3()
+  const { accountId, balance, isSupportedOceanNetwork } = useWeb3()
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
@@ -98,7 +98,7 @@ export default function FormStartCompute({
   }
 
   useEffect(() => {
-    if (!values.algorithm || !accountId || !isConsumable) return
+    if (!values.algorithm || !isConsumable) return
 
     async function fetchAlgorithmAssetExtended() {
       const algorithmAsset = getAlgorithmAsset(values.algorithm)
@@ -106,7 +106,7 @@ export default function FormStartCompute({
         algorithmAsset.chainId,
         algorithmAsset.services[0].datatokenAddress,
         algorithmAsset.services[0].timeout,
-        accountId
+        accountId || ZERO_ADDRESS // if user is not connected, use ZERO_ADDRESS as accountId
       )
       const extendedAlgoAsset: AssetExtended = {
         ...algorithmAsset,
@@ -198,15 +198,20 @@ export default function FormStartCompute({
     }
     setTotalPrices(totalPrices)
   }, [
-    asset?.accessDetails,
-    selectedAlgorithmAsset?.accessDetails,
+    asset,
     hasPreviousOrder,
     hasDatatoken,
     hasPreviousOrderSelectedComputeAsset,
     hasDatatokenSelectedComputeAsset,
     datasetOrderPriceAndFees,
     algoOrderPriceAndFees,
-    providerFeeAmount
+    providerFeeAmount,
+    isAssetNetwork,
+    selectedAlgorithmAsset?.accessDetails,
+    datasetOrderPrice,
+    algoOrderPrice,
+    algorithmSymbol,
+    datasetSymbol
   ])
 
   useEffect(() => {
@@ -216,12 +221,13 @@ export default function FormStartCompute({
         setIsBalanceSufficient(false)
         return
       }
+
       // if one comparison of baseTokenBalance and token price comparison is false then the state will be false
       setIsBalanceSufficient(
-        isBalanceSufficient && compareAsBN(baseTokenBalance, `${price.value}`)
+        baseTokenBalance && compareAsBN(baseTokenBalance, `${price.value}`)
       )
     })
-  }, [balance, dtBalance, datasetSymbol, algorithmSymbol])
+  }, [balance, dtBalance, datasetSymbol, algorithmSymbol, totalPrices])
 
   return (
     <Form className={styles.form}>
@@ -295,6 +301,7 @@ export default function FormStartCompute({
         isAlgorithmConsumable={
           selectedAlgorithmAsset?.accessDetails?.isPurchasable
         }
+        isSupportedOceanNetwork={isSupportedOceanNetwork}
         hasProviderFee={providerFeeAmount && providerFeeAmount !== '0'}
         retry={retry}
       />
