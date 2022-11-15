@@ -71,6 +71,7 @@
         "name": "paymentCollector",
         "label": "Payment Collector Address",
         "placeholder": "e.g. 0X123ABC...",
+        "help": "This address will receive the revenue from all sales. More info available in our [docs](TODO: Update docs + Add link here).",
         "required": false
       }
     ]
