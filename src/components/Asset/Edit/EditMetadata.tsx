@@ -46,20 +46,17 @@ export default function Edit({
     async function getInitialPaymentCollector() {
       let paymentCollector
       try {
-        console.log('owner', asset?.nft.owner)
         const datatoken = new Datatoken(web3)
-        console.log('datatoken', datatoken)
         paymentCollector = await datatoken.getPaymentCollector(
           asset?.datatokens[0].address
         )
-        console.log('paymentCollector', paymentCollector)
         setPaymentCollector(paymentCollector)
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
     getInitialPaymentCollector()
-  }, [asset])
+  }, [asset, web3])
 
   async function updateFixedPrice(newPrice: string) {
     const config = getOceanConfig(asset.chainId)
@@ -101,6 +98,15 @@ export default function Edit({
       asset?.accessDetails?.type === 'fixed' &&
         values.price !== asset.accessDetails.price &&
         (await updateFixedPrice(values.price))
+
+      if (values.paymentCollector !== paymentCollector) {
+        const datatoken = new Datatoken(web3)
+        await datatoken.setPaymentCollector(
+          asset?.datatokens[0].address,
+          accountId,
+          values.paymentCollector
+        )
+      }
 
       if (values.files[0]?.url) {
         const file = {
