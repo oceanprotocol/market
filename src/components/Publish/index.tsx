@@ -133,6 +133,9 @@ export default function PublishPage({
         erc721Address
       )
 
+      // add custom identifier
+      Object.assign(ddo, { customIdentifier: 'myCustomIdentifier' })
+
       if (!ddo) throw new Error('No DDO received. Please try again.')
 
       setDdo(ddo)
