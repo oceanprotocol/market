@@ -1,12 +1,18 @@
-import { Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
+import {
+  Metadata,
+  ServiceComputeOptions,
+  getPaymentCollector
+} from '@oceanprotocol/lib'
 import { secondsToString } from '@utils/ddo'
 import { ComputeEditForm, MetadataEditForm } from './_types'
 
-export function getInitialValues(
+export async function getInitialValues(
+  owner: string,
   metadata: Metadata,
   timeout: number,
   price: string
-): Partial<MetadataEditForm> {
+): Promise<Partial<MetadataEditForm>> {
+  const paymentCollector = await getPaymentCollector(owner)
   return {
     name: metadata?.name,
     description: metadata?.description,
@@ -15,7 +21,8 @@ export function getInitialValues(
     files: [{ url: '', type: '' }],
     timeout: secondsToString(timeout),
     author: metadata?.author,
-    tags: metadata?.tags
+    tags: metadata?.tags,
+    paymentCollector
   }
 }
 

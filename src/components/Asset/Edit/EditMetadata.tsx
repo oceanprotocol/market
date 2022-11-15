@@ -145,6 +145,7 @@ export default function Edit({
     <Formik
       enableReinitialize
       initialValues={getInitialValues(
+        asset?.nft.owner,
         asset?.metadata,
         asset?.services[0]?.timeout,
         asset?.accessDetails?.price
