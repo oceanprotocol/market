@@ -23,7 +23,7 @@ export default function MetadataFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
 
-  const [field, meta] = useField('metadata.dockerImageCustomChecksum')
+  const [meta] = useField('metadata.dockerImageCustomChecksum')
 
   // BoxSelection component is not a Formik component
   // so we need to handle checked state manually.

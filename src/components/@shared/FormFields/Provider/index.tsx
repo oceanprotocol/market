@@ -16,7 +16,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
   const { chainId } = useWeb3()
   const newCancelToken = useCancelToken()
   const { initialValues, setFieldError } = useFormikContext<FormPublishData>()
-  const [field, meta, helpers] = useField(props.name)
+  const [field, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
 
   async function handleValidation(e: React.SyntheticEvent) {

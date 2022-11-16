@@ -99,6 +99,13 @@ export function useAssetListSignals(
         })
       )
     }
-  }, [signals, dataTokenAddresses])
+  }, [
+    signals,
+    dataTokenAddresses,
+    assetSignalsUrls,
+    signalViewType,
+    datatokensStringsArray,
+    accountId
+  ])
   return { urls, assetSignalOrigins }
 }

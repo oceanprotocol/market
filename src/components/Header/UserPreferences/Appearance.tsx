@@ -33,8 +33,6 @@ export default function Appearance({
     event.target.value === 'Dark' ? darkMode.enable() : darkMode.disable()
   }
 
-  const [history, setHistory] = useState<boolean>()
-
   return (
     <li>
       <div>

@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
 import Input from '@shared/FormInput'
-import styles from './index.module.css'
 
 export default function Debug(): ReactElement {
   const { debug, setDebug } = useUserPreferences()

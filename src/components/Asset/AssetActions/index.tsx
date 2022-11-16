@@ -49,11 +49,10 @@ export default function AssetActions({
 
   // Signals loading logic
   // Get from AssetList component
-  const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>([
+  const [dataTokenAddresses] = useState<string[][]>([
     asset.datatokens.map((data) => data.address)
   ])
-  const { assetSignalOriginItems, signals, assetSignalsUrls } =
-    useSignalContext()
+  const { signals, assetSignalsUrls } = useSignalContext()
   const filterAssetSignals = () => {
     return signals
       .filter((signal) => signal.type === 1)
@@ -189,9 +188,9 @@ export default function AssetActions({
         signalItems={filteredSignals}
         isLoading={isFetchingSignals}
       />
-      {/*{signalItems ? (*/}
-      {/*  <AssetTeaserSignals assetId={asset.id} signalItems={filteredSignals} />*/}
-      {/*) : null}*/}
+      {/* {signalItems ? ( */}
+      {/*  <AssetTeaserSignals assetId={asset.id} signalItems={filteredSignals} /> */}
+      {/* ) : null} */}
       <Web3Feedback
         networkId={asset?.chainId}
         isAssetNetwork={isAssetNetwork}

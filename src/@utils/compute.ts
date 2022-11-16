@@ -290,7 +290,7 @@ export async function getComputeJobs(
   )
 
   let tokenOrders: TokenOrder[] = []
-  results.map((result) =>
+  results.forEach((result) =>
     result.orders.forEach((tokenOrder: TokenOrder) =>
       tokenOrders.push(tokenOrder)
     )

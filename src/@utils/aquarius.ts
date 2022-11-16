@@ -236,7 +236,7 @@ export async function getAssetsFromNftList(
   cancelToken: CancelToken
 ): Promise<Asset[]> {
   try {
-    if (!(nftList.length > 0)) return
+    if (!(nftList.length <= 0)) return
 
     const baseParams = {
       chainIds,

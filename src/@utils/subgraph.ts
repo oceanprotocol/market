@@ -2,23 +2,8 @@ import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
-import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-
-const PreviousOrderQuery = gql`
-  query AssetPreviousOrder($id: String!, $account: String!) {
-    orders(
-      first: 1
-      where: { datatoken: $id, payer: $account }
-      orderBy: createdTimestamp
-      orderDirection: desc
-    ) {
-      createdTimestamp
-      tx
-    }
-  }
-`
 
 const UserTokenOrders = gql`
   query OrdersData($user: String!) {

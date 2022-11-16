@@ -3,7 +3,6 @@ import Input from '@shared/FormInput'
 import React, { ReactElement, useState } from 'react'
 import { getFieldContent } from '../_utils'
 import styles from './Custom.module.css'
-// import contentAsset from '../../../../content/settings/custom.json'
 import Button from '@shared/atoms/Button'
 
 export function Custom(): ReactElement {

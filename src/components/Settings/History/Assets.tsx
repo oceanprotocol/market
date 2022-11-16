@@ -15,7 +15,6 @@ export function Assets({
 }): ReactElement {
   const { values } = useFormikContext<any>()
   const { signals } = useUserPreferences()
-  const [checked, setChecked] = useState<boolean>()
   const getSignalPageViewOptions = () => {
     return (
       signals
