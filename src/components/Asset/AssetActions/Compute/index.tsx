@@ -157,7 +157,6 @@ export default function Compute({
         accountId,
         chainIds,
         null,
-        1,
         null,
         null
       )
@@ -167,7 +166,11 @@ export default function Compute({
 
       // If it does not exist create here
       const metaNFT = result.results[0]
+      console.log('----------------------------Meta NFT-------------')
       console.log(metaNFT)
+      console.log(metaNFT.nft.owner)
+      console.log(metaNFT.DID)
+      console.log('----------------------------Meta NFT end-------------')
 
       metaNFT.metadata.description += getCommentString()
       LoggerInstance.log(

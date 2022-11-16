@@ -494,9 +494,11 @@ export async function getPublishedMeta(
 ): Promise<PagedAssets> {
   const filters: FilterTerm[] = []
 
+  debugger
   // filters.push(getFilterTerm('metadata.desc', did))
   filters.push(getFilterTerm('metadata.type', 'meta'))
-  // filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
+  if (accountId != null)
+    filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
 
   const baseQueryParams = {
     chainIds,
