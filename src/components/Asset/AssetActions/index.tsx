@@ -189,9 +189,9 @@ export default function AssetActions({
         signalItems={filteredSignals}
         isLoading={isFetchingSignals}
       />
-      {/*{signalItems ? (*/}
-      {/*  <AssetTeaserSignals assetId={asset.id} signalItems={filteredSignals} />*/}
-      {/*) : null}*/}
+      {/* {signalItems ? ( */}
+      {/*  <AssetTeaserSignals assetId={asset.id} signalItems={filteredSignals} /> */}
+      {/* ) : null} */}
       <Web3Feedback
         networkId={asset?.chainId}
         isAssetNetwork={isAssetNetwork}

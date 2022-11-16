@@ -1,15 +1,15 @@
-import React, {ReactElement, useState} from 'react'
-import {Tabs as ReactTabs} from 'react-tabs'
+import React, { ReactElement, useState } from 'react'
+import { Tabs as ReactTabs } from 'react-tabs'
 import styles from './index.module.css'
 import DetailsArrow from '@images/details-arrow.svg'
 import UtuIcon from '@images/utu-logo.svg'
 import Source from '@images/source.svg'
 import Loader from '@shared/atoms/Loader'
-import {useSignalContext} from '@context/Signals'
-import {getURLParams} from '@hooks/useSignals/_util'
+import { useSignalContext } from '@context/Signals'
+import { getURLParams } from '@hooks/useSignals/_util'
 // @ts-ignore
-import {AssetExtended} from '../../../../@types/AssetExtended'
-import {SignalOriginItem} from '@context/Signals/_types'
+import { AssetExtended } from '../../../../@types/AssetExtended'
+import { SignalOriginItem } from '@context/Signals/_types'
 
 export interface TabsProps {
   className?: string
@@ -67,7 +67,7 @@ export default function AssetSignals({
                   </div>
                 </div>
               ) : (
-                  <LoaderArea/>
+                <LoaderArea />
               )}
             </li>
           )
@@ -77,23 +77,23 @@ export default function AssetSignals({
         console.log('one item in list')
         console.log(item)
         return item.title ? (
-            <li key={index}>
-              {item.signals ? (
-                  <div className={styles.assetListTitle}>
-                    <div className={styles.assetListTitleName}>
-                      <p>
-                        <UtuIcon className={styles.assetListIcon}/>
-                      </p>
-                      <p> {item.title} </p>
-                    </div>
+          <li key={index}>
+            {item.signals ? (
+              <div className={styles.assetListTitle}>
+                <div className={styles.assetListTitleName}>
+                  <p>
+                    <UtuIcon className={styles.assetListIcon} />
+                  </p>
+                  <p> {item.title} </p>
+                </div>
                 <div className={styles.assetListTitleNumber}>
                   {item.signals.length > 0 ? item.signals[0].value : 'N/A'}
                 </div>
-                  </div>
-              ) : (
-                  <LoaderArea/>
-              )}
-            </li>
+              </div>
+            ) : (
+              <LoaderArea />
+            )}
+          </li>
         ) : null
       }
     })

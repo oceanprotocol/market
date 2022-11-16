@@ -3,7 +3,14 @@ module.exports = (phase, { defaultConfig }) => {
    * @type {import('next').NextConfig}
    */
   const nextConfig = {
+    eslint: {
+      // Warning: This allows production builds to successfully complete even if
+      // your project has ESLint errors.
+      ignoreDuringBuilds: true
+    },
     webpack: (config, options) => {
+      console.log('config.output')
+      console.log(config.output)
       config.module.rules.push(
         {
           test: /\.svg$/,

@@ -168,3 +168,11 @@
   color: var(--font-color-text);
   line-height: 1.2;
 }
+
+.icon {
+  fill: var(--brand-grey-light);
+  transition: 0.2s ease-out;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  margin-right: 0.5rem;
+}

@@ -17,7 +17,7 @@ export default function AssetTeaserSignals({
 }) {
   let itemsList: any[] = []
   if (signalItems.length > 0) {
-    signalItems.forEach((signal, index) => {
+    signalItems.forEach((signal) => {
       if (signal.signals.length >= 1 && signal.signals.length < 4) {
         itemsList.push(
           signal.signals.map((item, index) => (

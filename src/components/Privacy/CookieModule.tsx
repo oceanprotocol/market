@@ -1,5 +1,5 @@
-import React, {ChangeEvent, ReactElement, useEffect, useState} from 'react'
-import {CookieConsentStatus, useConsent} from '@context/CookieConsent'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
+import { CookieConsentStatus, useConsent } from '@context/CookieConsent'
 import InputElement from '@shared/FormInput/InputElement'
 import Markdown from '@shared/Markdown'
 import styles from './CookieModule.module.css'
@@ -26,17 +26,17 @@ export default function CookieModule(props: CookieModuleProps): ReactElement {
     <div className={styles.wrapper}>
       <div className={styles.header}>
         <InputElement
-            type="checkbox"
-            content={''}
-            name={cookieName}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          type="checkbox"
+          content={''}
+          name={cookieName}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
             setChecked(e.target.checked)
           }}
-            checked={
+          checked={
             cookieConsentStatus[cookieName] === CookieConsentStatus.APPROVED
           }
-            options={[title]}
-            size="large"
+          options={[title]}
+          size="large"
         />
       </div>
       <Markdown text={desc} className={styles.description} />

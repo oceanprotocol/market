@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useRef } from 'react'
+import React, { ReactElement, useRef, useState } from 'react'
 import { Form, Formik } from 'formik'
 import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -14,7 +14,7 @@ import { Steps } from './Steps'
 import { FormPublishData } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import useNftFactory from '@hooks/useNftFactory'
-import { ProviderInstance, LoggerInstance, DDO } from '@oceanprotocol/lib'
+import { DDO, LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
@@ -266,7 +266,6 @@ export default function PublishPage({
 
     if (!_did) {
       const { did } = await publish(values, _ddo, _ddoEncrypted)
-      _did = did
       setDid(did)
     }
   }
