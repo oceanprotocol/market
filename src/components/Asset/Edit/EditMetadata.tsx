@@ -52,7 +52,10 @@ export default function Edit({
         )
         setPaymentCollector(paymentCollector)
       } catch (error) {
-        console.error(error)
+        LoggerInstance.error(
+          '[EditMetadata: getInitialPaymentCollector]',
+          error
+        )
       }
     }
     getInitialPaymentCollector()

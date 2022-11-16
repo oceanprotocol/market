@@ -4,7 +4,7 @@ import styles from './MetaFull.module.css'
 import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
-import { Asset, Datatoken } from '@oceanprotocol/lib'
+import { Asset, Datatoken, LoggerInstance } from '@oceanprotocol/lib'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
   const [paymentCollector, setPaymentCollector] = useState<string>()
@@ -21,7 +21,7 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
         )
         setPaymentCollector(paymentCollector)
       } catch (error) {
-        console.error(error)
+        LoggerInstance.error('[MetaFull: getInitialPaymentCollector]', error)
       }
     }
     getInitialPaymentCollector()
