@@ -59,7 +59,8 @@ export default function SignalAssetTeaser({
     datatokens.map((data: AssetDatatoken) => data.address),
     filterAssetSignals()
   )
-  const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
+  const isUnsupportedPricing =
+    asset?.accessDetaiPolygonIconls?.type === 'NOT_SUPPORTED'
   const { orders, allocated } = asset.stats
   useEffect(() => {
     if (signalItems) {

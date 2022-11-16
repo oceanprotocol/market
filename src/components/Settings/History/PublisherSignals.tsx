@@ -69,14 +69,14 @@ export default function PublisherSignalsTab(props: {
             const publisherId = urlPaths[urlPaths.length - 1]
             setTimeout(() => {
               alert(
-                  JSON.stringify(
-                      'Added ' + values.title + ' to custom publisher signals'
-                  )
+                JSON.stringify(
+                  'Added ' + values.title + ' to custom publisher signals'
+                )
               )
               const signalOrigin = {
                 ...DEFAULT_NEW_CUSTOM_SIGNAL,
                 id: `custom-signal-${slugify(values.title.toLowerCase())}-${
-                    props.signalSettings.length + 1
+                  props.signalSettings.length + 1
                 }`,
                 type: 2,
                 title: values.title,

@@ -90,10 +90,10 @@ export interface SignalOriginItem {
   origin: string
   /**
    * a list of signals retrieved from the given origin
-   * @type {Array<AssetSignalItem>}
+   * @type {AssetSignalItem[]}
    * @memberof SignalOriginItem
    */
-  signals: Array<AssetSignalItem>
+  signals: AssetSignalItem[]
   /**
    * a boolean representing when the signal should be displayed on the list page
    * @type {Boolean}
