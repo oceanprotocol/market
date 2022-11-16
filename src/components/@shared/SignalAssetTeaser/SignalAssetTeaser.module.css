@@ -1,0 +1,70 @@
+.signalLoaderText {
+  padding: calc(var(--spacer) / 8);
+}
+
+.signalContainer {
+  /*composes: box from '@shared/atoms/Box.module.css';*/
+  font-size: var(--font-size-small);
+  min-height: 3rem;
+  color: var(--color-secondary);
+  position: relative;
+  /* for sticking footer to bottom */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0.5rem var(--spacer);
+  background: var(--background-content);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 17px 0 var(--box-shadow-color);
+}
+
+.signal {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.signal > * {
+  padding-right: 1.5rem;
+}
+
+.signalTooltipContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.signalTooltip {
+  min-width: 1.3rem;
+  display: flex;
+  align-items: center;
+}
+
+.signalUnit {
+  display: inline;
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-base);
+  padding: calc(var(--spacer) / 8);
+  color: var(--font-color-text);
+  line-height: 1.2;
+}
+
+.icon {
+  fill: var(--brand-grey-light);
+  transition: 0.2s ease-out;
+  min-width: 1rem;
+  height: 1.4rem;
+  margin-right: 0.5rem;
+}
+
+/* .detailLine {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.networkLine {
+  display: flex;
+  justify-content: flex-end;
+} */

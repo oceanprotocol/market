@@ -55,3 +55,41 @@
   border-bottom: none;
   margin-bottom: 0;
 }
+
+.tokenApprovalList > *,
+.currencyList > * {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.listItemsList > * {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.listItems > * {
+  display: flex;
+  flex-direction: row;
+}
+
+.listItems > * :first-child {
+  width: 500px;
+  display: flex;
+  flex-direction: row;
+}
+
+.listItems > * :first-child > * {
+  width: 5rem;
+  align-items: center;
+}
+
+.listItems:first-child {
+  width: 50rem;
+  margin-right: 10rem;
+}
+
+.listItems:nth-child(2) {
+  width: 20rem;
+}

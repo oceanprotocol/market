@@ -1,6 +1,6 @@
 // import App from "next/app";
 import React, { ReactElement } from 'react'
-import type { AppProps /*, AppContext */ } from 'next/app'
+import type { AppProps } from 'next/app'
 import Web3Provider from '@context/Web3'
 import { UserPreferencesProvider } from '@context/UserPreferences'
 import PricesProvider from '@context/Prices'
@@ -12,6 +12,7 @@ import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../stylesGlobal/styles.css'
 import Decimal from 'decimal.js'
 import MarketMetadataProvider from '@context/MarketMetadata'
+import { SignalsProvider } from '../@context/Signals'
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })
@@ -21,11 +22,13 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
         <UrqlProvider>
           <UserPreferencesProvider>
             <PricesProvider>
-              <ConsentProvider>
-                <App>
-                  <Component {...pageProps} />
-                </App>
-              </ConsentProvider>
+              <SignalsProvider>
+                <ConsentProvider>
+                  <App>
+                    <Component {...pageProps} />
+                  </App>
+                </ConsentProvider>
+              </SignalsProvider>
             </PricesProvider>
           </UserPreferencesProvider>
         </UrqlProvider>

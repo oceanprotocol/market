@@ -1,16 +1,8 @@
-import React, {
-  ChangeEvent,
-  FormEvent,
-  KeyboardEvent,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useState
-} from 'react'
+import React, {ChangeEvent, FormEvent, KeyboardEvent, ReactElement, ReactNode, useEffect, useState} from 'react'
 import InputElement from './InputElement'
 import Label from './Label'
 import styles from './index.module.css'
-import { ErrorMessage, FieldInputProps } from 'formik'
+import {ErrorMessage, FieldInputProps} from 'formik'
 import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
@@ -20,6 +12,7 @@ import FormHelp from './Help'
 const cx = classNames.bind(styles)
 
 export interface InputProps {
+  textVisible?: boolean
   name: string
   label?: string | ReactNode
   placeholder?: string
@@ -32,6 +25,7 @@ export interface InputProps {
   sortOptions?: boolean
   additionalComponent?: ReactElement
   value?: string | number
+  content?: string
   onChange?(
     e:
       | FormEvent<HTMLInputElement>
@@ -92,7 +86,8 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     form,
     field,
     disclaimer,
-    disclaimerValues
+    disclaimerValues,
+    content
   } = props
 
   const isFormikField = typeof field !== 'undefined'
@@ -110,6 +105,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   })
 
   const [disclaimerVisible, setDisclaimerVisible] = useState(true)
+  const [textVisible, setTextVisible] = useState<boolean>(true)
 
   useEffect(() => {
     if (!isFormikField) return
@@ -120,6 +116,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
           props.form?.values[parsedFieldName[0]]?.[parsedFieldName[1]]
         )
       )
+      setTextVisible(textVisible)
     }
   }, [isFormikField, props.form?.values])
 
@@ -136,19 +133,22 @@ export default function Input(props: Partial<InputProps>): ReactElement {
           <Tooltip content={<Markdown text={help} />} />
         )}
       </Label>
-      <InputElement size={size} {...field} {...props} />
-      {help && prominentHelp && <FormHelp>{help}</FormHelp>}
+      <div className="test">
+        <InputElement size={size} {...field} {...props} />
+        {help && prominentHelp && <FormHelp>{help}</FormHelp>}
 
-      {field?.name !== 'files' && isFormikField && hasFormikError && (
-        <div className={styles.error}>
-          <ErrorMessage name={field.name} />
-        </div>
-      )}
+        {field?.name !== 'files' && isFormikField && hasFormikError && (
+          <div className={styles.error}>
+            <ErrorMessage name={field.name} />
+          </div>
+        )}
 
-      {disclaimer && (
-        <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>
-      )}
-      {additionalComponent && additionalComponent}
+        {disclaimer && (
+          <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>
+        )}
+        {additionalComponent && additionalComponent}
+        {textVisible ? <FormHelp>{content}</FormHelp> : null}
+      </div>
     </div>
   )
 }

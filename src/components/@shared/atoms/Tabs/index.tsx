@@ -25,38 +25,42 @@ export default function Tabs({
   showRadio
 }: TabsProps): ReactElement {
   return (
-    <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
-      <div className={styles.tabListContainer}>
-        <TabList className={styles.tabList}>
-          {items.map((item, index) => (
-            <Tab
-              className={styles.tab}
-              key={index}
-              onClick={
-                handleTabChange ? () => handleTabChange(item.title) : null
-              }
-              disabled={item.disabled}
-            >
-              {showRadio ? (
-                <InputRadio
-                  name={item.title}
-                  type="radio"
-                  checked={index === defaultIndex}
-                  options={[item.title]}
-                  readOnly
-                />
-              ) : (
-                item.title
-              )}
-            </Tab>
-          ))}
-        </TabList>
-      </div>
-      <div className={styles.tabContent}>
-        {items.map((item, index) => (
-          <TabPanel key={index}>{item.content}</TabPanel>
-        ))}
-      </div>
-    </ReactTabs>
+    <>
+      <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
+        <div className={styles.tabListContainer}>
+          <TabList className={styles.tabList}>
+            {items.map((item, index) => (
+              <Tab
+                className={styles.tab}
+                key={index}
+                onClick={
+                  handleTabChange ? () => handleTabChange(item.title) : null
+                }
+                disabled={item.disabled}
+              >
+                {showRadio ? (
+                  <InputRadio
+                    name={item.title}
+                    type="radio"
+                    checked={index === defaultIndex}
+                    options={[item.title]}
+                    readOnly
+                  />
+                ) : (
+                  item.title
+                )}
+              </Tab>
+            ))}
+          </TabList>
+          <div className={styles.tabContent}>
+            {items.map((item, index) => (
+              <>
+                <TabPanel key={index}>{item.content}</TabPanel>
+              </>
+            ))}
+          </div>
+        </div>
+      </ReactTabs>
+    </>
   )
 }

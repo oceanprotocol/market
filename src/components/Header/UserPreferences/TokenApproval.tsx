@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
 import Input from '@shared/FormInput'
+import styles from './index.module.css'
 
 export default function TokenApproval(): ReactElement {
   const { infiniteApproval, setInfiniteApproval } = useUserPreferences()
@@ -12,6 +13,7 @@ export default function TokenApproval(): ReactElement {
         help="Use infinite amount when approving tokens in _Use_."
         name="infiniteApproval"
         type="checkbox"
+        content="Use infinite amount when approving tokens in Use, Pool, or Trade"
         options={['Allow infinite amount']}
         defaultChecked={infiniteApproval === true}
         onChange={() => setInfiniteApproval(!infiniteApproval)}
