@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
-import Consume from './Download'
+import Download from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
@@ -16,6 +16,7 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
+import CalicaIntegration from './CalicaIntegration'
 
 export default function AssetActions({
   asset
@@ -136,7 +137,7 @@ export default function AssetActions({
           fileIsLoading={fileIsLoading}
         />
       ) : (
-        <Consume
+        <Download
           asset={asset}
           dtBalance={dtBalance}
           isBalanceSufficient={isBalanceSufficient}
@@ -144,6 +145,7 @@ export default function AssetActions({
           fileIsLoading={fileIsLoading}
         />
       )}
+      <CalicaIntegration />
       <AssetStats />
     </>
   )
