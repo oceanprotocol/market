@@ -489,7 +489,6 @@ export async function getPublishedMeta(
   accountId: string,
   chainIds: number[],
   cancelToken: CancelToken,
-  page?: number,
   accesType?: string,
   did: string
 ): Promise<PagedAssets> {
@@ -497,7 +496,7 @@ export async function getPublishedMeta(
 
   // filters.push(getFilterTerm('metadata.desc', did))
   filters.push(getFilterTerm('metadata.type', 'meta'))
-  filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
+  // filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
 
   const baseQueryParams = {
     chainIds,
@@ -515,8 +514,8 @@ export async function getPublishedMeta(
     },
     ignorePurgatory: true,
     esPaginationOptions: {
-      from: (Number(page) - 1 || 0) * 9,
-      size: 9
+      from: 0,
+      size: 100
     }
   } as BaseQueryParams
 

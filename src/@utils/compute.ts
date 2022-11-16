@@ -189,8 +189,8 @@ export function getQueryStringClaims(
     sort: { sortBy: SortTermOptions.Created },
     filters: [getFilterTerm('metadata.type', 'claims')]
   } as BaseQueryParams
-  algorithmDidList?.length > 0 &&
-    baseParams.filters.push(getFilterTerm('_id', algorithmDidList))
+  // algorithmDidList?.length > 0 &&
+  //   baseParams.filters.push(getFilterTerm('_id', algorithmDidList))
   trustedPublishersList?.length > 0 &&
     baseParams.filters.push(getFilterTerm('nft.owner', trustedPublishersList))
   const query = generateBaseQuery(baseParams)

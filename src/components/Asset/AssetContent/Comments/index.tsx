@@ -14,10 +14,11 @@ export class CommentData {
 
 function getComments(metaAssets: Asset[], mydid: string): CommentData[] {
   const comments: CommentData[] = []
-
+  console.log(mydid)
   for (let i = 0; i < metaAssets?.length; i++) {
     console.log('comments start')
     if (metaAssets[i].metadata.description.includes(mydid)) {
+      console.log(metaAssets[i].metadata.description)
       const lines = metaAssets[i].metadata.description.split(',')
 
       for (let j = 0; j < lines?.length; j++) {
