@@ -18,11 +18,17 @@ import { Steps } from './Steps'
 import { FormPublishData } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import useNftFactory from '@hooks/useNftFactory'
-import { ProviderInstance, LoggerInstance, DDO } from '@oceanprotocol/lib'
+import {
+  ProviderInstance,
+  LoggerInstance,
+  DDO,
+  Asset
+} from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
+import { getPublishedMeta } from '@utils/aquarius'
 
 // TODO: restore FormikPersist, add back clear form action
 // const formName = 'ocean-publish-form'
@@ -38,6 +44,7 @@ export default function PublishPage({
   const scrollToRef = useRef()
   const nftFactory = useNftFactory()
   const newAbortController = useAbortController()
+  const { chainIds } = useUserPreferences()
 
   // This `feedback` state is auto-synced into Formik context under `values.feedback`
   // for use in other components. Syncing defined in ./Steps.tsx child component.
@@ -275,6 +282,29 @@ export default function PublishPage({
     }
   }
 
+  async function doesMetaNFTExist(): Promise<boolean> {
+    try {
+      debugger
+
+      const result = await getPublishedMeta(
+        accountId,
+        chainIds,
+        null,
+        null,
+        null
+      )
+
+      console.log(result.results)
+      if (result.results != null && result.results.length > 0) {
+        LoggerInstance.debug('Meta NFT Already exists.')
+        return true
+      } else return false
+    } catch (error) {
+      LoggerInstance.error('Error doesMetaNFTExist', error.message)
+      return false
+    }
+  }
+
   return isInPurgatory && purgatoryData ? null : (
     <Formik
       initialValues={initialValues}
@@ -282,20 +312,23 @@ export default function PublishPage({
       onSubmit={async (values) => {
         // kick off publishing
         await handleSubmit(values)
-        console.log('Hi Umesh')
+        console.log('Hi Umesh - Submitting for meta NFT')
         debugger
-        let comment =
-          'did:op:41e9e6709e9d190144cc54ced79ad94a55e4a82b867b56dccd0221666518f6cf | This is a comment,'
 
-        comment +=
-          'did:op:1bdde707851d1b2a67af49909c9cf78e675df07f3cb74007c4bbfbb09c9cbcb9 | This is another comment'
-        values.metadata.nft.description = comment
-        values.metadata.nft.name = 'CommentNFT'
-        values.metadata.name = 'CommentNFT'
-        values.metadata.description = comment
-        values.metadata.type = 'meta'
+        const val = await doesMetaNFTExist()
 
-        await handleSubmit(values)
+        // If meta nft does not exist create it with same values
+
+        if (val !== true) {
+          LoggerInstance.debug('Creating Meta NFT')
+          values.metadata.nft.description = ''
+          values.metadata.nft.name = 'Meta NFT'
+          values.metadata.name = 'Meta NFT'
+          values.metadata.description = ''
+          values.metadata.type = 'meta'
+
+          await handleSubmit(values)
+        }
       }}
     >
       {({ values }) => (
