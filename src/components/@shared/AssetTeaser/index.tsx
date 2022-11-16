@@ -24,7 +24,6 @@ export default function AssetTeaser({
   noDescription,
   noPrice
 }: AssetTeaserProps): ReactElement {
-  console.log(asset)
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
@@ -33,6 +32,7 @@ export default function AssetTeaser({
   const { orders, allocated, price } = asset.stats
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
   const { locale } = useUserPreferences()
+  console.log({ price })
 
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
@@ -70,7 +70,7 @@ export default function AssetTeaser({
               {isUnsupportedPricing || !asset.services.length ? (
                 <strong>No pricing schema available</strong>
               ) : (
-                <Price price={price} size="small" />
+                <Price price={price} assetId={asset.id} size="small" />
               )}
             </div>
           )}

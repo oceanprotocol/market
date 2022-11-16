@@ -20,6 +20,7 @@ export default function PriceUnit({
   decimals?: string
 }): ReactElement {
   const { locale } = useUserPreferences()
+  console.log('Unit Price', price)
 
   return (
     <div className={`${styles.price} ${styles[size]} ${className}`}>
