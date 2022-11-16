@@ -9,7 +9,6 @@ export default function ToolTipSignals({
   signalItems: SignalOriginItem[]
 }) {
   if (!signalItems || signalItems.length < 1) return
-  console.log(signalItems)
   return (
     <ol className={styles.assets}>
       {signalItems.map((signal, index) => {
