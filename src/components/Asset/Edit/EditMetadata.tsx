@@ -44,11 +44,10 @@ export default function Edit({
 
   useEffect(() => {
     async function getInitialPaymentCollector() {
-      let paymentCollector
       try {
         const datatoken = new Datatoken(web3)
         setPaymentCollector(
-          await datatoken.getPaymentCollector(ddo.datatokens[0].address)
+          await datatoken.getPaymentCollector(asset?.datatokens[0].address)
         )
       } catch (error) {
         LoggerInstance.error(
