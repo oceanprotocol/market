@@ -3,6 +3,7 @@ import { assetAquarius } from './assetAquarius'
 export const asset: AssetExtended = {
   ...assetAquarius,
   accessDetails: {
+    templateId: 1,
     publisherMarketOrderFee: '0',
     type: 'fixed',
     addressOrId:
