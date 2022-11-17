@@ -21,6 +21,14 @@ export default function FilesInput(props: InputProps): ReactElement {
         ? props.form?.values?.services[0].providerUrl.url
         : asset.services[0].serviceEndpoint
       setIsLoading(true)
+
+      // TODO: handled on provider
+      if (url.includes('drive.google')) {
+        throw Error(
+          'Google Drive is not a supported hosting service. Please use an alternative.'
+        )
+      }
+
       const checkedFile = await getFileUrlInfo(url, providerUrl)
 
       // error if something's not right from response
