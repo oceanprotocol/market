@@ -47,10 +47,9 @@ export default function Edit({
       let paymentCollector
       try {
         const datatoken = new Datatoken(web3)
-        paymentCollector = await datatoken.getPaymentCollector(
-          asset?.datatokens[0].address
+        setPaymentCollector(
+          await datatoken.getPaymentCollector(ddo.datatokens[0].address)
         )
-        setPaymentCollector(paymentCollector)
       } catch (error) {
         LoggerInstance.error(
           '[EditMetadata: getInitialPaymentCollector]',

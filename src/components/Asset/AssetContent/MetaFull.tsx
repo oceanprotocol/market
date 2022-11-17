@@ -13,13 +13,11 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
 
   useEffect(() => {
     async function getInitialPaymentCollector() {
-      let paymentCollector
       try {
         const datatoken = new Datatoken(web3)
-        paymentCollector = await datatoken.getPaymentCollector(
-          ddo.datatokens[0].address
+        setPaymentCollector(
+          await datatoken.getPaymentCollector(ddo.datatokens[0].address)
         )
-        setPaymentCollector(paymentCollector)
       } catch (error) {
         LoggerInstance.error('[MetaFull: getInitialPaymentCollector]', error)
       }
