@@ -11,7 +11,7 @@ import {
 import { SvgWaves } from './SvgWaves'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-core'
-import { customProviderUrl } from 'app.config'
+import { customProviderUrl } from '../../app.config'
 
 // https://docs.opensea.io/docs/metadata-standards
 export interface NftMetadata {

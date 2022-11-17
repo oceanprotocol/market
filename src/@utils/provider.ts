@@ -10,7 +10,7 @@ import {
   UrlFile
 } from '@oceanprotocol/lib'
 // if customProviderUrl is set, we need to call provider using this custom endpoint
-import { customProviderUrl } from 'app.config'
+import { customProviderUrl } from '../../app.config'
 import Web3 from 'web3'
 import { getValidUntilTime } from './compute'
 
