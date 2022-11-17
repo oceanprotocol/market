@@ -43,7 +43,7 @@ export default function SignalAssetTeaser({
 }: AssetTeaserProps): ReactElement {
   const { datatokens } = asset
   const { locale } = useUserPreferences()
-  const { signals, assetSignalsUrls } = useSignalContext()
+  const { signals } = useSignalContext()
   const filterAssetSignals = () => {
     return signals
       .filter((signal) => signal.type === 1)

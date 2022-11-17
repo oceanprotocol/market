@@ -38,6 +38,13 @@
 .select [class$='menu'] {
   background-color: var(--background-highlight);
   border-radius: var(--border-radius);
+  background-color: var(--background-content);
+  margin-top: -2px;
+  border: 1px solid var(--font-color-text);
+  border-top-color: var(--border-color);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  box-shadow: none;
 }
 
 .select [class$='option'] {
@@ -76,16 +83,6 @@
   font-weight: var(--font-weight-base);
   transition: 0.2s ease-out;
   opacity: 0.7;
-}
-
-.select [class$='menu'] {
-  background-color: var(--background-content);
-  margin-top: -2px;
-  border: 1px solid var(--font-color-text);
-  border-top-color: var(--border-color);
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  box-shadow: none;
 }
 
 .select [class$='menu'] [class$='option']:hover,

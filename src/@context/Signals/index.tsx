@@ -46,8 +46,7 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
   const [origin, setOrigin] = useState<string[]>(
     signalUrls[0] ? signalUrls : ['']
   )
-  const { signals, addSignalSetting, removeSignalSetting } =
-    useUserPreferences()
+  const { signals } = useUserPreferences()
   const [assetSignalOriginItems, setAssetSignalOriginItems] =
     useState<SignalOriginItem[]>()
   // Using depsString method to resolve the array dependency issues when loading signalUrls array as a dependency
@@ -74,7 +73,7 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
         .filter((signal) => signal.type === 2)
         .map((signalOrigin) => getSignalUrls(signalOrigin))
       const compareUrl = new Set()
-      refSignalUrls.current.forEach((signal, index) => {
+      refSignalUrls.current.forEach((signal) => {
         compareUrl.add(signal)
       })
       defaultSignalUrls.forEach((url) => {
@@ -96,16 +95,16 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
         })
       })
     }
-  }, [refSignals.current])
+  }, [signals])
   useEffect(() => {
     const compareUrl = new Set()
-    refSignalUrls.current.forEach((signal, index) => {
+    refSignalUrls.current.forEach((signal) => {
       compareUrl.add(signal)
     })
     if (signalUrls.length > 0) {
       setOrigin(signalUrls)
     }
-  }, [refSignalUrls.current])
+  }, [signalUrls])
   // we can use multiple useSignalsLoaders(origins) in the context based on the various queries that load assetIds
   // publisher ids, and user addresses at different times
   const {

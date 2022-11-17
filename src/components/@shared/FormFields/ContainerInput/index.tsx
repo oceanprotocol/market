@@ -9,9 +9,7 @@ import { getContainerChecksum } from '@utils/docker'
 
 export default function ContainerInput(props: InputProps): ReactElement {
   const [field] = useField(props.name)
-  const [fieldChecksum, metaChecksum, helpersChecksum] = useField(
-    'metadata.dockerImageCustomChecksum'
-  )
+  const [helpersChecksum] = useField('metadata.dockerImageCustomChecksum')
 
   const { values, setFieldError, setFieldValue } =
     useFormikContext<FormPublishData>()

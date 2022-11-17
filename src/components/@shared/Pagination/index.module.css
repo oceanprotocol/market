@@ -13,11 +13,11 @@
   padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
   margin-left: -1px;
   margin-top: -1px;
-  display: block;
   cursor: pointer;
   min-width: 3rem;
   height: 100%;
   display: flex;
+  /* display: block; */
   align-items: center;
   justify-content: center;
   color: var(--color-secondary);

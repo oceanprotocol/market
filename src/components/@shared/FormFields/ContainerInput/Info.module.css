@@ -42,7 +42,6 @@
   top: -0.2rem;
   right: 0;
   font-size: var(--font-size-h3);
-  cursor: pointer;
   color: var(--font-color-text);
   background-color: transparent;
 }

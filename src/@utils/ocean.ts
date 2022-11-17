@@ -1,5 +1,4 @@
 import { ConfigHelper, Config } from '@oceanprotocol/lib'
-// import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 
 export function getOceanConfig(network: string | number): Config {
   const config = new ConfigHelper().getConfig(

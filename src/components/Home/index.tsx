@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Button from '@shared/atoms/Button'
 import Bookmarks from './Bookmarks'
 import { generateBaseQuery } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -70,20 +69,7 @@ export default function HomePage(): ReactElement {
       <TopSales title="Publishers With Most Sales" />
       <TopTags title="Top Tags By Sales" />
 
-      <SectionQueryResult
-        title="Recently Published"
-        query={queryLatest}
-        action={
-          <>
-            {/* <Button
-              style="text"
-              to="/search?sort=nft.created&sortOrder=desc">
-
-              All data sets and algorithms →
-            </Button> */}
-          </>
-        }
-      />
+      <SectionQueryResult title="Recently Published" query={queryLatest} />
     </>
   )
 }

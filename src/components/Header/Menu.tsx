@@ -8,8 +8,6 @@ import SearchBar from './SearchBar'
 import styles from './Menu.module.css'
 import { useRouter } from 'next/router'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import Tooltip from '@shared/atoms/Tooltip'
-import Caret from '@images/caret.svg'
 import SignalPreferences from './SignalPreferences'
 
 const Wallet = loadable(() => import('./Wallet'))
