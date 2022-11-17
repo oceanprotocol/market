@@ -11,6 +11,7 @@ import {
 import { SvgWaves } from './SvgWaves'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-core'
+import { customProviderUrl } from 'app.config'
 
 // https://docs.opensea.io/docs/metadata-standards
 export interface NftMetadata {
@@ -104,7 +105,7 @@ export async function setNftMetadata(
 ): Promise<TransactionReceipt> {
   const encryptedDdo = await ProviderInstance.encrypt(
     asset,
-    asset.services[0].serviceEndpoint,
+    customProviderUrl || asset.services[0].serviceEndpoint,
     signal
   )
   LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
@@ -138,7 +139,7 @@ export async function setNFTMetadataAndTokenURI(
 ): Promise<TransactionReceipt> {
   const encryptedDdo = await ProviderInstance.encrypt(
     asset,
-    asset.services[0].serviceEndpoint,
+    customProviderUrl || asset.services[0].serviceEndpoint,
     signal
   )
   LoggerInstance.log(

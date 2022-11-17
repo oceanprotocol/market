@@ -19,6 +19,7 @@ import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
+import { customProviderUrl } from 'app.config'
 
 export default function PublishPage({
   content
@@ -140,7 +141,7 @@ export default function PublishPage({
 
       const ddoEncrypted = await ProviderInstance.encrypt(
         ddo,
-        values.services[0].providerUrl.url,
+        customProviderUrl || values.services[0].providerUrl.url,
         newAbortController()
       )
 

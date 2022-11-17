@@ -29,9 +29,10 @@ module.exports = {
     1285,
     5,
     80001,
-    1287,
     process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true' ? 8996 : null
   ],
+
+  customProviderUrl: process.env.NEXT_PUBLIC_PROVIDER_URL,
 
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 

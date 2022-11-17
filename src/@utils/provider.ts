@@ -9,6 +9,8 @@ import {
   ProviderInstance,
   UrlFile
 } from '@oceanprotocol/lib'
+// if customProviderUrl is set, we need to call provider using this custom endpoint
+import { customProviderUrl } from 'app.config'
 import Web3 from 'web3'
 import { getValidUntilTime } from './compute'
 
@@ -50,14 +52,16 @@ export async function initializeProviderForCompute(
   }
 }
 
-// TODO: Why do we have these one line functions ?!?!?!
 export async function getEncryptedFiles(
   files: any,
   providerUrl: string
 ): Promise<string> {
   try {
     // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
-    const response = await ProviderInstance.encrypt(files, providerUrl)
+    const response = await ProviderInstance.encrypt(
+      files,
+      customProviderUrl || providerUrl
+    )
     return response
   } catch (error) {
     console.error('Error parsing json: ' + error.message)
@@ -74,7 +78,7 @@ export async function getFileDidInfo(
     const response = await ProviderInstance.checkDidFiles(
       did,
       serviceId,
-      providerUrl,
+      customProviderUrl || providerUrl,
       withChecksum
     )
     return response
@@ -94,7 +98,10 @@ export async function getFileUrlInfo(
       url,
       method: 'get'
     }
-    const response = await ProviderInstance.getFileInfo(fileUrl, providerUrl)
+    const response = await ProviderInstance.getFileInfo(
+      fileUrl,
+      customProviderUrl || providerUrl
+    )
     return response
   } catch (error) {
     LoggerInstance.error(error.message)
