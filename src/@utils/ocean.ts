@@ -15,7 +15,6 @@ export function getDevelopmentConfig(): Config {
 }
 
 export function getOceanConfig(network: string | number): Config {
-  console.log('network', network)
   let config = new ConfigHelper().getConfig(
     network,
     network === 'polygon' ||
