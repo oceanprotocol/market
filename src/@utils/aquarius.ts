@@ -165,7 +165,7 @@ export async function retrieveAsset(
     }
   }
 }
-let schema: any
+let schema: Promise<ShaclSchema>
 export function retrieveShaclSchema(): Promise<ShaclSchema> {
   if (schema) return schema
 
