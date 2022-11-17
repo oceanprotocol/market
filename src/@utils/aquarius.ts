@@ -167,7 +167,6 @@ export async function retrieveAsset(
 }
 let schema: any
 export function retrieveShaclSchema(): Promise<ShaclSchema> {
-  console.log(schema)
   if (schema) return schema
 
   try {

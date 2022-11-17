@@ -1,10 +1,4 @@
-import React, {
-  ReactElement,
-  useState,
-  useRef,
-  useEffect,
-  useCallback
-} from 'react'
+import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik } from 'formik'
 import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -25,7 +19,6 @@ import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
-import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function PublishPage({
   content
