@@ -37,6 +37,8 @@ export default function ContainerInput(props: InputProps): ReactElement {
           'metadata.dockerImageCustomChecksum',
           containerInfo.checksum
         )
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         helpersChecksum.setTouched(false)
         setIsValid(true)
       }
@@ -54,6 +56,8 @@ export default function ContainerInput(props: InputProps): ReactElement {
     setFieldValue('metadata.dockerImageCustomChecksum', '')
     setChecked(false)
     setIsValid(false)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     helpersChecksum.setTouched(true)
   }
 
