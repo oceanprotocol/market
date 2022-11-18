@@ -1,11 +1,8 @@
 import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import External from '@images/external.svg'
-import classNames from 'classnames/bind'
 import { Config } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import { getOceanConfig } from '@utils/ocean'
-
-const cx = classNames.bind(styles)
 
 export default function ExplorerLink({
   networkId,
@@ -20,10 +17,6 @@ export default function ExplorerLink({
 }): ReactElement {
   const [url, setUrl] = useState<string>()
   const [oceanConfig, setOceanConfig] = useState<Config>()
-  const styleClasses = cx({
-    link: true,
-    [className]: className
-  })
 
   useEffect(() => {
     if (!networkId) return
@@ -39,7 +32,7 @@ export default function ExplorerLink({
       title={`View on ${oceanConfig?.explorerUri}`}
       target="_blank"
       rel="noreferrer"
-      className={styleClasses}
+      className={`${styles.link} ${className || ''}`}
     >
       {children} <External />
     </a>

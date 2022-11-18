@@ -3,6 +3,7 @@ export interface MetadataEditForm {
   name: string
   description: string
   timeout: string
+  paymentCollector: string
   price?: string
   files: FileInfo[]
   links?: FileInfo[]

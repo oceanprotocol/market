@@ -1,0 +1,59 @@
+.display {
+  composes: selection from '@shared/FormInput/InputElement/AssetSelection/index.module.css';
+}
+
+.display [class*='loaderWrap'] {
+  margin: calc(var(--spacer) / 3);
+}
+
+.scroll {
+  composes: scroll from '@shared/FormInput/InputElement/AssetSelection/index.module.css';
+  margin-top: 0;
+  border-top: none;
+  width: 100%;
+}
+
+.row {
+  composes: row from '@shared/FormInput/InputElement/AssetSelection/index.module.css';
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row:first-child {
+  border-top: none;
+}
+
+.row:hover {
+  background-color: var(--background-content);
+}
+
+.info {
+  display: block;
+  width: 100%;
+}
+
+.title {
+  composes: title from '@shared/FormInput/InputElement/AssetSelection/index.module.css';
+}
+
+.hover:hover {
+  color: var(--color-primary);
+}
+
+.price {
+  composes: price from '@shared/FormInput/InputElement/AssetSelection/index.module.css';
+}
+
+.price [class*='symbol'] {
+  font-size: calc(var(--font-size-small) / 1.2) !important;
+}
+
+.did {
+  composes: did from '@shared/FormInput/InputElement/AssetSelection/index.module.css';
+}
+
+.empty {
+  composes: empty from '@shared/FormInput/InputElement/AssetSelection/index.module.css';
+}

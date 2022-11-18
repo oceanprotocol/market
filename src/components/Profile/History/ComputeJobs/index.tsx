@@ -8,7 +8,7 @@ import Refresh from '@images/refresh.svg'
 import { useUserPreferences } from '@context/UserPreferences'
 import NetworkName from '@shared/NetworkName'
 import styles from './index.module.css'
-import AssetListTitle from '@shared/AssetList/AssetListTitle'
+import AssetListTitle from '@shared/AssetListTitle'
 
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>

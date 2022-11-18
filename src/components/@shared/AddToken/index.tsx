@@ -8,19 +8,21 @@ import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
 
+export interface AddTokenProps {
+  address: string
+  symbol: string
+  text?: string
+  className?: string
+  minimal?: boolean
+}
+
 export default function AddToken({
   address,
   symbol,
   text,
   className,
   minimal
-}: {
-  address: string
-  symbol: string
-  text?: string
-  className?: string
-  minimal?: boolean
-}): ReactElement {
+}: AddTokenProps): ReactElement {
   const { web3Provider } = useWeb3()
 
   const styleClasses = cx({

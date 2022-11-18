@@ -1,5 +1,6 @@
 import { FileInfo } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
+import web3 from 'web3'
 
 export const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -41,7 +42,14 @@ export const validationSchema = Yup.object().shape({
     .nullable(),
   timeout: Yup.string().required('Required'),
   author: Yup.string().nullable(),
-  tags: Yup.array<string[]>().nullable()
+  tags: Yup.array<string[]>().nullable(),
+  paymentCollector: Yup.string().test(
+    'ValidAddress',
+    'Must be a valid Ethereum Address.',
+    (value) => {
+      return web3.utils.isAddress(value)
+    }
+  )
 })
 
 export const computeSettingsValidationSchema = Yup.object().shape({

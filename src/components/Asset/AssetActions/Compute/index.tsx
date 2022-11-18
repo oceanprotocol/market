@@ -32,7 +32,7 @@ import {
   getComputeEnviroment,
   getComputeJobs
 } from '@utils/compute'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
 import ComputeHistory from './History'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
@@ -45,6 +45,7 @@ import { getComputeFeedback } from '@utils/feedback'
 import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
+import { useAsset } from '@context/Asset'
 
 const refreshInterval = 10000 // 10 sec.
 export default function Compute({
@@ -60,8 +61,10 @@ export default function Compute({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3, isSupportedOceanNetwork } = useWeb3()
   const { chainIds } = useUserPreferences()
+  const { isAssetNetwork } = useAsset()
+
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
 
@@ -97,6 +100,7 @@ export default function Compute({
   const [refetchJobs, setRefetchJobs] = useState(false)
   const [isLoadingJobs, setIsLoadingJobs] = useState(false)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
+  const [retry, setRetry] = useState<boolean>(false)
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
@@ -115,7 +119,7 @@ export default function Compute({
     const datatokenInstance = new Datatoken(web3)
     const dtBalance = await datatokenInstance.balance(
       asset?.services[0].datatokenAddress,
-      accountId
+      accountId || ZERO_ADDRESS // if the user is not connected, we use ZERO_ADDRESS as accountId
     )
     setAlgorithmDTBalance(new Decimal(dtBalance).toString())
     const hasAlgoDt = Number(dtBalance) >= 1
@@ -133,9 +137,10 @@ export default function Compute({
       const initializedProvider = await initializeProviderForCompute(
         asset,
         selectedAlgorithmAsset,
-        accountId,
+        accountId || ZERO_ADDRESS, // if the user is not connected, we use ZERO_ADDRESS as accountId
         computeEnv
       )
+
       if (
         !initializedProvider ||
         !initializedProvider?.datasets ||
@@ -144,13 +149,17 @@ export default function Compute({
         throw new Error(`Error initializing provider for the compute job!`)
 
       setInitializedProviderResponse(initializedProvider)
-      setProviderFeeAmount(
-        await unitsToAmount(
-          web3,
-          initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
-          initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
-        )
+
+      const feeAmount = await unitsToAmount(
+        !isSupportedOceanNetwork || !isAssetNetwork
+          ? await getDummyWeb3(asset?.chainId)
+          : web3,
+        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
+        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
       )
+
+      setProviderFeeAmount(feeAmount)
+
       const computeDuration = (
         parseInt(initializedProvider?.datasets?.[0]?.providerFee?.validUntil) -
         Math.floor(Date.now() / 1000)
@@ -216,7 +225,7 @@ export default function Compute({
   }, [asset?.accessDetails, accountId, isUnsupportedPricing])
 
   useEffect(() => {
-    if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
+    if (!selectedAlgorithmAsset?.accessDetails) return
 
     setIsRequestingAlgoOrderPrice(true)
     setIsConsumableAlgorithmPrice(
@@ -291,7 +300,8 @@ export default function Compute({
   useEffect(() => {
     const newError = error
     if (!newError) return
-    toast.error(newError)
+    const errorMsg = newError + '. Please retry.'
+    toast.error(errorMsg)
   }, [error])
 
   async function startJob(): Promise<void> {
@@ -304,6 +314,7 @@ export default function Compute({
         documentId: selectedAlgorithmAsset.id,
         serviceId: selectedAlgorithmAsset.services[0].id
       }
+
       const allowed = await isOrderable(
         asset,
         computeService.id,
@@ -386,6 +397,7 @@ export default function Compute({
       initPriceAndFees()
     } catch (error) {
       setError(error.message)
+      setRetry(true)
       LoggerInstance.error(`[compute] ${error.message} `)
     } finally {
       setIsOrdering(false)
@@ -447,14 +459,12 @@ export default function Compute({
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
             isLoading={isOrdering || isRequestingAlgoOrderPrice}
             isComputeButtonDisabled={isComputeButtonDisabled}
-            hasPreviousOrder={validOrderTx !== undefined}
+            hasPreviousOrder={!!validOrderTx}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
             assetType={asset?.metadata.type}
             assetTimeout={secondsToString(asset?.services[0].timeout)}
-            hasPreviousOrderSelectedComputeAsset={
-              validAlgorithmOrderTx !== undefined
-            }
+            hasPreviousOrderSelectedComputeAsset={!!validAlgorithmOrderTx}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
             datasetSymbol={asset?.accessDetails?.baseToken?.symbol || 'OCEAN'}
             algorithmSymbol={
@@ -477,6 +487,7 @@ export default function Compute({
             algoOrderPriceAndFees={algoOrderPriceAndFees}
             providerFeeAmount={providerFeeAmount}
             validUntil={computeValidUntil}
+            retry={retry}
           />
         </Formik>
       )}
