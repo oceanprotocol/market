@@ -15,14 +15,13 @@ export default function AssetTeaserSignals({
   assetId: string
   signalItems: SignalOriginItem[]
 }) {
-  // array of arrays signalItemJsxElements[][]
   let itemsList: any[] = []
   if (signalItems.length > 0) {
     signalItems.forEach((signal) => {
-      if (signal.signals.length >= 1) {
+      if (signal.signals.length >= 1 && signal.signals.length < 4) {
         itemsList.push(
           signal.signals.map((item, index) => (
-            <div key={item.id} className={assetStyles.symbol2}>
+            <div key={index} className={assetStyles.symbol2}>
               <UtuIcon className={styles.icon} />
               <div>{item ? item.value : ''}</div>
             </div>
@@ -30,7 +29,6 @@ export default function AssetTeaserSignals({
         )
       }
     })
-    // flatten array to signalItemJsxElements[]
     itemsList = itemsList.flat()
     if (itemsList.length === 0) {
       return (

@@ -16,6 +16,8 @@ module.exports = (phase, { defaultConfig }) => {
       ignoreBuildErrors: true
     },
     webpack: (config, options) => {
+      console.log('config.output')
+      console.log(config.output)
       config.module.rules.push(
         {
           test: /\.svg$/,

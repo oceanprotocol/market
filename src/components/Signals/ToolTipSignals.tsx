@@ -15,7 +15,7 @@ export default function ToolTipSignals({
         if (signal.signals.length > 0) {
           return signal.signals.map((sig) => {
             return (
-              <li key={JSON.stringify(sig)}>
+              <li key={index}>
                 <div className={styles.assetListTitle}>
                   <div className={styles.assetListTitleName}>
                     <UtuIcon className={styles.icon} />

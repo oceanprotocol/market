@@ -77,7 +77,7 @@ export default function AssetSignals({
         console.log('one item in list')
         console.log(item)
         return item.title ? (
-          <li key={item.title + index + item.id}>
+          <li key={index}>
             {item.signals ? (
               <div className={styles.assetListTitle}>
                 <div className={styles.assetListTitleName}>
@@ -109,7 +109,7 @@ export default function AssetSignals({
         return item.signals.map((sig) => {
           // Return @SignalsItem
           return (
-            <li key={item.title + index + item.id}>
+            <li key={index}>
               {item.signals.length > 0 ? (
                 <div className={styles.assetListTitle}>
                   <div className={styles.assetListTitleName}>

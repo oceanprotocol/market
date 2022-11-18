@@ -70,6 +70,7 @@ export function fetcher(...urls: any[]) {
 
 export async function onSuccess(data: AssetSignalItem[]) {
   if (!data) return
+  console.log('[signals] Got new signal data.', data)
   return data
 }
 export async function onError(error: any) {
