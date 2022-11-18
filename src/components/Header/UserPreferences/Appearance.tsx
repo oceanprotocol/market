@@ -6,7 +6,7 @@ import Moon from '@images/moon.svg'
 import Sun from '@images/sun.svg'
 import BoxSelection, {
   BoxSelectionOption
-} from '@shared/FormFields/BoxSelection'
+} from '@shared/FormInput/InputElement/BoxSelection'
 import styles from './Appearance.module.css'
 
 export default function Appearance({

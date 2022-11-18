@@ -18,6 +18,7 @@ module.exports = {
 
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
+  defaultDatatokenTemplateIndex: 2,
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
     process.env.NEXT_PUBLIC_MARKET_FEE_ADDRESS ||

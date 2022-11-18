@@ -193,6 +193,7 @@ export default function AssetActions({
       {/* ) : null} */}
       <Web3Feedback
         networkId={asset?.chainId}
+        accountId={accountId}
         isAssetNetwork={isAssetNetwork}
       />
     </>

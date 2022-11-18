@@ -172,7 +172,7 @@
 }
 
 .radio {
-  composes: radio from '../../FormInput/InputRadio.module.css';
+  composes: radio from '../../FormInput/InputElement/Radio/index.module.css';
 }
 
 .AssetSignalsContentTitle > * {
@@ -191,4 +191,8 @@
 .displaySource {
   display: flex;
   align-items: baseline;
+}
+
+.loaderWrap {
+  margin-right: calc(var(--spacer) / 6);
 }

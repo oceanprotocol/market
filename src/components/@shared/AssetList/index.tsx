@@ -1,9 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
-import classNames from 'classnames/bind'
 import Loader from '@shared/atoms/Loader'
-import { useUserPreferences } from '@context/UserPreferences'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
@@ -11,10 +9,9 @@ import { AssetSignalItem } from '@context/Signals/_types'
 import useSignalsLoader, { useAssetListSignals } from '@hooks/useSignals'
 import { useSignalContext } from '@context/Signals'
 import SignalAssetTeaser from '@shared/SignalAssetTeaser/SignalAssetTeaser'
+import { useUserPreferences } from '@context/UserPreferences'
 
-const cx = classNames.bind(styles)
-
-export function LoaderArea() {
+function LoaderArea() {
   return (
     <div className={styles.loaderWrap}>
       <Loader />
@@ -22,7 +19,7 @@ export function LoaderArea() {
   )
 }
 
-declare type AssetListProps = {
+export declare type AssetListProps = {
   assets: AssetExtended[]
   showPagination: boolean
   page?: number
@@ -31,6 +28,8 @@ declare type AssetListProps = {
   onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
   noPublisher?: boolean
+  noDescription?: boolean
+  noPrice?: boolean
   signalItems?: AssetSignalItem[]
 }
 
@@ -42,11 +41,14 @@ export default function AssetList({
   isLoading,
   onPageChange,
   className,
-  noPublisher
+  noPublisher,
+  noDescription,
+  noPrice
 }: AssetListProps): ReactElement {
   const { chainIds, signals: settingsSignals } = useUserPreferences()
   const { accountId } = useWeb3()
-  const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
+  const [assetsWithPrices, setAssetsWithPrices] =
+    useState<AssetExtended[]>(assets)
   const [loading, setLoading] = useState<boolean>(isLoading)
   const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>(
     assetsWithPrices
@@ -66,7 +68,7 @@ export default function AssetList({
   )
   const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
   useEffect(() => {
-    if (!assets) return
+    if (!assets || !assets.length) return
     setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
 
@@ -97,25 +99,22 @@ export default function AssetList({
     onPageChange(selected + 1)
   }
 
-  const styleClasses = cx({
-    assetList: true,
-    [className]: className
-  })
+  const styleClasses = `${styles.assetList} ${className || ''}`
 
-  return chainIds.length === 0 ? (
-    <div className={styleClasses}>
-      <div className={styles.empty}>No network selected</div>
-    </div>
-  ) : assetsWithPrices && !loading ? (
+  return loading ? (
+    <LoaderArea />
+  ) : (
     <>
       <div className={styleClasses}>
-        {assetsWithPrices.length > 0 ? (
+        {assetsWithPrices?.length > 0 ? (
           assetsWithPrices.map((assetWithPrice) => {
             return (
               <SignalAssetTeaser
                 asset={assetWithPrice}
                 key={assetWithPrice.id}
                 noPublisher={noPublisher}
+                noDescription={noDescription}
+                noPrice={noPrice}
                 signalItems={signalItems}
               />
             )
@@ -133,7 +132,5 @@ export default function AssetList({
         />
       )}
     </>
-  ) : (
-    <LoaderArea />
   )
 }

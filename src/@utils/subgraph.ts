@@ -4,6 +4,7 @@ import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
+import appConfig from '../../app.config'
 
 const UserTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -61,6 +62,11 @@ export function getSubgraphUri(chainId: number): string {
 
 export function getQueryContext(chainId: number): OperationContext {
   try {
+    if (!appConfig.chainIdsSupported.includes(chainId))
+      throw Object.assign(
+        new Error('network not supported, query context cancelled')
+      )
+
     const queryContext: OperationContext = {
       url: `${getSubgraphUri(
         Number(chainId)

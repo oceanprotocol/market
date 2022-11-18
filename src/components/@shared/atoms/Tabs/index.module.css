@@ -79,5 +79,5 @@
 }
 
 .radio {
-  composes: radio from '../../FormInput/InputRadio.module.css';
+  composes: radio from '../../FormInput/InputElement/Radio/index.module.css';
 }

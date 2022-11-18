@@ -6,7 +6,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import ToolTipSignals from './ToolTipSignals'
 import React from 'react'
 import { SignalOriginItem } from '@context/Signals/_types'
-import { LoaderArea } from '@shared/AssetList'
+import Loader from '@shared/atoms/Loader'
 
 export default function AssetTeaserSignals({
   assetId,
@@ -57,5 +57,5 @@ export default function AssetTeaserSignals({
       </div>
     )
   }
-  return <LoaderArea />
+  return <Loader />
 }

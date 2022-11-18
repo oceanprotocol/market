@@ -1,17 +1,8 @@
 import React, { ReactElement } from 'react'
-import { formatCurrency } from '@coingecko/cryptoformat'
 import Conversion from './Conversion'
 import styles from './PriceUnit.module.css'
 import { useUserPreferences } from '@context/UserPreferences'
-
-export function formatPrice(price: number, locale: string): string {
-  return formatCurrency(price, '', locale, false, {
-    // Not exactly clear what `significant figures` are for this library,
-    // but setting this seems to give us the formatting we want.
-    // See https://github.com/oceanprotocol/market/issues/70
-    significantFigures: 4
-  })
-}
+import { formatNumber } from '@utils/numbers'
 
 export default function PriceUnit({
   price,
@@ -19,7 +10,8 @@ export default function PriceUnit({
   size = 'small',
   conversion,
   symbol,
-  type
+  type,
+  decimals
 }: {
   price: number
   type?: string
@@ -27,6 +19,7 @@ export default function PriceUnit({
   size?: 'small' | 'mini' | 'large'
   conversion?: boolean
   symbol?: string
+  decimals?: string
 }): ReactElement {
   const { locale } = useUserPreferences()
 
@@ -37,7 +30,7 @@ export default function PriceUnit({
       ) : (
         <>
           <div>
-            {Number.isNaN(price) ? '-' : formatPrice(price, locale)}{' '}
+            {Number.isNaN(price) ? '-' : formatNumber(price, locale, decimals)}{' '}
             <span className={styles.symbol}>{symbol}</span>
           </div>
           {conversion && <Conversion price={price} symbol={symbol} />}

@@ -2,7 +2,7 @@ import { useAsset } from '@context/Asset'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useWeb3 } from '@context/Web3'
 import Tooltip from '@shared/atoms/Tooltip'
-import { formatPrice } from '@shared/Price/PriceUnit'
+import { formatNumber } from '@utils/numbers'
 import { getNftOwnAllocation } from '@utils/veAllocation'
 import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
@@ -33,8 +33,8 @@ export default function AssetStats() {
       {asset?.stats?.allocated && asset?.stats?.allocated > 0 ? (
         <span className={styles.stat}>
           <span className={styles.number}>
-            {formatPrice(asset.stats.allocated, locale)}
-          </span>
+            {formatNumber(asset.stats.allocated, locale, '0')}
+          </span>{' '}
           veOCEAN
         </span>
       ) : null}
