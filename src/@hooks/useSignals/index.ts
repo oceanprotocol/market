@@ -76,19 +76,8 @@ export function useAssetListSignals(
           return datatokensList[0]
         })
       )
-      console.log('datatokensStringsArray')
-      console.log(dataTokenAddresses)
       setUrls(
         assetSignalsUrls.map((item) => {
-          console.log(
-            getURLParamsAssets({
-              uuids: [
-                { label: '$assetId', value: datatokensStringsArray.join(',') },
-                { label: '$userAccount', value: accountId }
-              ],
-              origin: item
-            })
-          )
           return getURLParamsAssets({
             uuids: [
               { label: '$assetId', value: datatokensStringsArray.join(',') },
@@ -99,13 +88,7 @@ export function useAssetListSignals(
         })
       )
     }
-  }, [
-    signals,
-    dataTokenAddresses,
-    assetSignalsUrls,
-    signalViewType,
-    datatokensStringsArray,
-    accountId
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signals, dataTokenAddresses, assetSignalsUrls, signalViewType, accountId])
   return { urls, assetSignalOrigins }
 }

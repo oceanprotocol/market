@@ -2,11 +2,19 @@ import { AssetSignalItem, SignalOriginItem } from '@context/Signals/_types'
 import styles from '@shared/atoms/AssetSignals/index.module.css'
 import UtuIcon from '@images/utu-logo.svg'
 import React from 'react'
-import { LoaderArea } from '@shared/AssetList'
+import Loader from '@shared/atoms/Loader'
 
 export interface AssetDetailsSignalProps {
   item: SignalOriginItem
   sig: AssetSignalItem
+}
+
+function LoaderArea() {
+  return (
+    <div className={styles.loaderWrap}>
+      <Loader />
+    </div>
+  )
 }
 
 export function AssetDetailsSignalSummary({

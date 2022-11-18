@@ -7,10 +7,11 @@ import Refresh from '@images/refresh.svg'
 import styles from './index.module.css'
 
 export default function Nft(props: InputProps): ReactElement {
-  const [field, helpers] = useField(props.name)
+  const [field, meta, helpers] = useField(props.name)
 
   const refreshNftMetadata = () => {
     const nftMetadata = generateNftMetadata()
+    // fix this helper
     helpers.setValue({ ...nftMetadata })
   }
 

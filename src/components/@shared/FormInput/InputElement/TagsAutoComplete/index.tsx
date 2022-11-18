@@ -22,7 +22,7 @@ export default function TagsAutoComplete({
   const [matchedTagsList, setMatchedTagsList] = useState<AutoCompleteOption[]>(
     []
   )
-  const [field, helpers] = useField(name)
+  const [field, meta, helpers] = useField(name)
   const [input, setInput] = useState<string>()
 
   const newCancelToken = useCancelToken()

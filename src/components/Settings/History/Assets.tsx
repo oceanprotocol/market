@@ -4,7 +4,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './Asset.module.css'
 import Source from '@images/source.svg'
 import { useUserPreferences } from '@context/UserPreferences'
-import infoStyles from '../../@shared/FormFields/FilesInput/Info.module.css'
+import infoStyles from '../../@shared/FormInput/InputElement/FilesInput/Info.module.css'
 
 const displayOptions = ['List View', 'Detail View']
 

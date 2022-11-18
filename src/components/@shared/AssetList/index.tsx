@@ -9,6 +9,7 @@ import { AssetSignalItem } from '@context/Signals/_types'
 import useSignalsLoader, { useAssetListSignals } from '@hooks/useSignals'
 import { useSignalContext } from '@context/Signals'
 import SignalAssetTeaser from '@shared/SignalAssetTeaser/SignalAssetTeaser'
+import { useUserPreferences } from '@context/UserPreferences'
 
 function LoaderArea() {
   return (
@@ -105,7 +106,7 @@ export default function AssetList({
   ) : (
     <>
       <div className={styleClasses}>
-        {assetsWithPrices.length > 0 ? (
+        {assetsWithPrices?.length > 0 ? (
           assetsWithPrices.map((assetWithPrice) => {
             return (
               <SignalAssetTeaser
