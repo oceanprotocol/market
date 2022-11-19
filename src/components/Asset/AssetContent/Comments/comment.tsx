@@ -43,15 +43,8 @@ export default function Comment({
   return (
     <Link href={`/profile/${profile?.name || commentedById}`}>
       <a className={styles.teaser}>
-        <Avatar
-          accountId={commentedById}
-          className={styles.avatar}
-          src={profile?.avatar}
-        />
         <div>
-          <Dotdotdot tagName="h4" clamp={2} className={styles.name}>
-            {comment}
-          </Dotdotdot>
+          {comment}
           <p className={styles.sales}>
             {profile?.name ? profile?.name : accountTruncate(commentedById)}
           </p>

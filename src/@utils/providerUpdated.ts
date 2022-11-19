@@ -472,7 +472,7 @@ export class Provider {
     payload.environment = computeEnv
     payload.dataset = dataset
     payload.algorithm = algorithm
-    payload.claim = claim
+    if (claim) payload.claim = claim
     if (payload.additionalDatasets)
       payload.additionalDatasets = additionalDatasets
     if (output) payload.output = output

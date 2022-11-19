@@ -32,6 +32,7 @@ import {
 } from './assetConvertor'
 import { ComputeEditForm } from 'src/components/Asset/Edit/_types'
 import { getFileDidInfo } from './provider'
+import internal from 'stream'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -180,7 +181,8 @@ export function getQueryString(
 export function getQueryStringClaims(
   trustedAlgorithmList: PublisherTrustedAlgorithm[],
   trustedPublishersList: string[],
-  chainId?: number
+  chainId?: number,
+  accountId: string
 ): SearchQuery {
   const algorithmDidList = trustedAlgorithmList?.map((x) => x.did)
 
@@ -189,6 +191,8 @@ export function getQueryStringClaims(
     sort: { sortBy: SortTermOptions.Created },
     filters: [getFilterTerm('metadata.type', 'claims')]
   } as BaseQueryParams
+
+  baseParams.filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
   // algorithmDidList?.length > 0 &&
   //   baseParams.filters.push(getFilterTerm('_id', algorithmDidList))
   trustedPublishersList?.length > 0 &&
@@ -246,6 +250,7 @@ export async function getAlgorithmAssetSelectionList(
 
 export async function getClaimsForAsset(
   asset: Asset,
+  accountId: string,
   token: CancelToken
 ): Promise<Asset[]> {
   const computeService: Service = getServiceByName(asset, 'compute')
@@ -262,7 +267,8 @@ export async function getClaimsForAsset(
     getQueryStringClaims(
       computeService.compute.publisherTrustedAlgorithms,
       computeService.compute.publisherTrustedAlgorithmPublishers,
-      asset.chainId
+      asset.chainId,
+      accountId
     ),
     token
   )

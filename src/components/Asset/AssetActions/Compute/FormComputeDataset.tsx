@@ -105,7 +105,6 @@ export default function FormStartCompute({
   }
 
   function getClaimAsset(claimId: string): Asset {
-    debugger
     let assetDdo = null
     ddoListClaims.forEach((ddo: Asset) => {
       if (ddo.id === claimId) assetDdo = ddo
@@ -117,7 +116,6 @@ export default function FormStartCompute({
     if (!values.algorithm || !accountId || !isConsumable) return
 
     async function fetchAlgorithmAssetExtended() {
-      debugger
       const algorithmAsset = getAlgorithmAsset(values.algorithm)
       const accessDetails = await getAccessDetails(
         algorithmAsset.chainId,
@@ -138,7 +136,6 @@ export default function FormStartCompute({
     if (!values.algorithm || !accountId || !isConsumable) return
 
     async function fetchClaimAssetExtended() {
-      debugger
       const algorithmAsset = getClaimAsset(values.claim)
       // const algorithmAsset = getAlgorithmAsset(values.algorithm)
       // const accessDetails = await getAccessDetails(

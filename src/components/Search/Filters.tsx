@@ -108,7 +108,13 @@ export default function FilterPrice({
       } else {
         if (serviceSelections.length) {
           await applyFilter(undefined, 'serviceType')
-          setServiceSelections(serviceFilterItems.map((p) => p.value))
+          const selections: string[] = []
+          selections.push(value)
+          serviceSelections.forEach(function (sel) {
+            selections.push(sel)
+          })
+
+          setServiceSelections(selections)
         } else {
           await applyFilter(value, 'serviceType')
           setServiceSelections([value])

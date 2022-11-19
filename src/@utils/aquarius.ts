@@ -494,7 +494,6 @@ export async function getPublishedMeta(
 ): Promise<PagedAssets> {
   const filters: FilterTerm[] = []
 
-  debugger
   // filters.push(getFilterTerm('metadata.desc', did))
   filters.push(getFilterTerm('metadata.type', 'meta'))
   if (accountId != null)

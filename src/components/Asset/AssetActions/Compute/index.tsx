@@ -139,11 +139,11 @@ export default function Compute({
       selectedAlgorithmAsset.id +
       '|' +
       'Claim ' +
-      selectedClaimAsset.nft.name +
+      selectedClaimAsset.id +
       ' is executed after execution of algorithm ' +
-      selectedAlgorithmAsset.nft.name +
+      selectedAlgorithmAsset.id +
       ' on dataset ' +
-      asset.nft.name +
+      asset.id +
       ','
     )
   }
@@ -151,8 +151,6 @@ export default function Compute({
   // Umesh initialize claim
   async function setMetaForClaimNFT() {
     try {
-      debugger
-
       const result = await getPublishedMeta(
         accountId,
         chainIds,
@@ -324,14 +322,16 @@ export default function Compute({
   useEffect(() => {
     if (!asset?.accessDetails || isUnsupportedPricing) return
 
-    getClaimsForAsset(asset, newCancelToken()).then((claimAssets) => {
-      setDdoClaimList(claimAssets)
-      getClaimAssetSelectionList(asset, claimAssets).then(
-        (claimSelectionList) => {
-          setClaimList(claimSelectionList)
-        }
-      )
-    })
+    getClaimsForAsset(asset, accountId, newCancelToken()).then(
+      (claimAssets) => {
+        setDdoClaimList(claimAssets)
+        getClaimAssetSelectionList(asset, claimAssets).then(
+          (claimSelectionList) => {
+            setClaimList(claimSelectionList)
+          }
+        )
+      }
+    )
   }, [asset, isUnsupportedPricing])
 
   // Output errors in toast UI
@@ -354,10 +354,12 @@ export default function Compute({
 
       console.log('job starting')
       console.log(selectedClaimAsset)
-      const computeClaim: ComputeAlgorithm = {
-        documentId: selectedClaimAsset.id,
+      let computeClaim: ComputeAlgorithm = {
+        documentId: null,
         serviceId: null
       }
+      if (selectedClaimAsset) computeClaim.documentId = selectedClaimAsset.id
+      else computeClaim = null
 
       const allowed = await isOrderable(
         asset,
@@ -495,7 +497,10 @@ export default function Compute({
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             if (!values.algorithm) return
-            await setMetaForClaimNFT()
+            if (selectedClaimAsset !== undefined) {
+              console.log('umesh ' + selectedClaimAsset)
+              await setMetaForClaimNFT()
+            }
             await startJob()
           }}
         >

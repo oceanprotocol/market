@@ -284,8 +284,6 @@ export default function PublishPage({
 
   async function doesMetaNFTExist(): Promise<boolean> {
     try {
-      debugger
-
       const result = await getPublishedMeta(
         accountId,
         chainIds,
@@ -313,7 +311,6 @@ export default function PublishPage({
         // kick off publishing
         await handleSubmit(values)
         console.log('Hi Umesh - Submitting for meta NFT')
-        debugger
 
         const val = await doesMetaNFTExist()
 
