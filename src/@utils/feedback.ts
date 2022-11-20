@@ -21,6 +21,7 @@ export function getComputeFeedback(
     1: `Approving ${datatokenSymbol} and ordering ${assetType} `,
     2: `Approving ${baseTokenSymbol} and ordering ${assetType}`,
     3: `Ordering ${assetType}`,
-    4: 'Generating signature. Starting compute job ...'
+    4: 'Generating signature. Starting compute job ...',
+    5: 'Setting Meta NFT'
   }
 }

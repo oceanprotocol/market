@@ -151,6 +151,7 @@ export default function Compute({
   // Umesh initialize claim
   async function setMetaForClaimNFT() {
     try {
+      setComputeStatusText(getComputeFeedback()[5])
       const result = await getPublishedMeta(
         accountId,
         chainIds,
@@ -358,8 +359,10 @@ export default function Compute({
         documentId: null,
         serviceId: null
       }
-      if (selectedClaimAsset) computeClaim.documentId = selectedClaimAsset.id
-      else computeClaim = null
+      if (selectedClaimAsset) {
+        computeClaim.documentId = selectedClaimAsset.id
+        computeClaim.serviceId = selectedClaimAsset.services[0].id
+      } else computeClaim = null
 
       const allowed = await isOrderable(
         asset,
@@ -414,6 +417,26 @@ export default function Compute({
       )
       if (!datasetOrderTx) throw new Error('Failed to order dataset.')
 
+      setComputeStatusText(
+        getComputeFeedback(
+          selectedClaimAsset.accessDetails.baseToken?.symbol,
+          selectedClaimAsset.accessDetails.datatoken?.symbol,
+          selectedClaimAsset.metadata.type
+        )[asset.accessDetails?.type === 'fixed' ? 2 : 3]
+      )
+
+      // Umesh - correct fees and other parameters here
+      const claimOrderTx = await handleComputeOrder(
+        web3,
+        selectedClaimAsset,
+        algoOrderPriceAndFees,
+        accountId,
+        hasAlgoAssetDatatoken,
+        initializedProviderResponse.algorithm,
+        computeEnv.consumerAddress
+      )
+      if (!claimOrderTx) throw new Error('Failed to order claim.')
+
       LoggerInstance.log('[compute] Starting compute job.')
       const computeAsset: ComputeAsset = {
         documentId: asset.id,
@@ -426,6 +449,9 @@ export default function Compute({
         publishOutput: true
       }
       setComputeStatusText(getComputeFeedback()[4])
+
+      computeClaim.transferTxId = claimOrderTx
+
       const response = await ProviderInstance.computeStart(
         asset.services[0].serviceEndpoint,
         web3,
