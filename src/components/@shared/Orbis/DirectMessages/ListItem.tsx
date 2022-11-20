@@ -5,14 +5,14 @@ import { accountTruncate } from '@utils/web3'
 import { didToAddress } from '@utils/orbis'
 import Avatar from '@shared/atoms/Avatar'
 import Time from '@shared/atoms/Time'
-import styles from './ConversationItem.module.css'
+import styles from './ListItem.module.css'
 
 export default function ConversationItem({
   conversation,
   unreads,
   setConversationId
 }: {
-  conversation: OrbisConversationInterface
+  conversation: IOrbisConversation
   unreads: number
   setConversationId: (value: string) => void
 }) {
@@ -48,7 +48,7 @@ export default function ConversationItem({
 
   return (
     <div
-      className={styles.conversationItem}
+      className={styles.conversation}
       onClick={() => setConversationId(conversation.stream_id)}
     >
       <div className={styles.accountAvatarSet}>
@@ -58,17 +58,15 @@ export default function ConversationItem({
         )}
       </div>
       <div className={styles.accountInfo}>
-        <div className={styles.accountHeading}>
-          <h3 className={styles.accountName}>{name}</h3>
-          <span className={styles.lastMessageDate}>
-            <Time
-              date={conversation.last_message_timestamp.toString()}
-              isUnix={true}
-              relative
-            />
-          </span>
-        </div>
-        {/* <p className={styles.accountChat}>{conversation.chat}</p> */}
+        <div className={styles.accountName}>{name}</div>
+        <span className={styles.lastMessageDate}>
+          <Time
+            date={conversation.last_message_timestamp.toString()}
+            isUnix={true}
+            relative={false}
+            displayFormat="Pp"
+          />
+        </span>
       </div>
     </div>
   )

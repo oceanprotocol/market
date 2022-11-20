@@ -5,28 +5,30 @@ import styles from './DecryptedMessage.module.css'
 export default function DecryptedMessage({
   content
 }: {
-  content: OrbisPostContentInterface
+  content: IOrbisMessageContent & { decryptedMessage?: string }
 }) {
   const { orbis } = useOrbis()
   const [loading, setLoading] = useState(true)
   const [decrypted, setDecrypted] = useState(null)
 
   useEffect(() => {
-    const decryptMessage = async (content: OrbisPostContentInterface) => {
-      if (!content?.encryptedMessage) {
-        setLoading(false)
-        setDecrypted(content.body)
-        return
-      }
+    const decryptMessage = async () => {
       setLoading(true)
-      const res = await orbis.decryptMessage(content)
 
-      setDecrypted(res.result)
+      if (content?.decryptedMessage) {
+        setDecrypted(content?.decryptedMessage)
+      } else {
+        const res = await orbis.decryptMessage({
+          conversation_id: content?.conversation_id,
+          encryptedMessage: content?.encryptedMessage
+        })
+        setDecrypted(res.result)
+      }
       setLoading(false)
     }
+
     if (content && orbis) {
-      console.log(content)
-      decryptMessage(content)
+      decryptMessage()
     }
   }, [content, orbis])
 

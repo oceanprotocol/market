@@ -5,20 +5,24 @@ import Postbox from './Postbox'
 import CommentIcon from '@images/comment.svg'
 import { useOrbis } from '@context/Orbis'
 
-export default function Comment({ asset }: { asset: AssetExtended }) {
+export default function Comment({ context }: { context: string }) {
   const { orbis } = useOrbis()
-  const [posts, setPosts] = useState<OrbisPostInterface[]>([])
+  const [posts, setPosts] = useState<IOrbisPost[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const loadPosts = async () => {
+  const _context =
+    process.env.NODE_ENV === 'development'
+      ? 'kjzl6cwe1jw145gun3sei0a4puw586yxa614le1tfh434y7quv2wsm0ivhbge7x'
+      : context
+
+  const fetchPosts = async () => {
     setLoading(true)
-    // const context =
-    //   process.env.NODE_ENV === 'development'
-    //     ? 'kjzl6cwe1jw149vvm1f8p9qlohhtkjuc302f22mipq95q7mevdljgx3tv9swujy'
-    //     : asset?.id
-    const { data, error } = await orbis.getPosts({ context: asset?.id }, page)
+    const { data, error } = await orbis.getPosts(
+      { context: _context, algorithm: 'all-context-master-posts' },
+      page
+    )
     if (error) {
       console.log(error)
     }
@@ -35,12 +39,12 @@ export default function Comment({ asset }: { asset: AssetExtended }) {
   }
 
   useEffect(() => {
-    if (asset?.id && !posts.length && orbis) {
-      loadPosts()
+    if (context && !posts.length && orbis) {
+      fetchPosts()
     }
-  }, [asset, posts, orbis])
+  }, [context, posts, orbis])
 
-  const callbackPost = (nPost: OrbisPostInterface) => {
+  const callback = (nPost: IOrbisPost) => {
     // console.log(nPost)
     if (nPost.stream_id) {
       // Search and replace
@@ -59,10 +63,6 @@ export default function Comment({ asset }: { asset: AssetExtended }) {
     }
   }
 
-  useEffect(() => {
-    console.log(posts)
-  }, [posts])
-
   return (
     <div className={styles.comment}>
       <div className={styles.header}>
@@ -71,16 +71,17 @@ export default function Comment({ asset }: { asset: AssetExtended }) {
       </div>
       <div className={styles.postBox}>
         <Postbox
-          callbackPost={callbackPost}
-          assetId={asset?.id}
+          callback={callback}
+          context={_context}
           placeholder="Share your comment here..."
         />
       </div>
-      <div className={styles.content}>
+      <div className={`${styles.content} comment-scrollable`}>
         <Posts
+          context={_context}
           posts={posts}
           loading={loading}
-          loadPosts={loadPosts}
+          fetchPosts={fetchPosts}
           hasMore={hasMore}
         />
       </div>

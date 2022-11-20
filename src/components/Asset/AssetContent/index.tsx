@@ -70,7 +70,7 @@ export default function AssetContent({
             {debug === true && <DebugOutput title="DDO" output={asset} />}
           </div>
 
-          <Comment asset={asset} />
+          <Comment context={asset?.id} />
         </div>
 
         <div className={styles.actions}>

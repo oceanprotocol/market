@@ -25,6 +25,10 @@ export default function EmojiPicker({
           lazyLoadEmojis={true}
           width={322}
           height={399}
+          skinTonesDisabled={true}
+          previewConfig={{
+            showPreview: false
+          }}
         />
       }
       trigger="click focus"

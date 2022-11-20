@@ -5,7 +5,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  max-height: 620px;
+  max-height: 720px;
 }
 
 .header {
@@ -33,5 +33,6 @@
 }
 
 .content {
+  position: relative;
   overflow-y: auto;
 }

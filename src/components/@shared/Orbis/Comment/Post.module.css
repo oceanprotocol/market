@@ -1,11 +1,24 @@
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
 .post {
   display: flex;
   width: 100%;
-  padding: calc(var(--spacer) / 2) var(--spacer);
-  border-bottom: 1px solid var(--border-color);
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-word;
+}
+
+.post.deleted {
+  opacity: 40%;
+  pointer-events: none;
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .post:last-of-type {
@@ -42,7 +55,36 @@
   margin-right: calc(var(--spacer) / 2);
 }
 
-.reactions {
+.body {
+  position: relative;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.readMore {
+  cursor: pointer;
+  color: var(--brand-pink);
+  font-size: var(--font-size-small);
+  display: inline-flex;
+  justify-content: flex-start;
+  gap: calc(var(--spacer) / 4);
+  margin: calc(var(--spacer) / 2) auto 0;
+}
+
+.readMore svg {
+  fill: currentColor;
+  width: var(--font-size-mini);
+  margin-right: calc(var(--spacer) / 8);
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reactions,
+.menu {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -50,7 +92,9 @@
   margin-top: calc(var(--spacer) / 2);
 }
 
-.reactions button {
+.reactions button,
+.menu button {
+  position: relative;
   display: flex;
   align-items: center;
   background: transparent;
@@ -61,8 +105,40 @@
 }
 
 .reactions button:hover,
-.reactions button.reacted {
+.reactions button.reacted,
+.menu button:hover {
   color: var(--brand-pink);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacer) / 4);
+}
+
+.options button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 3);
+  border-radius: var(--border-radius);
+}
+
+.postEdit {
+  color: var(--font-color-text);
+}
+
+.postEdit:hover {
+  background: var(--background-highlight);
+}
+
+.postDelete {
+  color: var(--brand-alert-red);
+}
+
+.postDelete:hover {
+  color: var(--font-color-text);
+  background: var(--brand-alert-red);
 }
 
 .reactions svg {

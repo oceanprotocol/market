@@ -1,0 +1,19 @@
+.replies {
+  border-left: 1px solid var(--border-color);
+  margin-left: calc(var(--spacer) / 2);
+  padding-left: calc(var(--spacer) / 2);
+}
+
+.replies:first-child {
+  margin-top: calc(var(--spacer) / 2);
+}
+
+.repliesItem {
+  margin-top: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.repliesPostbox {
+  margin-left: calc(var(--spacer) / 2);
+  margin-top: calc(var(--spacer) / 2);
+}

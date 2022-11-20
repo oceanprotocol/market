@@ -1,26 +1,26 @@
 import React from 'react'
 import Loader from '@shared/atoms/Loader'
 import Button from '@shared/atoms/Button'
-import Post from './Post'
+import MasterPost from './MasterPost'
 import styles from './Posts.module.css'
 
 export default function Posts({
+  context,
   posts,
-  loadPosts,
+  fetchPosts,
   hasMore,
   loading
 }: {
-  posts: OrbisPostInterface[]
-  loadPosts: () => void
+  context: string
+  posts: IOrbisPost[]
+  fetchPosts: () => Promise<void>
   hasMore: boolean
   loading: boolean
 }) {
   return (
     <div className={styles.posts}>
-      <div>
-        {posts.length > 0 &&
-          posts.map((post, index) => <Post key={index} post={post} />)}
-      </div>
+      {posts.length > 0 &&
+        posts.map((post, index) => <MasterPost key={index} post={post} />)}
 
       {loading ? (
         <div className={styles.loader}>
@@ -34,7 +34,7 @@ export default function Posts({
 
       {!loading && hasMore && (
         <div className={styles.loadMore}>
-          <Button style="text" size="small" onClick={loadPosts}>
+          <Button style="text" size="small" onClick={fetchPosts}>
             Load More
           </Button>
         </div>
