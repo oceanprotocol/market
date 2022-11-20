@@ -118,7 +118,7 @@
     "url": "https://github.com/oceanprotocol/market"
   },
   "engines": {
-    "node": "16"
+    "node": "18"
   },
   "browserslist": [
     ">0.2%",
