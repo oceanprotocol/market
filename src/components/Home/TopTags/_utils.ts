@@ -1,7 +1,7 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { generateBaseQuery, queryMetadata } from '@utils/aquarius'
 import axios, { CancelToken } from 'axios'
-import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
+import { SortTermOptions } from '../../../../src/@types/aquarius/SearchQuery'
 
 export async function getTopTags(
   chainIds: number[],
