@@ -12,9 +12,10 @@
   padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2);
   color: var(--color-secondary);
   position: relative;
-  display: flex;
+  display: block;
   flex-direction: row;
   align-items: center;
+  word-break: break-word;
 }
 
 .place {
