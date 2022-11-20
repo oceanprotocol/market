@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect } from 'react'
-import { Field, Form, useField, useFormikContext } from 'formik'
+import { Field, Form, useFormikContext } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
 import { useAsset } from '@context/Asset'
@@ -60,7 +60,16 @@ export default function FormEditMetadata({
     asset?.metadata?.links?.[0] &&
       getFileUrlInfo(asset.metadata.links[0], providerUrl).then(
         (checkedFile) => {
-          console.log(checkedFile)
+          // set valid false if url is using google drive
+          if (asset.metadata.links[0].includes('drive.google')) {
+            setFieldValue('links', [
+              {
+                url: asset.metadata.links[0],
+                valid: false
+              }
+            ])
+            return
+          }
           // initiate link with values from asset metadata
           setFieldValue('links', [
             {
