@@ -49,6 +49,8 @@ export default function Postbox({
       reply_to: replyTo ? replyTo.stream_id : undefined
     }
 
+    const timestamp = Math.floor(Date.now() / 1000)
+
     const _callbackContent: IOrbisMessage = {
       conversation_id: conversationId,
       content,
@@ -62,11 +64,9 @@ export default function Postbox({
       reply_to: replyTo ? replyTo.stream_id : null,
       reply_to_creator_details: replyTo ? replyTo.creator_details : null,
       reply_to_details: replyTo ? replyTo.content : null,
-      stream_id: 'new_post',
-      timestamp: Math.floor(Date.now() / 1000)
+      stream_id: 'new_post--' + timestamp,
+      timestamp
     }
-
-    console.log(_callbackContent)
 
     if (callback) callback(_callbackContent)
     postBoxArea.current.innerText = ''

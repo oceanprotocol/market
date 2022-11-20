@@ -17,7 +17,7 @@ export default function DmConversation() {
   const [isLoading, setIsLoading] = useState(false)
   const [messages, setMessages] = useState<IOrbisMessage[]>([])
   const [currentPage, setCurrentPage] = useState(0)
-  const [hasMore, setHasMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
   const [newMessages, setNewMessages] = useState(0)
 
   const scrollToBottom = (smooth = false) => {
@@ -42,6 +42,7 @@ export default function DmConversation() {
     }
 
     if (data) {
+      console.log(data.length)
       data.reverse()
       if (!polling) {
         setHasMore(data.length >= 50)
@@ -61,9 +62,12 @@ export default function DmConversation() {
     setIsLoading(false)
   }
 
-  useInterval(async () => {
-    await getMessages(true)
-  }, 7000)
+  useInterval(
+    async () => {
+      getMessages(true)
+    },
+    !isLoading ? 15000 : false
+  )
 
   const showTime = (index: number): boolean => {
     const nextMessage = messages[index + 1]
@@ -82,7 +86,7 @@ export default function DmConversation() {
   const onScrollMessages = throttle(() => {
     const el = messagesWrapper.current
 
-    if (hasMore && el.scrollTop === 0) {
+    if (hasMore && el.scrollTop <= 50) {
       getMessages()
     }
 
@@ -91,6 +95,14 @@ export default function DmConversation() {
     ) {
       setNewMessages(0)
     }
+
+    // Remove scroll listener
+    messagesWrapper.current.removeEventListener('scroll', onScrollMessages)
+
+    // Readd scroll listener
+    setTimeout(() => {
+      messagesWrapper.current.addEventListener('scroll', onScrollMessages)
+    }, 100)
   }, 1000)
 
   useEffect(() => {
@@ -105,13 +117,12 @@ export default function DmConversation() {
 
   useEffect(() => {
     const el = messagesWrapper.current
-
-    el.addEventListener('scroll', onScrollMessages)
+    messagesWrapper.current.addEventListener('scroll', onScrollMessages)
 
     return () => {
       el.removeEventListener('scroll', onScrollMessages)
     }
-  }, [messagesWrapper])
+  }, [messages])
 
   return (
     <div className={styles.conversation}>
@@ -139,6 +150,10 @@ export default function DmConversation() {
                 <div
                   key={index}
                   className={`${styles.message} ${
+                    message.stream_id.startsWith('new_post--')
+                      ? styles.pulse
+                      : ''
+                  } ${
                     account?.did === message.creator_details.did
                       ? styles.right
                       : styles.left

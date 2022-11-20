@@ -33,7 +33,7 @@ export default function DecryptedMessage({
   }, [content, orbis])
 
   return (
-    <span className={loading && styles.decrypting}>
+    <span className={loading ? styles.decrypting : ''}>
       {!loading ? decrypted : '---'}
     </span>
   )

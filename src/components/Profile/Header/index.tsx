@@ -27,12 +27,7 @@ export default function AccountHeader({
   accountId: string
 }): ReactElement {
   const { profile, ownAccount } = useProfile()
-  const {
-    account: orbisAccount,
-    hasLit,
-    createConversation,
-    getDid
-  } = useOrbis()
+  const { account: orbisAccount, createConversation, getDid } = useOrbis()
   const [isShowMore, setIsShowMore] = useState(false)
   const [userDid, setUserDid] = useState<string | undefined>()
 
@@ -70,9 +65,7 @@ export default function AccountHeader({
             >
               Send Direct Message
             </Button>
-            {userDid !== undefined && userDid === null && (
-              <span>User has no Ceramic Network DID</span>
-            )}
+            {userDid === null && <span>User has no Ceramic Network DID</span>}
             {!orbisAccount && <span>Please connect your wallet</span>}
           </div>
         )}
