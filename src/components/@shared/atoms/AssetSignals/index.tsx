@@ -7,6 +7,7 @@ import Source from '@images/source.svg'
 import Loader from '@shared/atoms/Loader'
 import { useSignalContext } from '@context/Signals'
 import { getURLParams } from '@hooks/useSignals/_util'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { AssetExtended } from '../../../../@types/AssetExtended'
 import { SignalOriginItem } from '@context/Signals/_types'
@@ -44,7 +45,7 @@ export default function AssetSignals({
   const urls = assetSignalsUrls.map((item) => {
     return item + getURLParams(['assetId', dataTokenAddresses.join(',')])
   })
-  const itemsClose = (index?: any) => {
+  const itemsClose = () => {
     if (isLoading) return
     const itemsList = signalItems.map((item, index) => {
       if (item.signals.length > 1) {
