@@ -94,32 +94,41 @@ export default function FilterPrice({
         }
       }
     } else {
-      if (isSelected) {
-        if (serviceSelections.length > 1) {
-          const otherValue = serviceFilterItems.find(
-            (p) => p.value !== value
-          ).value
-          await applyFilter(otherValue, 'serviceType')
-          setServiceSelections([otherValue])
-        } else {
-          await applyFilter(undefined, 'serviceType')
-          setServiceSelections([])
-        }
-      } else {
-        if (serviceSelections.length) {
-          await applyFilter(undefined, 'serviceType')
-          const selections: string[] = []
-          selections.push(value)
-          serviceSelections.forEach(function (sel) {
-            selections.push(sel)
-          })
+      // Making it single select for now
+      await applyFilter(value, 'serviceType')
 
-          setServiceSelections(selections)
-        } else {
-          await applyFilter(value, 'serviceType')
-          setServiceSelections([value])
-        }
-      }
+      // const selections: string[] = []
+      // selections.push(value)
+      // serviceSelections.forEach(function (sel) {
+      //   selections.push(sel)
+      // })
+
+      // if (isSelected) {
+      //   if (serviceSelections.length > 1) {
+      //     const otherValue = serviceFilterItems.find(
+      //       (p) => p.value !== value
+      //     ).value
+      //     await applyFilter(otherValue, 'serviceType')
+      //     setServiceSelections([otherValue])
+      //   } else {
+      //     await applyFilter(undefined, 'serviceType')
+      //     setServiceSelections([])
+      //   }
+      // } else {
+      //   if (serviceSelections.length) {
+      //     await applyFilter(undefined, 'serviceType')
+      //     const selections: string[] = []
+      //     selections.push(value)
+      //     serviceSelections.forEach(function (sel) {
+      //       selections.push(sel)
+      //     })
+
+      //     setServiceSelections(selections)
+      //   } else {
+      //     await applyFilter(value, 'serviceType')
+      //     setServiceSelections([value])
+      //   }
+      // }
     }
   }
 
