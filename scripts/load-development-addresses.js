@@ -25,6 +25,8 @@ envVars.push(`NEXT_PUBLIC_DISPENSER_ADDRESS='${addresses.Dispenser}'`)
 envVars.push(`NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS='${addresses.Ocean}'`)
 envVars.push(`NEXT_PUBLIC_MARKET_DEVELOPMENT='true'`)
 envVars.push(`#NEXT_PUBLIC_PROVIDER_URL='http://127.0.0.1:8030' # only for mac`)
+envVars.push(`#NEXT_PUBLIC_SUBGRAPH_URI='http://127.0.0.1:9000' # only for mac`)
+envVars.push(`#NEXT_PUBLIC_METADATACACHE_URI='http://127.0.0.1:5000' # only for mac`)
 
 var stream = fs.createWriteStream('.env', { flags: 'a' })
 
