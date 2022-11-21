@@ -6,10 +6,9 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
 import { AssetSignalItem } from '@context/Signals/_types'
-import useSignalsLoader, { useAssetListSignals } from '@hooks/useSignals'
+import useSignalsLoader, { useListSignals } from '@hooks/useSignals'
 import { useSignalContext } from '@context/Signals'
 import SignalAssetTeaser from '@shared/SignalAssetTeaser/SignalAssetTeaser'
-import { useUserPreferences } from '@context/UserPreferences'
 
 function LoaderArea() {
   return (
@@ -45,7 +44,6 @@ export default function AssetList({
   noDescription,
   noPrice
 }: AssetListProps): ReactElement {
-  const { chainIds, signals: settingsSignals } = useUserPreferences()
   const { accountId } = useWeb3()
   const [assetsWithPrices, setAssetsWithPrices] =
     useState<AssetExtended[]>(assets)
@@ -61,10 +59,12 @@ export default function AssetList({
   // Signals loading logic
   // Get from AssetList component
   const { signals, assetSignalsUrls } = useSignalContext()
-  const { urls } = useAssetListSignals(
+  const { urls } = useListSignals(
     dataTokenAddresses,
     signals,
-    assetSignalsUrls
+    assetSignalsUrls,
+    'listView',
+    true
   )
   const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
   useEffect(() => {

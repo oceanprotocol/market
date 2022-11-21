@@ -2,7 +2,7 @@ import React, { ReactElement, useState } from 'react'
 import { Tabs as ReactTabs } from 'react-tabs'
 import styles from './index.module.css'
 import DetailsArrow from '@images/details-arrow.svg'
-import UtuIcon from '@images/utu-logo.svg'
+import UtuIcon from '@images/UtuIcon.svg'
 import Source from '@images/source.svg'
 import Loader from '@shared/atoms/Loader'
 import { useSignalContext } from '@context/Signals'
@@ -46,12 +46,9 @@ export default function AssetSignals({
   })
   const itemsClose = (index?: any) => {
     if (isLoading) return
-    console.log(signalItems)
     const itemsList = signalItems.map((item, index) => {
-      console.log('itemList', index)
       if (item.signals.length > 1) {
         return item.signals.map((sig) => {
-          console.log(sig)
           return (
             <li key={sig.id + item.title}>
               {sig ? (
@@ -74,8 +71,6 @@ export default function AssetSignals({
         })
       }
       if (item.signals.length === 1) {
-        console.log('one item in list')
-        console.log(item)
         return item.title ? (
           <li key={index}>
             {item.signals ? (
@@ -97,7 +92,6 @@ export default function AssetSignals({
         ) : null
       }
     })
-    console.log(itemsList)
     return itemsList.filter((item) => item)
   }
   const signalDetails = () => {
@@ -145,9 +139,9 @@ export default function AssetSignals({
         })
       }
     })
-    console.log(sigs.flat())
     return sigs.flat()
   }
+
   return (
     <>
       <ReactTabs className={`${className || ''}`} defaultIndex={defaultIndex}>
