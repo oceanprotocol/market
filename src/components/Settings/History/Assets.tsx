@@ -74,7 +74,7 @@ export function Assets({
                       component={Input}
                       name={uuidListView}
                       options={[displayOptions[0]]}
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.preventDefault()
                         handleSignalItemUpdate(signalOrigin, {
                           ...signalOrigin,
@@ -92,7 +92,7 @@ export function Assets({
                       component={Input}
                       name={uuidDetailView}
                       options={[displayOptions[1]]}
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.preventDefault()
                         handleSignalItemUpdate(signalOrigin, {
                           ...signalOrigin,
