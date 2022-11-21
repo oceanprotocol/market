@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import styles from '@shared/SignalAssetTeaser/SignalAssetTeaser.module.css'
 import assetStyles from '@shared/AssetTeaser/index.module.css'
-import UtuIcon from '@images/utu-logo.svg'
+import UtuIcon from '@images/UtuIcon.svg'
 import Tooltip from '@shared/atoms/Tooltip'
 import ToolTipSignals from './ToolTipSignals'
 import React from 'react'
@@ -39,6 +39,7 @@ export default function AssetTeaserSignals({
         </Link>
       )
     }
+
     return (
       <div>
         <Link href={`/asset/${assetId}`}>

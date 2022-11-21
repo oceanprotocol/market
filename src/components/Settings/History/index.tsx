@@ -26,7 +26,12 @@ function getTabs(
     {
       title: 'Asset Signals',
       content: (
-        <AssetSignals signalSettings={signalSettings} accountId={accountId} />
+        <AssetSignals
+          signalSettings={signalSettings}
+          accountId={accountId}
+          signalType={1}
+          signalTypeTitle={'Asset'}
+        />
       )
     },
     {

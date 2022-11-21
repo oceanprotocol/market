@@ -5,13 +5,19 @@ import styles from './Asset.module.css'
 import Source from '@images/source.svg'
 import { useUserPreferences } from '@context/UserPreferences'
 import infoStyles from '../../@shared/FormInput/InputElement/FilesInput/Info.module.css'
+import { SignalOriginItem } from '@context/Signals/_types'
 
 const displayOptions = ['List View', 'Detail View']
 
 export function Assets({
-  handleRemoveSignal
+  handleRemoveSignal,
+  handleSignalItemUpdate
 }: {
-  handleRemoveSignal(id: string): void
+  handleRemoveSignal(signalOrigin: SignalOriginItem): void
+  handleSignalItemUpdate(
+    signalOrigin: SignalOriginItem,
+    signalOriginItemNew: SignalOriginItem
+  ): void
 }): ReactElement {
   const { values } = useFormikContext<any>()
   const { signals } = useUserPreferences()
@@ -22,8 +28,9 @@ export function Assets({
         // @ts-ignore
         .filter((signal) => signal.type === values?.type)
         .map((signalOrigin: any, index: number) => {
-          const uuidDetailView = signalOrigin.id + signalOrigin.detailView.id
-          const uuidListView = signalOrigin.id + signalOrigin.listView.id
+          const uuidDetailView =
+            signalOrigin.id + '_' + signalOrigin.detailView.id
+          const uuidListView = signalOrigin.id + '_' + signalOrigin.listView.id
           return (
             <>
               <li key={signalOrigin.id}>
@@ -35,7 +42,7 @@ export function Assets({
                       style={{ position: 'relative', display: 'flex' }}
                       onClick={(e) => {
                         e.preventDefault()
-                        return handleRemoveSignal(signalOrigin.id)
+                        return handleRemoveSignal(signalOrigin)
                       }}
                     >
                       &times;
@@ -67,6 +74,16 @@ export function Assets({
                       component={Input}
                       name={uuidListView}
                       options={[displayOptions[0]]}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleSignalItemUpdate(signalOrigin, {
+                          ...signalOrigin,
+                          [signalOrigin.listView.id]: {
+                            ...signalOrigin.listView,
+                            value: e.target.checked
+                          }
+                        })
+                      }}
                     />
                     <Field
                       type="checkbox"
@@ -75,6 +92,16 @@ export function Assets({
                       component={Input}
                       name={uuidDetailView}
                       options={[displayOptions[1]]}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleSignalItemUpdate(signalOrigin, {
+                          ...signalOrigin,
+                          [signalOrigin.detailView.id]: {
+                            ...signalOrigin.detailView,
+                            value: e.target.checked
+                          }
+                        })
+                      }}
                     />
                   </div>
                 </div>

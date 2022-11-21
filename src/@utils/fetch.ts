@@ -29,7 +29,6 @@ export async function fetchAllData(urls: string[]) {
   try {
     return await Promise.all(signalRequests).then(
       axios.spread((...allData) => {
-        console.log({ allData })
         return allData
       })
     )

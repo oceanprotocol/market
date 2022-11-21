@@ -1,6 +1,6 @@
 import { AssetSignalItem, SignalOriginItem } from '@context/Signals/_types'
 import styles from '@shared/atoms/AssetSignals/index.module.css'
-import UtuIcon from '@images/utu-logo.svg'
+import UtuIcon from '@images/UtuIcon.svg'
 import React from 'react'
 import Loader from '@shared/atoms/Loader'
 
