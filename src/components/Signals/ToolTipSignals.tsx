@@ -1,5 +1,5 @@
 import styles from '@shared/AssetTeaser/index.module.css'
-import UtuIcon from '@images/utu-logo.svg'
+import UtuIcon from '@images/UtuIcon.svg'
 import React from 'react'
 import { SignalOriginItem } from '@context/Signals/_types'
 
@@ -9,7 +9,6 @@ export default function ToolTipSignals({
   signalItems: SignalOriginItem[]
 }) {
   if (!signalItems || signalItems.length < 1) return
-  console.log(signalItems)
   return (
     <ol className={styles.assets}>
       {signalItems.map((signal, index) => {
@@ -21,7 +20,7 @@ export default function ToolTipSignals({
                   <div className={styles.assetListTitleName}>
                     <UtuIcon className={styles.icon} />
                     <p>
-                      {signal.title} - {signal.description}
+                      {signal.title} - {sig.description}
                     </p>
                   </div>
                   <div className={styles.assetListTitleNumber}>

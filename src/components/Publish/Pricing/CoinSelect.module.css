@@ -1,7 +1,7 @@
 .coinSelect {
-  composes: select from '../../@shared/FormInput/InputElement.module.css';
+  composes: select from '../../@shared/FormInput/InputElement/index.module.css';
   font-size: var(--font-size-small);
-  font-weight: var(--font-weight-base);
+  /* font-weight: var(--font-weight-base); */
   border: none;
   margin-right: -0.5rem;
   background-color: var(--background-highlight);

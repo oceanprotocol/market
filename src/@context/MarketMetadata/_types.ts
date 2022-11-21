@@ -1,4 +1,4 @@
-import {SignalSettingsItem} from '@context/Signals/_types'
+import { SignalSettingsItem } from '@context/Signals/_types'
 
 export interface OpcFee {
   chainId: number
@@ -12,6 +12,7 @@ export interface AppConfig {
   infuraProjectId: string
   chainIds: number[]
   chainIdsSupported: number[]
+  defaultDatatokenTemplateIndex: number
   marketFeeAddress: string
   publisherMarketOrderFee: string
   publisherMarketFixedSwapFee: string

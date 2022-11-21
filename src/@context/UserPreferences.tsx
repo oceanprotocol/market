@@ -33,6 +33,10 @@ interface UserPreferencesValue {
   setSignalSettings(signalSettings: SignalSettingsItem): void
   addSignalSetting(signalSetting: SignalOriginItem): void
   removeSignalSetting(signalSettingId: string): void
+  updateSignalSetting(
+    signalOriginItem: SignalOriginItem,
+    newSignalOriginItem: SignalOriginItem
+  ): void
 }
 
 const UserPreferencesContext = createContext(null)
@@ -142,6 +146,25 @@ function UserPreferencesProvider({
     })
   }
 
+  function updateSignalSetting(
+    signalItem: SignalOriginItem,
+    newSignalItem: SignalOriginItem
+  ) {
+    const newSignals = [...signalSettings.signals]
+    const newSignalSettings = { ...signalSettings }
+    const index = newSignals.indexOf(signalItem)
+    if (index > -1) {
+      // only splice array when item is found
+      console.log('Updating signal settings items')
+      newSignals.splice(index, 1, newSignalItem) // 2nd parameter means remove one item only
+    }
+    newSignalSettings.signals = [...newSignals]
+    console.log(newSignalSettings)
+    setSignalSettings((prevSignalSettings) => {
+      return { ...newSignalSettings }
+    })
+  }
+
   function addBookmark(didToAdd: string): void {
     const newPinned = [...bookmarks, didToAdd]
     setBookmarks(newPinned)
@@ -187,6 +210,7 @@ function UserPreferencesProvider({
           signals,
           addSignalSetting,
           removeSignalSetting,
+          updateSignalSetting,
           setInfiniteApproval,
           setChainIds,
           setDebug,

@@ -1,13 +1,23 @@
-import React, {ChangeEvent, FormEvent, KeyboardEvent, ReactElement, ReactNode, useEffect, useState} from 'react'
+import React, {
+  ChangeEvent,
+  FormEvent,
+  KeyboardEvent,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useState
+} from 'react'
 import InputElement from './InputElement'
 import Label from './Label'
 import styles from './index.module.css'
-import {ErrorMessage, FieldInputProps} from 'formik'
+import { ErrorMessage, FieldInputProps } from 'formik'
 import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import FormHelp from './Help'
+import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
+import { BoxSelectionOption } from '@shared/FormInput/InputElement/BoxSelection'
 
 const cx = classNames.bind(styles)
 
@@ -21,7 +31,7 @@ export interface InputProps {
   prominentHelp?: boolean
   tag?: string
   type?: string
-  options?: string[]
+  options?: string[] | AssetSelectionAsset[] | BoxSelectionOption[]
   sortOptions?: boolean
   additionalComponent?: ReactElement
   value?: string | number
@@ -47,7 +57,7 @@ export interface InputProps {
   max?: string
   disabled?: boolean
   readOnly?: boolean
-  field?: FieldInputProps<any>
+  field?: FieldInputProps<never>
   form?: any
   prefix?: string | ReactElement
   postfix?: string | ReactElement

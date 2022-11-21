@@ -41,7 +41,6 @@ export function getURLParamsAssets({
 }
 
 export function getSignalUrls(signalOriginItem: SignalOriginItem) {
-  // return signalOriginItem.origin + getURLParams(signalOriginItem.urlParams)
   return signalOriginItem.origin
 }
 

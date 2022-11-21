@@ -13,26 +13,19 @@ import { getServiceByName } from '@utils/ddo'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useSignalContext } from '@context/Signals'
 import { getAssetSignalItems } from '@hooks/useSignals/_util'
-import Loader from '@shared/atoms/Loader'
 import { SignalOriginItem } from '@context/Signals/_types'
 import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
 import AssetTeaserSignals from '../../Signals/AssetTeaserSignals'
-import { formatPrice } from '@shared/Price/PriceUnit'
 import { useUserPreferences } from '@context/UserPreferences'
+import { formatNumber } from '@utils/numbers'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
   isLoading?: boolean
+  noDescription?: boolean
+  noPrice?: boolean
   signalItems?: SignalOriginItem[]
-}
-
-function LoaderArea() {
-  return (
-    <div className={styles.loaderWrap}>
-      <Loader />
-    </div>
-  )
 }
 
 export default function SignalAssetTeaser({
@@ -43,7 +36,7 @@ export default function SignalAssetTeaser({
 }: AssetTeaserProps): ReactElement {
   const { datatokens } = asset
   const { locale } = useUserPreferences()
-  const { signals, assetSignalsUrls } = useSignalContext()
+  const { signals } = useSignalContext()
   const filterAssetSignals = () => {
     return signals
       .filter((signal) => signal.type === 1)
@@ -120,7 +113,7 @@ export default function SignalAssetTeaser({
               <span className={styles.typeLabel}>
                 {allocated < 0
                   ? ''
-                  : `${formatPrice(allocated, locale)} veOCEAN`}
+                  : `${formatNumber(allocated, locale)} veOCEAN`}
               </span>
             ) : null}
             {orders && orders > 0 ? (

@@ -60,12 +60,6 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
         break
       default:
         break
-      // Add your specific logic here
-      // e.g.
-      /* function handleAnalytics() {
-          ReactGA.initialize(analyticsId)
-          ReactGA.pageview(window.location.pathname + window.location.search)
-        } */
     }
   }
 
@@ -76,7 +70,6 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
         break
       default:
         break
-      // Add your specific logic here
     }
   }
 
@@ -107,7 +100,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
 
   useEffect(() => {
     // eslint-disable-next-line array-callback-return
-    Object.keys(consentStatus).map((cookieName) => {
+    Object.keys(consentStatus).forEach((cookieName) => {
       switch (consentStatus[cookieName]) {
         case CookieConsentStatus.APPROVED:
           handleAccept(cookieName)

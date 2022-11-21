@@ -1,4 +1,4 @@
-import React, { ReactElement, ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 import { DarkMode } from '@oceanprotocol/use-dark-mode'
 import FormHelp from '@shared/FormInput/Help'
 import Label from '@shared/FormInput/Label'
@@ -6,7 +6,7 @@ import Moon from '@images/moon.svg'
 import Sun from '@images/sun.svg'
 import BoxSelection, {
   BoxSelectionOption
-} from '@shared/FormFields/BoxSelection'
+} from '@shared/FormInput/InputElement/BoxSelection'
 import styles from './Appearance.module.css'
 
 export default function Appearance({
@@ -32,8 +32,6 @@ export default function Appearance({
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     event.target.value === 'Dark' ? darkMode.enable() : darkMode.disable()
   }
-
-  const [history, setHistory] = useState<boolean>()
 
   return (
     <li>

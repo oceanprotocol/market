@@ -46,7 +46,7 @@
   font-size: var(--font-size-base);
   margin-bottom: calc(var(--spacer) / 3);
   color: var(--color-secondary);
-  margin-bottom: 0;
+  /* margin-bottom: 0; */
   display: flex;
   align-items: center;
   justify-content: space-between;

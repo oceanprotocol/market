@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import styles from '@shared/SignalAssetTeaser/SignalAssetTeaser.module.css'
 import assetStyles from '@shared/AssetTeaser/index.module.css'
-import UtuIcon from '@images/utu-logo.svg'
+import UtuIcon from '@images/UtuIcon.svg'
 import Tooltip from '@shared/atoms/Tooltip'
 import ToolTipSignals from './ToolTipSignals'
 import React from 'react'
 import { SignalOriginItem } from '@context/Signals/_types'
-import { LoaderArea } from '@shared/AssetList'
+import Loader from '@shared/atoms/Loader'
 
 export default function AssetTeaserSignals({
   assetId,
@@ -17,7 +17,7 @@ export default function AssetTeaserSignals({
 }) {
   let itemsList: any[] = []
   if (signalItems.length > 0) {
-    signalItems.forEach((signal, index) => {
+    signalItems.forEach((signal) => {
       if (signal.signals.length >= 1 && signal.signals.length < 4) {
         itemsList.push(
           signal.signals.map((item, index) => (
@@ -39,6 +39,7 @@ export default function AssetTeaserSignals({
         </Link>
       )
     }
+
     return (
       <div>
         <Link href={`/asset/${assetId}`}>
@@ -57,5 +58,5 @@ export default function AssetTeaserSignals({
       </div>
     )
   }
-  return <LoaderArea />
+  return <Loader />
 }

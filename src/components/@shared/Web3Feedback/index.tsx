@@ -13,12 +13,13 @@ export declare type Web3Error = {
 
 export default function Web3Feedback({
   networkId,
+  accountId,
   isAssetNetwork
 }: {
   networkId: number
+  accountId: string
   isAssetNetwork?: boolean
 }): ReactElement {
-  const { accountId } = useWeb3()
   const { isGraphSynced, blockGraph, blockHead } = useGraphSyncStatus(networkId)
   const [state, setState] = useState<string>()
   const [title, setTitle] = useState<string>()
