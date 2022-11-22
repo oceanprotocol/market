@@ -11,11 +11,11 @@ export default function ToolTipSignals({
   if (!signalItems || signalItems.length < 1) return
   return (
     <ol className={styles.assets}>
-      {signalItems.map((signal, index) => {
+      {signalItems.map((signal) => {
         if (signal.signals.length > 0) {
-          return signal.signals.map((sig) => {
+          return signal.signals.map((sig, index) => {
             return (
-              <li key={index}>
+              <li key={'tooltip-' + signal.id + '-' + sig.assetId + index}>
                 <div className={styles.assetListTitle}>
                   <div className={styles.assetListTitleName}>
                     <UtuIcon className={styles.icon} />

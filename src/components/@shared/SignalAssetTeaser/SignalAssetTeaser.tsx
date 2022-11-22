@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useMemo } from 'react'
 import Link from 'next/link'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '@shared/Price'
@@ -47,11 +47,16 @@ export default function SignalAssetTeaser({
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
-  const filteredSignals = getAssetSignalItems(
-    signalItems,
-    datatokens.map((data: AssetDatatoken) => data.address),
-    signals
+  const filteredSignals = useMemo(
+    () =>
+      getAssetSignalItems(
+        signalItems,
+        datatokens.map((data: AssetDatatoken) => data.address),
+        signals
+      ),
+    [datatokens, signalItems, signals]
   )
+
   const isUnsupportedPricing =
     asset?.accessDetaiPolygonIconls?.type === 'NOT_SUPPORTED'
   const { orders, allocated } = asset.stats

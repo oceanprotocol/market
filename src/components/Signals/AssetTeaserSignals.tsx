@@ -29,7 +29,10 @@ export default function AssetTeaserSignals({
       if (signal.signals.length >= 1 && signal.signals.length < 4) {
         itemsList.push(
           signal.signals.map((item, index) => (
-            <div key={index} className={assetStyles.symbol2}>
+            <div
+              key={'asset-' + signal.id + '-' + item.assetId + '-' + index}
+              className={assetStyles.symbol2}
+            >
               <UtuIcon className={styles.icon} />
               <div>{item ? item.value : ''}</div>
             </div>

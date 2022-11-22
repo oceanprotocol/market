@@ -97,7 +97,8 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     field,
     disclaimer,
     disclaimerValues,
-    content
+    content,
+    textVisible
   } = props
 
   const isFormikField = typeof field !== 'undefined'
@@ -115,7 +116,6 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   })
 
   const [disclaimerVisible, setDisclaimerVisible] = useState(true)
-  const [textVisible, setTextVisible] = useState<boolean>(true)
 
   useEffect(() => {
     if (!isFormikField) return
@@ -126,7 +126,6 @@ export default function Input(props: Partial<InputProps>): ReactElement {
           props.form?.values[parsedFieldName[0]]?.[parsedFieldName[1]]
         )
       )
-      setTextVisible(textVisible)
     }
   }, [isFormikField, props.form?.values])
 

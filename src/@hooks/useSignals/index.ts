@@ -1,5 +1,5 @@
 import { SignalOriginItem } from '@context/Signals/_types'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import {
   fetcher,
@@ -20,12 +20,14 @@ export default function useSignalsLoader(
   const [publisherIds, setPublisherIds] = useState<string[]>([])
   const [userAddresses, setUserAddresses] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  let urlKey = null
-  if (origin) {
-    if (origin[0] && origin[0].length > 0) {
-      urlKey = origin
+
+  const urlKey = useMemo(() => {
+    if (origin && Array.isArray(origin)) {
+      return origin?.filter((url: string) => url)
     }
-  }
+    return null
+  }, [origin])
+
   const { data, error, isValidating } = useSWR(urlKey, fetcher, {
     refreshInterval,
     revalidateOnFocus: false,
