@@ -29,12 +29,7 @@ const validationMetadata = {
       if (!value) return
       return await validateFieldSchaclSchema(path, value, createError)
     }),
-  tags: Yup.string()
-    .nullable(true)
-    .test(async (value, { path, createError }): Promise<any> => {
-      if (!value) return
-      return await validateFieldSchaclSchema(path, value, createError)
-    }),
+  tags: Yup.array<string[]>().nullable(true),
   termsAndConditions: Yup.boolean().isTrue()
 }
 
