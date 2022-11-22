@@ -15,6 +15,8 @@ export default function AssetTeaserSignals({
   signalItems: SignalOriginItem[]
 }) {
   let itemsList: any[] = []
+  // only show list view enabled signals
+  const filteredSignals = signalItems.filter((signal) => signal.listView.value)
   const noSignalsEl = (
     <Link href={`/asset/${assetId}`}>
       <a className={styles.signalContainer}>
@@ -22,8 +24,8 @@ export default function AssetTeaserSignals({
       </a>
     </Link>
   )
-  if (signalItems.length > 0) {
-    signalItems.forEach((signal) => {
+  if (filteredSignals.length > 0) {
+    filteredSignals.forEach((signal) => {
       if (signal.signals.length >= 1 && signal.signals.length < 4) {
         itemsList.push(
           signal.signals.map((item, index) => (
@@ -50,7 +52,7 @@ export default function AssetTeaserSignals({
             <div className={styles.signalTooltipContainer}>
               <Tooltip
                 className={styles.signalTooltip}
-                content={<ToolTipSignals signalItems={signalItems} />}
+                content={<ToolTipSignals signalItems={filteredSignals} />}
               />
             </div>
           </a>

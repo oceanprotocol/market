@@ -86,17 +86,36 @@ export function arrayEqual(a1: any[], a2: any[]) {
   return true
 }
 
+/**
+ * detailedItems are loaded after fetching asset signals
+ * compArray is an array based on signal items in the current user settings/preferences
+ * @export
+ * @interface SignalOriginItem[] - detailedItems
+ * @interface SignalOriginItem[] - compArr
+ */
 function _appendSignalDetails(
   detailedItems: SignalOriginItem[],
   compArray: SignalOriginItem[]
 ) {
-  return detailedItems.map((signalOrigin, index) => {
-    return {
-      description: compArray[index]?.description || '',
-      title: compArray[index]?.title || '',
-      id: compArray[index]?.id || '',
-      ...signalOrigin
-    } as SignalOriginItem
+  return compArray.map((signalOrigin, index) => {
+    // If we have valid signal origin item results from the fetched/signals loaded
+    if (detailedItems[index]) {
+      // Return the signal data by merging signal details from config with recently fetched and available signals
+      return {
+        ...signalOrigin,
+        description:
+          detailedItems[index]?.description ||
+          compArray[index]?.description ||
+          '',
+        title: detailedItems[index]?.title || compArray[index]?.title || '',
+        id: detailedItems[index]?.id || compArray[index]?.id || '',
+        signals:
+          detailedItems[index]?.signals?.length > 0
+            ? detailedItems[index]?.signals
+            : []
+      } as SignalOriginItem
+    }
+    return signalOrigin
   })
 }
 
@@ -110,20 +129,24 @@ export function getAssetSignalItems(
     detailedItems = [signalItems]
     detailedItems = _appendSignalDetails(detailedItems, assetSignalOrigins)
   } else {
-    detailedItems = [...assetSignalOrigins]
-    detailedItems = _appendSignalDetails(assetSignalOrigins, detailedItems)
+    detailedItems = [...signalItems]
+    detailedItems = _appendSignalDetails(detailedItems, assetSignalOrigins)
   }
-  return detailedItems.map((signalItem) => {
-    if (signalItem) {
-      return {
-        ...signalItem,
-        signals: signalItem.signals
-          ? signalItem.signals.filter((signal) =>
-              compareIds.includes(signal.assetId)
-            )
-          : []
+  return detailedItems
+    .filter((sig) => {
+      return sig.signals && sig.signals.length > 0
+    })
+    .map((signalItem) => {
+      if (signalItem) {
+        return {
+          ...signalItem,
+          signals: signalItem.signals
+            ? signalItem.signals.filter((signal) =>
+                compareIds.includes(signal.assetId)
+              )
+            : []
+        }
       }
-    }
-    return null
-  })
+      return null
+    })
 }

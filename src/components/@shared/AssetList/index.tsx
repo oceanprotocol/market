@@ -98,7 +98,6 @@ export default function AssetList({
   function handlePageChange(selected: number) {
     onPageChange(selected + 1)
   }
-
   const styleClasses = `${styles.assetList} ${className || ''}`
 
   return loading ? (

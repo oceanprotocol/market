@@ -50,7 +50,7 @@ export default function SignalAssetTeaser({
   const filteredSignals = getAssetSignalItems(
     signalItems,
     datatokens.map((data: AssetDatatoken) => data.address),
-    filterAssetSignals()
+    signals
   )
   const isUnsupportedPricing =
     asset?.accessDetaiPolygonIconls?.type === 'NOT_SUPPORTED'
