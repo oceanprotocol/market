@@ -51,6 +51,7 @@ export default function InputElement({
   additionalComponent,
   disclaimer,
   disclaimerValues,
+  textVisible,
   /* eslint-enable @typescript-eslint/no-unused-vars */
   ...props
 }: InputProps): ReactElement {

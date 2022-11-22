@@ -49,11 +49,9 @@ export default function AssetList({
     useState<AssetExtended[]>(assets)
   const [loading, setLoading] = useState<boolean>(isLoading)
   const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>(
-    assetsWithPrices
-      ? assetsWithPrices.map((asset) =>
-          asset.datatokens.map((data) => data.address)
-        )
-      : null
+    assetsWithPrices?.map((asset) =>
+      asset.datatokens.map((data) => data.address)
+    ) || []
   )
   const isMounted = useIsMounted()
   // Signals loading logic
@@ -100,7 +98,7 @@ export default function AssetList({
   }
   const styleClasses = `${styles.assetList} ${className || ''}`
 
-  return loading ? (
+  return loading || isFetchingSignals ? (
     <LoaderArea />
   ) : (
     <>
