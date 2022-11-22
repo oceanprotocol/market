@@ -20,7 +20,7 @@ export default function Comment({ context }: { context: string }) {
   const fetchPosts = async () => {
     setLoading(true)
     const { data, error } = await orbis.getPosts(
-      { context: _context, algorithm: 'all-context-master-posts' },
+      { context, algorithm: 'all-context-master-posts' },
       page
     )
     if (error) {
@@ -45,22 +45,8 @@ export default function Comment({ context }: { context: string }) {
   }, [context, posts, orbis])
 
   const callback = (nPost: IOrbisPost) => {
-    // console.log(nPost)
-    if (nPost.stream_id) {
-      // Search and replace
-      const _nPost = posts.findIndex((o) => {
-        return !o.stream_id
-      })
-      console.log(_nPost)
-      if (_nPost > -1) {
-        const _posts = [...posts]
-        _posts[_nPost] = nPost
-        setPosts(_posts)
-      }
-    } else {
-      const _posts = [nPost, ...posts]
-      setPosts(_posts)
-    }
+    const _posts = [nPost, ...posts]
+    setPosts(_posts)
   }
 
   return (
@@ -72,13 +58,12 @@ export default function Comment({ context }: { context: string }) {
       <div className={styles.postBox}>
         <Postbox
           callback={callback}
-          context={_context}
+          context={context}
           placeholder="Share your comment here..."
         />
       </div>
       <div className={`${styles.content} comment-scrollable`}>
         <Posts
-          context={_context}
           posts={posts}
           loading={loading}
           fetchPosts={fetchPosts}

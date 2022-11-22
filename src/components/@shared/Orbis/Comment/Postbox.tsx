@@ -60,8 +60,8 @@ export default function Postbox({
       const content = {
         body,
         context,
-        master: replyTo ? replyTo.master || replyTo.stream_id : undefined,
-        reply_to: replyTo ? replyTo.stream_id : undefined
+        master: replyTo ? replyTo.master || replyTo.stream_id : null,
+        reply_to: replyTo ? replyTo.stream_id : null
         // mentions: _mentions || undefined
       }
 
@@ -92,7 +92,7 @@ export default function Postbox({
 
       console.log(_callbackContent)
 
-      if (callback) callback(_callbackContent)
+      callback(_callbackContent)
       postBoxArea.current.innerText = ''
 
       const res = await orbis.createPost(content)

@@ -42,7 +42,6 @@ export default function DmConversation() {
     }
 
     if (data) {
-      console.log(data.length)
       data.reverse()
       if (!polling) {
         setHasMore(data.length >= 50)
@@ -69,7 +68,11 @@ export default function DmConversation() {
     !isLoading ? 15000 : false
   )
 
-  const showTime = (index: number): boolean => {
+  const showTime = (streamId: string): boolean => {
+    const index = messages.findIndex((o) => o.stream_id === streamId)
+
+    if (index < -1) return true
+
     const nextMessage = messages[index + 1]
     if (!nextMessage || messages[index].creator !== nextMessage.creator)
       return true
@@ -146,9 +149,9 @@ export default function DmConversation() {
           {isLoading && <div className={styles.loading}>Loading...</div>}
           <div className={styles.messages}>
             <div ref={messagesWrapper} className={styles.scrollContent}>
-              {messages.map((message, index) => (
+              {messages.map((message) => (
                 <div
-                  key={index}
+                  key={message.stream_id}
                   className={`${styles.message} ${
                     message.stream_id.startsWith('new_post--')
                       ? styles.pulse
@@ -157,7 +160,7 @@ export default function DmConversation() {
                     account?.did === message.creator_details.did
                       ? styles.right
                       : styles.left
-                  } ${showTime(index) && styles.showTime}`}
+                  } ${showTime(message.stream_id) && styles.showTime}`}
                 >
                   <div className={styles.chatBubble}>
                     <DecryptedMessage content={message.content} />

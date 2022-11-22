@@ -5,13 +5,11 @@ import MasterPost from './MasterPost'
 import styles from './Posts.module.css'
 
 export default function Posts({
-  context,
   posts,
   fetchPosts,
   hasMore,
   loading
 }: {
-  context: string
   posts: IOrbisPost[]
   fetchPosts: () => Promise<void>
   hasMore: boolean
@@ -20,7 +18,7 @@ export default function Posts({
   return (
     <div className={styles.posts}>
       {posts.length > 0 &&
-        posts.map((post, index) => <MasterPost key={index} post={post} />)}
+        posts.map((post) => <MasterPost key={post.stream_id} post={post} />)}
 
       {loading ? (
         <div className={styles.loader}>
