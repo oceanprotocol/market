@@ -15,57 +15,25 @@ const validationMetadata = {
     .required('Required')
     .test(async (value, { path, createError }): Promise<any> => {
       if (!value) return
-      const keyField = path.split('.')[0]
-      const valueField = path.split('.')[1]
-
-      return await validateFieldSchaclSchema(
-        keyField,
-        valueField,
-        value,
-        createError
-      )
+      return await validateFieldSchaclSchema(path, value, createError)
     }),
   description: Yup.string()
     .required('Required')
     .test(async (value, { path, createError }): Promise<any> => {
       if (!value) return
-      const keyField = path.split('.')[0]
-      const valueField = path.split('.')[1]
-
-      return await validateFieldSchaclSchema(
-        keyField,
-        valueField,
-        value,
-        createError
-      )
+      return await validateFieldSchaclSchema(path, value, createError)
     }),
   author: Yup.string()
     .required('Required')
     .test(async (value, { path, createError }): Promise<any> => {
       if (!value) return
-      const keyField = path.split('.')[0]
-      const valueField = path.split('.')[1]
-
-      return await validateFieldSchaclSchema(
-        keyField,
-        valueField,
-        value,
-        createError
-      )
+      return await validateFieldSchaclSchema(path, value, createError)
     }),
   tags: Yup.string()
     .nullable(true)
     .test(async (value, { path, createError }): Promise<any> => {
       if (!value) return
-      const keyField = path.split('.')[0]
-      const valueField = path.split('.')[1]
-
-      return await validateFieldSchaclSchema(
-        keyField,
-        valueField,
-        value,
-        createError
-      )
+      return await validateFieldSchaclSchema(path, value, createError)
     }),
   termsAndConditions: Yup.boolean().isTrue()
 }

@@ -14,11 +14,12 @@ function getMinMax(valueField: string, field: ShaclSchemaField) {
 }
 
 export async function validateFieldSchaclSchema(
-  keyField: string,
-  valueField: string,
-  value: any,
+  path: string,
+  value: string,
   createError: any
-): Promise<any> {
+) {
+  const keyField = path.split('.')[0]
+  const valueField = path.split('.')[1]
   const schemaFields: any = await retrieveShaclSchema()
   const fieldSchema: ShaclSchemaField = schemaFields[keyField][valueField]
   const { minLength, maxLength } = getMinMax(valueField, fieldSchema)

@@ -23,6 +23,11 @@ export function escapeEsReservedCharacters(value: string): string {
   return value.replace(pattern, '\\$1')
 }
 
+export interface ShaclSchemaRes {
+  data: Promise<ShaclSchema>
+  status: number
+}
+
 /**
  * @param filterField the name of the actual field from the ddo schema e.g. 'id','service.attributes.main.type'
  * @param value the value of the filter
@@ -174,7 +179,7 @@ export function retrieveShaclSchema(): Promise<ShaclSchema> {
       `${metadataCacheUri}/api/aquarius/validation/schema`
     )
 
-    return getSchema.then((res: any) => {
+    return getSchema.then((res: ShaclSchemaRes) => {
       if (!res || res.status !== 200 || !res.data) return
 
       const data = { ...res.data }
