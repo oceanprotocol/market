@@ -6,7 +6,6 @@ import Tooltip from '@shared/atoms/Tooltip'
 import ToolTipSignals from './ToolTipSignals'
 import React from 'react'
 import { SignalOriginItem } from '@context/Signals/_types'
-import Loader from '@shared/atoms/Loader'
 
 export default function AssetTeaserSignals({
   assetId,
@@ -16,6 +15,13 @@ export default function AssetTeaserSignals({
   signalItems: SignalOriginItem[]
 }) {
   let itemsList: any[] = []
+  const noSignalsEl = (
+    <Link href={`/asset/${assetId}`}>
+      <a className={styles.signalContainer}>
+        <div className={styles.signal}> No Signals Available</div>
+      </a>
+    </Link>
+  )
   if (signalItems.length > 0) {
     signalItems.forEach((signal) => {
       if (signal.signals.length >= 1 && signal.signals.length < 4) {
@@ -31,13 +37,7 @@ export default function AssetTeaserSignals({
     })
     itemsList = itemsList.flat()
     if (itemsList.length === 0) {
-      return (
-        <Link href={`/asset/${assetId}`}>
-          <a className={styles.signalContainer}>
-            <div className={styles.signal}> No Signals Available</div>
-          </a>
-        </Link>
-      )
+      return noSignalsEl
     }
 
     return (
@@ -57,6 +57,7 @@ export default function AssetTeaserSignals({
         </Link>
       </div>
     )
+  } else {
+    return noSignalsEl
   }
-  return <Loader />
 }
