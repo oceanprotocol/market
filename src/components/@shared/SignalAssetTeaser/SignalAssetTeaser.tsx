@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import Link from 'next/link'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '@shared/Price'
@@ -55,14 +55,6 @@ export default function SignalAssetTeaser({
   const isUnsupportedPricing =
     asset?.accessDetaiPolygonIconls?.type === 'NOT_SUPPORTED'
   const { orders, allocated } = asset.stats
-  useEffect(() => {
-    if (signalItems) {
-      // eslint-disable-next-line no-empty
-      if (signalItems.length > 0) {
-      }
-    }
-  }, [signalItems])
-
   if (!signalItems || signalItems.length < 1) {
     return null
   }

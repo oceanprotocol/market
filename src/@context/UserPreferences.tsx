@@ -155,11 +155,9 @@ function UserPreferencesProvider({
     const index = newSignals.indexOf(signalItem)
     if (index > -1) {
       // only splice array when item is found
-      console.log('Updating signal settings items')
       newSignals.splice(index, 1, newSignalItem) // 2nd parameter means remove one item only
     }
     newSignalSettings.signals = [...newSignals]
-    console.log(newSignalSettings)
     setSignalSettings((prevSignalSettings) => {
       return { ...newSignalSettings }
     })
