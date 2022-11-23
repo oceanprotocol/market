@@ -73,6 +73,15 @@
         "placeholder": "e.g. 0X123ABC...",
         "help": "This address will receive the revenue from all sales. More info available in our [docs](https://docs.oceanprotocol.com/core-concepts/datanft-and-datatoken#revenue).",
         "required": false
+      },
+      {
+        "name": "retireAsset",
+        "label": "Retire Asset",
+        "placeholder": "e.g. 0X123ABC...",
+        "help": "This asset will no longer be visible to other users and it won't be possible to purchase it",
+        "type": "checkbox",
+        "options": ["I am sure I want to retire this asset"],
+        "required": false
       }
     ]
   }
