@@ -45,8 +45,6 @@ export default function TabsFile({
     setIndex(tabName)
   }
 
-  console.log(values)
-
   let textToolTip = false
   if (values?.services) {
     textToolTip = values.services[0].access === 'compute'
@@ -57,8 +55,6 @@ export default function TabsFile({
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
           {items.map((item, index) => {
-            console.log(items[tabIndex].props.value[0].type)
-
             if (isHidden) return null
 
             return (

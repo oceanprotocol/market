@@ -33,6 +33,7 @@ export interface InputProps {
   options?: string[] | AssetSelectionAsset[] | BoxSelectionOption[]
   sortOptions?: boolean
   fields?: FieldInputProps<any>[]
+  innerFields?: any
   additionalComponent?: ReactElement
   value?: string | number
   onChange?(
@@ -77,8 +78,8 @@ function checkError(
   if (
     (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
       form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]) ||
-    (form?.touched[field.name] &&
-      form?.errors[field.name] &&
+    (form?.touched[field?.name] &&
+      form?.errors[field?.name] &&
       field.name !== 'links')
   ) {
     return true
