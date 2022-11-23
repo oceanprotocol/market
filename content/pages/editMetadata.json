@@ -77,10 +77,10 @@
       {
         "name": "retireAsset",
         "label": "Retire Asset",
-        "placeholder": "e.g. 0X123ABC...",
         "help": "This asset will no longer be visible to other users and it won't be possible to purchase it",
-        "type": "checkbox",
-        "options": ["I am sure I want to retire this asset"],
+        "type": "select",
+        "options": ["Live", "I am sure I want to retire this asset"],
+        "sortOptions": false,
         "required": false
       }
     ]
