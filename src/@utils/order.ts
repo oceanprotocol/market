@@ -19,7 +19,8 @@ import { TransactionReceipt } from 'web3-eth'
 import {
   marketFeeAddress,
   consumeMarketOrderFee,
-  consumeMarketFixedSwapFee
+  consumeMarketFixedSwapFee,
+  customProviderUrl
 } from '../../app.config'
 import { toast } from 'react-toastify'
 
@@ -35,7 +36,7 @@ async function initializeProvider(
       asset.services[0].id,
       0,
       accountId,
-      asset.services[0].serviceEndpoint
+      customProviderUrl || asset.services[0].serviceEndpoint
     )
     return provider
   } catch (error) {
@@ -96,7 +97,7 @@ export async function order(
         marketFeeAddress
       } as FreOrderParams
 
-      if (asset.accessDetails.templateId === 1) {
+      if (asset.accessDetails?.templateId === 1) {
         // buy datatoken
         const txApprove = await approve(
           web3,
@@ -133,7 +134,7 @@ export async function order(
           orderParams._consumeMarketFee
         )
       }
-      if (asset.accessDetails.templateId === 2) {
+      if (asset.accessDetails?.templateId === 2) {
         const txApprove = await approve(
           web3,
           config,
@@ -160,7 +161,7 @@ export async function order(
       break
     }
     case 'free': {
-      if (asset.accessDetails.templateId === 1) {
+      if (asset.accessDetails?.templateId === 1) {
         const dispenser = new Dispenser(config.dispenserAddress, web3)
         const dispenserTx = await dispenser.dispense(
           asset.accessDetails?.datatoken.address,
@@ -177,7 +178,7 @@ export async function order(
           orderParams._consumeMarketFee
         )
       }
-      if (asset.accessDetails.templateId === 2) {
+      if (asset.accessDetails?.templateId === 2) {
         return await datatoken.buyFromDispenserAndOrder(
           asset.services[0].datatokenAddress,
           accountId,

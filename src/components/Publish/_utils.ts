@@ -234,7 +234,9 @@ export async function createTokensAndPricing(
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
-        baseTokenAddress: values.pricing.baseToken.address,
+        baseTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS
+          ? process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS
+          : values.pricing.baseToken.address,
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
         baseTokenDecimals: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS

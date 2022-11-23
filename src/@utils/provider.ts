@@ -43,7 +43,7 @@ export async function initializeProviderForCompute(
       computeAlgo,
       computeEnv?.id,
       validUntil,
-      dataset.services[0].serviceEndpoint,
+      customProviderUrl || dataset.services[0].serviceEndpoint,
       accountId
     )
   } catch (error) {
@@ -120,7 +120,7 @@ export async function downloadFile(
     asset.services[0].id,
     0,
     validOrderTx || asset.accessDetails.validOrderTx,
-    asset.services[0].serviceEndpoint,
+    customProviderUrl || asset.services[0].serviceEndpoint,
     web3
   )
   await downloadFileBrowser(downloadUrl)

@@ -18,7 +18,8 @@ import { getFixedBuyPrice } from './fixedRateExchange'
 import Decimal from 'decimal.js'
 import {
   consumeMarketOrderFee,
-  publisherMarketOrderFee
+  publisherMarketOrderFee,
+  customProviderUrl
 } from '../../app.config'
 
 const tokensPriceQuery = gql`
@@ -235,7 +236,7 @@ export async function getOrderPriceAndFees(
       asset?.services[0].id,
       0,
       accountId,
-      asset?.services[0].serviceEndpoint
+      customProviderUrl || asset?.services[0].serviceEndpoint
     ))
   orderPriceAndFee.providerFee = providerFees || initializeData.providerFee
 

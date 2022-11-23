@@ -3,9 +3,8 @@ import { ConfigHelper, Config } from '@oceanprotocol/lib'
 export function getDevelopmentConfig(): Config {
   // we need to hardcoded these values from Barge (see 'development' object in console)
   return {
-    nodeUri: process.env.NEXT_PUBLIC_RBAC_URL,
-    subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI,
-    metadataCacheUri: process.env.NEXT_PUBLIC_METADATACACHE_URI,
+    // subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI, // uncomment if on macOs
+    // metadataCacheUri: process.env.NEXT_PUBLIC_METADATACACHE_URI, // uncomment if on macOs
     fixedRateExchangeAddress:
       process.env.NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS,
     dispenserAddress: process.env.NEXT_PUBLIC_DISPENSER_ADDRESS,

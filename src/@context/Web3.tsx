@@ -166,7 +166,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       const userBalance = web3.utils.fromWei(
         await web3.eth.getBalance(accountId, 'latest')
       )
-      const key = networkData.nativeCurrency.symbol.toLowerCase()
+      const key = networkData?.nativeCurrency?.symbol.toLowerCase()
       const balance: UserBalance = { [key]: userBalance }
 
       if (approvedBaseTokens?.length > 0) {
@@ -183,7 +183,6 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
           })
         )
       }
-
       setBalance(balance)
       LoggerInstance.log('[web3] Balance: ', balance)
     } catch (error) {
