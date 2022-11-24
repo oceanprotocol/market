@@ -4,7 +4,7 @@ import MetaSecondary from './MetaSecondary'
 import { assetAquarius } from '../../../../.jest/__fixtures__/assetAquarius'
 import { algorithmAquarius } from '../../../../.jest/__fixtures__/algorithmAquarius'
 
-describe('src/components/Asset/AssetContent/MetaFull.tsx', () => {
+describe('src/components/Asset/AssetContent/MetaSecondary.tsx', () => {
   it('renders tags', () => {
     render(<MetaSecondary ddo={assetAquarius} />)
     expect(screen.getByText(assetAquarius.metadata.tags[0])).toBeInTheDocument()
