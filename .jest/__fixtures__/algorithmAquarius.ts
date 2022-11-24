@@ -10,9 +10,9 @@ export const algorithmAquarius: Asset = {
     created: '2022-11-07T13:56:13Z',
     updated: '2022-11-07T13:56:13Z',
     type: 'algorithm',
-    name: 'Algorithmic Cryptocurrency Trading (Freqtrade) - Strategy #1',
-    description:
-      'Written in Python language, this trading strategy uses the Triple Exponential Moving Average, Relative Strength Index, and Bollinger Bands technical financial indicators to trade cryptocurrencies using the open source project, Freqtrade (freqtrade.io). 5 minute Heiken Ashi candles in the strategy remove noise. ',
+    name: 'Python Strategy #1',
+    description: 'Written in Python language, this strategy remove noise.',
+    links: ['https://www.oceanprotocol.com/sample'],
     tags: [
       'trading',
       'defi',
@@ -23,7 +23,7 @@ export const algorithmAquarius: Asset = {
       'cryptocurrency',
       'crypto'
     ],
-    author: 'Shark Snacks',
+    author: 'Jelly McFish',
     license: 'https://market.oceanprotocol.com/terms',
     additionalInformation: {
       termsAndConditions: true
@@ -75,7 +75,7 @@ export const algorithmAquarius: Asset = {
   datatokens: [
     {
       address: '0x7eeB3B2d3462E4B634AB7b1bB38B7e552271F319',
-      name: 'Stupendous Shark Token',
+      name: 'Stupendous JellyFish Token',
       symbol: 'STUSHA-37',
       serviceId:
         '2f3773cc72fc6e6ff595bc6a619aed98cce04b75fc091d5d9910d5d81302ead2'

@@ -12,7 +12,16 @@ export const assetAquarius: Asset = {
     type: 'dataset',
     name: 'Testitest',
     description: 'This is a test.',
-    tags: [],
+    tags: [
+      'trading',
+      'defi',
+      'algorithm',
+      'algorithmic-crypto-trading',
+      'algo-trading',
+      'trading-strategy',
+      'cryptocurrency',
+      'crypto'
+    ],
     author: 'Test User',
     license: 'https://market.oceanprotocol.com/terms',
     additionalInformation: {
