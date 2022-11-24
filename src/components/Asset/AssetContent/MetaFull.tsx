@@ -8,7 +8,7 @@ import { Asset, Datatoken, LoggerInstance } from '@oceanprotocol/lib'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
   const [paymentCollector, setPaymentCollector] = useState<string>()
-  const { isInPurgatory } = useAsset()
+  const { isInPurgatory, assetState } = useAsset()
   const { web3 } = useWeb3()
 
   useEffect(() => {
@@ -40,6 +40,7 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
         title="Owner"
         content={<Publisher account={ddo?.nft?.owner} />}
       />
+      <MetaItem title="Asset State" content={assetState} />
       {paymentCollector && paymentCollector !== ddo?.nft?.owner && (
         <MetaItem
           title="Revenue Sent To"

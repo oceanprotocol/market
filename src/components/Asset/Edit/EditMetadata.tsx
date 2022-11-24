@@ -34,12 +34,11 @@ export default function Edit({
   asset: AssetExtended
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { fetchAsset, isAssetNetwork } = useAsset()
+  const { fetchAsset, isAssetNetwork, assetState } = useAsset()
   const { accountId, web3, chainId } = useWeb3()
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
   const [paymentCollector, setPaymentCollector] = useState<string>()
-  const [assetState, setAssetState] = useState<string>()
   const [error, setError] = useState<string>()
   const isComputeType = asset?.services[0]?.type === 'compute'
   const hasFeedback = error || success
@@ -47,15 +46,14 @@ export default function Edit({
   const stateOptions = content.form.data.filter(
     (item) => item.name === 'assetState'
   )[0].options
-  console.log(stateOptions)
+
   useEffect(() => {
-    async function getInitialData() {
+    async function getInitialPaymentCollector() {
       try {
         const datatoken = new Datatoken(web3, chainId)
         setPaymentCollector(
           await datatoken.getPaymentCollector(asset?.datatokens[0].address)
         )
-        setAssetState(stateOptions[asset.nft.state])
       } catch (error) {
         LoggerInstance.error(
           '[EditMetadata: getInitialPaymentCollector]',
@@ -63,7 +61,7 @@ export default function Edit({
         )
       }
     }
-    getInitialData()
+    getInitialPaymentCollector()
   }, [asset, chainId, stateOptions, web3])
 
   async function updateFixedPrice(newPrice: string) {
@@ -120,7 +118,6 @@ export default function Edit({
         const newState = (): number => {
           for (let i = 0; i < stateOptions.length; i++) {
             if (stateOptions[i] === values.assetState) {
-              console.log('newState', stateOptions[i], i)
               return i
             }
           }

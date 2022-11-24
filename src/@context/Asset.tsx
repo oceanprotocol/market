@@ -16,6 +16,7 @@ import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
+import content from '../../content/pages/editMetadata.json'
 
 export interface AssetProviderValue {
   isInPurgatory: boolean
@@ -28,6 +29,7 @@ export interface AssetProviderValue {
   isOwner: boolean
   oceanConfig: Config
   loading: boolean
+  assetState: string
   fetchAsset: (token?: CancelToken) => Promise<void>
 }
 
@@ -53,6 +55,7 @@ function AssetProvider({
   const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
   const [oceanConfig, setOceanConfig] = useState<Config>()
+  const [assetState, setAssetState] = useState<string>()
 
   const newCancelToken = useCancelToken()
   const isMounted = useIsMounted()
@@ -190,6 +193,18 @@ function AssetProvider({
     setOceanConfig(oceanConfig)
   }, [asset?.chainId])
 
+  // -----------------------------------
+  // Set Asset State as a string
+  // -----------------------------------
+  useEffect(() => {
+    if (!asset?.nft?.state) return
+    const stateOptions = content.form.data.filter(
+      (item) => item.name === 'assetState'
+    )[0].options
+
+    setAssetState(stateOptions[asset.nft.state])
+  }, [asset])
+
   return (
     <AssetContext.Provider
       value={
@@ -205,7 +220,8 @@ function AssetProvider({
           fetchAsset,
           isAssetNetwork,
           isOwner,
-          oceanConfig
+          oceanConfig,
+          assetState
         } as AssetProviderValue
       }
     >
