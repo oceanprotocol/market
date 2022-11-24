@@ -333,7 +333,7 @@ export default function Compute({
         )
       }
     )
-  }, [asset, isUnsupportedPricing])
+  }, [asset, selectedClaimAsset, accountId])
 
   // Output errors in toast UI
   useEffect(() => {
