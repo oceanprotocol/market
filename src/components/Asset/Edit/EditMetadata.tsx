@@ -43,10 +43,6 @@ export default function Edit({
   const isComputeType = asset?.services[0]?.type === 'compute'
   const hasFeedback = error || success
 
-  const stateOptions = content.form.data.filter(
-    (item) => item.name === 'assetState'
-  )[0].options
-
   useEffect(() => {
     async function getInitialPaymentCollector() {
       try {
@@ -62,7 +58,7 @@ export default function Edit({
       }
     }
     getInitialPaymentCollector()
-  }, [asset, chainId, stateOptions, web3])
+  }, [asset, chainId, web3])
 
   async function updateFixedPrice(newPrice: string) {
     const config = getOceanConfig(asset.chainId)
@@ -115,6 +111,9 @@ export default function Edit({
       }
       if (values.assetState !== assetState) {
         const nft = new Nft(web3, chainId)
+        const stateOptions = content.form.data.filter(
+          (item) => item.name === 'assetState'
+        )[0].options
         const newState = (): number => {
           for (let i = 0; i < stateOptions.length; i++) {
             if (stateOptions[i] === values.assetState) {
