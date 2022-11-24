@@ -75,11 +75,18 @@
         "required": false
       },
       {
-        "name": "retireAsset",
-        "label": "Retire Asset",
+        "name": "assetState",
+        "label": "Asset Status",
         "help": "This asset will no longer be visible to other users and it won't be possible to purchase it",
         "type": "select",
-        "options": ["Live", "I am sure I want to retire this asset"],
+        "options": [
+          "Active",
+          "End-of-life",
+          "Deprecated (by another asset)",
+          "Revoked by publisher",
+          "Ordering is temporary disabled",
+          "Asset unlisted"
+        ],
         "sortOptions": false,
         "required": false
       }

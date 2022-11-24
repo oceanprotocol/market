@@ -6,7 +6,8 @@ export function getInitialValues(
   metadata: Metadata,
   timeout: number,
   price: string,
-  paymentCollector: string
+  paymentCollector: string,
+  assetState: string
 ): Partial<MetadataEditForm> {
   return {
     name: metadata?.name,
@@ -17,7 +18,8 @@ export function getInitialValues(
     timeout: secondsToString(timeout),
     author: metadata?.author,
     tags: metadata?.tags,
-    paymentCollector
+    paymentCollector,
+    assetState
   }
 }
 

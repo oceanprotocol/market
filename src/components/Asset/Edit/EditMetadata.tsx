@@ -6,7 +6,8 @@ import {
   FixedRateExchange,
   Asset,
   Service,
-  Datatoken
+  Datatoken,
+  Nft
 } from '@oceanprotocol/lib'
 import { validationSchema } from './_validation'
 import { getInitialValues } from './_constants'
@@ -34,21 +35,27 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { fetchAsset, isAssetNetwork } = useAsset()
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3, chainId } = useWeb3()
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
   const [paymentCollector, setPaymentCollector] = useState<string>()
+  const [assetState, setAssetState] = useState<string>()
   const [error, setError] = useState<string>()
   const isComputeType = asset?.services[0]?.type === 'compute'
   const hasFeedback = error || success
 
+  const stateOptions = content.form.data.filter(
+    (item) => item.name === 'assetState'
+  )[0].options
+  console.log(stateOptions)
   useEffect(() => {
-    async function getInitialPaymentCollector() {
+    async function getInitialData() {
       try {
-        const datatoken = new Datatoken(web3)
+        const datatoken = new Datatoken(web3, chainId)
         setPaymentCollector(
           await datatoken.getPaymentCollector(asset?.datatokens[0].address)
         )
+        setAssetState(stateOptions[asset.nft.state])
       } catch (error) {
         LoggerInstance.error(
           '[EditMetadata: getInitialPaymentCollector]',
@@ -56,8 +63,8 @@ export default function Edit({
         )
       }
     }
-    getInitialPaymentCollector()
-  }, [asset, web3])
+    getInitialData()
+  }, [asset, chainId, stateOptions, web3])
 
   async function updateFixedPrice(newPrice: string) {
     const config = getOceanConfig(asset.chainId)
@@ -107,6 +114,18 @@ export default function Edit({
           accountId,
           values.paymentCollector
         )
+      }
+      if (values.assetState !== assetState) {
+        const nft = new Nft(web3, chainId)
+        const newState = (): number => {
+          for (let i = 0; i < stateOptions.length; i++) {
+            if (stateOptions[i] === values.assetState) {
+              console.log('newState', stateOptions[i], i)
+              return i
+            }
+          }
+        }
+        await nft.setMetadataState(asset?.nftAddress, accountId, newState())
       }
 
       if (values.files[0]?.url) {
@@ -176,7 +195,8 @@ export default function Edit({
         asset?.metadata,
         asset?.services[0]?.timeout,
         asset?.accessDetails?.price,
-        paymentCollector
+        paymentCollector,
+        assetState
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
