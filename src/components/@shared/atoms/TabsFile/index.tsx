@@ -45,8 +45,6 @@ export default function TabsFile({
     setIndex(tabName)
   }
 
-  console.log(values)
-
   let textToolTip = false
   if (values?.services) {
     textToolTip = values.services[0].access === 'compute'
@@ -57,14 +55,12 @@ export default function TabsFile({
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
           {items.map((item, index) => {
-            console.log(items[tabIndex].props.value[0].type)
-
             if (isHidden) return null
 
             return (
               <Tab
                 className={styles.tab}
-                key={index}
+                key={`tab_${items[tabIndex].props.name}_${index}`}
                 onClick={
                   handleTabChange ? () => handleTabChange(item.title) : null
                 }
@@ -80,7 +76,7 @@ export default function TabsFile({
         {items.map((item, index) => {
           return (
             <>
-              <TabPanel key={index}>
+              <TabPanel key={`tabpanel_${items[tabIndex].props.name}_${index}`}>
                 {!isHidden && (
                   <label className={styles.tabLabel}>
                     {item.field.label}

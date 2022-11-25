@@ -84,12 +84,19 @@ export default function InputElement({
     }
     case 'tabs': {
       const tabs: any = []
-      props.fields.map((field: any) => {
+      props.fields.map((field: any, i) => {
         return tabs.push({
           title: field.title,
           field,
           props,
-          content: <FilesInput {...field} form={form} {...props} />
+          content: (
+            <FilesInput
+              key={`fileInput_${i}`}
+              {...field}
+              form={form}
+              {...props}
+            />
+          )
         })
       })
 
