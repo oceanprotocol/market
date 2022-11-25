@@ -1,5 +1,7 @@
 import {
   Arweave,
+  GraphqlQuery,
+  Smartcontract,
   ComputeAlgorithm,
   ComputeAsset,
   ComputeEnvironment,
@@ -12,6 +14,7 @@ import {
   UrlFile
 } from '@oceanprotocol/lib'
 import Web3 from 'web3'
+import { AbiItem } from 'web3-utils/types'
 import { getValidUntilTime } from './compute'
 
 export async function initializeProviderForCompute(
@@ -88,28 +91,54 @@ export async function getFileDidInfo(
 export async function getFileInfo(
   file: string,
   providerUrl: string,
-  storageType: string
+  storageType: string,
+  query?: string,
+  abi?: AbiItem,
+  chainId?: number
 ): Promise<FileInfo[]> {
+  console.log(file, providerUrl, storageType, query, abi, chainId)
+
   try {
     let response
     switch (storageType) {
       case 'ipfs': {
         const fileIPFS: Ipfs = {
-          type: 'ipfs',
+          type: storageType,
           hash: file
         }
-
         response = await ProviderInstance.getFileInfo(fileIPFS, providerUrl)
-
         break
       }
       case 'arweave': {
         const fileArweave: Arweave = {
-          type: 'arweave',
+          type: storageType,
           transactionId: file
         }
-
         response = await ProviderInstance.getFileInfo(fileArweave, providerUrl)
+        break
+      }
+      case 'graphql': {
+        const fileGraphql: GraphqlQuery = {
+          type: storageType,
+          url: file,
+          query
+        }
+
+        response = await ProviderInstance.getFileInfo(fileGraphql, providerUrl)
+        break
+      }
+      case 'smartcontract': {
+        const fileSmartContract: Smartcontract = {
+          chainId,
+          type: storageType,
+          address: file,
+          abi
+        }
+
+        response = await ProviderInstance.getFileInfo(
+          fileSmartContract,
+          providerUrl
+        )
         break
       }
       default: {

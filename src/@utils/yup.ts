@@ -31,6 +31,16 @@ export function testLinks() {
           ? 'Transaction ID required.'
           : 'Transaction ID not valid.'
         break
+      case 'graphql':
+        validField = value?.toString().length < 30
+        errorMessage = !value?.toString() ? 'URL required.' : 'URL not valid.'
+        break
+      case 'smartcontract':
+        validField = value?.toString().length < 30
+        errorMessage = !value?.toString()
+          ? 'Address required.'
+          : 'Address not valid.'
+        break
     }
 
     if (!validField) {

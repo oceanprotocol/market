@@ -7,17 +7,23 @@ import { getFileInfo } from '@utils/provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import styles from './Index.module.css'
+import { AbiInput } from 'web3-utils/types'
+import { useWeb3 } from '@context/Web3'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
   const { asset } = useAsset()
+  const { chainId } = useWeb3()
 
   const providerUrl = props.form?.values?.services
     ? props.form?.values?.services[0].providerUrl.url
     : asset.services[0].serviceEndpoint
 
   const storageType = field.value[0].type
+  const query = field.value[0].query || undefined
+  // const abi = field.value[0].abi || undefined
+  console.log(field, query)
 
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
@@ -33,7 +39,23 @@ export default function FilesInput(props: InputProps): ReactElement {
         )
       }
 
-      const checkedFile = await getFileInfo(url, providerUrl, storageType)
+      // TODO: fixing AbiItem typing
+      const abi: any = {
+        inputs: [{ name: '', type: '' }],
+        name: 'swapOceanFee',
+        outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+        stateMutability: 'pure',
+        type: 'function'
+      }
+
+      const checkedFile = await getFileInfo(
+        url,
+        providerUrl,
+        storageType,
+        query,
+        abi,
+        chainId
+      )
 
       // error if something's not right from response
       if (!checkedFile)
