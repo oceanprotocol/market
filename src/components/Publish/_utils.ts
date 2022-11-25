@@ -139,18 +139,24 @@ export async function transformPublishFormToDdo(
   }
 
   // this is the default format hardcoded
+
   const file = {
     nftAddress,
     datatokenAddress,
     files: [
       {
-        type: 'url',
+        type: files[0].type,
         index: 0,
-        url: files[0].url,
+        [files[0].type === 'ipfs'
+          ? 'hash'
+          : files[0].type === 'arweave'
+          ? 'transactionId'
+          : 'url']: files[0].url,
         method: 'GET'
       }
     ]
   }
+
   const filesEncrypted =
     !isPreview &&
     files?.length &&
