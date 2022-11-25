@@ -60,6 +60,10 @@ function AssetProvider({
   const newCancelToken = useCancelToken()
   const isMounted = useIsMounted()
 
+  const stateOptions = content.form.data.filter(
+    (item) => item.name === 'assetState'
+  )[0].options
+
   // -----------------------------------
   // Helper: Get and set asset based on passed DID
   // -----------------------------------
@@ -80,27 +84,6 @@ function AssetProvider({
         return
       }
 
-      if ([1, 2, 3].includes(asset.nft.state)) {
-        // handle nft states as documented in https://docs.oceanprotocol.com/core-concepts/did-ddo/#state
-        let state
-        switch (asset.nft.state) {
-          case 1:
-            state = 'end-of-life'
-            break
-          case 2:
-            state = 'deprecated'
-            break
-          case 3:
-            state = 'revoked'
-            break
-        }
-
-        setTitle(`This asset has been flagged as "${state}" by the publisher`)
-        setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
-        LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
-        return
-      }
-
       if (asset) {
         setError(undefined)
         setAsset((prevState) => ({
@@ -111,12 +94,23 @@ function AssetProvider({
         setOwner(asset.nft?.owner)
         setIsInPurgatory(asset.purgatory?.state)
         setPurgatoryData(asset.purgatory)
+        setAssetState(stateOptions[asset.nft.state])
         LoggerInstance.log('[asset] Got asset', asset)
+      }
+      if (asset.nft.state !== 0 && accountId !== asset.nft.owner) {
+        setTitle(
+          `This asset has been flagged as "${
+            stateOptions[asset.nft.state]
+          }" by the publisher`
+        )
+        setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
+        LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
+        return
       }
 
       setLoading(false)
     },
-    [did]
+    [did, accountId]
   )
 
   // -----------------------------------
@@ -198,12 +192,8 @@ function AssetProvider({
   // -----------------------------------
   useEffect(() => {
     if (!asset?.nft?.state) return
-    const stateOptions = content.form.data.filter(
-      (item) => item.name === 'assetState'
-    )[0].options
-
     setAssetState(stateOptions[asset.nft.state])
-  }, [asset])
+  }, [asset, stateOptions])
 
   return (
     <AssetContext.Provider
