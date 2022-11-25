@@ -12,13 +12,11 @@ export const validationSchema = Yup.object().shape({
   files: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
-        url: testLinks(),
+        url: testLinks(true),
         valid: Yup.boolean().test((value, context) => {
           const { type } = context.parent
-
           // allow user to submit if the value type is hidden
           if (type === 'hidden') return true
-
           return value || false
         })
       })
@@ -26,14 +24,12 @@ export const validationSchema = Yup.object().shape({
     .nullable(),
   links: Yup.array<FileInfo[]>().of(
     Yup.object().shape({
-      url: testLinks(),
+      url: testLinks(true),
       valid: Yup.boolean().test((value, context) => {
         // allow user to submit if the value is null
         const { valid, url } = context.parent
-
         // allow user to continue if the url is empty
         if (!url) return true
-
         return valid
       })
     })

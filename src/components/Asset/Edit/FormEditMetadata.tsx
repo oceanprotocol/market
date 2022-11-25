@@ -47,12 +47,14 @@ export default function FormEditMetadata({
 
   useEffect(() => {
     // let's initiate files with empty url (we can't access the asset url) with type hidden (for UI frontend)
-    setFieldValue('files', [
-      {
-        url: '',
-        type: 'hidden'
-      }
-    ])
+    setTimeout(() => {
+      setFieldValue('files', [
+        {
+          url: '',
+          type: 'hidden'
+        }
+      ])
+    }, 500)
 
     const providerUrl = values?.services
       ? values?.services[0].providerUrl.url

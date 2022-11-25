@@ -55,11 +55,11 @@ export default function TabsFile({
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
           {items.map((item, index) => {
-            if (isHidden) return null
-
             return (
               <Tab
-                className={styles.tab}
+                className={`${styles.tab} ${
+                  isHidden ? styles.tabHidden : null
+                }`}
                 key={`tab_${items[tabIndex].props.name}_${index}`}
                 onClick={
                   handleTabChange ? () => handleTabChange(item.title) : null
