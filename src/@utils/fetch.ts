@@ -1,9 +1,17 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import axios, { AxiosResponse } from 'axios'
 
-export async function fetchData(url: string): Promise<AxiosResponse['data']> {
+export async function fetchData(
+  url: string,
+  options?: { timeout?: number }
+): Promise<AxiosResponse['data']> {
   try {
-    const response = await axios(url)
+    let response
+    if (options) {
+      response = await axios(url, { ...options })
+    } else {
+      response = await axios(url)
+    }
     return response?.data
   } catch (error) {
     if (error.response) {

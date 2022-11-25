@@ -53,7 +53,7 @@ export default function useSignalsLoader(
 }
 
 export function useListSignals(
-  dataTokenAddresses: string[][],
+  datatokenAddresses: string[],
   signals: SignalOriginItem[],
   assetSignalsUrls: string[],
   signalViewType = 'listView',
@@ -61,10 +61,10 @@ export function useListSignals(
 ) {
   const [assetSignalOrigins, setAssetSignalOrigins] = useState<any[]>([])
   const [datatokensStringsArray, setDatatokensStringsArray] = useState([])
-  const [urls, setUrls] = useState<any[]>()
+  const [urls, setUrls] = useState<any[]>([])
   const { accountId } = useWeb3()
   useEffect(() => {
-    if (dataTokenAddresses && dataTokenAddresses.length > 0) {
+    if (datatokenAddresses && datatokenAddresses.length > 0) {
       // Get only those asset signals that are for the list view and for asset types only
       setAssetSignalOrigins(
         signals
@@ -73,12 +73,8 @@ export function useListSignals(
           // @ts-ignore
           .filter((signal) => signal[signalViewType].value)
       )
-      setDatatokensStringsArray(
-        dataTokenAddresses.map((datatokensList) => {
-          if (datatokensList.length > 1) datatokensList.join(',')
-          return datatokensList[0]
-        })
-      )
+      const newDatatokenString = datatokenAddresses.join(',')
+      setDatatokensStringsArray([newDatatokenString])
       setUrls(
         assetSignalsUrls.map((item) => {
           return getURLParamsAssets({
@@ -92,6 +88,6 @@ export function useListSignals(
       )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signals, dataTokenAddresses, assetSignalsUrls, signalViewType, accountId])
+  }, [signals, datatokenAddresses, assetSignalsUrls, signalViewType, accountId])
   return { urls, assetSignalOrigins }
 }

@@ -8,7 +8,7 @@ import React, {
   useState
 } from 'react'
 import { SignalOriginItem, SignalSettingsItem } from '@context/Signals/_types'
-import useSignalsLoader from '@hooks/useSignals'
+import useSignalsLoader, { useListSignals } from '@hooks/useSignals'
 import { useUserPreferences } from '@context/UserPreferences'
 import { arrayEqual, getSignalUrls } from '@hooks/useSignals/_util'
 
@@ -17,7 +17,7 @@ export interface SignalsProviderValue {
   userAddresses: string[]
   assetIds: string[]
   publisherIds: string[]
-  signalUrls: string[]
+  datatokenAddresses: any
   assetSignalsUrls?: string[]
   publisherSignalsUrls?: string[]
   signals?: SignalOriginItem[]
@@ -29,6 +29,7 @@ export interface SignalsProviderValue {
 
   // // A method to update the current assetIds to use in signal queries
   setAssetIds(assets: string[]): void
+  updateDatatokenAddresses(datatokens: any): any
 
   setAssetSignalOriginItems(signals: SignalOriginItem[]): void
 
@@ -41,24 +42,44 @@ const SignalsContext = createContext({} as SignalsProviderValue)
 
 function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
   const [signalUrls, setSignalUrls] = useState<string[]>([])
-  const [publisherSignalsUrls, setPublisherSignalsUrl] = useState<string[]>([])
   const [assetSignalsUrls, setAssetSignalsUrl] = useState<string[]>([])
-  const [origin, setOrigin] = useState<string[]>(
-    signalUrls[0] ? signalUrls : ['']
-  )
+  // const [origin, setOrigin] = useState<string[]>(
+  //   signalUrls[0] ? signalUrls : ['']
+  // )
   const { signals } = useUserPreferences()
   const [assetSignalOriginItems, setAssetSignalOriginItems] =
     useState<SignalOriginItem[]>()
+  // TODO set the datatoken addresses here for use across multiple components
+  const _refDataTokenAddresses = useRef(new Set())
+  const [datatokenAddresses, _setDatatokenAddresses] = useState<any[]>([])
+  const updateDatatokenAddresses = (arr: string[]) => {
+    const newItems: string[] = []
+    arr.forEach((item) => {
+      if (!_refDataTokenAddresses.current.has(item)) {
+        _refDataTokenAddresses.current.add(item)
+        newItems.push(item)
+      }
+    })
+    if (newItems.length > 0) {
+      _setDatatokenAddresses([...datatokenAddresses, ...newItems])
+    }
+  }
   // Using depsString method to resolve the array dependency issues when loading signalUrls array as a dependency
   // https://stackoverflow.com/questions/59467758/passing-array-to-useeffect-dependency-list
-  const refSignals = useRef(signals)
   const refSignalUrls = useRef(signalUrls)
-  if (!arrayEqual(signals, refSignals.current)) {
-    refSignals.current = signals
-  }
   if (!arrayEqual(signalUrls, refSignalUrls.current)) {
     refSignalUrls.current = signalUrls
   }
+  // Check if we have synced the datatokens array with the set of unique
+  const uniqueDatatokensArr = Array.from(_refDataTokenAddresses.current)
+  if (!arrayEqual(datatokenAddresses, uniqueDatatokensArr)) {
+    _setDatatokenAddresses(uniqueDatatokensArr)
+  }
+  // TODO fetch datatoken addresses once loaded by the search queries
+  // TODO pass datatoken addresses to signal url loader to generate the correct signals
+  // TODO pass urls into signals API fetcher to fetch signals from relevant APIs
+  // TODO Indicate loading when signals are being fetched
+  // TODO update available signals once loaded from the API responses
   // Based on current default signal settings set the signalURLs that will be used to fetch signals by a signal loader
   useEffect(() => {
     // Check if there's anything in the current default settings
@@ -66,45 +87,25 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
       const defaultSignalUrls: string[] = signals.map((signalOrigin) =>
         getSignalUrls(signalOrigin)
       )
-      const assetTypeUrls: string[] = signals
-        .filter((signal) => signal.type === 1)
-        .map((signalOrigin) => getSignalUrls(signalOrigin))
-      const publisherTypeUrls: string[] = signals
-        .filter((signal) => signal.type === 2)
-        .map((signalOrigin) => getSignalUrls(signalOrigin))
+      setAssetSignalsUrl(defaultSignalUrls)
       const compareUrl = new Set()
-      refSignalUrls.current.forEach((signal) => {
-        compareUrl.add(signal)
-      })
       defaultSignalUrls.forEach((url) => {
-        if (compareUrl.has(url)) return
-        setSignalUrls((signalUrlArray) => {
-          return [...signalUrlArray, url]
-        })
-      })
-      assetTypeUrls.forEach((url) => {
         if (compareUrl.has(url)) return
         setAssetSignalsUrl((signalUrlArray) => {
           return [...signalUrlArray, url]
         })
-      })
-      publisherTypeUrls.forEach((url) => {
-        if (compareUrl.has(url)) return
-        setPublisherSignalsUrl((signalUrlArray) => {
-          return [...signalUrlArray, url]
-        })
+        compareUrl.add(url)
       })
     }
   }, [signals])
-  useEffect(() => {
-    const compareUrl = new Set()
-    refSignalUrls.current.forEach((signal) => {
-      compareUrl.add(signal)
-    })
-    if (signalUrls.length > 0) {
-      setOrigin(signalUrls)
-    }
-  }, [signalUrls])
+
+  const { urls } = useListSignals(
+    datatokenAddresses,
+    signals,
+    assetSignalsUrls,
+    'listView',
+    true
+  )
   // we can use multiple useSignalsLoaders(origins) in the context based on the various queries that load assetIds
   // publisher ids, and user addresses at different times
   const {
@@ -114,8 +115,7 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
     publisherIds,
     loading,
     signalItems
-  } = useSignalsLoader(origin)
-
+  } = useSignalsLoader(urls)
   return (
     <SignalsContext.Provider
       value={
@@ -126,11 +126,11 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
           signals,
           publisherIds,
           signalItems,
-          signalUrls,
           assetSignalsUrls,
-          publisherSignalsUrls,
           loading,
           assetSignalOriginItems,
+          datatokenAddresses,
+          updateDatatokenAddresses,
           setAssetSignalOriginItems
         } as SignalsProviderValue
       }
