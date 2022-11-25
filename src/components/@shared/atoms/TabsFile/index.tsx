@@ -60,7 +60,7 @@ export default function TabsFile({
             return (
               <Tab
                 className={styles.tab}
-                key={index}
+                key={`tab_${items[tabIndex].props.name}_${index}`}
                 onClick={
                   handleTabChange ? () => handleTabChange(item.title) : null
                 }
@@ -76,7 +76,7 @@ export default function TabsFile({
         {items.map((item, index) => {
           return (
             <>
-              <TabPanel key={index}>
+              <TabPanel key={`tabpanel_${items[tabIndex].props.name}_${index}`}>
                 {!isHidden && (
                   <label className={styles.tabLabel}>
                     {item.field.label}

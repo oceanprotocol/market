@@ -57,12 +57,12 @@ export const assetAquarius: Asset = {
     }
   ],
   stats: {
-    orders: 22
-    // price: {
-    //   value: 3231343254,
-    //   tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-    //   tokenSymbol: 'OCEAN'
-    // }
+    orders: 22,
+    price: {
+      value: 3231343254,
+      tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+      tokenSymbol: 'OCEAN'
+    }
   },
   purgatory: {
     state: false,

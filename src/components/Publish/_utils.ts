@@ -156,7 +156,6 @@ export async function transformPublishFormToDdo(
       }
     ]
   }
-  console.log(file)
 
   const filesEncrypted =
     !isPreview &&
