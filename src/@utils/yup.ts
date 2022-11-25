@@ -9,6 +9,9 @@ export function testLinks() {
     let errorMessage
 
     switch (type) {
+      case 'hidden':
+        validField = true
+        break
       case 'url':
         validField = isUrl(value?.toString() || '')
         if (!validField) {

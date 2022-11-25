@@ -25,6 +25,10 @@
   border: 0;
 }
 
+.tabHidden {
+  display: none !important;
+}
+
 .tab,
 .tab label {
   cursor: pointer;
@@ -61,13 +65,13 @@
   border-top: 0;
 }
 
-.tabLabel{
+.tabLabel {
   color: var(--font-color-text);
-    font-size: var(--font-size-small);
-    font-family: var(--font-family-heading);
-    line-height: 1.2;
-    display: block;
-    margin-bottom: calc(var(--spacer) / 2);
+  font-size: var(--font-size-small);
+  font-family: var(--font-family-heading);
+  line-height: 1.2;
+  display: block;
+  margin-bottom: calc(var(--spacer) / 2);
 }
 
 @media (min-width: 40rem) {
