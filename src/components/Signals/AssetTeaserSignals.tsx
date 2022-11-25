@@ -4,8 +4,8 @@ import assetStyles from '@shared/AssetTeaser/index.module.css'
 import UtuIcon from '@images/UtuIcon.svg'
 import Tooltip from '@shared/atoms/Tooltip'
 import ToolTipSignals from './ToolTipSignals'
-import React from 'react'
-import { SignalOriginItem } from '@context/Signals/_types'
+import React, { useEffect, useState } from 'react'
+import { AssetSignalItem, SignalOriginItem } from '@context/Signals/_types'
 
 export default function AssetTeaserSignals({
   assetId,
@@ -16,7 +16,13 @@ export default function AssetTeaserSignals({
 }) {
   let itemsList: any[] = []
   // only show list view enabled signals
-  const filteredSignals = signalItems.filter((signal) => signal.listView.value)
+  const [filteredSignals, setFilteredSignals] = useState<any[]>([])
+  useEffect(() => {
+    if (signalItems && Array.isArray(signalItems)) {
+      setFilteredSignals(signalItems.filter((signal) => signal.listView.value))
+    }
+  }, [signalItems])
+
   const noSignalsEl = (
     <Link href={`/asset/${assetId}`}>
       <a className={styles.signalContainer}>
@@ -28,7 +34,7 @@ export default function AssetTeaserSignals({
     filteredSignals.forEach((signal) => {
       if (signal.signals.length >= 1 && signal.signals.length < 4) {
         itemsList.push(
-          signal.signals.map((item, index) => (
+          signal.signals.map((item: AssetSignalItem, index: number) => (
             <div
               key={'asset-' + signal.id + '-' + item.assetId + '-' + index}
               className={assetStyles.symbol2}

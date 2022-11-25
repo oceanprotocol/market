@@ -19,7 +19,6 @@ import { FormPublishData } from 'src/components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
 import { useSignalContext } from '@context/Signals'
-import useSignalsLoader, { useListSignals } from '@hooks/useSignals'
 import { getAssetSignalItems } from '@hooks/useSignals/_util'
 import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
 
@@ -49,22 +48,19 @@ export default function AssetActions({
 
   // Signals loading logic
   // Get from AssetList component
-  const [dataTokenAddresses] = useState<string[][]>([
-    asset.datatokens.map((data) => data.address)
-  ])
-  const { signals, assetSignalsUrls } = useSignalContext()
+  // const [dataTokenAddresses] = useState<string[][]>([
+  //   asset.datatokens.map((data) => data.address)
+  // ])
+  const {
+    signals,
+    signalItems,
+    loading: isFetchingSignals
+  } = useSignalContext()
   const filterAssetSignals = () => {
     return signals
       .filter((signal) => signal.type === 1)
       .filter((signal) => signal.detailView.value)
   }
-  const { urls } = useListSignals(
-    dataTokenAddresses,
-    signals,
-    assetSignalsUrls,
-    'detailView'
-  )
-  const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
 
   const filteredSignals = getAssetSignalItems(
     signalItems,

@@ -7,6 +7,7 @@ import Publisher from '@shared/Publisher'
 import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from '../AssetTeaser/index.module.css'
+import stylesSignals from '../SignalAssetTeaser/SignalAssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -18,6 +19,7 @@ import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
 import AssetTeaserSignals from '../../Signals/AssetTeaserSignals'
 import { useUserPreferences } from '@context/UserPreferences'
 import { formatNumber } from '@utils/numbers'
+import Loader from '@shared/atoms/Loader'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -60,9 +62,9 @@ export default function SignalAssetTeaser({
   const isUnsupportedPricing =
     asset?.accessDetaiPolygonIconls?.type === 'NOT_SUPPORTED'
   const { orders, allocated } = asset.stats
-  if (!signalItems || signalItems.length < 1) {
-    return null
-  }
+  // if (!signalItems || signalItems.length < 1) {
+  //   return null
+  // }
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`}>
@@ -123,9 +125,15 @@ export default function SignalAssetTeaser({
           </footer>
         </a>
       </Link>
-      {signalItems ? (
+      {signalItems && !isLoading ? (
         <AssetTeaserSignals assetId={asset.id} signalItems={filteredSignals} />
-      ) : null}
+      ) : (
+        <div>
+          <div className={stylesSignals.signalContainer}>
+            <Loader message={'Loading signals'} />
+          </div>
+        </div>
+      )}
     </article>
   )
 }

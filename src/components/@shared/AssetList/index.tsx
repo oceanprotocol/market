@@ -6,7 +6,6 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
 import { AssetSignalItem } from '@context/Signals/_types'
-import useSignalsLoader, { useListSignals } from '@hooks/useSignals'
 import { useSignalContext } from '@context/Signals'
 import SignalAssetTeaser from '@shared/SignalAssetTeaser/SignalAssetTeaser'
 
@@ -48,23 +47,33 @@ export default function AssetList({
   const [assetsWithPrices, setAssetsWithPrices] =
     useState<AssetExtended[]>(assets)
   const [loading, setLoading] = useState<boolean>(isLoading)
+  // Get the token addresses from the assets list
   const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>(
     assetsWithPrices?.map((asset) =>
       asset.datatokens.map((data) => data.address)
     ) || []
   )
   const isMounted = useIsMounted()
-  // Signals loading logic
-  // Get from AssetList component
-  const { signals, assetSignalsUrls } = useSignalContext()
-  const { urls } = useListSignals(
-    dataTokenAddresses,
+  // Get the signals from the settings via the SignalContext
+  const {
     signals,
     assetSignalsUrls,
-    'listView',
-    true
-  )
-  const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
+    updateDatatokenAddresses,
+    datatokenAddresses,
+    signalItems,
+    loading: isFetchingSignals
+  } = useSignalContext()
+  // Use the signals from user settings to load the Urls to be fetched by signal loader
+  // const { urls } = useListSignals(
+  //   datatokenAddresses,
+  //   signals,
+  //   assetSignalsUrls,
+  //   'listView',
+  //   true
+  // )
+
+  // Fetch the signals from various APIs
+  // const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
   useEffect(() => {
     if (!assets || !assets.length) return
     setAssetsWithPrices(assets as AssetExtended[])
@@ -82,23 +91,24 @@ export default function AssetList({
     fetchPrices()
   }, [assets, isMounted, accountId])
 
+  // Update the datatoken addresses used to load signals
   useEffect(() => {
+    // if we have an asset list update the data token addresses based on this list
     if (assetsWithPrices) {
-      setDataTokenAddresses(
-        assetsWithPrices.map((asset) =>
-          asset.datatokens.map((data) => data.address)
-        )
+      updateDatatokenAddresses(
+        assetsWithPrices
+          .map((asset) => asset.datatokens.map((data) => data.address))
+          .flat()
       )
     }
   }, [assetsWithPrices])
-
   // // This changes the page field inside the query
   function handlePageChange(selected: number) {
     onPageChange(selected + 1)
   }
   const styleClasses = `${styles.assetList} ${className || ''}`
 
-  return loading || isFetchingSignals ? (
+  return loading ? (
     <LoaderArea />
   ) : (
     <>
@@ -113,6 +123,7 @@ export default function AssetList({
                 noDescription={noDescription}
                 noPrice={noPrice}
                 signalItems={signalItems}
+                isLoading={isFetchingSignals}
               />
             )
           })
