@@ -60,10 +60,6 @@ function AssetProvider({
   const newCancelToken = useCancelToken()
   const isMounted = useIsMounted()
 
-  const stateOptions = content.form.data.filter(
-    (item) => item.name === 'assetState'
-  )[0].options
-
   // -----------------------------------
   // Helper: Get and set asset based on passed DID
   // -----------------------------------
@@ -94,15 +90,12 @@ function AssetProvider({
         setOwner(asset.nft?.owner)
         setIsInPurgatory(asset.purgatory?.state)
         setPurgatoryData(asset.purgatory)
-        setAssetState(stateOptions[asset.nft.state])
+        console.log('1 = asset.nft.state', asset.nft.state)
+        setAssetState(asset.nft.state === 0 ? 'Active' : 'Asset unlisted')
         LoggerInstance.log('[asset] Got asset', asset)
       }
       if (asset.nft.state !== 0 && accountId !== asset.nft.owner) {
-        setTitle(
-          `This asset has been flagged as "${
-            stateOptions[asset.nft.state]
-          }" by the publisher`
-        )
+        setTitle(`This asset has been unlisted by the publisher`)
         setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
         return
@@ -191,9 +184,11 @@ function AssetProvider({
   // Set Asset State as a string
   // -----------------------------------
   useEffect(() => {
-    if (!asset?.nft?.state) return
-    setAssetState(stateOptions[asset.nft.state])
-  }, [asset, stateOptions])
+    if (!asset?.nft) return
+    console.log('########')
+    console.log('2 = asset.nft.state', asset.nft.state)
+    setAssetState(asset.nft.state === 0 ? 'Active' : 'Asset unlisted')
+  }, [asset])
 
   return (
     <AssetContext.Provider

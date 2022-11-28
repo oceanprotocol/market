@@ -111,17 +111,10 @@ export default function Edit({
       }
       if (values.assetState !== assetState) {
         const nft = new Nft(web3, chainId)
-        const stateOptions = content.form.data.filter(
-          (item) => item.name === 'assetState'
-        )[0].options
-        const newState = (): number => {
-          for (let i = 0; i < stateOptions.length; i++) {
-            if (stateOptions[i] === values.assetState) {
-              return i
-            }
-          }
-        }
-        await nft.setMetadataState(asset?.nftAddress, accountId, newState())
+
+        const newState = values.assetState === 'Active' ? 0 : 5
+        console.log('newState', newState)
+        await nft.setMetadataState(asset?.nftAddress, accountId, newState)
       }
 
       if (values.files[0]?.url) {
