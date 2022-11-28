@@ -251,9 +251,9 @@ export const assets: AssetExtended[] = [
       allocated: 0,
       orders: 1,
       price: {
+        value: 3231343254,
         tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-        tokenSymbol: 'OCEAN',
-        value: 7
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0',
@@ -345,9 +345,9 @@ export const assets: AssetExtended[] = [
       allocated: 50.2051887512,
       orders: 1,
       price: {
+        value: 3231343254,
         tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-        tokenSymbol: 'OCEAN',
-        value: 10
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0',
@@ -445,9 +445,9 @@ export const assets: AssetExtended[] = [
       allocated: 0,
       orders: 1,
       price: {
+        value: 3231343254,
         tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-        tokenSymbol: 'OCEAN',
-        value: 6
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0',
@@ -575,9 +575,9 @@ export const assets: AssetExtended[] = [
       allocated: 0,
       orders: 1,
       price: {
+        value: 3231343254,
         tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-        tokenSymbol: 'OCEAN',
-        value: 5
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0'
@@ -663,9 +663,9 @@ export const assets: AssetExtended[] = [
       allocated: 0,
       orders: 1,
       price: {
+        value: 3231343254,
         tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-        tokenSymbol: 'OCEAN',
-        value: 5
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0',
@@ -757,9 +757,9 @@ export const assets: AssetExtended[] = [
       allocated: 0,
       orders: 1,
       price: {
+        value: 3231343254,
         tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-        tokenSymbol: 'OCEAN',
-        value: 5
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0',
@@ -850,7 +850,9 @@ export const assets: AssetExtended[] = [
       allocated: 114.1658859253,
       orders: 1,
       price: {
-        value: 0
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0',
@@ -933,9 +935,9 @@ export const assets: AssetExtended[] = [
     stats: {
       orders: 1,
       price: {
+        value: 3231343254,
         tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-        tokenSymbol: 'OCEAN',
-        value: 2
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0',
@@ -1024,7 +1026,9 @@ export const assets: AssetExtended[] = [
     stats: {
       orders: 1,
       price: {
-        value: 0
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0',
@@ -1349,9 +1353,9 @@ export const assets: AssetExtended[] = [
     stats: {
       orders: 1,
       price: {
+        value: 3231343254,
         tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-        tokenSymbol: 'OCEAN',
-        value: 1
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0',
