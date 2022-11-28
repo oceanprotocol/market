@@ -1,6 +1,7 @@
 import { FileInfo } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import web3 from 'web3'
+import { testLinks } from '../../../@utils/yup'
 
 export const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -11,35 +12,28 @@ export const validationSchema = Yup.object().shape({
   files: Yup.array<FileInfo[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string()
-          .url('Must be a valid URL.')
-          .test(
-            'GoogleNotSupported',
-            'Google Drive is not a supported hosting service. Please use an alternative.',
-            (value) => {
-              return !value?.toString().includes('drive.google')
-            }
-          ),
-        valid: Yup.boolean().isTrue()
+        url: testLinks(true),
+        valid: Yup.boolean().test((value, context) => {
+          const { type } = context.parent
+          // allow user to submit if the value type is hidden
+          if (type === 'hidden') return true
+          return value || false
+        })
       })
     )
     .nullable(),
-  links: Yup.array<FileInfo[]>()
-    .of(
-      Yup.object().shape({
-        url: Yup.string()
-          .url('Must be a valid URL.')
-          .test(
-            'GoogleNotSupported',
-            'Google Drive is not a supported hosting service. Please use an alternative.',
-            (value) => {
-              return !value?.toString().includes('drive.google')
-            }
-          ),
-        valid: Yup.boolean().isTrue()
+  links: Yup.array<FileInfo[]>().of(
+    Yup.object().shape({
+      url: testLinks(true),
+      valid: Yup.boolean().test((value, context) => {
+        // allow user to submit if the value is null
+        const { valid, url } = context.parent
+        // allow user to continue if the url is empty
+        if (!url) return true
+        return valid
       })
-    )
-    .nullable(),
+    })
+  ),
   timeout: Yup.string().required('Required'),
   author: Yup.string().nullable(),
   tags: Yup.array<string[]>().nullable(),

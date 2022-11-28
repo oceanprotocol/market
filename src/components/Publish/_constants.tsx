@@ -72,8 +72,8 @@ export const initialValues: FormPublishData = {
   },
   services: [
     {
-      files: [{ url: '', type: '' }],
-      links: [{ url: '', type: '' }],
+      files: [{ url: '', type: 'ipfs' }],
+      links: [{ url: '', type: 'url' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: 'access',

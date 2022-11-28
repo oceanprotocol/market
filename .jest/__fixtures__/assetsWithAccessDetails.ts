@@ -70,7 +70,9 @@ export const assets: AssetExtended[] = [
       allocated: 0,
       orders: 0,
       price: {
-        value: 1
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
       }
     },
     version: '4.1.0',
@@ -153,12 +155,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 45554.69921875,
-      orders: 1
-      // price: {
-      //   tokenAddress: '0x282d8efCe846A88B159800bd4130ad77443Fa1A1',
-      //   tokenSymbol: 'mOCEAN',
-      //   value: 100
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -247,12 +249,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 0,
-      orders: 1
-      // price: {
-      //   tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-      //   tokenSymbol: 'OCEAN',
-      //   value: 7
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -341,12 +343,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 50.2051887512,
-      orders: 1
-      // price: {
-      //   tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-      //   tokenSymbol: 'OCEAN',
-      //   value: 10
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -441,12 +443,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 0,
-      orders: 1
-      // price: {
-      //   tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-      //   tokenSymbol: 'OCEAN',
-      //   value: 6
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -571,12 +573,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 0,
-      orders: 1
-      // price: {
-      //   tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-      //   tokenSymbol: 'OCEAN',
-      //   value: 5
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0'
   },
@@ -659,12 +661,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 0,
-      orders: 1
-      // price: {
-      //   tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-      //   tokenSymbol: 'OCEAN',
-      //   value: 5
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -753,12 +755,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 0,
-      orders: 1
-      // price: {
-      //   tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-      //   tokenSymbol: 'OCEAN',
-      //   value: 5
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -846,10 +848,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 114.1658859253,
-      orders: 1
-      // price: {
-      //   value: 0
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -929,12 +933,12 @@ export const assets: AssetExtended[] = [
       }
     ],
     stats: {
-      orders: 1
-      // price: {
-      //   tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-      //   tokenSymbol: 'OCEAN',
-      //   value: 2
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -1020,10 +1024,12 @@ export const assets: AssetExtended[] = [
       }
     ],
     stats: {
-      orders: 1
-      // price: {
-      //   value: 0
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -1105,10 +1111,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 11159.279296875,
-      orders: 1
-      // price: {
-      //   value: 0
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -1188,10 +1196,12 @@ export const assets: AssetExtended[] = [
       }
     ],
     stats: {
-      orders: 0
-      // price: {
-      //   value: 0
-      // }
+      orders: 0,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -1272,8 +1282,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 0,
-      orders: 0
-      // price: {}
+      orders: 0,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -1341,12 +1355,12 @@ export const assets: AssetExtended[] = [
       }
     ],
     stats: {
-      orders: 1
-      // price: {
-      //   tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
-      //   tokenSymbol: 'OCEAN',
-      //   value: 1
-      // }
+      orders: 1,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -1432,10 +1446,12 @@ export const assets: AssetExtended[] = [
       }
     ],
     stats: {
-      orders: 0
-      // price: {
-      //   value: 0
-      // }
+      orders: 0,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
@@ -1527,7 +1543,12 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 422.9883117676,
-      orders: 0
+      orders: 0,
+      price: {
+        value: 3231343254,
+        tokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
+        tokenSymbol: 'OCEAN'
+      }
     },
     version: '4.1.0',
     accessDetails: {
