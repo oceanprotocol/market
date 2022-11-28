@@ -75,6 +75,7 @@ export default function ContainerInput(props: InputProps): ReactElement {
           name={`${field.name}[0].url`}
           checkUrl={false}
           isLoading={isLoading}
+          storageType={'url'}
           handleButtonClick={handleValidation}
         />
       )}

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useCallback, useState } from 'react'
 import styles from './index.module.css'
 import { InputProps } from '..'
 import FilesInput from './FilesInput'
@@ -11,6 +11,7 @@ import Nft from './Nft'
 import InputRadio from './Radio'
 import ContainerInput from '@shared/FormInput/InputElement/ContainerInput'
 import TagsAutoComplete from './TagsAutoComplete'
+import TabsFile from '@shared/atoms/TabsFile'
 
 const cx = classNames.bind(styles)
 
@@ -55,6 +56,7 @@ export default function InputElement({
   ...props
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
+
   switch (props.type) {
     case 'select': {
       const sortedOptions =
@@ -79,6 +81,26 @@ export default function InputElement({
             ))}
         </select>
       )
+    }
+    case 'tabs': {
+      const tabs: any = []
+      props.fields.map((field: any, i) => {
+        return tabs.push({
+          title: field.title,
+          field,
+          props,
+          content: (
+            <FilesInput
+              key={`fileInput_${i}`}
+              {...field}
+              form={form}
+              {...props}
+            />
+          )
+        })
+      })
+
+      return <TabsFile items={tabs} className={styles.pricing} />
     }
     case 'textarea':
       return <textarea id={props.name} className={styles.textarea} {...props} />

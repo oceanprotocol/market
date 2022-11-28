@@ -6,6 +6,7 @@ import styles from './index.module.css'
 import InputGroup from '@shared/FormInput/InputGroup'
 import InputElement from '@shared/FormInput/InputElement'
 import isUrl from 'is-url-superb'
+import { isCID } from '@utils/ipfs'
 
 export interface URLInputProps {
   submitText: string
@@ -13,6 +14,7 @@ export interface URLInputProps {
   isLoading: boolean
   name: string
   checkUrl?: boolean
+  storageType?: string
 }
 
 export default function URLInput({
@@ -21,6 +23,7 @@ export default function URLInput({
   isLoading,
   name,
   checkUrl,
+  storageType,
   ...props
 }: URLInputProps): ReactElement {
   const [field, meta] = useField(name)
@@ -32,7 +35,8 @@ export default function URLInput({
     setIsButtonDisabled(
       !field?.value ||
         field.value === '' ||
-        (checkUrl && !isUrl(field.value)) ||
+        (checkUrl && storageType === 'url' && !isUrl(field.value)) ||
+        (checkUrl && storageType === 'ipfs' && !isCID(field.value)) ||
         field.value.includes('javascript:') ||
         meta?.error
     )

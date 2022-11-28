@@ -23,7 +23,8 @@ import { FormPublishData, MetadataAlgorithmContainer } from './_types'
 import {
   marketFeeAddress,
   publisherMarketOrderFee,
-  publisherMarketFixedSwapFee
+  publisherMarketFixedSwapFee,
+  defaultDatatokenTemplateIndex
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
 import { getContainerChecksum } from '@utils/docker'
@@ -138,18 +139,24 @@ export async function transformPublishFormToDdo(
   }
 
   // this is the default format hardcoded
+
   const file = {
     nftAddress,
     datatokenAddress,
     files: [
       {
-        type: 'url',
+        type: files[0].type,
         index: 0,
-        url: files[0].url,
+        [files[0].type === 'ipfs'
+          ? 'hash'
+          : files[0].type === 'arweave'
+          ? 'transactionId'
+          : 'url']: files[0].url,
         method: 'GET'
       }
     ]
   }
+
   const filesEncrypted =
     !isPreview &&
     files?.length &&
@@ -211,7 +218,7 @@ export async function createTokensAndPricing(
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
   const ercParams: DatatokenCreateParams = {
-    templateIndex: 2,
+    templateIndex: defaultDatatokenTemplateIndex,
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,

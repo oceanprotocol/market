@@ -79,8 +79,6 @@ export default function SearchPage({
     fetchAssets(parsed, chainIds)
   }, [parsed, chainIds, newCancelToken, fetchAssets])
 
-  console.log(queryResult?.results)
-
   return (
     <>
       <div className={styles.search}>

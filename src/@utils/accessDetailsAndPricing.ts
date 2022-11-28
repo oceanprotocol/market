@@ -30,6 +30,7 @@ const tokensPriceQuery = gql`
       publishMarketFeeAddress
       publishMarketFeeToken
       publishMarketFeeAmount
+      templateId
       orders(
         where: { payer: $account }
         orderBy: createdTimestamp
@@ -84,6 +85,7 @@ const tokenPriceQuery = gql`
       id
       symbol
       name
+      templateId
       publishMarketFeeAddress
       publishMarketFeeToken
       publishMarketFeeAmount
@@ -160,7 +162,7 @@ function getAccessDetailsFromTokenPrice(
     // the last valid order should be the last reuse order tx id if there is one
     accessDetails.validOrderTx = reusedOrder?.tx || order?.tx
   }
-
+  accessDetails.templateId = tokenPrice.templateId
   // TODO: fetch order fee from sub query
   accessDetails.publisherMarketOrderFee = tokenPrice?.publishMarketFeeAmount
 
@@ -169,6 +171,7 @@ function getAccessDetailsFromTokenPrice(
     const dispenser = tokenPrice.dispensers[0]
     accessDetails.type = 'free'
     accessDetails.addressOrId = dispenser.token.id
+
     accessDetails.price = '0'
     accessDetails.isPurchasable = dispenser.active
     accessDetails.datatoken = {

@@ -1,9 +1,9 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useField } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
-import { getFileUrlInfo } from '@utils/provider'
+import { getFileInfo } from '@utils/provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 
@@ -12,16 +12,27 @@ export default function FilesInput(props: InputProps): ReactElement {
   const [isLoading, setIsLoading] = useState(false)
   const { asset } = useAsset()
 
+  const providerUrl = props.form?.values?.services
+    ? props.form?.values?.services[0].providerUrl.url
+    : asset.services[0].serviceEndpoint
+
+  const storageType = field.value[0].type
+
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e?.preventDefault()
 
     try {
-      const providerUrl = props.form?.values?.services
-        ? props.form?.values?.services[0].providerUrl.url
-        : asset.services[0].serviceEndpoint
       setIsLoading(true)
-      const checkedFile = await getFileUrlInfo(url, providerUrl)
+
+      // TODO: handled on provider
+      if (url.includes('drive.google')) {
+        throw Error(
+          'Google Drive is not a supported hosting service. Please use an alternative.'
+        )
+      }
+
+      const checkedFile = await getFileInfo(url, providerUrl, storageType)
 
       // error if something's not right from response
       if (!checkedFile)
@@ -31,7 +42,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         throw Error('✗ No valid file detected. Check your URL and try again.')
 
       // if all good, add file to formik state
-      helpers.setValue([{ url, ...checkedFile[0] }])
+      helpers.setValue([{ url, type: storageType, ...checkedFile[0] }])
     } catch (error) {
       props.form.setFieldError(`${field.name}[0].url`, error.message)
       LoggerInstance.error(error.message)
@@ -42,7 +53,9 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   function handleClose() {
     helpers.setTouched(false)
-    helpers.setValue(meta.initialValue)
+    helpers.setValue([
+      { url: '', type: storageType === 'hidden' ? 'ipfs' : storageType }
+    ])
   }
 
   return (
@@ -56,7 +69,9 @@ export default function FilesInput(props: InputProps): ReactElement {
           {...props}
           name={`${field.name}[0].url`}
           isLoading={isLoading}
+          checkUrl={true}
           handleButtonClick={handleValidation}
+          storageType={storageType}
         />
       )}
     </>
