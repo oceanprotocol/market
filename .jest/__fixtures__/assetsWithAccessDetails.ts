@@ -68,8 +68,10 @@ export const assets: AssetExtended[] = [
     ],
     stats: {
       allocated: 0,
-      orders: 0
-      // price: {}
+      orders: 0,
+      price: {
+        value: 1
+      }
     },
     version: '4.1.0',
     accessDetails: {
