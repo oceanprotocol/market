@@ -113,7 +113,6 @@ export default function Edit({
         const nft = new Nft(web3, chainId)
 
         const newState = values.assetState === 'Active' ? 0 : 5
-        console.log('newState', newState)
         await nft.setMetadataState(asset?.nftAddress, accountId, newState)
       }
 
