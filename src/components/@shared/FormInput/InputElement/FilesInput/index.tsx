@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useField } from 'formik'
+import { Field, useField } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
-import { InputProps } from '@shared/FormInput'
+import Input, { InputProps } from '@shared/FormInput'
 import { getFileInfo } from '@utils/provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
@@ -89,15 +89,33 @@ export default function FilesInput(props: InputProps): ReactElement {
       field?.value?.[0]?.type === 'hidden' ? (
         <FileInfo file={field.value[0]} handleClose={handleClose} />
       ) : (
-        <UrlInput
-          submitText="Validate"
-          {...props}
-          name={`${field.name}[0].url`}
-          isLoading={isLoading}
-          checkUrl={true}
-          handleButtonClick={handleValidation}
-          storageType={storageType}
-        />
+        <>
+          <UrlInput
+            submitText="Validate"
+            {...props}
+            name={`${field.name}[0].url`}
+            isLoading={isLoading}
+            checkUrl={true}
+            handleButtonClick={handleValidation}
+            storageType={storageType}
+          />
+          {(storageType === 'graphql' || storageType === 'smartcontract') && (
+            <div className={`${styles.textblock}`}>
+              {props.innerFields &&
+                props.innerFields.map((innerField: any, i: number) => {
+                  return (
+                    <Field
+                      key={i}
+                      component={Input}
+                      {...innerField}
+                      name={`${field.name}[0].${innerField.value}`}
+                      value={field.value[0][innerField.value]}
+                    />
+                  )
+                })}
+            </div>
+          )}
+        </>
       )}
     </>
   )
