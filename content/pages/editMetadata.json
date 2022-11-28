@@ -29,19 +29,62 @@
       },
       {
         "name": "files",
-        "label": "New file",
-        "placeholder": "e.g. https://file.com/file.json",
-        "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. Leaving this field empty will not remove the current value.",
-        "prominentHelp": true,
-        "type": "files"
-      },
-      {
+        "label": "File",
+        "prominentHelp": false, 
+        "type": "tabs",
+        "fields": [{
+          "value": "ipfs",
+          "title": "IPFS",
+          "label": "CID",
+          "placeholder": "e.g. bafkreidgvpkjawlxz6sffxzwgooowe5yt7i6wsyg236mfoks77nywkptdq",
+          "help": "This CID will be stored encrypted after publishing.",
+          "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+          "prominentHelp": true,
+          "type": "files",
+          "required": true
+        },
+        {
+          "value": "arweave",
+          "title": "Arweave",
+          "label": "Transaction ID",
+          "placeholder": "e.g. DBRCL94j3QqdPaUtt4VWRen8rZfJZBb7Ey40iMpXfhtd",
+          "help": "This Transaction ID will be stored encrypted after publishing.",
+          "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+          "prominentHelp": true,
+          "type": "files",
+          "required": true
+        },
+        {
+          "value": "url",
+          "title": "URL",
+          "label": "File",
+          "placeholder": "e.g. https://file.com/file.json",
+          "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+          "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+          "prominentHelp": true,
+          "type": "files",
+          "required": true
+        }],
+        "sortOptions": false,
+        "required": true
+      },{
         "name": "links",
-        "label": "New sample file",
-        "placeholder": "e.g. https://file.com/samplefile.json",
-        "help": "Please provide a URL to a sample of your dataset file. This file should reveal the data structure of your dataset, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.** Leaving this field empty will not remove the current value.",
-        "prominentHelp": true,
-        "type": "files"
+        "label": "Sample file",
+        "prominentHelp": false,
+        "type": "tabs",
+        "fields": [
+          {
+            "value": "url",
+            "title": "URL",
+            "label": "File",
+            "placeholder": "e.g. https://file.com/file.json",
+            "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+            "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+            "prominentHelp": true,
+            "type": "files",
+            "required": false
+          }],
+        "required": false
       },
 
       {
@@ -65,6 +108,13 @@
         "label": "New Tags",
         "type": "tags",
         "placeholder": "e.g. logistics",
+        "required": false
+      },
+      {
+        "name": "paymentCollector",
+        "label": "Payment Collector Address",
+        "placeholder": "e.g. 0X123ABC...",
+        "help": "This address will receive the revenue from all sales. More info available in our [docs](https://docs.oceanprotocol.com/core-concepts/datanft-and-datatoken#revenue).",
         "required": false
       }
     ]

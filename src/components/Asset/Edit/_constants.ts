@@ -5,17 +5,19 @@ import { ComputeEditForm, MetadataEditForm } from './_types'
 export function getInitialValues(
   metadata: Metadata,
   timeout: number,
-  price: string
+  price: string,
+  paymentCollector: string
 ): Partial<MetadataEditForm> {
   return {
     name: metadata?.name,
     description: metadata?.description,
     price,
-    links: [{ url: '', type: '' }],
-    files: [{ url: '', type: '' }],
+    links: [{ url: '', type: 'url' }],
+    files: [{ url: '', type: 'ipfs' }],
     timeout: secondsToString(timeout),
     author: metadata?.author,
-    tags: metadata?.tags
+    tags: metadata?.tags,
+    paymentCollector
   }
 }
 
