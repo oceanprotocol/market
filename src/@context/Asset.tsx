@@ -90,7 +90,6 @@ function AssetProvider({
         setOwner(asset.nft?.owner)
         setIsInPurgatory(asset.purgatory?.state)
         setPurgatoryData(asset.purgatory)
-        console.log('1 = asset.nft.state', asset.nft.state)
         setAssetState(asset.nft.state === 0 ? 'Active' : 'Asset unlisted')
         LoggerInstance.log('[asset] Got asset', asset)
       }
@@ -185,8 +184,6 @@ function AssetProvider({
   // -----------------------------------
   useEffect(() => {
     if (!asset?.nft) return
-    console.log('########')
-    console.log('2 = asset.nft.state', asset.nft.state)
     setAssetState(asset.nft.state === 0 ? 'Active' : 'Asset unlisted')
   }, [asset])
 
