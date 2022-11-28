@@ -83,11 +83,11 @@ export const algorithmAquarius: Asset = {
   ],
   stats: {
     allocated: 0,
-    orders: 0
-    // price: {
-    //   value: 50,
-    //   tokenAddress: '0x967da4048cD07aB37855c090aAF366e4ce1b9F48',
-    //   tokenSymbol: 'OCEAN'
-    // }
+    orders: 0,
+    price: {
+      value: 50,
+      tokenAddress: '0x967da4048cD07aB37855c090aAF366e4ce1b9F48',
+      tokenSymbol: 'OCEAN'
+    }
   }
 }
