@@ -1,0 +1,91 @@
+.tabListContainer {
+  margin-left: auto;
+  margin-right: auto;
+  border-bottom: 1px solid var(--border-color);
+  max-width: 100%;
+}
+
+.tabList {
+  text-align: center;
+  padding: calc(var(--spacer) / 2) 0 0 0;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tab {
+  display: inline-block;
+  padding: calc(var(--spacer) / 8) calc(var(--spacer) / 2);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-small);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  margin-right: -1px;
+  background: none;
+  border: 0;
+}
+
+.tabHidden {
+  display: none !important;
+}
+
+.tab,
+.tab label {
+  cursor: pointer;
+}
+
+.tab:focus-visible {
+  outline: none;
+}
+
+.tab[aria-selected='true'] {
+  background-color: inherit;
+  color: inherit;
+  list-style: none;
+  background-color: var(--background-body);
+  border: 1px solid var(--border-color);
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  border-bottom: 0;
+}
+
+.tab[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
+.tab > div {
+  margin: 0;
+}
+
+.tabContent {
+  padding: calc(var(--spacer) / 2);
+  border: 1px solid var(--border-color);
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  border-top: 0;
+}
+
+.tabLabel {
+  color: var(--font-color-text);
+  font-size: var(--font-size-small);
+  font-family: var(--font-family-heading);
+  line-height: 1.2;
+  display: block;
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+@media (min-width: 40rem) {
+  .tabContent {
+    padding: calc(var(--spacer) / 2);
+  }
+}
+
+@media (min-width: 60rem) {
+  .tab {
+    padding: calc(var(--spacer) / 8) var(--spacer);
+  }
+}
+
+.radio {
+  composes: radio from '../../FormInput/InputElement/Radio/index.module.css';
+}

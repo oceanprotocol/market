@@ -115,7 +115,7 @@ export default function Edit({
           datatokenAddress: asset.services[0].datatokenAddress,
           files: [
             {
-              type: 'url',
+              type: values.files[0].type,
               index: 0,
               url: values.files[0].url,
               method: 'GET'

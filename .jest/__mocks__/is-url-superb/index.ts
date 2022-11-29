@@ -1,1 +1,3 @@
-export default true
+export default function isUrl() {
+  return true
+}
