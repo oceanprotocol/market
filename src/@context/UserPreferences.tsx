@@ -87,9 +87,18 @@ function UserPreferencesProvider({
     localStorage?.infiniteApproval || false
   )
   // Initialize signal settings
-  const [signalSettings, setSignalSettings] = useState<SignalSettingsItem>(
-    localStorage?.signalSettings || appConfig.signalSettings
-  )
+  let initSignalSettings: SignalSettingsItem = appConfig.signalSettings
+  if (localStorage?.signalSettings) {
+    if (localStorage.signalSettings && localStorage.signalSettings.version) {
+      if (
+        localStorage.signalSettings.version === appConfig.signalSettings.version
+      ) {
+        initSignalSettings = localStorage.signalSettings
+      }
+    }
+  }
+  const [signalSettings, setSignalSettings] =
+    useState<SignalSettingsItem>(initSignalSettings)
 
   // Write values to localStorage on change
   useEffect(() => {

@@ -52,7 +52,7 @@ export function getSignalUrls(signalOriginItem: SignalOriginItem) {
 export async function fetchSignals(url: string): Promise<any[]> {
   if (url.length === 0) throw Error('empty url')
   try {
-    return await fetchData(url, { timeout: 4000 })
+    return await fetchData(url, { timeout: 10000 })
   } catch (error) {
     console.log(error)
     throw Error('Something went wrong with the signal fetch - ' + url)

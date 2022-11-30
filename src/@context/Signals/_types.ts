@@ -128,6 +128,7 @@ export interface SignalSettingsItem {
    */
   signals: SignalOriginItem[]
   enabled: boolean
+  version: number
 }
 
 export interface SignalParams {

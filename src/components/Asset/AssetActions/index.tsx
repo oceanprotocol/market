@@ -58,7 +58,7 @@ export default function AssetActions({
   } = useSignalContext()
   const filterAssetSignals = () => {
     return signals
-      .filter((signal) => signal.type === 1)
+      .filter((signal) => true)
       .filter((signal) => signal.detailView.value)
   }
 
