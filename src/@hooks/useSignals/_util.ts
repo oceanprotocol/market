@@ -41,7 +41,6 @@ export function getURLParamsAssets({
 }
 
 export function getSignalUrls(signalOriginItem: SignalOriginItem) {
-  // return signalOriginItem.origin + getURLParams(signalOriginItem.urlParams)
   return signalOriginItem.origin
 }
 
@@ -53,7 +52,7 @@ export function getSignalUrls(signalOriginItem: SignalOriginItem) {
 export async function fetchSignals(url: string): Promise<any[]> {
   if (url.length === 0) throw Error('empty url')
   try {
-    return await fetchData(url)
+    return await fetchData(url, { timeout: 4000 })
   } catch (error) {
     console.log(error)
     throw Error('Something went wrong with the signal fetch - ' + url)
@@ -71,7 +70,6 @@ export function fetcher(...urls: any[]) {
 
 export async function onSuccess(data: AssetSignalItem[]) {
   if (!data) return
-  console.log('[signals] Got new signal data.', data)
   return data
 }
 export async function onError(error: any) {
@@ -88,17 +86,36 @@ export function arrayEqual(a1: any[], a2: any[]) {
   return true
 }
 
+/**
+ * detailedItems are loaded after fetching asset signals
+ * compArray is an array based on signal items in the current user settings/preferences
+ * @export
+ * @interface SignalOriginItem[] - detailedItems
+ * @interface SignalOriginItem[] - compArr
+ */
 function _appendSignalDetails(
   detailedItems: SignalOriginItem[],
   compArray: SignalOriginItem[]
 ) {
-  return detailedItems.map((signalOrigin, index) => {
-    return {
-      description: compArray[index]?.description || '',
-      title: compArray[index]?.title || '',
-      id: compArray[index]?.id || '',
-      ...signalOrigin
-    } as SignalOriginItem
+  return compArray.map((signalOrigin, index) => {
+    // If we have valid signal origin item results from the fetched/signals loaded
+    if (detailedItems[index]) {
+      // Return the signal data by merging signal details from config with recently fetched and available signals
+      return {
+        ...signalOrigin,
+        description:
+          detailedItems[index]?.description ||
+          compArray[index]?.description ||
+          '',
+        title: detailedItems[index]?.title || compArray[index]?.title || '',
+        id: detailedItems[index]?.id || compArray[index]?.id || '',
+        signals:
+          detailedItems[index]?.signals?.length > 0
+            ? detailedItems[index]?.signals
+            : []
+      } as SignalOriginItem
+    }
+    return signalOrigin
   })
 }
 
@@ -115,17 +132,21 @@ export function getAssetSignalItems(
     detailedItems = [...signalItems]
     detailedItems = _appendSignalDetails(detailedItems, assetSignalOrigins)
   }
-  return detailedItems.map((signalItem) => {
-    if (signalItem) {
-      return {
-        ...signalItem,
-        signals: signalItem.signals
-          ? signalItem.signals.filter((signal) =>
-              compareIds.includes(signal.assetId)
-            )
-          : []
+  return detailedItems
+    .filter((sig) => {
+      return sig.signals && sig.signals.length > 0
+    })
+    .map((signalItem) => {
+      if (signalItem) {
+        return {
+          ...signalItem,
+          signals: signalItem.signals
+            ? signalItem.signals.filter((signal) =>
+                compareIds.includes(signal.assetId)
+              )
+            : []
+        }
       }
-    }
-    return null
-  })
+      return null
+    })
 }

@@ -1,4 +1,4 @@
-import { BoxSelectionOption } from '@shared/FormFields/BoxSelection'
+import { BoxSelectionOption } from '@shared/FormInput/InputElement/BoxSelection'
 import Input from '@shared/FormInput'
 import { Field, useField, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
@@ -22,7 +22,7 @@ export default function MetadataFields(): ReactElement {
 
   // connect with Form state, use for conditional field rendering
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
-
+  // eslint-disable-next-line
   const [field, meta] = useField('metadata.dockerImageCustomChecksum')
 
   // BoxSelection component is not a Formik component

@@ -18,6 +18,7 @@ module.exports = {
 
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
+  defaultDatatokenTemplateIndex: 2,
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
     process.env.NEXT_PUBLIC_MARKET_FEE_ADDRESS ||
@@ -142,12 +143,38 @@ module.exports = {
         }
       },
       {
-        id: 'sample_utu_signal',
-        title: 'UTU Ocean Signals',
+        id: 'default_utu_signal',
+        title: 'UTU Ocean Ranking Signal',
         description:
           'UTU Ocean signal helps you make better data market decisions',
         origin:
-          'https://stage-api.ututrust.com/core-api/ocean/interactionSummary/id?assetId=$assetId&userAccount=$userAccount',
+          'https://stage-api.ututrust.com/core-api/ocean/ranking?assetId=$assetId&userAccount=$userAccount',
+        isCustom: false,
+        signals: [],
+        type: 1,
+        listView: {
+          id: 'listView',
+          value: true,
+          name: 'List View'
+        },
+        detailView: {
+          id: 'detailView',
+          value: true,
+          name: 'Details View'
+        },
+        urlParams: {
+          assetIds: [],
+          publisherIds: [],
+          userAddresses: []
+        }
+      },
+      {
+        id: 'default_utu_signal_2',
+        title: 'UTU Ocean Interaction Signal',
+        description:
+          'UTU Ocean signal helps you make better data market decisions',
+        origin:
+          'https://stage-api.ututrust.com/core-api/ocean/interactionSummary?assetId=$assetId&userAccount=$userAccount',
         isCustom: false,
         signals: [],
         type: 1,

@@ -8,17 +8,21 @@ import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './index.module.css'
 import { getServiceByName } from '@utils/ddo'
-import { formatPrice } from '@shared/Price/PriceUnit'
 import { useUserPreferences } from '@context/UserPreferences'
+import { formatNumber } from '@utils/numbers'
 
-declare type AssetTeaserProps = {
+export declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
+  noDescription?: boolean
+  noPrice?: boolean
 }
 
 export default function AssetTeaser({
   asset,
-  noPublisher
+  noPublisher,
+  noDescription,
+  noPrice
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
@@ -53,29 +57,57 @@ export default function AssetTeaser({
             </Dotdotdot>
             {!noPublisher && <Publisher account={owner} minimal />}
           </header>
-          <div className={styles.content}>
-            <Dotdotdot tagName="p" clamp={3}>
-              {removeMarkdown(description?.substring(0, 300) || '')}
-            </Dotdotdot>
-          </div>
-          {isUnsupportedPricing || !asset.services.length ? (
-            <strong>No pricing schema available</strong>
-          ) : (
-            <Price accessDetails={asset.accessDetails} size="small" />
+          {!noDescription && (
+            <div className={styles.content}>
+              <Dotdotdot tagName="p" clamp={3}>
+                {removeMarkdown(description?.substring(0, 300) || '')}
+              </Dotdotdot>
+            </div>
           )}
+          {!noPrice && (
+            <div className={styles.price}>
+              {isUnsupportedPricing || !asset.services.length ? (
+                <strong>No pricing schema available</strong>
+              ) : (
+                <Price accessDetails={asset.accessDetails} size="small" />
+              )}
+            </div>
+          )}
+
           <footer className={styles.footer}>
             {allocated && allocated > 0 ? (
               <span className={styles.typeLabel}>
-                {allocated < 0
-                  ? ''
-                  : `${formatPrice(allocated, locale)} veOCEAN`}
+                {allocated < 0 ? (
+                  ''
+                ) : (
+                  <>
+                    <strong>{formatNumber(allocated, locale, '0')}</strong>{' '}
+                    veOCEAN
+                  </>
+                )}
               </span>
             ) : null}
             {orders && orders > 0 ? (
               <span className={styles.typeLabel}>
-                {orders < 0
-                  ? 'N/A'
-                  : `${orders} ${orders === 1 ? 'sale' : 'sales'}`}
+                {orders < 0 ? (
+                  'N/A'
+                ) : (
+                  <>
+                    <strong>{orders}</strong> {orders === 1 ? 'sale' : 'sales'}
+                  </>
+                )}
+              </span>
+            ) : null}
+            {asset.views && asset.views > 0 ? (
+              <span className={styles.typeLabel}>
+                {asset.views < 0 ? (
+                  'N/A'
+                ) : (
+                  <>
+                    <strong>{asset.views}</strong>{' '}
+                    {asset.views === 1 ? 'view' : 'views'}
+                  </>
+                )}
               </span>
             ) : null}
           </footer>

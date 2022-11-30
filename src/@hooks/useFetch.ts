@@ -61,12 +61,10 @@ export function useMockFetch(
 
   function get(url = ''): Promise<SignalOriginItem[]> {
     setLoading(true)
-    console.log('fetching from mock signals api', baseUrl + url)
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (success) {
           setLoading(false)
-          console.log('fetched from signals API')
           resolve(sampleSignals.length > 0 ? sampleSignals : [])
         } else {
           setLoading(false)

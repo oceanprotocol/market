@@ -26,7 +26,12 @@ function getTabs(
     {
       title: 'Asset Signals',
       content: (
-        <AssetSignals signalSettings={signalSettings} accountId={accountId} />
+        <AssetSignals
+          signalSettings={signalSettings}
+          accountId={accountId}
+          signalType={1}
+          signalTypeTitle={'Asset'}
+        />
       )
     },
     {
@@ -66,7 +71,7 @@ export default function HistoryPage({
     tabs = getTabs(accountIdentifier, accountId, signals)
   }, [signals])
 
-  let defaultTabIndex = 0
+  let defaultTabIndex: number
   defaultTab === 'ComputeJobs' ? (defaultTabIndex = 4) : (defaultTabIndex = 0)
 
   return (

@@ -45,7 +45,7 @@ export default function FilterPrice({
   async function applyFilter(filter: string, filterType: string) {
     filterType === 'accessType' ? setAccessType(filter) : setServiceType(filter)
     if (addFiltersToUrl) {
-      let urlLocation = ''
+      let urlLocation: string
       if (filterType.localeCompare('accessType') === 0) {
         urlLocation = await addExistingParamsToUrl(location, ['accessType'])
       } else {

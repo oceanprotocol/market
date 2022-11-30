@@ -3,7 +3,6 @@ import Input from '@shared/FormInput'
 import React, { ReactElement, useState } from 'react'
 import { getFieldContent } from '../_utils'
 import styles from './Custom.module.css'
-// import contentAsset from '../../../../content/settings/custom.json'
 import Button from '@shared/atoms/Button'
 
 export function Custom(): ReactElement {
@@ -53,11 +52,11 @@ export function Custom(): ReactElement {
           />
           <p>
             Enter the URL of the API endpoint which you want to add. The URL
-            must contain the placeholder <p>$assetid</p> in order to pass to the
+            must contain the placeholder <b>$assetid</b> in order to pass to the
             API the reference of the data asset. Optionally you can also use
-            $usersaddress if the API needs the address of the connected user to
-            compute the signal value and $accountid in order to pass a reference
-            of the publisher.
+            <b>$userAccount</b> if the API needs the address of the connected
+            user to compute the signal value and <b>$publisherId</b> in order to
+            pass a reference of the publisher.
           </p>
           <div className={styles.sectionElementsBtn}>
             <Button type={'submit'} style="primary">

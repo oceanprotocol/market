@@ -12,7 +12,7 @@ import { validationSchema } from '../_validation'
 
 export default function GeneralTab(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { darkModeConfig, signalSettings } = appConfig
+  const { darkModeConfig } = appConfig
   const darkMode = useDarkMode(false, darkModeConfig)
   const textVisible = true
   return (

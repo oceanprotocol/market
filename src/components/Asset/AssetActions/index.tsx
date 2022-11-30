@@ -19,7 +19,6 @@ import { FormPublishData } from 'src/components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
 import { useSignalContext } from '@context/Signals'
-import useSignalsLoader, { useAssetListSignals } from '@hooks/useSignals'
 import { getAssetSignalItems } from '@hooks/useSignals/_util'
 import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
 
@@ -49,23 +48,19 @@ export default function AssetActions({
 
   // Signals loading logic
   // Get from AssetList component
-  const [dataTokenAddresses, setDataTokenAddresses] = useState<string[][]>([
-    asset.datatokens.map((data) => data.address)
-  ])
-  const { assetSignalOriginItems, signals, assetSignalsUrls } =
-    useSignalContext()
+  // const [dataTokenAddresses] = useState<string[][]>([
+  //   asset.datatokens.map((data) => data.address)
+  // ])
+  const {
+    signals,
+    signalItems,
+    loading: isFetchingSignals
+  } = useSignalContext()
   const filterAssetSignals = () => {
     return signals
       .filter((signal) => signal.type === 1)
       .filter((signal) => signal.detailView.value)
   }
-  const { urls } = useAssetListSignals(
-    dataTokenAddresses,
-    signals,
-    assetSignalsUrls,
-    'detailView'
-  )
-  const { signalItems, loading: isFetchingSignals } = useSignalsLoader(urls)
 
   const filteredSignals = getAssetSignalItems(
     signalItems,
@@ -179,21 +174,31 @@ export default function AssetActions({
   )
 
   const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
-
-  return (
-    <>
-      <Tabs items={tabs} className={styles.actions} />
+  let AssetSignalsEl
+  if (
+    filteredSignals.filter((signalOrigin) => signalOrigin.signals.length > 0)
+      .length === 0
+  ) {
+    AssetSignalsEl = (
+      <div className={styles.signalsText}>No signals available</div>
+    )
+  } else {
+    AssetSignalsEl = (
       <AssetSignals
         className={styles.actions}
         asset={asset}
         signalItems={filteredSignals}
         isLoading={isFetchingSignals}
       />
-      {/*{signalItems ? (*/}
-      {/*  <AssetTeaserSignals assetId={asset.id} signalItems={filteredSignals} />*/}
-      {/*) : null}*/}
+    )
+  }
+  return (
+    <>
+      <Tabs items={tabs} className={styles.actions} />
+      {AssetSignalsEl}
       <Web3Feedback
         networkId={asset?.chainId}
+        accountId={accountId}
         isAssetNetwork={isAssetNetwork}
       />
     </>

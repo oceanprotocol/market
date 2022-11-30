@@ -5,7 +5,6 @@ import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
 import { useWeb3 } from '@context/Web3'
-import { chainIds } from 'app.config'
 import { getComputeJobs } from '@utils/compute'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useCancelToken } from '@hooks/useCancelToken'
@@ -114,7 +113,7 @@ export default function HistoryPage({
     setRefetchJobs
   )
 
-  let defaultTabIndex = 0
+  let defaultTabIndex: number
   defaultTab === 'ComputeJobs' ? (defaultTabIndex = 4) : (defaultTabIndex = 0)
 
   return (

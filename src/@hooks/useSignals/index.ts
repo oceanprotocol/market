@@ -1,5 +1,5 @@
 import { SignalOriginItem } from '@context/Signals/_types'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import {
   fetcher,
@@ -20,12 +20,14 @@ export default function useSignalsLoader(
   const [publisherIds, setPublisherIds] = useState<string[]>([])
   const [userAddresses, setUserAddresses] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  let urlKey = null
-  if (origin) {
-    if (origin[0] && origin[0].length > 0) {
-      urlKey = origin
+
+  const urlKey = useMemo(() => {
+    if (origin && Array.isArray(origin)) {
+      return origin?.filter((url: string) => url)
     }
-  }
+    return null
+  }, [origin])
+
   const { data, error, isValidating } = useSWR(urlKey, fetcher, {
     refreshInterval,
     revalidateOnFocus: false,
@@ -50,55 +52,42 @@ export default function useSignalsLoader(
   }
 }
 
-export function useAssetListSignals(
-  dataTokenAddresses: string[][],
+export function useListSignals(
+  datatokenAddresses: string[],
   signals: SignalOriginItem[],
   assetSignalsUrls: string[],
-  signalViewType = 'listView'
+  signalViewType = 'listView',
+  onlyAssetSignals = false
 ) {
   const [assetSignalOrigins, setAssetSignalOrigins] = useState<any[]>([])
   const [datatokensStringsArray, setDatatokensStringsArray] = useState([])
-  const [urls, setUrls] = useState<any[]>()
+  const [urls, setUrls] = useState<any[]>([])
   const { accountId } = useWeb3()
   useEffect(() => {
-    if (dataTokenAddresses && dataTokenAddresses.length > 0) {
+    if (datatokenAddresses && datatokenAddresses.length > 0) {
       // Get only those asset signals that are for the list view and for asset types only
       setAssetSignalOrigins(
         signals
-          .filter((signal) => signal.type === 1)
+          .filter((signal) => (onlyAssetSignals ? signal.type === 1 : true))
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           .filter((signal) => signal[signalViewType].value)
       )
-      setDatatokensStringsArray(
-        dataTokenAddresses.map((datatokensList) => {
-          if (datatokensList.length > 1) datatokensList.join(',')
-          return datatokensList[0]
-        })
-      )
-      console.log('datatokensStringsArray')
-      console.log(dataTokenAddresses)
+      const newDatatokenString = datatokenAddresses.join(',')
+      setDatatokensStringsArray([newDatatokenString])
       setUrls(
         assetSignalsUrls.map((item) => {
-          console.log(
-            getURLParamsAssets({
-              uuids: [
-                { label: '$assetId', value: datatokensStringsArray.join(',') },
-                { label: '$userAccount', value: accountId }
-              ],
-              origin: item
-            })
-          )
           return getURLParamsAssets({
             uuids: [
               { label: '$assetId', value: datatokensStringsArray.join(',') },
-              { label: '$userAccount', value: accountId }
+              { label: '$userAccount', value: accountId || '' }
             ],
             origin: item
           })
         })
       )
     }
-  }, [signals, dataTokenAddresses])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signals, datatokenAddresses, assetSignalsUrls, signalViewType, accountId])
   return { urls, assetSignalOrigins }
 }

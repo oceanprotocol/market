@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useMemo } from 'react'
 import Link from 'next/link'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '@shared/Price'
@@ -7,32 +7,27 @@ import Publisher from '@shared/Publisher'
 import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from '../AssetTeaser/index.module.css'
+import stylesSignals from '../SignalAssetTeaser/SignalAssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { useSignalContext } from '@context/Signals'
 import { getAssetSignalItems } from '@hooks/useSignals/_util'
-import Loader from '@shared/atoms/Loader'
 import { SignalOriginItem } from '@context/Signals/_types'
 import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
 import AssetTeaserSignals from '../../Signals/AssetTeaserSignals'
-import { formatPrice } from '@shared/Price/PriceUnit'
 import { useUserPreferences } from '@context/UserPreferences'
+import { formatNumber } from '@utils/numbers'
+import Loader from '@shared/atoms/Loader'
 
 declare type AssetTeaserProps = {
   asset: AssetExtended
   noPublisher?: boolean
   isLoading?: boolean
+  noDescription?: boolean
+  noPrice?: boolean
   signalItems?: SignalOriginItem[]
-}
-
-function LoaderArea() {
-  return (
-    <div className={styles.loaderWrap}>
-      <Loader />
-    </div>
-  )
 }
 
 export default function SignalAssetTeaser({
@@ -43,7 +38,7 @@ export default function SignalAssetTeaser({
 }: AssetTeaserProps): ReactElement {
   const { datatokens } = asset
   const { locale } = useUserPreferences()
-  const { signals, assetSignalsUrls } = useSignalContext()
+  const { signals } = useSignalContext()
   const filterAssetSignals = () => {
     return signals
       .filter((signal) => signal.type === 1)
@@ -54,25 +49,22 @@ export default function SignalAssetTeaser({
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
-  const filteredSignals = getAssetSignalItems(
-    signalItems,
-    datatokens.map((data: AssetDatatoken) => data.address),
-    filterAssetSignals()
+  const filteredSignals = useMemo(
+    () =>
+      getAssetSignalItems(
+        signalItems,
+        datatokens.map((data: AssetDatatoken) => data.address),
+        signals
+      ),
+    [datatokens, signalItems, signals]
   )
+
   const isUnsupportedPricing =
     asset?.accessDetaiPolygonIconls?.type === 'NOT_SUPPORTED'
   const { orders, allocated } = asset.stats
-  useEffect(() => {
-    if (signalItems) {
-      // eslint-disable-next-line no-empty
-      if (signalItems.length > 0) {
-      }
-    }
-  }, [signalItems])
-
-  if (!signalItems || signalItems.length < 1) {
-    return null
-  }
+  // if (!signalItems || signalItems.length < 1) {
+  //   return null
+  // }
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`}>
@@ -120,7 +112,7 @@ export default function SignalAssetTeaser({
               <span className={styles.typeLabel}>
                 {allocated < 0
                   ? ''
-                  : `${formatPrice(allocated, locale)} veOCEAN`}
+                  : `${formatNumber(allocated, locale)} veOCEAN`}
               </span>
             ) : null}
             {orders && orders > 0 ? (
@@ -133,9 +125,15 @@ export default function SignalAssetTeaser({
           </footer>
         </a>
       </Link>
-      {signalItems ? (
+      {signalItems && !isLoading ? (
         <AssetTeaserSignals assetId={asset.id} signalItems={filteredSignals} />
-      ) : null}
+      ) : (
+        <div>
+          <div className={stylesSignals.signalContainer}>
+            <Loader message={'Loading signals'} />
+          </div>
+        </div>
+      )}
     </article>
   )
 }

@@ -46,9 +46,9 @@
         "react/jsx-no-bind": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "no-use-before-define": "off",
-        "@typescript-eslint/no-use-before-define": "error",
+        "@typescript-eslint/no-use-before-define": "off",
         "prefer-destructuring": [
-          "error",
+          "off",
           {
             "object": true,
             "array": false
