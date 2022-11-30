@@ -40,9 +40,9 @@ export default function AssetSignals({
     signalItems.forEach((item, index) => {
       if (item.signals.length > 1) {
         itemsList.push(
-          item.signals.map((sig) => {
+          item.signals.map((sig, index) => {
             return (
-              <li key={sig.id + item.title}>
+              <li key={sig.id + item.title + index}>
                 {sig ? (
                   <div className={styles.assetListTitle}>
                     <div className={styles.assetListTitleName}>
@@ -66,7 +66,7 @@ export default function AssetSignals({
       if (item.signals.length === 1) {
         itemsList.push(
           item.title ? (
-            <li key={index}>
+            <li key={item.id + item.title + index}>
               {item.signals ? (
                 <div className={styles.assetListTitle}>
                   <div className={styles.assetListTitleName}>
@@ -100,7 +100,7 @@ export default function AssetSignals({
           item.signals.map((sig) => {
             // Return @SignalsItem
             return (
-              <li key={index}>
+              <li key={sig.id + item.title + index}>
                 {item.signals.length > 0 ? (
                   <div className={styles.assetListTitle}>
                     <div className={styles.assetListTitleName}>
