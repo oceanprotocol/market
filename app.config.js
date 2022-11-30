@@ -89,8 +89,60 @@ module.exports = {
   // Check out SignalSettingsItem type in the Signals context folder to learn more
   signalSettings: {
     lastUpdated: new Date().toDateString(),
-    version: 0.1,
+    version: 0.11,
     signals: [
+      // {
+      //   id: 'sample_quantitative_signal',
+      //   title: 'Sample Quantitative Signal',
+      //   description:
+      //       'Qualitative signal helps you make better investment decisions',
+      //   origin:
+      //       'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/$assetId',
+      //   isCustom: false,
+      //   signals: [],
+      //   type: 1,
+      //   listView: {
+      //     id: 'listView',
+      //     value: true,
+      //     name: 'List View'
+      //   },
+      //   detailView: {
+      //     id: 'detailsView',
+      //     value: true,
+      //     name: 'Details View'
+      //   },
+      //   urlParams: {
+      //     assetIds: [],
+      //     publisherIds: [],
+      //     userAddresses: []
+      //   }
+      // },
+      // {
+      //   id: 'sample_qualitative_signal',
+      //   title: 'Sample Qualitative Signal',
+      //   description:
+      //       'Qualitative signal helps you make better investment decisions',
+      //   origin:
+      //       'https://62c5a9c8134fa108c2591da2.mockapi.io/api/protocol/v1/sample-signals/id?assetId=$assetId',
+      //   isCustom: false,
+      //   signals: [],
+      //   type: 1,
+      //   listView: {
+      //     id: 'listView',
+      //     value: true,
+      //     name: 'List View'
+      //   },
+      //   detailView: {
+      //     id: 'detailsView',
+      //     value: true,
+      //     name: 'Details View'
+      //   },
+      //   urlParams: {
+      //     assetIds: [],
+      //     publisherIds: [],
+      //     userAddresses: []
+      //   }
+      // },
       {
         id: 'default_utu_signal',
         title: 'UTU Ocean Ranking Signal',
