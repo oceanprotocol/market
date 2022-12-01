@@ -19,6 +19,7 @@ import axios, { CancelToken } from 'axios'
 import web3 from 'web3'
 import { useMarketMetadata } from '../MarketMetadata'
 import { getEnsProfile } from '@utils/ens'
+import { getPublisherOrders } from '../../@utils/subgraph'
 
 interface ProfileProviderValue {
   profile: Profile
@@ -223,7 +224,12 @@ function ProfileProvider({
       try {
         const result = await getUserSales(accountId, chainIds)
         setSales(result)
-        LoggerInstance.log(`[profile] Fetched sales number: ${result}.`, result)
+        const graphData = await getPublisherOrders(137, accountId)
+        LoggerInstance.log(`[profile] Fetched sales number:`, result)
+        LoggerInstance.log(
+          `[profile] Fetched sales Data: ${graphData}.`,
+          graphData
+        )
       } catch (error) {
         LoggerInstance.error(error.message)
       }

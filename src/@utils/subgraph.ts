@@ -55,6 +55,17 @@ const OpcsApprovedTokensQuery = gql`
   }
 `
 
+const publisherOrdersQuery = gql`
+  query publisherOrdersQuery($user: ID!) {
+    user(id: $user) {
+      orders {
+        lastPriceToken
+        lastPriceValue
+      }
+    }
+  }
+`
+
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
@@ -167,6 +178,22 @@ export async function getOpcsApprovedTokens(
   try {
     const response = await fetchData(OpcsApprovedTokensQuery, null, context)
     return response?.data?.opcs[0].approvedTokens
+  } catch (error) {
+    LoggerInstance.error('Error getOpcsApprovedTokens: ', error.message)
+    throw Error(error.message)
+  }
+}
+
+export async function getPublisherOrders(
+  chainId: number,
+  accountId: string
+): Promise<TokenInfo[]> {
+  const context = getQueryContext(chainId)
+  const variables = { user: accountId?.toLowerCase() }
+
+  try {
+    const response = await fetchData(publisherOrdersQuery, variables, context)
+    return response.data.user.orders
   } catch (error) {
     LoggerInstance.error('Error getOpcsApprovedTokens: ', error.message)
     throw Error(error.message)
