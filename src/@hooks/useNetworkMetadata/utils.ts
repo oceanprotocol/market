@@ -11,9 +11,8 @@ export function getNetworkType(network: EthereumListsChain): string {
   // We hack in mainnet detection for moonriver.
   if (
     network &&
-    !network.name.includes('Testnet') &&
-    !network.title?.includes('Testnet') &&
-    network.name !== 'Moonbase Alpha'
+    !network.name?.includes('Testnet') &&
+    !network.title?.includes('Testnet')
   ) {
     return NetworkType.Mainnet
   } else {
@@ -21,18 +20,12 @@ export function getNetworkType(network: EthereumListsChain): string {
   }
 }
 
-export function getNetworkDisplayName(
-  data: EthereumListsChain,
-  networkId: number
-): string {
+export function getNetworkDisplayName(data: EthereumListsChain): string {
   let displayName
 
-  switch (networkId) {
+  switch (data.chainId) {
     case 137:
       displayName = 'Polygon'
-      break
-    case 1287:
-      displayName = 'Moonbase'
       break
     case 1285:
       displayName = 'Moonriver'
@@ -43,9 +36,6 @@ export function getNetworkDisplayName(
     case 8996:
       displayName = 'Development'
       break
-    case 3:
-      displayName = 'Ropsten'
-      break
     case 5:
       displayName = 'Görli'
       break
@@ -54,7 +44,9 @@ export function getNetworkDisplayName(
       break
     default:
       displayName = data
-        ? `${data.chain} ${getNetworkType(data) === 'mainnet' ? '' : data.name}`
+        ? `${data.chain}${
+            getNetworkType(data) === 'mainnet' ? '' : ` ${data.name}`
+          }`
         : 'Unknown'
       break
   }

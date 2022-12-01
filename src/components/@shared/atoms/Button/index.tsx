@@ -41,10 +41,8 @@ export default function Button({
   })
 
   return to ? (
-    <Link href={to}>
-      <a className={styleClasses} {...props}>
-        {children}
-      </a>
+    <Link href={to} className={styleClasses} {...props}>
+      {children}
     </Link>
   ) : href ? (
     <a href={href} className={styleClasses} {...props}>

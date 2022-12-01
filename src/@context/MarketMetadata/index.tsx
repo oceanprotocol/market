@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useState
 } from 'react'
-import { OpcQuery } from 'src/@types/subgraph/OpcQuery'
+import { OpcQuery } from '../../../src/@types/subgraph/OpcQuery'
 import { OperationResult } from 'urql'
 import { opcQuery } from './_queries'
 import { MarketMetadataProviderValue, OpcFee } from './_types'

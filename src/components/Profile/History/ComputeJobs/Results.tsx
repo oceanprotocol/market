@@ -12,7 +12,7 @@ import FormHelp from '@shared/FormInput/Help'
 import content from '../../../../../content/pages/history.json'
 import { useWeb3 } from '@context/Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { retrieveAsset } from '@utils/aquarius'
+import { getAsset } from '@utils/aquarius'
 
 export default function Results({
   job
@@ -21,7 +21,6 @@ export default function Results({
 }): ReactElement {
   const providerInstance = new Provider()
   const { accountId, web3 } = useWeb3()
-  const [isLoading, setIsLoading] = useState(false)
   const isFinished = job.dateFinished !== null
 
   const [datasetProvider, setDatasetProvider] = useState<string>()
@@ -29,7 +28,7 @@ export default function Results({
 
   useEffect(() => {
     async function getAssetMetadata() {
-      const ddo = await retrieveAsset(job.inputDID[0], newCancelToken())
+      const ddo = await getAsset(job.inputDID[0], newCancelToken())
       setDatasetProvider(ddo.services[0].serviceEndpoint)
     }
     getAssetMetadata()
@@ -61,7 +60,6 @@ export default function Results({
     if (!accountId || !job) return
 
     try {
-      setIsLoading(true)
       const jobResult = await providerInstance.getComputeResultUrl(
         datasetProvider,
         web3,
@@ -72,8 +70,6 @@ export default function Results({
       await downloadFileBrowser(jobResult)
     } catch (error) {
       LoggerInstance.error(error.message)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -97,7 +93,7 @@ export default function Results({
                   </Button>
                 </ListItem>
               ) : (
-                <ListItem>No results found.</ListItem>
+                <ListItem key={i}>No results found.</ListItem>
               )
             )}
         </ul>
