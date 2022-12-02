@@ -5,6 +5,7 @@ import Button from '@shared/atoms/Button'
 import Stats from './Stats'
 import Account from './Account'
 import styles from './index.module.css'
+import { useWeb3 } from '@context/Web3'
 import { useProfile } from '@context/Profile'
 import { useOrbis } from '@context/Orbis'
 
@@ -27,7 +28,8 @@ export default function AccountHeader({
   accountId: string
 }): ReactElement {
   const { profile, ownAccount } = useProfile()
-  const { account: orbisAccount, createConversation, getDid } = useOrbis()
+  const { accountId: ownAccountId } = useWeb3()
+  const { createConversation, getDid } = useOrbis()
   const [isShowMore, setIsShowMore] = useState(false)
   const [userDid, setUserDid] = useState<string | undefined>()
 
@@ -45,6 +47,7 @@ export default function AccountHeader({
     if (accountId) {
       getUserDid()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId])
 
   return (
@@ -55,18 +58,17 @@ export default function AccountHeader({
       </div>
 
       <div>
-        {!ownAccount && (
+        {!ownAccount && userDid && (
           <div className={styles.dmButton}>
             <Button
               style="primary"
               size="small"
-              disabled={!userDid || !orbisAccount}
+              disabled={!ownAccountId}
               onClick={() => createConversation(userDid)}
             >
               Send Direct Message
             </Button>
-            {userDid === null && <span>User has no Ceramic Network DID</span>}
-            {!orbisAccount && <span>Please connect your wallet</span>}
+            {!ownAccountId && <span>Please connect your wallet</span>}
           </div>
         )}
         <Markdown text={profile?.description} className={styles.description} />

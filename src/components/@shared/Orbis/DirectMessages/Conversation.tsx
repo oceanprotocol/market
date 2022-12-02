@@ -116,6 +116,7 @@ export default function DmConversation() {
         setMessages([])
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationId, orbis, isMounted])
 
   useEffect(() => {
@@ -125,6 +126,7 @@ export default function DmConversation() {
     return () => {
       el.removeEventListener('scroll', onScrollMessages)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages])
 
   return (

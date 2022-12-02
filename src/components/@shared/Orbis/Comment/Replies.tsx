@@ -107,6 +107,7 @@ const Replies = ({
 
   useEffect(() => {
     if (master) getPosts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [master])
 
   return (

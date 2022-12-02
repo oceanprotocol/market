@@ -2,6 +2,7 @@ import React, {
   useContext,
   createContext,
   useState,
+  useMemo,
   useEffect,
   ReactNode,
   ReactElement
@@ -13,6 +14,8 @@ import { useWeb3 } from './Web3'
 import { accountTruncate } from '@utils/web3'
 import { didToAddress } from '@utils/orbis'
 
+import DirectMessages from '@shared/Orbis/DirectMessages'
+
 type IOrbisProvider = {
   orbis: IOrbis
   account: IOrbisProfile
@@ -22,20 +25,23 @@ type IOrbisProvider = {
   conversations: IOrbisConversation[]
   conversationTitle: string
   unreadMessages: IOrbisNotification[]
-  connectOrbis: () => Promise<void>
+  connectOrbis: (lit?: boolean) => Promise<IOrbisProfile | null>
   disconnectOrbis: () => void
-  checkConnection: (value: boolean) => Promise<void>
+  checkConnection: (options: {
+    autoConnect?: boolean
+    lit?: boolean
+  }) => Promise<IOrbisProfile>
   connectLit: () => Promise<{
     status?: number
-    error?: any
+    error?: unknown
     result?: string
   }>
   setOpenConversations: (value: boolean) => void
   setConversationId: (value: string) => void
   setConversations: (value: IOrbisConversation[]) => void
-  getConversations: () => Promise<void>
+  getConversations: (did: string) => Promise<void>
   createConversation: (value: string) => Promise<void>
-  checkConversation: (value: string) => IOrbisConversation[]
+  checkConversation: (value: string) => Promise<IOrbisConversation[]>
   getDid: (value: string) => Promise<string>
 }
 
@@ -43,27 +49,53 @@ const OrbisContext = createContext({} as IOrbisProvider)
 
 const orbis: IOrbis = new Orbis()
 const NOTIFICATION_REFRESH_INTERVAL = 10000
-const CONVERSATION_CONTEXT = 'ocean_market'
+const CONVERSATION_CONTEXT = 'ocean_market' // Can be changed to whatever
 
 function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
-  const { web3Provider } = useWeb3()
+  const { web3Provider, accountId } = useWeb3()
   const [account, setAccount] = useState<IOrbisProfile | null>(null)
   const [hasLit, setHasLit] = useState(false)
   const [openConversations, setOpenConversations] = useState(false)
   const [conversationId, setConversationId] = useState(null)
-  const [conversations, setConversations] = useState([])
-  const [conversationTitle, setConversationTitle] = useState(null)
+  const [conversations, setConversations] = useState<IOrbisConversation[]>([])
   const [unreadMessages, setUnreadMessages] = useState<IOrbisNotification[]>([])
 
+  const conversationTitle = useMemo(() => {
+    let title = null
+    if (conversationId && conversations.length) {
+      const conversation = conversations.find(
+        (o) => o.stream_id === conversationId
+      )
+      if (conversation) {
+        const recipient = conversation.recipients_details.find(
+          (o: IOrbisProfile) => o.did !== account.did
+        )
+
+        const address =
+          recipient?.metadata?.address || didToAddress(recipient?.did)
+
+        title =
+          recipient?.metadata?.ensName ||
+          recipient?.profile?.username ||
+          accountTruncate(address)
+      }
+    }
+
+    return title
+  }, [conversationId, account, conversations])
+
   // Connecting to Orbis
-  const connectOrbis = async () => {
+  const connectOrbis = async (lit = false) => {
     const res = await orbis.connect_v2({
       provider: web3Provider,
-      chain: 'ethereum'
+      chain: 'ethereum',
+      lit
     })
+
     if (res.status === 200) {
       const { data } = await orbis.getProfile(res.did)
       setAccount(data)
+      return data
     } else {
       await sleep(2000)
       await connectOrbis()
@@ -83,34 +115,37 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     return res
   }
 
-  const checkConnection = async (autoConnect = true) => {
+  const checkConnection = async ({
+    autoConnect,
+    lit
+  }: {
+    autoConnect?: boolean
+    lit?: boolean
+  }) => {
     const res = await orbis.isConnected()
-
     if (res.status === 200) {
       setHasLit(res.details.hasLit)
       const { data } = await orbis.getProfile(res.did)
       setAccount(data)
+      return data
     } else if (autoConnect) {
-      await connectOrbis()
+      const data = await connectOrbis(lit)
+      return data
     }
+    return null
   }
 
-  const getConversations = async () => {
-    const { data, error } = await orbis.getConversations({
-      did: account?.did,
+  const getConversations = async (did: string = null) => {
+    const { data } = await orbis.getConversations({
+      did,
       context: CONVERSATION_CONTEXT
     })
 
-    if (error) {
-      console.log(error)
-    }
-
-    if (data) {
-      setConversations(data)
-    }
+    setConversations(data || [])
+    return data || []
   }
 
-  const checkConversation = (userDid: string) => {
+  const checkConversation = async (userDid: string) => {
     const filtered: IOrbisConversation[] = conversations.filter(
       (conversation: IOrbisConversation) => {
         return conversation.recipients.includes(userDid)
@@ -121,15 +156,30 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   }
 
   const createConversation = async (userDid: string) => {
+    let _account = account
+    if (!_account) {
+      // Check connection and force connect
+      _account = await checkConnection({ autoConnect: true })
+    }
+
     if (!hasLit) {
       const res = await connectLit()
       if (res.status !== 200) return
     }
 
-    const convoExists = checkConversation(userDid)
+    let _conversations = [...conversations]
+    if (!_conversations.length) {
+      _conversations = await getConversations(_account?.did)
+    }
 
-    if (convoExists.length > 0) {
-      setConversationId(convoExists[0].stream_id)
+    const existingConversations = _conversations.filter(
+      (conversation: IOrbisConversation) => {
+        return conversation.recipients.includes(userDid)
+      }
+    )
+
+    if (existingConversations.length > 0) {
+      setConversationId(existingConversations[0].stream_id)
       setOpenConversations(true)
     } else {
       const res = await orbis.createConversation({
@@ -150,7 +200,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     })
 
     if (error) {
-      console.log(error)
       setUnreadMessages([])
     } else if (data.length > 0) {
       const _unreads = data.filter((o: IOrbisNotification) => {
@@ -166,7 +215,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     const { data, error } = await orbis.getDids(address)
 
     if (error) {
-      console.log(error)
       return
     }
 
@@ -184,38 +232,17 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   }, NOTIFICATION_REFRESH_INTERVAL)
 
   useEffect(() => {
-    if (account) {
-      // Fetch conversations
-      getConversations()
-    } else if (web3Provider) {
+    if (accountId && web3Provider) {
       // Check if wallet connected
-      checkConnection()
+      checkConnection({})
     }
-  }, [account, web3Provider])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountId, web3Provider])
 
   useEffect(() => {
-    if (conversationId && conversations.length) {
-      const conversation = conversations.find(
-        (o) => o.stream_id === conversationId
-      )
-      if (conversation) {
-        const recipient = conversation.recipients_details.find(
-          (o: IOrbisProfile) => o.did !== account.did
-        )
-
-        const address =
-          recipient?.metadata?.address || didToAddress(recipient?.did)
-
-        setConversationTitle(
-          recipient?.metadata?.ensName ||
-            recipient?.profile?.username ||
-            accountTruncate(address)
-        )
-      }
-    } else {
-      setConversationTitle(null)
-    }
-  }, [conversationId, account, conversations])
+    if (account) getConversations(account?.did)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account])
 
   return (
     <OrbisContext.Provider
@@ -242,6 +269,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       }}
     >
       {children}
+      {account && <DirectMessages />}
     </OrbisContext.Provider>
   )
 }

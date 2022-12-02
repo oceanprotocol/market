@@ -22,7 +22,7 @@ export default function Postbox({
   editPost?: IOrbisPost
   enterToSend?: boolean
   cancelReplyTo?: () => void
-  callback: (value: any) => void
+  callback: (value: IOrbisPost | IOrbisPost['content']) => void
 }) {
   const [focusOffset, setFocusOffset] = useState<number | undefined>()
   const [focusNode, setFocusNode] = useState<Node | undefined>()

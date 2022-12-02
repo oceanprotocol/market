@@ -13,10 +13,6 @@ export default function MasterPost({ post }: { post: IOrbisPost }) {
     null
   )
 
-  const deletePost = async (post: IOrbisPost) => {
-    console.log('delete post:', post)
-  }
-
   useEffect(() => {
     if (scrollToEl !== null) {
       const _scrollable: HTMLElement = masterPost.current.closest(

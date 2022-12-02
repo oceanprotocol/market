@@ -12,11 +12,6 @@ export default function Comment({ context }: { context: string }) {
   const [hasMore, setHasMore] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const _context =
-    process.env.NODE_ENV === 'development'
-      ? 'kjzl6cwe1jw145gun3sei0a4puw586yxa614le1tfh434y7quv2wsm0ivhbge7x'
-      : context
-
   const fetchPosts = async () => {
     setLoading(true)
     const { data, error } = await orbis.getPosts(
@@ -42,6 +37,7 @@ export default function Comment({ context }: { context: string }) {
     if (context && !posts.length && orbis) {
       fetchPosts()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context, posts, orbis])
 
   const callback = (nPost: IOrbisPost) => {

@@ -15,7 +15,7 @@ export default function Postbox({
   conversationId: string
   replyTo?: IOrbisMessage
   cancelReplyTo?: () => void
-  callback: (value: any) => void
+  callback: (value: IOrbisMessage) => void
 }) {
   const [focusOffset, setFocusOffset] = useState<number | undefined>()
   const [focusNode, setFocusNode] = useState<Node | undefined>()
