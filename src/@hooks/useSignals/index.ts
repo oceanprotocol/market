@@ -87,7 +87,10 @@ export function useListSignals(
                     .map((datatoken) => datatoken.toString().toLowerCase())
                     .join(',')
                 },
-                { label: '$user', value: accountId || NOT_LOGGED_IN }
+                {
+                  label: '$user',
+                  value: accountId.toString().toLowerCase() || NOT_LOGGED_IN
+                }
               ],
               origin: item
             })
