@@ -89,7 +89,7 @@ export function useListSignals(
                 },
                 {
                   label: '$user',
-                  value: accountId.toString().toLowerCase() || NOT_LOGGED_IN
+                  value: accountId?.toString().toLowerCase() || NOT_LOGGED_IN
                 }
               ],
               origin: item
