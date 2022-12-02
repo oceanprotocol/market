@@ -20,7 +20,6 @@ import web3 from 'web3'
 import { useMarketMetadata } from '../MarketMetadata'
 import { getEnsProfile } from '@utils/ens'
 import { getPublisherOrders } from '../../@utils/subgraph'
-import { PublisherOrders } from 'src/@types/subgraph/OrdersData'
 
 interface ProfileProviderValue {
   profile: Profile
@@ -225,7 +224,9 @@ function ProfileProvider({
       try {
         const result = await getUserSales(accountId, chainIds)
         setSales(result)
+        console.log('accountId', accountId)
         const graphData = await getPublisherOrders(accountId)
+        console.log('graphData.length', graphData.length)
         let orderValue = 0
         graphData.forEach((order) => {
           orderValue += Number(order.lastPriceValue)

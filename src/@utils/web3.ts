@@ -33,7 +33,7 @@ export async function addCustomNetwork(
 
   const newNetworkData = {
     chainId: `0x${network.chainId.toString(16)}`,
-    chainName: getNetworkDisplayName(network, network.chainId),
+    chainName: getNetworkDisplayName(network),
     nativeCurrency: network.nativeCurrency,
     rpcUrls: network.rpc,
     blockExplorerUrls

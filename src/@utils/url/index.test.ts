@@ -1,4 +1,4 @@
-import { sanitizeUrl } from './url'
+import { sanitizeUrl } from '.'
 
 describe('@utils/url', () => {
   test('sanitizeUrl', () => {

@@ -21,14 +21,13 @@ export default function PrivacyLanguages({
           return (
             <React.Fragment key={policy.policy}>
               {i > 0 && ' — '}
-              <Link href={slug}>
-                <a
-                  onClick={() => {
-                    setPrivacyPolicySlug(slug)
-                  }}
-                >
-                  {policy.language}
-                </a>
+              <Link
+                href={slug}
+                onClick={() => {
+                  setPrivacyPolicySlug(slug)
+                }}
+              >
+                {policy.language}
               </Link>
             </React.Fragment>
           )
