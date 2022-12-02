@@ -9,6 +9,7 @@ import {
 } from '@hooks/useSignals/_util'
 import { UseSignals } from '@hooks/useSignals/_types'
 import { useWeb3 } from '@context/Web3'
+import { NOT_LOGGED_IN } from '@utils/constants'
 // Reusable state and fetch logic for loading signal data to any page, context or component
 // A hook to fetch signals for all available in a particular signal type list e.g asset list or publisher list
 export default function useSignalsLoader(
@@ -75,17 +76,27 @@ export function useListSignals(
       )
       const newDatatokenString = datatokenAddresses.join(',')
       setDatatokensStringsArray([newDatatokenString])
-      setUrls(
-        assetSignalsUrls.map((item) => {
-          return getURLParamsAssets({
-            uuids: [
-              { label: '$assetId', value: datatokensStringsArray.join(',') },
-              { label: '$userAccount', value: accountId || '' }
-            ],
-            origin: item
+      if (assetSignalsUrls.length > 0) {
+        setUrls(
+          assetSignalsUrls.map((item) => {
+            return getURLParamsAssets({
+              uuids: [
+                {
+                  label: '$assetId',
+                  value: datatokensStringsArray
+                    .map((datatoken) => datatoken.toString().toLowerCase())
+                    .join(',')
+                },
+                {
+                  label: '$user',
+                  value: accountId.toString().toLowerCase() || NOT_LOGGED_IN
+                }
+              ],
+              origin: item
+            })
           })
-        })
-      )
+        )
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signals, datatokenAddresses, assetSignalsUrls, signalViewType, accountId])

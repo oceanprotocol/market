@@ -89,7 +89,7 @@ module.exports = {
   // Check out SignalSettingsItem type in the Signals context folder to learn more
   signalSettings: {
     lastUpdated: new Date().toDateString(),
-    version: 0.12,
+    version: 0.13,
     signals: [
       // {
       //   id: 'sample_quantitative_signal',
@@ -149,7 +149,7 @@ module.exports = {
         description:
           'UTU Ocean signal helps you make better data market decisions',
         origin:
-          'https://stage-api.ututrust.com/core-api/ocean/ranking?assetId=$assetId&userAccount=$userAccount',
+          'https://stage-api.ututrust.com/core-api/ocean/ranking?assetId=$assetId&user=$user',
         isCustom: false,
         signals: [],
         type: 1,
@@ -175,7 +175,7 @@ module.exports = {
         description:
           'UTU Ocean signal helps you make better data market decisions',
         origin:
-          'https://stage-api.ututrust.com/core-api/ocean/interactionSummary?assetId=$assetId&userAccount=$userAccount',
+          'https://stage-api.ututrust.com/core-api/ocean/interactionSummary?assetId=$assetId&user=$user',
         isCustom: false,
         signals: [],
         type: 1,
