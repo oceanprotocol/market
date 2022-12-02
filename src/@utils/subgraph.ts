@@ -2,7 +2,10 @@ import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
-import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
+import {
+  OrdersData_orders as OrdersData,
+  PublisherOrders
+} from '../@types/subgraph/OrdersData'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
 import appConfig from '../../app.config'
 
@@ -185,15 +188,22 @@ export async function getOpcsApprovedTokens(
 }
 
 export async function getPublisherOrders(
-  chainId: number,
   accountId: string
-): Promise<TokenInfo[]> {
-  const context = getQueryContext(chainId)
+): Promise<PublisherOrders[]> {
   const variables = { user: accountId?.toLowerCase() }
-
   try {
-    const response = await fetchData(publisherOrdersQuery, variables, context)
-    return response.data.user.orders
+    const response = await fetchDataForMultipleChains(
+      publisherOrdersQuery,
+      variables,
+      [1, 137, 56, 246, 1285]
+    )
+    let data: PublisherOrders[] = []
+    response.forEach((element) => {
+      if (element.user.orders) {
+        data = data.concat(element.user.orders)
+      }
+    })
+    return data
   } catch (error) {
     LoggerInstance.error('Error getOpcsApprovedTokens: ', error.message)
     throw Error(error.message)
