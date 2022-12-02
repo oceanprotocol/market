@@ -17,7 +17,7 @@ export function getURLParams(urlParams: SignalParams | string[]) {
     paramString += `publisherId=${urlParams.publisherIds.join(',')}`
   }
   if (urlParams.userAddresses.length > 0) {
-    paramString += `userAccountId=${urlParams.userAddresses.join(',')}`
+    paramString += `user=${urlParams.userAddresses.join(',')}`
   }
   return paramString
 }
