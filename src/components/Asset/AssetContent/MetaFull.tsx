@@ -7,7 +7,7 @@ import { useWeb3 } from '@context/Web3'
 import { Asset, Datatoken, LoggerInstance } from '@oceanprotocol/lib'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
-  const [paymentCollector, setPaymentCollector] = useState<string>()
+  const [paymentCollector, setPaymentCollector] = React.useState<string>()
   const { isInPurgatory } = useAsset()
   const { web3 } = useWeb3()
 
