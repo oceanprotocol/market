@@ -14,6 +14,7 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
   useEffect(() => {
     async function getInitialPaymentCollector() {
       try {
+        if (!web3 || !ddo) return
         const datatoken = new Datatoken(web3)
         setPaymentCollector(
           await datatoken.getPaymentCollector(ddo.datatokens[0].address)
