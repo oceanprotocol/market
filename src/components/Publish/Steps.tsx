@@ -14,6 +14,8 @@ export function Steps({
   const { values, setFieldValue, touched, setTouched } =
     useFormikContext<FormPublishData>()
 
+  const isCustomProviderUrl = values?.services?.[0]?.providerUrl.custom
+
   // auto-sync user chainId & account into form data values
   useEffect(() => {
     if (!chainId || !accountId) return
@@ -41,11 +43,7 @@ export function Steps({
 
   // Auto-change default providerUrl on user network change
   useEffect(() => {
-    if (
-      !values?.user?.chainId ||
-      values?.services[0]?.providerUrl.custom === true
-    )
-      return
+    if (!values?.user?.chainId || isCustomProviderUrl === true) return
 
     const config = getOceanConfig(values.user.chainId)
     if (config) {
@@ -57,12 +55,7 @@ export function Steps({
     }
 
     setTouched({ ...touched, services: [{ providerUrl: { url: true } }] })
-  }, [
-    values?.user?.chainId,
-    values?.services[0]?.providerUrl.custom,
-    setFieldValue,
-    setTouched
-  ])
+  }, [values?.user?.chainId, isCustomProviderUrl, setFieldValue, setTouched])
 
   const { component } = wizardSteps.filter((stepContent) => {
     return stepContent.step === values.user.stepCurrent

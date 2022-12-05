@@ -13,7 +13,7 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
 import { useFormikContext } from 'formik'
-import { FormPublishData } from 'src/components/Publish/_types'
+import { FormPublishData } from '@components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
 

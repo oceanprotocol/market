@@ -1,5 +1,7 @@
-import { getEnsName, getEnsAddress, getEnsProfile } from './ens'
+import { getEnsName, getEnsAddress, getEnsProfile } from '.'
 
+// TODO: this directly hits the ENS registry, which is not ideal
+// so we need to rewrite this to mock responses instead for more reliable test runs.
 describe('@utils/ens', () => {
   jest.setTimeout(10000)
   jest.retryTimes(2)
