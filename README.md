@@ -351,6 +351,8 @@ npm run build
 npm run serve
 ```
 
+The build command runs `next export` and outputs a static site under `./out`, ready to be deployed.
+
 ## ⬆️ Deployment
 
 Every branch or Pull Request is automatically deployed to multiple hosts for redundancy and emergency reasons:
