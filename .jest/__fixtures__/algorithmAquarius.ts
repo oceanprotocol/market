@@ -12,7 +12,17 @@ export const algorithmAquarius: Asset = {
     type: 'algorithm',
     name: 'algorithmTestitest',
     description: 'This is an algorithm test.',
-    tags: [],
+    links: ['https://www.oceanprotocol.com/sample'],
+    tags: [
+      'trading',
+      'defi',
+      'algorithm',
+      'algorithmic-crypto-trading',
+      'algo-trading',
+      'trading-strategy',
+      'cryptocurrency',
+      'crypto'
+    ],
     author: 'Test User',
     license: 'https://market.oceanprotocol.com/terms',
     additionalInformation: {
