@@ -1,6 +1,7 @@
 import { isCID } from '@utils/ipfs'
 import isUrl from 'is-url-superb'
 import * as Yup from 'yup'
+import web3 from 'web3'
 
 export function testLinks(isEdit?: boolean) {
   return Yup.string().test((value, context) => {
@@ -14,6 +15,7 @@ export function testLinks(isEdit?: boolean) {
         validField = true
         break
       case 'url':
+      case 'graphql':
         validField = isUrl(value?.toString() || '')
         // if we're in publish, the field must be valid
         if (!validField) {
@@ -44,12 +46,8 @@ export function testLinks(isEdit?: boolean) {
           ? 'Transaction ID required.'
           : 'Transaction ID not valid.'
         break
-      case 'graphql':
-        validField = value?.toString().length < 30
-        errorMessage = !value?.toString() ? 'URL required.' : 'URL not valid.'
-        break
       case 'smartcontract':
-        validField = value?.toString().length < 30
+        validField = web3.utils.isAddress(value?.toString())
         errorMessage = !value?.toString()
           ? 'Address required.'
           : 'Address not valid.'

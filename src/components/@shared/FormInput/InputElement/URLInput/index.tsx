@@ -7,7 +7,7 @@ import InputGroup from '@shared/FormInput/InputGroup'
 import InputElement from '@shared/FormInput/InputElement'
 import isUrl from 'is-url-superb'
 import { isCID } from '@utils/ipfs'
-
+import web3 from 'web3'
 export interface URLInputProps {
   submitText: string
   handleButtonClick(e: React.SyntheticEvent, data: string): void
@@ -28,7 +28,7 @@ export default function URLInput({
 }: URLInputProps): ReactElement {
   const [field, meta] = useField(name)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
-
+  const inputValues = (props as any).value[0]
   useEffect(() => {
     if (!field?.value) return
 
@@ -37,10 +37,15 @@ export default function URLInput({
         field.value === '' ||
         (checkUrl && storageType === 'url' && !isUrl(field.value)) ||
         (checkUrl && storageType === 'ipfs' && !isCID(field.value)) ||
+        (checkUrl &&
+          storageType === 'graphql' &&
+          !isCID(field.value) &&
+          !inputValues?.query) ||
         field.value.includes('javascript:') ||
+        (storageType === 'smartcontract' && !inputValues?.abi) ||
         meta?.error
     )
-  }, [field?.value, meta?.error])
+  }, [field?.value, meta?.error, inputValues])
 
   return (
     <>

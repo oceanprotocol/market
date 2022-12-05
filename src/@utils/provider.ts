@@ -13,6 +13,7 @@ import {
   ProviderInstance,
   UrlFile
 } from '@oceanprotocol/lib'
+import { QueryHeader } from '@shared/FormInput/InputElement/Headers'
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils/types'
 import { getValidUntilTime } from './compute'
@@ -88,16 +89,19 @@ export async function getFileDidInfo(
   }
 }
 
+interface FileIntoExt extends FileInfo {
+  headers?: []
+}
+
 export async function getFileInfo(
   file: string,
   providerUrl: string,
   storageType: string,
   query?: string,
+  headers?: QueryHeader[],
   abi?: AbiItem,
   chainId?: number
-): Promise<FileInfo[]> {
-  console.log(file, providerUrl, storageType, query, abi, chainId)
-
+): Promise<FileIntoExt[]> {
   try {
     let response
     switch (storageType) {

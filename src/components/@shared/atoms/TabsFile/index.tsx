@@ -76,7 +76,10 @@ export default function TabsFile({
         {items.map((item, index) => {
           return (
             <>
-              <TabPanel key={`tabpanel_${items[tabIndex].props.name}_${index}`}>
+              <TabPanel
+                key={`tabpanel_${items[tabIndex].props.name}_${index}`}
+                className={styles.tabPanel}
+              >
                 {!isHidden && (
                   <label className={styles.tabLabel}>
                     {item.field.label}

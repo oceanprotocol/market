@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { Field, useField } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
@@ -7,8 +7,8 @@ import { getFileInfo } from '@utils/provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import styles from './Index.module.css'
-import { AbiInput } from 'web3-utils/types'
 import { useWeb3 } from '@context/Web3'
+import InputHeaders from '../Headers'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -22,8 +22,8 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   const storageType = field.value[0].type
   const query = field.value[0].query || undefined
-  // const abi = field.value[0].abi || undefined
-  console.log(field, query)
+  const abi = field.value[0].abi || undefined
+  const headers = field.value[0].headers || undefined
 
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
@@ -40,6 +40,7 @@ export default function FilesInput(props: InputProps): ReactElement {
       }
 
       // TODO: fixing AbiItem typing
+      /*
       const abi: any = {
         inputs: [{ name: '', type: '' }],
         name: 'swapOceanFee',
@@ -47,12 +48,14 @@ export default function FilesInput(props: InputProps): ReactElement {
         stateMutability: 'pure',
         type: 'function'
       }
+      */
 
       const checkedFile = await getFileInfo(
         url,
         providerUrl,
         storageType,
         query,
+        headers,
         abi,
         chainId
       )
@@ -81,8 +84,6 @@ export default function FilesInput(props: InputProps): ReactElement {
     ])
   }
 
-  console.log(props)
-
   return (
     <>
       {field?.value?.[0]?.valid === true ||
@@ -104,13 +105,17 @@ export default function FilesInput(props: InputProps): ReactElement {
               {props.innerFields &&
                 props.innerFields.map((innerField: any, i: number) => {
                   return (
-                    <Field
-                      key={i}
-                      component={Input}
-                      {...innerField}
-                      name={`${field.name}[0].${innerField.value}`}
-                      value={field.value[0][innerField.value]}
-                    />
+                    <>
+                      <Field
+                        key={i}
+                        component={
+                          innerField.type === 'headers' ? InputHeaders : Input
+                        }
+                        {...innerField}
+                        name={`${field.name}[0].${innerField.value}`}
+                        value={field.value[0][innerField.value]}
+                      />
+                    </>
                   )
                 })}
             </div>
