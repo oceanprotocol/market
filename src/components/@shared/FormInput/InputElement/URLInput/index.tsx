@@ -28,7 +28,7 @@ export default function URLInput({
 }: URLInputProps): ReactElement {
   const [field, meta] = useField(name)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
-  const inputValues = (props as any).value[0]
+  const inputValues = (props as any)?.value
   useEffect(() => {
     if (!field?.value) return
 
@@ -40,9 +40,9 @@ export default function URLInput({
         (checkUrl &&
           storageType === 'graphql' &&
           !isCID(field.value) &&
-          !inputValues?.query) ||
+          !inputValues[0]?.query) ||
         field.value.includes('javascript:') ||
-        (storageType === 'smartcontract' && !inputValues?.abi) ||
+        (storageType === 'smartcontract' && !inputValues[0]?.abi) ||
         meta?.error
     )
   }, [field?.value, meta?.error, inputValues])
