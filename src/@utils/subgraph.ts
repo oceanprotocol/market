@@ -57,6 +57,7 @@ const OpcsApprovedTokensQuery = gql`
 
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
+  if (chainId === 800001) return 'https://v4.subgraph2.mumbai.oceanprotocol.com'
   return config.subgraphUri
 }
 
