@@ -14,16 +14,19 @@ import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import Web3 from 'web3'
-import Button from '@shared/atoms/Button'
 import RelatedAssets from '../RelatedAssets'
+import OwnerActions from '../OwnerActions'
+import Web3Feedback from '@components/@shared/Web3Feedback'
+import { useWeb3 } from '@context/Web3'
 
 export default function AssetContent({
   asset
 }: {
   asset: AssetExtended
 }): ReactElement {
-  const { isInPurgatory, purgatoryData, isOwner, isAssetNetwork } = useAsset()
+  const { isInPurgatory, purgatoryData, isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
+  const { accountId } = useWeb3()
   const [receipts, setReceipts] = useState([])
   const [nftPublisher, setNftPublisher] = useState<string>()
 
@@ -72,13 +75,12 @@ export default function AssetContent({
 
         <div className={styles.actions}>
           <AssetActions asset={asset} />
-          {isOwner && isAssetNetwork && (
-            <div className={styles.ownerActions}>
-              <Button style="text" size="small" to={`/asset/${asset?.id}/edit`}>
-                Edit Asset
-              </Button>
-            </div>
-          )}
+          <OwnerActions />
+          <Web3Feedback
+            networkId={asset?.chainId}
+            accountId={accountId}
+            isAssetNetwork={isAssetNetwork}
+          />
           <RelatedAssets />
         </div>
       </article>

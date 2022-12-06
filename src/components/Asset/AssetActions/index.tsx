@@ -15,7 +15,7 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from '@components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
-import Calica from './Calica'
+import Calica from '../OwnerActions'
 
 export default function AssetActions({
   asset
@@ -133,32 +133,24 @@ export default function AssetActions({
   }, [balance, accountId, asset?.accessDetails, dtBalance])
 
   return (
-    <>
-      <div className={styles.actions}>
-        {isCompute ? (
-          <Compute
-            asset={asset}
-            dtBalance={dtBalance}
-            file={fileMetadata}
-            fileIsLoading={fileIsLoading}
-          />
-        ) : (
-          <Download
-            asset={asset}
-            dtBalance={dtBalance}
-            isBalanceSufficient={isBalanceSufficient}
-            file={fileMetadata}
-            fileIsLoading={fileIsLoading}
-          />
-        )}
-        <AssetStats />
-      </div>
-      <Calica />
-      <Web3Feedback
-        networkId={asset?.chainId}
-        accountId={accountId}
-        isAssetNetwork={isAssetNetwork}
-      />
-    </>
+    <div className={styles.actions}>
+      {isCompute ? (
+        <Compute
+          asset={asset}
+          dtBalance={dtBalance}
+          file={fileMetadata}
+          fileIsLoading={fileIsLoading}
+        />
+      ) : (
+        <Download
+          asset={asset}
+          dtBalance={dtBalance}
+          isBalanceSufficient={isBalanceSufficient}
+          file={fileMetadata}
+          fileIsLoading={fileIsLoading}
+        />
+      )}
+      <AssetStats />
+    </div>
   )
 }
