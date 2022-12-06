@@ -239,7 +239,7 @@ export default function PublishPage({
     let _datatokenAddress = datatokenAddress
     let _ddo = ddo
     let _ddoEncrypted = ddoEncrypted
-    let _did = did
+    const _did = did
 
     if (!_erc721Address || !_datatokenAddress) {
       const { erc721Address, datatokenAddress } = await create(values)

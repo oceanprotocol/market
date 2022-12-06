@@ -1,4 +1,4 @@
-import {ServiceComputeOptions} from '@oceanprotocol/lib'
+import { ServiceComputeOptions } from '@oceanprotocol/lib'
 
 interface FileInfo {
   url: string

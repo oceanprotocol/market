@@ -1,8 +1,10 @@
-import React from 'react'
-import {signalSettings} from '../../../app.config.js'
-import {FormSettingsData} from './_types'
-import {ServiceComputeOptions} from '@oceanprotocol/lib'
-import {SignalOriginItem, SignalSettingsItem} from '../../@context/Signals/_types'
+import { ServiceComputeOptions } from '@oceanprotocol/lib'
+import { signalSettings } from '../../../app.config.js'
+import {
+  SignalOriginItem,
+  SignalSettingsItem
+} from '../../@context/Signals/_types'
+import { FormSettingsData } from './_types'
 
 const computeOptions: ServiceComputeOptions = {
   allowRawAlgorithm: false,

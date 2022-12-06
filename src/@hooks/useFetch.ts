@@ -23,7 +23,7 @@ export default function useFetch(baseUrl: string) {
     })
   }
   // If we need to send data we can use the POST method here
-  function post(url: string, body: {}) {
+  function post(url: string, body: Record<string, unknown>) {
     return new Promise((resolve, reject) => {
       fetch(baseUrl + url, {
         method: 'post',
