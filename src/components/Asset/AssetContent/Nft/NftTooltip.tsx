@@ -65,7 +65,7 @@ export default function NftTooltip({
             <a
               href={openSeaUrl}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className={explorerLinkStyles.link}
             >
               View on OpenSea <External />

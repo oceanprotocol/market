@@ -31,7 +31,7 @@ export default function ExplorerLink({
       href={`${url}/${path}`}
       title={`View on ${oceanConfig?.explorerUri}`}
       target="_blank"
-      rel="noreferrer"
+      rel="noopener noreferrer"
       className={`${styles.link} ${className || ''}`}
     >
       {children} <External />

@@ -14,7 +14,7 @@ export default function BuildId(): ReactElement {
         isMainBranch ? commitId : commitBranch
       }`}
       target="_blank"
-      rel="noreferrer"
+      rel="noopener noreferrer"
       title="Build ID referring to the linked commit hash."
     >
       {isMainBranch ? commitId.substring(0, 7) : commitBranch}

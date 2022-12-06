@@ -1,7 +1,6 @@
 .consume {
   width: auto;
   margin-bottom: calc(var(--spacer) / 2);
-  margin-top: -1rem;
 }
 
 .info {

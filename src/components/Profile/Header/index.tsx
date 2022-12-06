@@ -13,7 +13,7 @@ const isDescriptionTextClamped = () => {
 
 const LinkExternal = ({ url, text }: { url: string; text: string }) => {
   return (
-    <a href={url} target="_blank" rel="noreferrer">
+    <a href={url} target="_blank" rel="noopener noreferrer">
       {text}
     </a>
   )

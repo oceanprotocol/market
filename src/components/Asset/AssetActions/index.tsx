@@ -2,7 +2,6 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Download from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
-import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
@@ -16,7 +15,7 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from '@components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
-import CalicaIntegration from './CalicaIntegration'
+import Calica from './Calica'
 
 export default function AssetActions({
   asset
@@ -133,34 +132,28 @@ export default function AssetActions({
     }
   }, [balance, accountId, asset?.accessDetails, dtBalance])
 
-  const UseContent = (
-    <>
-      {isCompute ? (
-        <Compute
-          asset={asset}
-          dtBalance={dtBalance}
-          file={fileMetadata}
-          fileIsLoading={fileIsLoading}
-        />
-      ) : (
-        <Download
-          asset={asset}
-          dtBalance={dtBalance}
-          isBalanceSufficient={isBalanceSufficient}
-          file={fileMetadata}
-          fileIsLoading={fileIsLoading}
-        />
-      )}
-      <CalicaIntegration />
-      <AssetStats />
-    </>
-  )
-
-  const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
-
   return (
     <>
-      <Tabs items={tabs} className={styles.actions} />
+      <div className={styles.actions}>
+        {isCompute ? (
+          <Compute
+            asset={asset}
+            dtBalance={dtBalance}
+            file={fileMetadata}
+            fileIsLoading={fileIsLoading}
+          />
+        ) : (
+          <Download
+            asset={asset}
+            dtBalance={dtBalance}
+            isBalanceSufficient={isBalanceSufficient}
+            file={fileMetadata}
+            fileIsLoading={fileIsLoading}
+          />
+        )}
+        <AssetStats />
+      </div>
+      <Calica />
       <Web3Feedback
         networkId={asset?.chainId}
         accountId={accountId}

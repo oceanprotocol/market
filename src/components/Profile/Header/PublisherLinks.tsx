@@ -59,7 +59,7 @@ export default function PublisherLinks({
           href={getLinkData(link).href}
           key={link.key}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           {getLinkData(link).label}{' '}
           <External className={styles.linksExternal} />

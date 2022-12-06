@@ -9,7 +9,7 @@ const SampleButton = ({ url }: { url: string }) => (
   <Button
     href={url}
     target="_blank"
-    rel="noreferrer"
+    rel="noopener noreferrer"
     download
     style="text"
     size="small"

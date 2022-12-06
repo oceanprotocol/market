@@ -26,6 +26,7 @@ export default function Footer(): ReactElement {
             size="small"
             href="https://oceanprotocol.com"
             target="_blank"
+            rel="noopener noreferrer"
           >
             Ocean Protocol <External className={styles.svg} />
           </Button>

@@ -94,7 +94,7 @@ export default function AssetSelection({
                       className={styles.link}
                       href={`/asset/${asset.did}`}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                     >
                       <External />
                     </a>

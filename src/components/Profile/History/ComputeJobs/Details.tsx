@@ -26,8 +26,7 @@ function Asset({
         <a
           className={styles.assetLink}
           href={`/asset/${did}`}
-          target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           <External />
         </a>
