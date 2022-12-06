@@ -7,13 +7,13 @@ import { compareAsBN } from '@utils/numbers'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import Web3Feedback from '@shared/Web3Feedback'
-import { getFileDidInfo, getFileUrlInfo } from '@utils/provider'
+import { getFileDidInfo, getFileInfo } from '@utils/provider'
 import { getOceanConfig } from '@utils/ocean'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
 import { useFormikContext } from 'formik'
-import { FormPublishData } from 'src/components/Publish/_types'
+import { FormPublishData } from '@components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
 import CalicaIntegration from './CalicaIntegration'
@@ -53,14 +53,20 @@ export default function AssetActions({
         formikState?.values?.services[0].providerUrl.url ||
         asset?.services[0]?.serviceEndpoint
 
+      const storageType = formikState?.values?.services
+        ? formikState?.values?.services[0].files[0].type
+        : null
+
       try {
         const fileInfoResponse = formikState?.values?.services?.[0].files?.[0]
           .url
-          ? await getFileUrlInfo(
+          ? await getFileInfo(
               formikState?.values?.services?.[0].files?.[0].url,
-              providerUrl
+              providerUrl,
+              storageType
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
+
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
 
         // set the content type in the Dataset Schema

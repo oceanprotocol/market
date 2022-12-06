@@ -1,11 +1,12 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import { Formik } from 'formik'
 import {
   LoggerInstance,
   Metadata,
   FixedRateExchange,
   Asset,
-  Service
+  Service,
+  Datatoken
 } from '@oceanprotocol/lib'
 import { validationSchema } from './_validation'
 import { getInitialValues } from './_constants'
@@ -36,9 +37,27 @@ export default function Edit({
   const { accountId, web3 } = useWeb3()
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
+  const [paymentCollector, setPaymentCollector] = useState<string>()
   const [error, setError] = useState<string>()
   const isComputeType = asset?.services[0]?.type === 'compute'
   const hasFeedback = error || success
+
+  useEffect(() => {
+    async function getInitialPaymentCollector() {
+      try {
+        const datatoken = new Datatoken(web3)
+        setPaymentCollector(
+          await datatoken.getPaymentCollector(asset?.datatokens[0].address)
+        )
+      } catch (error) {
+        LoggerInstance.error(
+          '[EditMetadata: getInitialPaymentCollector]',
+          error
+        )
+      }
+    }
+    getInitialPaymentCollector()
+  }, [asset, web3])
 
   async function updateFixedPrice(newPrice: string) {
     const config = getOceanConfig(asset.chainId)
@@ -81,13 +100,22 @@ export default function Edit({
         values.price !== asset.accessDetails.price &&
         (await updateFixedPrice(values.price))
 
+      if (values.paymentCollector !== paymentCollector) {
+        const datatoken = new Datatoken(web3)
+        await datatoken.setPaymentCollector(
+          asset?.datatokens[0].address,
+          accountId,
+          values.paymentCollector
+        )
+      }
+
       if (values.files[0]?.url) {
         const file = {
           nftAddress: asset.nftAddress,
           datatokenAddress: asset.services[0].datatokenAddress,
           files: [
             {
-              type: 'url',
+              type: values.files[0].type,
               index: 0,
               url: values.files[0].url,
               method: 'GET'
@@ -147,7 +175,8 @@ export default function Edit({
       initialValues={getInitialValues(
         asset?.metadata,
         asset?.services[0]?.timeout,
-        asset?.accessDetails?.price
+        asset?.accessDetails?.price,
+        paymentCollector
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {

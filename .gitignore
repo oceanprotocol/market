@@ -8,6 +8,7 @@ coverage
 .next
 .artifacts
 .vercel
+.swc
 repo-metadata.json
 networks-metadata.json
 src/@types/subgraph

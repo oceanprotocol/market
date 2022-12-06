@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
-import { retrieveAsset } from '@utils/aquarius'
+import { getAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
@@ -66,7 +66,7 @@ function AssetProvider({
 
       LoggerInstance.log('[asset] Fetching asset...')
       setLoading(true)
-      const asset = await retrieveAsset(did, token)
+      const asset = await getAsset(did, token)
 
       if (!asset) {
         setError(

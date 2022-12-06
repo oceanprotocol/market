@@ -1,5 +1,5 @@
 import React from 'react'
-import { allowFixedPricing } from '../../../app.config.js'
+import { allowFixedPricing } from '../../../app.config'
 import {
   FormPublishData,
   MetadataAlgorithmContainer,
@@ -72,8 +72,8 @@ export const initialValues: FormPublishData = {
   },
   services: [
     {
-      files: [{ url: '', type: '' }],
-      links: [{ url: '', type: '' }],
+      files: [{ url: '', type: 'ipfs' }],
+      links: [{ url: '', type: 'url' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: 'access',

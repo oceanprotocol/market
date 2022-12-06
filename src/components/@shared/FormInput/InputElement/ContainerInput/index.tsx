@@ -2,7 +2,7 @@ import React, { ReactElement, useState } from 'react'
 import { useField, useFormikContext } from 'formik'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
-import { FormPublishData } from 'src/components/Publish/_types'
+import { FormPublishData } from '@components/Publish/_types'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import ImageInfo from './Info'
 import { getContainerChecksum } from '@utils/docker'
@@ -75,6 +75,7 @@ export default function ContainerInput(props: InputProps): ReactElement {
           name={`${field.name}[0].url`}
           checkUrl={false}
           isLoading={isLoading}
+          storageType={'url'}
           handleButtonClick={handleValidation}
         />
       )}

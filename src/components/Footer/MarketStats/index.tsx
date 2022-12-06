@@ -6,7 +6,7 @@ import useNetworkMetadata, {
 } from '@hooks/useNetworkMetadata'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import styles from './index.module.css'
-import { FooterStatsValues_globalStatistics as FooterStatsValuesGlobalStatistics } from 'src/@types/subgraph/FooterStatsValues'
+import { FooterStatsValues_globalStatistics as FooterStatsValuesGlobalStatistics } from '../../../../src/@types/subgraph/FooterStatsValues'
 import MarketStatsTotal from './Total'
 import { queryGlobalStatistics } from './_queries'
 import { StatsTotal } from './_types'

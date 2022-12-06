@@ -23,7 +23,7 @@ export default function FileInfo({
         {hideUrl ? 'https://oceanprotocol/placeholder' : file.url}
       </h3>
       <ul>
-        <li className={styles.success}>✓ URL confirmed</li>
+        <li className={styles.success}>✓ File confirmed</li>
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}
         {contentTypeCleaned && <li>{contentTypeCleaned}</li>}
       </ul>

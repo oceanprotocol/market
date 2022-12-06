@@ -5,7 +5,6 @@ import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
 import { useWeb3 } from '@context/Web3'
-import { chainIds } from 'app.config'
 import { getComputeJobs } from '@utils/compute'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useCancelToken } from '@hooks/useCancelToken'
@@ -17,6 +16,7 @@ interface HistoryTab {
 }
 
 const refreshInterval = 10000 // 10 sec.
+
 function getTabs(
   accountId: string,
   userAccountId: string,
