@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
 import RelatedAssets from '.'
-import { assets } from '../../../../.jest/__fixtures__/assetsWithAccessDetails'
+import { assets } from '../../../../.jest/__fixtures__/datasetsWithAccessDetails'
 import { queryMetadata } from '../../../@utils/aquarius'
 // import * as userPreferencesMock from '../../../@context/UserPreferences'
 
