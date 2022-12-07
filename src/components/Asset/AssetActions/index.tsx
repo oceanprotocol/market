@@ -65,12 +65,6 @@ export default function AssetActions({
 
   const urls = useSignalUrls(dataTokensStringArray, assetSignalsUrls)
 
-  const filterAssetSignals = () => {
-    return signals
-      .filter((signal) => true)
-      .filter((signal) => signal.detailView.value)
-  }
-
   const { loading: isFetchingSignalsItems, signalItems } =
     useSignalsLoader(urls)
 
@@ -79,10 +73,18 @@ export default function AssetActions({
     [isFetchingSignals, isFetchingSignalsItems]
   )
 
-  const filteredSignals = getAssetSignalItems(
-    signalItems,
-    asset.datatokens.map((data: AssetDatatoken) => data.address),
-    filterAssetSignals()
+  const filteredSignals = useMemo(
+    () =>
+      getAssetSignalItems(
+        signalItems,
+        asset.datatokens.map((data: AssetDatatoken) =>
+          data.address.toLowerCase()
+        ),
+        signals
+          .filter((signal) => true)
+          .filter((signal) => signal.detailView.value)
+      ),
+    [signalItems, signals, asset]
   )
   // Get and set file info
   useEffect(() => {
