@@ -76,7 +76,7 @@ export function useListSignals(
       )
       const newDatatokenString = datatokenAddresses.join(',')
       setDatatokensStringsArray([newDatatokenString])
-      if (assetSignalsUrls.length > 0) {
+      if (assetSignalsUrls?.length && datatokensStringsArray?.length) {
         setUrls(
           assetSignalsUrls.map((item) => {
             return getURLParamsAssets({
