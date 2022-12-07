@@ -27,6 +27,7 @@ import { useAsset } from '@context/Asset'
 import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
+import { assetStateToNumber } from '@utils/assetState'
 
 export default function Edit({
   asset
@@ -112,8 +113,11 @@ export default function Edit({
       if (values.assetState !== assetState) {
         const nft = new Nft(web3, chainId)
 
-        const newState = values.assetState === 'Active' ? 0 : 5
-        await nft.setMetadataState(asset?.nftAddress, accountId, newState)
+        await nft.setMetadataState(
+          asset?.nftAddress,
+          accountId,
+          assetStateToNumber(values.assetState)
+        )
       }
 
       if (values.files[0]?.url) {

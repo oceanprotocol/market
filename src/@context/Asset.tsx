@@ -16,7 +16,7 @@ import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
-import content from '../../content/pages/editMetadata.json'
+import { assetStateToString } from '@utils/assetState'
 
 export interface AssetProviderValue {
   isInPurgatory: boolean
@@ -90,7 +90,7 @@ function AssetProvider({
         setOwner(asset.nft?.owner)
         setIsInPurgatory(asset.purgatory?.state)
         setPurgatoryData(asset.purgatory)
-        setAssetState(asset.nft.state === 0 ? 'Active' : 'Asset unlisted')
+        setAssetState(assetStateToString(asset.nft.state))
         LoggerInstance.log('[asset] Got asset', asset)
       }
       if (asset.nft.state !== 0 && accountId !== asset.nft.owner) {
@@ -184,7 +184,7 @@ function AssetProvider({
   // -----------------------------------
   useEffect(() => {
     if (!asset?.nft) return
-    setAssetState(asset.nft.state === 0 ? 'Active' : 'Asset unlisted')
+    setAssetState(assetStateToString(asset.nft.state))
   }, [asset])
 
   return (
