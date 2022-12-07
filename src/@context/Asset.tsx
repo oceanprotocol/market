@@ -93,7 +93,7 @@ function AssetProvider({
         setAssetState(assetStateToString(asset.nft.state))
         LoggerInstance.log('[asset] Got asset', asset)
       }
-      if (asset.nft.state !== (0 || 5) && accountId !== asset.nft.owner) {
+      if (asset.nft.state === (2 | 3 | 4) && accountId !== asset.nft.owner) {
         setTitle(
           `This asset has been set as "${assetStateToString(
             asset.nft.state
