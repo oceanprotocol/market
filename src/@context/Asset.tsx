@@ -93,8 +93,12 @@ function AssetProvider({
         setAssetState(assetStateToString(asset.nft.state))
         LoggerInstance.log('[asset] Got asset', asset)
       }
-      if (asset.nft.state !== 0 && accountId !== asset.nft.owner) {
-        setTitle(`This asset has been unlisted by the publisher`)
+      if (asset.nft.state !== (0 || 5) && accountId !== asset.nft.owner) {
+        setTitle(
+          `This asset has been set as "${assetStateToString(
+            asset.nft.state
+          )}" by the publisher`
+        )
         setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
         return
