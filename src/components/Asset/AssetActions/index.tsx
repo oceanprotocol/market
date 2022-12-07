@@ -56,6 +56,7 @@ export default function AssetActions({
     signalItems,
     loading: isFetchingSignals
   } = useSignalContext()
+  console.log(signalItems, asset)
   const filterAssetSignals = () => {
     return signals
       .filter((signal) => true)
