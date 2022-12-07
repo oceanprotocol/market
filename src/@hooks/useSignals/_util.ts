@@ -142,7 +142,7 @@ export function getAssetSignalItems(
           ...signalItem,
           signals: signalItem.signals
             ? signalItem.signals.filter((signal) =>
-                compareIds.includes(signal.assetId)
+                compareIds.includes(signal.assetId.toLowerCase())
               )
             : []
         }
