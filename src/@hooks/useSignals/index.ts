@@ -53,6 +53,37 @@ export default function useSignalsLoader(
   }
 }
 
+export function useSignalUrls(
+  datatokenAddresses: string[],
+  assetSignalsUrls: string[]
+) {
+  const { accountId } = useWeb3()
+
+  const urls = useMemo(() => {
+    if (!assetSignalsUrls?.length || !datatokenAddresses?.length) return []
+
+    return assetSignalsUrls.map((item) => {
+      return getURLParamsAssets({
+        uuids: [
+          {
+            label: '$assetId',
+            value: datatokenAddresses
+              .map((datatoken) => datatoken.toString().toLowerCase())
+              .join(',')
+          },
+          {
+            label: '$user',
+            value: accountId?.toString().toLowerCase() || NOT_LOGGED_IN
+          }
+        ],
+        origin: item
+      })
+    })
+  }, [accountId, assetSignalsUrls, datatokenAddresses])
+
+  return urls
+}
+
 export function useListSignals(
   datatokenAddresses: string[],
   signals: SignalOriginItem[],
@@ -61,9 +92,9 @@ export function useListSignals(
   onlyAssetSignals = false
 ) {
   const [assetSignalOrigins, setAssetSignalOrigins] = useState<any[]>([])
-  const [datatokensStringsArray, setDatatokensStringsArray] = useState([])
-  const [urls, setUrls] = useState<any[]>([])
-  const { accountId } = useWeb3()
+
+  const urls = useSignalUrls(datatokenAddresses, assetSignalsUrls)
+
   useEffect(() => {
     if (datatokenAddresses && datatokenAddresses.length > 0) {
       // Get only those asset signals that are for the list view and for asset types only
@@ -74,31 +105,9 @@ export function useListSignals(
           // @ts-ignore
           .filter((signal) => signal[signalViewType].value)
       )
-      const newDatatokenString = datatokenAddresses.join(',')
-      setDatatokensStringsArray([newDatatokenString])
-      if (assetSignalsUrls?.length && datatokensStringsArray?.length) {
-        setUrls(
-          assetSignalsUrls.map((item) => {
-            return getURLParamsAssets({
-              uuids: [
-                {
-                  label: '$assetId',
-                  value: datatokensStringsArray
-                    .map((datatoken) => datatoken.toString().toLowerCase())
-                    .join(',')
-                },
-                {
-                  label: '$user',
-                  value: accountId?.toString().toLowerCase() || NOT_LOGGED_IN
-                }
-              ],
-              origin: item
-            })
-          })
-        )
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signals, datatokenAddresses, assetSignalsUrls, signalViewType, accountId])
+  }, [signals, datatokenAddresses, assetSignalsUrls, signalViewType])
+
   return { urls, assetSignalOrigins }
 }
