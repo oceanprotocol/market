@@ -1,5 +1,5 @@
 /* eslint-disable react/no-children-prop */
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import Compute from './Compute'
 import Consume from './Download'
 import { Datatoken, FileInfo, LoggerInstance } from '@oceanprotocol/lib'
@@ -21,6 +21,7 @@ import AssetStats from './AssetStats'
 import { useSignalContext } from '@context/Signals'
 import { getAssetSignalItems } from '@hooks/useSignals/_util'
 import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
+import useSignalsLoader, { useSignalUrls } from '@hooks/useSignals'
 
 export default function AssetActions({
   asset
@@ -53,15 +54,30 @@ export default function AssetActions({
   // ])
   const {
     signals,
-    signalItems,
-    loading: isFetchingSignals
+    loading: isFetchingSignals,
+    assetSignalsUrls
   } = useSignalContext()
-  console.log(signalItems, asset)
+
+  const dataTokensStringArray = useMemo(
+    () => asset.datatokens.map((el) => el.address),
+    [asset]
+  )
+
+  const urls = useSignalUrls(dataTokensStringArray, assetSignalsUrls)
+
   const filterAssetSignals = () => {
     return signals
       .filter((signal) => true)
       .filter((signal) => signal.detailView.value)
   }
+
+  const { loading: isFetchingSignalsItems, signalItems } =
+    useSignalsLoader(urls)
+
+  const isFetching = useMemo(
+    () => isFetchingSignalsItems || isFetchingSignals,
+    [isFetchingSignals, isFetchingSignalsItems]
+  )
 
   const filteredSignals = getAssetSignalItems(
     signalItems,
@@ -189,7 +205,7 @@ export default function AssetActions({
         className={styles.actions}
         asset={asset}
         signalItems={filteredSignals}
-        isLoading={isFetchingSignals}
+        isLoading={isFetching}
       />
     )
   }

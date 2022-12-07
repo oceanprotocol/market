@@ -88,14 +88,6 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
         getSignalUrls(signalOrigin)
       )
       setAssetSignalsUrl(defaultSignalUrls)
-      // const compareUrl = new Set()
-      // defaultSignalUrls.forEach((url) => {
-      //   if (compareUrl.has(url)) return
-      //   setAssetSignalsUrl((signalUrlArray) => {
-      //     return [...signalUrlArray, url]
-      //   })
-      //   compareUrl.add(url)
-      // })
     }
   }, [signals])
 
