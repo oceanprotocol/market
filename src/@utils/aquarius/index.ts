@@ -19,7 +19,7 @@ export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 export function escapeEsReservedCharacters(value: string): string {
   // eslint-disable-next-line no-useless-escape
   const pattern = /([\!\*\+\-\=\<\>\&\|\(\)\[\]\{\}\^\~\?\:\\/"])/g
-  return value.replace(pattern, '\\$1')
+  return value?.replace(pattern, '\\$1')
 }
 
 /**
