@@ -10,7 +10,7 @@ export default function ComputeHistory({
 }: {
   title: string
   children: ReactNode
-  refetchJobs?: any
+  refetchJobs?: React.Dispatch<React.SetStateAction<boolean>>
 }): ReactElement {
   const [open, setOpen] = useState(false)
 

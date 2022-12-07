@@ -1,7 +1,7 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { generateBaseQuery, queryMetadata } from '@utils/aquarius'
 import axios, { CancelToken } from 'axios'
-import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
+import { SortTermOptions } from '../../../../src/@types/aquarius/SearchQuery'
 
 export async function getTopTags(
   chainIds: number[],
@@ -32,7 +32,7 @@ export async function getTopTags(
   try {
     const result = await queryMetadata(query, cancelToken)
     const tagsList = result?.aggregations?.topTags?.buckets.map(
-      (x: { key: any }) => x.key
+      (x: { key: string }) => x.key
     )
     return tagsList
   } catch (error) {

@@ -18,10 +18,10 @@ export default function WalletNetworkSwitcher(): ReactElement {
   const walletNetworkData = getNetworkDataById(networksList, networkId)
 
   const ddoNetworkName = (
-    <strong>{getNetworkDisplayName(ddoNetworkData, asset.chainId)}</strong>
+    <strong>{getNetworkDisplayName(ddoNetworkData)}</strong>
   )
   const walletNetworkName = (
-    <strong>{getNetworkDisplayName(walletNetworkData, networkId)}</strong>
+    <strong>{getNetworkDisplayName(walletNetworkData)}</strong>
   )
 
   async function switchWalletNetwork() {

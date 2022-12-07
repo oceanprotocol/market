@@ -8,7 +8,7 @@ import SuccessConfetti from '@shared/SuccessConfetti'
 import { useWeb3 } from '@context/Web3'
 import { useRouter } from 'next/router'
 import Tooltip from '@shared/atoms/Tooltip'
-import AvailableNetworks from 'src/components/Publish/AvailableNetworks'
+import AvailableNetworks from '@components/Publish/AvailableNetworks'
 import Info from '@images/info.svg'
 import Loader from '@shared/atoms/Loader'
 

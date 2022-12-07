@@ -24,17 +24,11 @@ export default function Links() {
         </Fragment>
       ))}
 
-      <Link href="/imprint">
-        <a>Imprint</a>
-      </Link>
+      <Link href="/imprint">Imprint</Link>
       {' — '}
-      <Link href="/terms">
-        <a>Terms</a>
-      </Link>
+      <Link href="/terms">Terms</Link>
       {' — '}
-      <Link href={privacyPolicySlug}>
-        <a>Privacy</a>
-      </Link>
+      <Link href={privacyPolicySlug}>Privacy</Link>
       {appConfig?.privacyPreferenceCenter === 'true' && (
         <>
           {' — '}
