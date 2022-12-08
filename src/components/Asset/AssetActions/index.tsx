@@ -1,5 +1,5 @@
 /* eslint-disable react/no-children-prop */
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import Compute from './Compute'
 import Consume from './Download'
 import { Datatoken, FileInfo, LoggerInstance } from '@oceanprotocol/lib'
@@ -19,9 +19,9 @@ import { FormPublishData } from 'src/components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
 import { useSignalContext } from '@context/Signals'
-import { getAssetSignalItems, getSignalUrls } from '@hooks/useSignals/_util'
+import { getAssetSignalItems } from '@hooks/useSignals/_util'
 import { AssetDatatoken } from '@oceanprotocol/lib/dist/src/@types/Asset'
-import useSignalsLoader, { useListSignals } from '@hooks/useSignals'
+import useSignalsLoader, { useSignalUrls } from '@hooks/useSignals'
 
 export default function AssetActions({
   asset
@@ -49,34 +49,40 @@ export default function AssetActions({
 
   // Signals loading logic
   // Get from AssetList component
-  const [datatokenAddresses] = useState<string[]>([
-    ...asset.datatokens.map((data) => data.address).flat()
-  ])
-  const { signals } = useSignalContext()
-  // console.log(signalItems, asset)
-  const filterAssetSignals = () => {
-    return signals
-      .filter((signal) => true)
-      .filter((signal) => signal.detailView.value)
-  }
-
-  const assetSignalsUrls = filterAssetSignals().map((signalOrigin) =>
-    getSignalUrls(signalOrigin)
-  )
-
-  const { urls } = useListSignals(
-    datatokenAddresses,
+  // const [dataTokenAddresses] = useState<string[][]>([
+  //   asset.datatokens.map((data) => data.address)
+  // ])
+  const {
     signals,
-    assetSignalsUrls,
-    'detailView'
+    loading: isFetchingSignals,
+    assetSignalsUrls
+  } = useSignalContext()
+
+  const dataTokensStringArray = useMemo(
+    () => asset.datatokens.map((el) => el.address),
+    [asset]
   )
 
-  const { loading: isFetchingSignals, signalItems } = useSignalsLoader(urls)
+  const urls = useSignalUrls(dataTokensStringArray, assetSignalsUrls)
 
-  const filteredSignals = getAssetSignalItems(
-    signalItems,
-    asset.datatokens.map((data: AssetDatatoken) => data.address),
-    filterAssetSignals()
+  const { loading: isFetchingSignalsItems, signalItems } =
+    useSignalsLoader(urls)
+
+  const isFetching = useMemo(
+    () => isFetchingSignalsItems || isFetchingSignals,
+    [isFetchingSignals, isFetchingSignalsItems]
+  )
+
+  const filteredSignals = useMemo(
+    () =>
+      getAssetSignalItems(
+        signalItems,
+        asset.datatokens.map((data: AssetDatatoken) => data.address),
+        signals
+          .filter((signal) => true)
+          .filter((signal) => signal.detailView.value)
+      ),
+    [signalItems, signals, asset]
   )
   // Get and set file info
   useEffect(() => {
@@ -199,7 +205,7 @@ export default function AssetActions({
         className={styles.actions}
         asset={asset}
         signalItems={filteredSignals}
-        isLoading={isFetchingSignals}
+        isLoading={isFetching}
       />
     )
   }

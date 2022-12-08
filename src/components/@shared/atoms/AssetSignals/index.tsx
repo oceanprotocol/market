@@ -49,7 +49,7 @@ export default function AssetSignals({
                       <p>
                         <UtuIcon className={styles.assetListIcon} />
                       </p>
-                      <p> {item.title} </p>
+                      <p> {sig.name ? sig.name : item.title} </p>
                     </div>
                     <div className={styles.assetListTitleNumber}>
                       {sig.value ? sig.value : 'N/A'}
@@ -73,7 +73,12 @@ export default function AssetSignals({
                     <p>
                       <UtuIcon className={styles.assetListIcon} />
                     </p>
-                    <p> {item.title} </p>
+                    <p>
+                      {' '}
+                      {item.signals[0].name
+                        ? item.signals[0].name
+                        : item.title}{' '}
+                    </p>
                   </div>
                   <div className={styles.assetListTitleNumber}>
                     {item.signals.length > 0 ? item.signals[0].value : 'N/A'}
@@ -107,7 +112,7 @@ export default function AssetSignals({
                       <p>
                         <UtuIcon className={styles.assetListIcon} />
                       </p>
-                      <p> {item.title} </p>
+                      <p> {sig.name ? sig.name : item.title} </p>
                     </div>
                     <div className={styles.assetListTitleNumber}>
                       {sig ? sig.value : 'N/A'}

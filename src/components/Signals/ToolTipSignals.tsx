@@ -20,7 +20,7 @@ export default function ToolTipSignals({
                   <div className={styles.assetListTitleName}>
                     <UtuIcon className={styles.icon} />
                     <p>
-                      {signal.title} - {sig.description}
+                      {sig.name ? sig.name : signal.title} - {sig.description}
                     </p>
                   </div>
                   <div className={styles.assetListTitleNumber}>
