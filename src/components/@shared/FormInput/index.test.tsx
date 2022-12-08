@@ -61,14 +61,16 @@ describe('@shared/FormInput', () => {
         name: 'Asset',
         price: '10',
         checked: false,
-        symbol: 'OCEAN'
+        symbol: 'OCEAN',
+        chainId: 1
       },
       {
         did: 'did:op:yyy',
         name: 'Asset',
         price: '10',
         checked: true,
-        symbol: 'OCEAN'
+        symbol: 'OCEAN',
+        chainId: 137
       }
     ]
     render(<FormInput type="assetSelection" options={assets} />)
