@@ -26,7 +26,7 @@ import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelecti
 import { transformAssetToAssetSelection } from './assetConvertor'
 import { ComputeEditForm } from '../components/Asset/Edit/_types'
 import { getFileDidInfo } from './provider'
-import { chainIdsSupported } from 'app.config'
+import { chainIdsSupported } from '../../app.config'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -340,7 +340,8 @@ export async function createTrustedAlgorithmList(
 
   const selectedAssets = await getAssetsFromDids(
     selectedAlgorithms,
-    cancelToken
+    cancelToken,
+    chainIdsSupported
   )
 
   if (!selectedAssets || selectedAssets.length === 0) return []

@@ -18,7 +18,7 @@ import { transformAssetToAssetSelection } from '@utils/assetConvertor'
 import { ComputeEditForm } from './_types'
 import content from '../../../../content/pages/editComputeDataset.json'
 import { getFieldContent } from '@utils/form'
-import { chainIdsSupported } from 'app.config'
+import { chainIdsSupported } from '../../../../app.config'
 
 export default function FormEditComputeDataset(): ReactElement {
   const { asset } = useAsset()

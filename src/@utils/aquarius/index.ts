@@ -196,7 +196,7 @@ export async function getAssetsFromDids(
   try {
     const orderedDDOListByDIDList: Asset[] = []
     const baseQueryparams = {
-      chainIds,
+      chainIds: chainIds || chainIdsSupported,
       filters: [getFilterTerm('_id', didList)],
       ignorePurgatory: true
     } as BaseQueryParams

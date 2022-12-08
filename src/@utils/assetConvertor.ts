@@ -6,14 +6,10 @@ export async function transformAssetToAssetSelection(
   assets: Asset[],
   selectedAlgorithms?: PublisherTrustedAlgorithm[]
 ): Promise<AssetSelectionAsset[]> {
-  console.log(`assets: ${JSON.stringify(assets)}`)
-  console.log(`selectedAlgorithms: ${JSON.stringify(selectedAlgorithms)}`)
-
   const extendedAssets: AssetExtended[] = await getAccessDetailsForAssets(
     assets
   )
   const algorithmList: AssetSelectionAsset[] = []
-  console.log(`extendedAssets: ${JSON.stringify(extendedAssets)}`)
   for (const asset of extendedAssets) {
     if (asset?.accessDetails?.price) {
       let selected = false
