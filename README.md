@@ -39,6 +39,12 @@
 
 The app is a React app built with [Next.js](https://nextjs.org) + TypeScript + CSS modules and will connect to Ocean remote components by default.
 
+Prerequisites:
+
+- [node.js](https://nodejs.org/en/) (required). Check the [.nvmrc](.nvmrc) file to make sure you are using the correct version of node.js.
+- [nvm](https://github.com/nvm-sh/nvm) (recommended). This is the recommend way to ensure you are using the correct version of node.js.
+- [git](https://git-scm.com/) is required to follow the instructions below.
+
 To start local development:
 
 ```bash
