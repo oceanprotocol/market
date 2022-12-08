@@ -6,6 +6,7 @@ import External from '@images/external.svg'
 import InputElement from '@shared/FormInput/InputElement'
 import Loader from '@shared/atoms/Loader'
 import styles from './index.module.css'
+import { chainIdToNetworkName } from '@utils/chainIdToNetworkName'
 
 export interface AssetSelectionAsset {
   did: string
@@ -13,6 +14,7 @@ export interface AssetSelectionAsset {
   price: string
   checked: boolean
   symbol: string
+  chainId: number
 }
 
 function Empty() {
@@ -101,7 +103,8 @@ export default function AssetSelection({
                   </h3>
 
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
-                    {asset.symbol} | {asset.did}
+                    {chainIdToNetworkName(asset.chainId)} | {asset.symbol} |{' '}
+                    {asset.did}
                   </Dotdotdot>
                 </label>
 

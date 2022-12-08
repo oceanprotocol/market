@@ -2,6 +2,7 @@ import { getAccessDetailsForAssets } from './accessDetailsAndPricing'
 import { PublisherTrustedAlgorithm, Asset } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { getServiceByName } from './ddo'
+import { chainIds } from 'app.config'
 
 export async function transformAssetToAssetSelection(
   datasetProviderEndpoint: string,
@@ -32,7 +33,8 @@ export async function transformAssetToAssetSelection(
         name: asset.metadata.name,
         price: asset.accessDetails.price,
         checked: selected,
-        symbol: asset.datatokens[0].symbol
+        symbol: asset.datatokens[0].symbol,
+        chainId: asset.chainId
       }
       selected
         ? algorithmList.unshift(algorithmAsset)
