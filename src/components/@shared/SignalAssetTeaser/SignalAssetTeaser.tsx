@@ -39,11 +39,6 @@ export default function SignalAssetTeaser({
   const { datatokens } = asset
   const { locale } = useUserPreferences()
   const { signals } = useSignalContext()
-  const filterAssetSignals = () => {
-    return signals
-      .filter((signal) => signal.type === 1)
-      .filter((signal) => signal.listView.value)
-  }
 
   const { name, type, description } = asset.metadata
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
@@ -53,7 +48,7 @@ export default function SignalAssetTeaser({
     () =>
       getAssetSignalItems(
         signalItems,
-        datatokens.map((data: AssetDatatoken) => data.address),
+        datatokens.map((data: AssetDatatoken) => data.address.toLowerCase()),
         signals
       ),
     [datatokens, signalItems, signals]
