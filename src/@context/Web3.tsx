@@ -23,6 +23,7 @@ import useNetworkMetadata, {
 import { useMarketMetadata } from './MarketMetadata'
 import { getTokenBalance } from '@utils/web3'
 import { getOpcsApprovedTokens } from '@utils/subgraph'
+import axios from 'axios'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -403,6 +404,13 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3Provider, web3])
+
+  useEffect(() => {
+    if (!accountId) return
+    axios
+      .post(`${appConfig.utuDefiScannerUri}/${accountId.toLowerCase()}`)
+      .catch(console.error)
+  }, [accountId, appConfig.utuDefiScannerUri])
 
   return (
     <Web3Context.Provider

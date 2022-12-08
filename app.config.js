@@ -197,5 +197,8 @@ module.exports = {
       }
     ],
     enabled: true
-  }
+  },
+  utuDefiScannerUri:
+    process.env.UTU_DEFI_SCANNER_URL ||
+    'https://stage-defi.ututrust.com/subscribe'
 }
