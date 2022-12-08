@@ -1,6 +1,8 @@
 .teaser {
   max-width: 40rem;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .signalLoaderText {
@@ -54,7 +56,6 @@
 .symbol2 {
   display: flex;
   flex-direction: row;
-  align-items: center;
 }
 
 .algorithm .link {

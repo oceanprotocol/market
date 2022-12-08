@@ -23,8 +23,7 @@ export default function ToolTipSignals({
                     <p className={styles2.signalName}>
                       {sig.name ? sig.name : signal.title} - {sig.description}
                     </p>
-                  </div>
-                  <div className={styles.assetListTitleNumber}>
+
                     <p className={styles2.signalValue}>
                       {sig.value ? sig.value : 'N/A'}
                     </p>
