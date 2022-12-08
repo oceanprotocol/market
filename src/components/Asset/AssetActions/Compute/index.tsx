@@ -247,9 +247,10 @@ export default function Compute({
 
   useEffect(() => {
     if (!asset?.accessDetails || isUnsupportedPricing) return
-
+    console.log('asset', asset)
     getAlgorithmsForAsset(asset, newCancelToken()).then((algorithmsAssets) => {
       setDdoAlgorithmList(algorithmsAssets)
+      console.log('algorithmsAssets', algorithmsAssets)
       getAlgorithmAssetSelectionList(asset, algorithmsAssets).then(
         (algorithmSelectionList) => {
           setAlgorithmList(algorithmSelectionList)

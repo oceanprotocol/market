@@ -26,6 +26,7 @@ import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelecti
 import { transformAssetToAssetSelection } from './assetConvertor'
 import { ComputeEditForm } from '../components/Asset/Edit/_types'
 import { getFileDidInfo } from './provider'
+import { chainIdsSupported } from 'app.config'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -158,7 +159,7 @@ export function getQueryString(
   const algorithmDidList = trustedAlgorithmList?.map((x) => x.did)
 
   const baseParams = {
-    chainIds: [chainId],
+    chainIds: chainId ? [chainId] : chainIdsSupported,
     sort: { sortBy: SortTermOptions.Created },
     filters: [getFilterTerm('metadata.type', 'algorithm')]
   } as BaseQueryParams
@@ -174,6 +175,7 @@ export async function getAlgorithmsForAsset(
   asset: Asset,
   token: CancelToken
 ): Promise<Asset[]> {
+  console.log(`getAlgorithmsForAsset`, asset)
   const computeService: Service = getServiceByName(asset, 'compute')
 
   if (
@@ -191,8 +193,9 @@ export async function getAlgorithmsForAsset(
     ),
     token
   )
-
+  console.log('gueryResults', gueryResults)
   const algorithms: Asset[] = gueryResults?.results
+  console.log('algorithms', algorithms)
   return algorithms
 }
 
@@ -205,6 +208,7 @@ export async function getAlgorithmAssetSelectionList(
   if (!computeService.compute) {
     algorithmSelectionList = []
   } else {
+    console.log('1 algorithms', algorithms)
     algorithmSelectionList = await transformAssetToAssetSelection(
       algorithms,
       []
