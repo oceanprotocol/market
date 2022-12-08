@@ -61,8 +61,8 @@ export default function Bookmarks(): ReactElement {
       try {
         const result = await getAssetsFromDids(
           bookmarks,
-          chainIds,
-          newCancelToken()
+          newCancelToken(),
+          chainIds
         )
         if (!result?.length) return
 
