@@ -41,9 +41,9 @@ The app is a React app built with [Next.js](https://nextjs.org) + TypeScript + C
 
 Prerequisites:
 
-- [node.js](https://nodejs.org/en/) (required). Check the [.nvmrc](.nvmrc) file to make sure you are using the correct version of node.js.
-- [nvm](https://github.com/nvm-sh/nvm) (recommended). This is the recommend way to ensure you are using the correct version of node.js.
-- [git](https://git-scm.com/) is required to follow the instructions below.
+- [Node.js](https://nodejs.org/en/) (required). Check the [.nvmrc](.nvmrc) file to make sure you are using the correct version of Node.js.
+- [nvm](https://github.com/nvm-sh/nvm) (recommended). This is the recommend way to manage Node.js versions.
+- [Git](https://git-scm.com/) is required to follow the instructions below.
 
 To start local development:
 
