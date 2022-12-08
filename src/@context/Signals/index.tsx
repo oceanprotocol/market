@@ -26,16 +26,9 @@ export interface SignalsProviderValue {
   loading: boolean
   // Settings provide data to work with locally and then also decide fetching based on user preferences
   settings?: SignalSettingsItem
-
-  // // A method to update the current assetIds to use in signal queries
-  setAssetIds(assets: string[]): void
   updateDatatokenAddresses(datatokens: any): any
 
   setAssetSignalOriginItems(signals: SignalOriginItem[]): void
-
-  // setUserAddresses?(userAddresses: string[]): void
-  // setPublisherIds?(queryUrls: string[]): void
-  // setSignalUrls?(queryUrls: string[]): void
 }
 
 const SignalsContext = createContext({} as SignalsProviderValue)
@@ -57,7 +50,7 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
     arr.forEach((item) => {
       if (!_refDataTokenAddresses.current.has(item)) {
         _refDataTokenAddresses.current.add(item)
-        newItems.push(item)
+        newItems.push(item.toLowerCase())
       }
     })
     if (newItems.length > 0) {
@@ -75,11 +68,6 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
   if (!arrayEqual(datatokenAddresses, uniqueDatatokensArr)) {
     _setDatatokenAddresses(uniqueDatatokensArr)
   }
-  // TODO fetch datatoken addresses once loaded by the search queries
-  // TODO pass datatoken addresses to signal url loader to generate the correct signals
-  // TODO pass urls into signals API fetcher to fetch signals from relevant APIs
-  // TODO Indicate loading when signals are being fetched
-  // TODO update available signals once loaded from the API responses
   // Based on current default signal settings set the signalURLs that will be used to fetch signals by a signal loader
   useEffect(() => {
     // Check if there's anything in the current default settings
@@ -100,21 +88,14 @@ function SignalsProvider({ children }: { children: ReactNode }): ReactElement {
   )
   // we can use multiple useSignalsLoaders(origins) in the context based on the various queries that load assetIds
   // publisher ids, and user addresses at different times
-  const {
-    assetIds,
-    setAssetIds,
-    userAddresses,
-    publisherIds,
-    loading,
-    signalItems
-  } = useSignalsLoader(urls)
+  const { assetIds, userAddresses, publisherIds, loading, signalItems } =
+    useSignalsLoader(urls)
   return (
     <SignalsContext.Provider
       value={
         {
           userAddresses,
           assetIds,
-          setAssetIds,
           signals,
           publisherIds,
           signalItems,

@@ -17,7 +17,6 @@ export default function useSignalsLoader(
   refreshInterval = 120000
 ): UseSignals {
   const [signalItems, setSignalItems] = useState<SignalOriginItem[]>([])
-  const [assetIds, setAssetIds] = useState<string[]>([])
   const [publisherIds, setPublisherIds] = useState<string[]>([])
   const [userAddresses, setUserAddresses] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>(true)
@@ -43,8 +42,6 @@ export default function useSignalsLoader(
   }, [data, error, isValidating, loading])
   return {
     signalItems,
-    assetIds,
-    setAssetIds,
     publisherIds,
     userAddresses,
     setPublisherIds,
