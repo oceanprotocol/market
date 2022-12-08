@@ -124,14 +124,12 @@ export function getAssetSignalItems(
   compareIds: string[],
   assetSignalOrigins: SignalOriginItem[]
 ) {
-  let detailedItems
-  if (!Array.isArray(signalItems)) {
-    detailedItems = [signalItems]
-    detailedItems = _appendSignalDetails(detailedItems, assetSignalOrigins)
-  } else {
-    detailedItems = [...signalItems]
-    detailedItems = _appendSignalDetails(detailedItems, assetSignalOrigins)
-  }
+  const compareIdsLowerCased = compareIds.map((id) => id.toLowerCase())
+
+  const detailedItems = _appendSignalDetails(
+    !Array.isArray(signalItems) ? [signalItems] : [...signalItems],
+    assetSignalOrigins
+  )
   return detailedItems
     .filter((sig) => {
       return sig.signals && sig.signals.length > 0
@@ -142,7 +140,7 @@ export function getAssetSignalItems(
           ...signalItem,
           signals: signalItem.signals
             ? signalItem.signals.filter((signal) =>
-                compareIds.includes(signal.assetId.toLowerCase())
+                compareIdsLowerCased.includes(signal.assetId.toLowerCase())
               )
             : []
         }
