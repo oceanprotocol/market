@@ -328,7 +328,6 @@ export async function getComputeJobs(
 
 export async function createTrustedAlgorithmList(
   selectedAlgorithms: string[], // list of DIDs,
-  assetChainId: number,
   cancelToken: CancelToken
 ): Promise<PublisherTrustedAlgorithm[]> {
   const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
@@ -340,7 +339,6 @@ export async function createTrustedAlgorithmList(
 
   const selectedAssets = await getAssetsFromDids(
     selectedAlgorithms,
-    [assetChainId],
     cancelToken
   )
 
@@ -369,14 +367,12 @@ export async function createTrustedAlgorithmList(
 export async function transformComputeFormToServiceComputeOptions(
   values: ComputeEditForm,
   currentOptions: ServiceComputeOptions,
-  assetChainId: number,
   cancelToken: CancelToken
 ): Promise<ServiceComputeOptions> {
   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
     ? null
     : await createTrustedAlgorithmList(
         values.publisherTrustedAlgorithms,
-        assetChainId,
         cancelToken
       )
 

@@ -21,7 +21,6 @@ export default function DebugEditCompute({
       const privacy = await transformComputeFormToServiceComputeOptions(
         values,
         asset.services[0].compute,
-        asset.chainId,
         newCancelToken()
       )
       setFormTransformed(privacy)

@@ -57,7 +57,6 @@ export default function EditComputeDataset({
         await transformComputeFormToServiceComputeOptions(
           values,
           asset.services[0].compute,
-          asset.chainId,
           newCancelToken()
         )
 

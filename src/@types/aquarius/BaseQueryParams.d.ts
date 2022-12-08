@@ -4,7 +4,7 @@ interface EsPaginationOptions {
 }
 
 interface BaseQueryParams {
-  chainIds: number[]
+  chainIds?: number[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   nestedQuery?: any
   esPaginationOptions?: EsPaginationOptions

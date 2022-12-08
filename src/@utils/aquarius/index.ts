@@ -188,8 +188,8 @@ export async function getAssetsNames(
 
 export async function getAssetsFromDids(
   didList: string[],
-  chainIds: number[],
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
+  chainIds?: number[]
 ): Promise<Asset[]> {
   if (didList?.length === 0 || chainIds?.length === 0) return []
 
