@@ -77,9 +77,7 @@ export default function AssetActions({
     () =>
       getAssetSignalItems(
         signalItems,
-        asset.datatokens.map((data: AssetDatatoken) =>
-          data.address.toLowerCase()
-        ),
+        asset.datatokens.map((data: AssetDatatoken) => data.address),
         signals
           .filter((signal) => true)
           .filter((signal) => signal.detailView.value)
