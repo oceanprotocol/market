@@ -167,7 +167,6 @@ export function getQueryString(
   trustedPublishersList?.length > 0 &&
     baseParams.filters.push(getFilterTerm('nft.owner', trustedPublishersList))
   const query = generateBaseQuery(baseParams)
-
   return query
 }
 
@@ -188,8 +187,7 @@ export async function getAlgorithmsForAsset(
   const gueryResults = await queryMetadata(
     getQueryString(
       computeService.compute.publisherTrustedAlgorithms,
-      computeService.compute.publisherTrustedAlgorithmPublishers,
-      asset.chainId
+      computeService.compute.publisherTrustedAlgorithmPublishers
     ),
     token
   )
@@ -208,7 +206,6 @@ export async function getAlgorithmAssetSelectionList(
     algorithmSelectionList = []
   } else {
     algorithmSelectionList = await transformAssetToAssetSelection(
-      computeService?.serviceEndpoint,
       algorithms,
       []
     )

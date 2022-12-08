@@ -18,6 +18,7 @@ import { transformAssetToAssetSelection } from '@utils/assetConvertor'
 import { ComputeEditForm } from './_types'
 import content from '../../../../content/pages/editComputeDataset.json'
 import { getFieldContent } from '@utils/form'
+import { chainIdsSupported } from 'app.config'
 
 export default function FormEditComputeDataset(): ReactElement {
   const { asset } = useAsset()
@@ -31,16 +32,14 @@ export default function FormEditComputeDataset(): ReactElement {
       publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
     ): Promise<AssetSelectionAsset[]> => {
       const baseParams = {
-        chainIds: [asset.chainId],
+        chainIds: chainIdsSupported,
         sort: { sortBy: SortTermOptions.Created },
         filters: [getFilterTerm('metadata.type', 'algorithm')]
       } as BaseQueryParams
 
       const query = generateBaseQuery(baseParams)
       const queryResult = await queryMetadata(query, newCancelToken())
-      const datasetComputeService = getServiceByName(asset, 'compute')
       const algorithmSelectionList = await transformAssetToAssetSelection(
-        datasetComputeService?.serviceEndpoint,
         queryResult?.results,
         publisherTrustedAlgorithms
       )

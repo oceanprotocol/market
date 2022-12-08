@@ -2,7 +2,7 @@ import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../../@types/subgraph/OrdersData'
-import { metadataCacheUri } from '../../../app.config'
+import { chainIdsSupported, metadataCacheUri } from '../../../app.config'
 import {
   SortDirectionOptions,
   SortTermOptions
@@ -220,7 +220,7 @@ export async function getAlgorithmDatasetsForCompute(
   cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {
   const baseQueryParams = {
-    chainIds: [datasetChainId],
+    chainIds: chainIdsSupported,
     nestedQuery: {
       must: {
         match: {
@@ -241,7 +241,6 @@ export async function getAlgorithmDatasetsForCompute(
   if (computeDatasets?.totalResults === 0) return []
 
   const datasets = await transformAssetToAssetSelection(
-    datasetProviderUri,
     computeDatasets.results,
     []
   )
