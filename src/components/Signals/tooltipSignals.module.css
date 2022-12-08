@@ -1,0 +1,16 @@
+.tooltip-signals-container {
+  height: fit-content;
+  min-width: 10rem;
+}
+
+.signal-name {
+  width: max-content;
+  min-width: 5rem;
+  margin: 0 0.5rem 0 0;
+}
+
+.signal-value {
+  width: fit-content;
+  min-width: 4rem;
+  margin: 0 0 0 0.5rem;
+}

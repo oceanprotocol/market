@@ -32,7 +32,7 @@ export default function AssetTeaserSignals({
   )
   if (filteredSignals.length > 0) {
     filteredSignals.forEach((signal) => {
-      if (signal.signals.length >= 1 && signal.signals.length < 4) {
+      if (signal.signals.length >= 1) {
         itemsList.push(
           signal.signals.map((item: AssetSignalItem, index: number) => (
             <div
