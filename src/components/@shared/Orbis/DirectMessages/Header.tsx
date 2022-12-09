@@ -11,40 +11,54 @@ export default function Header() {
     conversationId,
     openConversations,
     conversationTitle,
+    unreadMessages,
     setOpenConversations,
     setConversationId
   } = useOrbis()
 
+  const handleToggle = (e: any) => {
+    e.preventDefault()
+    if (e.target.type === 'button') {
+      setConversationId(null)
+    } else {
+      setOpenConversations(!openConversations)
+    }
+  }
+
   return (
-    <div className={styles.header}>
+    <div className={styles.header} onClick={handleToggle}>
       {!conversationId ? (
         <>
-          <ChatBubble role="img" aria-label="Chat" className={styles.icon} />
+          <div>
+            <ChatBubble role="img" aria-label="Chat" className={styles.icon} />
+          </div>
           <span>Direct Messages</span>
-          {/* {unreadMessages.length > 0 && (
+          {unreadMessages.length > 0 && (
             <span className={styles.notificationCount}>
               {unreadMessages.length}
             </span>
-          )} */}
+          )}
         </>
       ) : (
         <>
-          <button
-            type="button"
-            aria-label="button"
-            className={styles.btnBack}
-            onClick={() => setConversationId(null)}
-          >
-            <ArrowBack role="img" aria-label="arrow" className={styles.back} />
-          </button>
+          {openConversations && (
+            <button
+              type="button"
+              aria-label="button"
+              className={styles.btnBack}
+              onClick={handleToggle}
+            >
+              <ArrowBack
+                role="img"
+                aria-label="arrow"
+                className={styles.backIcon}
+              />
+            </button>
+          )}
           <span>{conversationTitle}</span>
         </>
       )}
-      <button
-        type="button"
-        className={styles.toggle}
-        onClick={() => setOpenConversations(!openConversations)}
-      >
+      <div className={styles.toggleArrow}>
         <ChevronUp
           role="img"
           aria-label="Toggle"
@@ -52,7 +66,7 @@ export default function Header() {
             openConversations ? styles.isFlipped : ''
           }`}
         />
-      </button>
+      </div>
     </div>
   )
 }

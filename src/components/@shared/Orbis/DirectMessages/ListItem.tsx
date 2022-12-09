@@ -28,14 +28,19 @@ export default function ConversationItem({
       const details = conversation.recipients_details.find(
         (o) => o.did !== account.did
       )
+      const did = conversation.recipients.find((o) => o !== account.did)
 
-      const _address = didToAddress(details?.did)
+      const _address = didToAddress(did)
       setAddress(_address)
 
-      if (details?.metadata?.ensName) {
-        setName(details?.metadata?.ensName)
-      } else if (details?.profile?.username) {
-        setName(details?.profile?.username)
+      if (details) {
+        if (details?.metadata?.ensName) {
+          setName(details?.metadata?.ensName)
+        } else if (details?.profile?.username) {
+          setName(details?.profile?.username)
+        } else {
+          setName(accountTruncate(_address))
+        }
       } else {
         setName(accountTruncate(_address))
       }

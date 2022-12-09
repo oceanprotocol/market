@@ -1,7 +1,7 @@
 .conversation {
   display: flex;
   align-items: center;
-  padding: calc(var(--spacer) / 2) var(--spacer);
+  padding: calc(0.5 * var(--spacer)) calc(0.5 * var(--spacer));
   border-bottom: 1px solid var(--border-color);
   cursor: pointer;
 }

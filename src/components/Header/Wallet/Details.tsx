@@ -19,7 +19,7 @@ export default function Details(): ReactElement {
     networkId,
     balance
   } = useWeb3()
-  const { disconnectOrbis } = useOrbis()
+  const { checkOrbisConnection, disconnectOrbis } = useOrbis()
   const { locale } = useUserPreferences()
 
   const [mainCurrency, setMainCurrency] = useState<string>()
@@ -85,6 +85,7 @@ export default function Details(): ReactElement {
               onClick={async () => {
                 await web3Modal?.clearCachedProvider()
                 connect()
+                checkOrbisConnection({})
               }}
             >
               Switch Wallet

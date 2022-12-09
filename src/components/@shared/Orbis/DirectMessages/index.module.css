@@ -11,7 +11,7 @@
   left: 0;
   transition: transform 300ms ease 0s;
   pointer-events: none;
-  z-index: 20;
+  z-index: 2;
 }
 
 .floating {
@@ -38,6 +38,21 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.walletWrapper {
+  margin: auto;
+  max-width: 320px;
+  text-align: center;
+}
+
+.walletWrapper p {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+}
+
+.walletWrapper button {
+  margin: var(--spacer) auto 0;
 }
 
 .isClosed {

@@ -121,10 +121,10 @@ export default function DmConversation() {
 
   useEffect(() => {
     const el = messagesWrapper.current
-    messagesWrapper.current.addEventListener('scroll', onScrollMessages)
+    el?.addEventListener('scroll', onScrollMessages)
 
     return () => {
-      el.removeEventListener('scroll', onScrollMessages)
+      el?.removeEventListener('scroll', onScrollMessages)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages])

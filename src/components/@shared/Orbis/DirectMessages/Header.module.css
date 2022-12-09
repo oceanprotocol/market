@@ -1,28 +1,19 @@
 .header {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  gap: calc(0.5 * var(--spacer));
   align-items: center;
-  padding: calc(0.35 * var(--spacer)) var(--spacer);
+  padding: calc(0.35 * var(--spacer)) calc(0.5 * var(--spacer));
   border-bottom: 1px solid var(--border-color);
   box-shadow: var(--box-shadow);
   font-size: var(--font-size-h5);
   font-weight: var(--font-weight-bold);
+  cursor: pointer;
 }
 
 .icon {
-  margin-left: 0;
   width: 1.5rem;
-  margin-right: calc(0.5 * var(--spacer));
   fill: var(--font-color-text);
-}
-
-.back {
-  margin-left: 0;
-  width: 1rem;
-  margin-right: calc(0.5 * var(--spacer));
-  fill: var(--font-color-text);
-  transform: rotate(180deg);
 }
 
 .btnBack {
@@ -31,10 +22,29 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.toggle {
-  cursor: pointer;
+.btnBack:hover {
+  background-color: var(--background-highlight);
+}
+
+.btnBack .backIcon {
+  pointer-events: none;
+  width: 1rem;
+  fill: var(--font-color-text);
+  transform: rotate(180deg);
+}
+
+.toggleArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-left: auto;
   background: transparent;
   border: none;
@@ -43,7 +53,9 @@
   height: 32px;
 }
 
-.toggle .icon {
+.toggleArrow .icon {
+  margin-left: auto;
+  margin-right: auto;
   fill: transparent;
 }
 

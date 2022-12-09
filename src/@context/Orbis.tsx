@@ -27,7 +27,7 @@ type IOrbisProvider = {
   unreadMessages: IOrbisNotification[]
   connectOrbis: (lit?: boolean) => Promise<IOrbisProfile | null>
   disconnectOrbis: () => void
-  checkConnection: (options: {
+  checkOrbisConnection: (options: {
     autoConnect?: boolean
     lit?: boolean
   }) => Promise<IOrbisProfile>
@@ -38,10 +38,7 @@ type IOrbisProvider = {
   }>
   setOpenConversations: (value: boolean) => void
   setConversationId: (value: string) => void
-  setConversations: (value: IOrbisConversation[]) => void
-  getConversations: (did: string) => Promise<void>
   createConversation: (value: string) => Promise<void>
-  checkConversation: (value: string) => Promise<IOrbisConversation[]>
   getDid: (value: string) => Promise<string>
 }
 
@@ -67,17 +64,23 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         (o) => o.stream_id === conversationId
       )
       if (conversation) {
-        const recipient = conversation.recipients_details.find(
+        const details = conversation.recipients_details.find(
           (o: IOrbisProfile) => o.did !== account.did
         )
+        const did = conversation.recipients.find(
+          (o: string) => o !== account.did
+        )
 
-        const address =
-          recipient?.metadata?.address || didToAddress(recipient?.did)
+        const address = didToAddress(did)
 
-        title =
-          recipient?.metadata?.ensName ||
-          recipient?.profile?.username ||
-          accountTruncate(address)
+        if (details) {
+          title =
+            details?.metadata?.ensName ||
+            details?.profile?.username ||
+            accountTruncate(address)
+        } else {
+          title = accountTruncate(address)
+        }
       }
     }
 
@@ -95,6 +98,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     if (res.status === 200) {
       const { data } = await orbis.getProfile(res.did)
       setAccount(data)
+      setHasLit(res.details.hasLit)
       return data
     } else {
       await sleep(2000)
@@ -115,7 +119,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     return res
   }
 
-  const checkConnection = async ({
+  const checkOrbisConnection = async ({
     autoConnect,
     lit
   }: {
@@ -141,25 +145,32 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       context: CONVERSATION_CONTEXT
     })
 
-    setConversations(data || [])
-    return data || []
-  }
+    // Only show conversations with exactly 2 unique participants and remove duplicates based on participants
+    const filteredConversations: IOrbisConversation[] = []
+    data.forEach((conversation: IOrbisConversation) => {
+      if (conversation.recipients.length === 2) {
+        const found = filteredConversations.find(
+          (o: IOrbisConversation) =>
+            o.recipients.length === 2 &&
+            o.recipients.includes(conversation.recipients[0]) &&
+            o.recipients.includes(conversation.recipients[1])
+        )
 
-  const checkConversation = async (userDid: string) => {
-    const filtered: IOrbisConversation[] = conversations.filter(
-      (conversation: IOrbisConversation) => {
-        return conversation.recipients.includes(userDid)
+        if (!found) {
+          filteredConversations.push(conversation)
+        }
       }
-    )
+    })
 
-    return filtered
+    setConversations(filteredConversations)
+    return filteredConversations
   }
 
   const createConversation = async (userDid: string) => {
     let _account = account
     if (!_account) {
       // Check connection and force connect
-      _account = await checkConnection({ autoConnect: true })
+      _account = await checkOrbisConnection({ autoConnect: true })
     }
 
     if (!hasLit) {
@@ -222,6 +233,8 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
 
     if (data && data.length > 0) {
       _did = data[0].did
+    } else {
+      _did = `did:pkh:eip155:0:${address.toLowerCase()}`
     }
 
     return _did
@@ -234,7 +247,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (accountId && web3Provider) {
       // Check if wallet connected
-      checkConnection({})
+      checkOrbisConnection({})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, web3Provider])
@@ -257,19 +270,16 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         unreadMessages,
         connectOrbis,
         disconnectOrbis,
-        checkConnection,
+        checkOrbisConnection,
         connectLit,
         setOpenConversations,
         setConversationId,
-        setConversations,
-        getConversations,
         createConversation,
-        checkConversation,
         getDid
       }}
     >
       {children}
-      {account && <DirectMessages />}
+      <DirectMessages />
     </OrbisContext.Provider>
   )
 }

@@ -22,25 +22,23 @@ const LinkExternal = ({ url, text }: { url: string; text: string }) => {
   )
 }
 
-export default function AccountHeader({
-  accountId
-}: {
-  accountId: string
-}): ReactElement {
-  const { profile, ownAccount } = useProfile()
-  const { accountId: ownAccountId } = useWeb3()
-  const { createConversation, getDid } = useOrbis()
-  const [isShowMore, setIsShowMore] = useState(false)
+const DmButton = ({ accountId }: { accountId: string }) => {
+  const { ownAccount } = useProfile()
+  const { accountId: ownAccountId, connect } = useWeb3()
+  const { checkOrbisConnection, createConversation, getDid } = useOrbis()
   const [userDid, setUserDid] = useState<string | undefined>()
 
-  const toogleShowMore = () => {
-    setIsShowMore(!isShowMore)
+  const handleActivation = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    const resConnect = await connect()
+    if (resConnect) {
+      await checkOrbisConnection({ autoConnect: true, lit: true })
+    }
   }
 
   useEffect(() => {
     const getUserDid = async () => {
       const did = await getDid(accountId)
-      console.log(did)
       setUserDid(did)
     }
 
@@ -50,6 +48,44 @@ export default function AccountHeader({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId])
 
+  if (!ownAccount && userDid) {
+    return (
+      <div className={styles.dmButton}>
+        <Button
+          style="primary"
+          size="small"
+          disabled={!ownAccountId}
+          onClick={() => createConversation(userDid)}
+        >
+          Send Direct Message
+        </Button>
+      </div>
+    )
+  }
+
+  if (!ownAccountId) {
+    return (
+      <div className={styles.dmButton}>
+        <Button style="primary" size="small" onClick={handleActivation}>
+          Connect Wallet
+        </Button>
+      </div>
+    )
+  }
+}
+
+export default function AccountHeader({
+  accountId
+}: {
+  accountId: string
+}): ReactElement {
+  const { profile } = useProfile()
+  const [isShowMore, setIsShowMore] = useState(false)
+
+  const toogleShowMore = () => {
+    setIsShowMore(!isShowMore)
+  }
+
   return (
     <div className={styles.grid}>
       <div>
@@ -58,19 +94,7 @@ export default function AccountHeader({
       </div>
 
       <div>
-        {!ownAccount && userDid && (
-          <div className={styles.dmButton}>
-            <Button
-              style="primary"
-              size="small"
-              disabled={!ownAccountId}
-              onClick={() => createConversation(userDid)}
-            >
-              Send Direct Message
-            </Button>
-            {!ownAccountId && <span>Please connect your wallet</span>}
-          </div>
-        )}
+        <DmButton accountId={accountId} />
         <Markdown text={profile?.description} className={styles.description} />
         {isDescriptionTextClamped() ? (
           <span className={styles.more} onClick={toogleShowMore}>
