@@ -37,7 +37,7 @@ export interface AssetSignalItem {
    * @type {string}
    * @memberof SignalItem
    */
-  value: string
+  value: string | number
   /**
    * details about the signal
    * @type {string}
