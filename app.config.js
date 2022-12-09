@@ -148,8 +148,10 @@ module.exports = {
         title: 'UTU Ocean Ranking Signal',
         description:
           'UTU Ocean signal helps you make better data market decisions',
-        origin:
-          'https://stage-api.ututrust.com/core-api/ocean/ranking?assetId=$assetId&user=$user',
+        origin: `${
+          process.env.NEXT_PUBLIC_UTU_CORE_API_URL ||
+          'https://stage-api.ututrust.com/core-api'
+        }/ocean/ranking?assetId=$assetId&user=$user`,
         isCustom: false,
         signals: [],
         type: 1,
@@ -174,8 +176,10 @@ module.exports = {
         title: 'UTU Ocean Interaction Signal',
         description:
           'UTU Ocean signal helps you make better data market decisions',
-        origin:
-          'https://stage-api.ututrust.com/core-api/ocean/interactionSummary?assetId=$assetId&user=$user',
+        origin: `${
+          process.env.NEXT_PUBLIC_UTU_CORE_API_URL ||
+          'https://stage-api.ututrust.com/core-api'
+        }/ocean/interactionSummary?assetId=$assetId&user=$user`,
         isCustom: false,
         signals: [],
         type: 1,
@@ -198,7 +202,8 @@ module.exports = {
     ],
     enabled: true
   },
-  utuDefiScannerUri:
-    process.env.UTU_DEFI_SCANNER_URL ||
-    'https://stage-defi.ututrust.com/subscribe'
+  utuDefiScannerUri: `${
+    process.env.NEXT_PUBLIC_UTU_DEFI_SCANNER_URL ||
+    'https://stage-defi.ututrust.com'
+  }/subscribe`
 }
