@@ -89,7 +89,7 @@ module.exports = {
   // Check out SignalSettingsItem type in the Signals context folder to learn more
   signalSettings: {
     lastUpdated: new Date().toDateString(),
-    version: 0.13,
+    version: 0.14,
     signals: [
       // {
       //   id: 'sample_quantitative_signal',
@@ -181,7 +181,7 @@ module.exports = {
         type: 1,
         listView: {
           id: 'listView',
-          value: true,
+          value: false,
           name: 'List View'
         },
         detailView: {
