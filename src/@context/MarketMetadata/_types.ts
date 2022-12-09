@@ -30,6 +30,7 @@ export interface AppConfig {
     storageKey: string
   }
   signalSettings?: SignalSettingsItem
+  utuDefiScannerUri: string
 }
 export interface SiteContent {
   siteTitle: string
