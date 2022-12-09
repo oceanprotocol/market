@@ -1,3 +1,4 @@
+import { FormPublishData } from '@components/Publish/_types'
 import { Asset, DDO, Service } from '@oceanprotocol/lib'
 
 export function getServiceByName(
@@ -64,4 +65,29 @@ export function secondsToString(numberOfSeconds: number): string {
     : seconds
     ? `${seconds} second${numberEnding(seconds)}`
     : 'less than a second'
+}
+
+export function previewDebugPatch(values: FormPublishData) {
+  // handle file's object property dynamically
+  // without braking Yup and type validation
+  // normalize files object
+  values.services[0].files[0][
+    values.services[0].files[0].type === 'ipfs'
+      ? 'hash'
+      : values.services[0].files[0].type === 'arweave'
+      ? 'transactionId'
+      : values.services[0].files[0].type === 'smartcontract'
+      ? 'address'
+      : 'url'
+  ] = values.services[0].files[0].url
+
+  // remove 'url' from obj
+  if (
+    values.services[0].files[0].type !== 'url' &&
+    values.services[0].files[0].type !== 'graphql'
+  ) {
+    delete values.services[0].files[0].url
+  }
+
+  return values
 }
