@@ -10,7 +10,7 @@
   position: relative;
   /* for sticking footer to bottom */
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   padding: 0.5rem var(--spacer);
   background: var(--background-content);
@@ -19,12 +19,23 @@
   box-shadow: 0 6px 17px 0 var(--box-shadow-color);
 }
 
-.signal {
+.signal,
+.text-values-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
   align-items: center;
   min-height: fit-content;
+  flex-flow: wrap;
+}
+
+.sigcontainer {
+  flex-direction: column;
+  min-width: 100%;
+  margin: 0 0 0 0.2rem;
+}
+
+.signalValue {
+  flex: 3;
 }
 
 .signal > * {

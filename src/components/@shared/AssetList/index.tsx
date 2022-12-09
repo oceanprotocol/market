@@ -97,7 +97,9 @@ export default function AssetList({
     if (assetsWithPrices) {
       updateDatatokenAddresses(
         assetsWithPrices
-          .map((asset) => asset.datatokens.map((data) => data.address))
+          .map((asset) =>
+            asset.datatokens.map((data) => data.address.toLowerCase())
+          )
           .flat()
       )
     }
