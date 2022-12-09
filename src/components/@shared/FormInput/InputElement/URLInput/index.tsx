@@ -15,6 +15,7 @@ export interface URLInputProps {
   name: string
   checkUrl?: boolean
   storageType?: string
+  hideButton?: boolean
 }
 
 export default function URLInput({
@@ -24,6 +25,7 @@ export default function URLInput({
   name,
   checkUrl,
   storageType,
+  hideButton,
   ...props
 }: URLInputProps): ReactElement {
   const [field, meta] = useField(name)
@@ -61,17 +63,19 @@ export default function URLInput({
           type="url"
         />
 
-        <Button
-          style="primary"
-          size="small"
-          onClick={(e: React.SyntheticEvent) => {
-            e.preventDefault()
-            handleButtonClick(e, field.value)
-          }}
-          disabled={isButtonDisabled}
-        >
-          {isLoading ? <Loader /> : submitText}
-        </Button>
+        {!hideButton && (
+          <Button
+            style="primary"
+            size="small"
+            onClick={(e: React.SyntheticEvent) => {
+              e.preventDefault()
+              handleButtonClick(e, field.value)
+            }}
+            disabled={isButtonDisabled}
+          >
+            {isLoading ? <Loader /> : submitText}
+          </Button>
+        )}
       </InputGroup>
 
       {meta.touched && meta.error && (

@@ -9,6 +9,8 @@ import { useAsset } from '@context/Asset'
 import styles from './Index.module.css'
 import { useWeb3 } from '@context/Web3'
 import InputHeaders from '../Headers'
+import Button from '@shared/atoms/Button'
+import Loader from '@shared/atoms/Loader'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -96,29 +98,49 @@ export default function FilesInput(props: InputProps): ReactElement {
             {...props}
             name={`${field.name}[0].url`}
             isLoading={isLoading}
+            hideButton={
+              storageType === 'graphql' || storageType === 'smartcontract'
+            }
             checkUrl={true}
             handleButtonClick={handleValidation}
             storageType={storageType}
           />
           {(storageType === 'graphql' || storageType === 'smartcontract') && (
-            <div className={`${styles.textblock}`}>
-              {props.innerFields &&
-                props.innerFields.map((innerField: any, i: number) => {
-                  return (
-                    <>
-                      <Field
-                        key={i}
-                        component={
-                          innerField.type === 'headers' ? InputHeaders : Input
-                        }
-                        {...innerField}
-                        name={`${field.name}[0].${innerField.value}`}
-                        value={field.value[0][innerField.value]}
-                      />
-                    </>
-                  )
-                })}
-            </div>
+            <>
+              <div className={`${styles.textblock}`}>
+                {props.innerFields &&
+                  props.innerFields.map((innerField: any, i: number) => {
+                    return (
+                      <>
+                        <Field
+                          key={i}
+                          component={
+                            innerField.type === 'headers' ? InputHeaders : Input
+                          }
+                          {...innerField}
+                          name={`${field.name}[0].${innerField.value}`}
+                          value={field.value[0][innerField.value]}
+                        />
+                      </>
+                    )
+                  })}
+              </div>
+
+              <Button
+                style="primary"
+                onClick={(e: React.SyntheticEvent) => {
+                  e.preventDefault()
+                  handleValidation(e, field.value[0].url)
+                }}
+                disabled={false}
+              >
+                {isLoading ? (
+                  <Loader />
+                ) : (
+                  `submit ${storageType === 'graphql' ? 'query' : 'abi'}`
+                )}
+              </Button>
+            </>
           )}
         </>
       )}

@@ -34,7 +34,6 @@ const validationService = {
     .of(
       Yup.object().shape({
         url: testLinks().required('Required'),
-
         valid: Yup.boolean().isTrue().required('File must be valid.')
       })
     )

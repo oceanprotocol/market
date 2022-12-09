@@ -9,7 +9,7 @@
         "help": "All metadata is stored on-chain in a newly deployed ERC-721 contract representing this asset, created with this name, symbol, description and image.",
         "required": true
       },
-      {
+      { 
         "name": "type",
         "label": "Asset Type",
         "type": "boxSelection",
@@ -165,9 +165,9 @@
                 "value": "query",
                 "title": "Query",
                 "label": "Query",
-                "placeholder": "query{ XXX... }}",
+                "placeholder": "query{\n    nfts(\n       orderBy: createdTimestamp,\n       orderDirection:desc\n   ){\n       id\n       symbol\n       createdTimestamp\n   }\n}",
                 "help": "This QUERY will be stored encrypted after publishing.",
-                "type": "textarea",
+                "type": "codeeditor",
                 "required": true
               }
             ]
@@ -187,9 +187,9 @@
                 "value": "abi",
                 "title": "ABI",
                 "label": "ABI",
-                "placeholder": "{ abi: 'xxx', ... }",
+                "placeholder": "{\n  'inputs': [],\n  'name': 'swapOceanFee',\n  'outputs': [{'internalType': 'uint256', 'name': '', 'type': 'uint256'}],\n  'stateMutability': 'view',\n  'type': 'function'\n}",
                 "help": "This ABI will be stored encrypted after publishing.",
-                "type": "text",
+                "type": "codeeditor",
                 "required": true
               }
             ]

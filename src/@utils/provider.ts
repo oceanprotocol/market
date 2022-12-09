@@ -99,7 +99,7 @@ export async function getFileInfo(
   storageType: string,
   query?: string,
   headers?: QueryHeader[],
-  abi?: AbiItem,
+  abi?: string,
   chainId?: number
 ): Promise<FileIntoExt[]> {
   try {
@@ -132,11 +132,14 @@ export async function getFileInfo(
         break
       }
       case 'smartcontract': {
+        // clean obj
+        console.log(abi)
+        console.log(JSON.parse(abi))
         const fileSmartContract: Smartcontract = {
           chainId,
           type: storageType,
           address: file,
-          abi
+          abi: JSON.parse(abi) as AbiItem
         }
 
         response = await ProviderInstance.getFileInfo(
