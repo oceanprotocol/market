@@ -38,6 +38,12 @@
   text-align: right;
 }
 
+.connectWallet {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .replyto {
   position: relative;
   display: flex;

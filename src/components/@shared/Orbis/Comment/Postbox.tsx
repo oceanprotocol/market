@@ -1,7 +1,9 @@
 import React, { useRef, useState, KeyboardEvent } from 'react'
 import styles from './Postbox.module.css'
+import walletStyles from '../../../Header/Wallet/Account.module.css'
 import { EmojiClickData } from 'emoji-picker-react'
 import { useOrbis } from '@context/Orbis'
+import { useWeb3 } from '@context/Web3'
 import Button from '@shared/atoms/Button'
 import EmojiPicker from '../EmojiPicker'
 import { accountTruncate } from '@utils/web3'
@@ -24,11 +26,13 @@ export default function Postbox({
   cancelReplyTo?: () => void
   callback: (value: IOrbisPost | IOrbisPost['content']) => void
 }) {
+  const { orbis, account, checkOrbisConnection } = useOrbis()
+  const { accountId, connect } = useWeb3()
+
   const [focusOffset, setFocusOffset] = useState<number | undefined>()
   const [focusNode, setFocusNode] = useState<Node | undefined>()
 
   const postBoxArea = useRef(null)
-  const { orbis, account } = useOrbis()
 
   const saveCaretPos = () => {
     const sel = document.getSelection()
@@ -121,6 +125,40 @@ export default function Postbox({
       restoreCaretPos()
       document.execCommand('insertHTML', false, emojiData.emoji)
     }
+  }
+
+  const handleActivation = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    const resConnect = await connect()
+    if (resConnect) {
+      await checkOrbisConnection({ autoConnect: true })
+    }
+  }
+
+  if (!accountId) {
+    return (
+      <div className={styles.postbox}>
+        <button
+          className={`${walletStyles.button} ${walletStyles.initial} ${styles.connectWallet}`}
+          onClick={(e) => handleActivation(e)}
+        >
+          Connect <span>Wallet</span>
+        </button>
+      </div>
+    )
+  }
+
+  if (!account) {
+    return (
+      <div className={styles.postbox}>
+        <button
+          className={`${walletStyles.button} ${walletStyles.initial} ${styles.connectWallet}`}
+          onClick={() => checkOrbisConnection({ autoConnect: true })}
+        >
+          Sign <span>Wallet</span>
+        </button>
+      </div>
+    )
   }
 
   return (
