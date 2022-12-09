@@ -53,9 +53,19 @@
   align-items: center;
 }
 
-.symbol2 {
+.symbol2,
+.symbol2Long {
   display: flex;
   flex-direction: row;
+}
+
+.symbol2Long {
+  min-width: 100%;
+  margin: 0.3rem 0;
+}
+
+.assetValueLong {
+  min-width: 80%;
 }
 
 .algorithm .link {
