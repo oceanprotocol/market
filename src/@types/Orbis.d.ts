@@ -164,11 +164,17 @@ declare interface IOrbis {
     error: any
     status: number
   }>
-  getNotifications: (options: { type: string; context?: string }) => Promise<{
-    data: any
-    error: any
-    status: number
-  }>
+  getNotifications: (
+    options: {
+      context: string
+      did: string
+      master?: string
+      only_master?: boolean
+      tag?: string
+      algorithm?: string
+    },
+    page: number
+  ) => Promise<any>
   getPost: (post_id: string) => Promise<{
     data: IOrbisPost
     error: any

@@ -139,6 +139,34 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     return null
   }
 
+  const getDid = async (address: string) => {
+    if (!address) return null
+
+    const { data, error } = await orbis.getDids(address)
+
+    if (error) {
+      return
+    }
+
+    let _did: string = null
+
+    if (data && data.length > 0) {
+      console.log(data)
+
+      // Try to get mainnet did
+      const mainnetDid = data.find((o: any) => {
+        const did = o.did.split(':')
+        return did[3] === '1'
+      })
+
+      _did = mainnetDid?.did || data[0].did
+    } else {
+      _did = `did:pkh:eip155:0:${address.toLowerCase()}`
+    }
+
+    return _did
+  }
+
   const getConversations = async (did: string = null) => {
     const { data } = await orbis.getConversations({
       did,
@@ -205,39 +233,33 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   }
 
   const getMessageNotifs = async () => {
+    let did = account?.did
+
+    if (!did && accountId) {
+      did = await getDid(accountId)
+    }
+
     const { data, error } = await orbis.api.rpc('orbis_f_notifications', {
-      user_did: account?.did || 'none',
+      user_did: did || 'none',
       notif_type: 'messages'
     })
+
+    console.log({ did, data, error })
 
     if (error) {
       setUnreadMessages([])
     } else if (data.length > 0) {
-      const _unreads = data.filter((o: IOrbisNotification) => {
-        return o.status === 'new'
-      })
-      setUnreadMessages(_unreads)
+      // Check if did is mainnet
+      const chainId = parseInt(did.split(':')[3])
+      if (chainId === 0) {
+        setUnreadMessages(data)
+      } else {
+        const _unreads = data.filter((o: IOrbisNotification) => {
+          return o.status === 'new'
+        })
+        setUnreadMessages(_unreads)
+      }
     }
-  }
-
-  const getDid = async (address: string) => {
-    if (!address) return null
-
-    const { data, error } = await orbis.getDids(address)
-
-    if (error) {
-      return
-    }
-
-    let _did: string = null
-
-    if (data && data.length > 0) {
-      _did = data[0].did
-    } else {
-      _did = `did:pkh:eip155:0:${address.toLowerCase()}`
-    }
-
-    return _did
   }
 
   useInterval(async () => {

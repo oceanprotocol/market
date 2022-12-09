@@ -7,7 +7,6 @@ import ChevronUp from '@images/chevronup.svg'
 
 export default function Header() {
   const {
-    // unreadMessages,
     conversationId,
     openConversations,
     conversationTitle,
