@@ -127,15 +127,15 @@ export default function AssetTeaserSignals({
         <Link href={`/asset/${assetId}`}>
           <a className={styles.signalContainer}>
             <div className={styles.signal}>
+              {signalsNumbersElements}
               <div className={styles.signalTooltipContainer}>
                 <Tooltip
                   className={styles.signalTooltip}
                   content={<ToolTipSignals signalItems={filteredSignals} />}
                 />
               </div>
-              {signalsNumbersElements}
             </div>
-            <div className={styles.sigcontainer}>{signalsTextElements}</div>
+            <div className={styles.sigcontainer}>{signalsTextElements} </div>
           </a>
         </Link>
       </div>
