@@ -61,7 +61,7 @@ export default function Compute({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3, isSupportedOceanNetwork } = useWeb3()
+  const { accountId, web3, isSupportedOceanNetwork, networkId } = useWeb3()
   const { chainIds } = useUserPreferences()
   const { isAssetNetwork } = useAsset()
 
@@ -466,11 +466,18 @@ export default function Compute({
             assetTimeout={secondsToString(asset?.services[0].timeout)}
             hasPreviousOrderSelectedComputeAsset={!!validAlgorithmOrderTx}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
-            datasetSymbol={asset?.accessDetails?.baseToken?.symbol || 'OCEAN'}
+            datasetSymbol={
+              asset?.accessDetails?.baseToken?.symbol || asset?.chainId === 137
+                ? 'mOCEAN'
+                : 'OCEAN'
+            }
             algorithmSymbol={
               selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol ||
-              'OCEAN'
+              selectedAlgorithmAsset?.chainId === 137
+                ? 'mOCEAN'
+                : 'OCEAN'
             }
+            providerFeesSymbol={networkId === 137 ? 'mOCEAN' : 'OCEAN'}
             dtSymbolSelectedComputeAsset={
               selectedAlgorithmAsset?.datatokens[0]?.symbol
             }

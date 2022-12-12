@@ -33,6 +33,7 @@ export default function FormStartCompute({
   hasDatatokenSelectedComputeAsset,
   datasetSymbol,
   algorithmSymbol,
+  providerFeesSymbol,
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
   selectedComputeAssetType,
@@ -61,6 +62,7 @@ export default function FormStartCompute({
   hasDatatokenSelectedComputeAsset?: boolean
   datasetSymbol?: string
   algorithmSymbol?: string
+  providerFeesSymbol?: string
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
   selectedComputeAssetType?: string
@@ -121,6 +123,11 @@ export default function FormStartCompute({
   // Set price for calculation output
   //
   useEffect(() => {
+    console.log('asset?.accessDetails ', asset?.accessDetails)
+    console.log(
+      'selectedAlgorithmAsset?.accessDetails ',
+      selectedAlgorithmAsset?.accessDetails
+    )
     if (!asset?.accessDetails || !selectedAlgorithmAsset?.accessDetails) return
 
     setDatasetOrderPrice(
@@ -145,7 +152,7 @@ export default function FormStartCompute({
       ? new Decimal(providerFeeAmount).toDecimalPlaces(MAX_DECIMALS)
       : new Decimal(0)
 
-    if (algorithmSymbol === 'OCEAN') {
+    if (algorithmSymbol === providerFeesSymbol) {
       let sum = providerFees.add(priceAlgo)
       totalPrices.push({
         value: sum.toDecimalPlaces(MAX_DECIMALS).toString(),
@@ -161,7 +168,7 @@ export default function FormStartCompute({
         })
       }
     } else {
-      if (datasetSymbol === 'OCEAN') {
+      if (datasetSymbol === providerFeesSymbol) {
         const sum = providerFees.add(priceDataset)
         totalPrices.push({
           value: sum.toDecimalPlaces(MAX_DECIMALS).toString(),
@@ -179,7 +186,7 @@ export default function FormStartCompute({
         })
         totalPrices.push({
           value: providerFees.toDecimalPlaces(MAX_DECIMALS).toString(),
-          symbol: 'OCEAN'
+          symbol: providerFeesSymbol
         })
       } else {
         totalPrices.push({
@@ -188,7 +195,7 @@ export default function FormStartCompute({
         })
         totalPrices.push({
           value: providerFees.toDecimalPlaces(MAX_DECIMALS).toString(),
-          symbol: 'OCEAN'
+          symbol: providerFeesSymbol
         })
         totalPrices.push({
           value: priceAlgo.toDecimalPlaces(MAX_DECIMALS).toString(),
@@ -215,7 +222,9 @@ export default function FormStartCompute({
   ])
 
   useEffect(() => {
+    console.log('total prices', totalPrices)
     totalPrices.forEach((price) => {
+      console.log('price', price)
       const baseTokenBalance = getTokenBalanceFromSymbol(balance, price.symbol)
       if (!baseTokenBalance) {
         setIsBalanceSufficient(false)
@@ -263,6 +272,7 @@ export default function FormStartCompute({
         datasetOrderPrice={datasetOrderPrice}
         algoOrderPrice={algoOrderPrice}
         providerFeeAmount={providerFeeAmount}
+        providerFeesSymbol={providerFeesSymbol}
         validUntil={validUntil}
         totalPrices={totalPrices}
       />
