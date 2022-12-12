@@ -24,24 +24,26 @@ export default function AssetComputeSelection({
           <Empty />
         ) : (
           assets.map((asset: AssetSelectionAsset) => (
-            <Link href={`/asset/${asset.did}`} key={asset.did}>
-              <a className={styles.row}>
-                <div className={styles.info}>
-                  <h3 className={styles.title}>
-                    <Dotdotdot clamp={1} tagName="span">
-                      {asset.name}
-                    </Dotdotdot>
-                  </h3>
-                  <Dotdotdot clamp={1} tagName="code" className={styles.did}>
-                    {asset.symbol} | {asset.did}
+            <Link
+              href={`/asset/${asset.did}`}
+              key={asset.did}
+              className={styles.row}
+            >
+              <div className={styles.info}>
+                <h3 className={styles.title}>
+                  <Dotdotdot clamp={1} tagName="span">
+                    {asset.name}
                   </Dotdotdot>
-                </div>
-                <PriceUnit
-                  price={Number(asset.price)}
-                  size="small"
-                  className={styles.price}
-                />
-              </a>
+                </h3>
+                <Dotdotdot clamp={1} tagName="code" className={styles.did}>
+                  {asset.symbol} | {asset.did}
+                </Dotdotdot>
+              </div>
+              <PriceUnit
+                price={Number(asset.price)}
+                size="small"
+                className={styles.price}
+              />
             </Link>
           ))
         )}

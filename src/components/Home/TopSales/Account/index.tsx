@@ -30,24 +30,25 @@ export default function Account({
   }, [account?.id])
 
   return (
-    <Link href={`/profile/${profile?.name || account.id}`}>
-      <a className={styles.teaser}>
-        {place && <span className={styles.place}>{place}</span>}
-        <Avatar
-          accountId={account.id}
-          className={styles.avatar}
-          src={profile?.avatar}
-        />
-        <div>
-          <Dotdotdot tagName="h4" clamp={2} className={styles.name}>
-            {profile?.name ? profile?.name : accountTruncate(account.id)}
-          </Dotdotdot>
-          <p className={styles.sales}>
-            <span>{account.totalSales}</span>
-            {`${account.totalSales === 1 ? ' sale' : ' sales'}`}
-          </p>
-        </div>
-      </a>
+    <Link
+      href={`/profile/${profile?.name || account.id}`}
+      className={styles.teaser}
+    >
+      {place && <span className={styles.place}>{place}</span>}
+      <Avatar
+        accountId={account.id}
+        className={styles.avatar}
+        src={profile?.avatar}
+      />
+      <div>
+        <Dotdotdot tagName="h4" clamp={2} className={styles.name}>
+          {profile?.name ? profile?.name : accountTruncate(account.id)}
+        </Dotdotdot>
+        <p className={styles.sales}>
+          <span>{account.totalSales}</span>
+          {`${account.totalSales === 1 ? ' sale' : ' sales'}`}
+        </p>
+      </div>
     </Link>
   )
 }

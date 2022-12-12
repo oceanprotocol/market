@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 import Loader from '../../../@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
-import Account from 'src/components/Home/TopSales/Account'
+import Account from '@components/Home/TopSales/Account'
 import { UserSales } from '@utils/aquarius'
 
 function LoaderArea() {

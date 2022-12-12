@@ -1,5 +1,5 @@
 import { FormikContextType, useFormikContext } from 'formik'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'

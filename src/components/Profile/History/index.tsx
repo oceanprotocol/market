@@ -16,6 +16,7 @@ interface HistoryTab {
 }
 
 const refreshInterval = 10000 // 10 sec.
+
 function getTabs(
   accountId: string,
   userAccountId: string,

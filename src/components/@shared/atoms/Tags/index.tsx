@@ -15,10 +15,12 @@ const Tag = ({ tag, noLinks }: { tag: string; noLinks?: boolean }) => {
   return noLinks ? (
     <span className={styles.tag}>{tag}</span>
   ) : (
-    <Link href={`/search?tags=${urlEncodedTag}&sort=_score&sortOrder=desc`}>
-      <a className={styles.tag} title={tag}>
-        {tag}
-      </a>
+    <Link
+      href={`/search?tags=${urlEncodedTag}&sort=_score&sortOrder=desc`}
+      className={styles.tag}
+      title={tag}
+    >
+      {tag}
     </Link>
   )
 }
