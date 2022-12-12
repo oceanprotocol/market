@@ -23,7 +23,7 @@ export function getNetworkType(network: EthereumListsChain): string {
 export function getNetworkDisplayName(data: EthereumListsChain): string {
   let displayName
 
-  switch (data.chainId) {
+  switch (data?.chainId) {
     case 137:
       displayName = 'Polygon'
       break
