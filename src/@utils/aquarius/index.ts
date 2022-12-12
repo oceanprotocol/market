@@ -44,6 +44,8 @@ export function generateBaseQuery(
 ): SearchQuery {
   const filters: unknown[] = [getFilterTerm('_index', 'aquarius')]
   baseQueryParams.filters && filters.push(...baseQueryParams.filters)
+  baseQueryParams.chainIds &&
+    filters.push(getFilterTerm('chainId', baseQueryParams.chainIds))
   !baseQueryParams.ignorePurgatory &&
     filters.push(getFilterTerm('purgatory.state', false))
   !baseQueryParams.ignoreState &&
@@ -58,7 +60,6 @@ export function generateBaseQuery(
         ]
       }
     })
-  console.log('filter', filters)
   const generatedQuery = {
     from: baseQueryParams.esPaginationOptions?.from || 0,
     size:
@@ -68,7 +69,7 @@ export function generateBaseQuery(
     query: {
       bool: {
         ...baseQueryParams.nestedQuery,
-        filter: [...filters]
+        filter: filters
       }
     }
   } as SearchQuery
@@ -83,7 +84,6 @@ export function generateBaseQuery(
         baseQueryParams.sortOptions.sortDirection ||
         SortDirectionOptions.Descending
     }
-
   return generatedQuery
 }
 
