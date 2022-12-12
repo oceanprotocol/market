@@ -135,12 +135,10 @@ export default function Compute({
   }
 
   function appendCommentString(metaNFT: Asset) {
-    debugger
     LoggerInstance.log('[compute] getCommentsString')
     console.log(selectedClaimAsset)
     console.log(selectedAlgorithmAsset)
     console.log(asset)
-    debugger
     // Just to clean up previous version's data
     if (!metaNFT.metadata.description.startsWith('{'))
       metaNFT.metadata.description = ''
@@ -151,7 +149,7 @@ export default function Compute({
       selectedAlgorithmAsset.id,
       selectedClaimAsset.id,
       accountId,
-      Date.now()
+      Date.now() / 1000
     )
 
     metaNFT.metadata.description = JSON.stringify(

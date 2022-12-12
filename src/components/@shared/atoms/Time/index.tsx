@@ -23,6 +23,7 @@ export default function Time({
     if (!date || date === 'undefined') return
 
     const dateNew = isUnix ? new Date(Number(date) * 1000) : new Date(date)
+    console.log('datenew', dateNew)
     setDateIso(dateNew.toISOString())
     setDateNew(dateNew)
   }, [date, isUnix])
