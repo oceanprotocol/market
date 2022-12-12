@@ -22,7 +22,7 @@ export function testLinks(isEdit?: boolean) {
           validField = false
           errorMessage = 'Must be a valid url.'
         }
-        // we allow submit if we're in the edit page and the link field is empty
+        // we allow submit on empty sample field
         if (
           !value?.toString() &&
           (context.path === 'links[0].url' ||

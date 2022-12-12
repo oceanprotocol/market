@@ -1,10 +1,10 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Field, useField } from 'formik'
-import FileInfo from './Info'
+import { Field, FieldInputProps, useField } from 'formik'
+import FileInfoDetails from './Info'
 import UrlInput from '../URLInput'
 import Input, { InputProps } from '@shared/FormInput'
 import { getFileInfo } from '@utils/provider'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance, FileInfo } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import styles from './Index.module.css'
 import { useWeb3 } from '@context/Web3'
@@ -96,19 +96,16 @@ export default function FilesInput(props: InputProps): ReactElement {
     storageType === 'url' && setDisabledButton(!providerUrl || !headers?.length)
 
     if (meta.error?.length > 0) {
-      const { url } = meta.error[0]
+      const { url } = meta.error[0] as unknown as FileInfo
       url && setDisabledButton(true)
-      console.log(url)
     }
   }, [storageType, providerUrl, headers, query, abi, meta])
-
-  console.log(storageType)
 
   return (
     <>
       {field?.value?.[0]?.valid === true ||
       field?.value?.[0]?.type === 'hidden' ? (
-        <FileInfo file={field.value[0]} handleClose={handleClose} />
+        <FileInfoDetails file={field.value[0]} handleClose={handleClose} />
       ) : (
         <>
           <UrlInput
