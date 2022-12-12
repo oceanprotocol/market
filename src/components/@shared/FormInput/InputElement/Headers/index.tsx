@@ -17,6 +17,7 @@ export default function InputHeaders(props: InputProps): ReactElement {
 
   const [currentKey, setCurrentKey] = useState('')
   const [currentValue, setCurrentValue] = useState('')
+  const [disabledButton, setDisabledButton] = useState(true)
 
   const [headers, setHeaders] = useState([] as QueryHeader[])
 
@@ -51,6 +52,10 @@ export default function InputHeaders(props: InputProps): ReactElement {
   useEffect(() => {
     form.setFieldValue(`${field.name}`, headers)
   }, [headers])
+
+  useEffect(() => {
+    setDisabledButton(!currentKey || !currentValue)
+  }, [currentKey, currentValue])
 
   return (
     <div>
@@ -89,7 +94,7 @@ export default function InputHeaders(props: InputProps): ReactElement {
             e.preventDefault()
             addHeader()
           }}
-          disabled={false}
+          disabled={disabledButton}
         >
           add
         </Button>

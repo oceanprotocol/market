@@ -76,20 +76,30 @@
             "prominentHelp": true,
             "type": "files",
             "required": true,
+            "headers": true,
             "innerFields": [
+              {
+                "value": "headers",
+                "title": "Headers",
+                "label": "Headers",
+                "placeholder_value": "Authorization",
+                "help": "This QUERY will be stored encrypted after publishing.",
+                "type": "headers",
+                "required": true
+              },
               {
                 "value": "query",
                 "title": "Query",
                 "label": "Query",
-                "placeholder": "query{ XXX... }}",
+                "placeholder": "query{\n    nfts(\n       orderBy: createdTimestamp,\n       orderDirection:desc\n   ){\n       id\n       symbol\n       createdTimestamp\n   }\n}",
                 "help": "This QUERY will be stored encrypted after publishing.",
-                "type": "textarea",
+                "type": "codeeditor",
                 "required": true
               }
             ]
           },
           {
-            "value": "smartcontract",
+            "value": "smartcontract", 
             "title": "Smartcontract",
             "label": "Address",
             "placeholder": "e.g. 0x8149276f275EEFAc110D74AFE8AFECEaeC7d1593",
@@ -103,9 +113,9 @@
                 "value": "abi",
                 "title": "ABI",
                 "label": "ABI",
-                "placeholder": "{ abi: 'xxx', ... }",
+                "placeholder": "{\n  'inputs': [],\n  'name': 'swapOceanFee',\n  'outputs': [{'internalType': 'uint256', 'name': '', 'type': 'uint256'}],\n  'stateMutability': 'view',\n  'type': 'function'\n}",
                 "help": "This ABI will be stored encrypted after publishing.",
-                "type": "text",
+                "type": "codeeditor",
                 "required": true
               }
             ]

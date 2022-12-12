@@ -1,3 +1,8 @@
+import FormEditMetadata from '@components/Asset/Edit/FormEditMetadata'
+import {
+  ComputeEditForm,
+  MetadataEditForm
+} from '@components/Asset/Edit/_types'
 import { FormPublishData } from '@components/Publish/_types'
 import { Asset, DDO, Service } from '@oceanprotocol/lib'
 
@@ -67,27 +72,31 @@ export function secondsToString(numberOfSeconds: number): string {
     : 'less than a second'
 }
 
-export function previewDebugPatch(values: FormPublishData) {
+export function previewDebugPatch(
+  values: FormPublishData | Partial<MetadataEditForm> | ComputeEditForm
+) {
   // handle file's object property dynamically
   // without braking Yup and type validation
+  const buildValuesPreview = JSON.parse(JSON.stringify(values))
+  const valuesService = buildValuesPreview.services
+    ? buildValuesPreview.services[0]
+    : buildValuesPreview
+  const file = valuesService.files[0]
   // normalize files object
-  values.services[0].files[0][
-    values.services[0].files[0].type === 'ipfs'
+  file[
+    file.type === 'ipfs'
       ? 'hash'
-      : values.services[0].files[0].type === 'arweave'
+      : file.type === 'arweave'
       ? 'transactionId'
-      : values.services[0].files[0].type === 'smartcontract'
+      : file.type === 'smartcontract'
       ? 'address'
       : 'url'
-  ] = values.services[0].files[0].url
+  ] = file.url
 
   // remove 'url' from obj
-  if (
-    values.services[0].files[0].type !== 'url' &&
-    values.services[0].files[0].type !== 'graphql'
-  ) {
-    delete values.services[0].files[0].url
+  if (file.type !== 'url' && file.type !== 'graphql') {
+    delete file.url
   }
 
-  return values
+  return buildValuesPreview
 }

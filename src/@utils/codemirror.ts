@@ -9,7 +9,7 @@ export const oceanTheme = (marketTheme: any) => {
       background: 'var(--background-content)',
       foreground: 'var(--font-color-text)',
       selection: 'var(--background-highlight)',
-      lineHighlight: 'var(--background-highlight)',
+      lineHighlight: 'transparent',
       gutterBackground: 'var(--background-body)',
       gutterForeground: 'var(--font-color-text)'
     },

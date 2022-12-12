@@ -133,8 +133,6 @@ export async function getFileInfo(
       }
       case 'smartcontract': {
         // clean obj
-        console.log(abi)
-        console.log(JSON.parse(abi))
         const fileSmartContract: Smartcontract = {
           chainId,
           type: storageType,
