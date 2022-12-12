@@ -71,7 +71,7 @@
   font-family: var(--font-family-heading);
   line-height: 1.2;
   display: block;
-  margin-bottom: calc(var(--spacer) / 2);
+  margin-bottom: 0;
 }
 
 .tabPanel label {

@@ -138,7 +138,18 @@
             "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
             "prominentHelp": true,
             "type": "files",
-            "required": true
+            "required": true,
+            "innerFields": [
+              {
+                "value": "headers",
+                "title": "Headers",
+                "label": "Headers",
+                "placeholder_value": "Authorization",
+                "help": "This QUERY will be stored encrypted after publishing.",
+                "type": "headers",
+                "required": true
+              }
+            ]
           },
           {
             "value": "graphql",
@@ -150,7 +161,6 @@
             "prominentHelp": true,
             "type": "files",
             "required": true,
-            "headers": true,
             "innerFields": [
               {
                 "value": "headers",
@@ -173,7 +183,7 @@
             ]
           },
           {
-            "value": "smartcontract",
+            "value": "smartcontract", 
             "title": "Smartcontract",
             "label": "Address",
             "placeholder": "e.g. 0x8149276f275EEFAc110D74AFE8AFECEaeC7d1593",

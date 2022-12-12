@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { Field, useField } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
@@ -15,6 +15,7 @@ import Loader from '@shared/atoms/Loader'
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
+  const [disabledButton, setDisabledButton] = useState(true)
   const { asset } = useAsset()
   const { chainId } = useWeb3()
 
@@ -86,6 +87,23 @@ export default function FilesInput(props: InputProps): ReactElement {
     ])
   }
 
+  useEffect(() => {
+    storageType === 'graphql' &&
+      setDisabledButton(!providerUrl || headers?.length === 0 || !query)
+
+    storageType === 'smartcontract' && setDisabledButton(!providerUrl || !abi)
+
+    storageType === 'url' && setDisabledButton(!providerUrl || !headers?.length)
+
+    if (meta.error?.length > 0) {
+      const { url } = meta.error[0]
+      url && setDisabledButton(true)
+      console.log(url)
+    }
+  }, [storageType, providerUrl, headers, query, abi, meta])
+
+  console.log(storageType)
+
   return (
     <>
       {field?.value?.[0]?.valid === true ||
@@ -99,13 +117,15 @@ export default function FilesInput(props: InputProps): ReactElement {
             name={`${field.name}[0].url`}
             isLoading={isLoading}
             hideButton={
-              storageType === 'graphql' || storageType === 'smartcontract'
+              storageType === 'graphql' ||
+              storageType === 'smartcontract' ||
+              storageType === 'url'
             }
             checkUrl={true}
             handleButtonClick={handleValidation}
             storageType={storageType}
           />
-          {(storageType === 'graphql' || storageType === 'smartcontract') && (
+          {props.innerFields && (
             <>
               <div className={`${styles.textblock}`}>
                 {props.innerFields &&
@@ -132,12 +152,18 @@ export default function FilesInput(props: InputProps): ReactElement {
                   e.preventDefault()
                   handleValidation(e, field.value[0].url)
                 }}
-                disabled={false}
+                disabled={disabledButton}
               >
                 {isLoading ? (
                   <Loader />
                 ) : (
-                  `submit ${storageType === 'graphql' ? 'query' : 'abi'}`
+                  `submit ${
+                    storageType === 'graphql'
+                      ? 'query'
+                      : storageType === 'smartcontract'
+                      ? 'abi'
+                      : 'url'
+                  }`
                 )}
               </Button>
             </>

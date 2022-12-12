@@ -22,10 +22,11 @@ export function testLinks(isEdit?: boolean) {
           validField = false
           errorMessage = 'Must be a valid url.'
         }
-        // we allow submit if we're in the edit page and the field is empty
+        // we allow submit if we're in the edit page and the link field is empty
         if (
-          (!value?.toString() && isEdit) ||
-          (!value?.toString() && context.path === 'services[0].links[0].url')
+          !value?.toString() &&
+          (context.path === 'links[0].url' ||
+            context.path === 'services[0].links[0].url')
         ) {
           validField = true
         }
@@ -41,7 +42,7 @@ export function testLinks(isEdit?: boolean) {
         errorMessage = !value?.toString() ? 'CID required.' : 'CID not valid.'
         break
       case 'arweave':
-        validField = !value?.toString().includes('http')
+        validField = value && !value?.toString().includes('http')
         errorMessage = !value?.toString()
           ? 'Transaction ID required.'
           : 'Transaction ID not valid.'
@@ -53,6 +54,8 @@ export function testLinks(isEdit?: boolean) {
           : 'Address not valid.'
         break
     }
+
+    console.log(validField, value, type, validField)
 
     if (!validField) {
       return context.createError({

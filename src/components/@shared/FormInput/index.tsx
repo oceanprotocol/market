@@ -80,6 +80,7 @@ function checkError(
       form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]) ||
     (form?.touched[field?.name] &&
       form?.errors[field?.name] &&
+      field.name !== 'files' &&
       field.name !== 'links')
   ) {
     return true
@@ -126,6 +127,8 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       )
     }
   }, [isFormikField, props.form?.values])
+
+  console.log(form)
 
   return (
     <div className={styleClasses}>
