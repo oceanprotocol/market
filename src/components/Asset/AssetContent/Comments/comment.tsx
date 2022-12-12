@@ -7,7 +7,7 @@ import Avatar from '../../../@shared/atoms/Avatar'
 import { getEnsProfile } from '@utils/ens'
 import { UserSales } from '@utils/aquarius'
 import { type } from 'os'
-
+import Time from '@shared/atoms/Time'
 //
 declare type AccountProps = {
   account: UserSales
@@ -18,9 +18,10 @@ declare type CommentData = {
   commentedBy: Profile
   commentedById: string
   comment: string
-  time: Date
+  time: number
 }
 
+// Pass CommentMetaDataItem directly here
 export default function Comment({
   commentedBy,
   commentedById,
@@ -41,15 +42,17 @@ export default function Comment({
   }, [commentedById])
 
   return (
-    <Link href={`/profile/${profile?.name || commentedById}`}>
-      <a className={styles.teaser}>
-        <div>
+    <div>
+      <Link href={`/profile/${profile?.name || commentedById}`}>
+        <a className={styles.teaser}>
           {comment}
           <p className={styles.sales}>
             {profile?.name ? profile?.name : accountTruncate(commentedById)}
           </p>
-        </div>
-      </a>
-    </Link>
+        </a>
+      </Link>
+
+      <Time date={`${time}`} relative isUnix />
+    </div>
   )
 }

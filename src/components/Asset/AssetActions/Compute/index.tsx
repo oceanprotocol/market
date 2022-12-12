@@ -46,7 +46,11 @@ import { handleComputeOrder } from '@utils/order'
 import { getComputeFeedback } from '@utils/feedback'
 import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
-
+import {
+  CommentMetaData,
+  CommentMetaDataItem,
+  MetaTemplateType
+} from '../../AssetContent/Comments/CommentConstant'
 import { useUserPreferences } from '@context/UserPreferences'
 import { setNftMetadata } from '@utils/nft'
 
@@ -130,22 +134,30 @@ export default function Compute({
     return hasAlgoDt
   }
 
-  function getCommentString() {
+  function appendCommentString(metaNFT: Asset) {
+    debugger
     LoggerInstance.log('[compute] getCommentsString')
     console.log(selectedClaimAsset)
     console.log(selectedAlgorithmAsset)
     console.log(asset)
-    return (
-      selectedAlgorithmAsset.id +
-      '|' +
-      'Claim ' +
-      selectedClaimAsset.id +
-      ' is executed after execution of algorithm ' +
-      selectedAlgorithmAsset.id +
-      ' on dataset ' +
-      asset.id +
-      ','
+    debugger
+    // Just to clean up previous version's data
+    if (!metaNFT.metadata.description.startsWith('{'))
+      metaNFT.metadata.description = ''
+
+    const item = new CommentMetaDataItem(
+      MetaTemplateType.ClaimHistory,
+      asset.id,
+      selectedAlgorithmAsset.id,
+      selectedClaimAsset.id,
+      accountId,
+      Date.now()
     )
+
+    metaNFT.metadata.description = JSON.stringify(
+      CommentMetaData.addMeta(metaNFT.metadata.description, item)
+    )
+    console.log(JSON.stringify(metaNFT.metadata.description))
   }
 
   // Umesh initialize claim
@@ -171,7 +183,7 @@ export default function Compute({
       console.log(metaNFT.DID)
       console.log('----------------------------Meta NFT end-------------')
 
-      metaNFT.metadata.description += getCommentString()
+      appendCommentString(metaNFT)
       LoggerInstance.log(
         '[compute] New Meta Description ' + metaNFT.metadata.description
       )
