@@ -30,20 +30,22 @@ export default function Comment({
   }, [commentData.by])
 
   return (
-    <div>
+    <div className={styles.teaser} style={{ marginBottom: '4px' }}>
       <a href={`/asset/${commentData.claim}`}>Claim </a>
       is executed after
       <a href={`/asset/${commentData.algo}`}> algorithm </a>
       is executed on
       <a href={`/asset/${commentData.dataset}`}> dataset</a>
       <Link href={`/profile/${profile?.name || commentData.by}`}>
-        <a className={styles.teaser}>
+        <a>
           <p className={styles.sales}>
-            {profile?.name ? profile?.name : accountTruncate(commentData.by)}
+            {profile?.name ? profile?.name : commentData.by}
           </p>
         </a>
       </Link>
-      <Time date={`${commentData.time}`} relative isUnix />
+      <div className={styles.timeComment}>
+        <Time date={`${commentData.time}`} relative isUnix />
+      </div>
     </div>
   )
 }

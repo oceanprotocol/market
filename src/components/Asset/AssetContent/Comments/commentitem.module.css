@@ -38,3 +38,11 @@
   font-weight: var(--font-weight-bold);
   color: var(--font-color-text);
 }
+
+.time {
+  opacity: 0.8;
+  font-style: italic;
+  display: block;
+  height: 10px;
+  margin-top: 10px;
+}

@@ -33,6 +33,7 @@ function getComments(metaAssets: Asset[], ddo: Asset): CommentMetaDataItem[] {
         }
       })
     }
+    comments.sort((x) => x.time).reverse()
   }
   console.log('Umesh printing comments')
   console.log(comments)
