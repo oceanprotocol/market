@@ -1,7 +1,7 @@
-import { AllLockedQuery } from 'src/@types/subgraph/AllLockedQuery'
-import { OwnAllocationsQuery } from 'src/@types/subgraph/OwnAllocationsQuery'
-import { NftOwnAllocationQuery } from 'src/@types/subgraph/NftOwnAllocationQuery'
-import { OceanLockedQuery } from 'src/@types/subgraph/OceanLockedQuery'
+import { AllLockedQuery } from '../../src/@types/subgraph/AllLockedQuery'
+import { OwnAllocationsQuery } from '../../src/@types/subgraph/OwnAllocationsQuery'
+import { NftOwnAllocationQuery } from '../../src/@types/subgraph/NftOwnAllocationQuery'
+import { OceanLockedQuery } from '../../src/@types/subgraph/OceanLockedQuery'
 import { gql, OperationResult } from 'urql'
 import { fetchData, getQueryContext } from './subgraph'
 import axios from 'axios'
@@ -11,9 +11,6 @@ import {
   getNetworkType,
   NetworkType
 } from '@hooks/useNetworkMetadata'
-import { getAssetsFromNftList } from './aquarius'
-import { chainIdsSupported } from '../../app.config'
-import { Asset } from '@oceanprotocol/lib'
 
 const AllLocked = gql`
   query AllLockedQuery {
@@ -80,6 +77,7 @@ export function getVeChainNetworkIds(assetNetworkIds: number[]): number[] {
   })
   return veNetworkIds
 }
+
 export async function getNftOwnAllocation(
   userAddress: string,
   nftAddress: string,
@@ -176,18 +174,4 @@ export async function getOwnAllocations(
   }
 
   return allocations
-}
-
-export async function getOwnAssetsWithAllocation(
-  networkIds: number[],
-  userAddress: string
-): Promise<Asset[]> {
-  const allocations = await getOwnAllocations(networkIds, userAddress)
-  const assets = await getAssetsFromNftList(
-    allocations.map((x) => x.nftAddress),
-    chainIdsSupported,
-    null
-  )
-
-  return assets
 }

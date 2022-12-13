@@ -5,7 +5,7 @@ import FormActions from './FormActions'
 
 jest.mock('formik')
 
-describe('src/components/Asset/Edit/FormActions.tsx', () => {
+describe('@components/Asset/Edit/FormActions.tsx', () => {
   it('renders fixed price', () => {
     const isValid = true
     ;(useFormikContext as jest.Mock).mockReturnValue([isValid])

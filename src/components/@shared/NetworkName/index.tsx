@@ -17,7 +17,7 @@ export default function NetworkName({
 }): ReactElement {
   const { networksList } = useNetworkMetadata()
   const networkData = getNetworkDataById(networksList, networkId)
-  const networkName = getNetworkDisplayName(networkData, networkId)
+  const networkName = getNetworkDisplayName(networkData)
 
   return (
     <span

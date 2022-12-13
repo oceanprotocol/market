@@ -17,12 +17,7 @@ async function emptySearch() {
   const text = searchParams.get('text')
 
   if (text !== ('' || undefined || null)) {
-    const url = await addExistingParamsToUrl(location, [
-      'text',
-      'owner',
-      'tags'
-    ])
-    // router.push(`${url}&text=%20`)
+    await addExistingParamsToUrl(location, ['text', 'owner', 'tags'])
   }
 }
 

@@ -9,13 +9,13 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   rootDir: '../',
   // Add more setup options before each test is run
-  setupFilesAfterEnv: ['<rootDir>/.jest/jest.setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/.jest/jest.setup.tsx'],
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
   moduleDirectories: ['node_modules', '<rootDir>/src'],
-  testEnvironment: 'jest-environment-jsdom',
+  testEnvironment: 'jsdom',
   moduleNameMapper: {
     '^.+\\.(svg)$': '<rootDir>/.jest/__mocks__/svgrMock.tsx',
-    // '^@/components/(.*)$': '<rootDir>/components/$1',
+    '@components/(.*)$': '<rootDir>/src/components/$1',
     '@shared(.*)$': '<rootDir>/src/components/@shared/$1',
     '@hooks/(.*)$': '<rootDir>/src/@hooks/$1',
     '@context/(.*)$': '<rootDir>/src/@context/$1',
@@ -29,8 +29,25 @@ const customJestConfig = {
     '!src/**/*.{stories,test}.{ts,tsx}',
     '!src/@types/**/*.{ts,tsx}'
   ],
-  testPathIgnorePatterns: ['node_modules', '\\.cache', '.next', 'coverage']
+  // Add ignores so ESM packages are not transformed by Jest
+  // note: this does not work with Next.js, hence workaround further down
+  // see: https://github.com/vercel/next.js/issues/35634#issuecomment-1115250297
+  // transformIgnorePatterns: ['node_modules/(?!(uuid|remark)/)'],
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/.next/',
+    '<rootDir>/coverage'
+  ]
 }
 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-module.exports = createJestConfig(customJestConfig)
+// https://github.com/vercel/next.js/issues/35634#issuecomment-1115250297
+async function jestConfig() {
+  const nextJestConfig = await createJestConfig(customJestConfig)()
+
+  // Add ignores for specific ESM packages so they are transformed by Jest
+  // /node_modules/ is the first pattern
+  nextJestConfig.transformIgnorePatterns[0] = '/node_modules/(?!uuid|remark)/'
+  return nextJestConfig
+}
+
+module.exports = jestConfig

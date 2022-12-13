@@ -309,7 +309,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     )
 
     // Construct network display name
-    const networkDisplayName = getNetworkDisplayName(networkData, networkId)
+    const networkDisplayName = getNetworkDisplayName(networkData)
     setNetworkDisplayName(networkDisplayName)
 
     setIsTestnet(getNetworkType(networkData) !== NetworkType.Mainnet)

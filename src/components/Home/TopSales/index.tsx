@@ -1,6 +1,6 @@
 import { useUserPreferences } from '@context/UserPreferences'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import AccountList from 'src/components/Home/TopSales/AccountList'
+import AccountList from '@components/Home/TopSales/AccountList'
 import { getTopAssetsPublishers, UserSales } from '@utils/aquarius'
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
