@@ -64,9 +64,8 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
       {/* <AccountList accounts={result} isLoading={loading} /> */}
 
       <MetaItem title="DID" content={<code>{ddo?.id}</code>} />
-      {ddo?.metadata?.type === 'algorithm' && ddo?.metadata?.algorithm && (
-        <Comments title="Comments" assets={assets} mydid={ddo?.id} />
-      )}
+
+      <Comments title="Comments" assets={assets} ddo={ddo} />
     </div>
   ) : null
 }

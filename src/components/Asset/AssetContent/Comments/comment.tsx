@@ -7,49 +7,43 @@ import Avatar from '../../../@shared/atoms/Avatar'
 import { getEnsProfile } from '@utils/ens'
 import { UserSales } from '@utils/aquarius'
 import { type } from 'os'
-
+import Time from '@shared/atoms/Time'
+import { CommentMetaDataItem } from './CommentConstant'
 //
 declare type AccountProps = {
   account: UserSales
   place?: number
 }
 
-declare type CommentData = {
-  commentedBy: Profile
-  commentedById: string
-  comment: string
-  time: Date
-}
-
 export default function Comment({
-  commentedBy,
-  commentedById,
-  comment,
-  time
-}: CommentData): ReactElement {
+  commentData
+}: CommentMetaDataItem): ReactElement {
   const [profile, setProfile] = useState<Profile>()
 
   useEffect(() => {
-    if (!commentedById) return
-
     async function getProfileData() {
-      const profile = await getEnsProfile(commentedById)
+      const profile = await getEnsProfile(commentData.by)
       if (!profile) return
       setProfile(profile)
     }
     getProfileData()
-  }, [commentedById])
+  }, [commentData.by])
 
   return (
-    <Link href={`/profile/${profile?.name || commentedById}`}>
-      <a className={styles.teaser}>
-        <div>
-          {comment}
+    <div>
+      <a href={`/asset/${commentData.claim}`}>Claim </a>
+      is executed after
+      <a href={`/asset/${commentData.algo}`}> algorithm </a>
+      is executed on
+      <a href={`/asset/${commentData.dataset}`}> dataset</a>
+      <Link href={`/profile/${profile?.name || commentData.by}`}>
+        <a className={styles.teaser}>
           <p className={styles.sales}>
-            {profile?.name ? profile?.name : accountTruncate(commentedById)}
+            {profile?.name ? profile?.name : accountTruncate(commentData.by)}
           </p>
-        </div>
-      </a>
-    </Link>
+        </a>
+      </Link>
+      <Time date={`${commentData.time}`} relative isUnix />
+    </div>
   )
 }

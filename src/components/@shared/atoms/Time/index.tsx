@@ -20,9 +20,10 @@ export default function Time({
   const [dateNew, setDateNew] = useState<Date>()
 
   useEffect(() => {
-    if (!date) return
+    if (!date || date === 'undefined') return
 
     const dateNew = isUnix ? new Date(Number(date) * 1000) : new Date(date)
+    console.log('datenew', dateNew)
     setDateIso(dateNew.toISOString())
     setDateNew(dateNew)
   }, [date, isUnix])

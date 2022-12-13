@@ -4,38 +4,34 @@ import { useUserPreferences } from '@context/UserPreferences'
 import Comment from './comment'
 import styles from './Comments.module.css'
 import { Asset } from '@oceanprotocol/lib'
+import {
+  CommentMetaData,
+  CommentMetaDataItem
+} from '../../AssetContent/Comments/CommentConstant'
+import { listeners } from 'process'
 
-export class CommentData {
-  commentedBy: Profile
-  commentedById: string
-  comment: string
-  time: Date
-}
-
-function getComments(metaAssets: Asset[], mydid: string): CommentData[] {
-  const comments: CommentData[] = []
-  console.log(mydid)
+function getComments(metaAssets: Asset[], ddo: Asset): CommentMetaDataItem[] {
+  const comments: CommentMetaDataItem[] = []
   for (let i = 0; i < metaAssets?.length; i++) {
-    console.log('comments start')
-    console.log('---------------Owner-------------')
+    // Ignore unformatted comments from previous version
+    if (!metaAssets[i].metadata.name.startsWith('Meta')) continue
+    if (!metaAssets[i].metadata.description.startsWith('{')) continue
 
-    console.log(metaAssets[i].nft.owner)
-    console.log(metaAssets[i].metadata.description)
-    if (metaAssets[i].metadata.description.includes(mydid)) {
-      const lines = metaAssets[i].metadata.description.split(',')
-
-      for (let j = 0; j < lines?.length; j++) {
-        console.log('My ' + mydid)
-        const words = lines[j].split('|')
-        console.log('Received' + mydid)
-        if (words[0].trim() === mydid.trim()) {
-          console.log('Got did' + words[0])
-          const data: CommentData = new CommentData()
-          data.commentedById = metaAssets[i].nft.owner
-          data.comment = words[1]
-          comments.push(data)
+    const meta = CommentMetaData.fromJSON(metaAssets[i].metadata.description)
+    if (meta !== null) {
+      console.log('---------------Comment-------------')
+      console.log(meta.metadata)
+      meta.metadata.forEach((x) => {
+        if (
+          (ddo?.metadata?.type === 'algorithm' && x.algorithm === ddo?.id) ||
+          (ddo?.metadata?.type === 'dataset' && x.dataset === ddo?.id) ||
+          (ddo?.metadata?.type === 'claims' && x.claim === ddo?.id)
+        ) {
+          comments.push(x)
+          console.log(x.comment)
+          comments.push(x)
         }
-      }
+      })
     }
   }
   console.log('Umesh printing comments')
@@ -46,34 +42,28 @@ function getComments(metaAssets: Asset[], mydid: string): CommentData[] {
 declare type CommentsProps = {
   assets: Asset[]
   title: string
-  mydid: string
+  ddo: Asset
 }
 
 export default function Comments({
   assets,
   title,
-  mydid
+  ddo
 }: CommentsProps): ReactElement {
   const { chainIds } = useUserPreferences()
   const emptyText =
     chainIds.length === 0 ? 'No network selected.' : 'No results found.'
 
   console.log(assets)
-  const comments = getComments(assets, mydid)
+  const comments = getComments(assets, ddo)
+  console.log('Umesh ', comments, ddo)
   return (
     <div className={styles.metaItem}>
       <h3 className={styles.title}>{title}</h3>
 
       <div className={styles.list}>
         {comments?.length > 0 ? (
-          comments.map((commentData) => (
-            <Comment
-              comment={commentData.comment}
-              commentedById={commentData.commentedById}
-              commentedBy={commentData.commentedBy}
-              time={commentData.time}
-            />
-          ))
+          comments.map((commentData) => <Comment commentData={commentData} />)
         ) : (
           <div className={styles.empty}>{emptyText}</div>
         )}
