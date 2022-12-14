@@ -30,7 +30,7 @@ export default function DmConversation() {
   }
 
   const getMessages = async (polling = false) => {
-    if (isLoading) return
+    if (isLoading || !hasLit) return
 
     if (!polling) setIsLoading(true)
 
@@ -65,7 +65,7 @@ export default function DmConversation() {
     async () => {
       getMessages(true)
     },
-    !isLoading ? 15000 : false
+    !isLoading && hasLit ? 15000 : false
   )
 
   const showTime = (streamId: string): boolean => {
@@ -110,14 +110,14 @@ export default function DmConversation() {
 
   useEffect(() => {
     if (isMounted) {
-      if (conversationId && orbis) {
+      if (conversationId && orbis && hasLit) {
         getMessages()
       } else {
         setMessages([])
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationId, orbis, isMounted])
+  }, [conversationId, orbis, hasLit, isMounted])
 
   useEffect(() => {
     const el = messagesWrapper.current
