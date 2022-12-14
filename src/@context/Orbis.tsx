@@ -78,6 +78,13 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     window.localStorage.removeItem('lit-auth-sol-signature')
   }
 
+  // Remove ceramic session
+  const removeCeramicSession = (address: string) => {
+    const _ceramicSessions = { ...ceramicSessions }
+    delete _ceramicSessions[address.toLowerCase()]
+    setCeramicSessions({ ..._ceramicSessions })
+  }
+
   // Connecting to Orbis
   const connectOrbis = async ({
     address,
@@ -111,10 +118,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     const res = orbis.logout()
     if (res.status === 200) {
       resetStates()
-      const _ceramicSessions = { ...ceramicSessions }
-      console.log(_ceramicSessions[address.toLowerCase()])
-      delete _ceramicSessions[address.toLowerCase()]
-      setCeramicSessions({ ..._ceramicSessions })
+      removeCeramicSession(address)
     }
   }
 
@@ -133,7 +137,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     autoConnect?: boolean
     lit?: boolean
   }) => {
-    console.log(address)
     const sessionString = ceramicSessions[address.toLowerCase()] || '-'
     const res = await orbis.isConnected(sessionString)
     if (
@@ -150,6 +153,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       return data
     } else {
       resetStates()
+      removeCeramicSession(address)
       return null
     }
   }
@@ -327,10 +331,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, prevAccountId, web3Provider])
-
-  // useEffect(() => {
-  //   if (accountId !== prevAccountId) resetStates()
-  // }, [accountId, prevAccountId])
 
   useEffect(() => {
     if (account) {
