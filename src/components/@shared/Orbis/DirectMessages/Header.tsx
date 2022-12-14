@@ -10,14 +10,17 @@ export default function Header() {
     conversationId,
     openConversations,
     conversationTitle,
-    unreadMessages,
+    notifications,
     setOpenConversations,
     setConversationId
   } = useOrbis()
 
-  const handleToggle = (e: any) => {
+  const handleToggle = (
+    e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>
+  ) => {
     e.preventDefault()
-    if (e.target.type === 'button') {
+    const target = e.target as HTMLElement
+    if (target.tagName === 'BUTTON') {
       setConversationId(null)
     } else {
       setOpenConversations(!openConversations)
@@ -32,9 +35,9 @@ export default function Header() {
             <ChatBubble role="img" aria-label="Chat" className={styles.icon} />
           </div>
           <span>Direct Messages</span>
-          {unreadMessages.length > 0 && (
+          {Object.values(notifications).flat().length > 0 && (
             <span className={styles.notificationCount}>
-              {unreadMessages.length}
+              {Object.values(notifications).flat().length}
             </span>
           )}
         </>

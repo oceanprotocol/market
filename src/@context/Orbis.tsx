@@ -25,7 +25,7 @@ type IOrbisProvider = {
   conversationId: string
   conversations: IOrbisConversation[]
   conversationTitle: string
-  unreadMessages: IOrbisNotification[]
+  notifications: Record<string, string[]>
   connectOrbis: (options: {
     address: string
     lit?: boolean
@@ -44,6 +44,8 @@ type IOrbisProvider = {
   setOpenConversations: (value: boolean) => void
   setConversationId: (value: string) => void
   createConversation: (value: string) => Promise<void>
+  clearMessageNotifs: (conversationId: string) => void
+  getConversationTitle: (conversation: IOrbisConversation) => string
   getDid: (value: string) => Promise<string>
 }
 
@@ -56,26 +58,27 @@ const CONVERSATION_CONTEXT = 'ocean_market' // Can be changed to whatever
 function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   const { web3Provider, accountId } = useWeb3()
   const prevAccountId = usePrevious(accountId)
+
   const [ceramicSessions, setCeramicSessions] = useLocalStorage<string[]>(
     'ocean-ceramic-sessions',
     []
   )
+  const [usersNotifications, setUsersNotifications] = useLocalStorage<
+    Record<string, Record<string, string[]>>
+  >('ocean-convo-notifs', {})
+
   const [account, setAccount] = useState<IOrbisProfile | null>(null)
   const [hasLit, setHasLit] = useState(false)
   const [openConversations, setOpenConversations] = useState(false)
   const [conversationId, setConversationId] = useState(null)
   const [conversations, setConversations] = useState<IOrbisConversation[]>([])
-  const [unreadMessages, setUnreadMessages] = useState<IOrbisNotification[]>([])
 
   // Function to reset states
   const resetStates = () => {
     setAccount(null)
     setConversationId(null)
     setConversations([])
-    setUnreadMessages([])
     setHasLit(false)
-    window.localStorage.removeItem('lit-auth-signature')
-    window.localStorage.removeItem('lit-auth-sol-signature')
   }
 
   // Remove ceramic session
@@ -83,6 +86,12 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     const _ceramicSessions = { ...ceramicSessions }
     delete _ceramicSessions[address.toLowerCase()]
     setCeramicSessions({ ..._ceramicSessions })
+  }
+
+  // Remove lit signature
+  const removeLitSignature = () => {
+    window.localStorage.removeItem('lit-auth-signature')
+    window.localStorage.removeItem('lit-auth-sol-signature')
   }
 
   // Connecting to Orbis
@@ -117,7 +126,9 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   const disconnectOrbis = (address: string) => {
     const res = orbis.logout()
     if (res.status === 200) {
+      console.log('disconnected')
       resetStates()
+      removeLitSignature()
       removeCeramicSession(address)
     }
   }
@@ -143,7 +154,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       res.status === 200 &&
       didToAddress(res.did) === accountId.toLowerCase()
     ) {
-      console.log(res)
       setHasLit(res.details.hasLit)
       const { data } = await orbis.getProfile(res.did)
       setAccount(data)
@@ -152,7 +162,9 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       const data = await connectOrbis({ address, lit })
       return data
     } else {
+      console.log('not connected')
       resetStates()
+      removeLitSignature()
       removeCeramicSession(address)
       return null
     }
@@ -264,25 +276,78 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       did = await getDid(accountId)
     }
 
+    const address = didToAddress(did)
+
     const { data, error } = await orbis.api.rpc('orbis_f_notifications', {
       user_did: did || 'none',
       notif_type: 'messages'
     })
 
-    if (error) {
-      setUnreadMessages([])
-    } else if (data.length > 0) {
-      // Check if did is mainnet
-      const chainId = parseInt(did.split(':')[3])
-      if (chainId === 0) {
-        setUnreadMessages(data)
-      } else {
-        const _unreads = data.filter((o: IOrbisNotification) => {
-          return o.status === 'new'
-        })
-        setUnreadMessages(_unreads)
+    if (!error && data.length > 0) {
+      const _usersNotifications = { ...usersNotifications }
+      const _unreads = data.filter((o: IOrbisNotification) => {
+        return o.status === 'new'
+      })
+      _unreads.forEach((o: IOrbisNotification) => {
+        const conversationId = o.content.conversation_id
+        const { encryptedString } = o.content.encryptedMessage
+
+        // Add address if not exists
+        if (!_usersNotifications[address]) _usersNotifications[address] = {}
+
+        // Add conversationId if not exists
+        if (!_usersNotifications[address][conversationId])
+          _usersNotifications[address][conversationId] = []
+
+        // Add encryptedString if not exists
+        if (
+          !_usersNotifications[address][conversationId].includes(
+            encryptedString
+          )
+        ) {
+          _usersNotifications[address][conversationId].push(encryptedString)
+        }
+      })
+      setUsersNotifications(_usersNotifications)
+
+      if (_unreads.length > 0) {
+        // Get unix timestamp in seconds
+        const timestamp = Math.floor(Date.now() / 1000)
+        // Set read time
+        await orbis.setNotificationsReadTime('messages', timestamp)
       }
     }
+  }
+
+  const clearMessageNotifs = (conversationId: string) => {
+    console.log('clearMessageNotifs', conversationId)
+    const _usersNotifications = { ...usersNotifications }
+    const address = didToAddress(account?.did)
+    if (_usersNotifications[address]) {
+      delete _usersNotifications[address][conversationId]
+    }
+    setUsersNotifications(_usersNotifications)
+  }
+
+  const getConversationTitle = (conversation: IOrbisConversation) => {
+    let title = null
+
+    if (conversation) {
+      const details = conversation.recipients_details.find(
+        (o: IOrbisProfile) => o.did !== account.did
+      )
+      const did = conversation.recipients.find((o: string) => o !== account.did)
+
+      const address = didToAddress(did)
+
+      if (details) {
+        title = details?.metadata?.ensName || accountTruncate(address)
+      } else {
+        title = accountTruncate(address)
+      }
+    }
+
+    return title
   }
 
   const conversationTitle = useMemo(() => {
@@ -291,31 +356,20 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       const conversation = conversations.find(
         (o) => o.stream_id === conversationId
       )
-      if (conversation) {
-        const details = conversation.recipients_details.find(
-          (o: IOrbisProfile) => o.did !== account.did
-        )
-        const did = conversation.recipients.find(
-          (o: string) => o !== account.did
-        )
-
-        const address = didToAddress(did)
-
-        console.log({ details, address })
-
-        if (details) {
-          title =
-            details?.metadata?.ensName ||
-            details?.profile?.username ||
-            accountTruncate(address)
-        } else {
-          title = accountTruncate(address)
-        }
-      }
+      title = getConversationTitle(conversation)
     }
 
     return title
-  }, [conversationId, account, conversations])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversationId, conversations])
+
+  const notifications = useMemo(() => {
+    let _notifications = {}
+    if (accountId && accountId.toLowerCase() in usersNotifications) {
+      _notifications = usersNotifications[accountId.toLowerCase()]
+    }
+    return _notifications
+  }, [accountId, usersNotifications])
 
   useInterval(async () => {
     await getMessageNotifs()
@@ -335,6 +389,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (account) {
       getConversations(account?.did)
+      getMessageNotifs()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
@@ -349,7 +404,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         conversationId,
         conversations,
         conversationTitle,
-        unreadMessages,
+        notifications,
         connectOrbis,
         disconnectOrbis,
         checkOrbisConnection,
@@ -357,6 +412,8 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         setOpenConversations,
         setConversationId,
         createConversation,
+        clearMessageNotifs,
+        getConversationTitle,
         getDid
       }}
     >

@@ -11,6 +11,10 @@
   cursor: pointer;
 }
 
+.header > * {
+  pointer-events: none;
+}
+
 .icon {
   width: 1.5rem;
   fill: var(--font-color-text);
@@ -28,6 +32,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: auto;
 }
 
 .btnBack:hover {

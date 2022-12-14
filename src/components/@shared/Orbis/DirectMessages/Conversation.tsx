@@ -10,7 +10,14 @@ import Postbox from './Postbox'
 import styles from './Conversation.module.css'
 
 export default function DmConversation() {
-  const { orbis, account, conversationId, hasLit, connectLit } = useOrbis()
+  const {
+    orbis,
+    account,
+    conversationId,
+    hasLit,
+    connectLit,
+    clearMessageNotifs
+  } = useOrbis()
   const isMounted = useIsMounted()
 
   const messagesWrapper = useRef(null)
@@ -47,7 +54,10 @@ export default function DmConversation() {
         setHasMore(data.length >= 50)
         const _messages = [...data, ...messages]
         setMessages(_messages)
-        if (currentPage === 0) scrollToBottom()
+        if (currentPage === 0) {
+          clearMessageNotifs(conversationId)
+          scrollToBottom()
+        }
         setCurrentPage((prev) => prev + 1)
       } else {
         const unique = data.filter(
@@ -97,6 +107,7 @@ export default function DmConversation() {
       Math.ceil(el.scrollTop) >= Math.floor(el.scrollHeight - el.offsetHeight)
     ) {
       setNewMessages(0)
+      clearMessageNotifs(conversationId)
     }
 
     // Remove scroll listener

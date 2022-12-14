@@ -5,13 +5,10 @@ import ChatBubble from '@images/chatbubble.svg'
 import styles from './List.module.css'
 
 export default function List() {
-  const { conversations, unreadMessages, setConversationId } = useOrbis()
+  const { conversations, notifications, setConversationId } = useOrbis()
 
   const getConversationUnreads = (conversationId: string) => {
-    const _unreads = unreadMessages.filter(
-      (o) => o.content.conversation_id === conversationId
-    )
-    return _unreads.length
+    return notifications[conversationId]?.length || 0
   }
 
   return (
