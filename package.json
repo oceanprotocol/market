@@ -29,7 +29,7 @@
     "@oceanprotocol/lib": "^2.5.2",
     "@oceanprotocol/typographies": "^0.1.0",
     "@oceanprotocol/use-dark-mode": "^2.4.3",
-    "@orbisclub/orbis-sdk": "^0.4.4-beta.41",
+    "@orbisclub/orbis-sdk": "^0.4.4-beta.42",
     "@tippyjs/react": "^4.2.6",
     "@urql/exchange-refocus": "^1.0.0",
     "@walletconnect/web3-provider": "^1.8.0",

@@ -7,7 +7,6 @@ import React, {
   ReactNode,
   ReactElement
 } from 'react'
-import { sleep } from '@utils/index'
 import { useInterval } from '@hooks/useInterval'
 import { Orbis } from '@orbisclub/orbis-sdk'
 import { useWeb3 } from './Web3'
@@ -101,7 +100,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       setHasLit(res.details.hasLit)
       return data
     } else {
-      await sleep(2000)
       await connectOrbis()
     }
   }
@@ -127,6 +125,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     lit?: boolean
   }) => {
     const res = await orbis.isConnected()
+    console.log(res)
     if (res.status === 200) {
       setHasLit(res.details.hasLit)
       const { data } = await orbis.getProfile(res.did)
