@@ -4,7 +4,6 @@ import PriceUnit from './PriceUnit'
 
 export default function Price({
   price,
-  assetId,
   className,
   size,
   conversion
@@ -15,9 +14,6 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
-  console.log('price.value', price, assetId)
-  console.log('price.value', Number(price.value))
-
   return price?.value ? (
     <PriceUnit
       price={Number(price.value)}
