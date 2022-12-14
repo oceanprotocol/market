@@ -3,7 +3,7 @@ import { Field, Form, useFormikContext } from 'formik'
 import Input from '@shared/FormInput'
 import FormActions from './FormActions'
 import { useAsset } from '@context/Asset'
-import { FormPublishData } from 'src/components/Publish/_types'
+import { FormPublishData } from '@components/Publish/_types'
 import { getFileInfo } from '@utils/provider'
 import { getFieldContent } from '@utils/form'
 
@@ -129,6 +129,11 @@ export default function FormEditMetadata({
       />
 
       <Field {...getFieldContent('tags', data)} component={Input} name="tags" />
+      <Field
+        {...getFieldContent('paymentCollector', data)}
+        component={Input}
+        name="paymentCollector"
+      />
 
       <FormActions />
     </Form>

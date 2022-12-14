@@ -41,8 +41,8 @@ export default function Publisher({
         name
       ) : (
         <>
-          <Link href={`/profile/${account}`}>
-            <a title="Show profile page.">{name}</a>
+          <Link href={`/profile/${account}`} title="Show profile page.">
+            {name}
           </Link>
         </>
       )}

@@ -5,7 +5,7 @@ import { LoggerInstance } from '@oceanprotocol/lib'
 import Price from '@shared/Price'
 import Tooltip from '@shared/atoms/Tooltip'
 import AssetTitle from '@shared/AssetListTitle'
-import { retrieveDDOListByDIDs } from '@utils/aquarius'
+import { getAssetsFromDids } from '@utils/aquarius'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
@@ -59,7 +59,7 @@ export default function Bookmarks(): ReactElement {
       setIsLoading(true)
 
       try {
-        const result = await retrieveDDOListByDIDs(
+        const result = await getAssetsFromDids(
           bookmarks,
           chainIds,
           newCancelToken()

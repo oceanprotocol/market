@@ -117,7 +117,11 @@ export default function Edit({
             {
               type: values.files[0].type,
               index: 0,
-              url: values.files[0].url,
+              [values.files[0].type === 'ipfs'
+                ? 'hash'
+                : values.files[0].type === 'arweave'
+                ? 'transactionId'
+                : 'url']: values.files[0].url,
               method: 'GET'
             }
           ]

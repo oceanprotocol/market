@@ -1,5 +1,6 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import {
+  escapeEsReservedCharacters,
   generateBaseQuery,
   getFilterTerm,
   queryMetadata
@@ -26,10 +27,6 @@ export function updateQueryStringParameter(
   }
 }
 
-export function escapeESReservedChars(text: string): string {
-  return text?.replace(/([!*+\-=<>&|()\\[\]{}^~?:\\/"])/g, '\\$1')
-}
-
 export function getSearchQuery(
   chainIds: number[],
   text?: string,
@@ -42,7 +39,7 @@ export function getSearchQuery(
   serviceType?: string,
   accessType?: string
 ): SearchQuery {
-  text = escapeESReservedChars(text)
+  text = escapeEsReservedCharacters(text)
   const emptySearchTerm = text === undefined || text === ''
   const filters: FilterTerm[] = []
   let searchTerm = text || ''
@@ -150,7 +147,7 @@ export async function getResults(
   },
   chainIds: number[],
   cancelToken?: CancelToken
-): Promise<any> {
+): Promise<PagedAssets> {
   const {
     text,
     owner,

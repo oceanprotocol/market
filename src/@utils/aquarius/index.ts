@@ -1,13 +1,13 @@
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
-import { metadataCacheUri } from '../../app.config'
+import { OrdersData_orders as OrdersData } from '../../@types/subgraph/OrdersData'
+import { metadataCacheUri } from '../../../app.config'
 import {
   SortDirectionOptions,
   SortTermOptions
-} from '../@types/aquarius/SearchQuery'
-import { transformAssetToAssetSelection } from './assetConvertor'
+} from '../../@types/aquarius/SearchQuery'
+import { transformAssetToAssetSelection } from '../assetConvertor'
 
 export interface UserSales {
   id: string
@@ -19,7 +19,7 @@ export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 export function escapeEsReservedCharacters(value: string): string {
   // eslint-disable-next-line no-useless-escape
   const pattern = /([\!\*\+\-\=\<\>\&\|\(\)\[\]\{\}\^\~\?\:\\/"])/g
-  return value.replace(pattern, '\\$1')
+  return value?.replace(pattern, '\\$1')
 }
 
 /**
@@ -42,6 +42,24 @@ export function getFilterTerm(
 export function generateBaseQuery(
   baseQueryParams: BaseQueryParams
 ): SearchQuery {
+  const filters: unknown[] = [getFilterTerm('_index', 'aquarius')]
+  baseQueryParams.filters && filters.push(...baseQueryParams.filters)
+  baseQueryParams.chainIds &&
+    filters.push(getFilterTerm('chainId', baseQueryParams.chainIds))
+  !baseQueryParams.ignorePurgatory &&
+    filters.push(getFilterTerm('purgatory.state', false))
+  !baseQueryParams.ignoreState &&
+    filters.push({
+      bool: {
+        must_not: [
+          {
+            term: {
+              'nft.state': 5
+            }
+          }
+        ]
+      }
+    })
   const generatedQuery = {
     from: baseQueryParams.esPaginationOptions?.from || 0,
     size:
@@ -51,31 +69,7 @@ export function generateBaseQuery(
     query: {
       bool: {
         ...baseQueryParams.nestedQuery,
-        filter: [
-          ...(baseQueryParams.filters || []),
-          baseQueryParams.chainIds
-            ? getFilterTerm('chainId', baseQueryParams.chainIds)
-            : '',
-          getFilterTerm('_index', 'aquarius'),
-          ...(baseQueryParams.ignorePurgatory
-            ? ''
-            : [getFilterTerm('purgatory.state', false)]),
-          ...(baseQueryParams.ignoreState
-            ? ''
-            : [
-                {
-                  bool: {
-                    must_not: [
-                      {
-                        term: {
-                          'nft.state': 5
-                        }
-                      }
-                    ]
-                  }
-                }
-              ])
-        ]
+        filter: filters
       }
     }
   } as SearchQuery
@@ -90,7 +84,6 @@ export function generateBaseQuery(
         baseQueryParams.sortOptions.sortDirection ||
         SortDirectionOptions.Descending
     }
-
   return generatedQuery
 }
 
@@ -143,7 +136,7 @@ export async function queryMetadata(
   }
 }
 
-export async function retrieveAsset(
+export async function getAsset(
   did: string,
   cancelToken: CancelToken
 ): Promise<Asset> {
@@ -186,73 +179,7 @@ export async function getAssetsNames(
   }
 }
 
-export async function getAssetsFromDidList(
-  didList: string[],
-  chainIds: number[],
-  cancelToken: CancelToken
-): Promise<PagedAssets> {
-  try {
-    if (!didList.length) return
-
-    const baseParams = {
-      chainIds,
-      filters: [getFilterTerm('_id', didList)],
-      ignorePurgatory: true
-    } as BaseQueryParams
-    const query = generateBaseQuery(baseParams)
-
-    const queryResult = await queryMetadata(query, cancelToken)
-    return queryResult
-  } catch (error) {
-    LoggerInstance.error(error.message)
-  }
-}
-
-export async function getAssetsFromDtList(
-  dtList: string[],
-  chainIds: number[],
-  cancelToken: CancelToken
-): Promise<Asset[]> {
-  try {
-    if (!dtList.length) return
-
-    const baseParams = {
-      chainIds,
-      filters: [getFilterTerm('services.datatokenAddress', dtList)],
-      ignorePurgatory: true
-    } as BaseQueryParams
-    const query = generateBaseQuery(baseParams)
-
-    const queryResult = await queryMetadata(query, cancelToken)
-    return queryResult?.results
-  } catch (error) {
-    LoggerInstance.error(error.message)
-  }
-}
-
-export async function getAssetsFromNftList(
-  nftList: string[],
-  chainIds: number[],
-  cancelToken: CancelToken
-): Promise<Asset[]> {
-  try {
-    if (!(nftList.length > 0)) return
-
-    const baseParams = {
-      chainIds,
-      filters: [getFilterTerm('nftAddress', nftList)],
-      ignorePurgatory: true
-    } as BaseQueryParams
-    const query = generateBaseQuery(baseParams)
-
-    const queryResult = await queryMetadata(query, cancelToken)
-    return queryResult?.results
-  } catch (error) {
-    LoggerInstance.error(error.message)
-  }
-}
-
-export async function retrieveDDOListByDIDs(
+export async function getAssetsFromDids(
   didList: string[],
   chainIds: number[],
   cancelToken: CancelToken
@@ -368,7 +295,7 @@ export async function getPublishedAssets(
   }
 }
 
-export async function getTopPublishers(
+async function getTopPublishers(
   chainIds: number[],
   cancelToken: CancelToken,
   page?: number,

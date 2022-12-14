@@ -17,7 +17,7 @@ import {
   queryMetadata,
   getFilterTerm,
   generateBaseQuery,
-  retrieveDDOListByDIDs
+  getAssetsFromDids
 } from './aquarius'
 import { fetchDataForMultipleChains } from './subgraph'
 import { getServiceById, getServiceByName } from './ddo'
@@ -338,7 +338,7 @@ export async function createTrustedAlgorithmList(
   if (!selectedAlgorithms || selectedAlgorithms.length === 0)
     return trustedAlgorithms
 
-  const selectedAssets = await retrieveDDOListByDIDs(
+  const selectedAssets = await getAssetsFromDids(
     selectedAlgorithms,
     [assetChainId],
     cancelToken
@@ -392,32 +392,4 @@ export async function transformComputeFormToServiceComputeOptions(
   }
 
   return privacy
-}
-
-export async function checkComputeResourcesValidity(
-  asset: Asset,
-  accountId: string,
-  computeEnvMaxJobDuration: number,
-  datasetTimeout?: number,
-  algorithmTimeout?: number,
-  cancelToken?: CancelToken
-): Promise<boolean> {
-  const jobs = await getComputeJobs(
-    [asset?.chainId],
-    accountId,
-    asset,
-    cancelToken
-  )
-  if (jobs.computeJobs.length <= 0) return false
-  const inputValues = []
-  computeEnvMaxJobDuration && inputValues.push(computeEnvMaxJobDuration * 60)
-  datasetTimeout && inputValues.push(datasetTimeout)
-  algorithmTimeout && inputValues.push(algorithmTimeout)
-  const minValue = Math.min(...inputValues)
-  const jobStartDate = new Date(
-    parseInt(jobs.computeJobs[0].dateCreated) * 1000
-  )
-  jobStartDate.setMinutes(jobStartDate.getMinutes() + Math.floor(minValue / 60))
-  const currentTime = new Date().getTime() / 1000
-  return Math.floor(jobStartDate.getTime() / 1000) > currentTime
 }
