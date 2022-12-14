@@ -174,7 +174,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
 
       _did = mainnetDid?.did || data[0].did
     } else {
-      _did = `did:pkh:eip155:0:${address.toLowerCase()}`
+      _did = `did:pkh:eip155:1:${address.toLowerCase()}`
     }
 
     return _did
