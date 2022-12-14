@@ -12,7 +12,8 @@ import {
   ComputeAlgorithm,
   ComputeOutput,
   ProviderComputeInitializeResults,
-  unitsToAmount
+  unitsToAmount,
+  minAbi
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -90,6 +91,7 @@ export default function Compute({
   const [initializedProviderResponse, setInitializedProviderResponse] =
     useState<ProviderComputeInitializeResults>()
   const [providerFeeAmount, setProviderFeeAmount] = useState<string>('0')
+  const [providerFeesSymbol, setProviderFeesSymbol] = useState<string>('OCEAN')
   const [computeValidUntil, setComputeValidUntil] = useState<string>('0')
   const [datasetOrderPriceAndFees, setDatasetOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
@@ -159,6 +161,14 @@ export default function Compute({
       )
 
       setProviderFeeAmount(feeAmount)
+
+      const datatoken = new Datatoken(web3, null, null, minAbi)
+
+      setProviderFeesSymbol(
+        await datatoken.getSymbol(
+          initializedProvider.datasets[0].providerFee.providerFeeToken
+        )
+      )
 
       const computeDuration = (
         parseInt(initializedProvider?.datasets?.[0]?.providerFee?.validUntil) -
@@ -477,7 +487,7 @@ export default function Compute({
                 ? 'mOCEAN'
                 : 'OCEAN'
             }
-            providerFeesSymbol={networkId === 137 ? 'mOCEAN' : 'OCEAN'}
+            providerFeesSymbol={providerFeesSymbol}
             dtSymbolSelectedComputeAsset={
               selectedAlgorithmAsset?.datatokens[0]?.symbol
             }
