@@ -210,12 +210,7 @@ export default function Download({
                 {isPriceLoading ? (
                   <Loader message="Calculating full price (including fees)" />
                 ) : (
-                  <Price
-                    accessDetails={asset.accessDetails}
-                    orderPriceAndFees={orderPriceAndFees}
-                    conversion
-                    size="large"
-                  />
+                  <Price price={asset.stats?.price} conversion size="large" />
                 )}
 
                 {!isInPurgatory && <PurchaseButton />}

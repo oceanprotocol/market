@@ -25,27 +25,20 @@ describe('@shared/Price', () => {
   })
 
   it('renders null price', () => {
-    render(<Price accessDetails={{ ...asset.accessDetails, price: null }} />)
+    render(<Price price={asset.stats.price} />)
+    console.log('asset.stats.price', asset.stats.price)
     expect(screen.getByText('-')).toBeInTheDocument()
   })
 
   it('renders conversion', async () => {
-    render(
-      <Price
-        accessDetails={{ ...asset.accessDetails, price: '10' }}
-        conversion
-      />
-    )
+    render(<Price price={asset.stats.price} conversion />)
+    console.log('asset.stats.price', asset.stats.price)
     expect(await screen.findByText('≈')).toBeInTheDocument()
   })
 
   it('renders no conversion when no price defined', async () => {
-    render(
-      <Price
-        accessDetails={{ ...asset.accessDetails, price: null }}
-        conversion
-      />
-    )
+    render(<Price price={asset.stats.price} conversion />)
+    console.log('asset.stats.price', asset.stats.price)
     expect(screen.queryByText('≈')).not.toBeInTheDocument()
   })
 })
