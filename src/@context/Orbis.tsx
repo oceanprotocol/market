@@ -69,9 +69,13 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
 
   // Function to reset states
   const resetStates = () => {
+    setAccount(null)
     setConversationId(null)
     setConversations([])
     setUnreadMessages([])
+    setHasLit(false)
+    window.localStorage.removeItem('lit-auth-signature')
+    window.localStorage.removeItem('lit-auth-sol-signature')
   }
 
   // Connecting to Orbis
@@ -106,7 +110,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   const disconnectOrbis = (address: string) => {
     const res = orbis.logout()
     if (res.status === 200) {
-      setAccount(null)
       resetStates()
       const _ceramicSessions = { ...ceramicSessions }
       console.log(_ceramicSessions[address.toLowerCase()])
@@ -130,12 +133,14 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     autoConnect?: boolean
     lit?: boolean
   }) => {
-    const sessionString = ceramicSessions[address.toLowerCase()] || null
+    console.log(address)
+    const sessionString = ceramicSessions[address.toLowerCase()] || '-'
     const res = await orbis.isConnected(sessionString)
     if (
       res.status === 200 &&
       didToAddress(res.did) === accountId.toLowerCase()
     ) {
+      console.log(res)
       setHasLit(res.details.hasLit)
       const { data } = await orbis.getProfile(res.did)
       setAccount(data)
@@ -292,6 +297,8 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
 
         const address = didToAddress(did)
 
+        console.log({ details, address })
+
         if (details) {
           title =
             details?.metadata?.ensName ||
@@ -311,16 +318,19 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   }, NOTIFICATION_REFRESH_INTERVAL)
 
   useEffect(() => {
-    if (accountId && web3Provider) {
+    if (web3Provider && accountId) {
+      if (accountId !== prevAccountId) {
+        resetStates()
+      }
       // Check if wallet connected
       checkOrbisConnection({ address: accountId })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountId, web3Provider])
+  }, [accountId, prevAccountId, web3Provider])
 
-  useEffect(() => {
-    if (accountId !== prevAccountId) resetStates()
-  }, [accountId, prevAccountId])
+  // useEffect(() => {
+  //   if (accountId !== prevAccountId) resetStates()
+  // }, [accountId, prevAccountId])
 
   useEffect(() => {
     if (account) {
