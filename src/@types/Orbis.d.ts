@@ -1,8 +1,8 @@
 declare module '@orbisclub/orbis-sdk'
 
 declare interface IOrbisConstructor {
-  ceramic?: any
-  node?: any
+  ceramic?: unknown
+  node?: string
   store?: string
   PINATA_GATEWAY?: string
   PINATA_API_KEY?: string
@@ -11,17 +11,18 @@ declare interface IOrbisConstructor {
 }
 
 declare interface IOrbis {
-  api: any
-  connect: (provider: any, lit?: boolean) => Promise<IOrbisConnectReturns>
+  api: SupabaseClient
+  session: DIDSession
+  connect: (provider: unknown, lit?: boolean) => Promise<IOrbisConnectReturns>
   connect_v2: (opts?: {
-    provider?: any
+    provider?: unknown
     chain?: string
     lit?: boolean
-    oauth?: any
+    oauth?: unknown
   }) => Promise<IOrbisConnectReturns>
-  connectLit: (provider: any) => Promise<{
+  connectLit: (provider: unknown) => Promise<{
     status?: number
-    error?: any
+    error?: unknown
     result?: string
   }>
   connectWithSeed: (seed: Uint8Array) => Promise<IOrbisConnectReturns>
@@ -59,34 +60,34 @@ declare interface IOrbis {
     result: string
   }>
   createTileDocument: (
-    content: any,
+    content: unknown,
     tags: string[],
     schema: string,
     family: string
   ) => Promise<{
     status: number
     doc?: string
-    error?: any
+    error?: unknown
     result: string
   }>
   decryptMessage: (content: {
     conversation_id: string
     encryptedMessage: IOrbisEncryptedBody
-  }) => Promise<any>
-  decryptPost: (content: IOrbisPostContent) => Promise<any>
+  }) => Promise<{ result: string }>
+  decryptPost: (content: IOrbisPostContent) => Promise<{ result: string }>
   deletePost: (stream_id: string) => Promise<{
     status: number
     result: string
   }>
   deterministicDocument: (
-    content: any,
+    content: unknown,
     tags: string[],
     schema?: string,
     family?: string
   ) => Promise<{
     status: number
     doc?: string
-    error?: any
+    error?: unknown
     result: string
   }>
   editPost: (
@@ -99,24 +100,47 @@ declare interface IOrbis {
   }>
   getChannel: (channel_id: string) => Promise<{
     data: IOrbisChannel
-    error: any
+    error: unknown
     status: number
   }>
   getConversation: (conversation_id: string) => Promise<{
     status: number
-    data: any
-    error: any
+    data: IOrbisConversation | null
+    error: unknown
   }>
-  getConversations: (opts: { did: string; context?: string }) => Promise<any>
+  getConversations: (opts: { did: string; context?: string }) => Promise<{
+    data: IOrbisConversation[]
+    error: unknown
+    status: number
+  }>
+  getCredentials: (did: string) => Promise<{
+    data: {
+      stream_id: string
+      family: string
+      content: unknown
+      issuer: string
+      creator: string
+      subject_id: string
+      type: string
+    }[]
+    error: unknown
+    status: number
+  }>
   getDids: (address: string) => Promise<{
-    data: any
-    error: any
+    data: {
+      did: string
+      details: Pick<IOrbisProfile, 'did' | 'details'>
+      count_followers: number
+      count_following: number
+      pfp: string
+    }[]
+    error: unknown
     status: number
   }>
   getGroup: (group_id: string) => Promise<{
     data: IOrbisGroup
-    error: any
-    status: any
+    error: unknown
+    status: number
   }>
   getGroupMembers: (group_id: string) => Promise<{
     data: {
@@ -132,12 +156,12 @@ declare interface IOrbis {
       stream_id: string
       timestamp: number
     }[]
-    error: any
+    error: unknown
     status: number
   }>
   getGroups: () => Promise<{
     data: IOrbisGroup[]
-    error: any
+    error: unknown
     status: number
   }>
   getIsFollowing: (
@@ -145,7 +169,7 @@ declare interface IOrbis {
     did_followed: string
   ) => Promise<{
     data: boolean
-    error: any
+    error: unknown
     status: number
   }>
   getIsGroupMember: (
@@ -153,7 +177,7 @@ declare interface IOrbis {
     did: string
   ) => Promise<{
     data: boolean
-    error: any
+    error: unknown
     status: number
   }>
   getMessages: (
@@ -161,7 +185,7 @@ declare interface IOrbis {
     page: number
   ) => Promise<{
     data: IOrbisMessage[]
-    error: any
+    error: unknown
     status: number
   }>
   getNotifications: (
@@ -174,10 +198,14 @@ declare interface IOrbis {
       algorithm?: string
     },
     page: number
-  ) => Promise<any>
+  ) => Promise<{
+    data: IOrbisNotification[]
+    error: unknown
+    status: number
+  }>
   getPost: (post_id: string) => Promise<{
     data: IOrbisPost
-    error: any
+    error: unknown
     status: number
   }>
   getPosts: (
@@ -192,7 +220,7 @@ declare interface IOrbis {
     page: number
   ) => Promise<{
     data: IOrbisPost[]
-    error: any
+    error: unknown
     status: number
   }>
   getReaction: (
@@ -200,22 +228,22 @@ declare interface IOrbis {
     did: string
   ) => Promise<{
     data: { type: string }
-    error: any
+    error: unknown
     status: number
   }>
   getProfile: (did: string) => Promise<{
     data: IOrbisProfile
-    error: any
+    error: unknown
     status: number
   }>
   getProfileFollowers: (did: string) => Promise<{
     data: IOrbisProfile['details'][]
-    error: any
+    error: unknown
     status: number
   }>
   getProfileFollowing: (did: string) => Promise<{
     data: IOrbisProfile['details'][]
-    error: any
+    error: unknown
     status: number
   }>
   getProfileGroups: (did: string) => Promise<{
@@ -231,19 +259,19 @@ declare interface IOrbis {
       group_id: string
       stream_id: string
     }[]
-    error: any
+    error: unknown
     status: number
   }>
   getProfilesByUsername: (username: string) => Promise<{
     data: IOrbisProfile[]
-    error: any
+    error: unknown
     status: number
   }>
   isConnected: (sessionString?: string) => Promise<IOrbisConnectReturns>
   logout: () => {
     status: number
     result: string
-    error: any
+    error: unknown
   }
   react: (
     post_id: string,
@@ -272,7 +300,7 @@ declare interface IOrbis {
   ) => Promise<{
     status: number
     doc?: string
-    error?: any
+    error?: unknown
     result: string
   }>
   setNotificationsReadTime: (
@@ -282,7 +310,7 @@ declare interface IOrbis {
   ) => Promise<{
     status: number
     doc?: string
-    error?: any
+    error?: unknown
     result: string
   }>
   updateChannel: (
@@ -322,27 +350,31 @@ declare interface IOrbis {
   }>
   updateTileDocument: (
     stream_id: string,
-    content: any,
+    content: unknown,
     tags: string[],
     schema: string,
     family?: string
   ) => Promise<{
     status: number
     doc?: string
-    error?: any
+    error?: unknown
     result: string
   }>
   uploadMedia: (file: File) => Promise<{
     status: number
-    error?: any
-    result: any
+    error?: unknown
+    result: { url: string; gateway: string } | string
   }>
 }
 
 interface IOrbisConnectReturns {
   status: number
   did: string
-  details: any
+  details: {
+    did: string
+    profile: IOrbisProfile['details']['profile']
+    hasLit: boolean
+  }
   result: string
 }
 
@@ -412,7 +444,7 @@ declare interface IOrbisProfile {
       chain?: string
       ensName?: string
     }
-    nonces?: any
+    nonces?: number
     profile?: {
       cover?: string
       data?: object
@@ -426,7 +458,12 @@ declare interface IOrbisProfile {
       }
       username?: string
     }
-    twitter_details?: any
+    twitter_details?: {
+      credential_id: string
+      issuer: string
+      timestamp: number
+      username: string
+    }
   }
   did: string
   last_activity_timestamp: number

@@ -11,6 +11,7 @@ import styles from './Details.module.css'
 
 export default function Details(): ReactElement {
   const {
+    accountId,
     web3ProviderInfo,
     web3Modal,
     connect,
@@ -85,7 +86,7 @@ export default function Details(): ReactElement {
               onClick={async () => {
                 await web3Modal?.clearCachedProvider()
                 connect()
-                checkOrbisConnection({})
+                checkOrbisConnection({ address: accountId })
               }}
             >
               Switch Wallet
@@ -95,7 +96,7 @@ export default function Details(): ReactElement {
               size="small"
               onClick={() => {
                 logout()
-                disconnectOrbis()
+                disconnectOrbis(accountId)
                 location.reload()
               }}
             >

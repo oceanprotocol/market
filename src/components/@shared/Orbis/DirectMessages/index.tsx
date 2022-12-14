@@ -17,7 +17,11 @@ const BodyContent = () => {
     e.preventDefault()
     const resConnect = await connect()
     if (resConnect) {
-      await checkOrbisConnection({ autoConnect: true, lit: true })
+      await checkOrbisConnection({
+        address: accountId,
+        autoConnect: true,
+        lit: true
+      })
     }
   }
 
@@ -56,7 +60,11 @@ const BodyContent = () => {
           <button
             className={`${walletStyles.button} ${walletStyles.initial}`}
             onClick={() =>
-              checkOrbisConnection({ autoConnect: true, lit: true })
+              checkOrbisConnection({
+                address: accountId,
+                autoConnect: true,
+                lit: true
+              })
             }
           >
             Sign <span>Wallet</span>

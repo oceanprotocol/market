@@ -32,7 +32,11 @@ const DmButton = ({ accountId }: { accountId: string }) => {
     e.preventDefault()
     const resConnect = await connect()
     if (resConnect) {
-      await checkOrbisConnection({ autoConnect: true, lit: true })
+      await checkOrbisConnection({
+        address: ownAccountId,
+        autoConnect: true,
+        lit: true
+      })
     }
   }
 

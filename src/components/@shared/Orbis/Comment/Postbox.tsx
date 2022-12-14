@@ -131,7 +131,7 @@ export default function Postbox({
     e.preventDefault()
     const resConnect = await connect()
     if (resConnect) {
-      await checkOrbisConnection({ autoConnect: true })
+      await checkOrbisConnection({ address: accountId, autoConnect: true })
     }
   }
 
@@ -153,7 +153,9 @@ export default function Postbox({
       <div className={styles.postbox}>
         <button
           className={`${walletStyles.button} ${walletStyles.initial} ${styles.connectWallet}`}
-          onClick={() => checkOrbisConnection({ autoConnect: true })}
+          onClick={() =>
+            checkOrbisConnection({ address: accountId, autoConnect: true })
+          }
         >
           Sign <span>Wallet</span>
         </button>
