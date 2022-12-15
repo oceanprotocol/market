@@ -20,15 +20,18 @@ export default function PriceUnit({
   decimals?: string
 }): ReactElement {
   const { locale } = useUserPreferences()
+  console.log('\n\n\n######\n\n\n Number.isNaN(price)', Number.isNaN(price))
 
   return (
     <div className={`${styles.price} ${styles[size]} ${className}`}>
       {price === 0 ? (
         <div>Free</div>
+      ) : !price || Number.isNaN(price) ? (
+        <div>-</div>
       ) : (
         <>
           <div>
-            {Number.isNaN(price) ? '-' : formatNumber(price, locale, decimals)}{' '}
+            {formatNumber(price, locale, decimals)}
             <span className={styles.symbol}>{symbol}</span>
           </div>
           {conversion && <Conversion price={price} symbol={symbol} />}

@@ -18,27 +18,20 @@ describe('@shared/Price', () => {
     )
     expect(screen.getByText('10')).toBeInTheDocument()
   })
-
   it('renders free price', () => {
     render(<Price price={{ value: 0 }} />)
     expect(screen.getByText('Free')).toBeInTheDocument()
   })
-
   it('renders null price', () => {
     render(<Price price={{ value: null }} />)
-    console.log('asset.stats.price', asset.stats.price)
     expect(screen.getByText('-')).toBeInTheDocument()
   })
-
   it('renders conversion', async () => {
     render(<Price price={asset.stats.price} conversion />)
-    console.log('asset.stats.price', asset.stats.price)
     expect(await screen.findByText('≈')).toBeInTheDocument()
   })
-
   it('renders no conversion when no price defined', async () => {
-    render(<Price price={asset.stats.price} conversion />)
-    console.log('asset.stats.price', asset.stats.price)
+    render(<Price price={{ value: null, tokenSymbol: 'TEST' }} conversion />)
     expect(screen.queryByText('≈')).not.toBeInTheDocument()
   })
 })

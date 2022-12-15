@@ -6,6 +6,7 @@ export function formatNumber(
   locale: string,
   decimals?: string
 ): string {
+  console.log('\n\n\nformatNumber', price, locale, decimals)
   return formatCurrency(price, '', locale, false, {
     // Not exactly clear what `significant figures` are for this library,
     // but setting this seems to give us the formatting we want.

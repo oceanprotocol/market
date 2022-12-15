@@ -14,13 +14,13 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
-  return price?.value !== undefined ? (
+  return (
     <PriceUnit
-      price={price.value}
-      symbol={price.tokenSymbol}
+      price={price?.value}
+      symbol={price?.tokenSymbol}
       className={className}
       size={size}
       conversion={conversion}
     />
-  ) : null
+  )
 }
