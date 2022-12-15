@@ -48,7 +48,7 @@ export default function DmConversation() {
       console.log(error)
     }
 
-    if (data) {
+    if (data.length) {
       data.reverse()
       if (!polling) {
         setHasMore(data.length >= 50)
@@ -163,34 +163,38 @@ export default function DmConversation() {
         <>
           {isLoading && <div className={styles.loading}>Loading...</div>}
           <div className={styles.messages}>
-            <div ref={messagesWrapper} className={styles.scrollContent}>
-              {messages.map((message) => (
-                <div
-                  key={message.stream_id}
-                  className={`${styles.message} ${
-                    message.stream_id.startsWith('new_post--')
-                      ? styles.pulse
-                      : ''
-                  } ${
-                    account?.did === message.creator_details.did
-                      ? styles.right
-                      : styles.left
-                  } ${showTime(message.stream_id) && styles.showTime}`}
-                >
-                  <div className={styles.chatBubble}>
-                    <DecryptedMessage content={message.content} />
+            {!isLoading && messages.length === 0 ? (
+              <div className={styles.noMessages}>No message yet</div>
+            ) : (
+              <div ref={messagesWrapper} className={styles.scrollContent}>
+                {messages.map((message) => (
+                  <div
+                    key={message.stream_id}
+                    className={`${styles.message} ${
+                      message.stream_id.startsWith('new_post--')
+                        ? styles.pulse
+                        : ''
+                    } ${
+                      account?.did === message.creator_details.did
+                        ? styles.right
+                        : styles.left
+                    } ${showTime(message.stream_id) && styles.showTime}`}
+                  >
+                    <div className={styles.chatBubble}>
+                      <DecryptedMessage content={message.content} />
+                    </div>
+                    <div className={styles.time}>
+                      <Time
+                        date={message.timestamp.toString()}
+                        isUnix={true}
+                        relative={false}
+                        displayFormat="MMM d, yyyy, h:mm aa"
+                      />
+                    </div>
                   </div>
-                  <div className={styles.time}>
-                    <Time
-                      date={message.timestamp.toString()}
-                      isUnix={true}
-                      relative={false}
-                      displayFormat="MMM d, yyyy, h:mm aa"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {newMessages > 0 && (
               <button

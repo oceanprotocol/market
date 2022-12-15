@@ -52,7 +52,7 @@ type IOrbisProvider = {
 const OrbisContext = createContext({} as IOrbisProvider)
 
 const orbis: IOrbis = new Orbis()
-const NOTIFICATION_REFRESH_INTERVAL = 10000
+const NOTIFICATION_REFRESH_INTERVAL = 5000
 const CONVERSATION_CONTEXT = 'ocean_market' // Can be changed to whatever
 
 function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
@@ -126,7 +126,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   const disconnectOrbis = (address: string) => {
     const res = orbis.logout()
     if (res.status === 200) {
-      console.log('disconnected')
       resetStates()
       removeLitSignature()
       removeCeramicSession(address)
@@ -162,7 +161,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       const data = await connectOrbis({ address, lit })
       return data
     } else {
-      console.log('not connected')
       resetStates()
       removeLitSignature()
       removeCeramicSession(address)
@@ -252,7 +250,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   }
 
   const clearMessageNotifs = (conversationId: string) => {
-    console.log('clearMessageNotifs', conversationId)
     const _usersNotifications = { ...usersNotifications }
     const address = didToAddress(account?.did)
     if (_usersNotifications[address]) {
@@ -303,22 +300,30 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
 
     if (!hasLit) {
       const res = await connectLit()
-      if (res.status !== 200) return
+      if (res.status !== 200) {
+        alert('Error connecting to Lit.')
+        return
+      }
     }
 
-    let _conversations = [...conversations]
-    if (!_conversations.length) {
-      _conversations = await getConversations(_account?.did)
-    }
-
-    const existingConversations = _conversations.filter(
+    let existingConversation = conversations.find(
       (conversation: IOrbisConversation) => {
         return conversation.recipients.includes(userDid)
       }
     )
 
-    if (existingConversations.length > 0) {
-      setConversationId(existingConversations[0].stream_id)
+    // Refetch to make sure we have the latest conversations
+    if (!existingConversation) {
+      const _conversations = await getConversations(_account?.did)
+      existingConversation = _conversations.find(
+        (conversation: IOrbisConversation) => {
+          return conversation.recipients.includes(userDid)
+        }
+      )
+    }
+
+    if (existingConversation) {
+      setConversationId(existingConversation.stream_id)
       setOpenConversations(true)
     } else {
       const res = await orbis.createConversation({
@@ -326,8 +331,14 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         context: CONVERSATION_CONTEXT
       })
       if (res.status === 200) {
-        setConversationId(res.doc)
-        setOpenConversations(true)
+        setTimeout(async () => {
+          const { data, error } = await orbis.getConversation(res.doc)
+          if (!error && data) {
+            setConversations([data, ...conversations])
+          }
+          setConversationId(res.doc)
+          setOpenConversations(true)
+        }, 2000)
       }
     }
   }
@@ -338,6 +349,8 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       const conversation = conversations.find(
         (o) => o.stream_id === conversationId
       )
+
+      if (!conversation) return null
 
       // Get address from did
       const did = conversation.recipients.find((o: string) => o !== account.did)

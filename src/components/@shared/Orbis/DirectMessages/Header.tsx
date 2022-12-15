@@ -7,6 +7,7 @@ import ChevronUp from '@images/chevronup.svg'
 
 export default function Header() {
   const {
+    conversations,
     conversationId,
     openConversations,
     notifications,
@@ -35,7 +36,8 @@ export default function Header() {
     } else {
       setName(null)
     }
-  }, [conversationId, getConversationTitle])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversationId, conversations])
 
   return (
     <div className={styles.header} onClick={handleToggle}>

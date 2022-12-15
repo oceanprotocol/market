@@ -37,6 +37,12 @@
   color: var(--color-secondary);
 }
 
+.noMessages {
+  text-align: center;
+  padding: calc(var(--spacer) / 2);
+  color: var(--color-secondary);
+}
+
 .messages {
   position: relative;
   flex-grow: 1;

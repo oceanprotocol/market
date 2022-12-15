@@ -27,6 +27,7 @@ const DmButton = ({ accountId }: { accountId: string }) => {
   const { accountId: ownAccountId, connect } = useWeb3()
   const { checkOrbisConnection, createConversation, getDid } = useOrbis()
   const [userDid, setUserDid] = useState<string | undefined>()
+  const [isCreatingConversation, setIsCreatingConversation] = useState(false)
 
   const handleActivation = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -58,10 +59,14 @@ const DmButton = ({ accountId }: { accountId: string }) => {
         <Button
           style="primary"
           size="small"
-          disabled={!ownAccountId}
-          onClick={() => createConversation(userDid)}
+          disabled={!ownAccountId || isCreatingConversation}
+          onClick={async () => {
+            setIsCreatingConversation(true)
+            await createConversation(userDid)
+            setIsCreatingConversation(false)
+          }}
         >
-          Send Direct Message
+          {isCreatingConversation ? 'Loading...' : 'Send Direct Message'}
         </Button>
       </div>
     )
