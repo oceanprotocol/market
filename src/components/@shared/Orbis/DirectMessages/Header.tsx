@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './Header.module.css'
 import { useOrbis } from '@context/Orbis'
 import ChatBubble from '@images/chatbubble.svg'
@@ -9,11 +9,13 @@ export default function Header() {
   const {
     conversationId,
     openConversations,
-    conversationTitle,
     notifications,
+    getConversationTitle,
     setOpenConversations,
     setConversationId
   } = useOrbis()
+
+  const [name, setName] = useState<string>(null)
 
   const handleToggle = (
     e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>
@@ -26,6 +28,14 @@ export default function Header() {
       setOpenConversations(!openConversations)
     }
   }
+
+  useEffect(() => {
+    if (conversationId) {
+      getConversationTitle(conversationId).then((name) => setName(name))
+    } else {
+      setName(null)
+    }
+  }, [conversationId, getConversationTitle])
 
   return (
     <div className={styles.header} onClick={handleToggle}>
@@ -57,7 +67,7 @@ export default function Header() {
               />
             </button>
           )}
-          <span>{conversationTitle}</span>
+          <span>{name}</span>
         </>
       )}
       <div className={styles.toggleArrow}>

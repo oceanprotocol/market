@@ -12,6 +12,7 @@ import { Orbis } from '@orbisclub/orbis-sdk'
 import { useWeb3 } from './Web3'
 import { accountTruncate } from '@utils/web3'
 import { didToAddress } from '@utils/orbis'
+import { getEnsName } from '@utils/ens'
 import usePrevious from '@hooks/usePrevious'
 import useLocalStorage from '@hooks/useLocalStorage'
 
@@ -24,7 +25,6 @@ type IOrbisProvider = {
   openConversations: boolean
   conversationId: string
   conversations: IOrbisConversation[]
-  conversationTitle: string
   notifications: Record<string, string[]>
   connectOrbis: (options: {
     address: string
@@ -45,7 +45,7 @@ type IOrbisProvider = {
   setConversationId: (value: string) => void
   createConversation: (value: string) => Promise<void>
   clearMessageNotifs: (conversationId: string) => void
-  getConversationTitle: (conversation: IOrbisConversation) => string
+  getConversationTitle: (conversationId: string) => Promise<string>
   getDid: (value: string) => Promise<string>
 }
 
@@ -201,74 +201,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     return _did
   }
 
-  const getConversations = async (did: string = null) => {
-    const { data } = await orbis.getConversations({
-      did,
-      context: CONVERSATION_CONTEXT
-    })
-
-    // Only show conversations with exactly 2 unique participants and remove duplicates based on participants
-    const filteredConversations: IOrbisConversation[] = []
-    data.forEach((conversation: IOrbisConversation) => {
-      if (conversation.recipients.length === 2) {
-        const found = filteredConversations.find(
-          (o: IOrbisConversation) =>
-            o.recipients.length === 2 &&
-            o.recipients.includes(conversation.recipients[0]) &&
-            o.recipients.includes(conversation.recipients[1])
-        )
-
-        if (!found) {
-          filteredConversations.push(conversation)
-        }
-      }
-    })
-
-    setConversations(filteredConversations)
-    return filteredConversations
-  }
-
-  const createConversation = async (userDid: string) => {
-    let _account = account
-    if (!_account) {
-      // Check connection and force connect
-      _account = await checkOrbisConnection({
-        address: accountId,
-        autoConnect: true
-      })
-    }
-
-    if (!hasLit) {
-      const res = await connectLit()
-      if (res.status !== 200) return
-    }
-
-    let _conversations = [...conversations]
-    if (!_conversations.length) {
-      _conversations = await getConversations(_account?.did)
-    }
-
-    const existingConversations = _conversations.filter(
-      (conversation: IOrbisConversation) => {
-        return conversation.recipients.includes(userDid)
-      }
-    )
-
-    if (existingConversations.length > 0) {
-      setConversationId(existingConversations[0].stream_id)
-      setOpenConversations(true)
-    } else {
-      const res = await orbis.createConversation({
-        recipients: [userDid],
-        context: CONVERSATION_CONTEXT
-      })
-      if (res.status === 200) {
-        setConversationId(res.doc)
-        setOpenConversations(true)
-      }
-    }
-  }
-
   const getMessageNotifs = async () => {
     let did = account?.did
 
@@ -329,39 +261,96 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     setUsersNotifications(_usersNotifications)
   }
 
-  const getConversationTitle = (conversation: IOrbisConversation) => {
-    let title = null
+  const getConversations = async (did: string = null) => {
+    const { data } = await orbis.getConversations({
+      did,
+      context: CONVERSATION_CONTEXT
+    })
 
-    if (conversation) {
-      const details = conversation.recipients_details.find(
-        (o: IOrbisProfile) => o.did !== account.did
-      )
-      const did = conversation.recipients.find((o: string) => o !== account.did)
+    // Only show conversations with exactly 2 unique participants and remove duplicates based on participants
+    const filteredConversations: IOrbisConversation[] = []
+    data.forEach((conversation: IOrbisConversation) => {
+      if (conversation.recipients.length === 2) {
+        const found = filteredConversations.find(
+          (o: IOrbisConversation) =>
+            o.recipients.length === 2 &&
+            o.recipients.includes(conversation.recipients[0]) &&
+            o.recipients.includes(conversation.recipients[1])
+        )
 
-      const address = didToAddress(did)
-
-      if (details) {
-        title = details?.metadata?.ensName || accountTruncate(address)
-      } else {
-        title = accountTruncate(address)
+        if (!found) {
+          filteredConversations.push(conversation)
+        }
       }
-    }
+    })
 
-    return title
+    // Also fetch message notifications
+    await getMessageNotifs()
+
+    setConversations(filteredConversations)
+    return filteredConversations
   }
 
-  const conversationTitle = useMemo(() => {
-    let title = null
+  const createConversation = async (userDid: string) => {
+    let _account = account
+    if (!_account) {
+      // Check connection and force connect
+      _account = await checkOrbisConnection({
+        address: accountId,
+        autoConnect: true
+      })
+    }
+
+    if (!hasLit) {
+      const res = await connectLit()
+      if (res.status !== 200) return
+    }
+
+    let _conversations = [...conversations]
+    if (!_conversations.length) {
+      _conversations = await getConversations(_account?.did)
+    }
+
+    const existingConversations = _conversations.filter(
+      (conversation: IOrbisConversation) => {
+        return conversation.recipients.includes(userDid)
+      }
+    )
+
+    if (existingConversations.length > 0) {
+      setConversationId(existingConversations[0].stream_id)
+      setOpenConversations(true)
+    } else {
+      const res = await orbis.createConversation({
+        recipients: [userDid],
+        context: CONVERSATION_CONTEXT
+      })
+      if (res.status === 200) {
+        setConversationId(res.doc)
+        setOpenConversations(true)
+      }
+    }
+  }
+
+  const getConversationTitle = async (conversationId: string) => {
     if (conversationId && conversations.length) {
+      // Get conversation based on conversationId
       const conversation = conversations.find(
         (o) => o.stream_id === conversationId
       )
-      title = getConversationTitle(conversation)
-    }
 
-    return title
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationId, conversations])
+      // Get address from did
+      const did = conversation.recipients.find((o: string) => o !== account.did)
+      const address = didToAddress(did)
+
+      // Get ens name if exists
+      const ensName = await getEnsName(address)
+
+      return ensName || accountTruncate(address)
+    } else {
+      return null
+    }
+  }
 
   const notifications = useMemo(() => {
     let _notifications = {}
@@ -372,7 +361,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   }, [accountId, usersNotifications])
 
   useInterval(async () => {
-    await getMessageNotifs()
+    await getConversations(account?.did)
   }, NOTIFICATION_REFRESH_INTERVAL)
 
   useEffect(() => {
@@ -389,7 +378,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (account) {
       getConversations(account?.did)
-      getMessageNotifs()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
@@ -403,7 +391,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         openConversations,
         conversationId,
         conversations,
-        conversationTitle,
         notifications,
         connectOrbis,
         disconnectOrbis,

@@ -19,7 +19,7 @@ export default function ConversationItem({
 
   const newCancelToken = useCancelToken()
 
-  const name = getConversationTitle(conversation)
+  const [name, setName] = useState<string>(null)
   const [address, setAddress] = useState(null)
 
   useEffect(() => {
@@ -28,12 +28,15 @@ export default function ConversationItem({
 
       const _address = didToAddress(did)
       setAddress(_address)
+
+      const _name = await getConversationTitle(conversation?.stream_id)
+      setName(_name)
     }
 
     if (conversation && account) {
       getProfile()
     }
-  }, [conversation, account, newCancelToken])
+  }, [conversation, account, newCancelToken, getConversationTitle])
 
   return (
     <div
