@@ -74,11 +74,12 @@ const BodyContent = () => {
     )
   }
 
-  if (conversationId) {
-    return <Conversation />
-  }
-
-  return <List />
+  return (
+    <>
+      <List />
+      {conversationId && <Conversation />}
+    </>
+  )
 }
 
 export default function DirectMessages() {
