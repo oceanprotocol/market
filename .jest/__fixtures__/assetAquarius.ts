@@ -11,7 +11,7 @@ export const assetAquarius: Asset = {
     updated: '2022-09-29T11:30:26Z',
     type: 'dataset',
     name: 'Testitest',
-    description: 'This is a test.',
+    description: 'This is a test description.',
     tags: [],
     author: 'Test User',
     license: 'https://market.oceanprotocol.com/terms',
