@@ -99,6 +99,8 @@ export default function DmConversation() {
   const onScrollMessages = throttle(() => {
     const el = messagesWrapper.current
 
+    if (!el) return
+
     if (hasMore && el.scrollTop <= 50) {
       getMessages()
     }
