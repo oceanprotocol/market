@@ -199,7 +199,9 @@ export default function Download({
           />
         ) : (
           <>
-            {isUnsupportedPricing || !asset.services.length ? (
+            {isUnsupportedPricing ||
+            !asset.services.length ||
+            asset?.stats?.price?.value === undefined ? (
               <Alert
                 className={styles.fieldWarning}
                 state="info"
