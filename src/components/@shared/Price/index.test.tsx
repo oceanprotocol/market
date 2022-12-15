@@ -25,7 +25,7 @@ describe('@shared/Price', () => {
   })
 
   it('renders null price', () => {
-    render(<Price price={asset.stats.price} />)
+    render(<Price price={{ value: null }} />)
     console.log('asset.stats.price', asset.stats.price)
     expect(screen.getByText('-')).toBeInTheDocument()
   })
