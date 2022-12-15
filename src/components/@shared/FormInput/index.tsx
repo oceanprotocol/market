@@ -128,8 +128,6 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     }
   }, [isFormikField, props.form?.values])
 
-  console.log(form)
-
   return (
     <div className={styleClasses}>
       <Label htmlFor={props.name}>

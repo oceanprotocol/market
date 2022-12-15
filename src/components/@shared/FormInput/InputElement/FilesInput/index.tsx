@@ -42,17 +42,6 @@ export default function FilesInput(props: InputProps): ReactElement {
         )
       }
 
-      // TODO: fixing AbiItem typing
-      /*
-      const abi: any = {
-        inputs: [{ name: '', type: '' }],
-        name: 'swapOceanFee',
-        outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-        stateMutability: 'pure',
-        type: 'function'
-      }
-      */
-
       const checkedFile = await getFileInfo(
         url,
         providerUrl,
@@ -68,10 +57,23 @@ export default function FilesInput(props: InputProps): ReactElement {
         throw Error('Could not fetch file info. Is your network down?')
 
       if (checkedFile[0].valid === false)
-        throw Error('✗ No valid file detected. Check your URL and try again.')
+        throw Error(
+          `✗ No valid file detected. Check your ${props.label} and details, and try again.`
+        )
 
       // if all good, add file to formik state
-      helpers.setValue([{ url, type: storageType, ...checkedFile[0] }])
+      helpers.setValue([
+        {
+          url,
+          providerUrl,
+          type: storageType,
+          query,
+          headers,
+          abi,
+          chainId,
+          ...checkedFile[0]
+        }
+      ])
     } catch (error) {
       props.form.setFieldError(`${field.name}[0].url`, error.message)
       LoggerInstance.error(error.message)
@@ -88,12 +90,11 @@ export default function FilesInput(props: InputProps): ReactElement {
   }
 
   useEffect(() => {
-    storageType === 'graphql' &&
-      setDisabledButton(!providerUrl || headers?.length === 0 || !query)
+    storageType === 'graphql' && setDisabledButton(!providerUrl || !query)
 
     storageType === 'smartcontract' && setDisabledButton(!providerUrl || !abi)
 
-    storageType === 'url' && setDisabledButton(!providerUrl || !headers?.length)
+    storageType === 'url' && setDisabledButton(!providerUrl)
 
     if (meta.error?.length > 0) {
       const { url } = meta.error[0] as unknown as FileInfo

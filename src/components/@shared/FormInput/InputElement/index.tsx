@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import CodeMirror from '@uiw/react-codemirror'
-import { json } from '@codemirror/lang-json'
 import styles from './index.module.css'
 import { InputProps } from '..'
 import FilesInput from './FilesInput'
@@ -16,7 +15,7 @@ import TagsAutoComplete from './TagsAutoComplete'
 import TabsFile from '@shared/atoms/TabsFile'
 import useDarkMode from '@oceanprotocol/use-dark-mode'
 import appConfig from '../../../../../app.config'
-import { oceanTheme } from '@utils/codemirror'
+import { extensions, oceanTheme } from '@utils/codemirror'
 
 const cx = classNames.bind(styles)
 
@@ -106,19 +105,25 @@ export default function InputElement({
         })
       })
 
-      return <TabsFile items={tabs} className={styles.pricing} />
+      return (
+        <TabsFile
+          items={tabs}
+          key={`tabFile_${props.name}`}
+          className={styles.pricing}
+        />
+      )
     }
 
     case 'codeeditor':
       return (
         <CodeMirror
           id={props.name}
-          className={styles.textarea}
+          className={styles.codemirror}
           value={`${props.value ? props.value : ''}`}
           height="200px"
           placeholder={props.placeholder}
-          theme={oceanTheme(darkMode ? 'dark' : 'light')}
-          extensions={[json()]}
+          theme={oceanTheme(darkMode ? 'dark' : 'light', props)}
+          extensions={[extensions]}
           onChange={(value) => {
             form.setFieldError(`${field.name}`, 'test')
             form.setFieldValue(`${props.name}`, value)

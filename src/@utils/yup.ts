@@ -55,8 +55,6 @@ export function testLinks(isEdit?: boolean) {
         break
     }
 
-    console.log(validField, value, type, validField)
-
     if (!validField) {
       return context.createError({
         message: errorMessage

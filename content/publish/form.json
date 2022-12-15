@@ -147,7 +147,7 @@
                 "placeholder_value": "Authorization",
                 "help": "This QUERY will be stored encrypted after publishing.",
                 "type": "headers",
-                "required": true
+                "required": false
               }
             ]
           },
@@ -169,7 +169,7 @@
                 "placeholder_value": "Authorization",
                 "help": "This QUERY will be stored encrypted after publishing.",
                 "type": "headers",
-                "required": true
+                "required": false
               },
               {
                 "value": "query",
