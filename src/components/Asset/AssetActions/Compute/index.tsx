@@ -162,11 +162,15 @@ export default function Compute({
 
       setProviderFeeAmount(feeAmount)
 
-      const datatoken = new Datatoken(web3, null, null, minAbi)
-
+      const datatoken = new Datatoken(
+        await getDummyWeb3(asset?.chainId),
+        null,
+        null,
+        minAbi
+      )
       setProviderFeesSymbol(
         await datatoken.getSymbol(
-          initializedProvider.datasets[0].providerFee.providerFeeToken
+          initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken
         )
       )
 

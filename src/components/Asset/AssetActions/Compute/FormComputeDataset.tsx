@@ -213,7 +213,8 @@ export default function FormStartCompute({
     datasetOrderPrice,
     algoOrderPrice,
     algorithmSymbol,
-    datasetSymbol
+    datasetSymbol,
+    providerFeesSymbol
   ])
 
   useEffect(() => {
