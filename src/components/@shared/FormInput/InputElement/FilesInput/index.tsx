@@ -26,7 +26,7 @@ export default function FilesInput(props: InputProps): ReactElement {
       setIsLoading(true)
 
       // TODO: handled on provider
-      if (url.includes('drive.google')) {
+      if (url.includes('google.com')) {
         throw Error(
           'Google Drive is not a supported hosting service. Please use an alternative.'
         )
