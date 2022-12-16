@@ -123,11 +123,6 @@ export default function FormStartCompute({
   // Set price for calculation output
   //
   useEffect(() => {
-    console.log('asset?.accessDetails ', asset?.accessDetails)
-    console.log(
-      'selectedAlgorithmAsset?.accessDetails ',
-      selectedAlgorithmAsset?.accessDetails
-    )
     if (!asset?.accessDetails || !selectedAlgorithmAsset?.accessDetails) return
 
     setDatasetOrderPrice(
@@ -222,9 +217,7 @@ export default function FormStartCompute({
   ])
 
   useEffect(() => {
-    console.log('total prices', totalPrices)
     totalPrices.forEach((price) => {
-      console.log('price', price)
       const baseTokenBalance = getTokenBalanceFromSymbol(balance, price.symbol)
       if (!baseTokenBalance) {
         setIsBalanceSufficient(false)

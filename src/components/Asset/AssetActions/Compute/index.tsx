@@ -477,15 +477,12 @@ export default function Compute({
             hasPreviousOrderSelectedComputeAsset={!!validAlgorithmOrderTx}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
             datasetSymbol={
-              asset?.accessDetails?.baseToken?.symbol || asset?.chainId === 137
-                ? 'mOCEAN'
-                : 'OCEAN'
+              asset?.accessDetails?.baseToken?.symbol ||
+              (asset?.chainId === 137 ? 'mOCEAN' : 'OCEAN')
             }
             algorithmSymbol={
               selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol ||
-              selectedAlgorithmAsset?.chainId === 137
-                ? 'mOCEAN'
-                : 'OCEAN'
+              (selectedAlgorithmAsset?.chainId === 137 ? 'mOCEAN' : 'OCEAN')
             }
             providerFeesSymbol={providerFeesSymbol}
             dtSymbolSelectedComputeAsset={
