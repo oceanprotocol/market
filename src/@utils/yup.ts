@@ -28,7 +28,7 @@ export function testLinks(isEdit?: boolean) {
           validField = true
         }
         // if the url has google drive, we need to block the user from submit
-        if (value?.toString().includes('drive.google')) {
+        if (value?.toString().includes('google.com')) {
           validField = false
           errorMessage =
             'Google Drive is not a supported hosting service. Please use an alternative.'
