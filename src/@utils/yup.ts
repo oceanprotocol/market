@@ -1,6 +1,7 @@
 import { isCID } from '@utils/ipfs'
 import isUrl from 'is-url-superb'
 import * as Yup from 'yup'
+import { isGoogleUrl } from './googleUrl'
 
 export function testLinks(isEdit?: boolean) {
   return Yup.string().test((value, context) => {
@@ -28,7 +29,7 @@ export function testLinks(isEdit?: boolean) {
           validField = true
         }
         // if the url has google drive, we need to block the user from submit
-        if (value?.toString().includes('google.com')) {
+        if (isGoogleUrl(value?.toString())) {
           validField = false
           errorMessage =
             'Google Drive is not a supported hosting service. Please use an alternative.'
