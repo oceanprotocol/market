@@ -31,11 +31,6 @@ export default function AssetTeaser({
   const { orders, allocated, price } = asset.stats
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
   const { locale } = useUserPreferences()
-  console.log(
-    'asset?.stats?.price?.value === undefined',
-    asset?.stats?.price?.value === undefined,
-    asset?.stats?.price?.value
-  )
 
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
