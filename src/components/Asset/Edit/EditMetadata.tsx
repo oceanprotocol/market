@@ -15,7 +15,7 @@ import { useWeb3 } from '@context/Web3'
 import { useUserPreferences } from '@context/UserPreferences'
 import Web3Feedback from '@shared/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
-import { mapTimeoutStringToSeconds } from '@utils/ddo'
+import { mapTimeoutStringToSeconds, normalizeFile } from '@utils/ddo'
 import styles from './index.module.css'
 import content from '../../../../content/pages/editMetadata.json'
 import { useAbortController } from '@hooks/useAbortController'
@@ -113,19 +113,11 @@ export default function Edit({
         const file = {
           nftAddress: asset.nftAddress,
           datatokenAddress: asset.services[0].datatokenAddress,
-          files: [
-            {
-              type: values.files[0].type,
-              index: 0,
-              [values.files[0].type === 'ipfs'
-                ? 'hash'
-                : values.files[0].type === 'arweave'
-                ? 'transactionId'
-                : 'url']: values.files[0].url,
-              method: 'GET'
-            }
-          ]
+          files: [normalizeFile(values.files[0])]
         }
+
+        console.log(file)
+
         const filesEncrypted = await getEncryptedFiles(
           file,
           asset.services[0].serviceEndpoint

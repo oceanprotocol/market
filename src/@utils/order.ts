@@ -22,6 +22,7 @@ import {
   consumeMarketFixedSwapFee
 } from '../../app.config'
 import { toast } from 'react-toastify'
+import { getEncryptedFiles, getFileInfo } from './provider'
 
 async function initializeProvider(
   asset: AssetExtended,
@@ -30,6 +31,15 @@ async function initializeProvider(
 ): Promise<ProviderInitialize> {
   if (providerFees) return
   try {
+    console.log(
+      'here',
+      asset.id,
+      asset.services[0].id,
+      0,
+      accountId,
+      asset.services[0].serviceEndpoint
+    )
+
     const provider = await ProviderInstance.initialize(
       asset.id,
       asset.services[0].id,
@@ -62,6 +72,13 @@ export async function order(
 ): Promise<TransactionReceipt> {
   const datatoken = new Datatoken(web3)
   const config = getOceanConfig(asset.chainId)
+
+  const filesEncrypted = await getEncryptedFiles(
+    asset.services[0].files,
+    asset.services[0].serviceEndpoint
+  )
+
+  console.log(filesEncrypted)
 
   const initializeData = await initializeProvider(
     asset,

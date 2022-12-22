@@ -76,6 +76,8 @@ export default function AssetActions({
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
 
+        console.log(formikState?.values?.services?.[0].files?.[0].url)
+
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
 
         // set the content type in the Dataset Schema

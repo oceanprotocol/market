@@ -4,7 +4,16 @@ import {
   MetadataEditForm
 } from '@components/Asset/Edit/_types'
 import { FormPublishData } from '@components/Publish/_types'
-import { Asset, DDO, Service } from '@oceanprotocol/lib'
+import {
+  Arweave,
+  Asset,
+  DDO,
+  GraphqlQuery,
+  Ipfs,
+  Service,
+  Smartcontract,
+  UrlFile
+} from '@oceanprotocol/lib'
 
 export function getServiceByName(
   ddo: Asset | DDO,
@@ -72,6 +81,54 @@ export function secondsToString(numberOfSeconds: number): string {
     : 'less than a second'
 }
 
+export function normalizeFile(storageType: string, file: any, chainId: number) {
+  let fileObj
+  switch (storageType) {
+    case 'ipfs': {
+      fileObj = {
+        type: storageType,
+        hash: file[0]?.url || file?.url
+      } as Ipfs
+      break
+    }
+    case 'arweave': {
+      fileObj = {
+        type: storageType,
+        transactionId: file[0]?.transactionId || file?.transactionId
+      } as Arweave
+      break
+    }
+    case 'graphql': {
+      fileObj = {
+        type: storageType,
+        url: file[0]?.url || file?.url,
+        query: file[0]?.query || file?.query
+      } as GraphqlQuery
+      break
+    }
+    case 'smartcontract': {
+      // clean obj
+      fileObj = {
+        chainId,
+        type: storageType,
+        address: file[0]?.address || file?.address || file[0]?.url || file?.url,
+        abi: file[0]?.abi || file?.abi ? file[0]?.abi || file?.abi : null
+      } as Smartcontract
+      break
+    }
+    default: {
+      fileObj = {
+        type: 'url',
+        index: 0,
+        url: file ? file[0]?.url || file?.url : null,
+        method: 'get'
+      } as UrlFile
+      break
+    }
+  }
+  return fileObj
+}
+
 export function previewDebugPatch(
   values: FormPublishData | Partial<MetadataEditForm> | ComputeEditForm
 ) {
@@ -81,22 +138,7 @@ export function previewDebugPatch(
   const valuesService = buildValuesPreview.services
     ? buildValuesPreview.services[0]
     : buildValuesPreview
-  const file = valuesService.files[0]
-  // normalize files object
-  file[
-    file.type === 'ipfs'
-      ? 'hash'
-      : file.type === 'arweave'
-      ? 'transactionId'
-      : file.type === 'smartcontract'
-      ? 'address'
-      : 'url'
-  ] = file.url
-
-  // remove 'url' from obj
-  if (file.type !== 'url' && file.type !== 'graphql') {
-    delete file.url
-  }
+  normalizeFile(valuesService.files[0])
 
   return buildValuesPreview
 }
