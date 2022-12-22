@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import React from 'react'
 import AssetList from './index'
-import { assetAquarius } from '../../../../.jest/__fixtures__/assetAquarius'
+import { datasetAquarius } from '../../../../.jest/__fixtures__/datasetAquarius'
 
 describe('@shared/AssetList', () => {
   it('renders without crashing', async () => {
@@ -9,7 +9,7 @@ describe('@shared/AssetList', () => {
 
     render(
       <AssetList
-        assets={[assetAquarius]}
+        assets={[datasetAquarius]}
         showPagination
         page={1}
         totalPages={10}
