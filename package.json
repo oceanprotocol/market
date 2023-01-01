@@ -78,7 +78,7 @@
     "@svgr/webpack": "^6.5.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@types/jest": "^29.2.3",
+    "@types/jest": "^29.2.5",
     "@types/js-cookie": "^3.0.2",
     "@types/loadable__component": "^5.13.4",
     "@types/node": "^18.8.5",
