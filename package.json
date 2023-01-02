@@ -57,7 +57,7 @@
     "react-paginate": "^8.1.4",
     "react-select": "^5.7.0",
     "react-spring": "^9.5.5",
-    "react-tabs": "^5.1.0",
+    "react-tabs": "^6.0.0",
     "react-toastify": "^9.1.1",
     "remark": "^14.0.2",
     "remark-gfm": "^3.0.1",
