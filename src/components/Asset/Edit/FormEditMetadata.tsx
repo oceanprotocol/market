@@ -6,7 +6,7 @@ import { useAsset } from '@context/Asset'
 import { FormPublishData } from '@components/Publish/_types'
 import { getFileInfo } from '@utils/provider'
 import { getFieldContent } from '@utils/form'
-import { isGoogleUrl } from '@utils/googleUrl'
+import { isGoogleUrl } from '@utils/url/index'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,

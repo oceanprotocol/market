@@ -1,7 +1,7 @@
 import { isCID } from '@utils/ipfs'
 import isUrl from 'is-url-superb'
 import * as Yup from 'yup'
-import { isGoogleUrl } from './googleUrl'
+import { isGoogleUrl } from './url/index'
 
 export function testLinks(isEdit?: boolean) {
   return Yup.string().test((value, context) => {
