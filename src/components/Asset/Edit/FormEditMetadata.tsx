@@ -66,15 +66,15 @@ export default function FormEditMetadata({
       getFileInfo(asset.metadata.links[0], providerUrl, 'url').then(
         (checkedFile) => {
           // set valid false if url is using google drive
-          if (isGoogleUrl(asset.metadata.links[0])) {
-            setFieldValue('links', [
-              {
-                url: asset.metadata.links[0],
-                valid: false
-              }
-            ])
-            return
-          }
+
+          setFieldValue('links', [
+            {
+              url: asset.metadata.links[0],
+              valid: false
+            }
+          ])
+          return
+
           // initiate link with values from asset metadata
           setFieldValue('links', [
             {

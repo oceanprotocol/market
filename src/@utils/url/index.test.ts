@@ -18,6 +18,7 @@ describe('isGoogleUrl', () => {
     expect(isGoogleUrl('https://calendar.google.com')).toBe(true)
   })
   it('should return false if the url is not a google domain', () => {
+    expect(isGoogleUrl('https://google.test.com')).toBe(false)
     expect(isGoogleUrl('https://drive.gloogle.com')).toBe(false)
     expect(isGoogleUrl('https://drive.google.test.com')).toBe(false)
     expect(isGoogleUrl('https://google.com.test.com')).toBe(false)
