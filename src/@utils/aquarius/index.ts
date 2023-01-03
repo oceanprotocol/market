@@ -42,6 +42,24 @@ export function getFilterTerm(
 export function generateBaseQuery(
   baseQueryParams: BaseQueryParams
 ): SearchQuery {
+  const filters: unknown[] = [getFilterTerm('_index', 'aquarius')]
+  baseQueryParams.filters && filters.push(...baseQueryParams.filters)
+  baseQueryParams.chainIds &&
+    filters.push(getFilterTerm('chainId', baseQueryParams.chainIds))
+  !baseQueryParams.ignorePurgatory &&
+    filters.push(getFilterTerm('purgatory.state', false))
+  !baseQueryParams.ignoreState &&
+    filters.push({
+      bool: {
+        must_not: [
+          {
+            term: {
+              'nft.state': 5
+            }
+          }
+        ]
+      }
+    })
   const generatedQuery = {
     from: baseQueryParams.esPaginationOptions?.from || 0,
     size:
@@ -51,31 +69,7 @@ export function generateBaseQuery(
     query: {
       bool: {
         ...baseQueryParams.nestedQuery,
-        filter: [
-          ...(baseQueryParams.filters || []),
-          baseQueryParams.chainIds
-            ? getFilterTerm('chainId', baseQueryParams.chainIds)
-            : [],
-          getFilterTerm('_index', 'aquarius'),
-          ...(baseQueryParams.ignorePurgatory
-            ? []
-            : [getFilterTerm('purgatory.state', false)]),
-          ...(baseQueryParams.ignoreState
-            ? []
-            : [
-                {
-                  bool: {
-                    must_not: [
-                      {
-                        term: {
-                          'nft.state': 5
-                        }
-                      }
-                    ]
-                  }
-                }
-              ])
-        ]
+        filter: filters
       }
     }
   } as SearchQuery
@@ -90,7 +84,6 @@ export function generateBaseQuery(
         baseQueryParams.sortOptions.sortDirection ||
         SortDirectionOptions.Descending
     }
-
   return generatedQuery
 }
 
