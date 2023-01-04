@@ -75,7 +75,7 @@ function getAlgoHelpText(
   isBalanceSufficient: boolean,
   isSupportedOceanNetwork: boolean,
   web3: Web3,
-  priceType: string
+  algorithmPriceType: string
 ) {
   const text =
     (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
@@ -90,8 +90,8 @@ function getAlgoHelpText(
       ? `Connect to the correct network to interact with this asset.`
       : isBalanceSufficient === false
       ? ''
-      : priceType === 'free'
-      ? `The selected ${selectedComputeAssetType} is free to use.`
+      : algorithmPriceType === 'free'
+      ? `Additionally, the selected ${selectedComputeAssetType} is free to use.`
       : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and send it back to the publisher.`
   return text
 }
@@ -105,6 +105,8 @@ function getComputeAssetHelpText(
   isConsumable: boolean,
   consumableFeedback: string,
   isBalanceSufficient: boolean,
+  algorithmPriceType: string,
+  priceType: string,
   hasPreviousOrderSelectedComputeAsset?: boolean,
   hasDatatokenSelectedComputeAsset?: boolean,
   assetType?: string,
@@ -128,7 +130,7 @@ function getComputeAssetHelpText(
     consumableFeedback,
     isSupportedOceanNetwork,
     web3,
-    assetType
+    priceType
   )
 
   const computeAlgoHelpText = getAlgoHelpText(
@@ -142,7 +144,7 @@ function getComputeAssetHelpText(
     isBalanceSufficient,
     isSupportedOceanNetwork,
     web3,
-    assetType
+    algorithmPriceType
   )
 
   const providerFeeHelpText = hasProviderFee
@@ -238,6 +240,8 @@ export default function ButtonBuy({
                   isConsumable,
                   consumableFeedback,
                   isBalanceSufficient,
+                  algorithmPriceType,
+                  priceType,
                   hasPreviousOrderSelectedComputeAsset,
                   hasDatatokenSelectedComputeAsset,
                   assetType,
