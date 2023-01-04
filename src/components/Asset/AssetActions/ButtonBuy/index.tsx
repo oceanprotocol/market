@@ -46,7 +46,8 @@ function getConsumeHelpText(
   isBalanceSufficient: boolean,
   consumableFeedback: string,
   isSupportedOceanNetwork: boolean,
-  web3: Web3
+  web3: Web3,
+  priceType: string
 ) {
   const text =
     isConsumable === false
@@ -57,7 +58,9 @@ function getConsumeHelpText(
       ? `You own ${dtBalance} ${dtSymbol} allowing you to use this dataset by spending 1 ${dtSymbol}, but without paying ${btSymbol} again.`
       : isBalanceSufficient === false
       ? `You do not have enough ${btSymbol} in your wallet to purchase this asset.`
-      : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher.`
+      : priceType === 'free'
+      ? `This ${assetType} is free to use. Gas fees still apply.`
+      : `To use this ${assetType}, you will buy 1 ${dtSymbol} and immediately send it back to the publisher.`
   return text
 }
 
@@ -71,7 +74,8 @@ function getAlgoHelpText(
   hasDatatokenSelectedComputeAsset: boolean,
   isBalanceSufficient: boolean,
   isSupportedOceanNetwork: boolean,
-  web3: Web3
+  web3: Web3,
+  priceType: string
 ) {
   const text =
     (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
@@ -86,7 +90,9 @@ function getAlgoHelpText(
       ? `Connect to the correct network to interact with this asset.`
       : isBalanceSufficient === false
       ? ''
-      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
+      : priceType === 'free'
+      ? `The selected ${selectedComputeAssetType} is free to use.`
+      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and send it back to the publisher.`
   return text
 }
 
@@ -121,7 +127,8 @@ function getComputeAssetHelpText(
     isBalanceSufficient,
     consumableFeedback,
     isSupportedOceanNetwork,
-    web3
+    web3,
+    assetType
   )
 
   const computeAlgoHelpText = getAlgoHelpText(
@@ -134,7 +141,8 @@ function getComputeAssetHelpText(
     hasDatatokenSelectedComputeAsset,
     isBalanceSufficient,
     isSupportedOceanNetwork,
-    web3
+    web3,
+    assetType
   )
 
   const providerFeeHelpText = hasProviderFee
@@ -218,7 +226,8 @@ export default function ButtonBuy({
                   isBalanceSufficient,
                   consumableFeedback,
                   isSupportedOceanNetwork,
-                  web3
+                  web3,
+                  priceType
                 )
               : getComputeAssetHelpText(
                   hasPreviousOrder,
