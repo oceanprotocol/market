@@ -31,15 +31,6 @@ async function initializeProvider(
 ): Promise<ProviderInitialize> {
   if (providerFees) return
   try {
-    console.log(
-      'here',
-      asset.id,
-      asset.services[0].id,
-      0,
-      accountId,
-      asset.services[0].serviceEndpoint
-    )
-
     const provider = await ProviderInstance.initialize(
       asset.id,
       asset.services[0].id,

@@ -76,7 +76,7 @@ export default function AssetActions({
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
 
-        console.log(formikState?.values?.services?.[0].files?.[0].url)
+        console.log(asset)
 
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
 
