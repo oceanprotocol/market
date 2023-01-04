@@ -34,8 +34,8 @@ export default function DebugEditMetadata({
   }
 
   useEffect(() => {
-    setValuePreview(previewDebugPatch(values))
-  }, [values])
+    setValuePreview(previewDebugPatch(values, asset.chainId))
+  }, [asset.chainId, values])
 
   return (
     <>

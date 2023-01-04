@@ -29,7 +29,7 @@ export default function DebugEditCompute({
       setFormTransformed(privacy)
     }
     transformValues()
-    setValuePreview(previewDebugPatch(values))
+    setValuePreview(previewDebugPatch(values, asset.chainId))
   }, [values, asset])
 
   return (

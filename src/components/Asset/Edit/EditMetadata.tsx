@@ -34,7 +34,7 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { fetchAsset, isAssetNetwork } = useAsset()
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3, chainId } = useWeb3()
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
   const [paymentCollector, setPaymentCollector] = useState<string>()
@@ -113,10 +113,8 @@ export default function Edit({
         const file = {
           nftAddress: asset.nftAddress,
           datatokenAddress: asset.services[0].datatokenAddress,
-          files: [normalizeFile(values.files[0])]
+          files: [normalizeFile(values.files[0].type, values.files[0], chainId)]
         }
-
-        console.log(file)
 
         const filesEncrypted = await getEncryptedFiles(
           file,

@@ -133,7 +133,8 @@ export function normalizeFile(storageType: string, file: any, chainId: number) {
 }
 
 export function previewDebugPatch(
-  values: FormPublishData | Partial<MetadataEditForm> | ComputeEditForm
+  values: FormPublishData | Partial<MetadataEditForm> | ComputeEditForm,
+  chainId: number
 ) {
   // handle file's object property dynamically
   // without braking Yup and type validation
@@ -141,7 +142,7 @@ export function previewDebugPatch(
   const valuesService = buildValuesPreview.services
     ? buildValuesPreview.services[0]
     : buildValuesPreview
-  normalizeFile(valuesService.files[0])
+  normalizeFile(valuesService.files[0].type, valuesService.files[0], chainId)
 
   return buildValuesPreview
 }
