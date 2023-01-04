@@ -112,7 +112,10 @@ export function normalizeFile(storageType: string, file: any, chainId: number) {
         chainId,
         type: storageType,
         address: file[0]?.address || file?.address || file[0]?.url || file?.url,
-        abi: file[0]?.abi || file?.abi ? file[0]?.abi || file?.abi : null
+        abi:
+          file[0]?.abi || file?.abi
+            ? JSON.parse(file[0]?.abi || file?.abi)
+            : null
       } as Smartcontract
       break
     }
