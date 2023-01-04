@@ -5,6 +5,7 @@ import Stats from './Stats'
 import Account from './Account'
 import styles from './index.module.css'
 import { useProfile } from '@context/Profile'
+import Share from './Share'
 
 const isDescriptionTextClamped = () => {
   const el = document.getElementById('description')
@@ -35,6 +36,7 @@ export default function AccountHeader({
     <div className={styles.grid}>
       <div>
         <Account accountId={accountId} />
+        <Share accountId={accountId} />
         <Stats accountId={accountId} />
       </div>
 
