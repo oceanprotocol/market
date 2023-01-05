@@ -14,6 +14,7 @@ import {
   Smartcontract,
   UrlFile
 } from '@oceanprotocol/lib'
+import { checkJson } from './codemirror'
 
 export function isValidDid(did: string): boolean {
   const regex = /did:op:[A-Za-z0-9]{64}/
@@ -117,10 +118,9 @@ export function normalizeFile(storageType: string, file: any, chainId: number) {
         chainId,
         type: storageType,
         address: file[0]?.address || file?.address || file[0]?.url || file?.url,
-        abi:
-          file[0]?.abi || file?.abi
-            ? JSON.parse(file[0]?.abi || file?.abi)
-            : null
+        abi: checkJson(file[0]?.abi || file?.abi)
+          ? JSON.parse(file[0]?.abi || file?.abi)
+          : file[0]?.abi || file?.abi
       } as Smartcontract
       break
     }
@@ -147,7 +147,11 @@ export function previewDebugPatch(
   const valuesService = buildValuesPreview.services
     ? buildValuesPreview.services[0]
     : buildValuesPreview
-  normalizeFile(valuesService.files[0].type, valuesService.files[0], chainId)
+  valuesService.files[0] = normalizeFile(
+    valuesService.files[0].type,
+    valuesService.files[0],
+    chainId
+  )
 
   return buildValuesPreview
 }
