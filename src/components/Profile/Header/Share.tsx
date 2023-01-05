@@ -11,7 +11,9 @@ export default function Share({
   accountId: string
 }): ReactElement {
   function copyLink() {
-    navigator.clipboard.writeText(window.location.href + '/' + accountId)
+    navigator.clipboard.writeText(
+      window.location.origin + '/profile/' + accountId
+    )
     toast.success('Profile link copied to clipboard')
   }
   return (
