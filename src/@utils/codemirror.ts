@@ -12,7 +12,11 @@ export function checkJson(text: string) {
 
 export const oceanTheme = (marketTheme: any, field) => {
   let textColor = 'var(--font-color-text)'
-  if (field.name === 'services[0].files[0].abi' && !checkJson(field.value)) {
+  if (
+    (field.name === 'files[0].abi' ||
+      field.name === 'services[0].files[0].abi') &&
+    !checkJson(field.value)
+  ) {
     textColor = 'var(--brand-alert-red)'
   }
 
