@@ -1,17 +1,16 @@
 import { createTheme } from '@uiw/codemirror-themes'
 import { json } from '@codemirror/lang-json'
 
-export const oceanTheme = (marketTheme: any, field) => {
-  function checkJson(text: string) {
-    text = typeof text !== 'string' ? JSON.stringify(text) : text
-    try {
-      JSON.parse(text)
-      return true
-    } catch (error) {
-      return false
-    }
+export function checkJson(text: string) {
+  try {
+    JSON.parse(text)
+    return true
+  } catch (error) {
+    return false
   }
+}
 
+export const oceanTheme = (marketTheme: any, field) => {
   let textColor = 'var(--font-color-text)'
   if (field.name === 'services[0].files[0].abi' && !checkJson(field.value)) {
     textColor = 'var(--brand-alert-red)'
