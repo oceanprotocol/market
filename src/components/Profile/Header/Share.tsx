@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import styles from './Share.module.css'
 import Button from '@shared/atoms/Button'
+import ShareIcon from '@images/share.svg'
 
 export default function Share({
   accountId
@@ -12,7 +13,13 @@ export default function Share({
   }
   return (
     <div className={styles.share}>
-      <Button className={styles.button} onClick={copyLink} style="text">
+      <Button
+        className={styles.button}
+        onClick={copyLink}
+        style="text"
+        size="small"
+      >
+        <ShareIcon role="img" aria-label="Share" className={styles.icon} />
         Share
       </Button>
     </div>

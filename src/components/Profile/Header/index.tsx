@@ -36,11 +36,12 @@ export default function AccountHeader({
     <div className={styles.grid}>
       <div>
         <Account accountId={accountId} />
-        <Share accountId={accountId} />
+
         <Stats accountId={accountId} />
       </div>
 
       <div>
+        <Share accountId={accountId} />
         <Markdown text={profile?.description} className={styles.description} />
         {isDescriptionTextClamped() ? (
           <span className={styles.more} onClick={toogleShowMore}>

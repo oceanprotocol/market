@@ -1,3 +1,8 @@
 .share {
-  padding: 10px;
+  float: right;
+}
+.icon {
+  display: inline-block;
+  margin-right: calc(var(--spacer) / 5);
+  fill: var(--brand-pink);
 }
