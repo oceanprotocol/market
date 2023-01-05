@@ -25,7 +25,15 @@ export default function TabsFile({
   className
 }: TabsProps): ReactElement {
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
-  const [tabIndex, setTabIndex] = useState(0)
+  const initialState = () => {
+    const index = items.findIndex((tab: any) => {
+      return tab.field.value === values.services[0].files[0].type
+    })
+
+    return index < 0 ? 0 : index
+  }
+
+  const [tabIndex, setTabIndex] = useState(initialState)
   // hide tabs if are hidden
   const isHidden = items[tabIndex].props.value[0].type === 'hidden'
 
