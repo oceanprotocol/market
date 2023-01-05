@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react'
+import { toast } from 'react-toastify'
 import styles from './Share.module.css'
 import Button from '@shared/atoms/Button'
 import ShareIcon from '@images/share.svg'
@@ -10,6 +11,7 @@ export default function Share({
 }): ReactElement {
   function copyLink() {
     navigator.clipboard.writeText(window.location.href + '/' + accountId)
+    toast.success('Profile link copied to clipboard')
   }
   return (
     <div className={styles.share}>
