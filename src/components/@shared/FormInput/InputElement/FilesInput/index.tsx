@@ -32,11 +32,11 @@ export default function FilesInput(props: InputProps): ReactElement {
         )
       }
       // Check if provider is a valid provider
-      const isValid = await ProviderInstance.isValidProvider(field.value.url)
+      const isValid = await ProviderInstance.isValidProvider(providerUrl)
 
       if (!isValid)
         throw Error(
-          '✗ Provider cannot be reached, please check status at https://status.oceanprotocol.com and try again later.'
+          '✗ Provider cannot be reached, please check status.oceanprotocol.com and try again later.'
         )
 
       const checkedFile = await getFileInfo(url, providerUrl, storageType)
