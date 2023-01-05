@@ -138,7 +138,7 @@ export default function Download({
             asset.accessDetails.datatoken?.symbol
           )[3]
         )
-        console.log('here')
+
         await downloadFile(web3, asset, accountId, validOrderTx)
       } else {
         setStatusText(
