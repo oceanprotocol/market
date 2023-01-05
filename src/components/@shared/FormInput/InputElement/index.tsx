@@ -125,7 +125,6 @@ export default function InputElement({
           theme={oceanTheme(darkMode ? 'dark' : 'light', props)}
           extensions={[extensions]}
           onChange={(value) => {
-            form.setFieldError(`${field.name}`, 'test')
             form.setFieldValue(`${props.name}`, value)
           }}
         />

@@ -138,15 +138,11 @@ export async function transformPublishFormToDdo(
       })
   }
 
-  // this is the default format hardcoded
-
   const file = {
     nftAddress,
     datatokenAddress,
     files: [normalizeFile(files[0].type, files[0], chainId)]
   }
-
-  console.log(file, files)
 
   const filesEncrypted =
     !isPreview &&
