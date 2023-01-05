@@ -4,7 +4,7 @@ import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
 import { getFileInfo } from '@utils/provider'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 
 export default function FilesInput(props: InputProps): ReactElement {
@@ -31,6 +31,13 @@ export default function FilesInput(props: InputProps): ReactElement {
           'Google Drive is not a supported hosting service. Please use an alternative.'
         )
       }
+      // Check if provider is a valid provider
+      const isValid = await ProviderInstance.isValidProvider(field.value.url)
+
+      if (!isValid)
+        throw Error(
+          '✗ Provider cannot be reached, please check status at https://status.oceanprotocol.com and try again later.'
+        )
 
       const checkedFile = await getFileInfo(url, providerUrl, storageType)
 
