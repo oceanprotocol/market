@@ -11,6 +11,7 @@ import { useWeb3 } from '@context/Web3'
 import InputHeaders from '../Headers'
 import Button from '@shared/atoms/Button'
 import Loader from '@shared/atoms/Loader'
+import { checkJson } from '@utils/codemirror'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -92,7 +93,8 @@ export default function FilesInput(props: InputProps): ReactElement {
   useEffect(() => {
     storageType === 'graphql' && setDisabledButton(!providerUrl || !query)
 
-    storageType === 'smartcontract' && setDisabledButton(!providerUrl || !abi)
+    storageType === 'smartcontract' &&
+      setDisabledButton(!providerUrl || !abi || !checkJson(abi))
 
     storageType === 'url' && setDisabledButton(!providerUrl)
 
