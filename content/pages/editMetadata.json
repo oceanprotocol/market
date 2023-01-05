@@ -94,7 +94,7 @@
                 "title": "Headers",
                 "label": "Headers",
                 "placeholder_value": "Authorization",
-                "help": "This QUERY will be stored encrypted after publishing.",
+                "help": "This HEADER will be stored encrypted after publishing.",
                 "type": "headers",
                 "required": true
               },
