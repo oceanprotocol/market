@@ -1,6 +1,6 @@
 import { Asset } from '@oceanprotocol/lib'
 
-export const assetAquarius: Asset = {
+export const datasetAquarius: Asset = {
   '@context': ['https://w3id.org/did/v1'],
   id: 'did:op:6654b0793765b269696cec8d2f0d077d9bbcdd3c4f033d941ab9684e8ad06630',
   nftAddress: '0xbA5BA7B09e2FA1eb0258f647503F81D2Af5cb07d',
@@ -12,7 +12,16 @@ export const assetAquarius: Asset = {
     type: 'dataset',
     name: 'Testitest',
     description: 'This is a test.',
-    tags: [],
+    tags: [
+      'trading',
+      'defi',
+      'algorithm',
+      'algorithmic-crypto-trading',
+      'algo-trading',
+      'trading-strategy',
+      'cryptocurrency',
+      'crypto'
+    ],
     author: 'Test User',
     license: 'https://market.oceanprotocol.com/terms',
     additionalInformation: {

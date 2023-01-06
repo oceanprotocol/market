@@ -1,7 +1,7 @@
 import marketMetadata from '../__fixtures__/marketMetadata'
 import userPreferences from '../__fixtures__/userPreferences'
 import web3 from '../__fixtures__/web3'
-import { asset } from '../__fixtures__/assetWithAccessDetails'
+import { asset } from '../__fixtures__/datasetWithAccessDetails'
 
 jest.mock('../../src/@context/MarketMetadata', () => ({
   useMarketMetadata: () => marketMetadata

@@ -12,6 +12,7 @@ import InputHeaders from '../Headers'
 import Button from '@shared/atoms/Button'
 import Loader from '@shared/atoms/Loader'
 import { checkJson } from '@utils/codemirror'
+import { isGoogleUrl } from '@utils/url/index'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -37,7 +38,7 @@ export default function FilesInput(props: InputProps): ReactElement {
       setIsLoading(true)
 
       // TODO: handled on provider
-      if (url.includes('drive.google')) {
+      if (isGoogleUrl(url)) {
         throw Error(
           'Google Drive is not a supported hosting service. Please use an alternative.'
         )
