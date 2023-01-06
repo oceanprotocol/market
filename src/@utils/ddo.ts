@@ -144,6 +144,10 @@ export function previewDebugPatch(
   // handle file's object property dynamically
   // without braking Yup and type validation
   const buildValuesPreview = JSON.parse(JSON.stringify(values))
+
+  // fallback for edit mode under "edit compute settings"
+  if (!buildValuesPreview.services) return buildValuesPreview
+
   const valuesService = buildValuesPreview.services
     ? buildValuesPreview.services[0]
     : buildValuesPreview
