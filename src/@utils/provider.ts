@@ -55,8 +55,6 @@ export async function initializeProviderForCompute(
   )
 
   try {
-    console.log('here')
-
     const filesEncrypted = await getEncryptedFiles(
       dataset.services[0].files,
       dataset.services[0].serviceEndpoint
