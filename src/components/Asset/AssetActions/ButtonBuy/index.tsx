@@ -151,10 +151,8 @@ function getComputeAssetHelpText(
     ? 'In order to start the job you also need to pay the fees for renting the c2d resources.'
     : 'The C2D resources required to start the job are available, no payment is required for them.'
   let computeHelpText = `${computeAssetHelpText} ${computeAlgoHelpText} ${providerFeeHelpText}`
-  if (priceType === 'free' || algorithmPriceType === 'free') {
-    computeHelpText +=
-      'Please note that network gas fees still apply, even when using free assets.'
-  }
+
+  computeHelpText = computeHelpText.replace(/^\s+/, '')
   console.log('computeHelpText', computeHelpText)
   return computeHelpText
 }
@@ -205,6 +203,53 @@ export default function ButtonBuy({
     ? 'Order Compute Job'
     : `Buy Compute Job`
 
+  function message(): string {
+    let message = ''
+    if (action === 'download') {
+      message = getConsumeHelpText(
+        btSymbol,
+        dtBalance,
+        dtSymbol,
+        hasDatatoken,
+        hasPreviousOrder,
+        assetType,
+        isConsumable,
+        isBalanceSufficient,
+        consumableFeedback,
+        isSupportedOceanNetwork,
+        web3,
+        priceType
+      )
+    } else {
+      message = getComputeAssetHelpText(
+        hasPreviousOrder,
+        hasDatatoken,
+        btSymbol,
+        dtSymbol,
+        dtBalance,
+        isConsumable,
+        consumableFeedback,
+        isBalanceSufficient,
+        algorithmPriceType,
+        priceType,
+        hasPreviousOrderSelectedComputeAsset,
+        hasDatatokenSelectedComputeAsset,
+        assetType,
+        dtSymbolSelectedComputeAsset,
+        dtBalanceSelectedComputeAsset,
+        selectedComputeAssetType,
+        isAlgorithmConsumable,
+        isSupportedOceanNetwork,
+        web3,
+        hasProviderFee
+      )
+    }
+    if (priceType === 'free' || algorithmPriceType === 'free') {
+      message +=
+        ' Please note that network gas fees still apply, even when using free assets.'
+    }
+    return message
+  }
   return (
     <div className={styles.actions}>
       {isLoading ? (
@@ -220,45 +265,7 @@ export default function ButtonBuy({
           >
             {buttonText}
           </Button>
-          <div className={styles.help}>
-            {action === 'download'
-              ? getConsumeHelpText(
-                  btSymbol,
-                  dtBalance,
-                  dtSymbol,
-                  hasDatatoken,
-                  hasPreviousOrder,
-                  assetType,
-                  isConsumable,
-                  isBalanceSufficient,
-                  consumableFeedback,
-                  isSupportedOceanNetwork,
-                  web3,
-                  priceType
-                )
-              : getComputeAssetHelpText(
-                  hasPreviousOrder,
-                  hasDatatoken,
-                  btSymbol,
-                  dtSymbol,
-                  dtBalance,
-                  isConsumable,
-                  consumableFeedback,
-                  isBalanceSufficient,
-                  algorithmPriceType,
-                  priceType,
-                  hasPreviousOrderSelectedComputeAsset,
-                  hasDatatokenSelectedComputeAsset,
-                  assetType,
-                  dtSymbolSelectedComputeAsset,
-                  dtBalanceSelectedComputeAsset,
-                  selectedComputeAssetType,
-                  isAlgorithmConsumable,
-                  isSupportedOceanNetwork,
-                  web3,
-                  hasProviderFee
-                )}
-          </div>
+          <div className={styles.help}>{message()}</div>
         </>
       )}
     </div>

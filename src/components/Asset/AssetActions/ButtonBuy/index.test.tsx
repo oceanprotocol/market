@@ -79,7 +79,9 @@ describe('Asset/AssetActions/ButtonBuy', () => {
     const button = screen.getByText('Download')
     expect(button).toContainHTML('<button')
     expect(
-      screen.getByText('This Dataset is free to use. Gas fees still apply.')
+      screen.getByText(
+        'This Dataset is free to use. Please note that network gas fees still apply, even when using free assets.'
+      )
     ).toBeInTheDocument()
   })
 
@@ -112,7 +114,7 @@ describe('Asset/AssetActions/ButtonBuy', () => {
     render(<ButtonBuy {...computeProps} />)
     expect(
       screen.getByText(
-        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Connect to the correct network to interact with this asset. C2D resources required to start the job are available, no payment required for those fees.'
+        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Connect to the correct network to interact with this asset. The C2D resources required to start the job are available, no payment is required for them. Please note that network gas fees still apply, even when using free assets.'
       )
     ).toBeInTheDocument()
   })
@@ -121,7 +123,7 @@ describe('Asset/AssetActions/ButtonBuy', () => {
     render(<ButtonBuy {...computeProps} priceType="free" />)
     expect(
       screen.getByText(
-        'This algorithm is free to use. Gas fees still apply. Connect to the correct network to interact with this asset. C2D resources required to start the job are available, no payment required for those fees.'
+        'This algorithm is free to use. Connect to the correct network to interact with this asset. The C2D resources required to start the job are available, no payment is required for them. Please note that network gas fees still apply, even when using free assets.'
       )
     ).toBeInTheDocument()
   })
@@ -130,7 +132,7 @@ describe('Asset/AssetActions/ButtonBuy', () => {
     render(<ButtonBuy {...computeProps} algorithmPriceType="fixed" />)
     expect(
       screen.getByText(
-        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Connect to the correct network to interact with this asset. C2D resources required to start the job are available, no payment required for those fees.'
+        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Connect to the correct network to interact with this asset. The C2D resources required to start the job are available, no payment is required for them.'
       )
     ).toBeInTheDocument()
   })
