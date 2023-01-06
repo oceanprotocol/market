@@ -59,7 +59,7 @@ function getConsumeHelpText(
       : isBalanceSufficient === false
       ? `You do not have enough ${btSymbol} in your wallet to purchase this asset.`
       : priceType === 'free'
-      ? `This ${assetType} is free to use. Gas fees still apply.`
+      ? `This ${assetType} is free to use.`
       : `To use this ${assetType}, you will buy 1 ${dtSymbol} and immediately send it back to the publisher.`
   return text
 }
@@ -149,8 +149,13 @@ function getComputeAssetHelpText(
 
   const providerFeeHelpText = hasProviderFee
     ? 'In order to start the job you also need to pay the fees for renting the c2d resources.'
-    : 'C2D resources required to start the job are available, no payment required for those fees.'
-  const computeHelpText = `${computeAssetHelpText} ${computeAlgoHelpText} ${providerFeeHelpText}`
+    : 'The C2D resources required to start the job are available, no payment is required for them.'
+  let computeHelpText = `${computeAssetHelpText} ${computeAlgoHelpText} ${providerFeeHelpText}`
+  if (priceType === 'free' || algorithmPriceType === 'free') {
+    computeHelpText +=
+      'Please note that network gas fees still apply, even when using free assets.'
+  }
+  console.log('computeHelpText', computeHelpText)
   return computeHelpText
 }
 
