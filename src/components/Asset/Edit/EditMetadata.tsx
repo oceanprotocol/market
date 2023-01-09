@@ -179,7 +179,7 @@ export default function Edit({
       initialValues={getInitialValues(
         asset?.metadata,
         asset?.services[0]?.timeout,
-        asset?.accessDetails?.price,
+        asset?.accessDetails?.price || '0',
         paymentCollector
       )}
       validationSchema={validationSchema}
