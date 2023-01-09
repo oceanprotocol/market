@@ -75,7 +75,7 @@ export default function DmConversation() {
     async () => {
       getMessages(true)
     },
-    !isLoading && hasLit ? 15000 : false
+    isLoading || !hasLit || !messages.length ? false : 15000
   )
 
   const showTime = (streamId: string): boolean => {
@@ -123,7 +123,12 @@ export default function DmConversation() {
 
   useEffect(() => {
     if (isMounted) {
-      if (conversationId && orbis && hasLit) {
+      if (
+        conversationId &&
+        !conversationId.startsWith('new-') &&
+        orbis &&
+        hasLit
+      ) {
         getMessages()
       } else {
         setMessages([])

@@ -5,6 +5,7 @@ import Button from '@shared/atoms/Button'
 import Stats from './Stats'
 import Account from './Account'
 import styles from './index.module.css'
+import { accountTruncate } from '@utils/web3'
 import { useWeb3 } from '@context/Web3'
 import { useProfile } from '@context/Profile'
 import { useOrbis } from '@context/Orbis'
@@ -23,18 +24,24 @@ const LinkExternal = ({ url, text }: { url: string; text: string }) => {
 }
 
 const DmButton = ({ accountId }: { accountId: string }) => {
-  const { ownAccount } = useProfile()
+  const { profile, ownAccount } = useProfile()
   const { accountId: ownAccountId, connect } = useWeb3()
-  const { checkOrbisConnection, createConversation, getDid } = useOrbis()
+  const {
+    checkOrbisConnection,
+    getConversation,
+    setNewConversation,
+    setConversationId,
+    setOpenConversations,
+    getDid
+  } = useOrbis()
   const [userDid, setUserDid] = useState<string | undefined>()
   const [isCreatingConversation, setIsCreatingConversation] = useState(false)
 
-  const handleActivation = async (e: React.MouseEvent) => {
-    e.preventDefault()
+  const handleActivation = async () => {
     const resConnect = await connect()
     if (resConnect) {
       await checkOrbisConnection({
-        address: ownAccountId,
+        address: resConnect,
         autoConnect: true,
         lit: true
       })
@@ -59,24 +66,34 @@ const DmButton = ({ accountId }: { accountId: string }) => {
         <Button
           style="primary"
           size="small"
-          disabled={!ownAccountId || isCreatingConversation}
+          disabled={isCreatingConversation}
           onClick={async () => {
-            setIsCreatingConversation(true)
-            await createConversation(userDid)
-            setIsCreatingConversation(false)
+            if (!ownAccountId) {
+              handleActivation()
+            } else {
+              setIsCreatingConversation(true)
+              const conversation = await getConversation(userDid)
+              if (conversation) {
+                setConversationId(conversation.stream_id)
+              } else {
+                console.log('need to create new conversation')
+                const suffix =
+                  profile && profile?.name
+                    ? profile?.name
+                    : accountTruncate(accountId)
+
+                setConversationId(`new-${suffix}`)
+                setNewConversation({
+                  name: suffix,
+                  recipients: [userDid]
+                })
+              }
+              setOpenConversations(true)
+              setIsCreatingConversation(false)
+            }
           }}
         >
           {isCreatingConversation ? 'Loading...' : 'Send Direct Message'}
-        </Button>
-      </div>
-    )
-  }
-
-  if (!ownAccountId) {
-    return (
-      <div className={styles.dmButton}>
-        <Button style="primary" size="small" onClick={handleActivation}>
-          Connect Wallet
         </Button>
       </div>
     )
