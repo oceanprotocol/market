@@ -29,7 +29,6 @@ export default function Header() {
   ) => {
     e.preventDefault()
     const target = e.target as HTMLElement
-    console.log(target)
     const { role } = target.dataset
     if (role) {
       if (role === 'back-button') {
@@ -38,17 +37,14 @@ export default function Header() {
       } else {
         let _address = ''
         if (newConversation) {
-          console.log(newConversation.recipients)
           _address = didToAddress(newConversation.recipients[0])
         } else {
-          console.log(accountId)
           const conversation = conversations.find(
             (c) => c.stream_id === conversationId
           )
           const recipients = conversation.recipients.filter(
             (r) => didToAddress(r) !== accountId.toLowerCase()
           )
-          console.log(recipients)
           _address = didToAddress(recipients[0])
         }
         navigator.clipboard.writeText(_address)
@@ -96,7 +92,6 @@ export default function Header() {
               aria-label="button"
               data-role="back-button"
               className={styles.btnBack}
-              onClick={handleClick}
             >
               <ArrowBack
                 role="img"
@@ -109,7 +104,7 @@ export default function Header() {
             <>
               <span>{activeConversationTitle}</span>
               <button
-                onClick={handleClick}
+                type="button"
                 data-role="copy-address"
                 title="Copy Address"
                 className={styles.btnCopy}

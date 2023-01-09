@@ -28,7 +28,7 @@ const DmButton = ({ accountId }: { accountId: string }) => {
   const { accountId: ownAccountId, connect } = useWeb3()
   const {
     checkOrbisConnection,
-    getConversation,
+    getConversationByDid,
     setNewConversation,
     setConversationId,
     setOpenConversations,
@@ -72,7 +72,7 @@ const DmButton = ({ accountId }: { accountId: string }) => {
               handleActivation()
             } else {
               setIsCreatingConversation(true)
-              const conversation = await getConversation(userDid)
+              const conversation = await getConversationByDid(userDid)
               if (conversation) {
                 setConversationId(conversation.stream_id)
               } else {
@@ -80,11 +80,10 @@ const DmButton = ({ accountId }: { accountId: string }) => {
                 const suffix =
                   profile && profile?.name
                     ? profile?.name
-                    : accountTruncate(accountId)
+                    : accountTruncate(accountId.toLowerCase())
 
                 setConversationId(`new-${suffix}`)
                 setNewConversation({
-                  name: suffix,
                   recipients: [userDid]
                 })
               }

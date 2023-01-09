@@ -38,6 +38,27 @@
   text-align: right;
 }
 
+.postbox .editActions {
+  display: flex;
+  gap: calc(var(--spacer) / 4);
+}
+
+.postbox .editActions button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.postbox .cancelEdit {
+  color: var(--color-secondary);
+}
+
+.postbox .saveEdit {
+  color: var(--color-primary);
+}
+
 .connectWallet {
   width: 100%;
   display: flex;

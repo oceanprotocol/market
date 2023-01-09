@@ -4,24 +4,31 @@ import { EmojiClickData } from 'emoji-picker-react'
 import { useOrbis } from '@context/Orbis'
 import EmojiPicker from '../EmojiPicker'
 import { accountTruncate } from '@utils/web3'
-import { didToAddress } from '@utils/orbis'
+import { didToAddress, sleep } from '@utils/orbis'
 
 export default function Postbox({
-  conversationId,
   replyTo = null,
   cancelReplyTo,
   callback
 }: {
-  conversationId: string
   replyTo?: IOrbisMessage
   cancelReplyTo?: () => void
   callback: (value: IOrbisMessage) => void
 }) {
   const [focusOffset, setFocusOffset] = useState<number | undefined>()
   const [focusNode, setFocusNode] = useState<Node | undefined>()
+  const [isSending, setIsSending] = useState<boolean>(false)
 
   const postBoxArea = useRef(null)
-  const { orbis, account } = useOrbis()
+  const {
+    orbis,
+    account,
+    conversationId,
+    newConversation,
+    createConversation,
+    setConversationId,
+    setNewConversation
+  } = useOrbis()
 
   const saveCaretPos = () => {
     const sel = document.getSelection()
@@ -38,7 +45,22 @@ export default function Postbox({
   }
 
   const share = async () => {
-    if (!account) return false
+    if (!account || isSending) return false
+
+    setIsSending(true)
+
+    let _conversationId = conversationId
+    if (_conversationId.startsWith('new-') && newConversation) {
+      const _newConversation = await createConversation(
+        newConversation.recipients
+      )
+      if (_newConversation) {
+        _conversationId = _newConversation.stream_id
+        setConversationId(_conversationId)
+        setNewConversation(null)
+        await sleep(1000)
+      }
+    }
 
     const body = postBoxArea.current.innerText
 
@@ -72,7 +94,7 @@ export default function Postbox({
     postBoxArea.current.innerText = ''
 
     const res = await orbis.sendMessage({
-      conversation_id: conversationId,
+      conversation_id: _conversationId,
       body
     })
 
@@ -80,12 +102,14 @@ export default function Postbox({
       _callbackContent.stream_id = res.doc
       if (callback) callback(_callbackContent)
     }
+
+    setIsSending(false)
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (!e.key) return
 
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !isSending) {
       // Don't generate a new line
       e.preventDefault()
       share()

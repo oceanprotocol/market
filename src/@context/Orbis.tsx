@@ -11,14 +11,13 @@ import { useInterval } from '@hooks/useInterval'
 import { Orbis } from '@orbisclub/orbis-sdk'
 import { useWeb3 } from './Web3'
 import { accountTruncate } from '@utils/web3'
-import { didToAddress } from '@utils/orbis'
+import { didToAddress, sleep } from '@utils/orbis'
 import { getEnsName } from '@utils/ens'
 import usePrevious from '@hooks/usePrevious'
 import useLocalStorage from '@hooks/useLocalStorage'
 import DirectMessages from '@shared/Orbis/DirectMessages'
 
 interface INewConversation {
-  name: string | null
   recipients: string[]
 }
 
@@ -51,8 +50,8 @@ type IOrbisProvider = {
   setNewConversation: (newConversation: INewConversation) => void
   setOpenConversations: (open: boolean) => void
   setConversationId: (conversationId: string) => void
-  getConversation: (userDid: string) => Promise<IOrbisConversation>
-  createConversation: (userDid: string) => Promise<void>
+  getConversationByDid: (userDid: string) => Promise<IOrbisConversation>
+  createConversation: (recipients: string[]) => Promise<IOrbisConversation>
   clearMessageNotifs: (conversationId: string) => void
   getConversationTitle: (conversationId: string) => Promise<string>
   getDid: (address: string) => Promise<string>
@@ -62,7 +61,8 @@ const OrbisContext = createContext({} as IOrbisProvider)
 
 const orbis: IOrbis = new Orbis()
 const NOTIFICATION_REFRESH_INTERVAL = 5000
-const CONVERSATION_CONTEXT = 'ocean_market' // Can be changed to whatever
+const CONVERSATION_CONTEXT =
+  process.env.NEXT_PUBLIC_ORBIS_CONTEXT || 'ocean_market' // Can be changed to whatever
 
 function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   const { web3Provider, accountId } = useWeb3()
@@ -312,15 +312,22 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     return filteredConversations
   }
 
-  const getConversation = async (userDid: string) => {
-    if (!account || !userDid) return null
+  const getConversation = async (conversationId: string) => {
+    if (!conversationId) return null
+    const { data, error } = await orbis.getConversation(conversationId)
+    if (error || !data) {
+      await sleep(2000)
+      await getConversation(conversationId)
+    } else {
+      return data
+    }
+  }
 
-    console.log('has account and target userDid')
+  const getConversationByDid = async (userDid: string) => {
+    if (!account || !userDid) return null
 
     const _conversations = await getConversations(account?.did)
     if (!_conversations.length) return null
-
-    console.log('has conversations')
 
     const filteredConversations = _conversations.filter(
       (conversation: IOrbisConversation) => {
@@ -333,67 +340,28 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
 
     if (!filteredConversations.length) return null
 
-    console.log('has filtered conversations')
-
     return filteredConversations[0]
   }
 
-  const createConversation = async (userDid: string) => {
-    let _account = account
-    if (!_account) {
-      // Check connection and force connect
-      _account = await checkOrbisConnection({
-        address: accountId,
-        autoConnect: true
-      })
-    }
+  const createConversation = async (recipients: string[]) => {
+    if (!recipients.length) return null
 
-    if (!hasLit) {
-      const res = await connectLit()
-      if (res.status !== 200) {
-        alert('Error connecting to Lit.')
-        return
-      }
-    }
+    const res = await orbis.createConversation({
+      recipients,
+      context: CONVERSATION_CONTEXT
+    })
 
-    let existingConversation = conversations.find(
-      (conversation: IOrbisConversation) => {
-        return conversation.recipients.includes(userDid)
-      }
-    )
-
-    // Refetch to make sure we have the latest conversations
-    if (!existingConversation) {
-      const _conversations = await getConversations(_account?.did)
-      existingConversation = _conversations.find(
-        (conversation: IOrbisConversation) => {
-          return conversation.recipients.includes(userDid)
-        }
-      )
-    }
-
-    if (existingConversation) {
-      setConversationId(existingConversation.stream_id)
-      setOpenConversations(true)
-    } else {
-      const res = await orbis.createConversation({
-        recipients: [userDid],
-        context: CONVERSATION_CONTEXT
-      })
-      if (res.status === 200) {
-        setTimeout(async () => {
-          const { data, error } = await orbis.getConversation(res.doc)
-          if (!error && data) {
-            setConversations([data, ...conversations])
-          }
-          setConversationId(res.doc)
-          setOpenConversations(true)
-        }, 2000)
+    if (res.status === 200) {
+      await sleep(2000)
+      const _newConversation = await getConversation(res.doc)
+      if (_newConversation) {
+        setConversations([_newConversation, ...conversations])
+        return _newConversation
       }
     }
   }
 
-  // const createConversationV2 = async (userDid: string) => {
+  // const createConversation = async (userDid: string) => {
   //   let _account = account
   //   if (!_account) {
   //     // Check connection and force connect
@@ -411,13 +379,21 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   //     }
   //   }
 
-  //   // Refetch to make sure we have the latest conversations
-  //   const _conversations = await getConversations(_account?.did)
-  //   const existingConversation = _conversations.find(
+  //   let existingConversation = conversations.find(
   //     (conversation: IOrbisConversation) => {
   //       return conversation.recipients.includes(userDid)
   //     }
   //   )
+
+  //   // Refetch to make sure we have the latest conversations
+  //   if (!existingConversation) {
+  //     const _conversations = await getConversations(_account?.did)
+  //     existingConversation = _conversations.find(
+  //       (conversation: IOrbisConversation) => {
+  //         return conversation.recipients.includes(userDid)
+  //       }
+  //     )
+  //   }
 
   //   if (existingConversation) {
   //     setConversationId(existingConversation.stream_id)
@@ -492,10 +468,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
-  useEffect(() => {
-    console.log({ newConversation, activeConversationTitle })
-  }, [newConversation, activeConversationTitle])
-
   return (
     <OrbisContext.Provider
       value={{
@@ -516,7 +488,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         setNewConversation,
         setOpenConversations,
         setConversationId,
-        getConversation,
+        getConversationByDid,
         createConversation,
         clearMessageNotifs,
         getConversationTitle,

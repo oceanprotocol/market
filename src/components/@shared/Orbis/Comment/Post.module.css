@@ -45,6 +45,10 @@
   font-size: var(--font-size-mini);
 }
 
+.btnOptions {
+  cursor: pointer;
+}
+
 .blockies {
   aspect-ratio: 1/1;
   flex-shrink: 0;

@@ -142,8 +142,8 @@ export default function Post({
       <Avatar accountId={address} className={styles.blockies} />
       <div className={styles.content}>
         <div className={styles.profile}>
-          <Link href={`/profile/${address}`}>
-            <a className={styles.name}>{accountTruncate(address)}</a>
+          <Link href={`/profile/${address}`} className={styles.name}>
+            {accountTruncate(address)}
           </Link>
           <span>&bull;</span>
           <div className={styles.metadata}>
@@ -168,6 +168,7 @@ export default function Post({
             context={postClone?.context}
             editPost={postClone}
             callback={callbackEdit}
+            cancelEdit={() => setIsEditing(false)}
           />
         )}
         {hideOverflow && (
@@ -219,15 +220,12 @@ export default function Post({
                       </button>
                     </div>
                   }
+                  trigger="click"
                   zIndex={21}
                   placement={'top'}
+                  className={styles.btnOptions}
                 >
-                  <button
-                    title="Options"
-                    onClick={() => console.log('clicked')}
-                  >
-                    <Ellipsis role="img" aria-label="Options" />
-                  </button>
+                  <Ellipsis role="img" aria-label="Options" />
                 </Tooltip>
               </div>
             )}

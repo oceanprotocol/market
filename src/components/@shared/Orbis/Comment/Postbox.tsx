@@ -1,4 +1,4 @@
-import React, { useRef, useState, KeyboardEvent } from 'react'
+import React, { useRef, useState, useEffect, KeyboardEvent } from 'react'
 import styles from './Postbox.module.css'
 import walletStyles from '../../../Header/Wallet/Account.module.css'
 import { EmojiClickData } from 'emoji-picker-react'
@@ -16,6 +16,7 @@ export default function Postbox({
   editPost = null,
   enterToSend = false,
   cancelReplyTo,
+  cancelEdit,
   callback
 }: {
   context: string
@@ -24,6 +25,7 @@ export default function Postbox({
   editPost?: IOrbisPost
   enterToSend?: boolean
   cancelReplyTo?: () => void
+  cancelEdit?: () => void
   callback: (value: IOrbisPost | IOrbisPost['content']) => void
 }) {
   const { orbis, account, checkOrbisConnection } = useOrbis()
@@ -135,6 +137,12 @@ export default function Postbox({
     }
   }
 
+  useEffect(() => {
+    if (editPost) {
+      postBoxArea.current.innerText = editPost.content.body
+    }
+  }, [editPost])
+
   if (!accountId) {
     return (
       <div className={styles.postbox}>
@@ -194,17 +202,33 @@ export default function Postbox({
         />
         <EmojiPicker onEmojiClick={onEmojiClick} />
       </div>
-      <div className={styles.sendButtonWrap}>
-        <Button
-          style="primary"
-          type="submit"
-          size="small"
-          disabled={false}
-          onClick={share}
-        >
-          Send
-        </Button>
-      </div>
+      {editPost ? (
+        <div className={styles.editActions}>
+          <button
+            type="button"
+            className={styles.cancelEdit}
+            onClick={cancelEdit}
+          >
+            Cancel
+          </button>
+          <span>&middot;</span>
+          <button type="submit" className={styles.saveEdit} onClick={share}>
+            Save
+          </button>
+        </div>
+      ) : (
+        <div className={styles.sendButtonWrap}>
+          <Button
+            style="primary"
+            type="submit"
+            size="small"
+            disabled={false}
+            onClick={share}
+          >
+            Send
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

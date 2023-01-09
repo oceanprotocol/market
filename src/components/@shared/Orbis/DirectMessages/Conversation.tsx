@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useOrbis } from '@context/Orbis'
-import { useIsMounted } from '@hooks/useIsMounted'
 import { useInterval } from '@hooks/useInterval'
 import { throttle } from '@utils/throttle'
 import Time from '@shared/atoms/Time'
@@ -18,9 +17,9 @@ export default function DmConversation() {
     connectLit,
     clearMessageNotifs
   } = useOrbis()
-  const isMounted = useIsMounted()
 
   const messagesWrapper = useRef(null)
+  const [isInitialized, setIsInitialized] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [messages, setMessages] = useState<IOrbisMessage[]>([])
   const [currentPage, setCurrentPage] = useState(0)
@@ -36,12 +35,16 @@ export default function DmConversation() {
     }, 300)
   }
 
-  const getMessages = async (polling = false) => {
+  const getMessages: (options?: {
+    polling?: boolean
+    reset?: boolean
+  }) => Promise<void> = async ({ polling = false, reset = false }) => {
     if (isLoading || !hasLit) return
 
     if (!polling) setIsLoading(true)
 
-    const _page = polling ? 0 : currentPage
+    const _page = polling || reset ? 0 : currentPage
+    let _messages = reset ? [] : [...messages]
     const { data, error } = await orbis.getMessages(conversationId, _page)
 
     if (error) {
@@ -52,30 +55,34 @@ export default function DmConversation() {
       data.reverse()
       if (!polling) {
         setHasMore(data.length >= 50)
-        const _messages = [...data, ...messages]
+        _messages = [...data, ..._messages]
         setMessages(_messages)
         if (currentPage === 0) {
           clearMessageNotifs(conversationId)
           scrollToBottom()
         }
-        setCurrentPage((prev) => prev + 1)
+        setCurrentPage(_page + 1)
       } else {
         const unique = data.filter(
-          (a) => !messages.some((b) => a.stream_id === b.stream_id)
+          (a) => !_messages.some((b) => a.stream_id === b.stream_id)
         )
-        setNewMessages(unique.length)
-        setMessages([...messages, ...unique])
+        setMessages([..._messages, ...unique])
+        const el = messagesWrapper.current
+        if (el && el.scrollHeight > el.offsetHeight) {
+          setNewMessages((prev) => prev + unique.length)
+        }
       }
     }
 
+    setIsInitialized(true)
     setIsLoading(false)
   }
 
   useInterval(
     async () => {
-      getMessages(true)
+      getMessages({ polling: true })
     },
-    isLoading || !hasLit || !messages.length ? false : 15000
+    !isLoading && hasLit && isInitialized ? 5000 : false
   )
 
   const showTime = (streamId: string): boolean => {
@@ -122,20 +129,18 @@ export default function DmConversation() {
   }, 1000)
 
   useEffect(() => {
-    if (isMounted) {
-      if (
-        conversationId &&
-        !conversationId.startsWith('new-') &&
-        orbis &&
-        hasLit
-      ) {
-        getMessages()
-      } else {
-        setMessages([])
-      }
+    setIsInitialized(false)
+    setMessages([])
+    if (
+      conversationId &&
+      !conversationId.startsWith('new-') &&
+      orbis &&
+      hasLit
+    ) {
+      getMessages({ reset: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationId, orbis, hasLit, isMounted])
+  }, [conversationId, orbis, hasLit])
 
   useEffect(() => {
     const el = messagesWrapper.current
@@ -210,7 +215,7 @@ export default function DmConversation() {
               </button>
             )}
           </div>
-          <Postbox conversationId={conversationId} callback={callback} />
+          <Postbox callback={callback} />
         </>
       )}
     </div>
