@@ -580,7 +580,7 @@ declare interface IOrbisConversation {
   content: {
     recipients: string[]
   }
-  context?: string | null
+  context: string | null
   details: {
     content: {
       recipients: string[]
