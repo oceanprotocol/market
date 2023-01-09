@@ -8,7 +8,7 @@ module.exports = {
   metadataCacheUri:
     process.env.NEXT_PUBLIC_METADATACACHE_URI ||
     'https://v4.aquarius.oceanprotocol.com',
-  calicaUri: 'https://calica.xyz/ocean/contracts',
+  calicaBaseUri: 'https://calica.xyz',
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
   chainIds: [1, 137, 56, 246, 1285],

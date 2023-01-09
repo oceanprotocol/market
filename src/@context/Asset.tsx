@@ -7,7 +7,12 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
+import {
+  Config,
+  Datatoken,
+  LoggerInstance,
+  Purgatory
+} from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { getAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
@@ -42,7 +47,7 @@ function AssetProvider({
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
 
-  const { chainId, accountId } = useWeb3()
+  const { chainId, accountId, web3 } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
   const [asset, setAsset] = useState<AssetExtended>()
@@ -115,6 +120,27 @@ function AssetProvider({
     },
     [did]
   )
+  // -----------------------------------
+  // Helper: Get and set asset payment collector
+  // -----------------------------------
+  useEffect(() => {
+    async function getInitialPaymentCollector() {
+      if (!asset?.datatokens || !asset.datatokens[0]?.address) return
+      try {
+        const datatoken = new Datatoken(web3)
+        const paymentCollector = await datatoken.getPaymentCollector(
+          asset.datatokens[0].address
+        )
+        setAsset((prevState) => ({
+          ...prevState,
+          paymentCollector
+        }))
+      } catch (error) {
+        LoggerInstance.error('[MetaFull: getInitialPaymentCollector]', error)
+      }
+    }
+    getInitialPaymentCollector()
+  }, [asset?.datatokens, web3])
 
   // -----------------------------------
   // Helper: Get and set asset access details

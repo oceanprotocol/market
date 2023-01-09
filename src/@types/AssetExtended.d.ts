@@ -6,5 +6,6 @@ declare global {
   interface AssetExtended extends Asset {
     accessDetails?: AccessDetails
     views?: number
+    paymentCollector?: string
   }
 }
