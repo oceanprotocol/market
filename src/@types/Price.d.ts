@@ -46,6 +46,7 @@ declare global {
     isPurchasable?: boolean
     isOwned: bool
     validOrderTx: string
+    validProviderFees: ProviderFees
     publisherMarketOrderFee: string
   }
 

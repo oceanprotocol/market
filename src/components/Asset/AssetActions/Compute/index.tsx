@@ -13,7 +13,8 @@ import {
   ComputeOutput,
   ProviderComputeInitializeResults,
   unitsToAmount,
-  minAbi
+  minAbi,
+  ProviderFees
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -92,6 +93,7 @@ export default function Compute({
     useState<ProviderComputeInitializeResults>()
   const [providerFeeAmount, setProviderFeeAmount] = useState<string>('0')
   const [providerFeesSymbol, setProviderFeesSymbol] = useState<string>('OCEAN')
+  const [validProviderFee, setValidProviderFee] = useState<ProviderFees>(null)
   const [computeValidUntil, setComputeValidUntil] = useState<string>('0')
   const [datasetOrderPriceAndFees, setDatasetOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
