@@ -60,8 +60,6 @@ export async function initializeProviderForCompute(
       dataset.services[0].serviceEndpoint
     )
 
-    console.log(filesEncrypted)
-
     return await ProviderInstance.initializeCompute(
       [computeAsset],
       computeAlgo,

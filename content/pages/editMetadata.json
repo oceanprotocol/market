@@ -111,7 +111,7 @@
           },
           {
             "value": "smartcontract", 
-            "title": "Smartcontract",
+            "title": "Smart Contract",
             "label": "Address",
             "placeholder": "e.g. 0x8149276f275EEFAc110D74AFE8AFECEaeC7d1593",
             "help": "This ABI will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",

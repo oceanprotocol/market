@@ -69,8 +69,6 @@ export async function order(
     asset.services[0].serviceEndpoint
   )
 
-  console.log(filesEncrypted)
-
   const initializeData = await initializeProvider(
     asset,
     accountId,
