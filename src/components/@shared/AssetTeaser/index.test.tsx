@@ -11,7 +11,7 @@ describe('@shared/AssetTeaser', () => {
     asset.stats.price = null
     render(<AssetTeaser asset={asset} />)
     expect(screen.getByText('No pricing schema available')).toBeInTheDocument()
-    expect(screen.getByText('This is a test description.')).toBeInTheDocument()
+    expect(screen.getByText('This is a test.')).toBeInTheDocument()
   })
   it('renders asset teaser with no description', () => {
     asset.metadata.description = null
