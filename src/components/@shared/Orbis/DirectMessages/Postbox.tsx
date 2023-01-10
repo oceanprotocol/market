@@ -8,10 +8,14 @@ import { didToAddress, sleep } from '@utils/orbis'
 
 export default function Postbox({
   replyTo = null,
+  isCreatingConvo,
+  setIsCreatingConvo,
   cancelReplyTo,
   callback
 }: {
   replyTo?: IOrbisMessage
+  isCreatingConvo: boolean
+  setIsCreatingConvo: (isCreatingConvo: boolean) => void
   cancelReplyTo?: () => void
   callback: (value: IOrbisMessage) => void
 }) {
@@ -49,8 +53,12 @@ export default function Postbox({
 
     setIsSending(true)
 
+    const body = postBoxArea.current.innerText
+    postBoxArea.current.innerText = ''
+
     let _conversationId = conversationId
     if (_conversationId.startsWith('new-') && newConversation) {
+      setIsCreatingConvo(true)
       const _newConversation = await createConversation(
         newConversation.recipients
       )
@@ -60,9 +68,8 @@ export default function Postbox({
         setNewConversation(null)
         await sleep(1000)
       }
+      setIsCreatingConvo(false)
     }
-
-    const body = postBoxArea.current.innerText
 
     const content: IOrbisMessageContent & { decryptedMessage?: string } = {
       encryptedMessage: null,
@@ -91,7 +98,6 @@ export default function Postbox({
     }
 
     if (callback) callback(_callbackContent)
-    postBoxArea.current.innerText = ''
 
     const res = await orbis.sendMessage({
       conversation_id: _conversationId,
@@ -109,7 +115,12 @@ export default function Postbox({
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (!e.key) return
 
-    if (e.key === 'Enter' && !e.shiftKey && !isSending) {
+    if (isSending && isCreatingConvo) {
+      e.preventDefault()
+      return
+    }
+
+    if (e.key === 'Enter' && !e.shiftKey) {
       // Don't generate a new line
       e.preventDefault()
       share()
@@ -151,6 +162,9 @@ export default function Postbox({
           onKeyDown={handleKeyDown}
           onKeyUp={saveCaretPos}
           onMouseUp={saveCaretPos}
+          style={{
+            pointerEvents: isSending || isCreatingConvo ? 'none' : 'auto'
+          }}
         />
         <EmojiPicker onEmojiClick={onEmojiClick} />
       </div>

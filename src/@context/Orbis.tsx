@@ -21,16 +21,21 @@ interface INewConversation {
   recipients: string[]
 }
 
+export interface IConversationWithNotifsCount extends IOrbisConversation {
+  notifications_count: number
+}
+
 type IOrbisProvider = {
   orbis: IOrbis
   account: IOrbisProfile
   hasLit: boolean
   openConversations: boolean
   conversationId: string
-  conversations: IOrbisConversation[]
-  notifications: Record<string, string[]>
+  conversations: IConversationWithNotifsCount[]
   activeConversationTitle: string
   newConversation: INewConversation
+  notifsLastRead: Record<string, Record<string, number>>
+  totalNotifications: number
   connectOrbis: (options: {
     address: string
     lit?: boolean
@@ -52,9 +57,9 @@ type IOrbisProvider = {
   setConversationId: (conversationId: string) => void
   getConversationByDid: (userDid: string) => Promise<IOrbisConversation>
   createConversation: (recipients: string[]) => Promise<IOrbisConversation>
-  clearMessageNotifs: (conversationId: string) => void
   getConversationTitle: (conversationId: string) => Promise<string>
   getDid: (address: string) => Promise<string>
+  clearConversationNotifs: (conversationId: string) => void
 }
 
 const OrbisContext = createContext({} as IOrbisProvider)
@@ -72,15 +77,17 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     'ocean-ceramic-sessions',
     []
   )
-  const [usersNotifications, setUsersNotifications] = useLocalStorage<
-    Record<string, Record<string, string[]>>
-  >('ocean-convo-notifs', {})
+  const [notifsLastRead, setNotifsLastRead] = useLocalStorage<
+    Record<string, Record<string, number>>
+  >('ocean-notifs-last-read', {})
 
   const [account, setAccount] = useState<IOrbisProfile | null>(null)
   const [hasLit, setHasLit] = useState(false)
   const [openConversations, setOpenConversations] = useState(false)
   const [conversationId, setConversationId] = useState(null)
-  const [conversations, setConversations] = useState<IOrbisConversation[]>([])
+  const [conversations, setConversations] = useState<
+    IConversationWithNotifsCount[]
+  >([])
   const [activeConversationTitle, setActiveConversationTitle] = useState(null)
   const [newConversation, setNewConversation] =
     useState<INewConversation | null>(null)
@@ -211,69 +218,78 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     return _did
   }
 
-  const getMessageNotifs = async () => {
+  const getConversationNotifications: (
+    conversations: IConversationWithNotifsCount[]
+  ) => Promise<void> = async (conversations) => {
+    if (!conversations.length || !orbis) return
+
     let did = account?.did
 
     if (!did && accountId) {
       did = await getDid(accountId)
     }
 
-    const address = didToAddress(did)
+    const _newConversations = await Promise.all(
+      conversations.map(async (conversation) => {
+        // Get timestamp of last read notification
+        const lastRead =
+          notifsLastRead[accountId]?.[conversation.stream_id] || 0
 
-    const { data, error } = await orbis.api.rpc('orbis_f_notifications', {
-      user_did: did || 'none',
-      notif_type: 'messages'
-    })
+        const { data, error } = await orbis.api
+          .rpc('orbis_f_count_notifications_alpha', {
+            user_did: did,
+            notif_type: 'messages',
+            q_context: CONVERSATION_CONTEXT,
+            q_conversation_id: conversation.stream_id,
+            q_last_read: lastRead
+          })
+          .single()
 
-    if (!error && data.length > 0) {
-      const _usersNotifications = { ...usersNotifications }
-      const _conversationIds = conversations.map((o) => o.stream_id)
+        if (error) {
+          console.log(error)
+          return conversation
+        }
 
-      // Only show new notifications from existing conversations
-      const _unreads = data.filter((o: IOrbisNotification) => {
-        return (
-          _conversationIds.includes(o.content.conversation_id) &&
-          o.status === 'new'
-        )
-      })
-      _unreads.forEach((o: IOrbisNotification) => {
-        const conversationId = o.content.conversation_id
-        const { encryptedString } = o.content.encryptedMessage
-
-        // Add address if not exists
-        if (!_usersNotifications[address]) _usersNotifications[address] = {}
-
-        // Add conversationId if not exists
-        if (!_usersNotifications[address][conversationId])
-          _usersNotifications[address][conversationId] = []
-
-        // Add encryptedString if not exists
-        if (
-          !_usersNotifications[address][conversationId].includes(
-            encryptedString
-          )
-        ) {
-          _usersNotifications[address][conversationId].push(encryptedString)
+        if (data) {
+          const newNotifsCount = data.count_new_notifications
+          // Get conversation by stream_id
+          conversation.notifications_count = newNotifsCount
+          return conversation
         }
       })
-      setUsersNotifications(_usersNotifications)
+    )
 
-      if (_unreads.length > 0) {
-        // Get unix timestamp in seconds
-        const timestamp = Math.floor(Date.now() / 1000)
-        // Set read time
-        await orbis.setNotificationsReadTime('messages', timestamp)
-      }
-    }
+    setConversations(_newConversations)
   }
 
-  const clearMessageNotifs = (conversationId: string) => {
-    const _usersNotifications = { ...usersNotifications }
-    const address = didToAddress(account?.did)
-    if (_usersNotifications[address]) {
-      delete _usersNotifications[address][conversationId]
+  const clearConversationNotifs = async (conversationId: string) => {
+    if (!accountId || !conversationId) return
+
+    const _notifsLastRead = { ...notifsLastRead }
+
+    // Add address if not exists
+    if (!_notifsLastRead[accountId]) {
+      _notifsLastRead[accountId] = {}
     }
-    setUsersNotifications(_usersNotifications)
+
+    // Add conversationId if not exists
+    if (!_notifsLastRead[accountId][conversationId]) {
+      _notifsLastRead[accountId][conversationId] = 0
+    }
+
+    // Update last read
+    _notifsLastRead[accountId][conversationId] = Math.floor(Date.now() / 1000)
+    setNotifsLastRead(_notifsLastRead)
+
+    // Set conversation notifications count to 0
+    const _conversations = conversations.map((conversation) => {
+      if (conversation.stream_id === conversationId) {
+        conversation.notifications_count = 0
+      }
+      return conversation
+    })
+
+    setConversations(_conversations)
   }
 
   const getConversations = async (did: string = null) => {
@@ -285,8 +301,8 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     })
 
     // Only show conversations with unique recipients
-    const filteredConversations: IOrbisConversation[] = []
-    data.forEach((conversation: IOrbisConversation) => {
+    const filteredConversations: IConversationWithNotifsCount[] = []
+    data.forEach((conversation: IConversationWithNotifsCount) => {
       if (conversation.recipients.length > 1) {
         // Sort recipients by alphabetical order and stringify
         const sortedRecipients = conversation.recipients.sort()
@@ -294,7 +310,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
 
         // Check if conversation already exists based on sorted and stringified recipients
         const found = filteredConversations.find(
-          (o: IOrbisConversation) =>
+          (o: IConversationWithNotifsCount) =>
             o.recipients.length > 1 &&
             o.recipients.sort().join(',') === stringifiedRecipients
         )
@@ -306,7 +322,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     })
 
     // Also fetch message notifications
-    await getMessageNotifs()
+    await getConversationNotifications(filteredConversations)
 
     setConversations(filteredConversations)
     return filteredConversations
@@ -319,7 +335,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       await sleep(2000)
       await getConversation(conversationId)
     } else {
-      return data
+      return data as IConversationWithNotifsCount
     }
   }
 
@@ -330,7 +346,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     if (!_conversations.length) return null
 
     const filteredConversations = _conversations.filter(
-      (conversation: IOrbisConversation) => {
+      (conversation: IConversationWithNotifsCount) => {
         return (
           conversation.recipients.length === 2 &&
           conversation.recipients.includes(userDid)
@@ -361,61 +377,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     }
   }
 
-  // const createConversation = async (userDid: string) => {
-  //   let _account = account
-  //   if (!_account) {
-  //     // Check connection and force connect
-  //     _account = await checkOrbisConnection({
-  //       address: accountId,
-  //       autoConnect: true
-  //     })
-  //   }
-
-  //   if (!hasLit) {
-  //     const res = await connectLit()
-  //     if (res.status !== 200) {
-  //       alert('Error connecting to Lit.')
-  //       return
-  //     }
-  //   }
-
-  //   let existingConversation = conversations.find(
-  //     (conversation: IOrbisConversation) => {
-  //       return conversation.recipients.includes(userDid)
-  //     }
-  //   )
-
-  //   // Refetch to make sure we have the latest conversations
-  //   if (!existingConversation) {
-  //     const _conversations = await getConversations(_account?.did)
-  //     existingConversation = _conversations.find(
-  //       (conversation: IOrbisConversation) => {
-  //         return conversation.recipients.includes(userDid)
-  //       }
-  //     )
-  //   }
-
-  //   if (existingConversation) {
-  //     setConversationId(existingConversation.stream_id)
-  //     setOpenConversations(true)
-  //   } else {
-  //     const res = await orbis.createConversation({
-  //       recipients: [userDid],
-  //       context: CONVERSATION_CONTEXT
-  //     })
-  //     if (res.status === 200) {
-  //       setTimeout(async () => {
-  //         const { data, error } = await orbis.getConversation(res.doc)
-  //         if (!error && data) {
-  //           setConversations([data, ...conversations])
-  //         }
-  //         setConversationId(res.doc)
-  //         setOpenConversations(true)
-  //       }, 2000)
-  //     }
-  //   }
-  // }
-
   const getConversationTitle = async (conversationId: string) => {
     if (conversationId && conversations.length) {
       // Get conversation based on conversationId
@@ -438,13 +399,17 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     }
   }
 
-  const notifications = useMemo(() => {
-    let _notifications = {}
-    if (accountId && accountId.toLowerCase() in usersNotifications) {
-      _notifications = usersNotifications[accountId.toLowerCase()]
-    }
-    return _notifications
-  }, [accountId, usersNotifications])
+  const totalNotifications = useMemo(() => {
+    if (!conversations.length) return 0
+
+    // Loop through conversations and count notifications
+    let count = 0
+    conversations.forEach((conversation: IConversationWithNotifsCount) => {
+      count += conversation?.notifications_count || 0
+    })
+
+    return count
+  }, [conversations])
 
   useInterval(async () => {
     await getConversations(account?.did)
@@ -477,9 +442,10 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         openConversations,
         conversationId,
         conversations,
-        notifications,
         activeConversationTitle,
         newConversation,
+        notifsLastRead,
+        totalNotifications,
         connectOrbis,
         disconnectOrbis,
         checkOrbisConnection,
@@ -490,9 +456,9 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         setConversationId,
         getConversationByDid,
         createConversation,
-        clearMessageNotifs,
         getConversationTitle,
-        getDid
+        getDid,
+        clearConversationNotifs
       }}
     >
       {children}

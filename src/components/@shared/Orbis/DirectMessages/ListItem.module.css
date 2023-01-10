@@ -30,8 +30,8 @@
   bottom: -4px;
   right: -4px;
   background-color: var(--color-primary);
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   color: var(--brand-white);
   border-radius: 100%;
   display: flex;
@@ -39,9 +39,6 @@
   align-items: center;
   font-size: var(--font-size-mini);
   font-weight: 600;
-  position: absolute;
-  bottom: -4px;
-  right: -4px;
 }
 
 .accountInfo {

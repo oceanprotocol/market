@@ -88,8 +88,8 @@
 
 .notificationCount {
   background-color: var(--color-primary);
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   color: var(--brand-white);
   border-radius: 100%;
   display: flex;

@@ -14,9 +14,9 @@ export default function Header() {
     conversations,
     conversationId,
     openConversations,
-    notifications,
     activeConversationTitle,
     newConversation,
+    totalNotifications,
     setActiveConversationTitle,
     setNewConversation,
     getConversationTitle,
@@ -78,9 +78,9 @@ export default function Header() {
             <ChatBubble role="img" aria-label="Chat" className={styles.icon} />
           </div>
           <span>Direct Messages</span>
-          {Object.values(notifications).flat().length > 0 && (
+          {totalNotifications > 0 && (
             <span className={styles.notificationCount}>
-              {Object.values(notifications).flat().length}
+              {totalNotifications}
             </span>
           )}
         </>

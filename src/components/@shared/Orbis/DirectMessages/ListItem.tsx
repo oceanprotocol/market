@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { useOrbis } from '@context/Orbis'
+import { useOrbis, IConversationWithNotifsCount } from '@context/Orbis'
 import { didToAddress } from '@utils/orbis'
 import Avatar from '@shared/atoms/Avatar'
 import Time from '@shared/atoms/Time'
@@ -8,11 +8,9 @@ import styles from './ListItem.module.css'
 
 export default function ConversationItem({
   conversation,
-  unreads,
   setConversationId
 }: {
-  conversation: IOrbisConversation
-  unreads: number
+  conversation: IConversationWithNotifsCount
   setConversationId: (value: string) => void
 }) {
   const { account, getConversationTitle } = useOrbis()
@@ -45,8 +43,10 @@ export default function ConversationItem({
     >
       <div className={styles.accountAvatarSet}>
         <Avatar accountId={address} className={styles.accountAvatar} />
-        {unreads > 0 && (
-          <div className={styles.notificationCount}>{unreads}</div>
+        {conversation.notifications_count > 0 && (
+          <div className={styles.notificationCount}>
+            {conversation.notifications_count}
+          </div>
         )}
       </div>
       <div className={styles.accountInfo}>

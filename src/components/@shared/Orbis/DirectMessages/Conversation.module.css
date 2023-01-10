@@ -17,9 +17,11 @@
   padding: calc(var(--spacer) / 4);
   text-align: center;
   color: var(--color-secondary);
-  -webkit-animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* -webkit-animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   -moz-animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; */
+  background-color: var(--background-content);
+  z-index: 2;
 }
 
 .connectLit {
