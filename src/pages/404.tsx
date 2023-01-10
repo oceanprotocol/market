@@ -14,24 +14,8 @@ export default function Page404(): ReactElement {
     <>
       <Head>
         <style type="text/css">{`
-          body {
-            background: transparent url(${fishfail}) center bottom no-repeat !important;
-            background-size: cover !important;
-            min-height: 100vh;
-          }
-
           main {
             text-align: center;
-          }
-
-          header *,
-          footer *,
-          main * {
-            color: var(--brand-white) !important;
-          }
-
-          header svg path {
-            fill: var(--brand-white) !important;
           }
         `}</style>
       </Head>
