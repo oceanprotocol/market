@@ -40,6 +40,9 @@ export default function FileIcon({
                   ? filesize(Number(file.contentLength)).toString()
                   : ''}
               </li>
+              <li>
+                {file.type === 'smartcontract' ? 'smart\ncontract' : file.type}
+              </li>
             </>
           ) : (
             <li className={styles.empty}>No file info available</li>

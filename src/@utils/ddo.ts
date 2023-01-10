@@ -1,5 +1,10 @@
 import { Asset, DDO, Service } from '@oceanprotocol/lib'
 
+export function isValidDid(did: string): boolean {
+  const regex = /did:op:[A-Za-z0-9]{64}/
+  return regex.test(did)
+}
+
 export function getServiceByName(
   ddo: Asset | DDO,
   name: 'access' | 'compute'
