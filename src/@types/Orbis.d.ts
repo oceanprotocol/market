@@ -203,6 +203,16 @@ declare interface IOrbis {
     error: unknown
     status: number
   }>
+  getNotificationsCount: (options: {
+    type: string
+    context?: string
+    conversation_id?: string
+    last_read_timestamp?: number
+  }) => Promise<{
+    data: { count_new_notifications: number }
+    error: unknown
+    status: number
+  }>
   getPost: (post_id: string) => Promise<{
     data: IOrbisPost
     error: unknown
