@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import filesize from 'filesize'
+import { filesize } from 'filesize'
 import cleanupContentType from '@utils/cleanupContentType'
 import styles from './index.module.css'
 import Loader from '@shared/atoms/Loader'
