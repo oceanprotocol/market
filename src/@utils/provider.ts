@@ -108,6 +108,13 @@ export async function getFileInfo(
 ): Promise<FileIntoExt[]> {
   try {
     let response
+    const headersProvider = {}
+    if (headers.length > 0) {
+      headers.map((el) => {
+        headersProvider[el.key] = el.value
+        return el
+      })
+    }
     switch (storageType) {
       case 'ipfs': {
         const fileIPFS: Ipfs = {
@@ -129,6 +136,7 @@ export async function getFileInfo(
         const fileGraphql: GraphqlQuery = {
           type: storageType,
           url: file,
+          headers: headersProvider,
           query
         }
 
@@ -155,6 +163,7 @@ export async function getFileInfo(
           type: 'url',
           index: 0,
           url: file,
+          headers: headersProvider,
           method: 'get'
         }
 
