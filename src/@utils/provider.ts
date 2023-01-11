@@ -109,7 +109,7 @@ export async function getFileInfo(
   try {
     let response
     const headersProvider = {}
-    if (headers.length > 0) {
+    if (headers?.length > 0) {
       headers.map((el) => {
         headersProvider[el.key] = el.value
         return el
