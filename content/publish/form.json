@@ -187,7 +187,7 @@
             "title": "Smartcontract",
             "label": "Address",
             "placeholder": "e.g. 0x8149276f275EEFAc110D74AFE8AFECEaeC7d1593",
-            "help": "This ABI will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+            "help": "This ABI will be stored encrypted after publishing.",
             "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
             "prominentHelp": true,
             "type": "files",
