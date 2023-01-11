@@ -39,6 +39,7 @@ const tokensPriceQuery = gql`
         tx
         serviceIndex
         createdTimestamp
+        providerFee
         reuses(orderBy: createdTimestamp, orderDirection: desc) {
           id
           caller
