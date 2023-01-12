@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { useOrbis } from '@context/Orbis'
+import Refresh from '@images/refresh.svg'
 import styles from './DecryptedMessage.module.css'
 
 export default function DecryptedMessage({
-  content
+  content,
+  position = 'right'
 }: {
   content: IOrbisMessageContent & { decryptedMessage?: string }
+  position: 'left' | 'right'
 }) {
   const { orbis } = useOrbis()
   const [loading, setLoading] = useState(true)
   const [decrypted, setDecrypted] = useState(null)
+  const [encryptionError, setEncryptionError] = useState<boolean>(false)
 
-  useEffect(() => {
-    const decryptMessage = async () => {
-      setLoading(true)
+  const decryptMessage = async () => {
+    setLoading(true)
+    setEncryptionError(false)
 
+    try {
       if (content?.decryptedMessage) {
         setDecrypted(content?.decryptedMessage)
       } else {
@@ -22,19 +27,49 @@ export default function DecryptedMessage({
           conversation_id: content?.conversation_id,
           encryptedMessage: content?.encryptedMessage
         })
-        setDecrypted(res.result)
+        if (res.status === 200) {
+          setEncryptionError(false)
+          setDecrypted(res.result)
+        } else {
+          setEncryptionError(true)
+          setDecrypted('Decryption error - please try later')
+        }
       }
-      setLoading(false)
+    } catch (error) {
+      console.log(error)
+      setEncryptionError(true)
+      setDecrypted('Decryption error - please try later')
     }
 
-    if (content && orbis) {
-      decryptMessage()
-    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    if (content && orbis) decryptMessage()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content, orbis])
 
+  if (loading) {
+    return <span className={styles.decrypting}>---</span>
+  }
+
   return (
-    <span className={loading ? styles.decrypting : ''}>
+    <div style={{ position: 'relative' }}>
       {!loading ? decrypted : '---'}
-    </span>
+      {encryptionError && (
+        <button
+          type="button"
+          className={`${styles.refresh} ${styles[position]}`}
+          onClick={decryptMessage}
+          title="Refresh"
+        >
+          <Refresh
+            role="img"
+            aria-label="Refresh"
+            className={styles.refreshIcon}
+          />
+        </button>
+      )}
+    </div>
   )
 }

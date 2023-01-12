@@ -197,7 +197,14 @@ export default function DmConversation() {
                     } ${showTime(message.stream_id) && styles.showTime}`}
                   >
                     <div className={styles.chatBubble}>
-                      <DecryptedMessage content={message.content} />
+                      <DecryptedMessage
+                        content={message.content}
+                        position={
+                          account?.did === message.creator_details.did
+                            ? 'left'
+                            : 'right'
+                        }
+                      />
                     </div>
                     <div className={styles.time}>
                       <Time

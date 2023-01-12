@@ -93,8 +93,6 @@
   padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2.5);
   font-size: var(--font-size-text);
   border-radius: 1rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
   word-break: break-word;
   flex-shrink: 1;
 }
