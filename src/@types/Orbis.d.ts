@@ -73,7 +73,10 @@ declare interface IOrbis {
   decryptMessage: (content: {
     conversation_id: string
     encryptedMessage: IOrbisEncryptedBody
-  }) => Promise<{ result: string }>
+  }) => Promise<{
+    result: string
+    status: number
+  }>
   decryptPost: (content: IOrbisPostContent) => Promise<{ result: string }>
   deletePost: (stream_id: string) => Promise<{
     status: number
