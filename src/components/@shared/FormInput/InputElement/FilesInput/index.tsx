@@ -1,15 +1,15 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useField } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
 import { getFileInfo } from '@utils/provider'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import { isGoogleUrl } from '@utils/url/index'
 
 export default function FilesInput(props: InputProps): ReactElement {
-  const [field, meta, helpers] = useField(props.name)
+  const [field, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
   const { asset } = useAsset()
 
@@ -25,6 +25,12 @@ export default function FilesInput(props: InputProps): ReactElement {
 
     try {
       setIsLoading(true)
+
+      if (!ProviderInstance.isValidProvider(providerUrl)) {
+        throw Error(
+          '✗ Provider cannot be reached, please check status.oceanprotocol.com and try again later.'
+        )
+      }
 
       // TODO: handled on provider
       if (isGoogleUrl(url)) {
