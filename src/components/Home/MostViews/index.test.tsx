@@ -3,7 +3,7 @@ import React from 'react'
 import MostViews from '.'
 import axios from 'axios'
 import { queryMetadata } from '@utils/aquarius'
-import { assetAquarius } from '../../../../.jest/__fixtures__/assetAquarius'
+import { datasetAquarius } from '../../../../.jest/__fixtures__/datasetAquarius'
 
 jest.mock('axios')
 jest.mock('@utils/aquarius')
@@ -12,7 +12,7 @@ const axiosMock = axios as jest.Mocked<typeof axios>
 const queryMetadataMock = queryMetadata as jest.Mock
 
 const queryMetadataBaseReturn: PagedAssets = {
-  results: [assetAquarius],
+  results: [datasetAquarius],
   page: 1,
   totalPages: 1,
   totalResults: 1,
@@ -27,7 +27,7 @@ describe('components/Home/MostViews', () => {
   it('renders without crashing', async () => {
     axiosMock.get.mockImplementation(() =>
       Promise.resolve({
-        data: [{ count: 666, did: assetAquarius.id }]
+        data: [{ count: 666, did: datasetAquarius.id }]
       })
     )
     queryMetadataMock.mockResolvedValue(queryMetadataBaseReturn)
