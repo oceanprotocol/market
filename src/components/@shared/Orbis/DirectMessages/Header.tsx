@@ -3,6 +3,7 @@ import styles from './Header.module.css'
 import { useWeb3 } from '@context/Web3'
 import { useOrbis } from '@context/Orbis'
 import { didToAddress } from '@utils/orbis'
+import { toast } from 'react-toastify'
 import ChatBubble from '@images/chatbubble.svg'
 import ArrowBack from '@images/arrow.svg'
 import ChevronUp from '@images/chevronup.svg'
@@ -48,7 +49,7 @@ export default function Header() {
           _address = didToAddress(recipients[0])
         }
         navigator.clipboard.writeText(_address)
-        alert('Address copied to clipboard')
+        toast.info('Address copied to clipboard')
       }
     } else {
       setOpenConversations(!openConversations)
