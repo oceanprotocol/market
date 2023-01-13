@@ -180,6 +180,7 @@ export default function Compute({
         ' initializedProvider?.algorithm?.providerFee?.providerFeeAmount ==',
         initializedProvider?.algorithm?.providerFee?.providerFeeAmount
       )
+
       if (
         selectedAlgorithmAsset?.accessDetails?.validProviderFees &&
         initializedProvider?.algorithm?.providerFee?.providerFeeAmount
