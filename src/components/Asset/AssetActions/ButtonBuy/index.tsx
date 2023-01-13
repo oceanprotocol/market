@@ -46,7 +46,8 @@ function getConsumeHelpText(
   isBalanceSufficient: boolean,
   consumableFeedback: string,
   isSupportedOceanNetwork: boolean,
-  web3: Web3
+  web3: Web3,
+  priceType: string
 ) {
   const text =
     isConsumable === false
@@ -57,7 +58,9 @@ function getConsumeHelpText(
       ? `You own ${dtBalance} ${dtSymbol} allowing you to use this dataset by spending 1 ${dtSymbol}, but without paying ${btSymbol} again.`
       : isBalanceSufficient === false
       ? `You do not have enough ${btSymbol} in your wallet to purchase this asset.`
-      : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher.`
+      : priceType === 'free'
+      ? `This ${assetType} is free to use.`
+      : `To use this ${assetType}, you will buy 1 ${dtSymbol} and immediately send it back to the publisher.`
   return text
 }
 
@@ -71,7 +74,8 @@ function getAlgoHelpText(
   hasDatatokenSelectedComputeAsset: boolean,
   isBalanceSufficient: boolean,
   isSupportedOceanNetwork: boolean,
-  web3: Web3
+  web3: Web3,
+  algorithmPriceType: string
 ) {
   const text =
     (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
@@ -86,7 +90,9 @@ function getAlgoHelpText(
       ? `Connect to the correct network to interact with this asset.`
       : isBalanceSufficient === false
       ? ''
-      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
+      : algorithmPriceType === 'free'
+      ? `Additionally, the selected ${selectedComputeAssetType} is free to use.`
+      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and send it back to the publisher.`
   return text
 }
 
@@ -99,6 +105,8 @@ function getComputeAssetHelpText(
   isConsumable: boolean,
   consumableFeedback: string,
   isBalanceSufficient: boolean,
+  algorithmPriceType: string,
+  priceType: string,
   hasPreviousOrderSelectedComputeAsset?: boolean,
   hasDatatokenSelectedComputeAsset?: boolean,
   assetType?: string,
@@ -121,7 +129,8 @@ function getComputeAssetHelpText(
     isBalanceSufficient,
     consumableFeedback,
     isSupportedOceanNetwork,
-    web3
+    web3,
+    priceType
   )
 
   const computeAlgoHelpText = getAlgoHelpText(
@@ -134,13 +143,17 @@ function getComputeAssetHelpText(
     hasDatatokenSelectedComputeAsset,
     isBalanceSufficient,
     isSupportedOceanNetwork,
-    web3
+    web3,
+    algorithmPriceType
   )
 
   const providerFeeHelpText = hasProviderFee
     ? 'In order to start the job you also need to pay the fees for renting the c2d resources.'
-    : 'C2D resources required to start the job are available, no payment required for those fees.'
-  const computeHelpText = `${computeAssetHelpText} ${computeAlgoHelpText} ${providerFeeHelpText}`
+    : 'The C2D resources required to start the job are available, no payment is required for them.'
+  let computeHelpText = `${computeAssetHelpText} ${computeAlgoHelpText} ${providerFeeHelpText}`
+
+  computeHelpText = computeHelpText.replace(/^\s+/, '')
+  console.log('computeHelpText', computeHelpText)
   return computeHelpText
 }
 
@@ -190,6 +203,53 @@ export default function ButtonBuy({
     ? 'Order Compute Job'
     : `Buy Compute Job`
 
+  function message(): string {
+    let message = ''
+    if (action === 'download') {
+      message = getConsumeHelpText(
+        btSymbol,
+        dtBalance,
+        dtSymbol,
+        hasDatatoken,
+        hasPreviousOrder,
+        assetType,
+        isConsumable,
+        isBalanceSufficient,
+        consumableFeedback,
+        isSupportedOceanNetwork,
+        web3,
+        priceType
+      )
+    } else {
+      message = getComputeAssetHelpText(
+        hasPreviousOrder,
+        hasDatatoken,
+        btSymbol,
+        dtSymbol,
+        dtBalance,
+        isConsumable,
+        consumableFeedback,
+        isBalanceSufficient,
+        algorithmPriceType,
+        priceType,
+        hasPreviousOrderSelectedComputeAsset,
+        hasDatatokenSelectedComputeAsset,
+        assetType,
+        dtSymbolSelectedComputeAsset,
+        dtBalanceSelectedComputeAsset,
+        selectedComputeAssetType,
+        isAlgorithmConsumable,
+        isSupportedOceanNetwork,
+        web3,
+        hasProviderFee
+      )
+    }
+    if (priceType === 'free' || algorithmPriceType === 'free') {
+      message +=
+        ' Please note that network gas fees still apply, even when using free assets.'
+    }
+    return message
+  }
   return (
     <div className={styles.actions}>
       {isLoading ? (
@@ -205,42 +265,7 @@ export default function ButtonBuy({
           >
             {buttonText}
           </Button>
-          <div className={styles.help}>
-            {action === 'download'
-              ? getConsumeHelpText(
-                  btSymbol,
-                  dtBalance,
-                  dtSymbol,
-                  hasDatatoken,
-                  hasPreviousOrder,
-                  assetType,
-                  isConsumable,
-                  isBalanceSufficient,
-                  consumableFeedback,
-                  isSupportedOceanNetwork,
-                  web3
-                )
-              : getComputeAssetHelpText(
-                  hasPreviousOrder,
-                  hasDatatoken,
-                  btSymbol,
-                  dtSymbol,
-                  dtBalance,
-                  isConsumable,
-                  consumableFeedback,
-                  isBalanceSufficient,
-                  hasPreviousOrderSelectedComputeAsset,
-                  hasDatatokenSelectedComputeAsset,
-                  assetType,
-                  dtSymbolSelectedComputeAsset,
-                  dtBalanceSelectedComputeAsset,
-                  selectedComputeAssetType,
-                  isAlgorithmConsumable,
-                  isSupportedOceanNetwork,
-                  web3,
-                  hasProviderFee
-                )}
-          </div>
+          <div className={styles.help}>{message()}</div>
         </>
       )}
     </div>

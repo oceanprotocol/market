@@ -20,6 +20,7 @@ interface PriceOutputProps {
   datasetOrderPrice?: string
   algoOrderPrice?: string
   providerFeeAmount?: string
+  providerFeesSymbol?: string
   validUntil?: string
   totalPrices?: totalPriceMap[]
 }
@@ -84,6 +85,7 @@ export default function PriceOutput({
   datasetOrderPrice,
   algoOrderPrice,
   providerFeeAmount,
+  providerFeesSymbol,
   validUntil,
   totalPrices
 }: PriceOutputProps): ReactElement {
@@ -134,7 +136,7 @@ export default function PriceOutput({
             <Row
               price={providerFeeAmount} // initializeCompute.provider fee amount
               timeout={`${validUntil} seconds`} // valid until value
-              symbol={'OCEAN'} // we assume that provider fees will always be in OCEAN token
+              symbol={providerFeesSymbol} // we assume that provider fees will always be in OCEAN token
               sign="+"
               type="C2D RESOURCES"
             />
