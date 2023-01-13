@@ -154,6 +154,14 @@ export default function Compute({
 
       setInitializedProviderResponse(initializedProvider)
 
+      console.log(
+        'asset.accessDetails?.validProviderFees == ',
+        asset.accessDetails?.validProviderFees
+      )
+      console.log(
+        ' initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount == ',
+        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
+      )
       if (
         asset.accessDetails?.validProviderFees &&
         initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
@@ -164,8 +172,16 @@ export default function Compute({
         }
       }
 
+      console.log(
+        ' selectedAlgorithmAsset?.accessDetails?.validProviderFees == ',
+        selectedAlgorithmAsset?.accessDetails?.validProviderFees
+      )
+      console.log(
+        ' initializedProvider?.algorithm?.providerFee?.providerFeeAmount ==',
+        initializedProvider?.algorithm?.providerFee?.providerFeeAmount
+      )
       if (
-        selectedAlgorithmAsset.accessDetails?.validProviderFees &&
+        selectedAlgorithmAsset?.accessDetails?.validProviderFees &&
         initializedProvider?.algorithm?.providerFee?.providerFeeAmount
       ) {
         initializedProvider.algorithm.providerFee = {
