@@ -154,6 +154,20 @@ export default function Compute({
 
       setInitializedProviderResponse(initializedProvider)
 
+      if (
+        asset.accessDetails?.validProviderFees &&
+        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
+      ) {
+        initializedProvider.datasets[0].providerFee.providerFeeAmount = '0'
+      }
+
+      if (
+        selectedAlgorithmAsset.accessDetails?.validProviderFees &&
+        initializedProvider?.algorithm?.providerFee?.providerFeeAmount
+      ) {
+        initializedProvider.algorithm.providerFee.providerFeeAmount = '0'
+      }
+
       const feeAmount = await unitsToAmount(
         !isSupportedOceanNetwork || !isAssetNetwork
           ? await getDummyWeb3(asset?.chainId)
@@ -371,6 +385,7 @@ export default function Compute({
           asset.metadata.type
         )[asset.accessDetails?.type === 'fixed' ? 2 : 3]
       )
+
       const datasetOrderTx = await handleComputeOrder(
         web3,
         asset,

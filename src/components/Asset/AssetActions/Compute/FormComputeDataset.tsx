@@ -198,7 +198,6 @@ export default function FormStartCompute({
         })
       }
     }
-    console.log('totalPrices', totalPrices)
     setTotalPrices(totalPrices)
   }, [
     asset,
@@ -220,9 +219,7 @@ export default function FormStartCompute({
 
   useEffect(() => {
     totalPrices.forEach((price) => {
-      console.log('price ', price)
       const baseTokenBalance = getTokenBalanceFromSymbol(balance, price.symbol)
-      console.log('baseTokenBalance ', baseTokenBalance)
       if (!baseTokenBalance) {
         setIsBalanceSufficient(false)
         return
