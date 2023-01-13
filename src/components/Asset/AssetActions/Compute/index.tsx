@@ -158,14 +158,20 @@ export default function Compute({
         asset.accessDetails?.validProviderFees &&
         initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
       ) {
-        initializedProvider.datasets[0].providerFee.providerFeeAmount = '0'
+        initializedProvider.datasets[0].providerFee = {
+          providerFeeAmount: '0',
+          ...asset.accessDetails?.validProviderFees
+        }
       }
 
       if (
         selectedAlgorithmAsset.accessDetails?.validProviderFees &&
         initializedProvider?.algorithm?.providerFee?.providerFeeAmount
       ) {
-        initializedProvider.algorithm.providerFee.providerFeeAmount = '0'
+        initializedProvider.algorithm.providerFee = {
+          providerFeeAmount: '0',
+          ...selectedAlgorithmAsset.accessDetails.validProviderFees
+        }
       }
 
       const feeAmount = await unitsToAmount(
