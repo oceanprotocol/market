@@ -156,17 +156,10 @@ function getAccessDetailsFromTokenPrice(
   }
 
   if (tokenPrice?.orders?.length > 0) {
-    console.log('tokenPrice == ', tokenPrice.id)
     const order = tokenPrice.orders[0]
     const providerFees: ProviderFees = order?.providerFee
       ? JSON.parse(order.providerFee)
       : null
-    console.log('providerFees ==', providerFees?.validUntil)
-    console.log(' Date.now() / 1000  ==', Date.now() / 1000)
-    console.log(
-      'Number(providerFees?.validUntil) ==',
-      Number(providerFees?.validUntil)
-    )
     accessDetails.validProviderFees =
       providerFees?.validUntil &&
       Date.now() / 1000 < Number(providerFees?.validUntil)
