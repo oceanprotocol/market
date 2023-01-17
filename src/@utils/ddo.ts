@@ -89,6 +89,14 @@ export function secondsToString(numberOfSeconds: number): string {
 
 export function normalizeFile(storageType: string, file: any, chainId: number) {
   let fileObj
+  const headersProvider = {}
+  const headers = file[0]?.headers || file?.headers
+  if (headers.length > 0) {
+    headers.map((el) => {
+      headersProvider[el.key] = el.value
+      return el
+    })
+  }
   switch (storageType) {
     case 'ipfs': {
       fileObj = {
@@ -108,7 +116,8 @@ export function normalizeFile(storageType: string, file: any, chainId: number) {
       fileObj = {
         type: storageType,
         url: file[0]?.url || file?.url,
-        query: file[0]?.query || file?.query
+        query: file[0]?.query || file?.query,
+        headers: headersProvider
       } as GraphqlQuery
       break
     }
@@ -129,6 +138,7 @@ export function normalizeFile(storageType: string, file: any, chainId: number) {
         type: 'url',
         index: 0,
         url: file ? file[0]?.url || file?.url : null,
+        headers: headersProvider,
         method: 'get'
       } as UrlFile
       break
