@@ -50,8 +50,6 @@ export default function Download({
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
 
-  console.log(asset?.accessDetails)
-
   const isUnsupportedPricing =
     asset?.accessDetails?.type === 'NOT_SUPPORTED' ||
     !asset?.accessDetails?.baseToken?.symbol
