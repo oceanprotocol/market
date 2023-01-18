@@ -303,7 +303,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     // Only show conversations with unique recipients
     const filteredConversations: IConversationWithNotifsCount[] = []
     data.forEach((conversation: IConversationWithNotifsCount) => {
-      if (conversation.recipients.length > 1) {
+      if (conversation.recipients.length === 2) {
         // Sort recipients by alphabetical order and stringify
         const sortedRecipients = conversation.recipients.sort()
         const stringifiedRecipients = sortedRecipients.join(',')
@@ -324,6 +324,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     // Also fetch message notifications
     await getConversationNotifications(filteredConversations)
 
+    console.log(filteredConversations)
     setConversations(filteredConversations)
     return filteredConversations
   }
