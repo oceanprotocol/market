@@ -12,7 +12,7 @@ import {
 import { validationSchema } from './_validation'
 import { getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
-import { useWeb3 } from '@context/Web3'
+import { useWeb3 } from '@hooks/useBalance'
 import { useUserPreferences } from '@context/UserPreferences'
 import Web3Feedback from '@shared/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NftFactory } from '@oceanprotocol/lib'
-import { useWeb3 } from '@context/Web3'
+import { useWeb3 } from '@hooks/useBalance'
 import { getOceanConfig } from '@utils/ocean'
 
 function useNftFactory(): NftFactory {

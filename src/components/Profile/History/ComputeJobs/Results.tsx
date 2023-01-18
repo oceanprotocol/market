@@ -10,7 +10,7 @@ import Button from '@shared/atoms/Button'
 import styles from './Results.module.css'
 import FormHelp from '@shared/FormInput/Help'
 import content from '../../../../../content/pages/history.json'
-import { useWeb3 } from '@context/Web3'
+import { useWeb3 } from '@hooks/useBalance'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getAsset } from '@utils/aquarius'
 

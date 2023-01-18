@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useWeb3 } from '@context/Web3'
 import { AssetWithOwnAllocation, getOwnAllocations } from '@utils/veAllocation'
 import styles from './index.module.css'
 import {
@@ -12,9 +11,10 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import AssetListTable from './AssetListTable'
+import { useAccount } from 'wagmi'
 
 export default function Allocations(): ReactElement {
-  const { accountId } = useWeb3()
+  const { address } = useAccount()
   const { chainIds } = useUserPreferences()
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
@@ -24,18 +24,18 @@ export default function Allocations(): ReactElement {
   const [hasAllocations, setHasAllocations] = useState(false)
 
   useEffect(() => {
-    if (!accountId) return
+    if (!address) return
 
     async function checkAllocations() {
       try {
-        const allocations = await getOwnAllocations(chainIds, accountId)
+        const allocations = await getOwnAllocations(chainIds, address)
         setHasAllocations(allocations && allocations.length > 0)
       } catch (error) {
         LoggerInstance.error(error.message)
       }
     }
     checkAllocations()
-  }, [accountId, chainIds])
+  }, [address, chainIds])
 
   useEffect(() => {
     async function getAllocationAssets() {
@@ -44,7 +44,7 @@ export default function Allocations(): ReactElement {
       try {
         setLoading(true)
 
-        const allocations = await getOwnAllocations(chainIds, accountId)
+        const allocations = await getOwnAllocations(chainIds, address)
         setHasAllocations(allocations && allocations.length > 0)
 
         const baseParams = {
@@ -82,7 +82,7 @@ export default function Allocations(): ReactElement {
       }
     }
     getAllocationAssets()
-  }, [hasAllocations, accountId, chainIds, isMounted, newCancelToken])
+  }, [hasAllocations, address, chainIds, isMounted, newCancelToken])
 
   return (
     <section className={styles.section}>

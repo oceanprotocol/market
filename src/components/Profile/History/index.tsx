@@ -4,11 +4,11 @@ import PublishedList from './PublishedList'
 import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
-import { useWeb3 } from '@context/Web3'
 import { getComputeJobs } from '@utils/compute'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { LoggerInstance } from '@oceanprotocol/lib'
+import { useAccount } from 'wagmi'
 
 interface HistoryTab {
   title: string
@@ -56,7 +56,7 @@ export default function HistoryPage({
 }: {
   accountIdentifier: string
 }): ReactElement {
-  const { accountId } = useWeb3()
+  const { address } = useAccount()
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
 
@@ -69,7 +69,7 @@ export default function HistoryPage({
 
   const fetchJobs = useCallback(
     async (type: string) => {
-      if (!chainIds || chainIds.length === 0 || !accountId) {
+      if (!chainIds || chainIds.length === 0 || !address) {
         return
       }
 
@@ -77,7 +77,7 @@ export default function HistoryPage({
         type === 'init' && setIsLoadingJobs(true)
         const computeJobs = await getComputeJobs(
           chainIds,
-          accountId,
+          address,
           null,
           newCancelToken()
         )
@@ -88,7 +88,7 @@ export default function HistoryPage({
         setIsLoadingJobs(false)
       }
     },
-    [accountId, chainIds, isLoadingJobs, newCancelToken]
+    [address, chainIds, isLoadingJobs, newCancelToken]
   )
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function HistoryPage({
 
   const tabs = getTabs(
     accountIdentifier,
-    accountId,
+    address,
     jobs,
     isLoadingJobs,
     refetchJobs,

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useWeb3 } from '@context/Web3'
 import { Config, LoggerInstance } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import axios, { AxiosResponse } from 'axios'
 import { getOceanConfig } from '@utils/ocean'
+import { useBlockNumber } from 'wagmi'
 
 const blockDifferenceThreshold = 30
 const ethGraphUrl = `https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks`
@@ -55,7 +55,7 @@ async function getBlockSubgraph(subgraphUri: string) {
 }
 
 export function useGraphSyncStatus(networkId: number): UseGraphSyncStatus {
-  const { block, web3Loading } = useWeb3()
+  const { data: block, isError, isLoading } = useBlockNumber()
   const [blockGraph, setBlockGraph] = useState<number>()
   const [blockHead, setBlockHead] = useState<number>()
   const [isGraphSynced, setIsGraphSynced] = useState(true)
@@ -72,7 +72,7 @@ export function useGraphSyncStatus(networkId: number): UseGraphSyncStatus {
 
   // Get and set head block
   useEffect(() => {
-    if (!oceanConfig?.nodeUri || web3Loading) return
+    if (!oceanConfig?.nodeUri || isLoading || isError) return
 
     async function initBlockHead() {
       const blockHead = block || (await getBlockHead(oceanConfig))
@@ -80,7 +80,7 @@ export function useGraphSyncStatus(networkId: number): UseGraphSyncStatus {
       LoggerInstance.log('[GraphStatus] Head block: ', blockHead)
     }
     initBlockHead()
-  }, [web3Loading, block, oceanConfig])
+  }, [isLoading, isError, block, oceanConfig])
 
   // Get and set subgraph block
   useEffect(() => {
@@ -101,7 +101,7 @@ export function useGraphSyncStatus(networkId: number): UseGraphSyncStatus {
 
   // Set sync status
   useEffect(() => {
-    if ((!blockGraph && !blockHead) || web3Loading || subgraphLoading) return
+    if ((!blockGraph && !blockHead) || isLoading || subgraphLoading) return
 
     const difference = blockHead - blockGraph
 
@@ -110,7 +110,7 @@ export function useGraphSyncStatus(networkId: number): UseGraphSyncStatus {
       return
     }
     setIsGraphSynced(true)
-  }, [blockGraph, blockHead, web3Loading, subgraphLoading])
+  }, [blockGraph, blockHead, isLoading, subgraphLoading])
 
   return { blockHead, blockGraph, isGraphSynced }
 }

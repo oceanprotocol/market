@@ -5,7 +5,6 @@ import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import { useAsset } from '@context/Asset'
-import { useWeb3 } from '@context/Web3'
 import Web3Feedback from '@shared/Web3Feedback'
 import { getFileDidInfo, getFileInfo } from '@utils/provider'
 import { getOceanConfig } from '@utils/ocean'
@@ -16,13 +15,17 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from '@components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
+import { useAccount, useProvider } from 'wagmi'
+import useBalance from '@hooks/useBalance'
 
 export default function AssetActions({
   asset
 }: {
   asset: AssetExtended
 }): ReactElement {
-  const { accountId, balance, web3 } = useWeb3()
+  const { address } = useAccount()
+  const { balance } = useBalance()
+  const web3Provider = useProvider()
   const { isAssetNetwork } = useAsset()
   const newCancelToken = useCancelToken()
   const isMounted = useIsMounted()
@@ -89,14 +92,14 @@ export default function AssetActions({
 
   // Get and set user DT balance
   useEffect(() => {
-    if (!web3 || !accountId || !isAssetNetwork) return
+    if (!web3 || !address || !isAssetNetwork) return
 
     async function init() {
       try {
-        const datatokenInstance = new Datatoken(web3)
+        const datatokenInstance = new Datatoken(web3Provider as any)
         const dtBalance = await datatokenInstance.balance(
           asset.services[0].datatokenAddress,
-          accountId
+          address
         )
         setDtBalance(dtBalance)
       } catch (e) {
@@ -104,7 +107,7 @@ export default function AssetActions({
       }
     }
     init()
-  }, [web3, accountId, asset, isAssetNetwork])
+  }, [web3Provider, address, asset, isAssetNetwork])
 
   // Check user balance against price
   useEffect(() => {
@@ -112,7 +115,7 @@ export default function AssetActions({
     if (
       !asset?.accessDetails?.price ||
       !asset?.accessDetails?.baseToken?.symbol ||
-      !accountId ||
+      !address ||
       !balance ||
       !dtBalance
     )
@@ -130,7 +133,7 @@ export default function AssetActions({
     return () => {
       setIsBalanceSufficient(false)
     }
-  }, [balance, accountId, asset?.accessDetails, dtBalance])
+  }, [balance, address, asset?.accessDetails, dtBalance])
 
   const UseContent = (
     <>
@@ -161,7 +164,7 @@ export default function AssetActions({
       <Tabs items={tabs} className={styles.actions} />
       <Web3Feedback
         networkId={asset?.chainId}
-        accountId={accountId}
+        accountId={address}
         isAssetNetwork={isAssetNetwork}
       />
     </>

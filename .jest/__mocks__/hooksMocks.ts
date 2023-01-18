@@ -11,10 +11,6 @@ jest.mock('../../src/@context/UserPreferences', () => ({
   useUserPreferences: () => userPreferences
 }))
 
-jest.mock('../../src/@context/Web3', () => ({
-  useWeb3: () => web3
-}))
-
 jest.mock('../../../@context/Asset', () => ({
   useAsset: () => ({ asset })
 }))

@@ -2,15 +2,16 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Page from '@shared/Page'
 import ProfilePage from '../../components/Profile'
 import { accountTruncate } from '@utils/web3'
-import { useWeb3 } from '@context/Web3'
 import ProfileProvider from '@context/Profile'
 import { getEnsAddress, getEnsName } from '@utils/ens'
 import { useRouter } from 'next/router'
-import web3 from 'web3'
+import { useAccount, useEnsName } from 'wagmi'
+import { utils } from 'ethers'
 
 export default function PageProfile(): ReactElement {
   const router = useRouter()
-  const { accountId, accountEns } = useWeb3()
+  const { address } = useAccount()
+  const { data: accountEns } = useEnsName({ address })
   const [finalAccountId, setFinalAccountId] = useState<string>()
   const [finalAccountEns, setFinalAccountEns] = useState<string>()
   const [ownAccount, setOwnAccount] = useState(false)
@@ -22,7 +23,7 @@ export default function PageProfile(): ReactElement {
       // Path is root /profile, have web3 take over
       if (router.asPath === '/profile') {
         setFinalAccountEns(accountEns)
-        setFinalAccountId(accountId)
+        setFinalAccountId(address)
         setOwnAccount(true)
         return
       }
@@ -30,9 +31,9 @@ export default function PageProfile(): ReactElement {
       const pathAccount = router.query.account as string
 
       // Path has ETH address
-      if (web3.utils.isAddress(pathAccount)) {
-        setOwnAccount(pathAccount === accountId)
-        const finalAccountId = pathAccount || accountId
+      if (utils.isAddress(pathAccount)) {
+        setOwnAccount(pathAccount === address)
+        const finalAccountId = pathAccount || address
         setFinalAccountId(finalAccountId)
 
         const accountEns = await getEnsName(finalAccountId)
@@ -47,12 +48,12 @@ export default function PageProfile(): ReactElement {
           resolvedAccountId === '0x0000000000000000000000000000000000000000'
         )
           return
-        setOwnAccount(resolvedAccountId === accountId)
+        setOwnAccount(resolvedAccountId === address)
         setFinalAccountId(resolvedAccountId)
       }
     }
     init()
-  }, [router, accountId, accountEns])
+  }, [router, address, accountEns])
 
   // Replace pathname with ENS name if present
   useEffect(() => {
@@ -61,7 +62,7 @@ export default function PageProfile(): ReactElement {
     const newProfilePath = `/profile/${finalAccountEns}`
     // make sure we only replace path once
     if (newProfilePath !== router.asPath) router.replace(newProfilePath)
-  }, [router, finalAccountEns, accountId])
+  }, [router, finalAccountEns, address])
 
   return (
     <Page

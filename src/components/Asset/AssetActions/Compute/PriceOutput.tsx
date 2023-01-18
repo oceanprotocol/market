@@ -5,7 +5,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
-import { useWeb3 } from '@context/Web3'
+import { useWeb3 } from '@hooks/useBalance'
 
 interface PriceOutputProps {
   hasPreviousOrder: boolean

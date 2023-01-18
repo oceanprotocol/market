@@ -99,7 +99,8 @@ function MarketMetadataProvider({
           opcFees,
           siteContent,
           appConfig,
-          getOpcFeeForToken
+          getOpcFeeForToken,
+          approvedBaseTokens
         } as MarketMetadataProviderValue
       }
     >

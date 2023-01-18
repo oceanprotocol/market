@@ -1,4 +1,4 @@
-import { useWeb3 } from '@context/Web3'
+import { useWeb3 } from '@hooks/useBalance'
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
 import FormEditComputeDataset from './FormEditComputeDataset'

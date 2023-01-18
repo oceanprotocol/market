@@ -13,7 +13,6 @@ import MarketMetadataProvider from '@context/MarketMetadata'
 import { WagmiConfig } from 'wagmi'
 import { Web3Modal } from '@web3modal/react'
 import { wagmiClient, ethereumClient } from '@utils/web3'
-import Web3Provider from '@context/Web3'
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })
@@ -21,19 +20,17 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
     <>
       <WagmiConfig client={wagmiClient}>
         <MarketMetadataProvider>
-          <Web3Provider>
-            <UrqlProvider>
-              <UserPreferencesProvider>
-                <PricesProvider>
-                  <ConsentProvider>
-                    <App>
-                      <Component {...pageProps} />
-                    </App>
-                  </ConsentProvider>
-                </PricesProvider>
-              </UserPreferencesProvider>
-            </UrqlProvider>
-          </Web3Provider>
+          <UrqlProvider>
+            <UserPreferencesProvider>
+              <PricesProvider>
+                <ConsentProvider>
+                  <App>
+                    <Component {...pageProps} />
+                  </App>
+                </ConsentProvider>
+              </PricesProvider>
+            </UserPreferencesProvider>
+          </UrqlProvider>
         </MarketMetadataProvider>
       </WagmiConfig>
 

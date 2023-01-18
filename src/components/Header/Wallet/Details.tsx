@@ -7,7 +7,7 @@ import Conversion from '@shared/Price/Conversion'
 import { getOceanConfig } from '@utils/ocean'
 import { useNetwork, useProvider, useDisconnect, useAccount } from 'wagmi'
 import styles from './Details.module.css'
-import { useWeb3 } from '@context/Web3'
+import useBalance from '@hooks/useBalance'
 import { useWeb3Modal } from '@web3modal/react'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
 
@@ -17,7 +17,7 @@ export default function Details(): ReactElement {
   const { open: openWeb3Modal } = useWeb3Modal()
   const { disconnect } = useDisconnect()
   const provider = useProvider()
-  const { balance } = useWeb3()
+  const { balance } = useBalance()
   const { networkData } = useNetworkMetadata()
   const { locale } = useUserPreferences()
 

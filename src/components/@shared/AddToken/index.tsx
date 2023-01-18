@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
 import { addTokenToWallet } from '@utils/web3'
-import { useWeb3 } from '@context/Web3'
 import Button from '@shared/atoms/Button'
 import OceanLogo from '@images/logo.svg'
 import styles from './index.module.css'
+import { useProvider } from 'wagmi'
 
 const cx = classNames.bind(styles)
 
@@ -23,7 +23,7 @@ export default function AddToken({
   className,
   minimal
 }: AddTokenProps): ReactElement {
-  const { web3Provider } = useWeb3()
+  const web3Provider = useProvider()
 
   const styleClasses = cx({
     button: true,

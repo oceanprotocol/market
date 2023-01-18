@@ -140,7 +140,7 @@ export async function getTokenBalance(
 ): Promise<string> {
   try {
     const token = new ethers.Contract(tokenAddress, erc20ABI, web3Provider)
-    const balance = await token.methods.balanceOf(accountId).call()
+    const balance = await token.balanceOf(accountId)
     const adjustedDecimalsBalance = `${balance}${'0'.repeat(18 - decimals)}`
     return utils.formatEther(adjustedDecimalsBalance)
   } catch (e) {

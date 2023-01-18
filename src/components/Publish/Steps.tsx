@@ -1,28 +1,29 @@
 import { ReactElement, useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import { wizardSteps, initialPublishFeedback } from './_constants'
-import { useWeb3 } from '@context/Web3'
 import { FormPublishData, PublishFeedback } from './_types'
 import { getOceanConfig } from '@utils/ocean'
+import { useAccount, useNetwork } from 'wagmi'
 
 export function Steps({
   feedback
 }: {
   feedback: PublishFeedback
 }): ReactElement {
-  const { chainId, accountId, approvedBaseTokens } = useWeb3()
+  const { address } = useAccount()
+  const { chain } = useNetwork()
   const { values, setFieldValue, touched, setTouched } =
     useFormikContext<FormPublishData>()
 
   const isCustomProviderUrl = values?.services?.[0]?.providerUrl.custom
 
-  // auto-sync user chainId & account into form data values
+  // auto-sync user chain?.id & account into form data values
   useEffect(() => {
-    if (!chainId || !accountId) return
+    if (!chain?.id || !address) return
 
-    setFieldValue('user.chainId', chainId)
-    setFieldValue('user.accountId', accountId)
-  }, [chainId, accountId, setFieldValue])
+    setFieldValue('user.chain?.id', chain?.id)
+    setFieldValue('user.address', address)
+  }, [chain?.id, address, setFieldValue])
 
   useEffect(() => {
     if (!approvedBaseTokens?.length) return

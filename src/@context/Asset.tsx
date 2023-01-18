@@ -10,7 +10,6 @@ import React, {
 import { Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { getAsset } from '@utils/aquarius'
-import { useWeb3 } from './Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
@@ -18,6 +17,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
 import { assetStateToString } from '@utils/assetState'
 import { isValidDid } from '@utils/ddo'
+import { useAccount, useNetwork } from 'wagmi'
 
 export interface AssetProviderValue {
   isInPurgatory: boolean
@@ -44,8 +44,9 @@ function AssetProvider({
   children: ReactNode
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
+  const { address } = useAccount()
+  const { chain } = useNetwork()
 
-  const { chainId, accountId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
   const [asset, setAsset] = useState<AssetExtended>()
@@ -127,14 +128,14 @@ function AssetProvider({
       asset.chainId,
       asset.services[0].datatokenAddress,
       asset.services[0].timeout,
-      accountId
+      address
     )
     setAsset((prevState) => ({
       ...prevState,
       accessDetails
     }))
     LoggerInstance.log(`[asset] Got access details for ${did}`, accessDetails)
-  }, [asset?.chainId, asset?.services, accountId, did])
+  }, [asset?.chainId, asset?.services, address, did])
 
   // -----------------------------------
   // 1. Get and set asset based on passed DID
@@ -152,27 +153,27 @@ function AssetProvider({
     if (!isMounted) return
 
     fetchAccessDetails()
-  }, [accountId, fetchAccessDetails, isMounted])
+  }, [address, fetchAccessDetails, isMounted])
 
   // -----------------------------------
   // Check user network against asset network
   // -----------------------------------
   useEffect(() => {
-    if (!chainId || !asset?.chainId) return
+    if (!chain?.id || !asset?.chainId) return
 
-    const isAssetNetwork = chainId === asset?.chainId
+    const isAssetNetwork = chain?.id === asset?.chainId
     setIsAssetNetwork(isAssetNetwork)
-  }, [chainId, asset?.chainId])
+  }, [chain?.id, asset?.chainId])
 
   // -----------------------------------
   // Asset owner check against wallet user
   // -----------------------------------
   useEffect(() => {
-    if (!accountId || !owner) return
+    if (!address || !owner) return
 
-    const isOwner = accountId?.toLowerCase() === owner.toLowerCase()
+    const isOwner = address?.toLowerCase() === owner.toLowerCase()
     setIsOwner(isOwner)
-  }, [accountId, owner])
+  }, [address, owner])
 
   // -----------------------------------
   // Load ocean config based on asset network

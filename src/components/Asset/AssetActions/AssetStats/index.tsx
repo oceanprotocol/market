@@ -1,32 +1,32 @@
 import { useAsset } from '@context/Asset'
 import { useUserPreferences } from '@context/UserPreferences'
-import { useWeb3 } from '@context/Web3'
 import Tooltip from '@shared/atoms/Tooltip'
 import { formatNumber } from '@utils/numbers'
 import { getNftOwnAllocation } from '@utils/veAllocation'
 import React, { useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
 import styles from './index.module.css'
 
 export default function AssetStats() {
   const { locale } = useUserPreferences()
   const { asset } = useAsset()
-  const { accountId } = useWeb3()
+  const { address } = useAccount()
 
   const [ownAllocation, setOwnAllocation] = useState(0)
 
   useEffect(() => {
-    if (!asset || !accountId) return
+    if (!asset || !address) return
 
     async function init() {
       const allocation = await getNftOwnAllocation(
-        accountId,
+        address,
         asset.nftAddress,
         asset.chainId
       )
       setOwnAllocation(allocation / 100)
     }
     init()
-  }, [accountId, asset])
+  }, [address, asset])
 
   return (
     <footer className={styles.stats}>

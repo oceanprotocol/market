@@ -1,6 +1,5 @@
 import { FixedRateExchange, PriceAndFees } from '@oceanprotocol/lib'
 import { consumeMarketFixedSwapFee } from '../../app.config'
-import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 
 /**
@@ -13,14 +12,17 @@ import { getOceanConfig } from './ocean'
 export async function getFixedBuyPrice(
   accessDetails: AccessDetails,
   chainId?: number,
-  web3?: Web3
+  web3Provider?: any
 ): Promise<PriceAndFees> {
-  if (!web3 && !chainId)
+  if (!web3Provider && !chainId)
     throw new Error("web3 and chainId can't be undefined at the same time!")
 
   const config = getOceanConfig(chainId)
 
-  const fixed = new FixedRateExchange(config.fixedRateExchangeAddress, web3)
+  const fixed = new FixedRateExchange(
+    config.fixedRateExchangeAddress,
+    web3Provider
+  )
   const estimatedPrice = await fixed.calcBaseInGivenDatatokensOut(
     accessDetails.addressOrId,
     '1',

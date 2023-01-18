@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import { useWeb3 } from '@context/Web3'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
 import { addCustomNetwork } from '@utils/web3'
@@ -8,14 +7,16 @@ import useNetworkMetadata, {
   getNetworkDisplayName
 } from '@hooks/useNetworkMetadata'
 import { useAsset } from '@context/Asset'
+import { useNetwork, useProvider } from 'wagmi'
 
 export default function WalletNetworkSwitcher(): ReactElement {
-  const { networkId, web3Provider } = useWeb3()
+  const { chain } = useNetwork()
+  const web3Provider = useProvider()
   const { asset } = useAsset()
   const { networksList } = useNetworkMetadata()
 
   const ddoNetworkData = getNetworkDataById(networksList, asset.chainId)
-  const walletNetworkData = getNetworkDataById(networksList, networkId)
+  const walletNetworkData = getNetworkDataById(networksList, chain?.id)
 
   const ddoNetworkName = (
     <strong>{getNetworkDisplayName(ddoNetworkData)}</strong>
