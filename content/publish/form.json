@@ -139,6 +139,7 @@
             "prominentHelp": true,
             "type": "files",
             "required": true,
+            "methods": true,
             "innerFields": [
               {
                 "value": "headers",

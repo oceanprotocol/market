@@ -61,6 +61,7 @@ export default function AssetActions({
       const query = file?.query || undefined
       const abi = file?.abi || undefined
       const headers = file?.headers || undefined
+      const method = file?.method || undefined
 
       try {
         const fileInfoResponse = formikState?.values?.services?.[0].files?.[0]
@@ -72,7 +73,8 @@ export default function AssetActions({
               query,
               headers,
               abi,
-              chainId
+              chainId,
+              method
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
 

@@ -91,7 +91,7 @@ export function normalizeFile(storageType: string, file: any, chainId: number) {
   let fileObj
   const headersProvider = {}
   const headers = file[0]?.headers || file?.headers
-  if (headers.length > 0) {
+  if (headers && headers.length > 0) {
     headers.map((el) => {
       headersProvider[el.key] = el.value
       return el
@@ -139,7 +139,7 @@ export function normalizeFile(storageType: string, file: any, chainId: number) {
         index: 0,
         url: file ? file[0]?.url || file?.url : null,
         headers: headersProvider,
-        method: 'get'
+        method: file.method
       } as UrlFile
       break
     }

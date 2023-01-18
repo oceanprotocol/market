@@ -14,6 +14,7 @@ import Loader from '@shared/atoms/Loader'
 import { checkJson } from '@utils/codemirror'
 import { isGoogleUrl } from '@utils/url/index'
 import isUrl from 'is-url-superb'
+import MethodInput from '../MethodInput'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -30,6 +31,7 @@ export default function FilesInput(props: InputProps): ReactElement {
   const query = field.value[0].query || undefined
   const abi = field.value[0].abi || undefined
   const headers = field.value[0].headers || undefined
+  const method = field.value[0].method || undefined
 
   async function handleValidation(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
@@ -51,7 +53,8 @@ export default function FilesInput(props: InputProps): ReactElement {
         query,
         headers,
         abi,
-        chainId
+        chainId,
+        method
       )
 
       // error if something's not right from response
@@ -84,6 +87,10 @@ export default function FilesInput(props: InputProps): ReactElement {
     }
   }
 
+  async function handleMethod(method: string) {
+    helpers.setValue([{ ...props.value[0], method }])
+  }
+
   function handleClose() {
     helpers.setTouched(false)
     helpers.setValue([
@@ -112,20 +119,30 @@ export default function FilesInput(props: InputProps): ReactElement {
         <FileInfoDetails file={field.value[0]} handleClose={handleClose} />
       ) : (
         <>
-          <UrlInput
-            submitText="Validate"
-            {...props}
-            name={`${field.name}[0].url`}
-            isLoading={isLoading}
-            hideButton={
-              storageType === 'graphql' ||
-              storageType === 'smartcontract' ||
-              storageType === 'url'
-            }
-            checkUrl={true}
-            handleButtonClick={handleValidation}
-            storageType={storageType}
-          />
+          {props.methods && storageType === 'url' ? (
+            <MethodInput
+              {...props}
+              name={`${field.name}[0].url`}
+              isLoading={isLoading}
+              checkUrl={true}
+              handleButtonClick={handleMethod}
+              storageType={storageType}
+            />
+          ) : (
+            <UrlInput
+              submitText="Validate"
+              {...props}
+              name={`${field.name}[0].url`}
+              isLoading={isLoading}
+              hideButton={
+                storageType === 'graphql' || storageType === 'smartcontract'
+              }
+              checkUrl={true}
+              handleButtonClick={handleValidation}
+              storageType={storageType}
+            />
+          )}
+
           {props.innerFields && (
             <>
               <div className={`${styles.textblock}`}>

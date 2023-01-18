@@ -93,10 +93,6 @@ export async function getFileDidInfo(
   }
 }
 
-interface FileIntoExt extends FileInfo {
-  headers?: []
-}
-
 export async function getFileInfo(
   file: string,
   providerUrl: string,
@@ -104,8 +100,9 @@ export async function getFileInfo(
   query?: string,
   headers?: QueryHeader[],
   abi?: string,
-  chainId?: number
-): Promise<FileIntoExt[]> {
+  chainId?: number,
+  method?: string
+): Promise<FileInfo[]> {
   try {
     let response
     const headersProvider = {}
@@ -115,6 +112,7 @@ export async function getFileInfo(
         return el
       })
     }
+
     switch (storageType) {
       case 'ipfs': {
         const fileIPFS: Ipfs = {
@@ -164,7 +162,7 @@ export async function getFileInfo(
           index: 0,
           url: file,
           headers: headersProvider,
-          method: 'get'
+          method
         }
 
         response = await ProviderInstance.getFileInfo(fileUrl, providerUrl)
