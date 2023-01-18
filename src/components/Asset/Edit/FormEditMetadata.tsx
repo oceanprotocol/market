@@ -6,6 +6,7 @@ import { useAsset } from '@context/Asset'
 import { FormPublishData } from '@components/Publish/_types'
 import { getFileInfo } from '@utils/provider'
 import { getFieldContent } from '@utils/form'
+import { isGoogleUrl } from '@utils/url'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,
@@ -65,7 +66,7 @@ export default function FormEditMetadata({
       getFileInfo(asset.metadata.links[0], providerUrl, 'url').then(
         (checkedFile) => {
           // set valid false if url is using google drive
-          if (asset.metadata.links[0].includes('drive.google')) {
+          if (isGoogleUrl(asset.metadata.links[0])) {
             setFieldValue('links', [
               {
                 url: asset.metadata.links[0],

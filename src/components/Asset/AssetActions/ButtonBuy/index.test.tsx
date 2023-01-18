@@ -23,14 +23,14 @@ const computeProps: ButtonBuyProps = {
   action: 'compute',
   disabled: false,
   hasPreviousOrder: false,
-  hasDatatoken: true,
+  hasDatatoken: false,
   btSymbol: 'btSymbol',
   dtSymbol: 'dtSymbol',
   dtBalance: '100000000000',
   assetTimeout: '1 day',
   assetType: 'algorithm',
   hasPreviousOrderSelectedComputeAsset: false,
-  hasDatatokenSelectedComputeAsset: true,
+  hasDatatokenSelectedComputeAsset: false,
   dtSymbolSelectedComputeAsset: 'dtSymbol',
   dtBalanceSelectedComputeAsset: 'dtBalance',
   selectedComputeAssetType: 'selectedComputeAssetType',
@@ -78,6 +78,11 @@ describe('Asset/AssetActions/ButtonBuy', () => {
     render(<ButtonBuy {...downloadProps} priceType="free" hasPreviousOrder />)
     const button = screen.getByText('Download')
     expect(button).toContainHTML('<button')
+    expect(
+      screen.getByText(
+        'This Dataset is free to use. Please note that network gas fees still apply, even when using free assets.'
+      )
+    ).toBeInTheDocument()
   })
 
   it('Renders "Get" button for free assets without crashing', () => {
@@ -103,6 +108,33 @@ describe('Asset/AssetActions/ButtonBuy', () => {
     render(<ButtonBuy {...computeProps} />)
     const button = screen.getByText('Buy Compute Job')
     expect(button).toContainHTML('<button')
+  })
+
+  it('Renders correct message for fixed-priced compute asset with free algorithm', () => {
+    render(<ButtonBuy {...computeProps} />)
+    expect(
+      screen.getByText(
+        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Connect to the correct network to interact with this asset. The C2D resources required to start the job are available, no payment is required for them. Please note that network gas fees still apply, even when using free assets.'
+      )
+    ).toBeInTheDocument()
+  })
+
+  it('Renders correct message for free compute asset with free algorithm', () => {
+    render(<ButtonBuy {...computeProps} priceType="free" />)
+    expect(
+      screen.getByText(
+        'This algorithm is free to use. Connect to the correct network to interact with this asset. The C2D resources required to start the job are available, no payment is required for them. Please note that network gas fees still apply, even when using free assets.'
+      )
+    ).toBeInTheDocument()
+  })
+
+  it('Renders correct message for free compute asset with free algorithm', () => {
+    render(<ButtonBuy {...computeProps} algorithmPriceType="fixed" />)
+    expect(
+      screen.getByText(
+        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Connect to the correct network to interact with this asset. The C2D resources required to start the job are available, no payment is required for them.'
+      )
+    ).toBeInTheDocument()
   })
 
   it('Renders "Buy Compute Job" button for compute without crashing', () => {

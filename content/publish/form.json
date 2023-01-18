@@ -104,60 +104,64 @@
       {
         "name": "files",
         "label": "File",
-        "prominentHelp": false, 
+        "prominentHelp": false,
         "type": "tabs",
-        "fields": [{
-          "value": "ipfs",
-          "title": "IPFS",
-          "label": "CID",
-          "placeholder": "e.g. bafkreidgvpkjawlxz6sffxzwgooowe5yt7i6wsyg236mfoks77nywkptdq",
-          "help": "This CID will be stored encrypted after publishing.",
-          "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
-          "prominentHelp": true,
-          "type": "files",
-          "required": true
-        },
-        {
-          "value": "arweave",
-          "title": "Arweave",
-          "label": "Transaction ID",
-          "placeholder": "e.g. DBRCL94j3QqdPaUtt4VWRen8rZfJZBb7Ey40iMpXfhtd",
-          "help": "This Transaction ID will be stored encrypted after publishing.",
-          "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
-          "prominentHelp": true,
-          "type": "files",
-          "required": true
-        },
-        {
-          "value": "url",
-          "title": "URL",
-          "label": "File",
-          "placeholder": "e.g. https://file.com/file.json",
-          "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
-          "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
-          "prominentHelp": true,
-          "type": "files",
-          "required": true
-        }],
+        "fields": [
+          {
+            "value": "ipfs",
+            "title": "IPFS",
+            "label": "CID",
+            "placeholder": "e.g. bafkreidgvpkjawlxz6sffxzwgooowe5yt7i6wsyg236mfoks77nywkptdq",
+            "help": "This CID will be stored encrypted after publishing.",
+            "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+            "prominentHelp": true,
+            "type": "files",
+            "required": true
+          },
+          {
+            "value": "arweave",
+            "title": "Arweave",
+            "label": "Transaction ID",
+            "placeholder": "e.g. DBRCL94j3QqdPaUtt4VWRen8rZfJZBb7Ey40iMpXfhtd",
+            "help": "This Transaction ID will be stored encrypted after publishing.",
+            "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+            "prominentHelp": true,
+            "type": "files",
+            "required": true
+          },
+          {
+            "value": "url",
+            "title": "URL",
+            "label": "File",
+            "placeholder": "e.g. https://file.com/file.json",
+            "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+            "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+            "prominentHelp": true,
+            "type": "files",
+            "required": true
+          }
+        ],
         "sortOptions": false,
         "required": true
-      },{
+      },
+      {
         "name": "links",
         "label": "Sample file",
         "prominentHelp": false,
         "type": "tabs",
         "fields": [
           {
-          "value": "url",
-          "title": "URL",
-          "label": "File",
-          "placeholder": "e.g. https://file.com/file.json",
-          "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
-          "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
-          "prominentHelp": true,
-          "type": "files",
-          "required": false
-        }],
+            "value": "url",
+            "title": "URL",
+            "label": "File",
+            "placeholder": "e.g. https://file.com/file.json",
+            "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+            "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+            "prominentHelp": true,
+            "type": "files",
+            "required": false
+          }
+        ],
         "required": false
       },
       {
