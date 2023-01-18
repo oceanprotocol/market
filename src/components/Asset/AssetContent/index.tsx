@@ -15,7 +15,8 @@ import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import Web3 from 'web3'
 import Button from '@shared/atoms/Button'
-import Comment from '../../@shared/Orbis/Comment'
+// Uncomment line below to enable comment
+// import Comment from '../../@shared/Orbis/Comment'
 import RelatedAssets from '../RelatedAssets'
 
 export default function AssetContent({
@@ -70,7 +71,8 @@ export default function AssetContent({
             {debug === true && <DebugOutput title="DDO" output={asset} />}
           </div>
 
-          <Comment context={asset?.id} />
+          {/* Uncomment line below to enable comment */}
+          {/* <Comment context={asset?.id} /> */}
         </div>
 
         <div className={styles.actions}>
