@@ -49,4 +49,5 @@ export interface MarketMetadataProviderValue {
   siteContent: SiteContent
   appConfig: AppConfig
   getOpcFeeForToken: (tokenAddress: string, chainId: number) => string
+  approvedBaseTokens: TokenInfo[]
 }

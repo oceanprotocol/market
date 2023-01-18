@@ -4,20 +4,21 @@ import { useUserPreferences } from '@context/UserPreferences'
 import Button from '@shared/atoms/Button'
 import AddToken from '@shared/AddToken'
 import Conversion from '@shared/Price/Conversion'
-import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
+import { useNetwork, useProvider, useDisconnect, useAccount } from 'wagmi'
 import styles from './Details.module.css'
+import { useWeb3 } from '@context/Web3'
+import { useWeb3Modal } from '@web3modal/react'
+import useNetworkMetadata from '@hooks/useNetworkMetadata'
 
 export default function Details(): ReactElement {
-  const {
-    web3ProviderInfo,
-    web3Modal,
-    connect,
-    logout,
-    networkData,
-    networkId,
-    balance
-  } = useWeb3()
+  const { chain } = useNetwork()
+  const { connector: activeConnector, isConnected } = useAccount()
+  const { open: openWeb3Modal } = useWeb3Modal()
+  const { disconnect } = useDisconnect()
+  const provider = useProvider()
+  const { balance } = useWeb3()
+  const { networkData } = useNetworkMetadata()
   const { locale } = useUserPreferences()
 
   const [mainCurrency, setMainCurrency] = useState<string>()
@@ -27,19 +28,19 @@ export default function Details(): ReactElement {
   }>()
 
   useEffect(() => {
-    if (!networkId) return
+    if (!chain?.id) return
 
     const symbol = networkData?.nativeCurrency.symbol
     setMainCurrency(symbol)
 
-    const oceanConfig = getOceanConfig(networkId)
+    const oceanConfig = getOceanConfig(chain.id)
 
     oceanConfig &&
       setOceanTokenMetadata({
         address: oceanConfig.oceanTokenAddress,
         symbol: oceanConfig.oceanTokenSymbol
       })
-  }, [networkData, networkId])
+  }, [networkData, chain?.id])
 
   return (
     <div className={styles.details}>
@@ -65,10 +66,10 @@ export default function Details(): ReactElement {
         <li className={styles.actions}>
           <div title="Connected provider" className={styles.walletInfo}>
             <span className={styles.walletLogoWrap}>
-              <img className={styles.walletLogo} src={web3ProviderInfo?.logo} />
-              {web3ProviderInfo?.name}
+              {/* <img className={styles.walletLogo} src={activeConnector?.logo} /> */}
+              {activeConnector?.name}
             </span>
-            {web3ProviderInfo?.name === 'MetaMask' && (
+            {activeConnector?.name === 'MetaMask' && (
               <AddToken
                 address={oceanTokenMetadata?.address}
                 symbol={oceanTokenMetadata?.symbol}
@@ -77,21 +78,14 @@ export default function Details(): ReactElement {
             )}
           </div>
           <p>
-            <Button
-              style="text"
-              size="small"
-              onClick={async () => {
-                await web3Modal?.clearCachedProvider()
-                connect()
-              }}
-            >
+            <Button style="text" size="small" onClick={() => openWeb3Modal()}>
               Switch Wallet
             </Button>
             <Button
               style="text"
               size="small"
               onClick={() => {
-                logout()
+                disconnect()
                 location.reload()
               }}
             >

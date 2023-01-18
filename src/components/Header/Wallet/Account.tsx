@@ -1,39 +1,45 @@
 import React, { FormEvent } from 'react'
 import Caret from '@images/caret.svg'
 import { accountTruncate } from '@utils/web3'
-import Loader from '@shared/atoms/Loader'
+// import Loader from '@shared/atoms/Loader'
 import styles from './Account.module.css'
-import { useWeb3 } from '@context/Web3'
 import Avatar from '@shared/atoms/Avatar'
+import { useAccount, useProvider, useEnsName, useEnsAvatar } from 'wagmi'
+import { useWeb3Modal } from '@web3modal/react'
 
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { accountId, accountEns, accountEnsAvatar, web3Modal, connect } =
-    useWeb3()
+  // const provider = useProvider()
+  const { address } = useAccount()
+  const { data: accountEns } = useEnsName({ address, chainId: 1 })
+  const { data: accountEnsAvatar } = useEnsAvatar({ address, chainId: 1 })
+  const { open } = useWeb3Modal()
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in
     e.preventDefault()
 
-    await connect()
+    await open()
   }
 
-  return !accountId && web3Modal?.cachedProvider ? (
-    // Improve user experience for cached provider when connecting takes some time
-    <button className={styles.button} onClick={(e) => e.preventDefault()}>
-      <Loader />
-    </button>
-  ) : accountId ? (
+  // return
+  // !address && provider ? (
+  //   // Improve user experience for cached provider when connecting takes some time
+  //   <button className={styles.button} onClick={(e) => e.preventDefault()}>
+  //     <Loader />
+  //   </button>
+  // ) :
+  return address ? (
     <button
       className={styles.button}
       aria-label="Account"
       ref={ref}
       onClick={(e) => e.preventDefault()}
     >
-      <Avatar accountId={accountId} src={accountEnsAvatar} />
-      <span className={styles.address} title={accountId}>
-        {accountTruncate(accountEns || accountId)}
+      <Avatar accountId={address} src={accountEnsAvatar} />
+      <span className={styles.address} title={address}>
+        {accountTruncate(accountEns || address)}
       </span>
       <Caret aria-hidden="true" className={styles.caret} />
     </button>

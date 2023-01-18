@@ -4,19 +4,15 @@ import Details from './Details'
 import Tooltip from '@shared/atoms/Tooltip'
 import Network from './Network'
 import styles from './index.module.css'
-import { useWeb3 } from '@context/Web3'
+import { useAccount } from 'wagmi'
 
 export default function Wallet(): ReactElement {
-  const { accountId } = useWeb3()
+  const { address } = useAccount()
 
   return (
     <div className={styles.wallet}>
       <Network />
-      <Tooltip
-        content={<Details />}
-        trigger="click focus"
-        disabled={!accountId}
-      >
+      <Tooltip content={<Details />} trigger="click focus" disabled={!address}>
         <Account />
       </Tooltip>
     </div>

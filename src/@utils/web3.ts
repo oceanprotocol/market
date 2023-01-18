@@ -1,17 +1,15 @@
 import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
-import { AbiItem } from 'web3-utils/types'
-
 import {
   EthereumClient,
   modalConnectors,
   walletConnectProvider
 } from '@web3modal/ethereum'
 
-import { configureChains, createClient } from 'wagmi'
+import { configureChains, createClient, erc20ABI } from 'wagmi'
 import { mainnet, polygon, bsc, goerli, polygonMumbai } from 'wagmi/chains'
+import { ethers, utils } from 'ethers'
 
 export const chains = [mainnet, polygon, bsc, goerli, polygonMumbai]
 
@@ -42,10 +40,10 @@ export function accountTruncate(account: string): string {
  * @param chainId
  * @returns Web3 instance
  */
-export async function getDummyWeb3(chainId: number): Promise<Web3> {
-  const config = getOceanConfig(chainId)
-  return new Web3(config.nodeUri)
-}
+// export async function getDummyWeb3(chainId: number): Promise<Web3> {
+//   const config = getOceanConfig(chainId)
+//   return new Web3(config.nodeUri)
+// }
 
 export async function addCustomNetwork(
   web3Provider: any,
@@ -143,37 +141,13 @@ export async function getTokenBalance(
   accountId: string,
   decimals: number,
   tokenAddress: string,
-  web3: Web3
+  provider: any
 ): Promise<string> {
-  const minABI = [
-    {
-      constant: true,
-      inputs: [
-        {
-          name: '_owner',
-          type: 'address'
-        }
-      ],
-      name: 'balanceOf',
-      outputs: [
-        {
-          name: 'balance',
-          type: 'uint256'
-        }
-      ],
-      payable: false,
-      stateMutability: 'view',
-      type: 'function'
-    }
-  ] as AbiItem[]
-
   try {
-    const token = new web3.eth.Contract(minABI, tokenAddress, {
-      from: accountId
-    })
+    const token = new ethers.Contract(tokenAddress, erc20ABI, provider)
     const balance = await token.methods.balanceOf(accountId).call()
     const adjustedDecimalsBalance = `${balance}${'0'.repeat(18 - decimals)}`
-    return web3.utils.fromWei(adjustedDecimalsBalance)
+    return utils.formatEther(adjustedDecimalsBalance)
   } catch (e) {
     LoggerInstance.error(`ERROR: Failed to get the balance: ${e.message}`)
   }

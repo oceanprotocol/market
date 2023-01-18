@@ -19,9 +19,9 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })
   return (
     <>
-      <MarketMetadataProvider>
-        <Web3Provider>
-          <WagmiConfig client={wagmiClient}>
+      <WagmiConfig client={wagmiClient}>
+        <MarketMetadataProvider>
+          <Web3Provider>
             <UrqlProvider>
               <UserPreferencesProvider>
                 <PricesProvider>
@@ -33,9 +33,9 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
                 </PricesProvider>
               </UserPreferencesProvider>
             </UrqlProvider>
-          </WagmiConfig>
-        </Web3Provider>
-      </MarketMetadataProvider>
+          </Web3Provider>
+        </MarketMetadataProvider>
+      </WagmiConfig>
 
       <Web3Modal
         projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID}
