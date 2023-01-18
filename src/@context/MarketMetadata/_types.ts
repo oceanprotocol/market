@@ -7,7 +7,6 @@ export interface OpcFee {
 
 export interface AppConfig {
   metadataCacheUri: string
-  infuraProjectId: string
   chainIds: number[]
   chainIdsSupported: number[]
   defaultDatatokenTemplateIndex: number

@@ -6,19 +6,23 @@ import {
   modalConnectors,
   walletConnectProvider
 } from '@web3modal/ethereum'
-
 import { configureChains, createClient, erc20ABI } from 'wagmi'
 import { mainnet, polygon, bsc, goerli, polygonMumbai } from 'wagmi/chains'
+import { publicProvider } from 'wagmi/providers/public'
+import { infuraProvider } from 'wagmi/providers/infura'
 import { ethers, utils } from 'ethers'
 
-export const chains = [mainnet, polygon, bsc, goerli, polygonMumbai]
-
 // Wagmi client
-export const { provider } = configureChains(chains, [
-  walletConnectProvider({
-    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
-  })
-])
+export const { chains, provider } = configureChains(
+  [mainnet, polygon, bsc, goerli, polygonMumbai],
+  [
+    walletConnectProvider({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+    }),
+    infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID }),
+    publicProvider()
+  ]
+)
 
 export const wagmiClient = createClient({
   autoConnect: true,
@@ -35,15 +39,6 @@ export function accountTruncate(account: string): string {
   const truncated = account.replace(middle, '…')
   return truncated
 }
-/**
- * returns a dummy web3 instance, only usable to get info from the chain
- * @param chainId
- * @returns Web3 instance
- */
-// export async function getDummyWeb3(chainId: number): Promise<Web3> {
-//   const config = getOceanConfig(chainId)
-//   return new Web3(config.nodeUri)
-// }
 
 export async function addCustomNetwork(
   web3Provider: any,
@@ -141,10 +136,10 @@ export async function getTokenBalance(
   accountId: string,
   decimals: number,
   tokenAddress: string,
-  provider: any
+  web3Provider: any
 ): Promise<string> {
   try {
-    const token = new ethers.Contract(tokenAddress, erc20ABI, provider)
+    const token = new ethers.Contract(tokenAddress, erc20ABI, web3Provider)
     const balance = await token.methods.balanceOf(accountId).call()
     const adjustedDecimalsBalance = `${balance}${'0'.repeat(18 - decimals)}`
     return utils.formatEther(adjustedDecimalsBalance)

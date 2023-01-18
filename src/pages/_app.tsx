@@ -40,6 +40,8 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
       <Web3Modal
         projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID}
         ethereumClient={ethereumClient}
+        themeColor="blackWhite"
+        themeBackground="themeColor"
       />
     </>
   )

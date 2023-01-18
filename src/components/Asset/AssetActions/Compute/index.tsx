@@ -43,7 +43,6 @@ import { useAbortController } from '@hooks/useAbortController'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { handleComputeOrder } from '@utils/order'
 import { getComputeFeedback } from '@utils/feedback'
-import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useAsset } from '@context/Asset'
@@ -117,7 +116,6 @@ export default function Compute({
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
-    const web3 = await getDummyWeb3(asset?.chainId)
     const datatokenInstance = new Datatoken(web3)
     const dtBalance = await datatokenInstance.balance(
       asset?.services[0].datatokenAddress,
@@ -153,21 +151,14 @@ export default function Compute({
       setInitializedProviderResponse(initializedProvider)
 
       const feeAmount = await unitsToAmount(
-        !isSupportedOceanNetwork || !isAssetNetwork
-          ? await getDummyWeb3(asset?.chainId)
-          : web3,
+        web3,
         initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
         initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
       )
 
       setProviderFeeAmount(feeAmount)
 
-      const datatoken = new Datatoken(
-        await getDummyWeb3(asset?.chainId),
-        null,
-        null,
-        minAbi
-      )
+      const datatoken = new Datatoken(web3, null, null, minAbi)
       setProviderFeesSymbol(
         await datatoken.getSymbol(
           initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken
