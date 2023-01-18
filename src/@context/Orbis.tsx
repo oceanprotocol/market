@@ -324,7 +324,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     // Also fetch message notifications
     await getConversationNotifications(filteredConversations)
 
-    console.log(filteredConversations)
     setConversations(filteredConversations)
     return filteredConversations
   }
@@ -420,6 +419,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     if (web3Provider && accountId) {
       if (accountId !== prevAccountId) {
         resetStates()
+        removeLitSignature()
       }
       // Check if wallet connected
       checkOrbisConnection({ address: accountId })
