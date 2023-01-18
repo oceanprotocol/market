@@ -8,9 +8,8 @@ import React, {
   useCallback
 } from 'react'
 import Web3 from 'web3'
-import Web3Modal, { getProviderInfo, IProviderInfo } from 'web3modal'
+import { Web3Modal } from '@web3modal/standalone'
 import { infuraProjectId as infuraId } from '../../app.config'
-import WalletConnectProvider from '@walletconnect/web3-provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
 import { getEnsProfile } from '@utils/ens'
@@ -29,7 +28,7 @@ interface Web3ProviderValue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   web3Provider: any
   web3Modal: Web3Modal
-  web3ProviderInfo: IProviderInfo
+  // web3ProviderInfo: IProviderInfo
   accountId: string
   accountEns: string
   accountEnsAvatar: string
@@ -47,34 +46,28 @@ interface Web3ProviderValue {
   logout: () => Promise<void>
 }
 
-const web3ModalTheme = {
-  background: 'var(--background-body)',
-  main: 'var(--font-color-heading)',
-  secondary: 'var(--brand-grey-light)',
-  border: 'var(--border-color)',
-  hover: 'var(--background-highlight)'
-}
+// const web3ModalTheme = {
+//   background: 'var(--background-body)',
+//   main: 'var(--font-color-heading)',
+//   secondary: 'var(--brand-grey-light)',
+//   border: 'var(--border-color)',
+//   hover: 'var(--background-highlight)'
+// }
 
-const providerOptions = isBrowser
-  ? {
-      walletconnect: {
-        package: WalletConnectProvider,
-        options: {
-          infuraId,
-          rpc: {
-            137: 'https://polygon-rpc.com',
-            80001: 'https://rpc-mumbai.matic.today'
-          }
-        }
-      }
-    }
-  : {}
-
-export const web3ModalOpts = {
-  cacheProvider: true,
-  providerOptions,
-  theme: web3ModalTheme
-}
+// const providerOptions = isBrowser
+//   ? {
+//       walletconnect: {
+//         package: WalletConnectProvider,
+//         options: {
+//           infuraId,
+//           rpc: {
+//             137: 'https://polygon-rpc.com',
+//             80001: 'https://rpc-mumbai.matic.today'
+//           }
+//         }
+//       }
+//     }
+//   : {}
 
 const refreshInterval = 20000 // 20 sec.
 
@@ -118,7 +111,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       setWeb3Loading(true)
       LoggerInstance.log('[web3] Connecting Web3...')
 
-      const provider = await web3Modal?.connect()
+      const provider = await web3Modal?.openModal()
       setWeb3Provider(provider)
 
       const web3 = new Web3(provider)
@@ -237,7 +230,14 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
 
     async function init() {
       // note: needs artificial await here so the log message is reached and output
-      const web3ModalInstance = await new Web3Modal(web3ModalOpts)
+      const web3Modal = new Web3Modal({
+        projectId: '<YOUR_PROJECT_ID>',
+        standaloneChains: ['eip155:1'],
+        theme: web3ModalTheme
+      })
+      const signClient = await SignClient.init({
+        projectId: '<YOUR_PROJECT_ID>'
+      })
       setWeb3Modal(web3ModalInstance)
       LoggerInstance.log(
         '[web3] Web3Modal instance created.',
