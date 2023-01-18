@@ -13,8 +13,7 @@ import {
   ComputeOutput,
   ProviderComputeInitializeResults,
   unitsToAmount,
-  minAbi,
-  ProviderFees
+  minAbi
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
