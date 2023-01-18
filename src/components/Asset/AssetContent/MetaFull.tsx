@@ -3,17 +3,20 @@ import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
-import { useWeb3 } from '@context/Web3'
+// import { useWeb3 } from '@context/Web3'
+import { getDummyWeb3 } from '@utils/web3'
 import { Asset, Datatoken, LoggerInstance } from '@oceanprotocol/lib'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
   const [paymentCollector, setPaymentCollector] = useState<string>()
   const { isInPurgatory } = useAsset()
-  const { web3 } = useWeb3()
+  // const { web3 } = useWeb3()
 
   useEffect(() => {
     async function getInitialPaymentCollector() {
       try {
+        if (!ddo) return
+        const web3 = await getDummyWeb3(ddo.chainId)
         const datatoken = new Datatoken(web3)
         setPaymentCollector(
           await datatoken.getPaymentCollector(ddo.datatokens[0].address)
@@ -23,7 +26,7 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
       }
     }
     getInitialPaymentCollector()
-  }, [ddo, web3])
+  }, [ddo])
 
   function DockerImage() {
     const containerInfo = ddo?.metadata?.algorithm?.container
