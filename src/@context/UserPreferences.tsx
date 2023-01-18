@@ -24,8 +24,6 @@ interface UserPreferencesValue {
   removeBookmark: (did: string) => void
   setPrivacyPolicySlug: (slug: string) => void
   setShowPPC: (value: boolean) => void
-  infiniteApproval: boolean
-  setInfiniteApproval: (value: boolean) => void
   locale: string
 }
 
@@ -73,10 +71,6 @@ function UserPreferencesProvider({
     localStorage?.showPPC !== false
   )
 
-  const [infiniteApproval, setInfiniteApproval] = useState(
-    localStorage?.infiniteApproval || false
-  )
-
   // Write values to localStorage on change
   useEffect(() => {
     setLocalStorage({
@@ -85,18 +79,9 @@ function UserPreferencesProvider({
       currency,
       bookmarks,
       privacyPolicySlug,
-      showPPC,
-      infiniteApproval
+      showPPC
     })
-  }, [
-    chainIds,
-    debug,
-    currency,
-    bookmarks,
-    privacyPolicySlug,
-    showPPC,
-    infiniteApproval
-  ])
+  }, [chainIds, debug, currency, bookmarks, privacyPolicySlug, showPPC])
 
   // Set ocean.js log levels, default: Error
   useEffect(() => {
@@ -152,8 +137,6 @@ function UserPreferencesProvider({
           bookmarks,
           privacyPolicySlug,
           showPPC,
-          infiniteApproval,
-          setInfiniteApproval,
           setChainIds,
           setDebug,
           setCurrency,
