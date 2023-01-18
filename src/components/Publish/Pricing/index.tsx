@@ -22,23 +22,6 @@ export default function PricingFields(): ReactElement {
       token.name.toLowerCase().includes('ocean')
     ) || approvedBaseTokens?.[0]
 
-  const isBaseTokenSet = !!approvedBaseTokens?.find(
-    (token) => token?.address === values?.pricing?.baseToken?.address
-  )
-
-  useEffect(() => {
-    if (!approvedBaseTokens?.length) return
-    if (isBaseTokenSet) return
-    setFieldValue('pricing.baseToken', defaultBaseToken)
-  }, [
-    approvedBaseTokens,
-    chainId,
-    defaultBaseToken,
-    isBaseTokenSet,
-    setFieldValue,
-    values.pricing.baseToken
-  ])
-
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()

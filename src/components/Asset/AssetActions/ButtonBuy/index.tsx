@@ -153,7 +153,6 @@ function getComputeAssetHelpText(
   let computeHelpText = `${computeAssetHelpText} ${computeAlgoHelpText} ${providerFeeHelpText}`
 
   computeHelpText = computeHelpText.replace(/^\s+/, '')
-  console.log('computeHelpText', computeHelpText)
   return computeHelpText
 }
 
