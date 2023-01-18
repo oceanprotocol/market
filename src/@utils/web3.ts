@@ -4,6 +4,33 @@ import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 import { AbiItem } from 'web3-utils/types'
 
+import {
+  EthereumClient,
+  modalConnectors,
+  walletConnectProvider
+} from '@web3modal/ethereum'
+
+import { configureChains, createClient } from 'wagmi'
+import { mainnet, polygon, bsc, goerli, polygonMumbai } from 'wagmi/chains'
+
+export const chains = [mainnet, polygon, bsc, goerli, polygonMumbai]
+
+// Wagmi client
+export const { provider } = configureChains(chains, [
+  walletConnectProvider({
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+  })
+])
+
+export const wagmiClient = createClient({
+  autoConnect: true,
+  connectors: modalConnectors({ appName: 'Ocean Market', chains }),
+  provider
+})
+
+// Web3Modal Ethereum Client
+export const ethereumClient = new EthereumClient(wagmiClient, chains)
+
 export function accountTruncate(account: string): string {
   if (!account || account === '') return
   const middle = account.substring(6, 38)
