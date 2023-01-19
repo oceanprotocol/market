@@ -2,6 +2,7 @@ import React, { FormEvent, ReactElement } from 'react'
 import Button from '../../../@shared/atoms/Button'
 import styles from './index.module.css'
 import Loader from '../../../@shared/atoms/Loader'
+import Web3 from 'web3'
 
 export interface ButtonBuyProps {
   action: 'download' | 'compute'

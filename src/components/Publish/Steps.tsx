@@ -10,7 +10,7 @@ export function Steps({
 }: {
   feedback: PublishFeedback
 }): ReactElement {
-  const { address } = useAccount()
+  const { address: accountId } = useAccount()
   const { chain } = useNetwork()
   const { values, setFieldValue, touched, setTouched } =
     useFormikContext<FormPublishData>()
@@ -19,11 +19,11 @@ export function Steps({
 
   // auto-sync user chain?.id & account into form data values
   useEffect(() => {
-    if (!chain?.id || !address) return
+    if (!chain?.id || !accountId) return
 
     setFieldValue('user.chain?.id', chain?.id)
-    setFieldValue('user.address', address)
-  }, [chain?.id, address, setFieldValue])
+    setFieldValue('user.address', accountId)
+  }, [chain?.id, accountId, setFieldValue])
 
   useEffect(() => {
     if (!approvedBaseTokens?.length) return

@@ -11,9 +11,12 @@ import { useWeb3Modal } from '@web3modal/react'
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
   // const provider = useProvider()
-  const { address } = useAccount()
-  const { data: accountEns } = useEnsName({ address, chainId: 1 })
-  const { data: accountEnsAvatar } = useEnsAvatar({ address, chainId: 1 })
+  const { address: accountId } = useAccount()
+  const { data: accountEns } = useEnsName({ address: accountId, chainId: 1 })
+  const { data: accountEnsAvatar } = useEnsAvatar({
+    address: accountId,
+    chainId: 1
+  })
   const { open } = useWeb3Modal()
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
@@ -24,22 +27,22 @@ const Account = React.forwardRef((props, ref: any) => {
   }
 
   // return
-  // !address && provider ? (
+  // !accountId && provider ? (
   //   // Improve user experience for cached provider when connecting takes some time
   //   <button className={styles.button} onClick={(e) => e.preventDefault()}>
   //     <Loader />
   //   </button>
   // ) :
-  return address ? (
+  return accountId ? (
     <button
       className={styles.button}
       aria-label="Account"
       ref={ref}
       onClick={(e) => e.preventDefault()}
     >
-      <Avatar accountId={address} src={accountEnsAvatar} />
-      <span className={styles.address} title={address}>
-        {accountTruncate(accountEns || address)}
+      <Avatar accountId={accountId} src={accountEnsAvatar} />
+      <span className={styles.address} title={accountId}>
+        {accountTruncate(accountEns || accountId)}
       </span>
       <Caret aria-hidden="true" className={styles.caret} />
     </button>

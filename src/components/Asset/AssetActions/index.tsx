@@ -23,7 +23,7 @@ export default function AssetActions({
 }: {
   asset: AssetExtended
 }): ReactElement {
-  const { address } = useAccount()
+  const { address: accountId } = useAccount()
   const { balance } = useBalance()
   const web3Provider = useProvider()
   const { isAssetNetwork } = useAsset()
@@ -92,14 +92,14 @@ export default function AssetActions({
 
   // Get and set user DT balance
   useEffect(() => {
-    if (!web3 || !address || !isAssetNetwork) return
+    if (!web3Provider || !accountId || !isAssetNetwork) return
 
     async function init() {
       try {
         const datatokenInstance = new Datatoken(web3Provider as any)
         const dtBalance = await datatokenInstance.balance(
           asset.services[0].datatokenAddress,
-          address
+          accountId
         )
         setDtBalance(dtBalance)
       } catch (e) {
@@ -107,7 +107,7 @@ export default function AssetActions({
       }
     }
     init()
-  }, [web3Provider, address, asset, isAssetNetwork])
+  }, [web3Provider, accountId, asset, isAssetNetwork])
 
   // Check user balance against price
   useEffect(() => {
@@ -115,7 +115,7 @@ export default function AssetActions({
     if (
       !asset?.accessDetails?.price ||
       !asset?.accessDetails?.baseToken?.symbol ||
-      !address ||
+      !accountId ||
       !balance ||
       !dtBalance
     )
@@ -133,7 +133,7 @@ export default function AssetActions({
     return () => {
       setIsBalanceSufficient(false)
     }
-  }, [balance, address, asset?.accessDetails, dtBalance])
+  }, [balance, accountId, asset?.accessDetails, dtBalance])
 
   const UseContent = (
     <>
@@ -164,7 +164,7 @@ export default function AssetActions({
       <Tabs items={tabs} className={styles.actions} />
       <Web3Feedback
         networkId={asset?.chainId}
-        accountId={address}
+        accountId={accountId}
         isAssetNetwork={isAssetNetwork}
       />
     </>

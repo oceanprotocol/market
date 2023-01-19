@@ -11,7 +11,6 @@ import AvailableNetworks from '@components/Publish/AvailableNetworks'
 import Info from '@images/info.svg'
 import Loader from '@shared/atoms/Loader'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
-import { useAccount } from 'wagmi'
 
 export default function Actions({
   scrollToRef,
@@ -28,8 +27,6 @@ export default function Actions({
     isValid,
     isSubmitting
   }: FormikContextType<FormPublishData> = useFormikContext()
-  const { address } = useAccount()
-
   // async function handleActivation(e: FormEvent<HTMLButtonElement>) {
   //   // prevent accidentially submitting a form the button might be in
   //   e.preventDefault()

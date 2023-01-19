@@ -1,6 +1,7 @@
 import { FixedRateExchange, PriceAndFees } from '@oceanprotocol/lib'
 import { consumeMarketFixedSwapFee } from '../../app.config'
 import { getOceanConfig } from './ocean'
+import Web3 from 'web3'
 
 /**
  * This is used to calculate the price to buy one datatoken from a fixed rate exchange. You need to pass either a web3 object or a chainId. If you pass a chainId a dummy web3 object will be created

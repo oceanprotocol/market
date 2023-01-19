@@ -44,7 +44,7 @@ function AssetProvider({
   children: ReactNode
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { address } = useAccount()
+  const { address: accountId } = useAccount()
   const { chain } = useNetwork()
 
   const [isInPurgatory, setIsInPurgatory] = useState(false)
@@ -128,14 +128,14 @@ function AssetProvider({
       asset.chainId,
       asset.services[0].datatokenAddress,
       asset.services[0].timeout,
-      address
+      accountId
     )
     setAsset((prevState) => ({
       ...prevState,
       accessDetails
     }))
     LoggerInstance.log(`[asset] Got access details for ${did}`, accessDetails)
-  }, [asset?.chainId, asset?.services, address, did])
+  }, [asset?.chainId, asset?.services, accountId, did])
 
   // -----------------------------------
   // 1. Get and set asset based on passed DID
@@ -153,7 +153,7 @@ function AssetProvider({
     if (!isMounted) return
 
     fetchAccessDetails()
-  }, [address, fetchAccessDetails, isMounted])
+  }, [accountId, fetchAccessDetails, isMounted])
 
   // -----------------------------------
   // Check user network against asset network
@@ -169,11 +169,11 @@ function AssetProvider({
   // Asset owner check against wallet user
   // -----------------------------------
   useEffect(() => {
-    if (!address || !owner) return
+    if (!accountId || !owner) return
 
-    const isOwner = address?.toLowerCase() === owner.toLowerCase()
+    const isOwner = accountId?.toLowerCase() === owner.toLowerCase()
     setIsOwner(isOwner)
-  }, [address, owner])
+  }, [accountId, owner])
 
   // -----------------------------------
   // Load ocean config based on asset network

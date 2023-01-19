@@ -56,7 +56,7 @@ export default function HistoryPage({
 }: {
   accountIdentifier: string
 }): ReactElement {
-  const { address } = useAccount()
+  const { address: accountId } = useAccount()
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
 
@@ -69,7 +69,7 @@ export default function HistoryPage({
 
   const fetchJobs = useCallback(
     async (type: string) => {
-      if (!chainIds || chainIds.length === 0 || !address) {
+      if (!chainIds || chainIds.length === 0 || !accountId) {
         return
       }
 
@@ -77,7 +77,7 @@ export default function HistoryPage({
         type === 'init' && setIsLoadingJobs(true)
         const computeJobs = await getComputeJobs(
           chainIds,
-          address,
+          accountId,
           null,
           newCancelToken()
         )
@@ -88,7 +88,7 @@ export default function HistoryPage({
         setIsLoadingJobs(false)
       }
     },
-    [address, chainIds, isLoadingJobs, newCancelToken]
+    [accountId, chainIds, isLoadingJobs, newCancelToken]
   )
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function HistoryPage({
 
   const tabs = getTabs(
     accountIdentifier,
-    address,
+    accountId,
     jobs,
     isLoadingJobs,
     refetchJobs,

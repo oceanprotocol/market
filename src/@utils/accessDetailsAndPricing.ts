@@ -15,6 +15,7 @@ import {
   consumeMarketOrderFee,
   publisherMarketOrderFee
 } from '../../app.config'
+import Web3 from 'web3'
 
 const tokenPriceQuery = gql`
   query TokenPriceQuery($datatokenId: ID!, $account: String) {

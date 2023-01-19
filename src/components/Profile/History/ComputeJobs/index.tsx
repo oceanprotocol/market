@@ -55,11 +55,11 @@ export default function ComputeJobs({
   isLoading?: boolean
   refetchJobs?: any
 }): ReactElement {
-  const { address } = useAccount()
+  const { address: accountId } = useAccount()
   const { chainIds } = useUserPreferences()
   const [columnsMinimal] = useState([columns[4], columns[5], columns[3]])
 
-  return address ? (
+  return accountId ? (
     <>
       {jobs?.length >= 0 && !minimal && (
         <Button

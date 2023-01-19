@@ -38,7 +38,7 @@ const columns: TableOceanColumn<AssetExtended>[] = [
 
 export default function Bookmarks(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { address } = useAccount()
+  const { address: accountId } = useAccount()
   const { bookmarks } = useUserPreferences()
 
   const [pinned, setPinned] = useState<AssetExtended[]>()
@@ -77,7 +77,7 @@ export default function Bookmarks(): ReactElement {
     appConfig?.metadataCacheUri,
     bookmarks,
     chainIds,
-    address,
+    accountId,
     newCancelToken
   ])
 

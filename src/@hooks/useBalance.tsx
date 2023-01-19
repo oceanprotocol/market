@@ -1,12 +1,4 @@
-import React, {
-  useContext,
-  useState,
-  useEffect,
-  createContext,
-  ReactElement,
-  ReactNode,
-  useCallback
-} from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useMarketMetadata } from '../@context/MarketMetadata'
 import {
@@ -15,7 +7,6 @@ import {
   useProvider,
   useBalance as useBalanceWagmi
 } from 'wagmi'
-import { utils } from 'ethers'
 import { getTokenBalance } from '@utils/web3'
 
 interface BalanceProviderValue {

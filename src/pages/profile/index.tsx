@@ -10,8 +10,8 @@ import { isAddress } from 'ethers/lib/utils'
 
 export default function PageProfile(): ReactElement {
   const router = useRouter()
-  const { address } = useAccount()
-  const { data: accountEns } = useEnsName({ address })
+  const { address: accountId } = useAccount()
+  const { data: accountEns } = useEnsName({ address: accountId })
   const [finalAccountId, setFinalAccountId] = useState<string>()
   const [finalAccountEns, setFinalAccountEns] = useState<string>()
   const [ownAccount, setOwnAccount] = useState(false)
@@ -24,7 +24,7 @@ export default function PageProfile(): ReactElement {
       // Path is root /profile, have web3 take over
       if (router.asPath === '/profile') {
         setFinalAccountEns(accountEns)
-        setFinalAccountId(address)
+        setFinalAccountId(accountId)
         setOwnAccount(true)
         return
       }
@@ -33,8 +33,8 @@ export default function PageProfile(): ReactElement {
 
       // Path has ETH address
       if (isAddress(pathAccount)) {
-        setOwnAccount(pathAccount === address)
-        const finalAccountId = pathAccount || address
+        setOwnAccount(pathAccount === accountId)
+        const finalAccountId = pathAccount || accountId
         setFinalAccountId(finalAccountId)
 
         const accountEns = await getEnsName(finalAccountId)
@@ -49,12 +49,12 @@ export default function PageProfile(): ReactElement {
           resolvedAccountId === '0x0000000000000000000000000000000000000000'
         )
           return
-        setOwnAccount(resolvedAccountId === address)
+        setOwnAccount(resolvedAccountId === accountId)
         setFinalAccountId(resolvedAccountId)
       }
     }
     init()
-  }, [router, address, accountEns])
+  }, [router, accountId, accountEns])
 
   // Replace pathname with ENS name if present
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function PageProfile(): ReactElement {
     const newProfilePath = `/profile/${finalAccountEns}`
     // make sure we only replace path once
     if (newProfilePath !== router.asPath) router.replace(newProfilePath)
-  }, [router, finalAccountEns, address])
+  }, [router, finalAccountEns, accountId])
 
   return (
     <Page

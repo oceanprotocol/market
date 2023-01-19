@@ -13,7 +13,7 @@ export default function Title({
 }: {
   networkId: number
 }): ReactElement {
-  const { address } = useAccount()
+  const { address: accountId } = useAccount()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
 
   return (
@@ -25,7 +25,7 @@ export default function Title({
           <NetworkName
             networkId={networkId}
             className={
-              isSupportedOceanNetwork || !address
+              isSupportedOceanNetwork || !accountId
                 ? styles.network
                 : `${styles.network} ${styles.error}`
             }
@@ -33,7 +33,7 @@ export default function Title({
           <Tooltip
             content={<AvailableNetworks />}
             className={
-              isSupportedOceanNetwork || !address
+              isSupportedOceanNetwork || !accountId
                 ? styles.tooltip
                 : `${styles.tooltip} ${styles.error}`
             }

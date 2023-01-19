@@ -10,23 +10,23 @@ import styles from './index.module.css'
 export default function AssetStats() {
   const { locale } = useUserPreferences()
   const { asset } = useAsset()
-  const { address } = useAccount()
+  const { address: accountId } = useAccount()
 
   const [ownAllocation, setOwnAllocation] = useState(0)
 
   useEffect(() => {
-    if (!asset || !address) return
+    if (!asset || !accountId) return
 
     async function init() {
       const allocation = await getNftOwnAllocation(
-        address,
+        accountId,
         asset.nftAddress,
         asset.chainId
       )
       setOwnAllocation(allocation / 100)
     }
     init()
-  }, [address, asset])
+  }, [accountId, asset])
 
   return (
     <footer className={styles.stats}>
