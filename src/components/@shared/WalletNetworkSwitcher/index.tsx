@@ -7,11 +7,10 @@ import useNetworkMetadata, {
   getNetworkDisplayName
 } from '@hooks/useNetworkMetadata'
 import { useAsset } from '@context/Asset'
-import { useNetwork, useProvider } from 'wagmi'
+import { useNetwork } from 'wagmi'
 
 export default function WalletNetworkSwitcher(): ReactElement {
   const { chain } = useNetwork()
-  const web3Provider = useProvider()
   const { asset } = useAsset()
   const { networksList } = useNetworkMetadata()
 
@@ -29,7 +28,7 @@ export default function WalletNetworkSwitcher(): ReactElement {
     const networkNode = await networksList.find(
       (data) => data.chainId === asset.chainId
     )
-    addCustomNetwork(web3Provider, networkNode)
+    addCustomNetwork(networkNode)
   }
 
   return (

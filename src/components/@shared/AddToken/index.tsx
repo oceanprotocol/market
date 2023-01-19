@@ -4,7 +4,6 @@ import { addTokenToWallet } from '@utils/web3'
 import Button from '@shared/atoms/Button'
 import OceanLogo from '@images/logo.svg'
 import styles from './index.module.css'
-import { useProvider } from 'wagmi'
 
 const cx = classNames.bind(styles)
 
@@ -23,8 +22,6 @@ export default function AddToken({
   className,
   minimal
 }: AddTokenProps): ReactElement {
-  const web3Provider = useProvider()
-
   const styleClasses = cx({
     button: true,
     minimal,
@@ -32,9 +29,9 @@ export default function AddToken({
   })
 
   async function handleAddToken() {
-    if (!web3Provider) return
+    if (!window?.ethereum) return
 
-    await addTokenToWallet(web3Provider, address, symbol)
+    await addTokenToWallet(address, symbol)
   }
 
   return (

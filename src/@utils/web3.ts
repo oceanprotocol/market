@@ -41,7 +41,6 @@ export function accountTruncate(account: string): string {
 }
 
 export async function addCustomNetwork(
-  web3Provider: any,
   network: EthereumListsChain
 ): Promise<void> {
   // Always add explorer URL from ocean.js first, as it's null sometimes
@@ -59,13 +58,13 @@ export async function addCustomNetwork(
     blockExplorerUrls
   }
   try {
-    await web3Provider.request({
+    await window?.ethereum.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: newNetworkData.chainId }]
     })
   } catch (switchError) {
     if (switchError.code === 4902) {
-      await web3Provider.request(
+      await (window?.ethereum.request as any)(
         {
           method: 'wallet_addEthereumChain',
           params: [newNetworkData]
@@ -96,7 +95,6 @@ export async function addCustomNetwork(
 }
 
 export async function addTokenToWallet(
-  web3Provider: any,
   address: string,
   symbol: string,
   logo?: string
@@ -110,7 +108,7 @@ export async function addTokenToWallet(
     options: { address, symbol, image, decimals: 18 }
   }
 
-  web3Provider.sendAsync(
+  ;(window?.ethereum.request as any)(
     {
       method: 'wallet_watchAsset',
       params: tokenMetadata,
@@ -136,7 +134,7 @@ export async function getTokenBalance(
   accountId: string,
   decimals: number,
   tokenAddress: string,
-  web3Provider: any
+  web3Provider: ethers.providers.Provider
 ): Promise<string> {
   try {
     const token = new ethers.Contract(tokenAddress, erc20ABI, web3Provider)
