@@ -30,12 +30,13 @@ const BodyContent = () => {
       <div className={styles.walletWrapper}>
         <div>
           <h5>Connect your wallet to start messaging</h5>
-          <p>You will be ask to sign:</p>
           <p>
-            Sign 1: Create your decentralized Identity (DID) to share a message
-            and own it
+            A new decentralised, encrypted private messaging is here! Engage
+            with data publishers, get your algorithms whitelisted and establish
+            trust. You&apos;ll be required to sign 2 transactions, one to
+            connect to your decentralised identity and the other to your
+            encrypted key
           </p>
-          <p>Sign 2: Create your encrypted key to enable private messages</p>
           <button
             className={`${walletStyles.button} ${walletStyles.initial}`}
             onClick={(e) => handleActivation(e)}
@@ -53,10 +54,12 @@ const BodyContent = () => {
         <div>
           <h5>Sign your wallet to start messaging</h5>
           <p>
-            Sign 1: Create your decentralized Identity (DID) to share a message
-            and own it
+            A new decentralised, encrypted private messaging is here! Engage
+            with data publishers, get your algorithms whitelisted and establish
+            trust. You&apos;ll be required to sign 2 transactions, one to
+            connect to your decentralised identity and the other to your
+            encrypted key
           </p>
-          <p>Sign 2: Create your encrypted key to enable private messages</p>
           <button
             className={`${walletStyles.button} ${walletStyles.initial}`}
             onClick={() =>

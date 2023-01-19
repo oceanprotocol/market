@@ -22,7 +22,11 @@ export default function List() {
       ) : (
         <div className={styles.empty}>
           <ChatBubble role="img" aria-label="Chat" className={styles.icon} />
-          <span>No conversation yet...</span>
+          <p>
+            Hello! Any question regarding a specific dataset listed on Ocean
+            Marketplace? Go over the asset detail page or directly to a
+            publisher profile to start a conversation!
+          </p>
         </div>
       )}
     </div>
