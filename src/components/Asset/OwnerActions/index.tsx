@@ -13,6 +13,7 @@ export default function OwnerActions() {
   const [calicaUri, setCalicaUri] = useState()
   const newCancelToken = useCancelToken()
   useEffect(() => {
+    if (!asset.paymentCollector) return
     checkCalicaContractAddress(
       asset.paymentCollector,
       asset.chainId,
@@ -24,7 +25,7 @@ export default function OwnerActions() {
       calicaUri,
       asset?.paymentCollector
     )
-  }, [asset?.paymentCollector, calicaUri])
+  }, [asset.chainId, asset.paymentCollector, calicaUri, newCancelToken])
   // {ddo?.paymentCollector && ddo?.paymentCollector !== ddo?.nft?.owner && (
   return isOwner ? (
     <div className={styles.ownerActions}>
