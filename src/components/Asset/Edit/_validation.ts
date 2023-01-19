@@ -1,6 +1,6 @@
 import { FileInfo } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
-import web3 from 'web3'
+import { isAddress } from 'ethers/lib/utils'
 import { testLinks } from '../../../@utils/yup'
 
 export const validationSchema = Yup.object().shape({
@@ -41,7 +41,7 @@ export const validationSchema = Yup.object().shape({
     'ValidAddress',
     'Must be a valid Ethereum Address.',
     (value) => {
-      return web3.utils.isAddress(value)
+      return isAddress(value)
     }
   ),
   retireAsset: Yup.string()

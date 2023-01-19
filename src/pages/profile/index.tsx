@@ -6,7 +6,7 @@ import ProfileProvider from '@context/Profile'
 import { getEnsAddress, getEnsName } from '@utils/ens'
 import { useRouter } from 'next/router'
 import { useAccount, useEnsName } from 'wagmi'
-import { utils } from 'ethers'
+import { isAddress } from 'ethers/lib/utils'
 
 export default function PageProfile(): ReactElement {
   const router = useRouter()
@@ -32,7 +32,7 @@ export default function PageProfile(): ReactElement {
       const pathAccount = router.query.account as string
 
       // Path has ETH address
-      if (utils.isAddress(pathAccount)) {
+      if (isAddress(pathAccount)) {
         setOwnAccount(pathAccount === address)
         const finalAccountId = pathAccount || address
         setFinalAccountId(finalAccountId)

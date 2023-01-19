@@ -4,7 +4,7 @@ import Page from '@shared/Page'
 import { accountTruncate } from '@utils/web3'
 import { MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS } from '@utils/aquarius'
 import { useRouter } from 'next/router'
-import web3 from 'web3'
+import { isAddress } from 'ethers/lib/utils'
 
 export default function PageSearch(): ReactElement {
   const router = useRouter()
@@ -13,7 +13,7 @@ export default function PageSearch(): ReactElement {
   const [totalResults, setTotalResults] = useState<number>()
   const [totalPagesNumber, setTotalPagesNumber] = useState<number>()
 
-  const isETHAddress = web3.utils.isAddress(text as string)
+  const isETHAddress = isAddress(text as string)
   const searchValue =
     (isETHAddress ? accountTruncate(text as string) : text) ||
     tags ||
