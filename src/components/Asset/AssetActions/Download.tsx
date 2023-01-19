@@ -3,7 +3,7 @@ import FileIcon from '@shared/FileIcon'
 import Price from '@shared/Price'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
-import ButtonBuy from '@shared/ButtonBuy'
+import ButtonBuy from './ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
@@ -33,7 +33,7 @@ export default function Download({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3, isSupportedOceanNetwork } = useWeb3()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const isMounted = useIsMounted()
@@ -45,11 +45,16 @@ export default function Download({
   const [isPriceLoading, setIsPriceLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
+  const [isOrderDisabled, setIsOrderDisabled] = useState(false)
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
+  const [retry, setRetry] = useState<boolean>(false)
 
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
+  useEffect(() => {
+    Number(asset?.nft.state) === 4 && setIsOrderDisabled(true)
+  }, [asset?.nft.state])
   useEffect(() => {
     if (!asset?.accessDetails || isUnsupportedPricing) return
 
@@ -151,9 +156,10 @@ export default function Download({
       }
     } catch (error) {
       LoggerInstance.error(error)
+      setRetry(true)
       const message = isOwned
         ? 'Failed to download file!'
-        : 'An error occurred. Check console for more information.'
+        : 'An error occurred, please retry. Check console for more information.'
       toast.error(message)
     }
     setIsLoading(false)
@@ -169,7 +175,7 @@ export default function Download({
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
       onClick={handleOrderOrDownload}
-      assetTimeout={secondsToString(asset.services[0].timeout)}
+      assetTimeout={secondsToString(asset?.services?.[0]?.timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
       isLoading={isLoading}
@@ -177,32 +183,44 @@ export default function Download({
       isConsumable={asset.accessDetails?.isPurchasable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
+      retry={retry}
+      isSupportedOceanNetwork={isSupportedOceanNetwork}
     />
   )
 
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
     return (
       <div>
-        {isUnsupportedPricing ? (
+        {isOrderDisabled ? (
           <Alert
             className={styles.fieldWarning}
             state="info"
-            text={`No pricing schema available for this asset.`}
+            text={`The publisher temporarily disabled ordering for this asset`}
           />
         ) : (
           <>
-            {isPriceLoading ? (
-              <Loader message="Calculating full price (including fees)" />
-            ) : (
-              <Price
-                accessDetails={asset.accessDetails}
-                orderPriceAndFees={orderPriceAndFees}
-                conversion
-                size="large"
+            {isUnsupportedPricing || !asset.services.length ? (
+              <Alert
+                className={styles.fieldWarning}
+                state="info"
+                text={`No pricing schema available for this asset.`}
               />
-            )}
+            ) : (
+              <>
+                {isPriceLoading ? (
+                  <Loader message="Calculating full price (including fees)" />
+                ) : (
+                  <Price
+                    accessDetails={asset.accessDetails}
+                    orderPriceAndFees={orderPriceAndFees}
+                    conversion
+                    size="large"
+                  />
+                )}
 
-            {!isInPurgatory && <PurchaseButton />}
+                {!isInPurgatory && <PurchaseButton />}
+              </>
+            )}
           </>
         )}
       </div>

@@ -14,10 +14,11 @@ module.exports = {
   chainIds: [1, 137, 56, 246, 1285],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 137, 56, 246, 1285, 5, 80001, 1287],
+  chainIdsSupported: [1, 137, 56, 246, 1285, 5, 80001],
 
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
+  defaultDatatokenTemplateIndex: 2,
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
     process.env.NEXT_PUBLIC_MARKET_FEE_ADDRESS ||

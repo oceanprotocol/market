@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
 import { FormPublishData } from '../_types'
 import { useFormikContext } from 'formik'
-import AssetContent from 'src/components/Asset/AssetContent'
+import AssetContent from '@components/Asset/AssetContent'
 import { transformPublishFormToDdo } from '../_utils'
 import { ZERO_ADDRESS } from '@oceanprotocol/lib'
 
@@ -17,6 +17,7 @@ export default function Preview(): ReactElement {
       asset.accessDetails = {
         type: values.pricing.type,
         addressOrId: ZERO_ADDRESS,
+        templateId: 1,
         price: `${values.pricing.price}`,
         baseToken: {
           address: ZERO_ADDRESS,

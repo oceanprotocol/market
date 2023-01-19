@@ -13,14 +13,15 @@ export default function WalletNetworkSwitcher(): ReactElement {
   const { networkId, web3Provider } = useWeb3()
   const { asset } = useAsset()
   const { networksList } = useNetworkMetadata()
+
   const ddoNetworkData = getNetworkDataById(networksList, asset.chainId)
   const walletNetworkData = getNetworkDataById(networksList, networkId)
 
   const ddoNetworkName = (
-    <strong>{getNetworkDisplayName(ddoNetworkData, asset.chainId)}</strong>
+    <strong>{getNetworkDisplayName(ddoNetworkData)}</strong>
   )
   const walletNetworkName = (
-    <strong>{getNetworkDisplayName(walletNetworkData, networkId)}</strong>
+    <strong>{getNetworkDisplayName(walletNetworkData)}</strong>
   )
 
   async function switchWalletNetwork() {

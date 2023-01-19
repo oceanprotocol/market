@@ -9,13 +9,14 @@ import React, {
 } from 'react'
 import { Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
-import { retrieveAsset } from '@utils/aquarius'
+import { getAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
+import { isValidDid } from '@utils/ddo'
 
 export interface AssetProviderValue {
   isInPurgatory: boolean
@@ -63,10 +64,17 @@ function AssetProvider({
   const fetchAsset = useCallback(
     async (token?: CancelToken) => {
       if (!did) return
+      const isDid = isValidDid(did)
+
+      if (!isDid) {
+        setError(`The url is not for a valid DID`)
+        LoggerInstance.error(`[asset] Not a valid DID`)
+        return
+      }
 
       LoggerInstance.log('[asset] Fetching asset...')
       setLoading(true)
-      const asset = await retrieveAsset(did, token)
+      const asset = await getAsset(did, token)
 
       if (!asset) {
         setError(
@@ -77,8 +85,8 @@ function AssetProvider({
         return
       }
 
-      if (asset.nft.state) {
-        // handle nft states as documented in https://docs.oceanprotocol.com/concepts/did-ddo/#state
+      if ([1, 2, 3].includes(asset.nft.state)) {
+        // handle nft states as documented in https://docs.oceanprotocol.com/core-concepts/did-ddo/#state
         let state
         switch (asset.nft.state) {
           case 1:
@@ -120,7 +128,7 @@ function AssetProvider({
   // Helper: Get and set asset access details
   // -----------------------------------
   const fetchAccessDetails = useCallback(async (): Promise<void> => {
-    if (!asset?.chainId || !asset?.services) return
+    if (!asset?.chainId || !asset?.services?.length) return
 
     const accessDetails = await getAccessDetails(
       asset.chainId,

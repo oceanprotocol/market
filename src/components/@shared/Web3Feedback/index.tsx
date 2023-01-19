@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useWeb3 } from '@context/Web3'
 import Status from '@shared/atoms/Status'
 import styles from './index.module.css'
 import WalletNetworkSwitcher from '../WalletNetworkSwitcher'
@@ -13,12 +12,13 @@ export declare type Web3Error = {
 
 export default function Web3Feedback({
   networkId,
+  accountId,
   isAssetNetwork
 }: {
   networkId: number
+  accountId: string
   isAssetNetwork?: boolean
 }): ReactElement {
-  const { accountId } = useWeb3()
   const { isGraphSynced, blockGraph, blockHead } = useGraphSyncStatus(networkId)
   const [state, setState] = useState<string>()
   const [title, setTitle] = useState<string>()

@@ -17,7 +17,8 @@ const DefaultTrigger = React.forwardRef((props, ref: any) => {
 })
 
 export default function Tooltip(props: TippyProps): ReactElement {
-  const { content, children, trigger, disabled, className, placement } = props
+  const { className, ...restProps } = props
+  const { content, children, trigger, disabled, placement } = props
   const [styles, api] = useSpring(() => animation.from)
 
   function onMount() {
@@ -42,7 +43,7 @@ export default function Tooltip(props: TippyProps): ReactElement {
     <Tippy
       interactive
       interactiveBorder={5}
-      zIndex={1}
+      zIndex={3}
       trigger={trigger || 'mouseenter focus'}
       disabled={disabled || null}
       placement={placement || 'auto'}
@@ -60,7 +61,7 @@ export default function Tooltip(props: TippyProps): ReactElement {
       onMount={onMount}
       onHide={onHide}
       // animation
-      {...props}
+      {...restProps}
     >
       <div className={styleClasses}>{children || <DefaultTrigger />}</div>
     </Tippy>

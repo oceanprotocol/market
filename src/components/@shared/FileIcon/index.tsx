@@ -30,15 +30,18 @@ export default function FileIcon({
 
   return (
     <ul className={styleClasses}>
-      {!isLoading && file ? (
+      {!isLoading ? (
         <>
-          {file.contentType || file.contentLength ? (
+          {file?.contentType || file?.contentLength ? (
             <>
               <li>{cleanupContentType(file.contentType)}</li>
               <li>
                 {file.contentLength && file.contentLength !== '0'
                   ? filesize(Number(file.contentLength)).toString()
                   : ''}
+              </li>
+              <li>
+                {file.type === 'smartcontract' ? 'smart\ncontract' : file.type}
               </li>
             </>
           ) : (

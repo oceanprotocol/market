@@ -39,6 +39,12 @@
 
 The app is a React app built with [Next.js](https://nextjs.org) + TypeScript + CSS modules and will connect to Ocean remote components by default.
 
+Prerequisites:
+
+- [Node.js](https://nodejs.org/en/) (required). Check the [.nvmrc](.nvmrc) file to make sure you are using the correct version of Node.js.
+- [nvm](https://github.com/nvm-sh/nvm) (recommended). This is the recommend way to manage Node.js versions.
+- [Git](https://git-scm.com/) is required to follow the instructions below.
+
 To start local development:
 
 ```bash
@@ -253,7 +259,7 @@ export default function NetworkName(): ReactElement {
   const { networkId, isTestnet } = useWeb3()
   const { networksList } = useNetworkMetadata()
   const networkData = getNetworkDataById(networksList, networkId)
-  const networkName = getNetworkDisplayName(networkData, networkId)
+  const networkName = getNetworkDisplayName(networkData)
 
   return (
     <>

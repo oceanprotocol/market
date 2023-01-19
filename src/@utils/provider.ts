@@ -1,12 +1,15 @@
 import {
+  Arweave,
   ComputeAlgorithm,
   ComputeAsset,
   ComputeEnvironment,
   downloadFileBrowser,
   FileInfo,
+  Ipfs,
   LoggerInstance,
   ProviderComputeInitializeResults,
-  ProviderInstance
+  ProviderInstance,
+  UrlFile
 } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getValidUntilTime } from './compute'
@@ -82,12 +85,45 @@ export async function getFileDidInfo(
   }
 }
 
-export async function getFileUrlInfo(
-  url: string,
-  providerUrl: string
+export async function getFileInfo(
+  file: string,
+  providerUrl: string,
+  storageType: string
 ): Promise<FileInfo[]> {
   try {
-    const response = await ProviderInstance.checkFileUrl(url, providerUrl)
+    let response
+    switch (storageType) {
+      case 'ipfs': {
+        const fileIPFS: Ipfs = {
+          type: 'ipfs',
+          hash: file
+        }
+
+        response = await ProviderInstance.getFileInfo(fileIPFS, providerUrl)
+
+        break
+      }
+      case 'arweave': {
+        const fileArweave: Arweave = {
+          type: 'arweave',
+          transactionId: file
+        }
+
+        response = await ProviderInstance.getFileInfo(fileArweave, providerUrl)
+        break
+      }
+      default: {
+        const fileUrl: UrlFile = {
+          type: 'url',
+          index: 0,
+          url: file,
+          method: 'get'
+        }
+
+        response = await ProviderInstance.getFileInfo(fileUrl, providerUrl)
+        break
+      }
+    }
     return response
   } catch (error) {
     LoggerInstance.error(error.message)
