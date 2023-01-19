@@ -11,7 +11,6 @@
   align-items: flex-end;
   border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
-  padding: calc(var(--spacer) / 4);
 }
 
 .postbox .editable {
@@ -23,6 +22,7 @@
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  padding: calc(var(--spacer) / 4);
 }
 
 .postbox .editable:empty:before {
@@ -63,4 +63,27 @@
   border: none;
   color: currentColor;
   outline: none;
+}
+
+.sendButton {
+  background-color: transparent;
+  border: 0;
+  color: var(--color-primary);
+  width: 41px;
+  height: 41px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--border-color);
+  cursor: pointer;
+}
+
+.sendButton:disabled {
+  color: var(--color-secondary);
+  cursor: default;
+}
+
+.sendButton .icon {
+  width: 24px;
+  fill: currentColor;
 }

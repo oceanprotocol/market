@@ -1,8 +1,7 @@
-import React, { useRef, useState, KeyboardEvent } from 'react'
+import React, { useRef, useState, useMemo, KeyboardEvent } from 'react'
 import styles from './Postbox.module.css'
-import { EmojiClickData } from 'emoji-picker-react'
 import { useOrbis } from '@context/Orbis'
-import EmojiPicker from '../EmojiPicker'
+import SendIcon from '@images/send.svg'
 import { accountTruncate } from '@utils/web3'
 import { didToAddress, sleep } from '@utils/orbis'
 
@@ -19,8 +18,6 @@ export default function Postbox({
   cancelReplyTo?: () => void
   callback: (value: IOrbisMessage) => void
 }) {
-  const [focusOffset, setFocusOffset] = useState<number | undefined>()
-  const [focusNode, setFocusNode] = useState<Node | undefined>()
   const [isSending, setIsSending] = useState<boolean>(false)
 
   const postBoxArea = useRef(null)
@@ -34,26 +31,21 @@ export default function Postbox({
     setNewConversation
   } = useOrbis()
 
-  const saveCaretPos = () => {
-    const sel = document.getSelection()
-    if (sel) {
-      setFocusOffset(sel.focusOffset)
-      setFocusNode(sel.focusNode)
+  const isDisabled = useMemo(() => {
+    if (!conversationId || isSending || isCreatingConvo) {
+      return true
     }
-  }
 
-  const restoreCaretPos = () => {
-    postBoxArea.current.focus()
-    const sel = document.getSelection()
-    sel.collapse(focusNode, focusOffset)
-  }
+    return false
+  }, [conversationId, isSending, isCreatingConvo])
 
   const share = async () => {
-    if (!account || isSending) return false
+    if (!account || isSending || postBoxArea.current.innerText.trim() === '')
+      return false
 
     setIsSending(true)
 
-    const body = postBoxArea.current.innerText
+    const body = postBoxArea.current.innerText.trim()
     postBoxArea.current.innerText = ''
 
     let _conversationId = conversationId
@@ -117,22 +109,6 @@ export default function Postbox({
 
     if (isSending && isCreatingConvo) {
       e.preventDefault()
-      return
-    }
-
-    if (e.key === 'Enter' && !e.shiftKey) {
-      // Don't generate a new line
-      e.preventDefault()
-      share()
-    }
-  }
-
-  const onEmojiClick = (emojiData: EmojiClickData) => {
-    if (focusOffset === undefined || focusNode === undefined) {
-      postBoxArea.current.innerText += emojiData.emoji
-    } else {
-      restoreCaretPos()
-      document.execCommand('insertHTML', false, emojiData.emoji)
     }
   }
 
@@ -160,13 +136,18 @@ export default function Postbox({
           contentEditable={true}
           data-placeholder="Type your message here..."
           onKeyDown={handleKeyDown}
-          onKeyUp={saveCaretPos}
-          onMouseUp={saveCaretPos}
           style={{
             pointerEvents: isSending || isCreatingConvo ? 'none' : 'auto'
           }}
         />
-        <EmojiPicker onEmojiClick={onEmojiClick} />
+        <button
+          type="button"
+          className={styles.sendButton}
+          onClick={share}
+          disabled={isDisabled}
+        >
+          <SendIcon className={styles.icon} />
+        </button>
       </div>
     </div>
   )
