@@ -7,7 +7,6 @@ import Debug from './Debug'
 import Caret from '@images/caret.svg'
 import useDarkMode from '@oceanprotocol/use-dark-mode'
 import Appearance from './Appearance'
-import TokenApproval from './TokenApproval'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function UserPreferences(): ReactElement {
@@ -20,7 +19,6 @@ export default function UserPreferences(): ReactElement {
       content={
         <ul className={styles.preferencesDetails}>
           <Currency />
-          <TokenApproval />
           <Appearance darkMode={darkMode} />
           <Debug />
         </ul>
