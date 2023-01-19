@@ -35,7 +35,7 @@ describe('@shared/FormInput/InputElement/URLInput', () => {
     render(<URLInput {...props} />)
     expect(screen.getByRole('button')).toBeDisabled()
 
-    fireEvent.change(screen.getByRole('textbox'), {
+    fireEvent.change(screen.getByRole('button'), {
       target: { value: 'https://google.com' }
     })
   })
