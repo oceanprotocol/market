@@ -10,9 +10,9 @@ import Button from '@shared/atoms/Button'
 import styles from './Results.module.css'
 import FormHelp from '@shared/FormInput/Help'
 import content from '../../../../../content/pages/history.json'
-import { useWeb3 } from '@hooks/useBalance'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getAsset } from '@utils/aquarius'
+import { useAccount } from 'wagmi'
 
 export default function Results({
   job
@@ -20,7 +20,7 @@ export default function Results({
   job: ComputeJobMetaData
 }): ReactElement {
   const providerInstance = new Provider()
-  const { accountId, web3 } = useWeb3()
+  const { address: accountId } = useAccount()
   const isFinished = job.dateFinished !== null
 
   const [datasetProvider, setDatasetProvider] = useState<string>()

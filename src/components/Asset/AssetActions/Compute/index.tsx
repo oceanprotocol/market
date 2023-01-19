@@ -19,7 +19,6 @@ import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
-import { useWeb3 } from '@hooks/useBalance'
 import { Formik } from 'formik'
 import { getInitialValues, validationSchema } from './_constants'
 import FormStartComputeDataset from './FormComputeDataset'
@@ -46,8 +45,10 @@ import { getComputeFeedback } from '@utils/feedback'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useAsset } from '@context/Asset'
+import { useAccount } from 'wagmi'
 
 const refreshInterval = 10000 // 10 sec.
+
 export default function Compute({
   asset,
   dtBalance,
@@ -61,7 +62,7 @@ export default function Compute({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3, isSupportedOceanNetwork, networkId } = useWeb3()
+  const { address: accountId } = useAccount()
   const { chainIds } = useUserPreferences()
   const { isAssetNetwork } = useAsset()
 

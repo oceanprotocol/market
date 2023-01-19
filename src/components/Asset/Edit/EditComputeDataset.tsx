@@ -1,4 +1,3 @@
-import { useWeb3 } from '@hooks/useBalance'
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
 import FormEditComputeDataset from './FormEditComputeDataset'
@@ -24,6 +23,7 @@ import { useAsset } from '@context/Asset'
 import EditFeedback from './EditFeedback'
 import { setNftMetadata } from '@utils/nft'
 import { ComputeEditForm } from './_types'
+import { useAccount } from 'wagmi'
 
 export default function EditComputeDataset({
   asset
@@ -31,7 +31,7 @@ export default function EditComputeDataset({
   asset: AssetExtended
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { accountId, web3 } = useWeb3()
+  const { address: accountId } = useAccount()
   const { fetchAsset, isAssetNetwork } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()

@@ -2,7 +2,6 @@ import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik } from 'formik'
 import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
-import { useWeb3 } from '@hooks/useBalance'
 import { createTokensAndPricing, transformPublishFormToDdo } from './_utils'
 import PageHeader from '@shared/Page/PageHeader'
 import Title from './Title'
@@ -19,6 +18,7 @@ import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
+import { useAccount, useNetwork } from 'wagmi'
 
 export default function PublishPage({
   content
@@ -26,7 +26,8 @@ export default function PublishPage({
   content: { title: string; description: string; warning: string }
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { accountId, web3, chainId } = useWeb3()
+  const { address: accountId } = useAccount()
+  const { chain } = useNetwork()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const scrollToRef = useRef()
   const nftFactory = useNftFactory()
@@ -60,17 +61,11 @@ export default function PublishPage({
     }))
 
     try {
-      const config = getOceanConfig(chainId)
+      const config = getOceanConfig(chain?.id)
       LoggerInstance.log('[publish] using config: ', config)
 
       const { erc721Address, datatokenAddress, txHash } =
-        await createTokensAndPricing(
-          values,
-          accountId,
-          config,
-          nftFactory,
-          web3
-        )
+        await createTokensAndPricing(values, accountId, config, nftFactory)
 
       const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
       if (!isSuccess) throw new Error('No Token created. Please try again.')

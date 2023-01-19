@@ -2,7 +2,6 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import FileIcon from '@shared/FileIcon'
 import Price from '@shared/Price'
 import { useAsset } from '@context/Asset'
-import { useWeb3 } from '@hooks/useBalance'
 import ButtonBuy from './ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
@@ -17,6 +16,8 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
+import { useAccount } from 'wagmi'
+import useNetworkMetadata from '@hooks/useNetworkMetadata'
 
 export default function Download({
   asset,
@@ -33,7 +34,8 @@ export default function Download({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3, isSupportedOceanNetwork } = useWeb3()
+  const { address: accountId } = useAccount()
+  const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const isMounted = useIsMounted()

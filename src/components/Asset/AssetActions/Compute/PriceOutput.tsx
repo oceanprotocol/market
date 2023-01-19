@@ -5,7 +5,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
-import { useWeb3 } from '@hooks/useBalance'
+import useNetworkMetadata from '@hooks/useNetworkMetadata'
 
 interface PriceOutputProps {
   hasPreviousOrder: boolean
@@ -42,7 +42,7 @@ function Row({
   sign?: string
   type?: string
 }) {
-  const { isSupportedOceanNetwork } = useWeb3()
+  const { isSupportedOceanNetwork } = useNetworkMetadata()
 
   return (
     <div className={styles.priceRow}>

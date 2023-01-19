@@ -15,6 +15,7 @@ export default function PageProfile(): ReactElement {
   const [finalAccountId, setFinalAccountId] = useState<string>()
   const [finalAccountEns, setFinalAccountEns] = useState<string>()
   const [ownAccount, setOwnAccount] = useState(false)
+
   // Have accountId in path take over, if not present fall back to web3
   useEffect(() => {
     async function init() {

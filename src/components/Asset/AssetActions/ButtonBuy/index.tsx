@@ -2,8 +2,6 @@ import React, { FormEvent, ReactElement } from 'react'
 import Button from '../../../@shared/atoms/Button'
 import styles from './index.module.css'
 import Loader from '../../../@shared/atoms/Loader'
-import { useWeb3 } from '@hooks/useBalance'
-import Web3 from 'web3'
 
 export interface ButtonBuyProps {
   action: 'download' | 'compute'
@@ -185,7 +183,6 @@ export default function ButtonBuy({
   retry,
   isSupportedOceanNetwork
 }: ButtonBuyProps): ReactElement {
-  const { web3 } = useWeb3()
   const buttonText = retry
     ? 'Retry'
     : action === 'download'

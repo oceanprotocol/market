@@ -12,7 +12,6 @@ import {
 import { validationSchema } from './_validation'
 import { getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
-import { useWeb3 } from '@hooks/useBalance'
 import { useUserPreferences } from '@context/UserPreferences'
 import Web3Feedback from '@shared/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
@@ -28,6 +27,7 @@ import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
+import { useAccount } from 'wagmi'
 
 export default function Edit({
   asset
@@ -36,7 +36,7 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { fetchAsset, isAssetNetwork, assetState } = useAsset()
-  const { accountId, web3 } = useWeb3()
+  const { address: accountId } = useAccount()
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
   const [paymentCollector, setPaymentCollector] = useState<string>()

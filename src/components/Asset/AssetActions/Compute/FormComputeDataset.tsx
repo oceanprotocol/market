@@ -7,7 +7,6 @@ import { compareAsBN } from '@utils/numbers'
 import ButtonBuy from '../ButtonBuy'
 import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
-import { useWeb3 } from '@hooks/useBalance'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
@@ -16,6 +15,9 @@ import Alert from '@shared/atoms/Alert'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
+import { useAccount } from 'wagmi'
+import useBalance from '@hooks/useBalance'
+import useNetworkMetadata from '@hooks/useNetworkMetadata'
 
 export default function FormStartCompute({
   algorithms,
@@ -77,7 +79,9 @@ export default function FormStartCompute({
   retry: boolean
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
-  const { accountId, balance, isSupportedOceanNetwork } = useWeb3()
+  const { address: accountId } = useAccount()
+  const { balance } = useBalance()
+  const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
