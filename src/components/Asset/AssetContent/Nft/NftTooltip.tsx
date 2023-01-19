@@ -5,7 +5,7 @@ import { NftMetadata } from '@utils/nft'
 import React, { ReactElement } from 'react'
 import styles from './NftTooltip.module.css'
 import explorerLinkStyles from '@shared/ExplorerLink/index.module.css'
-import { accountTruncate } from '@utils/web3'
+import { accountTruncate } from '@utils/wallet'
 
 // Supported OpenSea networks:
 // https://support.opensea.io/hc/en-us/articles/4404027708051-Which-blockchains-does-OpenSea-support-

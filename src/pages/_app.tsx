@@ -12,7 +12,7 @@ import Decimal from 'decimal.js'
 import MarketMetadataProvider from '@context/MarketMetadata'
 import { WagmiConfig } from 'wagmi'
 import { Web3Modal } from '@web3modal/react'
-import { wagmiClient, ethereumClient } from '@utils/web3'
+import { wagmiClient, ethereumClient } from '@utils/wallet'
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })

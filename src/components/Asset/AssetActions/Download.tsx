@@ -18,6 +18,7 @@ import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
 import { useAccount } from 'wagmi'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
+import Web3 from 'web3'
 
 export default function Download({
   asset,
@@ -34,7 +35,7 @@ export default function Download({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { address: accountId } = useAccount()
+  const { address: accountId, connector, isConnected } = useAccount()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
@@ -51,6 +52,7 @@ export default function Download({
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
+  const [web3, setWeb3] = useState<Web3>()
 
   const isUnsupportedPricing =
     !asset?.accessDetails ||
@@ -59,6 +61,21 @@ export default function Download({
     asset?.accessDetails?.type === 'NOT_SUPPORTED' ||
     (asset?.accessDetails?.type === 'fixed' &&
       !asset?.accessDetails?.baseToken?.symbol)
+
+  // init web3.js object for compatibility with ocean.js
+  useEffect(() => {
+    const init = async () => {
+      if (!connector || !isConnected) return
+
+      try {
+        const web3 = new Web3(await connector.getProvider())
+        setWeb3(web3)
+      } catch (error) {
+        LoggerInstance.error(error.message)
+      }
+    }
+    init()
+  }, [connector, isConnected])
 
   useEffect(() => {
     Number(asset?.nft.state) === 4 && setIsOrderDisabled(true)
@@ -75,15 +92,18 @@ export default function Download({
       if (
         asset.accessDetails.addressOrId === ZERO_ADDRESS ||
         asset.accessDetails.type === 'free' ||
-        isLoading
+        isLoading ||
+        !web3
       )
         return
 
       try {
         !orderPriceAndFees && setIsPriceLoading(true)
+
         const _orderPriceAndFees = await getOrderPriceAndFees(
           asset,
-          ZERO_ADDRESS
+          ZERO_ADDRESS,
+          web3
         )
         setOrderPriceAndFees(_orderPriceAndFees)
         !orderPriceAndFees && setIsPriceLoading(false)
@@ -101,7 +121,7 @@ export default function Download({
      * Not adding isLoading and getOpcFeeForToken because we set these here. It is a compromise
      */
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asset, accountId, getOpcFeeForToken, isUnsupportedPricing])
+  }, [asset, accountId, getOpcFeeForToken, isUnsupportedPricing, web3])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)

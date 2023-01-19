@@ -150,9 +150,9 @@ function getAccessDetailsFromTokenPrice(
  */
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
-  accountId: string | undefined,
-  providerFees: ProviderFees | undefined,
-  web3: Web3
+  accountId: string,
+  web3: Web3,
+  providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
     price: String(asset?.stats?.price?.value || '0'),

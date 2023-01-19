@@ -7,7 +7,7 @@ import {
   useProvider,
   useBalance as useBalanceWagmi
 } from 'wagmi'
-import { getTokenBalance } from '@utils/web3'
+import { getTokenBalance } from '@utils/wallet'
 
 interface BalanceProviderValue {
   balance: UserBalance

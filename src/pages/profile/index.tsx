@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Page from '@shared/Page'
 import ProfilePage from '../../components/Profile'
-import { accountTruncate } from '@utils/web3'
+import { accountTruncate } from '@utils/wallet'
 import ProfileProvider from '@context/Profile'
 import { getEnsAddress, getEnsName } from '@utils/ens'
 import { useRouter } from 'next/router'

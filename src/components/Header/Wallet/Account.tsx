@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react'
 import Caret from '@images/caret.svg'
-import { accountTruncate } from '@utils/web3'
+import { accountTruncate } from '@utils/wallet'
 // import Loader from '@shared/atoms/Loader'
 import styles from './Account.module.css'
 import Avatar from '@shared/atoms/Avatar'

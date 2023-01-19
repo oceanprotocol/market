@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
-import { addCustomNetwork } from '@utils/web3'
+import { addCustomNetwork } from '@utils/wallet'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName

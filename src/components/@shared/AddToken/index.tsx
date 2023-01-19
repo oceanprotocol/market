@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
-import { addTokenToWallet } from '@utils/web3'
+import { addTokenToWallet } from '@utils/wallet'
 import Button from '@shared/atoms/Button'
 import OceanLogo from '@images/logo.svg'
 import styles from './index.module.css'
