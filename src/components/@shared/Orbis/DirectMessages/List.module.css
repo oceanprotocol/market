@@ -6,6 +6,10 @@
 
 .conversations .empty {
   height: 100%;
+  max-width: 80%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -16,5 +20,5 @@
 .conversations .empty .icon {
   width: var(--font-size-h1);
   fill: currentColor;
-  margin-bottom: calc(var(--spacer) / 4);
+  margin-bottom: calc(var(--spacer) / 2);
 }

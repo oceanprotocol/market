@@ -24,8 +24,11 @@ export default function List() {
           <ChatBubble role="img" aria-label="Chat" className={styles.icon} />
           <p>
             Hello! Any question regarding a specific dataset listed on Ocean
-            Marketplace? Go over the asset detail page or directly to a
-            publisher profile to start a conversation!
+            Marketplace?
+          </p>
+          <p>
+            Go over the asset detail page or directly to a publisher profile to
+            start a conversation!
           </p>
         </div>
       )}
