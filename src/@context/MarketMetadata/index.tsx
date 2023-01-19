@@ -81,9 +81,12 @@ function MarketMetadataProvider({
     try {
       const approvedTokensList = await getOpcsApprovedTokens(chainId)
       setApprovedBaseTokens(approvedTokensList)
-      LoggerInstance.log('[web3] Approved baseTokens', approvedTokensList)
+      LoggerInstance.log(
+        '[MarketMetadata] Approved baseTokens',
+        approvedTokensList
+      )
     } catch (error) {
-      LoggerInstance.error('[web3] Error: ', error.message)
+      LoggerInstance.error('[MarketMetadata] Error: ', error.message)
     }
   }, [])
 

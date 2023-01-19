@@ -149,8 +149,9 @@ function getAccessDetailsFromTokenPrice(
  */
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
-  accountId?: string,
-  providerFees?: ProviderFees
+  accountId: string | undefined,
+  providerFees: ProviderFees | undefined,
+  web3: Web3
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
     price: String(asset?.stats?.price?.value || '0'),
@@ -178,7 +179,11 @@ export async function getOrderPriceAndFees(
 
   // fetch price and swap fees
   if (asset?.accessDetails?.type === 'fixed') {
-    const fixed = await getFixedBuyPrice(asset?.accessDetails, asset?.chainId)
+    const fixed = await getFixedBuyPrice(
+      asset?.accessDetails,
+      asset?.chainId,
+      web3
+    )
     orderPriceAndFee.price = fixed.baseTokenAmount
     orderPriceAndFee.opcFee = fixed.oceanFeeAmount
     orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount

@@ -79,11 +79,18 @@ export default function Download({
       )
         return
 
-      !orderPriceAndFees && setIsPriceLoading(true)
-
-      const _orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
-      setOrderPriceAndFees(_orderPriceAndFees)
-      !orderPriceAndFees && setIsPriceLoading(false)
+      try {
+        !orderPriceAndFees && setIsPriceLoading(true)
+        const _orderPriceAndFees = await getOrderPriceAndFees(
+          asset,
+          ZERO_ADDRESS
+        )
+        setOrderPriceAndFees(_orderPriceAndFees)
+        !orderPriceAndFees && setIsPriceLoading(false)
+      } catch (error) {
+        LoggerInstance.error(error.message)
+        setIsPriceLoading(false)
+      }
     }
 
     init()

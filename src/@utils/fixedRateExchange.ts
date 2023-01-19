@@ -11,18 +11,15 @@ import { getOceanConfig } from './ocean'
  */
 export async function getFixedBuyPrice(
   accessDetails: AccessDetails,
-  chainId?: number,
-  web3Provider?: any
+  chainId: number,
+  web3: Web3
 ): Promise<PriceAndFees> {
-  if (!web3Provider && !chainId)
+  if (!web3 && !chainId)
     throw new Error("web3 and chainId can't be undefined at the same time!")
 
   const config = getOceanConfig(chainId)
 
-  const fixed = new FixedRateExchange(
-    config.fixedRateExchangeAddress,
-    web3Provider
-  )
+  const fixed = new FixedRateExchange(config.fixedRateExchangeAddress, web3)
   const estimatedPrice = await fixed.calcBaseInGivenDatatokensOut(
     accessDetails.addressOrId,
     '1',

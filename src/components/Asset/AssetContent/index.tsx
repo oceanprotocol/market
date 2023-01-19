@@ -13,7 +13,6 @@ import EditHistory from './EditHistory'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
-import Web3 from 'web3'
 import Button from '@shared/atoms/Button'
 import RelatedAssets from '../RelatedAssets'
 
@@ -28,11 +27,11 @@ export default function AssetContent({
   const [nftPublisher, setNftPublisher] = useState<string>()
 
   useEffect(() => {
-    setNftPublisher(
-      Web3.utils.toChecksumAddress(
-        receipts?.find((e) => e.type === 'METADATA_CREATED')?.nft?.owner
-      )
-    )
+    if (!receipts.length) return
+
+    const publisher = receipts?.find((e) => e.type === 'METADATA_CREATED')?.nft
+      ?.owner
+    setNftPublisher(publisher)
   }, [receipts])
 
   return (
