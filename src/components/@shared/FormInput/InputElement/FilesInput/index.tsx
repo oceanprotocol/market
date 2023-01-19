@@ -3,7 +3,7 @@ import { useField } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
-import { getFileInfo } from '@utils/provider'
+import { getFileInfo, checkValidProvider } from '@utils/provider'
 import { LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import { isGoogleUrl } from '@utils/url/index'
@@ -34,8 +34,8 @@ export default function FilesInput(props: InputProps): ReactElement {
       }
 
       // Check if provider is a valid provider
-      const isValid = await ProviderInstance.isValidProvider(providerUrl)
-
+      const isValid = await checkValidProvider(providerUrl)
+      console.log('\n\n\nisValid', isValid)
       if (!isValid)
         throw Error(
           '✗ Provider cannot be reached, please check status.oceanprotocol.com and try again later.'
