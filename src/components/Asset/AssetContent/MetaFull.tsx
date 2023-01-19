@@ -6,6 +6,7 @@ import { useAsset } from '@context/Asset'
 // import { useWeb3 } from '@context/Web3'
 import { getDummyWeb3 } from '@utils/web3'
 import { Asset, Datatoken, LoggerInstance } from '@oceanprotocol/lib'
+import DmButton from '@shared/Orbis/DirectMessages/DmButton'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
   const [paymentCollector, setPaymentCollector] = useState<string>()
@@ -54,6 +55,7 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
         <MetaItem title="Docker Image" content={<DockerImage />} />
       )}
       <MetaItem title="DID" content={<code>{ddo?.id}</code>} />
+      <DmButton accountId={ddo?.nft?.owner} text="Contact Publisher" />
     </div>
   ) : null
 }
