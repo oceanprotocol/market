@@ -79,7 +79,7 @@ export default function FormStartCompute({
   retry: boolean
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
-  const { address: accountId } = useAccount()
+  const { address: accountId, isConnected } = useAccount()
   const { balance } = useBalance()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
@@ -312,6 +312,7 @@ export default function FormStartCompute({
         isSupportedOceanNetwork={isSupportedOceanNetwork}
         hasProviderFee={providerFeeAmount && providerFeeAmount !== '0'}
         retry={retry}
+        isAccountConnected={isConnected}
       />
     </Form>
   )

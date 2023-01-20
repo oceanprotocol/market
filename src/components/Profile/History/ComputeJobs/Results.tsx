@@ -13,6 +13,7 @@ import content from '../../../../../content/pages/history.json'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getAsset } from '@utils/aquarius'
 import { useAccount } from 'wagmi'
+import { useWeb3Legacy } from '@context/Web3Legacy'
 
 export default function Results({
   job
@@ -21,10 +22,12 @@ export default function Results({
 }): ReactElement {
   const providerInstance = new Provider()
   const { address: accountId } = useAccount()
-  const isFinished = job.dateFinished !== null
+  const { web3 } = useWeb3Legacy()
 
   const [datasetProvider, setDatasetProvider] = useState<string>()
   const newCancelToken = useCancelToken()
+
+  const isFinished = job.dateFinished !== null
 
   useEffect(() => {
     async function getAssetMetadata() {

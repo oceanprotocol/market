@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import { NftFactory } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 import { useNetwork } from 'wagmi'
+import { useWeb3Legacy } from '@context/Web3Legacy'
 
 function useNftFactory(): NftFactory {
   const { chain } = useNetwork()
+  const { web3 } = useWeb3Legacy()
   const [nftFactory, setNftFactory] = useState<NftFactory>()
 
   useEffect(() => {

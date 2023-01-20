@@ -24,6 +24,7 @@ import EditFeedback from './EditFeedback'
 import { setNftMetadata } from '@utils/nft'
 import { ComputeEditForm } from './_types'
 import { useAccount } from 'wagmi'
+import { useWeb3Legacy } from '@context/Web3Legacy'
 
 export default function EditComputeDataset({
   asset
@@ -33,6 +34,8 @@ export default function EditComputeDataset({
   const { debug } = useUserPreferences()
   const { address: accountId } = useAccount()
   const { fetchAsset, isAssetNetwork } = useAsset()
+  const { web3 } = useWeb3Legacy()
+
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const newAbortController = useAbortController()

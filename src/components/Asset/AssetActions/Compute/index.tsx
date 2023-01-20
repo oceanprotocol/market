@@ -44,8 +44,8 @@ import { handleComputeOrder } from '@utils/order'
 import { getComputeFeedback } from '@utils/feedback'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
-import { useAsset } from '@context/Asset'
 import { useAccount } from 'wagmi'
+import { useWeb3Legacy } from '@context/Web3Legacy'
 
 const refreshInterval = 10000 // 10 sec.
 
@@ -64,7 +64,7 @@ export default function Compute({
 }): ReactElement {
   const { address: accountId } = useAccount()
   const { chainIds } = useUserPreferences()
-  const { isAssetNetwork } = useAsset()
+  const { web3 } = useWeb3Legacy()
 
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
@@ -187,6 +187,7 @@ export default function Compute({
         const datasetPriceAndFees = await getOrderPriceAndFees(
           asset,
           ZERO_ADDRESS,
+          web3,
           initializedProvider?.datasets?.[0]?.providerFee
         )
         if (!datasetPriceAndFees)
@@ -210,6 +211,7 @@ export default function Compute({
         const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
           selectedAlgorithmAsset,
           ZERO_ADDRESS,
+          web3,
           initializedProvider.algorithm.providerFee
         )
         if (!algorithmOrderPriceAndFees)

@@ -28,6 +28,7 @@ import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
 import { useAccount } from 'wagmi'
+import { useWeb3Legacy } from '@context/Web3Legacy'
 
 export default function Edit({
   asset
@@ -37,7 +38,9 @@ export default function Edit({
   const { debug } = useUserPreferences()
   const { fetchAsset, isAssetNetwork, assetState } = useAsset()
   const { address: accountId } = useAccount()
+  const { web3 } = useWeb3Legacy()
   const newAbortController = useAbortController()
+
   const [success, setSuccess] = useState<string>()
   const [paymentCollector, setPaymentCollector] = useState<string>()
   const [error, setError] = useState<string>()

@@ -19,6 +19,7 @@ import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
 import { useAccount, useNetwork } from 'wagmi'
+import { useWeb3Legacy } from '@context/Web3Legacy'
 
 export default function PublishPage({
   content
@@ -28,6 +29,7 @@ export default function PublishPage({
   const { debug } = useUserPreferences()
   const { address: accountId } = useAccount()
   const { chain } = useNetwork()
+  const { web3 } = useWeb3Legacy()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const scrollToRef = useRef()
   const nftFactory = useNftFactory()

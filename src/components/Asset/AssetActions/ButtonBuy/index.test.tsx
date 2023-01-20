@@ -16,7 +16,8 @@ const downloadProps: ButtonBuyProps = {
   priceType: 'fixed',
   isConsumable: true,
   isBalanceSufficient: true,
-  consumableFeedback: 'TEST: consumableFeedback'
+  consumableFeedback: 'TEST: consumableFeedback',
+  isAccountConnected: true
 }
 
 const computeProps: ButtonBuyProps = {
