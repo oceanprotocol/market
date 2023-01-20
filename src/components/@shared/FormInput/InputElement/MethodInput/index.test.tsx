@@ -6,7 +6,6 @@ import { useField } from 'formik'
 jest.mock('formik')
 
 const props: MethodInputProps = {
-  submitText: 'Submit',
   handleButtonClick: jest.fn(),
   isLoading: false,
   name: 'Hello Name'
@@ -21,19 +20,20 @@ const mockMeta = {
   value: ''
 }
 
-describe('@shared/FormInput/InputElement/URLInput', () => {
+describe('@shared/FormInput/InputElement/MethodInput', () => {
   it('renders without crashing', () => {
     const mockField = {
       value: '',
       checked: false,
       onChange: jest.fn(),
       onBlur: jest.fn(),
-      name: 'url'
+      name: 'url',
+      method: 'get'
     }
     ;(useField as jest.Mock).mockReturnValue([mockField, mockMeta])
 
     render(<MethodInput {...props} />)
-    expect(screen.getByRole('button')).toBeDisabled()
+    expect(screen.getByRole('textbox')).toBeInTheDocument()
 
     fireEvent.change(screen.getByRole('textbox'), {
       target: { value: 'https://google.com' }
@@ -46,12 +46,13 @@ describe('@shared/FormInput/InputElement/URLInput', () => {
       checked: false,
       onChange: jest.fn(),
       onBlur: jest.fn(),
-      name: 'url'
+      name: 'url',
+      method: 'get'
     }
     ;(useField as jest.Mock).mockReturnValue([mockField, mockMeta])
 
     render(<MethodInput {...props} />)
-    expect(screen.getByRole('button')).toBeEnabled()
-    fireEvent.click(screen.getByRole('button'))
+    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('textbox'))
   })
 })
