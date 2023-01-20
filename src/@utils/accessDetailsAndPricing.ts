@@ -216,7 +216,7 @@ export async function getOrderPriceAndFees(
   providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
-    price: '0',
+    price: String(asset?.stats?.price?.value || '0'),
     publisherMarketOrderFee: publisherMarketOrderFee || '0',
     publisherMarketFixedSwapFee: '0',
     consumeMarketOrderFee: consumeMarketOrderFee || '0',
