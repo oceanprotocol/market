@@ -7,7 +7,9 @@ import { Asset, Datatoken, LoggerInstance } from '@oceanprotocol/lib'
 import { useWeb3Legacy } from '@context/Web3Legacy'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
+  const { isInPurgatory } = useAsset()
   const { web3 } = useWeb3Legacy()
+
   const [paymentCollector, setPaymentCollector] = useState<string>()
   const { isInPurgatory, assetState } = useAsset()
 
@@ -21,7 +23,10 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
           await datatoken.getPaymentCollector(ddo.datatokens[0].address)
         )
       } catch (error) {
-        LoggerInstance.error('[MetaFull: getInitialPaymentCollector]', error)
+        LoggerInstance.error(
+          '[MetaFull: getInitialPaymentCollector]',
+          error.message
+        )
       }
     }
     getInitialPaymentCollector()

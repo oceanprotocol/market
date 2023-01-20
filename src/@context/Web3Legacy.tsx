@@ -32,15 +32,15 @@ function Web3LegacyProvider({
   const [web3Loading, setWeb3Loading] = useState<boolean>(true)
 
   useEffect(() => {
-    const init = async () => {
-      if (!web3Provider || !address || !chain?.id) return
+    if (!web3Provider || !address || !chain?.id) return
 
+    const init = async () => {
       try {
         setWeb3Loading(true)
         const web3 = new Web3(web3Provider as any)
         setWeb3(web3)
       } catch (error) {
-        LoggerInstance.error(error.message)
+        LoggerInstance.error(`[Web3Legacy] ${error.message}`)
       } finally {
         setWeb3Loading(false)
       }

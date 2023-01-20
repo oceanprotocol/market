@@ -1,17 +1,17 @@
 import React, { ReactElement } from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
-import { addCustomNetwork } from '@utils/wallet'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName
 } from '@hooks/useNetworkMetadata'
 import { useAsset } from '@context/Asset'
-import { useNetwork } from 'wagmi'
+import { useNetwork, useSwitchNetwork } from 'wagmi'
 
 export default function WalletNetworkSwitcher(): ReactElement {
   const { chain } = useNetwork()
   const { asset } = useAsset()
+  const { switchNetwork } = useSwitchNetwork({ chainId: asset?.chainId })
   const { networksList } = useNetworkMetadata()
 
   const ddoNetworkData = getNetworkDataById(networksList, asset.chainId)
@@ -24,13 +24,6 @@ export default function WalletNetworkSwitcher(): ReactElement {
     <strong>{getNetworkDisplayName(walletNetworkData)}</strong>
   )
 
-  async function switchWalletNetwork() {
-    const networkNode = await networksList.find(
-      (data) => data.chainId === asset.chainId
-    )
-    addCustomNetwork(networkNode)
-  }
-
   return (
     <>
       <p className={styles.text}>
@@ -38,7 +31,7 @@ export default function WalletNetworkSwitcher(): ReactElement {
         to {walletNetworkName}. Connect to {ddoNetworkName} to interact with
         this asset.
       </p>
-      <Button size="small" onClick={() => switchWalletNetwork()}>
+      <Button size="small" onClick={() => switchNetwork()}>
         Switch to {ddoNetworkName}
       </Button>
     </>

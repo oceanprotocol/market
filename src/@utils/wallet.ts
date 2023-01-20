@@ -1,6 +1,4 @@
-import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { getOceanConfig } from './ocean'
 import {
   EthereumClient,
   modalConnectors,
@@ -38,60 +36,6 @@ export function accountTruncate(account: string): string {
   const middle = account.substring(6, 38)
   const truncated = account.replace(middle, '…')
   return truncated
-}
-
-export async function addCustomNetwork(
-  network: EthereumListsChain
-): Promise<void> {
-  // Always add explorer URL from ocean.js first, as it's null sometimes
-  // in network data
-  const blockExplorerUrls = [
-    getOceanConfig(network.networkId).explorerUri,
-    network.explorers && network.explorers[0].url
-  ]
-
-  const newNetworkData = {
-    chainId: `0x${network.chainId.toString(16)}`,
-    chainName: getNetworkDisplayName(network),
-    nativeCurrency: network.nativeCurrency,
-    rpcUrls: network.rpc,
-    blockExplorerUrls
-  }
-  try {
-    await window?.ethereum.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: newNetworkData.chainId }]
-    })
-  } catch (switchError) {
-    if (switchError.code === 4902) {
-      await (window?.ethereum.request as any)(
-        {
-          method: 'wallet_addEthereumChain',
-          params: [newNetworkData]
-        },
-        (err: string, added: any) => {
-          if (err || 'error' in added) {
-            LoggerInstance.error(
-              `Couldn't add ${network.name} (0x${
-                network.chainId
-              }) network to MetaMask, error: ${err || added.error}`
-            )
-          } else {
-            LoggerInstance.log(
-              `Added ${network.name} (0x${network.chainId}) network to MetaMask`
-            )
-          }
-        }
-      )
-    } else {
-      LoggerInstance.error(
-        `Couldn't add ${network.name} (0x${network.chainId}) network to MetaMask, error: ${switchError}`
-      )
-    }
-  }
-  LoggerInstance.log(
-    `Added ${network.name} (0x${network.chainId}) network to MetaMask`
-  )
 }
 
 export async function addTokenToWallet(
@@ -136,6 +80,8 @@ export async function getTokenBalance(
   tokenAddress: string,
   web3Provider: ethers.providers.Provider
 ): Promise<string> {
+  if (!web3Provider) return
+
   try {
     const token = new ethers.Contract(tokenAddress, erc20ABI, web3Provider)
     const balance = await token.balanceOf(accountId)
@@ -151,6 +97,7 @@ export function getTokenBalanceFromSymbol(
   symbol: string
 ): string {
   if (!symbol) return
+
   const baseTokenBalance = balance?.[symbol.toLocaleLowerCase()]
   return baseTokenBalance || '0'
 }

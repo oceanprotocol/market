@@ -52,7 +52,7 @@ export function useGraphSyncStatus(networkId: number): UseGraphSyncStatus {
 
   // Log head block
   useEffect(() => {
-    if (blockHead) return
+    if (!blockHead) return
     LoggerInstance.log('[GraphStatus] Head block: ', blockHead)
   }, [blockHead])
 
