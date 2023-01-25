@@ -4,19 +4,23 @@ import PriceUnit from './PriceUnit'
 
 export default function Price({
   price,
+  orderPriceAndFees,
   className,
   size,
   conversion
 }: {
-  price: AssetPrice
+  price?: AssetPrice
+  orderPriceAndFees?: OrderPriceAndFees
   assetId?: string
   className?: string
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
+  if (!price && !orderPriceAndFees) return
+
   return (
     <PriceUnit
-      price={price?.value}
+      price={Number(orderPriceAndFees?.price) || price?.value}
       symbol={price?.tokenSymbol}
       className={className}
       size={size}
