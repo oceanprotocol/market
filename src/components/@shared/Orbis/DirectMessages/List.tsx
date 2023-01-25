@@ -1,5 +1,5 @@
-import React from 'react'
-import { useOrbis, IConversationWithNotifsCount } from '@context/Orbis'
+import React, { useMemo } from 'react'
+import { useOrbis, IConversationWithAdditionalData } from '@context/Orbis'
 import ListItem from './ListItem'
 import ChatBubble from '@images/chatbubble.svg'
 import styles from './List.module.css'
@@ -7,11 +7,18 @@ import styles from './List.module.css'
 export default function List() {
   const { conversations, setConversationId } = useOrbis()
 
+  const filteredConversations = useMemo(() => {
+    return conversations.filter(
+      (conversation: IConversationWithAdditionalData) =>
+        !conversation.empty_message
+    )
+  }, [conversations])
+
   return (
     <div className={styles.conversations}>
-      {conversations.length > 0 ? (
-        conversations.map(
-          (conversation: IConversationWithNotifsCount, index: number) => (
+      {filteredConversations.length > 0 ? (
+        filteredConversations.map(
+          (conversation: IConversationWithAdditionalData, index: number) => (
             <ListItem
               key={index}
               conversation={conversation}

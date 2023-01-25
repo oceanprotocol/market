@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './DmButton.module.css'
-import { accountTruncate } from '@utils/web3'
 import { useWeb3 } from '@context/Web3'
 import { useProfile } from '@context/Profile'
 import { useOrbis } from '@context/Orbis'
@@ -13,14 +12,14 @@ export default function DmButton({
   accountId: string
   text?: string
 }) {
-  const { profile, ownAccount } = useProfile()
+  const { ownAccount } = useProfile()
   const { accountId: ownAccountId, connect } = useWeb3()
   const {
     checkOrbisConnection,
     getConversationByDid,
-    setNewConversation,
     setConversationId,
     setOpenConversations,
+    createConversation,
     getDid
   } = useOrbis()
   const [userDid, setUserDid] = useState<string | undefined>()
@@ -66,15 +65,9 @@ export default function DmButton({
                 setConversationId(conversation.stream_id)
               } else {
                 console.log('need to create new conversation')
-                const suffix =
-                  profile && profile?.name
-                    ? profile?.name
-                    : accountTruncate(accountId.toLowerCase())
-
-                setConversationId(`new-${suffix}`)
-                setNewConversation({
-                  recipients: [userDid]
-                })
+                const newConversationId = await createConversation([userDid])
+                console.log(newConversationId)
+                setConversationId(newConversationId)
               }
               setOpenConversations(true)
               setIsCreatingConversation(false)

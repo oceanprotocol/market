@@ -1,67 +1,32 @@
-import React, { useRef, useState, useMemo, KeyboardEvent } from 'react'
+import React, { useRef } from 'react'
 import styles from './Postbox.module.css'
 import { useOrbis } from '@context/Orbis'
 import SendIcon from '@images/send.svg'
 import { accountTruncate } from '@utils/web3'
-import { didToAddress, sleep } from '@utils/orbis'
+import { didToAddress } from '@utils/orbis'
 
 export default function Postbox({
   replyTo = null,
-  isCreatingConvo,
-  setIsCreatingConvo,
   cancelReplyTo,
   callback
 }: {
   replyTo?: IOrbisMessage
-  isCreatingConvo: boolean
-  setIsCreatingConvo: (isCreatingConvo: boolean) => void
   cancelReplyTo?: () => void
   callback: (value: IOrbisMessage) => void
 }) {
-  const [isSending, setIsSending] = useState<boolean>(false)
-
   const postBoxArea = useRef(null)
   const {
     orbis,
     account,
     conversationId,
-    newConversation,
-    createConversation,
-    setConversationId,
-    setNewConversation
+    updateConversationEmptyMessageStatus
   } = useOrbis()
 
-  const isDisabled = useMemo(() => {
-    if (!conversationId || isSending || isCreatingConvo) {
-      return true
-    }
-
-    return false
-  }, [conversationId, isSending, isCreatingConvo])
-
   const share = async () => {
-    if (!account || isSending || postBoxArea.current.innerText.trim() === '')
-      return false
-
-    setIsSending(true)
+    if (!account || postBoxArea.current.innerText.trim() === '') return false
 
     const body = postBoxArea.current.innerText.trim()
     postBoxArea.current.innerText = ''
-
-    let _conversationId = conversationId
-    if (_conversationId.startsWith('new-') && newConversation) {
-      setIsCreatingConvo(true)
-      const _newConversation = await createConversation(
-        newConversation.recipients
-      )
-      if (_newConversation) {
-        _conversationId = _newConversation.stream_id
-        setConversationId(_conversationId)
-        setNewConversation(null)
-        await sleep(1000)
-      }
-      setIsCreatingConvo(false)
-    }
 
     const content: IOrbisMessageContent & { decryptedMessage?: string } = {
       encryptedMessage: null,
@@ -92,23 +57,14 @@ export default function Postbox({
     if (callback) callback(_callbackContent)
 
     const res = await orbis.sendMessage({
-      conversation_id: _conversationId,
+      conversation_id: conversationId,
       body
     })
 
     if (res.status === 200) {
       _callbackContent.stream_id = res.doc
       if (callback) callback(_callbackContent)
-    }
-
-    setIsSending(false)
-  }
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (!e.key) return
-
-    if (isSending && isCreatingConvo) {
-      e.preventDefault()
+      updateConversationEmptyMessageStatus(conversationId, false)
     }
   }
 
@@ -135,16 +91,12 @@ export default function Postbox({
           className={styles.editable}
           contentEditable={true}
           data-placeholder="Type your message here..."
-          onKeyDown={handleKeyDown}
-          style={{
-            pointerEvents: isSending || isCreatingConvo ? 'none' : 'auto'
-          }}
         />
         <button
           type="button"
           className={styles.sendButton}
           onClick={share}
-          disabled={isDisabled}
+          disabled={!conversationId}
         >
           <SendIcon className={styles.icon} />
         </button>

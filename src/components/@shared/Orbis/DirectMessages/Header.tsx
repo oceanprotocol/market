@@ -16,10 +16,8 @@ export default function Header() {
     conversationId,
     openConversations,
     activeConversationTitle,
-    newConversation,
     totalNotifications,
     setActiveConversationTitle,
-    setNewConversation,
     getConversationTitle,
     setOpenConversations,
     setConversationId
@@ -34,20 +32,15 @@ export default function Header() {
     if (role) {
       if (role === 'back-button') {
         setConversationId(null)
-        setNewConversation(null)
       } else {
         let _address = ''
-        if (newConversation) {
-          _address = didToAddress(newConversation.recipients[0])
-        } else {
-          const conversation = conversations.find(
-            (c) => c.stream_id === conversationId
-          )
-          const recipients = conversation.recipients.filter(
-            (r) => didToAddress(r) !== accountId.toLowerCase()
-          )
-          _address = didToAddress(recipients[0])
-        }
+        const conversation = conversations.find(
+          (c) => c.stream_id === conversationId
+        )
+        const recipients = conversation.recipients.filter(
+          (r) => didToAddress(r) !== accountId.toLowerCase()
+        )
+        _address = didToAddress(recipients[0])
         navigator.clipboard.writeText(_address)
         toast.info('Address copied to clipboard')
       }

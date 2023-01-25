@@ -21,7 +21,6 @@ export default function DmConversation() {
   const messagesWrapper = useRef(null)
   const [isInitialized, setIsInitialized] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isCreatingConvo, setIsCreatingConvo] = useState<boolean>(false)
   const [messages, setMessages] = useState<IOrbisMessage[]>([])
   const [currentPage, setCurrentPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
@@ -173,11 +172,6 @@ export default function DmConversation() {
       ) : (
         <>
           {isLoading && <div className={styles.loading}>Loading...</div>}
-          {isCreatingConvo && (
-            <div className={styles.loading}>
-              Creating conversation and sending message. Please wait...
-            </div>
-          )}
           <div className={styles.messages}>
             {!isLoading && messages.length === 0 ? (
               <div className={styles.noMessages}>No message yet</div>
@@ -228,11 +222,7 @@ export default function DmConversation() {
               </button>
             )}
           </div>
-          <Postbox
-            callback={callback}
-            isCreatingConvo={isCreatingConvo}
-            setIsCreatingConvo={setIsCreatingConvo}
-          />
+          <Postbox callback={callback} />
         </>
       )}
     </div>

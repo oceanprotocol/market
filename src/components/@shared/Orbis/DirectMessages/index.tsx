@@ -37,7 +37,8 @@ const BodyContent = () => {
           </p>
           <p>
             You&apos;ll be required to sign 2 transactions, one to connect to
-            your decentralised identity and the other to your encrypted key
+            your decentralised identity and the other to generate your encrypted
+            key
           </p>
           <button
             className={`${walletStyles.button} ${walletStyles.initial}`}
@@ -62,7 +63,8 @@ const BodyContent = () => {
           </p>
           <p>
             You&apos;ll be required to sign 2 transactions, one to connect to
-            your decentralised identity and the other to your encrypted key
+            your decentralised identity and the other to generate your encrypted
+            key
           </p>
           <button
             className={`${walletStyles.button} ${walletStyles.initial}`}
