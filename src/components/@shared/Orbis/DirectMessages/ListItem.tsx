@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { useOrbis, IConversationWithNotifsCount } from '@context/Orbis'
+import { useOrbis, IConversationWithAdditionalData } from '@context/Orbis'
 import { didToAddress } from '@utils/orbis'
 import Avatar from '@shared/atoms/Avatar'
 import Time from '@shared/atoms/Time'
@@ -10,7 +10,7 @@ export default function ConversationItem({
   conversation,
   setConversationId
 }: {
-  conversation: IConversationWithNotifsCount
+  conversation: IConversationWithAdditionalData
   setConversationId: (value: string) => void
 }) {
   const { account, getConversationTitle } = useOrbis()
