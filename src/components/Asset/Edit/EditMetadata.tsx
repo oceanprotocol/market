@@ -36,7 +36,7 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { fetchAsset, isAssetNetwork, assetState } = useAsset()
-  const { accountId, web3, chainId } = useWeb3()
+  const { accountId, web3 } = useWeb3()
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
   const [paymentCollector, setPaymentCollector] = useState<string>()
@@ -47,7 +47,7 @@ export default function Edit({
   useEffect(() => {
     async function getInitialPaymentCollector() {
       try {
-        const datatoken = new Datatoken(web3, chainId)
+        const datatoken = new Datatoken(web3)
         setPaymentCollector(
           await datatoken.getPaymentCollector(asset?.datatokens[0].address)
         )
@@ -59,7 +59,7 @@ export default function Edit({
       }
     }
     getInitialPaymentCollector()
-  }, [asset, chainId, web3])
+  }, [asset, web3])
 
   async function updateFixedPrice(newPrice: string) {
     const config = getOceanConfig(asset.chainId)
@@ -110,15 +110,6 @@ export default function Edit({
           values.paymentCollector
         )
       }
-      if (values.assetState !== assetState) {
-        const nft = new Nft(web3, chainId)
-
-        await nft.setMetadataState(
-          asset?.nftAddress,
-          accountId,
-          assetStateToNumber(values.assetState)
-        )
-      }
 
       if (values.files[0]?.url) {
         const file = {
@@ -167,6 +158,16 @@ export default function Edit({
         web3,
         newAbortController()
       )
+
+      if (values.assetState !== assetState) {
+        const nft = new Nft(web3)
+
+        await nft.setMetadataState(
+          asset?.nftAddress,
+          accountId,
+          assetStateToNumber(values.assetState)
+        )
+      }
 
       LoggerInstance.log('[edit] setMetadata result', setMetadataTx)
 
