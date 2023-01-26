@@ -108,7 +108,11 @@ export function normalizeFile(storageType: string, file: any, chainId: number) {
     case 'arweave': {
       fileObj = {
         type: storageType,
-        transactionId: file[0]?.transactionId || file?.transactionId
+        transactionId:
+          file[0]?.url ||
+          file?.url ||
+          file[0]?.transactionId ||
+          file?.transactionId
       } as Arweave
       break
     }
