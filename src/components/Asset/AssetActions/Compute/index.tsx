@@ -426,13 +426,17 @@ export default function Compute({
         }`}
       >
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        {isUnsupportedPricing || asset?.stats?.price?.value === undefined ? (
+        {isUnsupportedPricing ? (
           <Alert
             text={`No pricing schema available for this asset.`}
             state="info"
           />
         ) : (
-          <Price price={asset?.stats.price} conversion size="large" />
+          <Price
+            orderPriceAndFees={datasetOrderPriceAndFees}
+            conversion
+            size="large"
+          />
         )}
       </div>
 
