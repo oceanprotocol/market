@@ -9,7 +9,7 @@ export default function Price({
   size,
   conversion
 }: {
-  price?: AssetPrice
+  price: AssetPrice
   orderPriceAndFees?: OrderPriceAndFees
   assetId?: string
   className?: string
