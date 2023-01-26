@@ -16,6 +16,7 @@ import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
+import { isValidDid } from '@utils/ddo'
 
 export interface AssetProviderValue {
   isInPurgatory: boolean
@@ -63,6 +64,13 @@ function AssetProvider({
   const fetchAsset = useCallback(
     async (token?: CancelToken) => {
       if (!did) return
+      const isDid = isValidDid(did)
+
+      if (!isDid) {
+        setError(`The url is not for a valid DID`)
+        LoggerInstance.error(`[asset] Not a valid DID`)
+        return
+      }
 
       LoggerInstance.log('[asset] Fetching asset...')
       setLoading(true)

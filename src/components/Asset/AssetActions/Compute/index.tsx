@@ -12,7 +12,8 @@ import {
   ComputeAlgorithm,
   ComputeOutput,
   ProviderComputeInitializeResults,
-  unitsToAmount
+  unitsToAmount,
+  minAbi
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -61,7 +62,7 @@ export default function Compute({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3, isSupportedOceanNetwork } = useWeb3()
+  const { accountId, web3, isSupportedOceanNetwork, networkId } = useWeb3()
   const { chainIds } = useUserPreferences()
   const { isAssetNetwork } = useAsset()
 
@@ -90,6 +91,7 @@ export default function Compute({
   const [initializedProviderResponse, setInitializedProviderResponse] =
     useState<ProviderComputeInitializeResults>()
   const [providerFeeAmount, setProviderFeeAmount] = useState<string>('0')
+  const [providerFeesSymbol, setProviderFeesSymbol] = useState<string>('OCEAN')
   const [computeValidUntil, setComputeValidUntil] = useState<string>('0')
   const [datasetOrderPriceAndFees, setDatasetOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
@@ -159,6 +161,18 @@ export default function Compute({
       )
 
       setProviderFeeAmount(feeAmount)
+
+      const datatoken = new Datatoken(
+        await getDummyWeb3(asset?.chainId),
+        null,
+        null,
+        minAbi
+      )
+      setProviderFeesSymbol(
+        await datatoken.getSymbol(
+          initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken
+        )
+      )
 
       const computeDuration = (
         parseInt(initializedProvider?.datasets?.[0]?.providerFee?.validUntil) -
@@ -466,11 +480,15 @@ export default function Compute({
             assetTimeout={secondsToString(asset?.services[0].timeout)}
             hasPreviousOrderSelectedComputeAsset={!!validAlgorithmOrderTx}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
-            datasetSymbol={asset?.accessDetails?.baseToken?.symbol || 'OCEAN'}
+            datasetSymbol={
+              asset?.accessDetails?.baseToken?.symbol ||
+              (asset?.chainId === 137 ? 'mOCEAN' : 'OCEAN')
+            }
             algorithmSymbol={
               selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol ||
-              'OCEAN'
+              (selectedAlgorithmAsset?.chainId === 137 ? 'mOCEAN' : 'OCEAN')
             }
+            providerFeesSymbol={providerFeesSymbol}
             dtSymbolSelectedComputeAsset={
               selectedAlgorithmAsset?.datatokens[0]?.symbol
             }
