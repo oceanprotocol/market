@@ -55,12 +55,12 @@ export default function Download({
   useEffect(() => {
     Number(asset?.nft.state) === 4 && setIsOrderDisabled(true)
   }, [asset?.nft.state])
+
   useEffect(() => {
     if (!asset?.accessDetails || isUnsupportedPricing) return
 
-    asset.accessDetails.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
-    asset.accessDetails.validOrderTx &&
-      setValidOrderTx(asset?.accessDetails?.validOrderTx)
+    setIsOwned(asset?.accessDetails?.isOwned || false)
+    setValidOrderTx(asset?.accessDetails?.validOrderTx || '')
 
     // get full price and fees
     async function init() {
