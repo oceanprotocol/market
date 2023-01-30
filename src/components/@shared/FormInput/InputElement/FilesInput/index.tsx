@@ -3,7 +3,7 @@ import { useField } from 'formik'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
-import { getFileInfo } from '@utils/provider'
+import { getFileInfo, checkValidProvider } from '@utils/provider'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import { isGoogleUrl } from '@utils/url/index'
@@ -32,6 +32,13 @@ export default function FilesInput(props: InputProps): ReactElement {
           'Google Drive is not a supported hosting service. Please use an alternative.'
         )
       }
+
+      // Check if provider is a valid provider
+      const isValid = await checkValidProvider(providerUrl)
+      if (!isValid)
+        throw Error(
+          '✗ Provider cannot be reached, please check status.oceanprotocol.com and try again later.'
+        )
 
       const checkedFile = await getFileInfo(url, providerUrl, storageType)
 

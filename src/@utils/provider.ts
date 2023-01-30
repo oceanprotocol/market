@@ -147,3 +147,14 @@ export async function downloadFile(
   )
   await downloadFileBrowser(downloadUrl)
 }
+
+export async function checkValidProvider(
+  providerUrl: string
+): Promise<boolean> {
+  try {
+    const response = await ProviderInstance.isValidProvider(providerUrl)
+    return response
+  } catch (error) {
+    LoggerInstance.error(error.message)
+  }
+}
