@@ -50,7 +50,10 @@ export default function Download({
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
 
-  const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
+  const isUnsupportedPricing =
+    asset?.accessDetails?.type === 'NOT_SUPPORTED' ||
+    (asset?.accessDetails?.type === 'fixed' &&
+      !asset?.accessDetails?.baseToken?.symbol)
 
   useEffect(() => {
     Number(asset?.nft.state) === 4 && setIsOrderDisabled(true)

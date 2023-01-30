@@ -3,7 +3,7 @@ import { Field, useField } from 'formik'
 import FileInfoDetails from './Info'
 import UrlInput from '../URLInput'
 import Input, { InputProps } from '@shared/FormInput'
-import { getFileInfo } from '@utils/provider'
+import { getFileInfo, checkValidProvider } from '@utils/provider'
 import { LoggerInstance, FileInfo } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import styles from './index.module.css'
@@ -46,16 +46,23 @@ export default function FilesInput(props: InputProps): ReactElement {
         )
       }
 
-      const checkedFile = await getFileInfo(
-        url,
-        providerUrl,
-        storageType,
-        query,
-        headers,
-        abi,
-        chainId,
-        method
-      )
+      // Check if provider is a valid provider
+      const isValid = await checkValidProvider(providerUrl)
+      if (!isValid)
+        throw Error(
+          '✗ Provider cannot be reached, please check status.oceanprotocol.com and try again later.'
+        )
+
+        const checkedFile = await getFileInfo(
+          url,
+          providerUrl,
+          storageType,
+          query,
+          headers,
+          abi,
+          chainId,
+          method
+        )
 
       // error if something's not right from response
       if (!checkedFile)

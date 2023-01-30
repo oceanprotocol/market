@@ -39,9 +39,9 @@ export default function AssetStats() {
         </span>
       ) : null}
       {!asset?.stats || asset?.stats?.orders < 0 ? (
-        'N/A'
+        <span className={styles.stat}>N/A</span>
       ) : asset?.stats?.orders === 0 ? (
-        'No sales yet'
+        <span className={styles.stat}>No sales yet</span>
       ) : (
         <span className={styles.stat}>
           <span className={styles.number}>{asset.stats.orders}</span> sale
