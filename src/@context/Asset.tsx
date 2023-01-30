@@ -88,6 +88,16 @@ function AssetProvider({
         return
       }
 
+      if (asset.nft.state === (1 | 2 | 3)) {
+        setTitle(
+          `This asset has been set as "${assetStateToString(
+            asset.nft.state
+          )}" by the publisher`
+        )
+        setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
+        LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
+        return
+      }
       if (asset) {
         setError(undefined)
         setAsset((prevState) => ({
@@ -100,16 +110,6 @@ function AssetProvider({
         setPurgatoryData(asset.purgatory)
         setAssetState(assetStateToString(asset.nft.state))
         LoggerInstance.log('[asset] Got asset', asset)
-      }
-      if (asset.nft.state === (2 | 3 | 4) && accountId !== asset.nft.owner) {
-        setTitle(
-          `This asset has been set as "${assetStateToString(
-            asset.nft.state
-          )}" by the publisher`
-        )
-        setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
-        LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
-        return
       }
 
       setLoading(false)
