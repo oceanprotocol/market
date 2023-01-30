@@ -91,6 +91,7 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
       mockMeta,
       mockHelpers
     ])
+    ;(checkValidProvider as jest.Mock).mockReturnValue(true)
     ;(getFileInfo as jest.Mock).mockReturnValue([
       {
         valid: true,
