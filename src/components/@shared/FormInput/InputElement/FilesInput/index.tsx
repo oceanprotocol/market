@@ -53,16 +53,16 @@ export default function FilesInput(props: InputProps): ReactElement {
           '✗ Provider cannot be reached, please check status.oceanprotocol.com and try again later.'
         )
 
-        const checkedFile = await getFileInfo(
-          url,
-          providerUrl,
-          storageType,
-          query,
-          headers,
-          abi,
-          chainId,
-          method
-        )
+      const checkedFile = await getFileInfo(
+        url,
+        providerUrl,
+        storageType,
+        query,
+        headers,
+        abi,
+        chainId,
+        method
+      )
 
       // error if something's not right from response
       if (!checkedFile)
