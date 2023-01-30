@@ -68,7 +68,13 @@ const mockHelpers = {
 
 const mockForm = {
   values: {
-    services: [{ providerUrl: 'https://provider.url' }]
+    services: [
+      {
+        providerUrl: {
+          url: 'https://v4.provider.mainnet.oceanprotocol.com'
+        }
+      }
+    ]
   },
   errors: {},
   touched: {},
