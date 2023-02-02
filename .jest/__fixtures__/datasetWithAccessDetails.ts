@@ -1,7 +1,7 @@
-import { assetAquarius } from './assetAquarius'
+import { datasetAquarius } from './datasetAquarius'
 
 export const asset: AssetExtended = {
-  ...assetAquarius,
+  ...datasetAquarius,
   accessDetails: {
     templateId: 1,
     publisherMarketOrderFee: '0',

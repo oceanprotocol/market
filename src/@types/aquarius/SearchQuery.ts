@@ -46,6 +46,7 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     query: any
     sort?: { [jsonPath: string]: SortDirectionOptions }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     aggs?: any
   }
 }

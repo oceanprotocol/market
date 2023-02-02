@@ -33,6 +33,7 @@ export default function FormStartCompute({
   hasDatatokenSelectedComputeAsset,
   datasetSymbol,
   algorithmSymbol,
+  providerFeesSymbol,
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
   selectedComputeAssetType,
@@ -61,6 +62,7 @@ export default function FormStartCompute({
   hasDatatokenSelectedComputeAsset?: boolean
   datasetSymbol?: string
   algorithmSymbol?: string
+  providerFeesSymbol?: string
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
   selectedComputeAssetType?: string
@@ -145,7 +147,7 @@ export default function FormStartCompute({
       ? new Decimal(providerFeeAmount).toDecimalPlaces(MAX_DECIMALS)
       : new Decimal(0)
 
-    if (algorithmSymbol === 'OCEAN') {
+    if (algorithmSymbol === providerFeesSymbol) {
       let sum = providerFees.add(priceAlgo)
       totalPrices.push({
         value: sum.toDecimalPlaces(MAX_DECIMALS).toString(),
@@ -161,7 +163,7 @@ export default function FormStartCompute({
         })
       }
     } else {
-      if (datasetSymbol === 'OCEAN') {
+      if (datasetSymbol === providerFeesSymbol) {
         const sum = providerFees.add(priceDataset)
         totalPrices.push({
           value: sum.toDecimalPlaces(MAX_DECIMALS).toString(),
@@ -179,7 +181,7 @@ export default function FormStartCompute({
         })
         totalPrices.push({
           value: providerFees.toDecimalPlaces(MAX_DECIMALS).toString(),
-          symbol: 'OCEAN'
+          symbol: providerFeesSymbol
         })
       } else {
         totalPrices.push({
@@ -188,7 +190,7 @@ export default function FormStartCompute({
         })
         totalPrices.push({
           value: providerFees.toDecimalPlaces(MAX_DECIMALS).toString(),
-          symbol: 'OCEAN'
+          symbol: providerFeesSymbol
         })
         totalPrices.push({
           value: priceAlgo.toDecimalPlaces(MAX_DECIMALS).toString(),
@@ -211,7 +213,8 @@ export default function FormStartCompute({
     datasetOrderPrice,
     algoOrderPrice,
     algorithmSymbol,
-    datasetSymbol
+    datasetSymbol,
+    providerFeesSymbol
   ])
 
   useEffect(() => {
@@ -263,6 +266,7 @@ export default function FormStartCompute({
         datasetOrderPrice={datasetOrderPrice}
         algoOrderPrice={algoOrderPrice}
         providerFeeAmount={providerFeeAmount}
+        providerFeesSymbol={providerFeesSymbol}
         validUntil={validUntil}
         totalPrices={totalPrices}
       />
