@@ -7,7 +7,6 @@ import Tooltip from '@shared/atoms/Tooltip'
 import AssetTitle from '@shared/AssetListTitle'
 import { getAssetsFromDids } from '@utils/aquarius'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { useWeb3 } from '@context/Web3'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
@@ -66,11 +65,7 @@ export default function Bookmarks(): ReactElement {
         )
         if (!result?.length) return
 
-        const pinnedAssets: AssetExtended[] = await getAccessDetailsForAssets(
-          result,
-          accountId
-        )
-        setPinned(pinnedAssets)
+        setPinned(result)
       } catch (error) {
         LoggerInstance.error(`Bookmarks error:`, error.message)
       } finally {
