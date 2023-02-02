@@ -11,6 +11,7 @@ import {
   ProviderInstance,
   UrlFile
 } from '@oceanprotocol/lib'
+import { chainIds } from 'app.config'
 import Web3 from 'web3'
 import { getValidUntilTime } from './compute'
 
@@ -55,11 +56,12 @@ export async function initializeProviderForCompute(
 // TODO: Why do we have these one line functions ?!?!?!
 export async function getEncryptedFiles(
   files: any,
+  chainId: number,
   providerUrl: string
 ): Promise<string> {
   try {
     // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
-    const response = await ProviderInstance.encrypt(files, providerUrl)
+    const response = await ProviderInstance.encrypt(files, chainId, providerUrl)
     return response
   } catch (error) {
     console.error('Error parsing json: ' + error.message)
