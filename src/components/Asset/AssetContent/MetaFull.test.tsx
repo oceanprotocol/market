@@ -13,5 +13,6 @@ describe('src/components/Asset/AssetContent/MetaFull.tsx', () => {
   it('renders metadata for an algorithm', () => {
     render(<MetaFull ddo={algorithmAquarius} />)
     expect(screen.getByText('Docker Image')).toBeInTheDocument()
+    expect(screen.getByText('DID')).toBeInTheDocument()
   })
 })
