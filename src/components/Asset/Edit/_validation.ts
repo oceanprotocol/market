@@ -43,7 +43,8 @@ export const validationSchema = Yup.object().shape({
     (value) => {
       return web3.utils.isAddress(value)
     }
-  )
+  ),
+  retireAsset: Yup.string()
 })
 
 export const computeSettingsValidationSchema = Yup.object().shape({
