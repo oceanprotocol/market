@@ -15,17 +15,18 @@ export default function Price({
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
   const isSupported =
-    accessDetails?.type === 'fixed' || accessDetails?.type === 'free'
+    (accessDetails?.type === 'fixed' || accessDetails?.type === 'free') &&
+    accessDetails?.baseToken?.symbol
   const price = `${orderPriceAndFees?.price || accessDetails?.price}`
 
   return isSupported ? (
     <PriceUnit
       price={Number(price)}
-      symbol={accessDetails.baseToken?.symbol}
+      symbol={accessDetails?.baseToken?.symbol}
       className={className}
       size={size}
       conversion={conversion}
-      type={accessDetails.type}
+      type={accessDetails?.type}
     />
   ) : null
 }

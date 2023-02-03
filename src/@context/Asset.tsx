@@ -21,6 +21,7 @@ import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
+import { assetStateToString } from '@utils/assetState'
 import { isValidDid } from '@utils/ddo'
 
 export interface AssetProviderValue {
@@ -34,6 +35,7 @@ export interface AssetProviderValue {
   isOwner: boolean
   oceanConfig: Config
   loading: boolean
+  assetState: string
   fetchAsset: (token?: CancelToken) => Promise<void>
 }
 
@@ -59,6 +61,7 @@ function AssetProvider({
   const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
   const [oceanConfig, setOceanConfig] = useState<Config>()
+  const [assetState, setAssetState] = useState<string>()
 
   const newCancelToken = useCancelToken()
   const isMounted = useIsMounted()
@@ -90,27 +93,16 @@ function AssetProvider({
         return
       }
 
-      if ([1, 2, 3].includes(asset.nft.state)) {
-        // handle nft states as documented in https://docs.oceanprotocol.com/core-concepts/did-ddo/#state
-        let state
-        switch (asset.nft.state) {
-          case 1:
-            state = 'end-of-life'
-            break
-          case 2:
-            state = 'deprecated'
-            break
-          case 3:
-            state = 'revoked'
-            break
-        }
-
-        setTitle(`This asset has been flagged as "${state}" by the publisher`)
+      if (asset.nft.state === (1 | 2 | 3)) {
+        setTitle(
+          `This asset has been set as "${assetStateToString(
+            asset.nft.state
+          )}" by the publisher`
+        )
         setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
         return
       }
-
       if (asset) {
         setError(undefined)
         setAsset((prevState) => ({
@@ -121,12 +113,13 @@ function AssetProvider({
         setOwner(asset.nft?.owner)
         setIsInPurgatory(asset.purgatory?.state)
         setPurgatoryData(asset.purgatory)
+        setAssetState(assetStateToString(asset.nft.state))
         LoggerInstance.log('[asset] Got asset', asset)
       }
 
       setLoading(false)
     },
-    [did]
+    [did, accountId]
   )
   // -----------------------------------
   // Helper: Get and set asset payment collector
@@ -224,6 +217,14 @@ function AssetProvider({
     setOceanConfig(oceanConfig)
   }, [asset?.chainId])
 
+  // -----------------------------------
+  // Set Asset State as a string
+  // -----------------------------------
+  useEffect(() => {
+    if (!asset?.nft) return
+    setAssetState(assetStateToString(asset.nft.state))
+  }, [asset])
+
   return (
     <AssetContext.Provider
       value={
@@ -239,7 +240,8 @@ function AssetProvider({
           fetchAsset,
           isAssetNetwork,
           isOwner,
-          oceanConfig
+          oceanConfig,
+          assetState
         } as AssetProviderValue
       }
     >

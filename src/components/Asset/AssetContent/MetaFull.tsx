@@ -1,15 +1,34 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
+import { getDummyWeb3 } from '@utils/web3'
+import { Datatoken, LoggerInstance } from '@oceanprotocol/lib'
 
 export default function MetaFull({
   ddo
 }: {
   ddo: AssetExtended
 }): ReactElement {
-  const { isInPurgatory } = useAsset()
+  const [paymentCollector, setPaymentCollector] = useState<string>()
+  const { isInPurgatory, assetState } = useAsset()
+
+  useEffect(() => {
+    async function getInitialPaymentCollector() {
+      try {
+        if (!ddo) return
+        const web3 = await getDummyWeb3(ddo.chainId)
+        const datatoken = new Datatoken(web3)
+        setPaymentCollector(
+          await datatoken.getPaymentCollector(ddo.datatokens[0].address)
+        )
+      } catch (error) {
+        LoggerInstance.error('[MetaFull: getInitialPaymentCollector]', error)
+      }
+    }
+    getInitialPaymentCollector()
+  }, [ddo])
 
   function DockerImage() {
     const containerInfo = ddo?.metadata?.algorithm?.container
@@ -26,7 +45,10 @@ export default function MetaFull({
         title="Owner"
         content={<Publisher account={ddo?.nft?.owner} />}
       />
-      {ddo?.paymentCollector && ddo?.paymentCollector !== ddo?.nft?.owner && (
+      {assetState !== 'Active' && (
+        <MetaItem title="Asset State" content={assetState} />
+      )}
+      {paymentCollector && paymentCollector !== ddo?.nft?.owner && (
         <MetaItem
           title="Revenue Sent To"
           content={<Publisher account={ddo?.paymentCollector} />}

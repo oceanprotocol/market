@@ -120,6 +120,20 @@
         "placeholder": "e.g. 0X123ABC...",
         "help": "This address will receive the revenue from all sales. More info available in our [docs](https://docs.oceanprotocol.com/core-concepts/datanft-and-datatoken#revenue).",
         "required": false
+      },
+      {
+        "name": "assetState",
+        "label": "Asset Status",
+        "help": "This asset will no longer be visible to other users and it won't be possible to purchase it.  More info available in our [docs](https://docs.oceanprotocol.com/core-concepts/did-ddo#state).",
+        "type": "select",
+        "options": [
+          "Active",
+          "Revoked by publisher",
+          "Ordering is temporary disabled",
+          "Asset unlisted"
+        ],
+        "sortOptions": false,
+        "required": false
       }
     ]
   }
