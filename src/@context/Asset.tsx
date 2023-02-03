@@ -23,6 +23,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
 import { assetStateToString } from '@utils/assetState'
 import { isValidDid } from '@utils/ddo'
+import { getDummyWeb3 } from '@utils/web3'
 
 export interface AssetProviderValue {
   isInPurgatory: boolean
@@ -50,7 +51,7 @@ function AssetProvider({
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
 
-  const { chainId, accountId, web3 } = useWeb3()
+  const { chainId, accountId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
   const [asset, setAsset] = useState<AssetExtended>()
@@ -128,10 +129,13 @@ function AssetProvider({
     async function getInitialPaymentCollector() {
       if (!asset?.datatokens || !asset.datatokens[0]?.address) return
       try {
+        const web3 = await getDummyWeb3(asset.chainId)
         const datatoken = new Datatoken(web3)
+        console.log('datatoken', datatoken)
         const paymentCollector = await datatoken.getPaymentCollector(
           asset.datatokens[0].address
         )
+        console.log('paymentCollector', paymentCollector)
         setAsset((prevState) => ({
           ...prevState,
           paymentCollector
@@ -141,7 +145,7 @@ function AssetProvider({
       }
     }
     getInitialPaymentCollector()
-  }, [asset?.datatokens, web3])
+  }, [asset?.chainId, asset?.datatokens])
 
   // -----------------------------------
   // Helper: Get and set asset access details
