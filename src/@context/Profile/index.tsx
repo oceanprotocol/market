@@ -18,7 +18,7 @@ import {
 import axios, { CancelToken } from 'axios'
 import { useMarketMetadata } from '../MarketMetadata'
 import { getEnsProfile } from '@utils/ens'
-import { isAddress } from 'ethers/lib/utils'
+import { isAddress } from 'ethers'
 
 interface ProfileProviderValue {
   profile: Profile

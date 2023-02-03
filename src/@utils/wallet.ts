@@ -8,7 +8,7 @@ import { configureChains, createClient, erc20ABI } from 'wagmi'
 import { mainnet, polygon, bsc, goerli, polygonMumbai } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import { infuraProvider } from 'wagmi/providers/infura'
-import { ethers, utils } from 'ethers'
+import { ethers, formatEther, Provider } from 'ethers'
 
 // Wagmi client
 export const { chains, provider } = configureChains(
@@ -24,7 +24,11 @@ export const { chains, provider } = configureChains(
 
 export const wagmiClient = createClient({
   autoConnect: true,
-  connectors: modalConnectors({ appName: 'Ocean Market', chains }),
+  connectors: modalConnectors({
+    appName: 'Ocean Market',
+    version: '2',
+    chains
+  }),
   provider
 })
 
@@ -78,7 +82,7 @@ export async function getTokenBalance(
   accountId: string,
   decimals: number,
   tokenAddress: string,
-  web3Provider: ethers.providers.Provider
+  web3Provider: Provider
 ): Promise<string> {
   if (!web3Provider) return
 
@@ -86,7 +90,7 @@ export async function getTokenBalance(
     const token = new ethers.Contract(tokenAddress, erc20ABI, web3Provider)
     const balance = await token.balanceOf(accountId)
     const adjustedDecimalsBalance = `${balance}${'0'.repeat(18 - decimals)}`
-    return utils.formatEther(adjustedDecimalsBalance)
+    return formatEther(adjustedDecimalsBalance)
   } catch (e) {
     LoggerInstance.error(`ERROR: Failed to get the balance: ${e.message}`)
   }

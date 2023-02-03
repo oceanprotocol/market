@@ -7,11 +7,10 @@ import { Asset, Datatoken, LoggerInstance } from '@oceanprotocol/lib'
 import { useWeb3Legacy } from '@context/Web3Legacy'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
-  const { isInPurgatory } = useAsset()
+  const { isInPurgatory, assetState } = useAsset()
   const { web3 } = useWeb3Legacy()
 
   const [paymentCollector, setPaymentCollector] = useState<string>()
-  const { isInPurgatory, assetState } = useAsset()
 
   useEffect(() => {
     if (!ddo || !web3) return

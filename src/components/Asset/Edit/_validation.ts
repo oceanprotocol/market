@@ -1,6 +1,6 @@
 import { FileInfo } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
-import { isAddress } from 'ethers/lib/utils'
+import { isAddress } from 'ethers'
 import { testLinks } from '../../../@utils/yup'
 
 export const validationSchema = Yup.object().shape({

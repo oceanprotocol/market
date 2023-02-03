@@ -4,6 +4,7 @@ import { wizardSteps, initialPublishFeedback } from './_constants'
 import { FormPublishData, PublishFeedback } from './_types'
 import { getOceanConfig } from '@utils/ocean'
 import { useAccount, useNetwork } from 'wagmi'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export function Steps({
   feedback
@@ -12,6 +13,7 @@ export function Steps({
 }): ReactElement {
   const { address: accountId } = useAccount()
   const { chain } = useNetwork()
+  const { approvedBaseTokens } = useMarketMetadata()
   const { values, setFieldValue, touched, setTouched } =
     useFormikContext<FormPublishData>()
 
@@ -38,7 +40,7 @@ export function Steps({
     if (isBaseTokenSet) return
 
     setFieldValue('pricing.baseToken', defaultBaseToken)
-  }, [approvedBaseTokens])
+  }, [approvedBaseTokens, values?.pricing?.baseToken?.address])
 
   // auto-sync publish feedback into form data values
   useEffect(() => {

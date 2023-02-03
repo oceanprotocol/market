@@ -27,7 +27,7 @@ import {
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
 import { getContainerChecksum } from '@utils/docker'
-import { utils } from 'ethers'
+import { parseEther } from 'ethers'
 
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
@@ -273,8 +273,8 @@ export async function createTokensAndPricing(
       // both will be just 1 for the market
       const dispenserParams: DispenserCreationParams = {
         dispenserAddress: config.dispenserAddress,
-        maxTokens: utils.parseEther('1').toString(),
-        maxBalance: utils.parseEther('1').toString(),
+        maxTokens: parseEther('1').toString(),
+        maxBalance: parseEther('1').toString(),
         withMint: true,
         allowedSwapper: ZERO_ADDRESS
       }
