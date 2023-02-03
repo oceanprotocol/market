@@ -199,7 +199,7 @@ export default function FormEditMetadata({
       </span>
 
       <Field {...getFieldContent('tags', data)} component={Input} name="tags" />
-
+      
       <span
         className={
           Object.keys(diff).includes(
@@ -215,6 +215,12 @@ export default function FormEditMetadata({
           name="paymentCollector"
         />
       </span>
+
+      <Field
+        {...getFieldContent('assetState', data)}
+        component={Input}
+        name="assetState"
+      />
 
       <FormActions />
     </Form>
