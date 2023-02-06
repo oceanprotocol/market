@@ -6,7 +6,7 @@ import ProfileProvider from '@context/Profile'
 import { getEnsAddress, getEnsName } from '@utils/ens'
 import { useRouter } from 'next/router'
 import { useAccount, useEnsName } from 'wagmi'
-import { isAddress } from 'ethers'
+import { isAddress } from 'ethers/lib/utils'
 
 export default function PageProfile(): ReactElement {
   const router = useRouter()

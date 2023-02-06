@@ -8,7 +8,8 @@ import { configureChains, createClient, erc20ABI } from 'wagmi'
 import { mainnet, polygon, bsc, goerli, polygonMumbai } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import { infuraProvider } from 'wagmi/providers/infura'
-import { ethers, formatEther, Provider } from 'ethers'
+import { ethers } from 'ethers'
+import { formatEther } from 'ethers/lib/utils'
 
 // Wagmi client
 export const { chains, provider } = configureChains(
@@ -82,7 +83,7 @@ export async function getTokenBalance(
   accountId: string,
   decimals: number,
   tokenAddress: string,
-  web3Provider: Provider
+  web3Provider: ethers.providers.Provider
 ): Promise<string> {
   if (!web3Provider) return
 

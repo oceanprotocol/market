@@ -27,7 +27,7 @@ import {
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
 import { getContainerChecksum } from '@utils/docker'
-import { parseEther } from 'ethers'
+import { parseEther } from 'ethers/lib/utils'
 
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
