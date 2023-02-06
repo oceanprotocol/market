@@ -28,6 +28,7 @@ export const wagmiClient = createClient({
   connectors: modalConnectors({
     appName: 'Ocean Market',
     version: '2',
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     chains
   }),
   provider
