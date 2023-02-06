@@ -1,41 +1,18 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
-import {
-  EthereumClient,
-  modalConnectors,
-  walletConnectProvider
-} from '@web3modal/ethereum'
-import { configureChains, createClient, erc20ABI } from 'wagmi'
+import { createClient, erc20ABI } from 'wagmi'
 import { mainnet, polygon, bsc, goerli, polygonMumbai } from 'wagmi/chains'
-import { publicProvider } from 'wagmi/providers/public'
-import { infuraProvider } from 'wagmi/providers/infura'
 import { ethers } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
+import { getDefaultClient } from 'connectkit'
 
 // Wagmi client
-export const { chains, provider } = configureChains(
-  [mainnet, polygon, bsc, goerli, polygonMumbai],
-  [
-    walletConnectProvider({
-      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
-    }),
-    infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID }),
-    publicProvider()
-  ]
-)
-
-export const wagmiClient = createClient({
-  autoConnect: true,
-  connectors: modalConnectors({
+export const wagmiClient = createClient(
+  getDefaultClient({
     appName: 'Ocean Market',
-    version: '2',
-    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-    chains
-  }),
-  provider
-})
-
-// Web3Modal Ethereum Client
-export const ethereumClient = new EthereumClient(wagmiClient, chains)
+    infuraId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID,
+    chains: [mainnet, polygon, bsc, goerli, polygonMumbai]
+  })
+)
 
 export function accountTruncate(account: string): string {
   if (!account || account === '') return

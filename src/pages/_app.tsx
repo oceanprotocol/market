@@ -11,38 +11,44 @@ import '../stylesGlobal/styles.css'
 import Decimal from 'decimal.js'
 import MarketMetadataProvider from '@context/MarketMetadata'
 import { WagmiConfig } from 'wagmi'
-import { Web3Modal } from '@web3modal/react'
-import { wagmiClient, ethereumClient } from '@utils/wallet'
+import { ConnectKitProvider } from 'connectkit'
+import { wagmiClient } from '@utils/wallet'
 import Web3LegacyProvider from '@context/Web3Legacy'
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })
+
   return (
     <>
       <WagmiConfig client={wagmiClient}>
-        <Web3LegacyProvider>
-          <MarketMetadataProvider>
-            <UrqlProvider>
-              <UserPreferencesProvider>
-                <PricesProvider>
-                  <ConsentProvider>
-                    <App>
-                      <Component {...pageProps} />
-                    </App>
-                  </ConsentProvider>
-                </PricesProvider>
-              </UserPreferencesProvider>
-            </UrqlProvider>
-          </MarketMetadataProvider>
-        </Web3LegacyProvider>
+        <ConnectKitProvider
+          options={{ initialChainId: 0 }}
+          customTheme={{
+            '--ck-font-family': 'var(--font-family-base)',
+            '--ck-border-radius': 'var(--border-radius)',
+            '--ck-primary-button-border-radius': 'var(--border-radius)',
+            '--ck-primary-button-color': 'var(--text-color)',
+            '--ck-primary-button-background': 'var(--brand-grey-dimmed)',
+            '--ck-secondary-button-border-radius': 'var(--border-radius)'
+          }}
+        >
+          <Web3LegacyProvider>
+            <MarketMetadataProvider>
+              <UrqlProvider>
+                <UserPreferencesProvider>
+                  <PricesProvider>
+                    <ConsentProvider>
+                      <App>
+                        <Component {...pageProps} />
+                      </App>
+                    </ConsentProvider>
+                  </PricesProvider>
+                </UserPreferencesProvider>
+              </UrqlProvider>
+            </MarketMetadataProvider>
+          </Web3LegacyProvider>
+        </ConnectKitProvider>
       </WagmiConfig>
-
-      <Web3Modal
-        projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID}
-        ethereumClient={ethereumClient}
-        themeColor="blackWhite"
-        themeBackground="themeColor"
-      />
     </>
   )
 }

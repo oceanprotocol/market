@@ -5,18 +5,17 @@ import Button from '@shared/atoms/Button'
 import AddToken from '@shared/AddToken'
 import Conversion from '@shared/Price/Conversion'
 import { getOceanConfig } from '@utils/ocean'
-import { useNetwork, useProvider, useDisconnect, useAccount } from 'wagmi'
+import { useNetwork, useDisconnect, useAccount } from 'wagmi'
+import { useModal } from 'connectkit'
 import styles from './Details.module.css'
 import useBalance from '@hooks/useBalance'
-import { useWeb3Modal } from '@web3modal/react'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
 
 export default function Details(): ReactElement {
   const { chain } = useNetwork()
-  const { connector: activeConnector, isConnected } = useAccount()
-  const { open: openWeb3Modal } = useWeb3Modal()
+  const { connector: activeConnector } = useAccount()
+  const { setOpen } = useModal()
   const { disconnect } = useDisconnect()
-  const provider = useProvider()
   const { balance } = useBalance()
   const { networkData } = useNetworkMetadata()
   const { locale } = useUserPreferences()
@@ -78,7 +77,7 @@ export default function Details(): ReactElement {
             )}
           </div>
           <p>
-            <Button style="text" size="small" onClick={() => openWeb3Modal()}>
+            <Button style="text" size="small" onClick={() => setOpen(true)}>
               Switch Wallet
             </Button>
             <Button

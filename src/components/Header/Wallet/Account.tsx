@@ -4,26 +4,25 @@ import { accountTruncate } from '@utils/wallet'
 // import Loader from '@shared/atoms/Loader'
 import styles from './Account.module.css'
 import Avatar from '@shared/atoms/Avatar'
-import { useAccount, useProvider, useEnsName, useEnsAvatar } from 'wagmi'
-import { useWeb3Modal } from '@web3modal/react'
+import { useAccount, useEnsName, useEnsAvatar } from 'wagmi'
+import { useModal } from 'connectkit'
 
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  // const provider = useProvider()
   const { address: accountId } = useAccount()
   const { data: accountEns } = useEnsName({ address: accountId, chainId: 1 })
   const { data: accountEnsAvatar } = useEnsAvatar({
     address: accountId,
     chainId: 1
   })
-  const { open } = useWeb3Modal()
+  const { setOpen } = useModal()
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in
     e.preventDefault()
 
-    await open()
+    setOpen(true)
   }
 
   // return
