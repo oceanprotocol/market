@@ -199,7 +199,6 @@ export default function FormEditMetadata({
       </span>
 
       <Field {...getFieldContent('tags', data)} component={Input} name="tags" />
-      
       <span
         className={
           Object.keys(diff).includes(
