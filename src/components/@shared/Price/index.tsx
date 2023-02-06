@@ -15,8 +15,8 @@ export default function Price({
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
   const isSupported =
-    (accessDetails?.type === 'fixed' || accessDetails?.type === 'free') &&
-    accessDetails?.baseToken?.symbol
+    accessDetails?.type === 'free' ||
+    (accessDetails?.type === 'fixed' && accessDetails?.baseToken?.symbol)
   const price = `${orderPriceAndFees?.price || accessDetails?.price}`
 
   return isSupported ? (
