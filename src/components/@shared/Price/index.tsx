@@ -16,7 +16,7 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
-  if (!price && !orderPriceAndFees) return
+  if ((!price && !orderPriceAndFees) || !price?.tokenSymbol) return
 
   return (
     <PriceUnit
