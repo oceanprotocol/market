@@ -4,7 +4,6 @@ import {
   TokenPriceQuery,
   TokenPriceQuery_token as TokenPrice
 } from '../@types/subgraph/TokenPriceQuery'
-import { TokensPriceQuery_tokens as TokensPrice } from '../@types/subgraph/TokensPriceQuery'
 import {
   LoggerInstance,
   ProviderFees,
@@ -77,7 +76,7 @@ const tokenPriceQuery = gql`
 `
 
 function getAccessDetailsFromTokenPrice(
-  tokenPrice: TokenPrice | TokensPrice,
+  tokenPrice: TokenPrice,
   timeout?: number
 ): AccessDetails {
   const accessDetails = {} as AccessDetails
