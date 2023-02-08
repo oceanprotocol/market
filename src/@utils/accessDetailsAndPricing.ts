@@ -4,12 +4,8 @@ import {
   TokenPriceQuery,
   TokenPriceQuery_token as TokenPrice
 } from '../@types/subgraph/TokenPriceQuery'
+import { TokensPriceQuery_tokens as TokensPrice } from '../@types/subgraph/TokensPriceQuery'
 import {
-  TokensPriceQuery,
-  TokensPriceQuery_tokens as TokensPrice
-} from '../@types/subgraph/TokensPriceQuery'
-import {
-  Asset,
   LoggerInstance,
   ProviderFees,
   ProviderInstance
@@ -21,64 +17,6 @@ import {
   publisherMarketOrderFee
 } from '../../app.config'
 
-const tokensPriceQuery = gql`
-  query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
-    tokens(first: 1000, where: { id_in: $datatokenIds }) {
-      id
-      symbol
-      name
-      publishMarketFeeAddress
-      publishMarketFeeToken
-      publishMarketFeeAmount
-      templateId
-      orders(
-        where: { payer: $account }
-        orderBy: createdTimestamp
-        orderDirection: desc
-      ) {
-        tx
-        serviceIndex
-        createdTimestamp
-        reuses(orderBy: createdTimestamp, orderDirection: desc) {
-          id
-          caller
-          createdTimestamp
-          tx
-          block
-        }
-      }
-      dispensers {
-        id
-        active
-        isMinter
-        maxBalance
-        token {
-          id
-          name
-          symbol
-        }
-      }
-      fixedRateExchanges {
-        id
-        exchangeId
-        price
-        publishMarketSwapFee
-        baseToken {
-          symbol
-          name
-          address
-          decimals
-        }
-        datatoken {
-          symbol
-          name
-          address
-        }
-        active
-      }
-    }
-  }
-`
 const tokenPriceQuery = gql`
   query TokenPriceQuery($datatokenId: ID!, $account: String) {
     token(id: $datatokenId) {
