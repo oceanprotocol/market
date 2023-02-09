@@ -71,7 +71,7 @@
                 "title": "Headers",
                 "label": "Headers",
                 "placeholder_value": "Authorization",
-                "help": "This QUERY will be stored encrypted after publishing.",
+                "help": "This HEADERS will be stored encrypted after publishing.",
                 "type": "headers",
                 "required": true
               }
@@ -82,7 +82,7 @@
             "title": "Graphql",
             "label": "URL",
             "placeholder": "e.g. http://172.15.0.15:8000/subgraphs/name/oceanprotocol/ocean-subgraph",
-            "help": "This URL will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+            "help": "This URL will be stored encrypted after publishing.",
             "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
             "prominentHelp": true,
             "type": "files",
@@ -94,7 +94,7 @@
                 "title": "Headers",
                 "label": "Headers",
                 "placeholder_value": "Authorization",
-                "help": "This HEADER will be stored encrypted after publishing.",
+                "help": "This HEADERS will be stored encrypted after publishing.",
                 "type": "headers",
                 "required": true
               },
@@ -110,11 +110,11 @@
             ]
           },
           {
-            "value": "smartcontract", 
+            "value": "smartcontract",
             "title": "Smart Contract",
             "label": "Address",
             "placeholder": "e.g. 0x8149276f275EEFAc110D74AFE8AFECEaeC7d1593",
-            "help": "This ABI will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+            "help": "This ADDRESS will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
             "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
             "prominentHelp": true,
             "type": "files",
