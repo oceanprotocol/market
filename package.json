@@ -23,6 +23,7 @@
     "storybook:build": "cross-env NODE_ENV=test build-storybook"
   },
   "dependencies": {
+    "@codemirror/lang-json": "^6.0.1",
     "@codemirror/language": "^6.3.1",
     "@coingecko/cryptoformat": "^0.5.4",
     "@loadable/component": "^5.15.2",
@@ -73,8 +74,6 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@codemirror/lang-javascript": "^6.1.2",
-    "@codemirror/lang-json": "^6.0.1",
     "@storybook/addon-essentials": "^6.5.13",
     "@storybook/builder-webpack5": "^6.5.13",
     "@storybook/manager-webpack5": "^6.5.13",
