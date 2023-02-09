@@ -1,4 +1,3 @@
-import FormEditMetadata from '@components/Asset/Edit/FormEditMetadata'
 import {
   ComputeEditForm,
   MetadataEditForm
