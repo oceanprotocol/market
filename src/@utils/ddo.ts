@@ -87,7 +87,7 @@ export function secondsToString(numberOfSeconds: number): string {
     : 'less than a second'
 }
 
-// this is required to make it work properly.
+// this is required to make it work properly for preview/publish/edit/debug.
 // TODO: find a way to only have FileInfo interface instead of FileExtended
 interface FileExtended extends FileInfo {
   url?: string
