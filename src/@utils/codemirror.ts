@@ -9,8 +9,8 @@ export function checkJson(text: string) {
     return false
   }
 }
-
-export const oceanTheme = (marketTheme: any, field) => {
+declare type Theme = 'light' | 'dark'
+export const oceanTheme = (marketTheme: Theme, field) => {
   let textColor = 'var(--font-color-text)'
   if (
     (field.name === 'files[0].abi' ||
