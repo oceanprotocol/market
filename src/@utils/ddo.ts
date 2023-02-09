@@ -7,6 +7,7 @@ import {
   Arweave,
   Asset,
   DDO,
+  FileInfo,
   GraphqlQuery,
   Ipfs,
   Service,
@@ -86,7 +87,22 @@ export function secondsToString(numberOfSeconds: number): string {
     : 'less than a second'
 }
 
-export function normalizeFile(storageType: string, file: any, chainId: number) {
+// this is required to make it work properly.
+// TODO: find a way to only have FileInfo interface instead of FileExtended
+interface FileExtended extends FileInfo {
+  url?: string
+  query?: string
+  transactionId?: string
+  address?: string
+  abi?: string
+  headers?: { key: string; value: string }[]
+}
+
+export function normalizeFile(
+  storageType: string,
+  file: FileExtended,
+  chainId: number
+) {
   let fileObj
   const headersProvider = {}
   const headers = file[0]?.headers || file?.headers
