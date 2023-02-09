@@ -4,13 +4,15 @@ import { mainnet, polygon, bsc, goerli, polygonMumbai } from 'wagmi/chains'
 import { ethers, Contract } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { getDefaultClient } from 'connectkit'
+import { energyWeb, moonriver } from './chains'
 
 // Wagmi client
 export const wagmiClient = createClient(
   getDefaultClient({
     appName: 'Ocean Market',
     infuraId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID,
-    chains: [mainnet, polygon, bsc, goerli, polygonMumbai]
+    // TODO: mapping between appConfig.chainIdsSupported and wagmi chainId
+    chains: [mainnet, polygon, bsc, energyWeb, moonriver, goerli, polygonMumbai]
   })
 )
 
