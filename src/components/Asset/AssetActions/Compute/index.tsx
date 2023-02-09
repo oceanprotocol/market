@@ -433,7 +433,7 @@ export default function Compute({
           />
         ) : (
           <Price
-            accessDetails={asset?.accessDetails}
+            price={asset.stats?.price}
             orderPriceAndFees={datasetOrderPriceAndFees}
             conversion
             size="large"
