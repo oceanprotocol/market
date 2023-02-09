@@ -1,7 +1,7 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { createClient, erc20ABI } from 'wagmi'
 import { mainnet, polygon, bsc, goerli, polygonMumbai } from 'wagmi/chains'
-import { ethers } from 'ethers'
+import { ethers, Contract } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { getDefaultClient } from 'connectkit'
 
@@ -13,6 +13,20 @@ export const wagmiClient = createClient(
     chains: [mainnet, polygon, bsc, goerli, polygonMumbai]
   })
 )
+
+// ConnectKit CSS overrides
+// https://docs.family.co/connectkit/theming#theme-variables
+export const connectKitTheme = {
+  '--ck-font-family': 'var(--font-family-base)',
+  '--ck-border-radius': 'var(--border-radius)',
+  '--ck-overlay-background': 'var(--background-body-transparent)',
+  '--ck-body-background': 'var(--background-body)',
+  '--ck-body-color': 'var(--font-color-text)',
+  '--ck-primary-button-border-radius': 'var(--border-radius)',
+  '--ck-primary-button-color': 'var(--font-color-heading)',
+  '--ck-primary-button-background': 'var(--background-content)',
+  '--ck-secondary-button-border-radius': 'var(--border-radius)'
+}
 
 export function accountTruncate(account: string): string {
   if (!account || account === '') return
@@ -63,10 +77,10 @@ export async function getTokenBalance(
   tokenAddress: string,
   web3Provider: ethers.providers.Provider
 ): Promise<string> {
-  if (!web3Provider) return
+  if (!web3Provider || !accountId || !tokenAddress) return
 
   try {
-    const token = new ethers.Contract(tokenAddress, erc20ABI, web3Provider)
+    const token = new Contract(tokenAddress, erc20ABI, web3Provider)
     const balance = await token.balanceOf(accountId)
     const adjustedDecimalsBalance = `${balance}${'0'.repeat(18 - decimals)}`
     return formatEther(adjustedDecimalsBalance)

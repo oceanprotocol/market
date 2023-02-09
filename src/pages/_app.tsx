@@ -12,7 +12,7 @@ import Decimal from 'decimal.js'
 import MarketMetadataProvider from '@context/MarketMetadata'
 import { WagmiConfig } from 'wagmi'
 import { ConnectKitProvider } from 'connectkit'
-import { wagmiClient } from '@utils/wallet'
+import { connectKitTheme, wagmiClient } from '@utils/wallet'
 import Web3LegacyProvider from '@context/Web3Legacy'
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
@@ -23,14 +23,7 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
       <WagmiConfig client={wagmiClient}>
         <ConnectKitProvider
           options={{ initialChainId: 0 }}
-          customTheme={{
-            '--ck-font-family': 'var(--font-family-base)',
-            '--ck-border-radius': 'var(--border-radius)',
-            '--ck-primary-button-border-radius': 'var(--border-radius)',
-            '--ck-primary-button-color': 'var(--text-color)',
-            '--ck-primary-button-background': 'var(--brand-grey-dimmed)',
-            '--ck-secondary-button-border-radius': 'var(--border-radius)'
-          }}
+          customTheme={connectKitTheme}
         >
           <Web3LegacyProvider>
             <MarketMetadataProvider>
