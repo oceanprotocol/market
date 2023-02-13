@@ -1,5 +1,7 @@
 import { ConfigHelper, Config } from '@oceanprotocol/lib'
-// import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
+import { ethers } from 'ethers'
+
+import abiDatatoken from '@oceanprotocol/contracts/artifacts/contracts/interfaces/IERC20Template.sol/IERC20Template.json'
 
 export function getOceanConfig(network: string | number): Config {
   const config = new ConfigHelper().getConfig(
@@ -27,4 +29,18 @@ export function getDevelopmentConfig(): Config {
     // There is no subgraph in barge so we hardcode the Goerli one for now
     subgraphUri: 'https://v4.subgraph.goerli.oceanprotocol.com'
   } as Config
+}
+
+/**
+ * getPaymentCollector - returns the current paymentCollector
+ * @param dtAddress datatoken address
+ * @return {Promise<string>}
+ */
+export async function getPaymentCollector(
+  dtAddress: string,
+  provider: ethers.providers.Provider
+): Promise<string> {
+  const dtContract = new ethers.Contract(dtAddress, abiDatatoken.abi, provider)
+  const paymentCollector = await dtContract.getPaymentCollector()
+  return paymentCollector
 }
