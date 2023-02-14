@@ -30,3 +30,17 @@ export function getDevelopmentConfig(): Config {
     subgraphUri: 'https://v4.subgraph.goerli.oceanprotocol.com'
   } as Config
 }
+
+/**
+ * getPaymentCollector - returns the current paymentCollector
+ * @param dtAddress datatoken address
+ * @return {Promise<string>}
+ */
+export async function getPaymentCollector(
+  dtAddress: string,
+  provider: ethers.providers.Provider
+): Promise<string> {
+  const dtContract = new ethers.Contract(dtAddress, abiDatatoken.abi, provider)
+  const paymentCollector = await dtContract.getPaymentCollector()
+  return paymentCollector
+}

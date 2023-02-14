@@ -1,28 +1,37 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
-import { useContractRead } from 'wagmi'
-
-import abiDatatoken from '@oceanprotocol/contracts/artifacts/contracts/interfaces/IERC20Template.sol/IERC20Template.json'
+import { getPaymentCollector } from '@utils/ocean'
+import { useProvider } from 'wagmi'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
   const { isInPurgatory, assetState } = useAsset()
-  const { data: paymentCollector, error }: { data: string; error: Error } =
-    useContractRead({
-      address: ddo?.datatokens[0].address,
-      abi: abiDatatoken.abi,
-      functionName: 'getPaymentCollector'
-    })
+  const provider = useProvider()
 
-  if (error) {
-    LoggerInstance.error(
-      '[MetaFull: getInitialPaymentCollector]',
-      error.message
-    )
-  }
+  const [paymentCollector, setPaymentCollector] = useState<string>()
+
+  useEffect(() => {
+    if (!ddo || !provider) return
+
+    async function getInitialPaymentCollector() {
+      try {
+        const paymentCollector = await getPaymentCollector(
+          ddo.datatokens[0].address,
+          provider
+        )
+        setPaymentCollector(paymentCollector)
+      } catch (error) {
+        LoggerInstance.error(
+          '[MetaFull: getInitialPaymentCollector]',
+          error.message
+        )
+      }
+    }
+    getInitialPaymentCollector()
+  }, [ddo, provider])
 
   function DockerImage() {
     const containerInfo = ddo?.metadata?.algorithm?.container
