@@ -6,7 +6,8 @@ import {
   FixedRateExchange,
   Asset,
   Service,
-  Datatoken
+  Datatoken,
+  Nft
 } from '@oceanprotocol/lib'
 import { validationSchema } from './_validation'
 import { getInitialValues } from './_constants'
@@ -26,6 +27,7 @@ import { useAsset } from '@context/Asset'
 import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
+import { assetStateToNumber } from '@utils/assetState'
 
 export default function Edit({
   asset
@@ -33,7 +35,7 @@ export default function Edit({
   asset: AssetExtended
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { fetchAsset, isAssetNetwork } = useAsset()
+  const { fetchAsset, isAssetNetwork, assetState } = useAsset()
   const { accountId, web3 } = useWeb3()
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
@@ -157,6 +159,16 @@ export default function Edit({
         newAbortController()
       )
 
+      if (values.assetState !== assetState) {
+        const nft = new Nft(web3)
+
+        await nft.setMetadataState(
+          asset?.nftAddress,
+          accountId,
+          assetStateToNumber(values.assetState)
+        )
+      }
+
       LoggerInstance.log('[edit] setMetadata result', setMetadataTx)
 
       if (!setMetadataTx) {
@@ -180,7 +192,8 @@ export default function Edit({
         asset?.metadata,
         asset?.services[0]?.timeout,
         asset?.accessDetails?.price || '0',
-        paymentCollector
+        paymentCollector,
+        assetState
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
