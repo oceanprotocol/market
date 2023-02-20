@@ -16,11 +16,9 @@ interface BalanceProviderValue {
 function useBalance(): BalanceProviderValue {
   const { address } = useAccount()
   const { data: balanceNativeToken } = useBalanceWagmi({ address })
-
+  const web3provider = useProvider()
   const { approvedBaseTokens } = useMarketMetadata()
   const { chain } = useNetwork()
-
-  const web3provider = useProvider()
 
   const [balance, setBalance] = useState<UserBalance>({
     eth: '0'

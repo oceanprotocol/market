@@ -1,4 +1,5 @@
 import { Chain } from 'wagmi'
+import * as wagmiChains from 'wagmi/chains'
 
 export const energyWeb = {
   id: 246,
@@ -71,3 +72,13 @@ export const moonriver = {
   },
   testnet: false
 } as Chain
+
+export const getSupportedChains = (chainIdsSupported: number[]): Chain[] => {
+  const chains = [wagmiChains, energyWeb, moonriver].map((chain) => {
+    return Object.values(chain).filter((chain) =>
+      chainIdsSupported.includes(chain.id)
+    )
+  })
+  console.log(chains.flat())
+  return chains.flat()
+}

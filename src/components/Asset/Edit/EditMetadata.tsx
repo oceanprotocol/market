@@ -20,15 +20,14 @@ import styles from './index.module.css'
 import content from '../../../../content/pages/editMetadata.json'
 import { useAbortController } from '@hooks/useAbortController'
 import DebugEditMetadata from './DebugEditMetadata'
-import { getOceanConfig } from '@utils/ocean'
+import { getOceanConfig, getPaymentCollector } from '@utils/ocean'
 import EditFeedback from './EditFeedback'
 import { useAsset } from '@context/Asset'
 import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
-import { useAccount } from 'wagmi'
-import { useWeb3Legacy } from '@context/Web3Legacy'
+import { useAccount, useProvider } from 'wagmi'
 
 export default function Edit({
   asset
@@ -38,7 +37,7 @@ export default function Edit({
   const { debug } = useUserPreferences()
   const { fetchAsset, isAssetNetwork, assetState } = useAsset()
   const { address: accountId } = useAccount()
-  const { web3 } = useWeb3Legacy()
+  const provider = useProvider()
   const newAbortController = useAbortController()
 
   const [success, setSuccess] = useState<string>()
@@ -48,12 +47,15 @@ export default function Edit({
   const hasFeedback = error || success
 
   useEffect(() => {
+    if (!asset || !provider) return
+
     async function getInitialPaymentCollector() {
       try {
-        const datatoken = new Datatoken(web3)
-        setPaymentCollector(
-          await datatoken.getPaymentCollector(asset?.datatokens[0].address)
+        const paymentCollector = await getPaymentCollector(
+          asset.datatokens[0].address,
+          provider
         )
+        setPaymentCollector(paymentCollector)
       } catch (error) {
         LoggerInstance.error(
           '[EditMetadata: getInitialPaymentCollector]',
@@ -62,7 +64,7 @@ export default function Edit({
       }
     }
     getInitialPaymentCollector()
-  }, [asset, web3])
+  }, [asset, provider])
 
   async function updateFixedPrice(newPrice: string) {
     const config = getOceanConfig(asset.chainId)
