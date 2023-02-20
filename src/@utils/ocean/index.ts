@@ -1,7 +1,7 @@
 import { ConfigHelper, Config } from '@oceanprotocol/lib'
 import { ethers } from 'ethers'
 
-import abiDatatoken from '@oceanprotocol/contracts/artifacts/contracts/interfaces/IERC20Template.sol/IERC20Template.json'
+import abiDatatoken from '@oceanprotocol/contracts/artifacts/contracts/templates/ERC20TemplateEnterprise.sol/ERC20TemplateEnterprise.json'
 
 export function getOceanConfig(network: string | number): Config {
   const config = new ConfigHelper().getConfig(
@@ -34,6 +34,7 @@ export function getDevelopmentConfig(): Config {
 /**
  * getPaymentCollector - returns the current paymentCollector
  * @param dtAddress datatoken address
+ * @param provider the ethers.js web3 provider
  * @return {Promise<string>}
  */
 export async function getPaymentCollector(

@@ -16,9 +16,8 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
-import { useAccount } from 'wagmi'
+import { useAccount, useProvider } from 'wagmi'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
-import { useWeb3Legacy } from '@context/Web3Legacy'
 
 export default function Download({
   asset,
@@ -36,7 +35,7 @@ export default function Download({
   consumableFeedback?: string
 }): ReactElement {
   const { address: accountId, isConnected } = useAccount()
-  const { web3 } = useWeb3Legacy()
+  const provider = useProvider()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
@@ -76,9 +75,7 @@ export default function Download({
     async function init() {
       if (
         asset.accessDetails.addressOrId === ZERO_ADDRESS ||
-        asset.accessDetails.type === 'free' ||
-        isLoading ||
-        !web3
+        asset.accessDetails.type === 'free'
       )
         return
 
@@ -88,7 +85,7 @@ export default function Download({
         const _orderPriceAndFees = await getOrderPriceAndFees(
           asset,
           ZERO_ADDRESS,
-          web3
+          provider
         )
         setOrderPriceAndFees(_orderPriceAndFees)
         !orderPriceAndFees && setIsPriceLoading(false)
@@ -106,7 +103,7 @@ export default function Download({
      * Not adding isLoading and getOpcFeeForToken because we set these here. It is a compromise
      */
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asset, accountId, getOpcFeeForToken, isUnsupportedPricing, web3])
+  }, [asset, getOpcFeeForToken, isUnsupportedPricing])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
