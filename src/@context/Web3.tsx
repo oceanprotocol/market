@@ -9,10 +9,9 @@ import React, {
 } from 'react'
 import Web3 from 'web3'
 import { Web3Modal } from '@web3modal/standalone'
-import { infuraProjectId as infuraId } from '../../app.config'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { isBrowser } from '@utils/index'
 import SignClient from '@walletconnect/sign-client'
+import detectEthereumProvider from '@metamask/detect-provider'
 import { getEnsProfile } from '@utils/ens'
 import useNetworkMetadata, {
   getNetworkDataById,
@@ -28,7 +27,6 @@ interface Web3ProviderValue {
   web3: Web3
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   web3Provider: any
-  web3Modal: Web3Modal
   // web3ProviderInfo: IProviderInfo
   accountId: string
   accountEns: string
@@ -43,17 +41,10 @@ interface Web3ProviderValue {
   web3Loading: boolean
   isSupportedOceanNetwork: boolean
   approvedBaseTokens: TokenInfo[]
-  connect: () => Promise<void>
+  connectWeb3Modal: () => Promise<void>
+  connectMetaMask: () => Promise<void>
   logout: () => Promise<void>
 }
-
-// const web3ModalTheme = {
-//   background: 'var(--background-body)',
-//   main: 'var(--font-color-heading)',
-//   secondary: 'var(--brand-grey-light)',
-//   border: 'var(--border-color)',
-//   hover: 'var(--background-highlight)'
-// }
 
 // const providerOptions = isBrowser
 //   ? {
@@ -81,8 +72,6 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [web3, setWeb3] = useState<Web3>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [web3Provider, setWeb3Provider] = useState<any>()
-  const [signClient, setSignClient] = useState<SignClient>()
-  const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
   // const [web3ProviderInfo, setWeb3ProviderInfo] = useState<IProviderInfo>()
 
   const [networkId, setNetworkId] = useState<number>()
@@ -102,20 +91,42 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [approvedBaseTokens, setApprovedBaseTokens] = useState<TokenInfo[]>()
 
   // -----------------------------------
-  // Helper: connect to web3
+  // Helper: get web3 provider from MetaMask
   // -----------------------------------
-  const connect = useCallback(async () => {
-    if (!web3Modal || !signClient) {
-      setWeb3Loading(false)
-      return
-    }
-
+  const connectMetaMask = useCallback(async () => {
     try {
       setWeb3Loading(true)
       LoggerInstance.log('[web3] Connecting Web3...')
 
+      const provider = await detectEthereumProvider()
+      setWeb3Provider(provider)
+    } catch (error) {
+      LoggerInstance.error('[web3] Error: ', error.message)
+    } finally {
+      setWeb3Loading(false)
+    }
+  }, [])
+
+  // -----------------------------------
+  // Helper: get web3 provider from Web3Modal
+  // -----------------------------------
+  const connectWeb3Modal = useCallback(async () => {
+    try {
+      setWeb3Loading(true)
+      LoggerInstance.log('[web3] Connecting Web3...')
+
+      const web3Modal = new Web3Modal({
+        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+        standaloneChains: ['eip155:1'],
+        walletConnectVersion: 2
+        // theme: web3ModalTheme
+      })
+      const signClient = await SignClient.init({
+        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+      })
+
       if (signClient) {
-        const namespaces = {
+        const requiredNamespaces = {
           eip155: {
             methods: ['eth_sign'],
             chains: ['eip155:1'],
@@ -123,42 +134,24 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
           }
         }
         const { uri, approval } = await signClient.connect({
-          requiredNamespaces: namespaces
+          requiredNamespaces
         })
         if (uri) {
           const provider = await web3Modal.openModal({
             uri,
-            standaloneChains: namespaces.eip155.chains
+            standaloneChains: requiredNamespaces.eip155.chains
           })
           await approval()
           setWeb3Provider(provider)
           web3Modal.closeModal()
         }
       }
-
-      if (!web3Provider) return
-
-      const web3 = new Web3(web3Provider)
-      setWeb3(web3)
-      LoggerInstance.log('[web3] Web3 created.', web3)
-
-      const networkId = await web3.eth.net.getId()
-      setNetworkId(networkId)
-      LoggerInstance.log('[web3] network id ', networkId)
-
-      const chainId = await web3.eth.getChainId()
-      setChainId(chainId)
-      LoggerInstance.log('[web3] chain id ', chainId)
-
-      const accountId = (await web3.eth.getAccounts())[0]
-      setAccountId(accountId)
-      LoggerInstance.log('[web3] account id', accountId)
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
     } finally {
       setWeb3Loading(false)
     }
-  }, [web3Modal, web3Provider, signClient])
+  }, [])
 
   // -----------------------------------
   // Helper: Get approved base tokens list
@@ -244,30 +237,34 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [accountId])
 
   // -----------------------------------
-  // Create initial Web3Modal instance
+  // Init Web3
   // -----------------------------------
   useEffect(() => {
-    if (web3Modal) {
-      setWeb3Loading(false)
-      return
-    }
+    if (!web3Provider) return
 
-    async function init() {
-      const web3Modal = new Web3Modal({
-        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-        standaloneChains: ['eip155:1'],
-        walletConnectVersion: 2
-        // theme: web3ModalTheme
-      })
-      const signClient = await SignClient.init({
-        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
-      })
-      setWeb3Modal(web3Modal)
-      setSignClient(signClient)
-      LoggerInstance.log('[web3] Web3Modal instance created.', web3Modal)
+    async function initWeb3() {
+      try {
+        const web3 = new Web3(web3Provider)
+        setWeb3(web3)
+        LoggerInstance.log('[web3] Web3 created.', web3)
+
+        const networkId = await web3.eth.net.getId()
+        setNetworkId(networkId)
+        LoggerInstance.log('[web3] network id ', networkId)
+
+        const chainId = await web3.eth.getChainId()
+        setChainId(chainId)
+        LoggerInstance.log('[web3] chain id ', chainId)
+
+        const accountId = (await web3.eth.getAccounts())[0]
+        setAccountId(accountId)
+        LoggerInstance.log('[web3] account id', accountId)
+      } catch (error) {
+        LoggerInstance.error('[web3] Error: ', error.message)
+      }
     }
-    init()
-  }, [web3Modal])
+    initWeb3()
+  }, [web3Provider])
 
   // -----------------------------------
   // Reconnect automatically for returning users
@@ -431,7 +428,6 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       value={{
         web3,
         web3Provider,
-        web3Modal,
         accountId,
         accountEns,
         accountEnsAvatar,
@@ -445,7 +441,8 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         web3Loading,
         isSupportedOceanNetwork,
         approvedBaseTokens,
-        connect,
+        connectWeb3Modal,
+        connectMetaMask,
         logout
       }}
     >

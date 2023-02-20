@@ -1,30 +1,25 @@
-import React, { FormEvent } from 'react'
+import React, { useState } from 'react'
 import Caret from '@images/caret.svg'
 import { accountTruncate } from '@utils/web3'
-import Loader from '@shared/atoms/Loader'
 import styles from './Account.module.css'
 import { useWeb3 } from '@context/Web3'
 import Avatar from '@shared/atoms/Avatar'
+import Modal from '@components/@shared/atoms/Modal'
 
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { accountId, accountEns, accountEnsAvatar, web3Modal, connect } =
-    useWeb3()
+  const {
+    accountId,
+    accountEns,
+    accountEnsAvatar,
+    connectWeb3Modal,
+    connectMetaMask
+  } = useWeb3()
 
-  async function handleActivation(e: FormEvent<HTMLButtonElement>) {
-    // prevent accidentially submitting a form the button might be in
-    e.preventDefault()
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-    await connect()
-  }
-
-  return !accountId && web3Modal?.cachedProvider ? (
-    // Improve user experience for cached provider when connecting takes some time
-    <button className={styles.button} onClick={(e) => e.preventDefault()}>
-      <Loader />
-    </button>
-  ) : accountId ? (
+  return accountId ? (
     <button
       className={styles.button}
       aria-label="Account"
@@ -38,15 +33,25 @@ const Account = React.forwardRef((props, ref: any) => {
       <Caret aria-hidden="true" className={styles.caret} />
     </button>
   ) : (
-    <button
-      className={`${styles.button} ${styles.initial}`}
-      onClick={(e) => handleActivation(e)}
-      // Need the `ref` here although we do not want
-      // the Tippy to show in this state.
-      ref={ref}
-    >
-      Connect <span>Wallet</span>
-    </button>
+    <>
+      <button
+        className={`${styles.button} ${styles.initial}`}
+        onClick={() => setIsModalOpen(true)}
+        // Need the `ref` here although we do not want
+        // the Tippy to show in this state.
+        ref={ref}
+      >
+        Connect <span>Wallet</span>
+      </button>
+      <Modal
+        title={'Connect Wallet'}
+        isOpen={isModalOpen}
+        onToggleModal={() => setIsModalOpen(false)}
+      >
+        <button onClick={() => connectMetaMask()}>MetaMask</button>
+        <button onClick={() => connectWeb3Modal()}>WalletConnect</button>
+      </Modal>
+    </>
   )
 })
 
