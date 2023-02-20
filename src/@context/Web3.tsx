@@ -255,7 +255,8 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     async function init() {
       const web3Modal = new Web3Modal({
         projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-        standaloneChains: ['eip155:1']
+        standaloneChains: ['eip155:1'],
+        walletConnectVersion: 2
         // theme: web3ModalTheme
       })
       const signClient = await SignClient.init({
