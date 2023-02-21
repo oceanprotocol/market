@@ -1,19 +1,7 @@
 import AssetTeaser from '@shared/AssetTeaser'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
-import Loader from '@shared/atoms/Loader'
-import { useIsMounted } from '@hooks/useIsMounted'
-import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
-import { useWeb3 } from '@context/Web3'
-
-function LoaderArea() {
-  return (
-    <div className={styles.loaderWrap}>
-      <Loader />
-    </div>
-  )
-}
 
 export declare type AssetListProps = {
   assets: AssetExtended[]
@@ -33,52 +21,27 @@ export default function AssetList({
   showPagination,
   page,
   totalPages,
-  isLoading,
   onPageChange,
   className,
   noPublisher,
   noDescription,
   noPrice
 }: AssetListProps): ReactElement {
-  const { accountId } = useWeb3()
-  const [assetsWithPrices, setAssetsWithPrices] =
-    useState<AssetExtended[]>(assets)
-  const [loading, setLoading] = useState<boolean>(isLoading)
-  const isMounted = useIsMounted()
-
-  useEffect(() => {
-    if (!assets || !assets.length) return
-
-    setAssetsWithPrices(assets as AssetExtended[])
-    setLoading(false)
-    async function fetchPrices() {
-      const assetsWithPrices = await getAccessDetailsForAssets(
-        assets,
-        accountId || ''
-      )
-      if (!isMounted() || !assetsWithPrices) return
-      setAssetsWithPrices([...assetsWithPrices])
-    }
-    fetchPrices()
-  }, [assets, isMounted, accountId])
-
-  // // This changes the page field inside the query
+  // This changes the page field inside the query
   function handlePageChange(selected: number) {
     onPageChange(selected + 1)
   }
 
   const styleClasses = `${styles.assetList} ${className || ''}`
 
-  return loading ? (
-    <LoaderArea />
-  ) : (
+  return (
     <>
       <div className={styleClasses}>
-        {assetsWithPrices?.length > 0 ? (
-          assetsWithPrices?.map((assetWithPrice) => (
+        {assets?.length > 0 ? (
+          assets?.map((asset) => (
             <AssetTeaser
-              asset={assetWithPrice}
-              key={assetWithPrice.id}
+              asset={asset}
+              key={asset.id}
               noPublisher={noPublisher}
               noDescription={noDescription}
               noPrice={noPrice}

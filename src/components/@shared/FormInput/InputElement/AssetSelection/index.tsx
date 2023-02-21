@@ -10,7 +10,7 @@ import styles from './index.module.css'
 export interface AssetSelectionAsset {
   did: string
   name: string
-  price: string
+  price: number
   checked: boolean
   symbol: string
 }
@@ -106,8 +106,7 @@ export default function AssetSelection({
                 </label>
 
                 <PriceUnit
-                  price={Number(asset.price)}
-                  type={asset.price === '0' ? 'free' : undefined}
+                  price={asset.price}
                   size="small"
                   className={styles.price}
                 />

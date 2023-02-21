@@ -59,14 +59,14 @@ describe('@shared/FormInput', () => {
       {
         did: 'did:op:xxx',
         name: 'Asset',
-        price: '10',
+        price: 10,
         checked: false,
         symbol: 'OCEAN'
       },
       {
         did: 'did:op:yyy',
         name: 'Asset',
-        price: '10',
+        price: 10,
         checked: true,
         symbol: 'OCEAN'
       }

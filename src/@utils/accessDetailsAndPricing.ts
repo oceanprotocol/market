@@ -5,11 +5,6 @@ import {
   TokenPriceQuery_token as TokenPrice
 } from '../@types/subgraph/TokenPriceQuery'
 import {
-  TokensPriceQuery,
-  TokensPriceQuery_tokens as TokensPrice
-} from '../@types/subgraph/TokensPriceQuery'
-import {
-  Asset,
   LoggerInstance,
   ProviderFees,
   ProviderInstance
@@ -21,64 +16,6 @@ import {
   publisherMarketOrderFee
 } from '../../app.config'
 
-const tokensPriceQuery = gql`
-  query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
-    tokens(first: 1000, where: { id_in: $datatokenIds }) {
-      id
-      symbol
-      name
-      publishMarketFeeAddress
-      publishMarketFeeToken
-      publishMarketFeeAmount
-      templateId
-      orders(
-        where: { payer: $account }
-        orderBy: createdTimestamp
-        orderDirection: desc
-      ) {
-        tx
-        serviceIndex
-        createdTimestamp
-        reuses(orderBy: createdTimestamp, orderDirection: desc) {
-          id
-          caller
-          createdTimestamp
-          tx
-          block
-        }
-      }
-      dispensers {
-        id
-        active
-        isMinter
-        maxBalance
-        token {
-          id
-          name
-          symbol
-        }
-      }
-      fixedRateExchanges {
-        id
-        exchangeId
-        price
-        publishMarketSwapFee
-        baseToken {
-          symbol
-          name
-          address
-          decimals
-        }
-        datatoken {
-          symbol
-          name
-          address
-        }
-        active
-      }
-    }
-  }
-`
 const tokenPriceQuery = gql`
   query TokenPriceQuery($datatokenId: ID!, $account: String) {
     token(id: $datatokenId) {
@@ -139,7 +76,7 @@ const tokenPriceQuery = gql`
 `
 
 function getAccessDetailsFromTokenPrice(
-  tokenPrice: TokenPrice | TokensPrice,
+  tokenPrice: TokenPrice,
   timeout?: number
 ): AccessDetails {
   const accessDetails = {} as AccessDetails
@@ -216,7 +153,7 @@ export async function getOrderPriceAndFees(
   providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
-    price: '0',
+    price: String(asset?.stats?.price?.value || '0'),
     publisherMarketOrderFee: publisherMarketOrderFee || '0',
     publisherMarketFixedSwapFee: '0',
     consumeMarketOrderFee: consumeMarketOrderFee || '0',
@@ -287,59 +224,6 @@ export async function getAccessDetails(
     const tokenPrice: TokenPrice = tokenQueryResult.data.token
     const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
     return accessDetails
-  } catch (error) {
-    LoggerInstance.error('Error getting access details: ', error.message)
-  }
-}
-
-export async function getAccessDetailsForAssets(
-  assets: Asset[],
-  account = ''
-): Promise<AssetExtended[]> {
-  const assetsExtended: AssetExtended[] = assets
-  const chainAssetLists: { [key: number]: string[] } = {}
-
-  try {
-    for (const asset of assets) {
-      if (chainAssetLists[asset.chainId]) {
-        chainAssetLists[asset.chainId].push(
-          asset.services[0].datatokenAddress.toLowerCase()
-        )
-      } else {
-        chainAssetLists[asset.chainId] = []
-        chainAssetLists[asset.chainId].push(
-          asset.services[0].datatokenAddress.toLowerCase()
-        )
-      }
-    }
-
-    for (const chainKey in chainAssetLists) {
-      const queryContext = getQueryContext(Number(chainKey))
-      const tokenQueryResult: OperationResult<
-        TokensPriceQuery,
-        { datatokenIds: [string]; account: string }
-      > = await fetchData(
-        tokensPriceQuery,
-        {
-          datatokenIds: chainAssetLists[chainKey],
-          account: account?.toLowerCase()
-        },
-        queryContext
-      )
-      tokenQueryResult?.data?.tokens?.forEach((token) => {
-        const currentAsset = assetsExtended.find(
-          (asset) =>
-            asset.services[0].datatokenAddress.toLowerCase() === token.id
-        )
-        const accessDetails = getAccessDetailsFromTokenPrice(
-          token,
-          currentAsset?.services[0]?.timeout
-        )
-
-        currentAsset.accessDetails = accessDetails
-      })
-    }
-    return assetsExtended
   } catch (error) {
     LoggerInstance.error('Error getting access details: ', error.message)
   }
