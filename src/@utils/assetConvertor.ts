@@ -1,4 +1,3 @@
-import { getAccessDetailsForAssets } from './accessDetailsAndPricing'
 import { PublisherTrustedAlgorithm, Asset } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { getServiceByName } from './ddo'
@@ -8,17 +7,14 @@ export async function transformAssetToAssetSelection(
   assets: Asset[],
   selectedAlgorithms?: PublisherTrustedAlgorithm[]
 ): Promise<AssetSelectionAsset[]> {
-  const extendedAssets: AssetExtended[] = await getAccessDetailsForAssets(
-    assets
-  )
   const algorithmList: AssetSelectionAsset[] = []
 
-  for (const asset of extendedAssets) {
+  for (const asset of assets) {
     const algoService =
       getServiceByName(asset, 'compute') || getServiceByName(asset, 'access')
 
     if (
-      asset?.accessDetails?.price &&
+      asset?.stats?.price?.value &&
       algoService?.serviceEndpoint === datasetProviderEndpoint
     ) {
       let selected = false
@@ -30,7 +26,7 @@ export async function transformAssetToAssetSelection(
       const algorithmAsset: AssetSelectionAsset = {
         did: asset.id,
         name: asset.metadata.name,
-        price: asset.accessDetails.price,
+        price: asset.stats.price.value,
         checked: selected,
         symbol: asset.datatokens[0].symbol
       }

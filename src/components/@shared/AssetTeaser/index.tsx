@@ -21,16 +21,18 @@ export declare type AssetTeaserProps = {
 export default function AssetTeaser({
   asset,
   noPublisher,
-  noDescription,
-  noPrice
+  noDescription
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
-  const { orders, allocated } = asset.stats
-  const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
+  const { orders, allocated, price } = asset.stats
+  const isUnsupportedPricing =
+    !asset.services.length ||
+    asset?.stats?.price?.value === undefined ||
+    asset?.accessDetails?.type === 'NOT_SUPPORTED'
   const { locale } = useUserPreferences()
 
   return (
@@ -60,15 +62,13 @@ export default function AssetTeaser({
             </Dotdotdot>
           </div>
         )}
-        {!noPrice && (
-          <div className={styles.price}>
-            {isUnsupportedPricing || !asset.services.length ? (
-              <strong>No pricing schema available</strong>
-            ) : (
-              <Price accessDetails={asset.accessDetails} size="small" />
-            )}
-          </div>
-        )}
+        <div className={styles.price}>
+          {isUnsupportedPricing ? (
+            <strong>No pricing schema available</strong>
+          ) : (
+            <Price price={price} assetId={asset.id} size="small" />
+          )}
+        </div>
         <footer className={styles.footer}>
           {allocated && allocated > 0 ? (
             <span className={styles.typeLabel}>

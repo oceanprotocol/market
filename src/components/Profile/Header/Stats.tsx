@@ -5,7 +5,6 @@ import Conversion from '@shared/Price/Conversion'
 import NumberUnit from './NumberUnit'
 import styles from './Stats.module.css'
 import { useProfile } from '@context/Profile'
-import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 import { getLocked } from '@utils/veAllocation'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Button from '@shared/atoms/Button'
@@ -37,12 +36,10 @@ export default function Stats({
 
     async function getPublisherTotalSales() {
       try {
-        const assetsPrices = await getAccessDetailsForAssets(assets)
         let count = 0
-        for (const priceInfo of assetsPrices) {
-          if (priceInfo?.accessDetails?.price && priceInfo.stats.orders > 0) {
-            count +=
-              parseInt(priceInfo.accessDetails.price) * priceInfo.stats.orders
+        for (const priceInfo of assets) {
+          if (priceInfo?.stats?.price?.value && priceInfo.stats.orders > 0) {
+            count += priceInfo.stats.price.value * priceInfo.stats.orders
           }
         }
         setTotalSales(count)

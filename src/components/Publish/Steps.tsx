@@ -10,7 +10,7 @@ export function Steps({
 }: {
   feedback: PublishFeedback
 }): ReactElement {
-  const { chainId, accountId } = useWeb3()
+  const { chainId, accountId, approvedBaseTokens } = useWeb3()
   const { values, setFieldValue, touched, setTouched } =
     useFormikContext<FormPublishData>()
 
@@ -23,6 +23,21 @@ export function Steps({
     setFieldValue('user.chainId', chainId)
     setFieldValue('user.accountId', accountId)
   }, [chainId, accountId, setFieldValue])
+
+  useEffect(() => {
+    if (!approvedBaseTokens?.length) return
+
+    const defaultBaseToken =
+      approvedBaseTokens?.find((token) =>
+        token.name.toLowerCase().includes('ocean')
+      ) || approvedBaseTokens?.[0]
+    const isBaseTokenSet = !!approvedBaseTokens?.find(
+      (token) => token?.address === values?.pricing?.baseToken?.address
+    )
+    if (isBaseTokenSet) return
+
+    setFieldValue('pricing.baseToken', defaultBaseToken)
+  }, [approvedBaseTokens])
 
   // auto-sync publish feedback into form data values
   useEffect(() => {

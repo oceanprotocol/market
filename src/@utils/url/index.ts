@@ -1,3 +1,5 @@
+import isUrl from 'is-url-superb'
+
 export function sanitizeUrl(url: string) {
   const u = decodeURI(url).trim().toLowerCase()
   const isAllowedUrlScheme = u.startsWith('http://') || u.startsWith('https://')
@@ -6,7 +8,7 @@ export function sanitizeUrl(url: string) {
 
 // check if the url is a google domain
 export const isGoogleUrl = (url: string): boolean => {
-  if (!url) return
+  if (!url || !isUrl(url)) return
   const googleUrl = new URL(url)
   return googleUrl.hostname.endsWith('google.com')
 }
