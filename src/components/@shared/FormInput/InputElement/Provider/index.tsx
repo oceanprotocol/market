@@ -47,9 +47,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
       const isCompatible =
         providerChain === userChainId
           ? true
-          : providerChain.length > 0 && providerChain.includes(userChainId)
-          ? true
-          : false
+          : !!(providerChain.length > 0 && providerChain.includes(userChainId))
       if (!isCompatible)
         throw Error(
           '✗ This provider is incompatible with the network your wallet is connected to.'

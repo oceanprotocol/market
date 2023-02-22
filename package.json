@@ -14,6 +14,7 @@
     "jest": "jest -c .jest/jest.config.js",
     "jest:watch": "jest -c .jest/jest.config.js --watch",
     "lint": "eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx .",
+    "lint:fix": "eslint --ignore-path .gitignore --ext .ts,.tsx . --fix",
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
     "type-check": "tsc --noEmit",
     "deploy:s3": "bash scripts/deploy-s3.sh",
