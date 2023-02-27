@@ -7,14 +7,14 @@ module.exports = {
   // return appConfig.metadataCacheUri
   metadataCacheUri:
     process.env.NEXT_PUBLIC_METADATACACHE_URI ||
-    'https://v4.aquarius.oceanprotocol.com',
+    'https://aquarius.datachalenges.oceanprotocol.com',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [1, 137, 56, 246, 1285],
+  chainIds: [137, 80001],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 137, 56, 246, 1285, 5, 80001],
+  chainIdsSupported: [137, 80001],
 
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
