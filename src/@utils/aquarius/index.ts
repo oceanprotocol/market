@@ -57,32 +57,6 @@ export function generateBaseQuery(
               'nft.state': 5
             }
           }
-        ],
-        must: [
-          {
-            terms: {
-              id: [
-                'did:op:10de35106ac0c71d8dfccc01273a22cc63ad9b64764a0c2a389b76fb1aa53a10',
-                'did:op:6f975ec3b9064f98f6c672d070913b10b7bbcbc53a79d2c00e356ba4db719298',
-                'did:op:7e0bc5156f8cea8d4e752f2f3c4402da58753b5b10ee44a347ff5da7f56bb3d1',
-                'did:op:e9b2c2a157a7ee66af7ad79166f7699812aacab57941faf054ec2b2609621e6e',
-                'did:op:3a74dbc297bca6ce338ce0b7b3e9801e95b08d068473f4a6210196a7f13295c1',
-                'did:op:1d04dd8ff4d0488270c40c551a8e781001c3a6cbe67126e2966e2f9d9abc4f11',
-                'did:op:fcbb42f368e9680128d234cbfda6065544a2f5746e996108ddda65f8edb9939a',
-                'did:op:2030a326ac98106a68a440319f13b8f15353185b5ae4ae99c3bf31b53e9e5ae1',
-                'did:op:9f5cd15827f13a0081faa7252c01dad73d73bd7323f8146bfb5e9245c4a0a825',
-                'did:op:84548484cf2109094a87582ac46ee98a0534a0f65403ad1364e5f1214b140773',
-                'did:op:052e89ddda0fe9b400a6f292116fba6d1bb72b643f6fadc2ef6abbbe56be20f4',
-                'did:op:a5e3cb6cfa9ccc702464168621f9625d488455984fe0fd81a8ec2fc671e085cc',
-                'did:op:cbee73149648bafec85cd116f5ff27eeee857c26b84baafbfb345518445c5f45',
-                'did:op:fea46e8b1d7a7eaffa08364e572d75e509cc48bc07cb3ebcb74e164fa8b5b859',
-                'did:op:16957840694409af8a9d15b3bf3899d74ab6ed5ae85b713afb4e4f3446b19921',
-                'did:op:2f47a91c4ee9bb30aa0eb1bbb648006f9775865b91e49b2afd05d40f9baff073',
-                'did:op:0fe0b2193f2a92e5bb5bdcc4723ec38edc151a5301b6a770bda10a28655c72bb',
-                'did:op:4342c2d20f60da8c23f3953817645f4061bf44152c0f7dec65d71359d8733d3d'
-              ]
-            }
-          }
         ]
       }
     })
