@@ -135,6 +135,11 @@ export default function FormEditMetadata({
         component={Input}
         name="paymentCollector"
       />
+      <Field
+        {...getFieldContent('assetState', data)}
+        component={Input}
+        name="assetState"
+      />
 
       <FormActions />
     </Form>

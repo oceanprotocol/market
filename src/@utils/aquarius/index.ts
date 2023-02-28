@@ -254,6 +254,7 @@ export async function getPublishedAssets(
 
   const filters: FilterTerm[] = []
 
+  filters.push(getFilterTerm('nft.state', [0, 4, 5]))
   filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
   accesType !== undefined &&
     filters.push(getFilterTerm('services.type', accesType))

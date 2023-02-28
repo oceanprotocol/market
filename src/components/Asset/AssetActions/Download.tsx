@@ -50,17 +50,23 @@ export default function Download({
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
 
-  const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
+  const isUnsupportedPricing =
+    !asset?.accessDetails ||
+    !asset.services.length ||
+    asset?.stats?.price?.value === undefined ||
+    asset?.accessDetails?.type === 'NOT_SUPPORTED' ||
+    (asset?.accessDetails?.type === 'fixed' &&
+      !asset?.accessDetails?.baseToken?.symbol)
 
   useEffect(() => {
     Number(asset?.nft.state) === 4 && setIsOrderDisabled(true)
   }, [asset?.nft.state])
-  useEffect(() => {
-    if (!asset?.accessDetails || isUnsupportedPricing) return
 
-    asset.accessDetails.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
-    asset.accessDetails.validOrderTx &&
-      setValidOrderTx(asset?.accessDetails?.validOrderTx)
+  useEffect(() => {
+    if (isUnsupportedPricing) return
+
+    setIsOwned(asset?.accessDetails?.isOwned || false)
+    setValidOrderTx(asset?.accessDetails?.validOrderTx || '')
 
     // get full price and fees
     async function init() {
@@ -97,7 +103,6 @@ export default function Download({
       (asset?.accessDetails?.type === 'fixed' && !orderPriceAndFees) ||
       !isMounted ||
       !accountId ||
-      !asset?.accessDetails ||
       isUnsupportedPricing
     )
       return
@@ -199,7 +204,7 @@ export default function Download({
           />
         ) : (
           <>
-            {isUnsupportedPricing || !asset.services.length ? (
+            {isUnsupportedPricing ? (
               <Alert
                 className={styles.fieldWarning}
                 state="info"
@@ -211,7 +216,7 @@ export default function Download({
                   <Loader message="Calculating full price (including fees)" />
                 ) : (
                   <Price
-                    accessDetails={asset.accessDetails}
+                    price={asset.stats?.price}
                     orderPriceAndFees={orderPriceAndFees}
                     conversion
                     size="large"
