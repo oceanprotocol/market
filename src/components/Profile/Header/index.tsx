@@ -5,7 +5,7 @@ import Stats from './Stats'
 import Account from './Account'
 import styles from './index.module.css'
 import { useProfile } from '@context/Profile'
-import DmButton from '@shared/Orbis/DirectMessages/DmButton'
+import DmButton from '@shared/DirectMessages/DmButton'
 
 const isDescriptionTextClamped = () => {
   const el = document.getElementById('description')

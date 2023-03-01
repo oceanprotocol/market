@@ -1,13 +1,11 @@
 import React from 'react'
 import styles from './index.module.css'
 import Conversation from './Conversation'
-import { useOrbis } from '@context/Orbis'
+import { useOrbis } from '@context/DirectMessages'
 import { useWeb3 } from '@context/Web3'
 import Header from './Header'
 import List from './List'
-import walletStyles from '../../../Header/Wallet/Account.module.css'
-// import loadable from '@loadable/component'
-// const Wallet = loadable(() => import('../../../Header/Wallet'))
+import walletStyles from '../../Header/Wallet/Account.module.css'
 
 const BodyContent = () => {
   const { account, conversationId, checkOrbisConnection } = useOrbis()

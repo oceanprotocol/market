@@ -1,9 +1,13 @@
 import React, { useRef } from 'react'
 import styles from './Postbox.module.css'
-import { useOrbis } from '@context/Orbis'
+import { useOrbis } from '@context/DirectMessages'
 import SendIcon from '@images/send.svg'
 import { accountTruncate } from '@utils/web3'
-import { didToAddress } from '@utils/orbis'
+import { didToAddress } from './_utils'
+import {
+  IOrbisMessage,
+  IOrbisMessageContent
+} from '@context/DirectMessages/_types'
 
 export default function Postbox({
   replyTo = null,
@@ -68,6 +72,16 @@ export default function Postbox({
     }
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (!e.key) return
+
+    if (e.key === 'Enter' && !e.shiftKey) {
+      // Don't generate a new line
+      e.preventDefault()
+      share()
+    }
+  }
+
   return (
     <div className={styles.postbox}>
       {replyTo && (
@@ -91,6 +105,7 @@ export default function Postbox({
           className={styles.editable}
           contentEditable={true}
           data-placeholder="Type your message here..."
+          onKeyDown={handleKeyDown}
         />
         <button
           type="button"

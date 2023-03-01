@@ -6,7 +6,7 @@ import { UserPreferencesProvider } from '@context/UserPreferences'
 import PricesProvider from '@context/Prices'
 import UrqlProvider from '@context/UrqlProvider'
 import ConsentProvider from '@context/CookieConsent'
-import { OrbisProvider } from '@context/Orbis'
+import { OrbisProvider } from '@context/DirectMessages'
 import App from 'src/components/App'
 
 import '@oceanprotocol/typographies/css/ocean-typo.css'

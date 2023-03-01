@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
-import { useOrbis, IConversationWithAdditionalData } from '@context/Orbis'
+import { useOrbis } from '@context/DirectMessages'
+import { IConversationWithAdditionalData } from '@context/DirectMessages/_types'
 import ListItem from './ListItem'
 import ChatBubble from '@images/chatbubble.svg'
 import styles from './List.module.css'

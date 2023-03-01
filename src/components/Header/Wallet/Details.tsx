@@ -5,7 +5,7 @@ import Button from '@shared/atoms/Button'
 import AddToken from '@shared/AddToken'
 import Conversion from '@shared/Price/Conversion'
 import { useWeb3 } from '@context/Web3'
-import { useOrbis } from '@context/Orbis'
+import { useOrbis } from '@context/DirectMessages'
 import { getOceanConfig } from '@utils/ocean'
 import styles from './Details.module.css'
 

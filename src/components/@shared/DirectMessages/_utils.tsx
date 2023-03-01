@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import Link from 'next/link'
 import reactStringReplace from 'react-string-replace'
+import { IOrbisPostContent } from '@context/DirectMessages/_types'
 
 /** Regex patterns to use */
 const patternMentions = /\B@[a-z0-9_.⍙-]+/gi

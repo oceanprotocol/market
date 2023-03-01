@@ -15,9 +15,8 @@ import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import Web3 from 'web3'
 import Button from '@shared/atoms/Button'
-// Uncomment line below to enable comment
-// import Comment from '../../@shared/Orbis/Comment'
 import RelatedAssets from '../RelatedAssets'
+import DmButton from '@shared/DirectMessages/DmButton'
 
 export default function AssetContent({
   asset
@@ -47,6 +46,7 @@ export default function AssetContent({
         <div>
           <div className={styles.content}>
             <MetaMain asset={asset} nftPublisher={nftPublisher} />
+            <DmButton accountId={asset?.nft?.owner} />
             {asset?.accessDetails?.datatoken !== null && (
               <Bookmark did={asset?.id} />
             )}
@@ -70,9 +70,6 @@ export default function AssetContent({
             <EditHistory receipts={receipts} setReceipts={setReceipts} />
             {debug === true && <DebugOutput title="DDO" output={asset} />}
           </div>
-
-          {/* Uncomment line below to enable comment */}
-          {/* <Comment context={asset?.id} /> */}
         </div>
 
         <div className={styles.actions}>

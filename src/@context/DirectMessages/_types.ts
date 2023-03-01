@@ -1,6 +1,4 @@
-declare module '@orbisclub/orbis-sdk'
-
-declare interface IOrbisConstructor {
+export interface IOrbisConstructor {
   ceramic?: unknown
   node?: string
   store?: string
@@ -10,9 +8,9 @@ declare interface IOrbisConstructor {
   useLit?: boolean
 }
 
-declare interface IOrbis {
-  api: SupabaseClient
-  session: DIDSession
+export interface IOrbis {
+  api: any
+  session: any
   connect: (provider: unknown, lit?: boolean) => Promise<IOrbisConnectReturns>
   connect_v2: (opts?: {
     provider?: unknown
@@ -380,7 +378,7 @@ declare interface IOrbis {
   }>
 }
 
-interface IOrbisConnectReturns {
+export interface IOrbisConnectReturns {
   status: number
   did: string
   details: {
@@ -391,7 +389,7 @@ interface IOrbisConnectReturns {
   result: string
 }
 
-declare enum IOrbisGetPostsAlgorithm {
+export enum IOrbisGetPostsAlgorithm {
   'recommendations',
   'all-posts',
   'all-master-posts',
@@ -401,13 +399,13 @@ declare enum IOrbisGetPostsAlgorithm {
   ''
 }
 
-declare enum OrbisReaction {
+export enum OrbisReaction {
   'like',
   'haha',
   'downvote'
 }
 
-interface IOrbisGroup {
+export interface IOrbisGroup {
   channels: Pick<IOrbisChannel, 'content' | 'stream_id'>[]
   content: {
     name?: string
@@ -420,7 +418,7 @@ interface IOrbisGroup {
   stream_id: string
 }
 
-interface IOrbisChannel {
+export interface IOrbisChannel {
   archived?: boolean
   content: {
     group_id: string
@@ -445,7 +443,7 @@ interface IOrbisChannel {
   type: 'chat' | 'feed'
 }
 
-declare interface IOrbisProfile {
+export interface IOrbisProfile {
   address: string
   count_followers: number
   count_following: number
@@ -483,7 +481,7 @@ declare interface IOrbisProfile {
   username: string
 }
 
-interface IOrbisEncryptionRules {
+export interface IOrbisEncryptionRules {
   type: 'token-gated' | 'custom'
   chain: string
   contractType: 'ERC20' | 'ERC721' | 'ERC1155'
@@ -493,18 +491,18 @@ interface IOrbisEncryptionRules {
   accessControlConditions?: object
 }
 
-interface IOrbisEncryptedBody {
+export interface IOrbisEncryptedBody {
   accessControlConditions: string
   encryptedString: string
   encryptedSymmetricKey: string
 }
 
-interface IOrbisPostMention {
+export interface IOrbisPostMention {
   did: string
   username: string
 }
 
-interface IOrbisPostContent {
+export interface IOrbisPostContent {
   body: string
   title?: string
   context?: string
@@ -522,7 +520,7 @@ interface IOrbisPostContent {
   encryptedBody?: IOrbisEncryptedBody | null
 }
 
-declare interface IOrbisPost {
+export interface IOrbisPost {
   content: IOrbisPostContent
   context?: string
   context_details?: {
@@ -555,7 +553,7 @@ declare interface IOrbisPost {
   type?: string
 }
 
-declare interface IOrbisMessageContent {
+export interface IOrbisMessageContent {
   conversation_id?: string
   encryptedMessage?: {
     accessControlConditions: string
@@ -571,7 +569,7 @@ declare interface IOrbisMessageContent {
   reply_to?: string | null
 }
 
-declare interface IOrbisMessage {
+export interface IOrbisMessage {
   content: IOrbisMessageContent
   conversation_id: string
   created_at?: string
@@ -589,7 +587,7 @@ declare interface IOrbisMessage {
   timestamp: number
 }
 
-declare interface IOrbisConversation {
+export interface IOrbisConversation {
   content: {
     recipients: string[]
   }
@@ -607,7 +605,7 @@ declare interface IOrbisConversation {
   stream_id: string
 }
 
-declare interface IOrbisNotification {
+export interface IOrbisNotification {
   content: {
     conversation_id: string
     encryptedMessage: IOrbisEncryptedBody
@@ -620,4 +618,48 @@ declare interface IOrbisNotification {
     did: string
     profile: IOrbisProfile['details']['profile']
   }
+}
+
+export interface IConversationWithAdditionalData extends IOrbisConversation {
+  notifications_count: number
+  empty_message: boolean
+}
+
+export type IOrbisProvider = {
+  orbis: IOrbis
+  account: IOrbisProfile
+  hasLit: boolean
+  openConversations: boolean
+  conversationId: string
+  conversations: IConversationWithAdditionalData[]
+  activeConversationTitle: string
+  notifsLastRead: Record<string, Record<string, number>>
+  totalNotifications: number
+  connectOrbis: (options: {
+    address: string
+    lit?: boolean
+  }) => Promise<IOrbisProfile | null>
+  disconnectOrbis: (address: string) => void
+  checkOrbisConnection: (options: {
+    address: string
+    autoConnect?: boolean
+    lit?: boolean
+  }) => Promise<IOrbisProfile>
+  connectLit: () => Promise<{
+    status?: number
+    error?: unknown
+    result?: string
+  }>
+  setActiveConversationTitle: (title: string) => void
+  setOpenConversations: (open: boolean) => void
+  setConversationId: (conversationId: string) => void
+  getConversationByDid: (userDid: string) => Promise<IOrbisConversation>
+  createConversation: (recipients: string[]) => Promise<string>
+  getConversationTitle: (conversationId: string) => Promise<string>
+  getDid: (address: string) => Promise<string>
+  clearConversationNotifs: (conversationId: string) => void
+  updateConversationEmptyMessageStatus: (
+    conversationId: string,
+    status: boolean
+  ) => void
 }

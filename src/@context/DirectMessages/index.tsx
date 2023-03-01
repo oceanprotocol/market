@@ -9,57 +9,19 @@ import React, {
 } from 'react'
 import { useInterval } from '@hooks/useInterval'
 import { Orbis } from '@orbisclub/orbis-sdk'
-import { useWeb3 } from './Web3'
+import { useWeb3 } from '../Web3'
 import { accountTruncate } from '@utils/web3'
-import { didToAddress, sleep } from '@utils/orbis'
+import { didToAddress, sleep } from '@shared/DirectMessages/_utils'
 import { getEnsName } from '@utils/ens'
 import usePrevious from '@hooks/usePrevious'
 import useLocalStorage from '@hooks/useLocalStorage'
-import DirectMessages from '@shared/Orbis/DirectMessages'
-
-export interface IConversationWithAdditionalData extends IOrbisConversation {
-  notifications_count: number
-  empty_message: boolean
-}
-
-type IOrbisProvider = {
-  orbis: IOrbis
-  account: IOrbisProfile
-  hasLit: boolean
-  openConversations: boolean
-  conversationId: string
-  conversations: IConversationWithAdditionalData[]
-  activeConversationTitle: string
-  notifsLastRead: Record<string, Record<string, number>>
-  totalNotifications: number
-  connectOrbis: (options: {
-    address: string
-    lit?: boolean
-  }) => Promise<IOrbisProfile | null>
-  disconnectOrbis: (address: string) => void
-  checkOrbisConnection: (options: {
-    address: string
-    autoConnect?: boolean
-    lit?: boolean
-  }) => Promise<IOrbisProfile>
-  connectLit: () => Promise<{
-    status?: number
-    error?: unknown
-    result?: string
-  }>
-  setActiveConversationTitle: (title: string) => void
-  setOpenConversations: (open: boolean) => void
-  setConversationId: (conversationId: string) => void
-  getConversationByDid: (userDid: string) => Promise<IOrbisConversation>
-  createConversation: (recipients: string[]) => Promise<string>
-  getConversationTitle: (conversationId: string) => Promise<string>
-  getDid: (address: string) => Promise<string>
-  clearConversationNotifs: (conversationId: string) => void
-  updateConversationEmptyMessageStatus: (
-    conversationId: string,
-    status: boolean
-  ) => void
-}
+import DirectMessages from '@shared/DirectMessages'
+import {
+  IOrbis,
+  IOrbisProfile,
+  IOrbisProvider,
+  IConversationWithAdditionalData
+} from './_types'
 
 const OrbisContext = createContext({} as IOrbisProvider)
 

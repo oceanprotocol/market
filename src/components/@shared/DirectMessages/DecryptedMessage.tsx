@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { useOrbis } from '@context/Orbis'
+import { useOrbis } from '@context/DirectMessages'
 import Refresh from '@images/refresh.svg'
 import styles from './DecryptedMessage.module.css'
+import { IOrbisMessageContent } from '@context/DirectMessages/_types'
 
 export default function DecryptedMessage({
   content,

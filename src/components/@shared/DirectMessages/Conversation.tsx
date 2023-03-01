@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useOrbis } from '@context/Orbis'
+import { useOrbis } from '@context/DirectMessages'
 import { useInterval } from '@hooks/useInterval'
 import { throttle } from '@utils/throttle'
 import Time from '@shared/atoms/Time'
@@ -7,6 +7,8 @@ import Button from '@shared/atoms/Button'
 import DecryptedMessage from './DecryptedMessage'
 import Postbox from './Postbox'
 import styles from './Conversation.module.css'
+import { LoggerInstance } from '@oceanprotocol/lib'
+import { IOrbisMessage } from '@context/DirectMessages/_types'
 
 export default function DmConversation() {
   const {
@@ -48,7 +50,7 @@ export default function DmConversation() {
     const { data, error } = await orbis.getMessages(conversationId, _page)
 
     if (error) {
-      console.log(error)
+      LoggerInstance.error(error)
     }
 
     if (data.length) {
