@@ -79,7 +79,9 @@ export function generateBaseQuery(
                 'did:op:16957840694409af8a9d15b3bf3899d74ab6ed5ae85b713afb4e4f3446b19921',
                 'did:op:2f47a91c4ee9bb30aa0eb1bbb648006f9775865b91e49b2afd05d40f9baff073',
                 'did:op:0fe0b2193f2a92e5bb5bdcc4723ec38edc151a5301b6a770bda10a28655c72bb',
-                'did:op:4342c2d20f60da8c23f3953817645f4061bf44152c0f7dec65d71359d8733d3d'
+                'did:op:4342c2d20f60da8c23f3953817645f4061bf44152c0f7dec65d71359d8733d3d',
+                'did:op:4e5040015fd68a5ea61d18c471f164ab531dc6828dde4710d0cdfcdffa62761e',
+                'did:op:041765719c904354a32674327770b6bfb13a1cc998510b9fdd67d35521f3de93'
               ]
             }
           }
