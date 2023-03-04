@@ -6,6 +6,7 @@ import ExplorerLink from '@shared/ExplorerLink'
 import Publisher from '@shared/Publisher'
 import React, { ReactElement } from 'react'
 import styles from './MetaAsset.module.css'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function MetaAsset({
   asset,
@@ -15,7 +16,7 @@ export default function MetaAsset({
   isBlockscoutExplorer: boolean
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
-  const { web3ProviderInfo } = useWeb3()
+  // const { web3ProviderInfo } = useWeb3Auth()
 
   const dataTokenSymbol = asset?.datatokens[0]?.symbol
 
@@ -36,7 +37,7 @@ export default function MetaAsset({
         >
           {`Accessed with ${dataTokenSymbol}`}
         </ExplorerLink>
-        {web3ProviderInfo?.name === 'MetaMask' && isAssetNetwork && (
+        {/* {web3ProviderInfo?.name === 'MetaMask' && isAssetNetwork && (
           <span className={styles.addWrap}>
             <AddToken
               address={asset?.services[0].datatokenAddress}
@@ -46,7 +47,7 @@ export default function MetaAsset({
               minimal
             />
           </span>
-        )}
+        )} */}
       </span>
     </div>
   )

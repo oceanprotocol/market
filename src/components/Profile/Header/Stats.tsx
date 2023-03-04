@@ -9,13 +9,14 @@ import { getLocked } from '@utils/veAllocation'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Button from '@shared/atoms/Button'
 import { useWeb3 } from '@context/Web3'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function Stats({
   accountId
 }: {
   accountId: string
 }): ReactElement {
-  const web3 = useWeb3()
+  const web3 = useWeb3Auth()
   const { chainIds } = useUserPreferences()
   const { assets, assetsTotal, sales } = useProfile()
 

@@ -17,6 +17,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function Download({
   asset,
@@ -33,7 +34,7 @@ export default function Download({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3, isSupportedOceanNetwork } = useWeb3()
+  const { accountId, web3, isSupportedOceanNetwork } = useWeb3Auth()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const isMounted = useIsMounted()

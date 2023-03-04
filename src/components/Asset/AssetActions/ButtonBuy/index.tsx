@@ -4,6 +4,7 @@ import styles from './index.module.css'
 import Loader from '../../../@shared/atoms/Loader'
 import { useWeb3 } from '@context/Web3'
 import Web3 from 'web3'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export interface ButtonBuyProps {
   action: 'download' | 'compute'
@@ -185,7 +186,7 @@ export default function ButtonBuy({
   retry,
   isSupportedOceanNetwork
 }: ButtonBuyProps): ReactElement {
-  const { web3 } = useWeb3()
+  const { web3 } = useWeb3Auth()
   const buttonText = retry
     ? 'Retry'
     : action === 'download'

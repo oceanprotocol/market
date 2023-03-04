@@ -13,6 +13,7 @@ import content from '../../../../../content/pages/history.json'
 import { useWeb3 } from '@context/Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getAsset } from '@utils/aquarius'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function Results({
   job
@@ -20,7 +21,7 @@ export default function Results({
   job: ComputeJobMetaData
 }): ReactElement {
   const providerInstance = new Provider()
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3 } = useWeb3Auth()
   const isFinished = job.dateFinished !== null
 
   const [datasetProvider, setDatasetProvider] = useState<string>()

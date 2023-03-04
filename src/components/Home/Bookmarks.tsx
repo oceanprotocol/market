@@ -9,6 +9,7 @@ import { getAssetsFromDids } from '@utils/aquarius'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useWeb3 } from '@context/Web3'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 const columns: TableOceanColumn<AssetExtended>[] = [
   {
@@ -38,7 +39,7 @@ const columns: TableOceanColumn<AssetExtended>[] = [
 
 export default function Bookmarks(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { accountId } = useWeb3()
+  const { accountId } = useWeb3Auth()
   const { bookmarks } = useUserPreferences()
 
   const [pinned, setPinned] = useState<AssetExtended[]>()

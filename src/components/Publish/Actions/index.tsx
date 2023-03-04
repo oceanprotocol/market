@@ -11,6 +11,7 @@ import Tooltip from '@shared/atoms/Tooltip'
 import AvailableNetworks from '@components/Publish/AvailableNetworks'
 import Info from '@images/info.svg'
 import Loader from '@shared/atoms/Loader'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function Actions({
   scrollToRef,
@@ -20,14 +21,14 @@ export default function Actions({
   did: string
 }): ReactElement {
   const router = useRouter()
-  const { isSupportedOceanNetwork } = useWeb3()
+  const { isSupportedOceanNetwork } = useWeb3Auth()
   const {
     values,
     errors,
     isValid,
     isSubmitting
   }: FormikContextType<FormPublishData> = useFormikContext()
-  const { connect, accountId } = useWeb3()
+  const { connect, accountId } = useWeb3Auth()
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in

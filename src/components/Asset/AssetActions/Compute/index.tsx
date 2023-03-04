@@ -47,6 +47,7 @@ import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useAsset } from '@context/Asset'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 const refreshInterval = 10000 // 10 sec.
 export default function Compute({
@@ -62,7 +63,7 @@ export default function Compute({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3, isSupportedOceanNetwork, networkId } = useWeb3()
+  const { accountId, web3, isSupportedOceanNetwork, networkId } = useWeb3Auth()
   const { chainIds } = useUserPreferences()
   const { isAssetNetwork } = useAsset()
 

@@ -4,13 +4,13 @@ import { accountTruncate } from '@utils/web3'
 import Loader from '@shared/atoms/Loader'
 import styles from './Account.module.css'
 import { useWeb3 } from '@context/Web3'
-import Avatar from '@shared/atoms/Avatar'
+// import Avatar from '@shared/atoms/Avatar'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { accountId, accountEns, accountEnsAvatar, web3Modal, connect } =
-    useWeb3()
+  const { accountId, accountEns, web3Auth, connect } = useWeb3Auth()
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in
@@ -19,7 +19,7 @@ const Account = React.forwardRef((props, ref: any) => {
     await connect()
   }
 
-  return !accountId && web3Modal?.cachedProvider ? (
+  return !accountId && web3Auth?.provider ? (
     // Improve user experience for cached provider when connecting takes some time
     <button className={styles.button} onClick={(e) => e.preventDefault()}>
       <Loader />
@@ -31,7 +31,7 @@ const Account = React.forwardRef((props, ref: any) => {
       ref={ref}
       onClick={(e) => e.preventDefault()}
     >
-      <Avatar accountId={accountId} src={accountEnsAvatar} />
+      {/* <Avatar accountId={accountId} src={accountEnsAvatar} /> */}
       <span className={styles.address} title={accountId}>
         {accountTruncate(accountEns || accountId)}
       </span>

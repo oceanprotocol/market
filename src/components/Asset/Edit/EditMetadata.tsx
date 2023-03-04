@@ -28,6 +28,7 @@ import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function Edit({
   asset
@@ -36,7 +37,7 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { fetchAsset, isAssetNetwork, assetState } = useAsset()
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3 } = useWeb3Auth()
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
   const [paymentCollector, setPaymentCollector] = useState<string>()

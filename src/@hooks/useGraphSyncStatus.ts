@@ -4,7 +4,7 @@ import { Config, LoggerInstance } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import axios, { AxiosResponse } from 'axios'
 import { getOceanConfig } from '@utils/ocean'
-
+import { useWeb3Auth } from '@context/Web3Auth'
 const blockDifferenceThreshold = 30
 const ethGraphUrl = `https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks`
 const ethGraphQueryBody =
@@ -55,7 +55,7 @@ async function getBlockSubgraph(subgraphUri: string) {
 }
 
 export function useGraphSyncStatus(networkId: number): UseGraphSyncStatus {
-  const { block, web3Loading } = useWeb3()
+  const { block, web3Loading } = useWeb3Auth()
   const [blockGraph, setBlockGraph] = useState<number>()
   const [blockHead, setBlockHead] = useState<number>()
   const [isGraphSynced, setIsGraphSynced] = useState(true)

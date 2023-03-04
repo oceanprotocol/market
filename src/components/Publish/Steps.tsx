@@ -4,13 +4,14 @@ import { wizardSteps, initialPublishFeedback } from './_constants'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData, PublishFeedback } from './_types'
 import { getOceanConfig } from '@utils/ocean'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export function Steps({
   feedback
 }: {
   feedback: PublishFeedback
 }): ReactElement {
-  const { chainId, accountId, approvedBaseTokens } = useWeb3()
+  const { chainId, accountId, approvedBaseTokens } = useWeb3Auth()
   const { values, setFieldValue, touched, setTouched } =
     useFormikContext<FormPublishData>()
 

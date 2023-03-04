@@ -5,9 +5,10 @@ import Tooltip from '@shared/atoms/Tooltip'
 import { useWeb3 } from '@context/Web3'
 import NetworkName from '@shared/NetworkName'
 import styles from './Network.module.css'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function Network(): ReactElement {
-  const { networkId, isTestnet, isSupportedOceanNetwork } = useWeb3()
+  const { networkId, isTestnet, isSupportedOceanNetwork } = useWeb3Auth()
 
   return networkId ? (
     <div className={styles.network}>

@@ -8,9 +8,10 @@ import useNetworkMetadata, {
   getNetworkDisplayName
 } from '@hooks/useNetworkMetadata'
 import { useAsset } from '@context/Asset'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function WalletNetworkSwitcher(): ReactElement {
-  const { networkId, web3Provider } = useWeb3()
+  const { networkId, web3Provider } = useWeb3Auth()
   const { asset } = useAsset()
   const { networksList } = useNetworkMetadata()
 

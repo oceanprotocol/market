@@ -7,10 +7,11 @@ import ProfileProvider from '@context/Profile'
 import { getEnsAddress, getEnsName } from '@utils/ens'
 import { useRouter } from 'next/router'
 import web3 from 'web3'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function PageProfile(): ReactElement {
   const router = useRouter()
-  const { accountId, accountEns } = useWeb3()
+  const { accountId, accountEns } = useWeb3Auth()
   const [finalAccountId, setFinalAccountId] = useState<string>()
   const [finalAccountEns, setFinalAccountEns] = useState<string>()
   const [ownAccount, setOwnAccount] = useState(false)

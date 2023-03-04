@@ -242,7 +242,7 @@ import { useWeb3 } from '@context/Web3'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 
 function Component() {
-  const { accountId } = useWeb3()
+  const { accountId } = useWeb3Auth()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   return isInPurgatory ? <div>{purgatoryData.reason}</div> : null
 }
@@ -252,11 +252,11 @@ function Component() {
 
 All displayed chain & network metadata is retrieved from `https://chainid.network` on build time and integrated into NEXT's GraphQL layer. This data source is a community-maintained GitHub repository under [ethereum-lists/chains](https://github.com/ethereum-lists/chains).
 
-Within components this metadata can be queried for under `allNetworksMetadataJson`. The `useWeb3()` hook does this in the background to expose the final `networkDisplayName` for use in components:
+Within components this metadata can be queried for under `allNetworksMetadataJson`. The `useWeb3Auth()` hook does this in the background to expose the final `networkDisplayName` for use in components:
 
 ```tsx
 export default function NetworkName(): ReactElement {
-  const { networkId, isTestnet } = useWeb3()
+  const { networkId, isTestnet } = useWeb3Auth()
   const { networksList } = useNetworkMetadata()
   const networkData = getNetworkDataById(networksList, networkId)
   const networkName = getNetworkDisplayName(networkData)

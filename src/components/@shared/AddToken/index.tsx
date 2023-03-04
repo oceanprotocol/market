@@ -5,6 +5,7 @@ import { useWeb3 } from '@context/Web3'
 import Button from '@shared/atoms/Button'
 import OceanLogo from '@images/logo.svg'
 import styles from './index.module.css'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 const cx = classNames.bind(styles)
 
@@ -23,7 +24,7 @@ export default function AddToken({
   className,
   minimal
 }: AddTokenProps): ReactElement {
-  const { web3Provider } = useWeb3()
+  const { web3Provider } = useWeb3Auth()
 
   const styleClasses = cx({
     button: true,

@@ -24,6 +24,7 @@ import { useAsset } from '@context/Asset'
 import EditFeedback from './EditFeedback'
 import { setNftMetadata } from '@utils/nft'
 import { ComputeEditForm } from './_types'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function EditComputeDataset({
   asset
@@ -31,7 +32,7 @@ export default function EditComputeDataset({
   asset: AssetExtended
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3 } = useWeb3Auth()
   const { fetchAsset, isAssetNetwork } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()

@@ -18,7 +18,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
 import { assetStateToString } from '@utils/assetState'
 import { isValidDid } from '@utils/ddo'
-
+import { useWeb3Auth } from './Web3Auth'
 export interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: Purgatory
@@ -45,7 +45,7 @@ function AssetProvider({
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
 
-  const { chainId, accountId } = useWeb3()
+  const { chainId, accountId } = useWeb3Auth()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
   const [asset, setAsset] = useState<AssetExtended>()

@@ -8,10 +8,11 @@ import content from '../../../../content/price.json'
 import styles from './index.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import { useWeb3 } from '@context/Web3'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function PricingFields(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { approvedBaseTokens, chainId } = useWeb3()
+  const { approvedBaseTokens, chainId } = useWeb3Auth()
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { pricing } = values

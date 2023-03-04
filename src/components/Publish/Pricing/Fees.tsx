@@ -7,6 +7,7 @@ import { OpcFeesQuery_opc as OpcFeesData } from '../../../@types/subgraph/OpcFee
 import { useWeb3 } from '@context/Web3'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Decimal from 'decimal.js'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 const Default = ({
   title,
@@ -40,7 +41,7 @@ export default function Fees({
   tooltips: { [key: string]: string }
 }): ReactElement {
   const [oceanCommunitySwapFee, setOceanCommunitySwapFee] = useState<string>('')
-  const { chainId } = useWeb3()
+  const { chainId } = useWeb3Auth()
   const { appConfig } = useMarketMetadata()
 
   useEffect(() => {

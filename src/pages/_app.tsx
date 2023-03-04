@@ -2,6 +2,7 @@
 import React, { ReactElement } from 'react'
 import type { AppProps /*, AppContext */ } from 'next/app'
 import Web3Provider from '@context/Web3'
+import Web3AuthProvider from '@context/Web3Auth'
 import { UserPreferencesProvider } from '@context/UserPreferences'
 import PricesProvider from '@context/Prices'
 import UrqlProvider from '@context/UrqlProvider'
@@ -17,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })
   return (
     <MarketMetadataProvider>
-      <Web3Provider>
+      <Web3AuthProvider>
         <UrqlProvider>
           <UserPreferencesProvider>
             <PricesProvider>
@@ -29,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
             </PricesProvider>
           </UserPreferencesProvider>
         </UrqlProvider>
-      </Web3Provider>
+      </Web3AuthProvider>
     </MarketMetadataProvider>
   )
 }

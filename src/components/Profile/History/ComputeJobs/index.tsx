@@ -9,6 +9,7 @@ import { useUserPreferences } from '@context/UserPreferences'
 import NetworkName from '@shared/NetworkName'
 import styles from './index.module.css'
 import AssetListTitle from '@shared/AssetListTitle'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
@@ -55,7 +56,7 @@ export default function ComputeJobs({
   isLoading?: boolean
   refetchJobs?: any
 }): ReactElement {
-  const { accountId } = useWeb3()
+  const { accountId } = useWeb3Auth()
   const { chainIds } = useUserPreferences()
   const [columnsMinimal] = useState([columns[4], columns[5], columns[3]])
 

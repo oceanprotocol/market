@@ -11,9 +11,10 @@ import { getOceanConfig } from '@utils/ocean'
 import { useWeb3 } from '@context/Web3'
 import axios from 'axios'
 import { useCancelToken } from '@hooks/useCancelToken'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function CustomProvider(props: InputProps): ReactElement {
-  const { chainId } = useWeb3()
+  const { chainId } = useWeb3Auth()
   const newCancelToken = useCancelToken()
   const { initialValues, setFieldError } = useFormikContext<FormPublishData>()
   const [field, meta, helpers] = useField(props.name)

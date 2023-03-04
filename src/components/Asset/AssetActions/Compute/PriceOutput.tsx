@@ -6,6 +6,7 @@ import styles from './PriceOutput.module.css'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
 import { useWeb3 } from '@context/Web3'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 interface PriceOutputProps {
   hasPreviousOrder: boolean
@@ -42,7 +43,7 @@ function Row({
   sign?: string
   type?: string
 }) {
-  const { isSupportedOceanNetwork } = useWeb3()
+  const { isSupportedOceanNetwork } = useWebAuth()
 
   return (
     <div className={styles.priceRow}>

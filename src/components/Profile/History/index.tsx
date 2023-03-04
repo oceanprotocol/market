@@ -9,6 +9,7 @@ import { getComputeJobs } from '@utils/compute'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { LoggerInstance } from '@oceanprotocol/lib'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 interface HistoryTab {
   title: string
@@ -56,7 +57,7 @@ export default function HistoryPage({
 }: {
   accountIdentifier: string
 }): ReactElement {
-  const { accountId } = useWeb3()
+  const { accountId } = useWeb3Auth()
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
 

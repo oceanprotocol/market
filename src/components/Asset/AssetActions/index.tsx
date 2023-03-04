@@ -16,13 +16,14 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from '@components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import AssetStats from './AssetStats'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function AssetActions({
   asset
 }: {
   asset: AssetExtended
 }): ReactElement {
-  const { accountId, balance, web3 } = useWeb3()
+  const { accountId, balance, web3 } = useWeb3Auth()
   const { isAssetNetwork } = useAsset()
   const newCancelToken = useCancelToken()
   const isMounted = useIsMounted()

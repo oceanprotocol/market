@@ -16,6 +16,7 @@ import Alert from '@shared/atoms/Alert'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function FormStartCompute({
   algorithms,
@@ -77,7 +78,7 @@ export default function FormStartCompute({
   retry: boolean
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
-  const { accountId, balance, isSupportedOceanNetwork } = useWeb3()
+  const { accountId, balance, isSupportedOceanNetwork } = useWeb3Auth()
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
   const { asset, isAssetNetwork } = useAsset()

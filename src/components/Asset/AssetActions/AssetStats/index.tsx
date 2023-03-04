@@ -6,11 +6,12 @@ import { formatNumber } from '@utils/numbers'
 import { getNftOwnAllocation } from '@utils/veAllocation'
 import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function AssetStats() {
   const { locale } = useUserPreferences()
   const { asset } = useAsset()
-  const { accountId } = useWeb3()
+  const { accountId } = useWeb3Auth()
 
   const [ownAllocation, setOwnAllocation] = useState(0)
 

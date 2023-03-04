@@ -12,9 +12,10 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import AssetListTable from './AssetListTable'
+import { useWeb3Auth } from '@context/Web3Auth'
 
 export default function Allocations(): ReactElement {
-  const { accountId } = useWeb3()
+  const { accountId } = useWeb3Auth()
   const { chainIds } = useUserPreferences()
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()

@@ -8,7 +8,7 @@ import React, {
   useCallback
 } from 'react'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { getEnsName } from '@utils/ens'
+import { getEnsName, getEnsProfile } from '@utils/ens'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName,
@@ -21,11 +21,7 @@ import { getOpcsApprovedTokens } from '@utils/subgraph'
 import Web3 from 'web3'
 import { Web3Auth } from '@web3auth/modal'
 // import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
-import {
-  WALLET_ADAPTERS,
-  CHAIN_NAMESPACES,
-  SafeEventEmitterProvider
-} from '@web3auth/base'
+import { CHAIN_NAMESPACES, SafeEventEmitterProvider } from '@web3auth/base'
 
 interface Web3AuthInterface {
   web3: Web3
@@ -161,7 +157,7 @@ function Web3AuthProvider({ children }: { children: ReactNode }): ReactElement {
   }, [accountId, approvedBaseTokens, networkId, web3])
 
   // -----------------------------------
-  // Helper: Get user ENS name
+  // Helper: Get user ENS info
   // -----------------------------------
   const getUserEnsName = useCallback(async () => {
     if (!accountId) return
@@ -194,102 +190,35 @@ function Web3AuthProvider({ children }: { children: ReactNode }): ReactElement {
 
     async function init() {
       const clientId =
-        'BKby64yYsPT_n1gndsbJvR9oSp0Kkk81tx6PcvHndVJzEErs0jQaL3ecCe2qzmxiP5UM4qObcLTiifavdqArtP8' // get from https://dashboard.web3auth.io
+        'BKLATF5O6ppqgGZszTlrfwMnTABUU_xeeRArCNVQSFEIG4u-gGDlHSKCp3QynIqG8X37Dch6SjIHi1CyJD8UQ8g' // get from https://dashboard.web3auth.io
 
       const chainConfig = {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
         chainId: '0x13881',
         rpcTarget:
-          'https://polygon-mumbai.g.alchemy.com/v2/139ubWvnZOLu91g6lecqgS6PYveeZQ5K',
+          'https://polygon-mumbai.g.alchemy.com/v2/sjb7S20x3rAlzSMLoT6afJgGgaTALkaQ',
         displayName: 'Polygon Mumbai',
         blockExplorer: 'https://mumbai.polygonscan.com/',
         ticker: 'MATIC',
         tickerName: 'Matic'
       }
 
-      const uiConfig = {
-        appLogo:
-          'https://upload.wikimedia.org/wikipedia/commons/3/32/CGI_logo.svg'
-      }
+      // const uiConfig = {
+      //   appLogo:
+      //     'https://uploads-ssl.webflow.com/63f3d7ac06d38e1166925652/63f3dd6eb23ebf5771d44af2_LabsDAOLogoBlackCourier.png'
+      // }
 
       const authMode = process.env.NODE_ENV === 'production' ? 'WALLET' : 'DAPP'
-
+      console.log(clientId)
       const web3AuthInstance = new Web3Auth({
         clientId,
         chainConfig,
-        uiConfig,
+        // uiConfig,
         authMode
       })
 
-      const openloginAdapter = new OpenloginAdapter({
-        adapterSettings: {
-          network: 'testnet',
-          uxMode: 'popup',
-          whiteLabel: {
-            name: 'CGI Navigate',
-            logoLight:
-              'https://upload.wikimedia.org/wikipedia/commons/3/32/CGI_logo.svg',
-            logoDark:
-              'https://upload.wikimedia.org/wikipedia/commons/3/32/CGI_logo.svg',
-            defaultLanguage: 'en',
-            dark: false // whether to enable dark mode. defaultValue: false
-          }
-        }
-      })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const modalConfig: any = {
-        [WALLET_ADAPTERS.OPENLOGIN]: {
-          label: 'openlogin',
-          loginMethods: {
-            email_passwordless: {
-              showOnModal: true
-            },
-            google: {
-              showOnModal: false
-            },
-            facebook: {
-              showOnModal: false
-            },
-            twitter: {
-              showOnModal: false
-            },
-            reddit: {
-              showOnModal: false
-            },
-            discord: {
-              showOnModal: false
-            },
-            twitch: {
-              showOnModal: false
-            },
-            apple: {
-              showOnModal: false
-            },
-            line: {
-              showOnModal: false
-            },
-            github: {
-              showOnModal: false
-            },
-            kakao: {
-              showOnModal: false
-            },
-            linkedin: {
-              showOnModal: false
-            },
-            weibo: {
-              showOnModal: false
-            },
-            wechat: {
-              showOnModal: false
-            }
-          }
-        }
-      }
-      web3AuthInstance.configureAdapter(openloginAdapter)
-      await web3AuthInstance.initModal({
-        modalConfig
-      })
+      await web3AuthInstance.initModal()
 
       if (web3Auth?.provider) {
         setWeb3Provider(web3Auth.provider)
@@ -361,7 +290,7 @@ function Web3AuthProvider({ children }: { children: ReactNode }): ReactElement {
     )
 
     // Construct network display name
-    const networkDisplayName = getNetworkDisplayName(networkData, networkId)
+    const networkDisplayName = getNetworkDisplayName(networkData)
     setNetworkDisplayName(networkDisplayName)
 
     setIsTestnet(getNetworkType(networkData) !== NetworkType.Mainnet)
