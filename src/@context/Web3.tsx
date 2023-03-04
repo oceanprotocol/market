@@ -23,6 +23,7 @@ import useNetworkMetadata, {
 import { useMarketMetadata } from './MarketMetadata'
 import { getTokenBalance } from '@utils/web3'
 import { getOpcsApprovedTokens } from '@utils/subgraph'
+import { Web3Auth } from '@web3auth/modal'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -65,6 +66,12 @@ const providerOptions = isBrowser
             137: 'https://polygon-rpc.com',
             80001: 'https://rpc-mumbai.matic.today'
           }
+        }
+      },
+      web3auth: {
+        package: Web3Auth,
+        options: {
+          infuraId
         }
       }
     }
