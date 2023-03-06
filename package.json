@@ -23,6 +23,8 @@
     "storybook:build": "cross-env NODE_ENV=test build-storybook"
   },
   "dependencies": {
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/language": "^6.3.1",
     "@coingecko/cryptoformat": "^0.5.4",
     "@loadable/component": "^5.15.2",
     "@oceanprotocol/art": "^3.2.0",
@@ -30,6 +32,7 @@
     "@oceanprotocol/typographies": "^0.1.0",
     "@oceanprotocol/use-dark-mode": "^2.4.3",
     "@tippyjs/react": "^4.2.6",
+    "@uiw/react-codemirror": "^4.19.5",
     "@urql/exchange-refocus": "^1.0.0",
     "@walletconnect/web3-provider": "^1.8.0",
     "axios": "^1.2.0",
@@ -71,7 +74,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^6.5.15",
+    "@storybook/addon-essentials": "^6.5.13",
     "@storybook/builder-webpack5": "^6.5.13",
     "@storybook/manager-webpack5": "^6.5.13",
     "@storybook/react": "^6.5.13",
@@ -89,6 +92,7 @@
     "@types/remove-markdown": "^0.3.1",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
+    "@uiw/codemirror-themes": "^4.19.1",
     "apollo": "^2.34.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.35.0",

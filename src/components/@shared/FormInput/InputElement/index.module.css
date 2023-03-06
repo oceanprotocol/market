@@ -47,7 +47,7 @@
   display: none;
 }
 
-.textarea {
+.codemirror, .textarea {
   composes: input;
   height: auto;
 }
