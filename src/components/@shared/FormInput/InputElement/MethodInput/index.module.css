@@ -1,0 +1,44 @@
+.input {
+  composes: input from '@shared/FormInput/InputElement/index.module.css';
+}
+
+.inputMethod {
+  composes: input from '@shared/FormInput/InputElement/index.module.css';
+  cursor: pointer;
+  outline: 0;
+  margin: 0;
+  display: inline-block;
+  min-width: 7rem;
+  padding: calc(var(--spacer) / 3) var(--spacer);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  border-radius: var(--border-radius);
+  transition: 0.2s ease-out;
+  color: var(--brand-white);
+  box-shadow: 0 9px 18px 0 rgb(0 0 0 / 10%);
+  -webkit-user-select: none;
+  user-select: none;
+  text-align: center;
+  border-top-right-radius: var(--border-radius);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-top: 0;
+  margin-left: -1px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  white-space: nowrap;
+  background: var(--brand-gradient);
+  border: 0;
+}
+
+.hasError {
+  color: var(--brand-alert-red);
+  border-color: var(--brand-alert-red);
+}
+
+.error {
+  composes: error from '@shared/FormInput/index.module.css';
+}

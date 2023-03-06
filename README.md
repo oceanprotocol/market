@@ -461,7 +461,7 @@ The style can be changed by altering the `style` prop in the `PrivacyPreferenceC
 ## 🏛 License
 
 ```text
-Copyright 2022 Ocean Protocol Foundation Ltd.
+Copyright 2023 Ocean Protocol Foundation Ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

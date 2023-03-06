@@ -34,6 +34,7 @@ const tokenPriceQuery = gql`
         tx
         serviceIndex
         createdTimestamp
+        providerFee
         reuses(orderBy: createdTimestamp, orderDirection: desc) {
           id
           caller
@@ -92,6 +93,14 @@ function getAccessDetailsFromTokenPrice(
 
   if (tokenPrice?.orders?.length > 0) {
     const order = tokenPrice.orders[0]
+    const providerFees: ProviderFees = order?.providerFee
+      ? JSON.parse(order.providerFee)
+      : null
+    accessDetails.validProviderFees =
+      providerFees?.validUntil &&
+      Date.now() / 1000 < Number(providerFees?.validUntil)
+        ? providerFees
+        : null
     const reusedOrder = order?.reuses?.length > 0 ? order.reuses[0] : null
     // asset is owned if there is an order and asset has timeout 0 (forever) or if the condition is valid
     accessDetails.isOwned =
