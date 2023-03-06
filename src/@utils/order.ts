@@ -23,6 +23,7 @@ import {
   customProviderUrl
 } from '../../app.config'
 import { toast } from 'react-toastify'
+import { getEncryptedFiles, getFileInfo } from './provider'
 
 async function initializeProvider(
   asset: AssetExtended,
@@ -63,6 +64,11 @@ export async function order(
 ): Promise<TransactionReceipt> {
   const datatoken = new Datatoken(web3)
   const config = getOceanConfig(asset.chainId)
+
+  const filesEncrypted = await getEncryptedFiles(
+    asset.services[0].files,
+    asset.services[0].serviceEndpoint
+  )
 
   const initializeData = await initializeProvider(
     asset,

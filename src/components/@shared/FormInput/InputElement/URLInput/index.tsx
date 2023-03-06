@@ -7,7 +7,7 @@ import InputGroup from '@shared/FormInput/InputGroup'
 import InputElement from '@shared/FormInput/InputElement'
 import isUrl from 'is-url-superb'
 import { isCID } from '@utils/ipfs'
-
+import web3 from 'web3'
 export interface URLInputProps {
   submitText: string
   handleButtonClick(e: React.SyntheticEvent, data: string): void
@@ -15,6 +15,7 @@ export interface URLInputProps {
   name: string
   checkUrl?: boolean
   storageType?: string
+  hideButton?: boolean
 }
 
 export default function URLInput({
@@ -24,11 +25,12 @@ export default function URLInput({
   name,
   checkUrl,
   storageType,
+  hideButton,
   ...props
 }: URLInputProps): ReactElement {
   const [field, meta] = useField(name)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
-
+  const inputValues = (props as any)?.value
   useEffect(() => {
     if (!field?.value) return
 
@@ -37,10 +39,15 @@ export default function URLInput({
         field.value === '' ||
         (checkUrl && storageType === 'url' && !isUrl(field.value)) ||
         (checkUrl && storageType === 'ipfs' && !isCID(field.value)) ||
+        (checkUrl &&
+          storageType === 'graphql' &&
+          !isCID(field.value) &&
+          !inputValues[0]?.query) ||
         field.value.includes('javascript:') ||
+        (storageType === 'smartcontract' && !inputValues[0]?.abi) ||
         meta?.error
     )
-  }, [field?.value, meta?.error])
+  }, [field?.value, meta?.error, inputValues])
 
   return (
     <>
@@ -56,17 +63,19 @@ export default function URLInput({
           type="url"
         />
 
-        <Button
-          style="primary"
-          size="small"
-          onClick={(e: React.SyntheticEvent) => {
-            e.preventDefault()
-            handleButtonClick(e, field.value)
-          }}
-          disabled={isButtonDisabled}
-        >
-          {isLoading ? <Loader /> : submitText}
-        </Button>
+        {!hideButton && (
+          <Button
+            style="primary"
+            size="small"
+            onClick={(e: React.SyntheticEvent) => {
+              e.preventDefault()
+              handleButtonClick(e, field.value)
+            }}
+            disabled={isButtonDisabled}
+          >
+            {isLoading ? <Loader /> : submitText}
+          </Button>
+        )}
       </InputGroup>
 
       {meta.touched && meta.error && (

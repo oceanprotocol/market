@@ -64,7 +64,72 @@
             "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
             "prominentHelp": true,
             "type": "files",
-            "required": true
+            "required": true,
+            "innerFields": [
+              {
+                "value": "headers",
+                "title": "Headers",
+                "label": "Headers",
+                "placeholder_value": "Authorization",
+                "help": "This HEADERS will be stored encrypted after publishing.",
+                "type": "headers",
+                "required": true
+              }
+            ]
+          },
+          {
+            "value": "graphql",
+            "title": "Graphql",
+            "label": "URL",
+            "placeholder": "e.g. http://172.15.0.15:8000/subgraphs/name/oceanprotocol/ocean-subgraph",
+            "help": "This URL will be stored encrypted after publishing.",
+            "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+            "prominentHelp": true,
+            "type": "files",
+            "required": true,
+            "headers": true,
+            "innerFields": [
+              {
+                "value": "headers",
+                "title": "Headers",
+                "label": "Headers",
+                "placeholder_value": "Authorization",
+                "help": "This HEADERS will be stored encrypted after publishing.",
+                "type": "headers",
+                "required": true
+              },
+              {
+                "value": "query",
+                "title": "Query",
+                "label": "Query",
+                "placeholder": "query{\n    nfts(\n       orderBy: createdTimestamp,\n       orderDirection:desc\n   ){\n       id\n       symbol\n       createdTimestamp\n   }\n}",
+                "help": "This QUERY will be stored encrypted after publishing.",
+                "type": "codeeditor",
+                "required": true
+              }
+            ]
+          },
+          {
+            "value": "smartcontract",
+            "title": "Smart Contract",
+            "label": "Address",
+            "placeholder": "e.g. 0x8149276f275EEFAc110D74AFE8AFECEaeC7d1593",
+            "help": "This ADDRESS will be stored encrypted after publishing. **Please make sure that the endpoint is accessible over the internet and is not protected by a firewall or by credentials.**",
+            "computeHelp": "For a compute dataset, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size. ",
+            "prominentHelp": true,
+            "type": "files",
+            "required": true,
+            "innerFields": [
+              {
+                "value": "abi",
+                "title": "ABI",
+                "label": "ABI",
+                "placeholder": "{\n  'inputs': [],\n  'name': 'swapOceanFee',\n  'outputs': [{'internalType': 'uint256', 'name': '', 'type': 'uint256'}],\n  'stateMutability': 'view',\n  'type': 'function'\n}",
+                "help": "This ABI will be stored encrypted after publishing.",
+                "type": "codeeditor",
+                "required": true
+              }
+            ]
           }
         ],
         "sortOptions": false,

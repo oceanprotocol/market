@@ -1,5 +1,7 @@
 import {
   Arweave,
+  GraphqlQuery,
+  Smartcontract,
   ComputeAlgorithm,
   ComputeAsset,
   ComputeEnvironment,
@@ -13,7 +15,9 @@ import {
 } from '@oceanprotocol/lib'
 // if customProviderUrl is set, we need to call provider using this custom endpoint
 import { customProviderUrl } from '../../app.config'
+import { QueryHeader } from '@shared/FormInput/InputElement/Headers'
 import Web3 from 'web3'
+import { AbiItem } from 'web3-utils/types'
 import { getValidUntilTime } from './compute'
 
 export async function initializeProviderForCompute(
@@ -40,6 +44,11 @@ export async function initializeProviderForCompute(
   )
 
   try {
+    const filesEncrypted = await getEncryptedFiles(
+      dataset.services[0].files,
+      dataset.services[0].serviceEndpoint
+    )
+
     return await ProviderInstance.initializeCompute(
       [computeAsset],
       computeAlgo,
@@ -92,14 +101,27 @@ export async function getFileDidInfo(
 export async function getFileInfo(
   file: string,
   providerUrl: string,
-  storageType: string
+  storageType: string,
+  query?: string,
+  headers?: QueryHeader[],
+  abi?: string,
+  chainId?: number,
+  method?: string
 ): Promise<FileInfo[]> {
   try {
     let response
+    const headersProvider = {}
+    if (headers?.length > 0) {
+      headers.map((el) => {
+        headersProvider[el.key] = el.value
+        return el
+      })
+    }
+
     switch (storageType) {
       case 'ipfs': {
         const fileIPFS: Ipfs = {
-          type: 'ipfs',
+          type: storageType,
           hash: file
         }
 
@@ -112,7 +134,7 @@ export async function getFileInfo(
       }
       case 'arweave': {
         const fileArweave: Arweave = {
-          type: 'arweave',
+          type: storageType,
           transactionId: file
         }
 
@@ -122,12 +144,39 @@ export async function getFileInfo(
         )
         break
       }
+      case 'graphql': {
+        const fileGraphql: GraphqlQuery = {
+          type: storageType,
+          url: file,
+          headers: headersProvider,
+          query
+        }
+
+        response = await ProviderInstance.getFileInfo(fileGraphql, providerUrl)
+        break
+      }
+      case 'smartcontract': {
+        // clean obj
+        const fileSmartContract: Smartcontract = {
+          chainId,
+          type: storageType,
+          address: file,
+          abi: JSON.parse(abi) as AbiItem
+        }
+
+        response = await ProviderInstance.getFileInfo(
+          fileSmartContract,
+          providerUrl
+        )
+        break
+      }
       default: {
         const fileUrl: UrlFile = {
           type: 'url',
           index: 0,
           url: file,
-          method: 'get'
+          headers: headersProvider,
+          method
         }
 
         response = await ProviderInstance.getFileInfo(
