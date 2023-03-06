@@ -44,11 +44,6 @@ export async function initializeProviderForCompute(
   )
 
   try {
-    const filesEncrypted = await getEncryptedFiles(
-      dataset.services[0].files,
-      dataset.services[0].serviceEndpoint
-    )
-
     return await ProviderInstance.initializeCompute(
       [computeAsset],
       computeAlgo,
