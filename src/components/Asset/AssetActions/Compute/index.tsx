@@ -129,6 +129,99 @@ export default function Compute({
     return hasAlgoDt
   }
 
+  async function setComputeFees(
+    providerData: ProviderComputeInitializeResults
+  ): Promise<ProviderComputeInitializeResults> {
+    const providerFeeToken =
+      providerData?.datasets?.[0]?.providerFee?.providerFeeToken
+    const providerFeeAmount =
+      providerData?.datasets?.[0]?.providerFee?.providerFeeAmount
+    const feeValidity = providerData?.datasets?.[0]?.providerFee?.validUntil
+
+    console.log('providerFeeToken', providerFeeToken)
+    console.log('providerFeeAmount', providerFeeAmount)
+    console.log('feeValidity', feeValidity)
+
+    const feeAmount = await unitsToAmount(
+      !isSupportedOceanNetwork || !isAssetNetwork
+        ? await getDummyWeb3(asset?.chainId)
+        : web3,
+      providerFeeToken,
+      providerFeeAmount
+    )
+    setProviderFeeAmount(feeAmount)
+
+    const datatoken = new Datatoken(
+      await getDummyWeb3(asset?.chainId),
+      null,
+      null,
+      minAbi
+    )
+
+    setProviderFeesSymbol(await datatoken.getSymbol(providerFeeToken))
+
+    const computeDuration = (
+      parseInt(feeValidity) - Math.floor(Date.now() / 1000)
+    ).toString()
+    setComputeValidUntil(computeDuration)
+
+    if (
+      selectedAlgorithmAsset.accessDetails.validProviderFees ||
+      asset.accessDetails.validProviderFees
+    ) {
+      providerData.algorithm.providerFee = {
+        providerFeeAmount: '0',
+        ...(selectedAlgorithmAsset.accessDetails.validProviderFees ||
+          asset.accessDetails.validProviderFees)
+      }
+      providerData.datasets[0].providerFee = null
+    } else {
+      providerData.algorithm.providerFee =
+        providerData.algorithm.providerFee ||
+        providerData.datasets[0].providerFee
+      providerData.datasets[0].providerFee = null
+    }
+    return providerData
+  }
+
+  async function setAlgoPrice(providerData: ProviderComputeInitializeResults) {
+    if (
+      selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
+      selectedAlgorithmAsset?.accessDetails?.type !== 'free' &&
+      providerData?.algorithm?.providerFee
+    ) {
+      const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
+        selectedAlgorithmAsset,
+        ZERO_ADDRESS,
+        providerData.algorithm.providerFee
+      )
+      if (!algorithmOrderPriceAndFees)
+        throw new Error('Error setting algorithm price and fees!')
+
+      setAlgoOrderPriceAndFees(algorithmOrderPriceAndFees)
+    }
+  }
+
+  async function setDatasetPrice(
+    providerData: ProviderComputeInitializeResults
+  ) {
+    if (
+      asset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
+      asset?.accessDetails?.type !== 'free' &&
+      providerData?.datasets?.[0]?.providerFee
+    ) {
+      const datasetPriceAndFees = await getOrderPriceAndFees(
+        asset,
+        ZERO_ADDRESS,
+        providerData?.datasets?.[0]?.providerFee
+      )
+      if (!datasetPriceAndFees)
+        throw new Error('Error setting dataset price and fees!')
+
+      setDatasetOrderPriceAndFees(datasetPriceAndFees)
+    }
+  }
+
   async function initPriceAndFees() {
     try {
       const computeEnv = await getComputeEnviroment(asset)
@@ -150,101 +243,27 @@ export default function Compute({
       )
         throw new Error(`Error initializing provider for the compute job!`)
 
-      setInitializedProviderResponse(initializedProvider)
-
-      if (
-        asset.accessDetails?.validProviderFees &&
-        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
-      ) {
-        initializedProvider.datasets[0].providerFee = {
-          providerFeeAmount: '0',
-          ...asset.accessDetails?.validProviderFees
-        }
-      }
-
-      if (
-        selectedAlgorithmAsset?.accessDetails?.validProviderFees &&
-        initializedProvider?.algorithm?.providerFee?.providerFeeAmount
-      ) {
-        initializedProvider.algorithm.providerFee = {
-          providerFeeAmount: '0',
-          ...selectedAlgorithmAsset.accessDetails.validProviderFees
-        }
-      }
-
-      const feeAmount = await unitsToAmount(
-        !isSupportedOceanNetwork || !isAssetNetwork
-          ? await getDummyWeb3(asset?.chainId)
-          : web3,
-        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken,
-        initializedProvider?.datasets?.[0]?.providerFee?.providerFeeAmount
+      setComputeStatusText(
+        getComputeFeedback(
+          asset.accessDetails?.baseToken?.symbol,
+          asset.accessDetails?.datatoken?.symbol,
+          asset.metadata.type
+        )[0]
+      )
+      await setDatasetPrice(initializedProvider)
+      setComputeStatusText(
+        getComputeFeedback(
+          selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol,
+          selectedAlgorithmAsset?.accessDetails?.datatoken?.symbol,
+          selectedAlgorithmAsset?.metadata?.type
+        )[0]
       )
 
-      setProviderFeeAmount(feeAmount)
+      await setAlgoPrice(initializedProvider)
+      const sanitizedResponse = await setComputeFees(initializedProvider)
 
-      const datatoken = new Datatoken(
-        await getDummyWeb3(asset?.chainId),
-        null,
-        null,
-        minAbi
-      )
-      setProviderFeesSymbol(
-        await datatoken.getSymbol(
-          initializedProvider?.datasets?.[0]?.providerFee?.providerFeeToken
-        )
-      )
-
-      const computeDuration = (
-        parseInt(initializedProvider?.datasets?.[0]?.providerFee?.validUntil) -
-        Math.floor(Date.now() / 1000)
-      ).toString()
-      setComputeValidUntil(computeDuration)
-
-      if (
-        asset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
-        asset?.accessDetails?.type !== 'free' &&
-        initializedProvider?.datasets?.[0]?.providerFee
-      ) {
-        setComputeStatusText(
-          getComputeFeedback(
-            asset.accessDetails?.baseToken?.symbol,
-            asset.accessDetails?.datatoken?.symbol,
-            asset.metadata.type
-          )[0]
-        )
-        const datasetPriceAndFees = await getOrderPriceAndFees(
-          asset,
-          ZERO_ADDRESS,
-          initializedProvider?.datasets?.[0]?.providerFee
-        )
-        if (!datasetPriceAndFees)
-          throw new Error('Error setting dataset price and fees!')
-
-        setDatasetOrderPriceAndFees(datasetPriceAndFees)
-      }
-
-      if (
-        selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
-        selectedAlgorithmAsset?.accessDetails?.type !== 'free' &&
-        initializedProvider?.algorithm?.providerFee
-      ) {
-        setComputeStatusText(
-          getComputeFeedback(
-            selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol,
-            selectedAlgorithmAsset?.accessDetails?.datatoken?.symbol,
-            selectedAlgorithmAsset?.metadata?.type
-          )[0]
-        )
-        const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
-          selectedAlgorithmAsset,
-          ZERO_ADDRESS,
-          initializedProvider.algorithm.providerFee
-        )
-        if (!algorithmOrderPriceAndFees)
-          throw new Error('Error setting algorithm price and fees!')
-
-        setAlgoOrderPriceAndFees(algorithmOrderPriceAndFees)
-      }
+      console.log('sanitizedResponse ', sanitizedResponse)
+      setInitializedProviderResponse(sanitizedResponse)
     } catch (error) {
       setError(error.message)
       LoggerInstance.error(`[compute] ${error.message} `)
@@ -376,7 +395,6 @@ export default function Compute({
         selectedAlgorithmAsset,
         algoOrderPriceAndFees,
         accountId,
-        hasAlgoAssetDatatoken,
         initializedProviderResponse.algorithm,
         computeEnv.consumerAddress
       )
@@ -395,7 +413,6 @@ export default function Compute({
         asset,
         datasetOrderPriceAndFees,
         accountId,
-        hasDatatoken,
         initializedProviderResponse.datasets[0],
         computeEnv.consumerAddress
       )
