@@ -138,10 +138,6 @@ export default function Compute({
       providerData?.datasets?.[0]?.providerFee?.providerFeeAmount
     const feeValidity = providerData?.datasets?.[0]?.providerFee?.validUntil
 
-    console.log('providerFeeToken', providerFeeToken)
-    console.log('providerFeeAmount', providerFeeAmount)
-    console.log('feeValidity', feeValidity)
-
     const feeAmount = await unitsToAmount(
       !isSupportedOceanNetwork || !isAssetNetwork
         ? await getDummyWeb3(asset?.chainId)
@@ -171,15 +167,10 @@ export default function Compute({
     ) {
       providerData.algorithm.providerFee = {
         providerFeeAmount: '0',
-        ...(selectedAlgorithmAsset.accessDetails.validProviderFees ||
-          asset.accessDetails.validProviderFees)
+        ...(asset.accessDetails.validProviderFees ||
+          selectedAlgorithmAsset.accessDetails.validProviderFees)
       }
-      providerData.datasets[0].providerFee = null
-    } else {
-      providerData.algorithm.providerFee =
-        providerData.algorithm.providerFee ||
-        providerData.datasets[0].providerFee
-      providerData.datasets[0].providerFee = null
+      providerData.datasets[0].providerFee.providerFeeAmount = '0'
     }
     return providerData
   }
