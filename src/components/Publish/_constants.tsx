@@ -14,6 +14,7 @@ import Preview from './Preview'
 import Submission from './Submission'
 import { ServiceComputeOptions } from '@oceanprotocol/lib'
 import contentFeedback from '../../../content/publish/feedback.json'
+import CustomizationFields from './Customization'
 
 export const wizardSteps: StepContent[] = [
   {
@@ -28,16 +29,21 @@ export const wizardSteps: StepContent[] = [
   },
   {
     step: 3,
+    title: content.customization.title,
+    component: <CustomizationFields />
+  },
+  {
+    step: 4,
     title: content.pricing.title,
     component: <PricingFields />
   },
   {
-    step: 4,
+    step: 5,
     title: content.preview.title,
     component: <Preview />
   },
   {
-    step: 5,
+    step: 6,
     title: content.submission.title,
     component: <Submission />
   }
@@ -68,7 +74,8 @@ export const initialValues: FormPublishData = {
     dockerImage: '',
     dockerImageCustom: '',
     dockerImageCustomTag: '',
-    dockerImageCustomEntrypoint: ''
+    dockerImageCustomEntrypoint: '',
+    consumerParameters: []
   },
   services: [
     {
