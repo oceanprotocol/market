@@ -1,12 +1,48 @@
-import { MAX_DECIMALS } from '@utils/constants'
-import * as Yup from 'yup'
-import { getMaxDecimalsValidation } from '@utils/numbers'
 import { FileInfo } from '@oceanprotocol/lib'
+import { MAX_DECIMALS } from '@utils/constants'
+import { getMaxDecimalsValidation } from '@utils/numbers'
+import * as Yup from 'yup'
+import { SchemaLike } from 'yup/lib/types'
 import { testLinks } from '../../@utils/yup'
+import { paramTypes } from '../@shared/FormInput/InputElement/ConsumerParameters'
+import { AlgorithmConsumerParameter } from './_types'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
 // hint, hint: https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
+
+const validationConsumerParameters: {
+  [key in keyof AlgorithmConsumerParameter]: SchemaLike
+} = {
+  name: Yup.string()
+    .test('unique', 'Parameter names must be unique', (name, context) => {
+      // TODO: revert any
+      // from is not yet correctly typed: https://github.com/jquense/yup/issues/398#issuecomment-916693907
+      const [parentFormObj, nextParentFormObj] = (context as any).from
+      const { consumerParameters } = nextParentFormObj.value
+      const occasions = consumerParameters.filter(
+        (params) => params.name === name
+      )
+      return occasions.length === 1
+    })
+    .required('Required'),
+  type: Yup.string().oneOf(paramTypes).required('Required'),
+  description: Yup.string().required('Required'),
+  label: Yup.string().required('Required'),
+  required: Yup.boolean().required('Required'),
+  default: Yup.mixed().when('type', {
+    is: 'multiselect',
+    then: Yup.array().of(Yup.string()).required(),
+    otherwise: Yup.string().required()
+  }),
+  options: Yup.array().when('type', {
+    is: (value) => ['select', 'multiselect'].includes(value),
+    then: Yup.array()
+      .of(Yup.string())
+      .min(1, 'At least one option needs to be defined')
+      .required('Required')
+  })
+}
 
 const validationMetadata = {
   type: Yup.string()
@@ -26,7 +62,10 @@ const validationMetadata = {
   tags: Yup.array<string[]>().nullable(),
   termsAndConditions: Yup.boolean()
     .required('Required')
-    .isTrue('Please agree to the Terms and Conditions.')
+    .isTrue('Please agree to the Terms and Conditions.'),
+  consumerParameters: Yup.array().of(
+    Yup.object().shape(validationConsumerParameters)
+  )
 }
 
 const validationService = {

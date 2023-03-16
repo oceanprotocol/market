@@ -17,3 +17,27 @@ export function sortAssets(items: Asset[], sorted: string[]) {
   })
   return items
 }
+
+export const isObjectLike = (object: any) => {
+  return object !== null && typeof object === 'object' && !Array.isArray(object)
+}
+
+export const getObjectPropertyByPath = (object: any, path = '') => {
+  if (!isObjectLike(object)) return object
+  path = path.replace(/\[(\w+)\]/g, '.$1') // convert indexes to properties
+  path = path.replace(/^\./, '') // strip a leading dot
+  const pathArray = path.split('.')
+  for (let i = 0, n = pathArray.length; i < n; ++i) {
+    const key = pathArray[i]
+    try {
+      if (key in object) {
+        object = object[key]
+      } else {
+        return
+      }
+    } catch {
+      return object
+    }
+  }
+  return object
+}
