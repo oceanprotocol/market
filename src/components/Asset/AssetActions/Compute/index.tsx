@@ -13,7 +13,8 @@ import {
   ComputeOutput,
   ProviderComputeInitializeResults,
   unitsToAmount,
-  minAbi
+  minAbi,
+  ProviderFees
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -132,10 +133,15 @@ export default function Compute({
   async function setComputeFees(
     providerData: ProviderComputeInitializeResults
   ): Promise<ProviderComputeInitializeResults> {
+    if (asset.accessDetails.validProviderFees) {
+      providerData.datasets[0].providerFee.providerFeeAmount = '0'
+    }
+
     const providerFeeToken =
       providerData?.datasets?.[0]?.providerFee?.providerFeeToken
-    const providerFeeAmount =
-      providerData?.datasets?.[0]?.providerFee?.providerFeeAmount
+    const providerFeeAmount = asset.accessDetails.validProviderFees
+      ? '0'
+      : providerData?.datasets?.[0]?.providerFee?.providerFeeAmount
     const feeValidity = providerData?.datasets?.[0]?.providerFee?.validUntil
 
     const feeAmount = await unitsToAmount(
@@ -156,35 +162,24 @@ export default function Compute({
 
     setProviderFeesSymbol(await datatoken.getSymbol(providerFeeToken))
 
-    const computeDuration = (
-      parseInt(feeValidity) - Math.floor(Date.now() / 1000)
-    ).toString()
+    const computeDuration = asset.accessDetails.validProviderFees
+      ? asset.accessDetails.validProviderFees.validUntil
+      : (parseInt(feeValidity) - Math.floor(Date.now() / 1000)).toString()
     setComputeValidUntil(computeDuration)
 
-    if (
-      selectedAlgorithmAsset.accessDetails.validProviderFees ||
-      asset.accessDetails.validProviderFees
-    ) {
-      providerData.algorithm.providerFee = {
-        providerFeeAmount: '0',
-        ...(asset.accessDetails.validProviderFees ||
-          selectedAlgorithmAsset.accessDetails.validProviderFees)
-      }
-      providerData.datasets[0].providerFee.providerFeeAmount = '0'
-    }
     return providerData
   }
 
-  async function setAlgoPrice(providerData: ProviderComputeInitializeResults) {
+  async function setAlgoPrice(algoProviderFees: ProviderFees) {
     if (
       selectedAlgorithmAsset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
       selectedAlgorithmAsset?.accessDetails?.type !== 'free' &&
-      providerData?.algorithm?.providerFee
+      algoProviderFees
     ) {
       const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
         selectedAlgorithmAsset,
         ZERO_ADDRESS,
-        providerData.algorithm.providerFee
+        algoProviderFees
       )
       if (!algorithmOrderPriceAndFees)
         throw new Error('Error setting algorithm price and fees!')
@@ -193,18 +188,16 @@ export default function Compute({
     }
   }
 
-  async function setDatasetPrice(
-    providerData: ProviderComputeInitializeResults
-  ) {
+  async function setDatasetPrice(datasetProviderFees: ProviderFees) {
     if (
       asset?.accessDetails?.addressOrId !== ZERO_ADDRESS &&
       asset?.accessDetails?.type !== 'free' &&
-      providerData?.datasets?.[0]?.providerFee
+      datasetProviderFees
     ) {
       const datasetPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
-        providerData?.datasets?.[0]?.providerFee
+        datasetProviderFees
       )
       if (!datasetPriceAndFees)
         throw new Error('Error setting dataset price and fees!')
@@ -241,7 +234,7 @@ export default function Compute({
           asset.metadata.type
         )[0]
       )
-      await setDatasetPrice(initializedProvider)
+      await setDatasetPrice(initializedProvider?.datasets?.[0]?.providerFee)
       setComputeStatusText(
         getComputeFeedback(
           selectedAlgorithmAsset?.accessDetails?.baseToken?.symbol,
@@ -250,10 +243,8 @@ export default function Compute({
         )[0]
       )
 
-      await setAlgoPrice(initializedProvider)
+      await setAlgoPrice(initializedProvider?.algorithm?.providerFee)
       const sanitizedResponse = await setComputeFees(initializedProvider)
-
-      console.log('sanitizedResponse ', sanitizedResponse)
       setInitializedProviderResponse(sanitizedResponse)
     } catch (error) {
       setError(error.message)
