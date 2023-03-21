@@ -22,6 +22,7 @@ if (typeof window !== 'undefined') {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.posthog.com',
     // Disable in development
     loaded: (posthog) => {
+      console.log('process.env.NODE_ENV', process.env.NODE_ENV)
       if (process.env.NODE_ENV === 'development') posthog.opt_out_capturing()
     }
   })
@@ -33,13 +34,14 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
 
   useEffect(() => {
     // Track page views
+    console.log('posthog', posthog)
     const handleRouteChange = () => posthog?.capture('$pageview')
     router.events.on('routeChangeComplete', handleRouteChange)
 
     return () => {
       router.events.off('routeChangeComplete', handleRouteChange)
     }
-  }, [])
+  }, [router.events])
 
   return (
     <MarketMetadataProvider>
