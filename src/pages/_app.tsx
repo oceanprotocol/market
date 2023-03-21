@@ -42,23 +42,23 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
   }, [])
 
   return (
-    <PostHogProvider client={posthog}>
-      <MarketMetadataProvider>
-        <Web3Provider>
-          <UrqlProvider>
-            <UserPreferencesProvider>
-              <PricesProvider>
-                <ConsentProvider>
+    <MarketMetadataProvider>
+      <Web3Provider>
+        <UrqlProvider>
+          <UserPreferencesProvider>
+            <PricesProvider>
+              <ConsentProvider>
+                <PostHogProvider client={posthog}>
                   <App>
                     <Component {...pageProps} />
                   </App>
-                </ConsentProvider>
-              </PricesProvider>
-            </UserPreferencesProvider>
-          </UrqlProvider>
-        </Web3Provider>
-      </MarketMetadataProvider>
-    </PostHogProvider>
+                </PostHogProvider>
+              </ConsentProvider>
+            </PricesProvider>
+          </UserPreferencesProvider>
+        </UrqlProvider>
+      </Web3Provider>
+    </MarketMetadataProvider>
   )
 }
 
