@@ -19,7 +19,8 @@ import { useRouter } from 'next/router'
 // Check that PostHog is client-side (used to handle Next.js SSR)
 if (typeof window !== 'undefined') {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.posthog.com'
+    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.posthog.com',
+    persistence: 'memory'
   })
 }
 
