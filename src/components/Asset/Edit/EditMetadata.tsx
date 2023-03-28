@@ -16,7 +16,7 @@ import { useWeb3 } from '@context/Web3'
 import { useUserPreferences } from '@context/UserPreferences'
 import Web3Feedback from '@shared/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
-import { mapTimeoutStringToSeconds } from '@utils/ddo'
+import { mapTimeoutStringToSeconds, normalizeFile } from '@utils/ddo'
 import styles from './index.module.css'
 import content from '../../../../content/pages/editMetadata.json'
 import { useAbortController } from '@hooks/useAbortController'
@@ -36,7 +36,7 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { fetchAsset, isAssetNetwork, assetState } = useAsset()
-  const { accountId, web3 } = useWeb3()
+  const { accountId, web3, chainId } = useWeb3()
   const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
   const [paymentCollector, setPaymentCollector] = useState<string>()
@@ -115,19 +115,9 @@ export default function Edit({
         const file = {
           nftAddress: asset.nftAddress,
           datatokenAddress: asset.services[0].datatokenAddress,
-          files: [
-            {
-              type: values.files[0].type,
-              index: 0,
-              [values.files[0].type === 'ipfs'
-                ? 'hash'
-                : values.files[0].type === 'arweave'
-                ? 'transactionId'
-                : 'url']: values.files[0].url,
-              method: 'GET'
-            }
-          ]
+          files: [normalizeFile(values.files[0].type, values.files[0], chainId)]
         }
+
         const filesEncrypted = await getEncryptedFiles(
           file,
           asset.services[0].serviceEndpoint

@@ -34,7 +34,7 @@ declare global {
    * @prop {bool} isOwned checks if there are valid orders for this, it also takes in consideration timeout
    * @prop {string} validOrderTx  the latest valid order tx, it also takes in consideration timeout
    * @prop {string} publisherMarketOrderFee this is here just because it's more efficient, it's allready in the query
-   * @prop {FeeInfo} feeInfo  values of the relevant fees
+   * @prop {ProviderFees} validProviderFees  the latest valid order providerfees if there where any, checks them against current timestamp
    */
   interface AccessDetails {
     type: 'fixed' | 'free' | 'NOT_SUPPORTED'
@@ -47,6 +47,7 @@ declare global {
     isOwned: bool
     validOrderTx: string
     publisherMarketOrderFee: string
+    validProviderFees?: ProviderFees
   }
 
   interface PricePublishOptions {

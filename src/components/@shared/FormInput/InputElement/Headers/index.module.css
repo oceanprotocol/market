@@ -1,0 +1,13 @@
+.headersContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0 calc(var(--spacer) / 4);
+  margin-bottom: var(--spacer);
+}
+
+.headersAddedContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0 calc(var(--spacer) / 4);
+  margin-bottom: var(--spacer);
+}

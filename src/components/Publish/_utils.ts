@@ -13,7 +13,7 @@ import {
   Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
-import { mapTimeoutStringToSeconds } from '@utils/ddo'
+import { mapTimeoutStringToSeconds, normalizeFile } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
 import slugify from 'slugify'
@@ -138,23 +138,10 @@ export async function transformPublishFormToDdo(
       })
   }
 
-  // this is the default format hardcoded
-
   const file = {
     nftAddress,
     datatokenAddress,
-    files: [
-      {
-        type: files[0].type,
-        index: 0,
-        [files[0].type === 'ipfs'
-          ? 'hash'
-          : files[0].type === 'arweave'
-          ? 'transactionId'
-          : 'url']: files[0].url,
-        method: 'GET'
-      }
-    ]
+    files: [normalizeFile(files[0].type, files[0], chainId)]
   }
 
   const filesEncrypted =

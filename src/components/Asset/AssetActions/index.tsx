@@ -22,7 +22,7 @@ export default function AssetActions({
 }: {
   asset: AssetExtended
 }): ReactElement {
-  const { accountId, balance, web3 } = useWeb3()
+  const { accountId, balance, web3, chainId } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const newCancelToken = useCancelToken()
   const isMounted = useIsMounted()
@@ -56,13 +56,25 @@ export default function AssetActions({
         ? formikState?.values?.services[0].files[0].type
         : null
 
+      // TODO: replace 'any' with correct typing
+      const file = formikState?.values?.services[0].files[0] as any
+      const query = file?.query || undefined
+      const abi = file?.abi || undefined
+      const headers = file?.headers || undefined
+      const method = file?.method || undefined
+
       try {
         const fileInfoResponse = formikState?.values?.services?.[0].files?.[0]
           .url
           ? await getFileInfo(
               formikState?.values?.services?.[0].files?.[0].url,
               providerUrl,
-              storageType
+              storageType,
+              query,
+              headers,
+              abi,
+              chainId,
+              method
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
 

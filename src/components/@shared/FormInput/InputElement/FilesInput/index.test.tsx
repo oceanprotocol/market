@@ -20,12 +20,45 @@ const mockMeta = {
   value: ''
 }
 
-const mockField = {
+const mockFieldUrl = {
   value: 'https://hello.com',
   checked: false,
   onChange: jest.fn(),
   onBlur: jest.fn(),
   name: 'url'
+}
+
+const mockFieldIpfs = {
+  value: 'bafkreicxccbk4blsx5qtovqfgsuutxjxom47dvyzyz3asi2ggjg5ipwlc4',
+  checked: false,
+  onChange: jest.fn(),
+  onBlur: jest.fn(),
+  name: 'ipfs'
+}
+
+const mockFieldArwave = {
+  value: 'T6NL8Zc0LCbT3bF9HacAGQC4W0_hW7b3tXbm8OtWtlA',
+  checked: false,
+  onChange: jest.fn(),
+  onBlur: jest.fn(),
+  name: 'arweave'
+}
+
+const mockFieldGraphQL = {
+  value:
+    'https://v4.subgraph.mumbai.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
+  checked: false,
+  onChange: jest.fn(),
+  onBlur: jest.fn(),
+  name: 'graphql'
+}
+
+const mockFieldSM = {
+  value: '0x564955E9d25B49afE5Abd66966Ab4Bc9Ad55Fedb',
+  checked: false,
+  onChange: jest.fn(),
+  onBlur: jest.fn(),
+  name: 'smartcontract'
 }
 
 const mockHelpers = {
@@ -35,7 +68,13 @@ const mockHelpers = {
 
 const mockForm = {
   values: {
-    services: [{ providerUrl: 'https://provider.url' }]
+    services: [
+      {
+        providerUrl: {
+          url: 'https://v4.provider.mainnet.oceanprotocol.com'
+        }
+      }
+    ]
   },
   errors: {},
   touched: {},
@@ -46,8 +85,12 @@ const mockForm = {
 }
 
 describe('@shared/FormInput/InputElement/FilesInput', () => {
-  it('renders without crashing', async () => {
-    ;(useField as jest.Mock).mockReturnValue([mockField, mockMeta, mockHelpers])
+  it('renders URL without crashing', async () => {
+    ;(useField as jest.Mock).mockReturnValue([
+      mockFieldUrl,
+      mockMeta,
+      mockHelpers
+    ])
     ;(checkValidProvider as jest.Mock).mockReturnValue(true)
     ;(getFileInfo as jest.Mock).mockReturnValue([
       {
@@ -59,7 +102,7 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
       }
     ])
 
-    render(<FilesInput form={mockForm} field={mockField} {...props} />)
+    render(<FilesInput form={mockForm} field={mockFieldUrl} {...props} />)
     expect(screen.getByText('Validate')).toBeInTheDocument()
     fireEvent.click(screen.getByText('Validate'))
 
@@ -85,7 +128,7 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
       mockMeta,
       mockHelpers
     ])
-    render(<FilesInput {...props} field={mockField} />)
+    render(<FilesInput {...props} field={mockFieldUrl} />)
     expect(screen.getByText('https://hello.com')).toBeInTheDocument()
   })
 
@@ -106,7 +149,7 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
       mockMeta,
       mockHelpers
     ])
-    render(<FilesInput {...props} field={mockField} />)
+    render(<FilesInput {...props} field={mockFieldIpfs} />)
     expect(screen.getByText('✓ File confirmed')).toBeInTheDocument()
   })
 
@@ -127,26 +170,8 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
       mockMeta,
       mockHelpers
     ])
-    render(<FilesInput {...props} field={mockField} />)
+    render(<FilesInput {...props} field={mockFieldArwave} />)
     expect(screen.getByText('✓ File confirmed')).toBeInTheDocument()
-  })
-
-  it('renders fileinfo without contentType', () => {
-    ;(useField as jest.Mock).mockReturnValue([
-      {
-        value: [
-          {
-            valid: true,
-            url: 'https://hello.com',
-            type: 'url',
-            contentLength: 100
-          }
-        ]
-      },
-      mockMeta,
-      mockHelpers
-    ])
-    render(<FilesInput {...props} field={mockField} />)
   })
 
   it('renders fileinfo placeholder when hideUrl is passed', () => {
@@ -163,9 +188,60 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
       mockMeta,
       mockHelpers
     ])
-    render(<FilesInput {...props} field={mockField} />)
+    render(<FilesInput {...props} field={mockFieldUrl} />)
     expect(
       screen.getByText('https://oceanprotocol/placeholder')
     ).toBeInTheDocument()
+  })
+
+  it('renders fileinfo when graphql is valid', () => {
+    ;(useField as jest.Mock).mockReturnValue([
+      {
+        value: [
+          {
+            type: 'graphql',
+            valid: true,
+            url: 'https://v4.subgraph.mumbai.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
+            query:
+              'query{\n            nfts(orderBy: createdTimestamp,orderDirection:desc){\n                 id\n                 symbol\n                 createdTimestamp\n            }\n           }',
+            checksum: false
+          }
+        ]
+      },
+      mockMeta,
+      mockHelpers
+    ])
+    render(<FilesInput {...props} field={mockFieldGraphQL} />)
+  })
+
+  it('renders fileinfo when smart contract is valid', () => {
+    ;(useField as jest.Mock).mockReturnValue([
+      {
+        value: [
+          {
+            chainId: 80001,
+            type: 'smartcontract',
+            address: '0x564955E9d25B49afE5Abd66966Ab4Bc9Ad55Fedb',
+            abi: {
+              inputs: [],
+              name: 'swapOceanFee',
+              outputs: [
+                {
+                  internalType: 'uint256',
+                  name: '',
+                  type: 'uint256'
+                }
+              ],
+              stateMutability: 'view',
+              type: 'function'
+            },
+            valid: true
+          }
+        ]
+      },
+      mockMeta,
+      mockHelpers
+    ])
+    render(<FilesInput {...props} field={mockFieldSM} />)
   })
 })
