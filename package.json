@@ -31,7 +31,7 @@
     "@oceanprotocol/lib": "^2.6.1",
     "@oceanprotocol/typographies": "^0.1.0",
     "@oceanprotocol/use-dark-mode": "^2.4.3",
-    "@orbisclub/orbis-sdk": "^0.4.17",
+    "@orbisclub/orbis-sdk": "^0.4.40",
     "@tippyjs/react": "^4.2.6",
     "@uiw/react-codemirror": "^4.19.5",
     "@urql/exchange-refocus": "^1.0.0",

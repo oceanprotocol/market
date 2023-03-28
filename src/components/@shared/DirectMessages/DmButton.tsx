@@ -60,7 +60,6 @@ export default function DmButton({
             if (conversation) {
               setConversationId(conversation.stream_id)
             } else {
-              console.log('need to create new conversation')
               const newConversationId = await createConversation([userDid])
               console.log(newConversationId)
               setConversationId(newConversationId)
