@@ -3,6 +3,7 @@ import { useOrbis } from '@context/DirectMessages'
 import Refresh from '@images/refresh.svg'
 import styles from './DecryptedMessage.module.css'
 import { IOrbisMessageContent } from '@context/DirectMessages/_types'
+import { LoggerInstance } from '@oceanprotocol/lib'
 
 export default function DecryptedMessage({
   content,
@@ -37,7 +38,7 @@ export default function DecryptedMessage({
         }
       }
     } catch (error) {
-      console.log(error)
+      LoggerInstance.error(`[decryptMessage] orbis api error: `, error)
       setEncryptionError(true)
       setDecrypted('Decryption error - please try later')
     }

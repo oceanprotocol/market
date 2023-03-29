@@ -22,6 +22,7 @@ import {
   IOrbisProvider,
   IConversationWithAdditionalData
 } from './_types'
+import { LoggerInstance } from '@oceanprotocol/lib'
 
 const OrbisContext = createContext({} as IOrbisProvider)
 
@@ -205,7 +206,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
           .single()
 
         if (error) {
-          console.log(error)
+          LoggerInstance.error(`[directMessages] orbis api error: `, error)
         }
 
         if (data) {
@@ -220,7 +221,10 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
         )
 
         if (_error) {
-          console.log(_error)
+          LoggerInstance.error(
+            `[directMessages] orbis getMessages sdk error: `,
+            _error
+          )
         }
 
         if (_data) {
