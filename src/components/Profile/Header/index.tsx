@@ -40,7 +40,9 @@ export default function AccountHeader({
       </div>
 
       <div>
-        <DmButton accountId={accountId} />
+        <div className={styles.directMessage}>
+          <DmButton accountId={accountId} />
+        </div>
         <Markdown text={profile?.description} className={styles.description} />
         {isDescriptionTextClamped() ? (
           <span className={styles.more} onClick={toogleShowMore}>

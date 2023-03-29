@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
+import styles from './DmButton.module.css'
 import { useWeb3 } from '@context/Web3'
 import { useOrbis } from '@context/DirectMessages'
 
@@ -48,7 +49,7 @@ export default function DmButton({
   if (accountId !== ownAccountId && userDid) {
     return (
       <Button
-        style="primary"
+        style="text"
         size="small"
         disabled={isCreatingConversation}
         onClick={async () => {

@@ -20,6 +20,11 @@
   margin-bottom: 0;
 }
 
+.directMessage {
+  margin-top: calc(var(--spacer) / 2);
+  text-align: center;
+}
+
 @media (min-width: 50rem) {
   .grid {
     display: grid;
@@ -31,6 +36,11 @@
   .description {
     margin-top: calc(var(--spacer) / 2);
     -webkit-line-clamp: 7 !important;
+  }
+
+  .directMessage {
+    margin-top: 0;
+    text-align: end;
   }
 }
 
