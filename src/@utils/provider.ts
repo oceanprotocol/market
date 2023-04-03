@@ -13,23 +13,11 @@ import {
   ProviderInstance,
   UrlFile
 } from '@oceanprotocol/lib'
+import { chainIds } from 'app.config'
 import { QueryHeader } from '@shared/FormInput/InputElement/Headers'
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils/types'
 import { getValidUntilTime } from './compute'
-
-export async function getEncryptedFiles(
-  files: any,
-  providerUrl: string
-): Promise<string> {
-  try {
-    // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
-    const response = await ProviderInstance.encrypt(files, providerUrl)
-    return response
-  } catch (error) {
-    console.error('Error parsing json: ' + error.message)
-  }
-}
 
 export async function initializeProviderForCompute(
   dataset: AssetExtended,
@@ -55,11 +43,6 @@ export async function initializeProviderForCompute(
   )
 
   try {
-    const filesEncrypted = await getEncryptedFiles(
-      dataset.services[0].files,
-      dataset.services[0].serviceEndpoint
-    )
-
     return await ProviderInstance.initializeCompute(
       [computeAsset],
       computeAlgo,
@@ -71,6 +54,21 @@ export async function initializeProviderForCompute(
   } catch (error) {
     LoggerInstance.error(`Error initializing provider for the compute job!`)
     return null
+  }
+}
+
+// TODO: Why do we have these one line functions ?!?!?!
+export async function getEncryptedFiles(
+  files: any,
+  chainId: number,
+  providerUrl: string
+): Promise<string> {
+  try {
+    // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
+    const response = await ProviderInstance.encrypt(files, chainId, providerUrl)
+    return response
+  } catch (error) {
+    console.error('Error parsing json: ' + error.message)
   }
 }
 

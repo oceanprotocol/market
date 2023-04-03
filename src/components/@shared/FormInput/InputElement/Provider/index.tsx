@@ -40,10 +40,15 @@ export default function CustomProvider(props: InputProps): ReactElement {
       const providerResponse = await axios.get(field.value.url, {
         cancelToken: newCancelToken()
       })
-      const providerChainId = providerResponse?.data?.chainId
       const userChainId = chainId || 1
+      const providerChain =
+        providerResponse?.data?.chainId || providerResponse?.data?.chainIds
 
-      if (providerChainId !== userChainId)
+      const isCompatible =
+        providerChain === userChainId
+          ? true
+          : !!(providerChain.length > 0 && providerChain.includes(userChainId))
+      if (!isCompatible)
         throw Error(
           '✗ This provider is incompatible with the network your wallet is connected to.'
         )
