@@ -148,7 +148,7 @@ export async function transformPublishFormToDdo(
     !isPreview &&
     files?.length &&
     files[0].valid &&
-    (await getEncryptedFiles(file, providerUrl.url))
+    (await getEncryptedFiles(file, chainId, providerUrl.url))
 
   const newService: Service = {
     id: getHash(datatokenAddress + filesEncrypted),
