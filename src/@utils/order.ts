@@ -66,6 +66,7 @@ export async function order(
 
   const filesEncrypted = await getEncryptedFiles(
     asset.services[0].files,
+    asset.chainId,
     asset.services[0].serviceEndpoint
   )
 
