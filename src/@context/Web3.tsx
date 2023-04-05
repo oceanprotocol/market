@@ -43,7 +43,7 @@ interface Web3ProviderValue {
   web3Loading: boolean
   isSupportedOceanNetwork: boolean
   approvedBaseTokens: TokenInfo[]
-  connect: () => Promise<void>
+  connect: () => Promise<string>
   logout: () => Promise<void>
 }
 
@@ -136,8 +136,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       const accountId = (await web3.eth.getAccounts())[0]
       setAccountId(accountId)
       LoggerInstance.log('[web3] account id', accountId)
+      return accountId
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
+      return null
     } finally {
       setWeb3Loading(false)
     }

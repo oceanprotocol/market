@@ -1,0 +1,39 @@
+.decrypting {
+  -webkit-animation: pulse 2s ease-in-out 0s infinite forwards;
+  -moz-animation: pulse 2s ease-in-out 0s infinite forwards;
+  animation: pulse 2s ease-in-out 0s infinite forwards;
+}
+
+.refresh {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.refreshIcon {
+  fill: var(--font-color-text);
+}
+
+.refresh.right {
+  right: -38px;
+}
+
+.refresh.left {
+  right: calc(100% + 16px);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
