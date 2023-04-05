@@ -13,7 +13,6 @@ import {
   ProviderInstance,
   UrlFile
 } from '@oceanprotocol/lib'
-import { chainIds } from 'app.config'
 import { QueryHeader } from '@shared/FormInput/InputElement/Headers'
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils/types'
