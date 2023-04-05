@@ -6,7 +6,8 @@ import { UserPreferencesProvider } from '@context/UserPreferences'
 import PricesProvider from '@context/Prices'
 import UrqlProvider from '@context/UrqlProvider'
 import ConsentProvider from '@context/CookieConsent'
-import App from '../../src/components/App'
+import { OrbisProvider } from '@context/DirectMessages'
+import App from 'src/components/App'
 
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../stylesGlobal/styles.css'
@@ -45,11 +46,13 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
           <UserPreferencesProvider>
             <PricesProvider>
               <ConsentProvider>
-                <PostHogProvider client={posthog}>
-                  <App>
-                    <Component {...pageProps} />
-                  </App>
-                </PostHogProvider>
+                <OrbisProvider>
+                  <PostHogProvider client={posthog}>
+                    <App>
+                      <Component {...pageProps} />
+                    </App>
+                  </PostHogProvider>
+                </OrbisProvider>
               </ConsentProvider>
             </PricesProvider>
           </UserPreferencesProvider>
