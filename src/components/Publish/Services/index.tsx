@@ -83,7 +83,7 @@ export default function ServicesFields(): ReactElement {
             <Alert
               className={styles.fieldWarning}
               state="info"
-              text={siteContent.warning.ctd}
+              text={siteContent}
             />
           )}
         </>
