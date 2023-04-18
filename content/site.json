@@ -16,5 +16,6 @@
   ],
   "announcement": "[Lock your OCEAN](https://df.oceandao.org/) to get veOCEAN, earn rewards and curate data.",
   "warning": {
+    "ctd": "Algorithms have the option of using the compute-to-data feature."
   }
 }
