@@ -234,7 +234,7 @@ export default function FormStartCompute({
 
   return (
     <Form className={styles.form}>
-       <Alert
+      <Alert
         className={styles.warning}
         state="info"
         text={siteContent.warning.ctd}
