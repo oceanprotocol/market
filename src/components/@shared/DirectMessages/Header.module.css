@@ -1,0 +1,101 @@
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(0.5 * var(--spacer));
+  align-items: center;
+  padding: calc(0.35 * var(--spacer)) calc(0.5 * var(--spacer));
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+  font-size: var(--font-size-h5);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+}
+
+.header > * {
+  pointer-events: none;
+}
+
+.icon {
+  width: 1.5rem;
+  fill: var(--font-color-text);
+}
+
+.btnBack {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.btnBack:hover {
+  background-color: var(--background-highlight);
+}
+
+.btnBack .backIcon {
+  pointer-events: none;
+  width: 1rem;
+  fill: var(--font-color-text);
+  transform: rotate(180deg);
+}
+
+.btnCopy {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.btnCopy .copyIcon {
+  pointer-events: none;
+  width: 1rem;
+  fill: var(--color-secondary);
+}
+
+.toggleArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--font-color-text);
+  width: 32px;
+  height: 32px;
+}
+
+.toggleArrow .icon {
+  margin-left: auto;
+  margin-right: auto;
+  fill: transparent;
+}
+
+.isFlipped {
+  transform: scaleY(-1);
+}
+
+.notificationCount {
+  background-color: var(--color-primary);
+  width: 24px;
+  height: 24px;
+  color: var(--brand-white);
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-size-mini);
+  font-weight: 600;
+  margin-left: calc(var(--spacer) / 4);
+}

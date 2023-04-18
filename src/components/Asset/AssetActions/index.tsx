@@ -1,8 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
-import Consume from './Download'
+import Download from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
-import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
@@ -144,8 +143,8 @@ export default function AssetActions({
     }
   }, [balance, accountId, asset?.accessDetails, dtBalance])
 
-  const UseContent = (
-    <>
+  return (
+    <div className={styles.actions}>
       {isCompute ? (
         <Compute
           asset={asset}
@@ -154,7 +153,7 @@ export default function AssetActions({
           fileIsLoading={fileIsLoading}
         />
       ) : (
-        <Consume
+        <Download
           asset={asset}
           dtBalance={dtBalance}
           isBalanceSufficient={isBalanceSufficient}
@@ -163,19 +162,6 @@ export default function AssetActions({
         />
       )}
       <AssetStats />
-    </>
-  )
-
-  const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
-
-  return (
-    <>
-      <Tabs items={tabs} className={styles.actions} />
-      <Web3Feedback
-        networkId={asset?.chainId}
-        accountId={accountId}
-        isAssetNetwork={isAssetNetwork}
-      />
-    </>
+    </div>
   )
 }

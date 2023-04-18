@@ -34,6 +34,14 @@ export default function Preview(): ReactElement {
         validOrderTx: '',
         publisherMarketOrderFee: '0'
       }
+      asset.stats = {
+        orders: null,
+        price: {
+          value: values.pricing.type === 'free' ? 0 : values.pricing.price,
+          tokenSymbol: values.pricing?.baseToken?.symbol || 'OCEAN',
+          tokenAddress: ZERO_ADDRESS
+        }
+      }
       setAsset(asset)
     }
     makeDdo()

@@ -2,7 +2,7 @@
   composes: input from '@shared/FormInput/InputElement/index.module.css';
 }
 
-.inputMethod { 
+.inputMethod {
   composes: input from '@shared/FormInput/InputElement/index.module.css';
   cursor: pointer;
   outline: 0;
