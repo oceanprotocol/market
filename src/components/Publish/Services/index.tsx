@@ -79,13 +79,6 @@ export default function ServicesFields(): ReactElement {
             name="services[0].access"
             options={accessTypeOptions}
           />
-          {values.services[0].access === 'compute' && (
-            <Alert
-              className={styles.fieldWarning}
-              state="info"
-              text={siteContent.warning.ctd}
-            />
-          )}
         </>
       )}
       <Field

@@ -234,11 +234,6 @@ export default function FormStartCompute({
 
   return (
     <Form className={styles.form}>
-      <Alert
-        className={styles.warning}
-        state="info"
-        text={siteContent.warning.ctd}
-      />
       {content.form.data.map((field: FormFieldContent) => {
         return (
           <Field
