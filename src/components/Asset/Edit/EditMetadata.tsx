@@ -15,7 +15,7 @@ import { MetadataEditForm } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import Web3Feedback from '@shared/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
-import { mapTimeoutStringToSeconds } from '@utils/ddo'
+import { mapTimeoutStringToSeconds, normalizeFile } from '@utils/ddo'
 import styles from './index.module.css'
 import content from '../../../../content/pages/editMetadata.json'
 import { useAbortController } from '@hooks/useAbortController'
@@ -27,7 +27,7 @@ import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
-import { useAccount, useProvider } from 'wagmi'
+import { useAccount, useProvider, useNetwork } from 'wagmi'
 
 export default function Edit({
   asset
@@ -37,6 +37,7 @@ export default function Edit({
   const { debug } = useUserPreferences()
   const { fetchAsset, isAssetNetwork, assetState } = useAsset()
   const { address: accountId } = useAccount()
+  const { chain } = useNetwork()
   const provider = useProvider()
   const newAbortController = useAbortController()
 
@@ -121,20 +122,13 @@ export default function Edit({
           nftAddress: asset.nftAddress,
           datatokenAddress: asset.services[0].datatokenAddress,
           files: [
-            {
-              type: values.files[0].type,
-              index: 0,
-              [values.files[0].type === 'ipfs'
-                ? 'hash'
-                : values.files[0].type === 'arweave'
-                ? 'transactionId'
-                : 'url']: values.files[0].url,
-              method: 'GET'
-            }
+            normalizeFile(values.files[0].type, values.files[0], chain?.id)
           ]
         }
+
         const filesEncrypted = await getEncryptedFiles(
           file,
+          asset.chainId,
           asset.services[0].serviceEndpoint
         )
         updatedFiles = filesEncrypted

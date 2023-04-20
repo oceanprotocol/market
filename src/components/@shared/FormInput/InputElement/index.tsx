@@ -1,4 +1,5 @@
-import React, { ReactElement, useCallback, useState } from 'react'
+import React, { ReactElement } from 'react'
+import CodeMirror from '@uiw/react-codemirror'
 import styles from './index.module.css'
 import { InputProps } from '..'
 import FilesInput from './FilesInput'
@@ -12,6 +13,9 @@ import InputRadio from './Radio'
 import ContainerInput from '@shared/FormInput/InputElement/ContainerInput'
 import TagsAutoComplete from './TagsAutoComplete'
 import TabsFile from '@shared/atoms/TabsFile'
+import useDarkMode from '@oceanprotocol/use-dark-mode'
+import appConfig from '../../../../../app.config'
+import { extensions, oceanTheme } from '@utils/codemirror'
 
 const cx = classNames.bind(styles)
 
@@ -56,6 +60,7 @@ export default function InputElement({
   ...props
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
+  const darkMode = useDarkMode(false, appConfig?.darkModeConfig)
 
   switch (props.type) {
     case 'select': {
@@ -100,8 +105,31 @@ export default function InputElement({
         })
       })
 
-      return <TabsFile items={tabs} className={styles.pricing} />
+      return (
+        <TabsFile
+          items={tabs}
+          key={`tabFile_${props.name}`}
+          className={styles.pricing}
+        />
+      )
     }
+
+    case 'codeeditor':
+      return (
+        <CodeMirror
+          id={props.name}
+          className={styles.codemirror}
+          value={`${props.value ? props.value : ''}`}
+          height="200px"
+          placeholder={props.placeholder}
+          theme={oceanTheme(darkMode ? 'dark' : 'light', props)}
+          extensions={[extensions]}
+          onChange={(value) => {
+            form.setFieldValue(`${props.name}`, value)
+          }}
+        />
+      )
+
     case 'textarea':
       return <textarea id={props.name} className={styles.textarea} {...props} />
 

@@ -1,8 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
-import Consume from './Download'
+import Download from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
-import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import { useAsset } from '@context/Asset'
 import Web3Feedback from '@shared/Web3Feedback'
@@ -59,13 +58,25 @@ export default function AssetActions({
         ? formikState?.values?.services[0].files[0].type
         : null
 
+      // TODO: replace 'any' with correct typing
+      const file = formikState?.values?.services[0].files[0] as any
+      const query = file?.query || undefined
+      const abi = file?.abi || undefined
+      const headers = file?.headers || undefined
+      const method = file?.method || undefined
+
       try {
         const fileInfoResponse = formikState?.values?.services?.[0].files?.[0]
           .url
           ? await getFileInfo(
               formikState?.values?.services?.[0].files?.[0].url,
               providerUrl,
-              storageType
+              storageType,
+              query,
+              headers,
+              abi,
+              chainId,
+              method
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
 
@@ -135,8 +146,8 @@ export default function AssetActions({
     }
   }, [balance, accountId, asset?.accessDetails, dtBalance])
 
-  const UseContent = (
-    <>
+  return (
+    <div className={styles.actions}>
       {isCompute ? (
         <Compute
           asset={asset}
@@ -145,7 +156,7 @@ export default function AssetActions({
           fileIsLoading={fileIsLoading}
         />
       ) : (
-        <Consume
+        <Download
           asset={asset}
           dtBalance={dtBalance}
           isBalanceSufficient={isBalanceSufficient}
@@ -154,19 +165,6 @@ export default function AssetActions({
         />
       )}
       <AssetStats />
-    </>
-  )
-
-  const tabs: TabsItem[] = [{ title: 'Use', content: UseContent }]
-
-  return (
-    <>
-      <Tabs items={tabs} className={styles.actions} />
-      <Web3Feedback
-        networkId={asset?.chainId}
-        accountId={accountId}
-        isAssetNetwork={isAssetNetwork}
-      />
-    </>
+    </div>
   )
 }

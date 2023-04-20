@@ -15,6 +15,9 @@ import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import Button from '@shared/atoms/Button'
 import RelatedAssets from '../RelatedAssets'
+import DmButton from '@shared/DirectMessages/DmButton'
+import Web3Feedback from '@components/@shared/Web3Feedback'
+import { useWeb3 } from '@context/Web3'
 
 export default function AssetContent({
   asset
@@ -22,6 +25,7 @@ export default function AssetContent({
   asset: AssetExtended
 }): ReactElement {
   const { isInPurgatory, purgatoryData, isOwner, isAssetNetwork } = useAsset()
+  const { accountId } = useWeb3()
   const { debug } = useUserPreferences()
   const [receipts, setReceipts] = useState([])
   const [nftPublisher, setNftPublisher] = useState<string>()
@@ -78,6 +82,14 @@ export default function AssetContent({
               </Button>
             </div>
           )}
+          <div className={styles.ownerActions}>
+            <DmButton accountId={asset?.nft?.owner} />
+          </div>
+          <Web3Feedback
+            networkId={asset?.chainId}
+            accountId={accountId}
+            isAssetNetwork={isAssetNetwork}
+          />
           <RelatedAssets />
         </div>
       </article>

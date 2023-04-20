@@ -1,0 +1,73 @@
+.wrapper {
+  width: 100%;
+  padding: 0 calc(var(--spacer) / 3);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: transform 300ms ease 0s;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.floating {
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  width: 100%;
+  max-width: 400px;
+  height: 530px;
+  max-height: 80vh;
+  background-color: var(--background-content);
+  border: 1px solid var(--border-color);
+  border-bottom: 0;
+  border-radius: var(--border-radius);
+  transform: translateY(0);
+}
+
+.headerWrapper {
+  flex-shrink: 0;
+}
+
+.bodyWrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.walletWrapper {
+  margin: auto;
+  max-width: 320px;
+  text-align: center;
+}
+
+.walletWrapper p {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+}
+
+.walletWrapper button {
+  margin: var(--spacer) auto 0;
+}
+
+.isClosed {
+  transform: translateY(90%);
+}
+
+@media screen and (min-width: 42rem) {
+  .wrapper {
+    padding: 0 calc(var(--spacer) / 2);
+  }
+}
+
+@media screen and (min-width: 55rem) {
+  .wrapper {
+    padding: 0 var(--spacer);
+  }
+}

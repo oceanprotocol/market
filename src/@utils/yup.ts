@@ -1,6 +1,7 @@
 import { isCID } from '@utils/ipfs'
 import isUrl from 'is-url-superb'
 import * as Yup from 'yup'
+import web3 from 'web3'
 import { isGoogleUrl } from './url/index'
 
 export function testLinks(isEdit?: boolean) {
@@ -15,16 +16,18 @@ export function testLinks(isEdit?: boolean) {
         validField = true
         break
       case 'url':
+      case 'graphql':
         validField = isUrl(value?.toString() || '')
         // if we're in publish, the field must be valid
         if (!validField) {
           validField = false
           errorMessage = 'Must be a valid url.'
         }
-        // we allow submit if we're in the edit page and the field is empty
+        // we allow submit on empty sample field
         if (
-          (!value?.toString() && isEdit) ||
-          (!value?.toString() && context.path === 'services[0].links[0].url')
+          !value?.toString() &&
+          (context.path === 'links[0].url' ||
+            context.path === 'services[0].links[0].url')
         ) {
           validField = true
         }
@@ -40,10 +43,16 @@ export function testLinks(isEdit?: boolean) {
         errorMessage = !value?.toString() ? 'CID required.' : 'CID not valid.'
         break
       case 'arweave':
-        validField = !value?.toString().includes('http')
+        validField = value && !value?.toString().includes('http')
         errorMessage = !value?.toString()
           ? 'Transaction ID required.'
           : 'Transaction ID not valid.'
+        break
+      case 'smartcontract':
+        validField = web3.utils.isAddress(value?.toString())
+        errorMessage = !value?.toString()
+          ? 'Address required.'
+          : 'Address not valid.'
         break
     }
 

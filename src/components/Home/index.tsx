@@ -68,7 +68,7 @@ export default function HomePage(): ReactElement {
       />
 
       <SectionQueryResult title="Most Sales" query={queryMostSales} />
-      <MostViews />
+      {/* <MostViews /> */}
       <TopSales title="Publishers With Most Sales" />
       <TopTags title="Top Tags By Sales" />
 
