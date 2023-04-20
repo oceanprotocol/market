@@ -9,8 +9,8 @@ import React, {
 } from 'react'
 import { useInterval } from '@hooks/useInterval'
 import { Orbis } from '@orbisclub/orbis-sdk'
-import { useWeb3 } from '../Web3'
-import { accountTruncate } from '@utils/web3'
+import { accountTruncate } from '@utils/wallet'
+import { useAccount, useProvider } from 'wagmi'
 import { didToAddress, sleep } from '@shared/DirectMessages/_utils'
 import { getEnsName } from '@utils/ens'
 import usePrevious from '@hooks/usePrevious'
@@ -32,7 +32,8 @@ const CONVERSATION_CONTEXT =
   process.env.NEXT_PUBLIC_ORBIS_CONTEXT || 'ocean_market' // Can be changed to whatever
 
 function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
-  const { web3Provider, accountId } = useWeb3()
+  const { address: accountId } = useAccount()
+  const web3provider = useProvider()
   const prevAccountId = usePrevious(accountId)
 
   const [ceramicSessions, setCeramicSessions] = useLocalStorage<string[]>(

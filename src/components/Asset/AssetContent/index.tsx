@@ -17,7 +17,7 @@ import Button from '@shared/atoms/Button'
 import RelatedAssets from '../RelatedAssets'
 import DmButton from '@shared/DirectMessages/DmButton'
 import Web3Feedback from '@components/@shared/Web3Feedback'
-import { useWeb3 } from '@context/Web3'
+import { useAccount } from 'wagmi'
 
 export default function AssetContent({
   asset
@@ -25,7 +25,7 @@ export default function AssetContent({
   asset: AssetExtended
 }): ReactElement {
   const { isInPurgatory, purgatoryData, isOwner, isAssetNetwork } = useAsset()
-  const { accountId } = useWeb3()
+  const { address: accountId } = useAccount()
   const { debug } = useUserPreferences()
   const [receipts, setReceipts] = useState([])
   const [nftPublisher, setNftPublisher] = useState<string>()
