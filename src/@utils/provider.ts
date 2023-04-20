@@ -58,14 +58,17 @@ export async function initializeProviderForCompute(
   }
 }
 
+// TODO: Why do we have these one line functions ?!?!?!
 export async function getEncryptedFiles(
   files: any,
+  chainId: number,
   providerUrl: string
 ): Promise<string> {
   try {
     // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
     const response = await ProviderInstance.encrypt(
       files,
+      chainId,
       customProviderUrl || providerUrl
     )
     return response

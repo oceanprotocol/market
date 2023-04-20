@@ -1,0 +1,62 @@
+.conversation {
+  display: flex;
+  align-items: center;
+  padding: calc(0.5 * var(--spacer)) calc(0.5 * var(--spacer));
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+}
+
+.conversation:hover {
+  background: var(--background-highlight);
+}
+
+.accountAvatarSet {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.accountAvatar {
+  aspect-ratio: 1/1;
+  border-radius: 100%;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+  width: calc(var(--font-size-large) * 2.5);
+  height: calc(var(--font-size-large) * 2.5);
+  margin-left: 0;
+}
+
+.notificationCount {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background-color: var(--color-primary);
+  width: 24px;
+  height: 24px;
+  color: var(--brand-white);
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-size-mini);
+  font-weight: 600;
+}
+
+.accountInfo {
+  padding-left: calc(var(--spacer) / 2);
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accountName {
+  font-size: var(--font-size-medium);
+  color: var(--color-primary);
+}
+
+.lastMessageDate {
+  font-size: var(--font-size-mini);
+  color: var(--font-color-text);
+  min-width: calc(var(--spacer) * 1.5);
+  text-align: right;
+}

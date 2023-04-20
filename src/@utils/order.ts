@@ -23,7 +23,6 @@ import {
   customProviderUrl
 } from '../../app.config'
 import { toast } from 'react-toastify'
-import { getEncryptedFiles, getFileInfo } from './provider'
 
 async function initializeProvider(
   asset: AssetExtended,
@@ -64,11 +63,6 @@ export async function order(
 ): Promise<TransactionReceipt> {
   const datatoken = new Datatoken(web3)
   const config = getOceanConfig(asset.chainId)
-
-  const filesEncrypted = await getEncryptedFiles(
-    asset.services[0].files,
-    asset.services[0].serviceEndpoint
-  )
 
   const initializeData = await initializeProvider(
     asset,
@@ -251,27 +245,6 @@ async function approveProviderFee(
   return txApproveWei
 }
 
-async function startOrder(
-  web3: Web3,
-  asset: AssetExtended,
-  orderPriceAndFees: OrderPriceAndFees,
-  accountId: string,
-  hasDatatoken: boolean,
-  initializeData: ProviderComputeInitialize,
-  computeConsumerAddress?: string
-): Promise<TransactionReceipt> {
-  const tx = await order(
-    web3,
-    asset,
-    orderPriceAndFees,
-    accountId,
-    initializeData.providerFee,
-    computeConsumerAddress
-  )
-  LoggerInstance.log('[compute] Asset ordered:', tx)
-  return tx
-}
-
 /**
  * Handles order for compute assets for the following scenarios:
  * - have validOrder and no providerFees -> then order is valid, providerFees are valid, it returns the valid order value
@@ -291,7 +264,6 @@ export async function handleComputeOrder(
   asset: AssetExtended,
   orderPriceAndFees: OrderPriceAndFees,
   accountId: string,
-  hasDatatoken: boolean,
   initializeData: ProviderComputeInitialize,
   computeConsumerAddress?: string
 ): Promise<string> {
@@ -342,15 +314,16 @@ export async function handleComputeOrder(
     }
 
     LoggerInstance.log('[compute] Calling order ...', initializeData)
-    const txStartOrder = await startOrder(
+
+    const txStartOrder = await order(
       web3,
       asset,
       orderPriceAndFees,
       accountId,
-      hasDatatoken,
-      initializeData,
+      initializeData.providerFee,
       computeConsumerAddress
     )
+
     LoggerInstance.log('[compute] Order succeeded', txStartOrder)
     return txStartOrder?.transactionHash
   } catch (error) {

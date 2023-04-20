@@ -233,7 +233,7 @@
         "name": "algorithmPrivacy",
         "label": "Algorithm Privacy",
         "type": "checkbox",
-        "options": ["Keep my algorithm private"],
+        "options": ["Keep my algorithm private for Compute-to-Data"],
         "help": "By default, your algorithm can be downloaded for free or a fixed price, in addition to running in compute jobs. Enabling this option will prevent downloading, so your algorithm can only be run as part of a compute job on a dataset.",
         "required": false
       },

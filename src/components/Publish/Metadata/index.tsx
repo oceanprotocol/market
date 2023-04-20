@@ -77,13 +77,6 @@ export default function MetadataFields(): ReactElement {
         name="metadata.type"
         options={assetTypeOptions}
       />
-      {values.services[0].access === 'compute' && (
-        <Alert
-          className={styles.fieldWarning}
-          state="info"
-          text={siteContent.warning.ctd}
-        />
-      )}
       <Field
         {...getFieldContent('name', content.metadata.fields)}
         component={Input}

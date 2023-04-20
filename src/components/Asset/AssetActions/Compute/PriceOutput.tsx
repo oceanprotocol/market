@@ -42,21 +42,13 @@ function Row({
   sign?: string
   type?: string
 }) {
-  const { isSupportedOceanNetwork } = useWeb3()
-
   return (
     <div className={styles.priceRow}>
       <div className={styles.sign}>{sign}</div>
       <div className={styles.type}>{type}</div>
       <div>
         <PriceUnit
-          price={
-            !isSupportedOceanNetwork
-              ? hasPreviousOrder || hasDatatoken
-                ? 0
-                : Number(price)
-              : Number(price)
-          }
+          price={hasPreviousOrder || hasDatatoken ? 0 : Number(price)}
           symbol={symbol}
           size="small"
           className={styles.price}

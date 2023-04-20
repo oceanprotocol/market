@@ -5,11 +5,13 @@ import Button from '@shared/atoms/Button'
 import AddToken from '@shared/AddToken'
 import Conversion from '@shared/Price/Conversion'
 import { useWeb3 } from '@context/Web3'
+import { useOrbis } from '@context/DirectMessages'
 import { getOceanConfig } from '@utils/ocean'
 import styles from './Details.module.css'
 
 export default function Details(): ReactElement {
   const {
+    accountId,
     web3ProviderInfo,
     web3Modal,
     connect,
@@ -18,6 +20,7 @@ export default function Details(): ReactElement {
     networkId,
     balance
   } = useWeb3()
+  const { checkOrbisConnection, disconnectOrbis } = useOrbis()
   const { locale } = useUserPreferences()
 
   const [mainCurrency, setMainCurrency] = useState<string>()
@@ -83,6 +86,7 @@ export default function Details(): ReactElement {
               onClick={async () => {
                 await web3Modal?.clearCachedProvider()
                 connect()
+                checkOrbisConnection({ address: accountId })
               }}
             >
               Switch Wallet
@@ -92,6 +96,7 @@ export default function Details(): ReactElement {
               size="small"
               onClick={() => {
                 logout()
+                disconnectOrbis(accountId)
                 location.reload()
               }}
             >

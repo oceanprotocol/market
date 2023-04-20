@@ -1,0 +1,89 @@
+.postbox {
+  width: 100%;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-color);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
+}
+
+.postbox .postboxInput {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.postbox .editable {
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  flex-grow: 1;
+  outline: none;
+  max-height: 80px;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  padding: calc(var(--spacer) / 4);
+}
+
+.postbox .editable:empty:before {
+  content: attr(data-placeholder);
+  color: var(--color-secondary);
+  pointer-events: none;
+}
+
+.postbox .editable::-webkit-scrollbar {
+  display: none;
+}
+
+.replyto {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 2);
+  font-size: var(--font-size-small);
+  background: var(--background-highlight);
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+
+.replytoDetails {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.replytoCancel {
+  flex-shrink: 0;
+  font-size: var(--font-size-large);
+  line-height: 1;
+  font-weight: bold;
+  background: transparent;
+  border: none;
+  color: currentColor;
+  outline: none;
+}
+
+.sendButton {
+  background-color: transparent;
+  border: 0;
+  color: var(--color-primary);
+  width: 41px;
+  height: 41px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--border-color);
+  cursor: pointer;
+}
+
+.sendButton:disabled {
+  color: var(--color-secondary);
+  cursor: default;
+}
+
+.sendButton .icon {
+  width: 24px;
+  fill: currentColor;
+}

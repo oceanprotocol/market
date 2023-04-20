@@ -141,6 +141,7 @@ export default function PublishPage({
 
       const ddoEncrypted = await ProviderInstance.encrypt(
         ddo,
+        ddo.chainId,
         customProviderUrl || values.services[0].providerUrl.url,
         newAbortController()
       )
