@@ -154,7 +154,7 @@ export default function Edit({
       const setMetadataTx = await setNftMetadata(
         updatedAsset,
         accountId,
-        web3,
+        signer,
         newAbortController()
       )
 

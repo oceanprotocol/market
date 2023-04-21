@@ -33,7 +33,7 @@ const CONVERSATION_CONTEXT =
 
 function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   const { address: accountId } = useAccount()
-  const web3provider = useProvider()
+  const web3Provider = useProvider()
   const prevAccountId = usePrevious(accountId)
 
   const [ceramicSessions, setCeramicSessions] = useLocalStorage<string[]>(

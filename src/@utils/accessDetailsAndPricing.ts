@@ -15,7 +15,7 @@ import {
   consumeMarketOrderFee,
   publisherMarketOrderFee
 } from '../../app.config'
-import { ethers } from 'ethers'
+import { Signer } from 'ethers'
 
 const tokenPriceQuery = gql`
   query TokenPriceQuery($datatokenId: ID!, $account: String) {
@@ -160,7 +160,7 @@ function getAccessDetailsFromTokenPrice(
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
   accountId: string,
-  provider: ethers.providers.Provider,
+  signer: Signer,
   providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
@@ -192,7 +192,7 @@ export async function getOrderPriceAndFees(
     const fixed = await getFixedBuyPrice(
       asset?.accessDetails,
       asset?.chainId,
-      provider
+      signer
     )
     orderPriceAndFee.price = fixed.baseTokenAmount
     orderPriceAndFee.opcFee = fixed.oceanFeeAmount

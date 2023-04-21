@@ -10,12 +10,10 @@ import walletStyles from '../../Header/Wallet/Account.module.css'
 const BodyContent = () => {
   const { account, conversationId, checkOrbisConnection } = useOrbis()
   const { address: accountId } = useAccount()
-  const { connect } = useConnect()
 
   const handleActivation = async (e: React.MouseEvent) => {
     e.preventDefault()
-    const resConnect = await connect()
-    if (resConnect) {
+    if (accountId) {
       await checkOrbisConnection({
         address: accountId,
         autoConnect: true,

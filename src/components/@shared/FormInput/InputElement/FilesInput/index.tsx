@@ -61,7 +61,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         query,
         headers,
         abi,
-        chains,
+        chain?.id,
         method
       )
 

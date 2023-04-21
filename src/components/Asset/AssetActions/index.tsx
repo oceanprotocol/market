@@ -14,7 +14,7 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from '@components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/wallet'
 import AssetStats from './AssetStats'
-import { useAccount, useProvider } from 'wagmi'
+import { useAccount, useProvider, useNetwork } from 'wagmi'
 import useBalance from '@hooks/useBalance'
 
 export default function AssetActions({
@@ -24,6 +24,7 @@ export default function AssetActions({
 }): ReactElement {
   const { address: accountId } = useAccount()
   const { balance } = useBalance()
+  const { chain } = useNetwork()
   const web3Provider = useProvider()
   const { isAssetNetwork } = useAsset()
   const newCancelToken = useCancelToken()
@@ -75,7 +76,7 @@ export default function AssetActions({
               query,
               headers,
               abi,
-              chainId,
+              chain?.id,
               method
             )
           : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)

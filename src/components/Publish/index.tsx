@@ -18,8 +18,7 @@ import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
-import { useAccount, useNetwork } from 'wagmi'
-import { useWeb3Legacy } from '@context/Web3Legacy'
+import { useAccount, useNetwork, useSigner } from 'wagmi'
 
 export default function PublishPage({
   content
@@ -28,8 +27,8 @@ export default function PublishPage({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { address: accountId } = useAccount()
+  const { data: signer } = useSigner()
   const { chain } = useNetwork()
-  const { web3 } = useWeb3Legacy()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const scrollToRef = useRef()
   const nftFactory = useNftFactory()
@@ -194,23 +193,24 @@ export default function PublishPage({
       const res = await setNFTMetadataAndTokenURI(
         ddo,
         accountId,
-        web3,
+        signer,
         values.metadata.nft,
         newAbortController()
       )
-      if (!res?.transactionHash)
+      const tx = await res.wait()
+      if (!tx?.transactionHash)
         throw new Error(
           'Metadata could not be written into the NFT. Please try again.'
         )
 
-      LoggerInstance.log('[publish] setMetadata result', res)
+      LoggerInstance.log('[publish] setMetadata result', tx)
 
       setFeedback((prevState) => ({
         ...prevState,
         '3': {
           ...prevState['3'],
-          status: res ? 'success' : 'error',
-          txHash: res?.transactionHash
+          status: tx ? 'success' : 'error',
+          txHash: tx?.transactionHash
         }
       }))
 

@@ -14,7 +14,7 @@ import useNetworkMetadata from '@hooks/useNetworkMetadata'
 
 export default function Details(): ReactElement {
   const { chain } = useNetwork()
-  const { connector: activeConnector } = useAccount()
+  const { connector: activeConnector, address: accountId } = useAccount()
   const { connect } = useConnect()
   const { setOpen } = useModal()
   const { disconnect } = useDisconnect()

@@ -3,7 +3,7 @@ import NetworkName from '@shared/NetworkName'
 import styles from './Network.module.css'
 import Button from '@shared/atoms/Button'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
-import { addCustomNetwork } from '@utils/wallet'
+// TODO: import { addCustomNetwork } from '@utils/wallet'
 
 export default function Network({
   chainId
@@ -14,7 +14,7 @@ export default function Network({
 
   function changeNetwork(chainId: number) {
     const networkNode = networksList.find((data) => data.chainId === chainId)
-    addCustomNetwork(networkNode)
+    // addCustomNetwork(networkNode)
   }
 
   return (

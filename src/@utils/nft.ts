@@ -100,7 +100,7 @@ export async function setNftMetadata(
   accountId: string,
   signer: Signer,
   signal: AbortSignal
-): Promise<TransactionReceipt> {
+): Promise<ethers.providers.TransactionResponse> {
   const encryptedDdo = await ProviderInstance.encrypt(
     asset,
     asset.chainId,

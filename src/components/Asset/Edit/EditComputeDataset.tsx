@@ -23,7 +23,7 @@ import { useAsset } from '@context/Asset'
 import EditFeedback from './EditFeedback'
 import { setNftMetadata } from '@utils/nft'
 import { ComputeEditForm } from './_types'
-import { useAccount } from 'wagmi'
+import { useAccount, useSigner } from 'wagmi'
 import { useWeb3Legacy } from '@context/Web3Legacy'
 
 export default function EditComputeDataset({
@@ -33,6 +33,7 @@ export default function EditComputeDataset({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { address: accountId } = useAccount()
+  const { data: signer } = useSigner()
   const { fetchAsset, isAssetNetwork } = useAsset()
   const { web3 } = useWeb3Legacy()
 
@@ -49,7 +50,7 @@ export default function EditComputeDataset({
         asset?.accessDetails?.isPurchasable
       ) {
         const tx = await setMinterToPublisher(
-          web3,
+          signer,
           asset?.accessDetails?.datatoken?.address,
           accountId,
           setError
@@ -87,7 +88,7 @@ export default function EditComputeDataset({
       const setMetadataTx = await setNftMetadata(
         updatedAsset,
         accountId,
-        web3,
+        signer,
         newAbortController()
       )
 
@@ -100,7 +101,7 @@ export default function EditComputeDataset({
       } else {
         if (asset.accessDetails.type === 'free') {
           const tx = await setMinterToDispenser(
-            web3,
+            signer,
             asset?.accessDetails?.datatoken?.address,
             accountId,
             setError

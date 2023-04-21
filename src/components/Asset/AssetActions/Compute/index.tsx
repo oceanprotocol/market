@@ -46,7 +46,6 @@ import { getComputeFeedback } from '@utils/feedback'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useAccount, useSigner } from 'wagmi'
-import { sign } from 'core-js/core/number'
 
 const refreshInterval = 10000 // 10 sec.
 
@@ -118,7 +117,7 @@ export default function Compute({
 
   async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
     if (!asset?.services[0].datatokenAddress) return
-    const datatokenInstance = new Datatoken(web3)
+    const datatokenInstance = new Datatoken(signer)
     const dtBalance = await datatokenInstance.balance(
       asset?.services[0].datatokenAddress,
       accountId || ZERO_ADDRESS // if the user is not connected, we use ZERO_ADDRESS as accountId
@@ -153,7 +152,7 @@ export default function Compute({
     )
     setProviderFeeAmount(feeAmount)
 
-    const datatoken = new Datatoken(signer, null, null, minAbi)
+    const datatoken = new Datatoken(signer)
     // const datatoken = new Datatoken(
     //   await getDummyWeb3(asset?.chainId),
     //   null,
@@ -179,6 +178,7 @@ export default function Compute({
       const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
         selectedAlgorithmAsset,
         ZERO_ADDRESS,
+        signer,
         algoProviderFees
       )
       if (!algorithmOrderPriceAndFees)
@@ -197,6 +197,7 @@ export default function Compute({
       const datasetPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
+        signer,
         datasetProviderFees
       )
       if (!datasetPriceAndFees)
@@ -373,7 +374,7 @@ export default function Compute({
       )
 
       const algorithmOrderTx = await handleComputeOrder(
-        web3,
+        signer,
         selectedAlgorithmAsset,
         algoOrderPriceAndFees,
         accountId,
@@ -391,7 +392,7 @@ export default function Compute({
       )
 
       const datasetOrderTx = await handleComputeOrder(
-        web3,
+        signer,
         asset,
         datasetOrderPriceAndFees,
         accountId,
@@ -414,8 +415,7 @@ export default function Compute({
       setComputeStatusText(getComputeFeedback()[4])
       const response = await ProviderInstance.computeStart(
         asset.services[0].serviceEndpoint,
-        web3,
-        accountId,
+        signer,
         computeEnv?.id,
         computeAsset,
         computeAlgorithm,

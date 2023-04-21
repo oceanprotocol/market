@@ -12,7 +12,6 @@ export default function DmButton({
   text?: string
 }) {
   const { address: ownAccountId } = useAccount()
-  const { connect } = useConnect()
   const {
     checkOrbisConnection,
     getConversationByDid,
@@ -25,10 +24,9 @@ export default function DmButton({
   const [isCreatingConversation, setIsCreatingConversation] = useState(false)
 
   const handleActivation = async () => {
-    const resConnect = await connect()
-    if (resConnect) {
+    if (ownAccountId) {
       await checkOrbisConnection({
-        address: resConnect,
+        address: ownAccountId,
         autoConnect: true,
         lit: true
       })

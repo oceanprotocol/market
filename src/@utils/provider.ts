@@ -11,11 +11,11 @@ import {
   LoggerInstance,
   ProviderComputeInitializeResults,
   ProviderInstance,
-  UrlFile
+  UrlFile,
+  AbiItem
 } from '@oceanprotocol/lib'
 import { QueryHeader } from '@shared/FormInput/InputElement/Headers'
 import { Signer } from 'ethers'
-import { AbiItem } from 'web3-utils/types'
 import { getValidUntilTime } from './compute'
 
 export async function initializeProviderForCompute(

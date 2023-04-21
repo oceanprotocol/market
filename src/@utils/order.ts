@@ -59,7 +59,7 @@ export async function order(
   accountId: string,
   providerFees?: ProviderFees,
   computeConsumerAddress?: string
-): Promise<ethers.providers.TransactionResponse | BigNumber> {
+): Promise<ethers.providers.TransactionResponse> {
   const datatoken = new Datatoken(signer)
   const config = getOceanConfig(asset.chainId)
 
@@ -128,7 +128,6 @@ export async function order(
 
         return await datatoken.startOrder(
           asset.accessDetails.datatoken.address,
-          accountId,
           orderParams.consumer,
           orderParams.serviceIndex,
           orderParams._providerFee,
@@ -137,13 +136,13 @@ export async function order(
       }
       if (asset.accessDetails.templateId === 2) {
         const txApprove = await approve(
-          web3,
+          signer,
           config,
           accountId,
           asset.accessDetails.baseToken.address,
           asset.accessDetails.datatoken.address,
           await amountToUnits(
-            web3,
+            signer,
             asset?.accessDetails?.baseToken?.address,
             orderPriceAndFees.price
           ),
@@ -154,7 +153,6 @@ export async function order(
         }
         return await datatoken.buyFromFreAndOrder(
           asset.accessDetails.datatoken.address,
-          accountId,
           orderParams,
           freParams
         )
@@ -163,16 +161,14 @@ export async function order(
     }
     case 'free': {
       if (asset.accessDetails.templateId === 1) {
-        const dispenser = new Dispenser(config.dispenserAddress, web3)
+        const dispenser = new Dispenser(config.dispenserAddress, signer)
         const dispenserTx = await dispenser.dispense(
           asset.accessDetails?.datatoken.address,
-          accountId,
           '1',
           accountId
         )
         return await datatoken.startOrder(
           asset.accessDetails.datatoken.address,
-          accountId,
           orderParams.consumer,
           orderParams.serviceIndex,
           orderParams._providerFee,
@@ -182,7 +178,6 @@ export async function order(
       if (asset.accessDetails.templateId === 2) {
         return await datatoken.buyFromDispenserAndOrder(
           asset.services[0].datatokenAddress,
-          accountId,
           orderParams,
           config.dispenserAddress
         )
@@ -309,8 +304,9 @@ export async function handleComputeOrder(
         initializeData.providerFee
       )
       if (!txReuseOrder) throw new Error('Failed to reuse order!')
-      LoggerInstance.log('[compute] Reused order:', txReuseOrder)
-      return txReuseOrder?.transactionHash
+      const tx = await txReuseOrder.wait()
+      LoggerInstance.log('[compute] Reused order:', tx)
+      return tx?.transactionHash
     }
 
     LoggerInstance.log('[compute] Calling order ...', initializeData)
@@ -324,8 +320,9 @@ export async function handleComputeOrder(
       computeConsumerAddress
     )
 
-    LoggerInstance.log('[compute] Order succeeded', txStartOrder)
-    return txStartOrder?.transactionHash
+    const tx = await txStartOrder.wait()
+    LoggerInstance.log('[compute] Order succeeded', tx)
+    return tx?.transactionHash
   } catch (error) {
     toast.error(error.message)
     LoggerInstance.error(`[compute] ${error.message}`)

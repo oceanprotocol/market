@@ -16,7 +16,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
-import { useAccount, useProvider } from 'wagmi'
+import { useAccount, useSigner } from 'wagmi'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
 
 export default function Download({
@@ -35,7 +35,7 @@ export default function Download({
   consumableFeedback?: string
 }): ReactElement {
   const { address: accountId, isConnected } = useAccount()
-  const provider = useProvider()
+  const { data: signer } = useSigner()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
@@ -85,7 +85,7 @@ export default function Download({
         const _orderPriceAndFees = await getOrderPriceAndFees(
           asset,
           ZERO_ADDRESS,
-          provider
+          signer
         )
         setOrderPriceAndFees(_orderPriceAndFees)
         !orderPriceAndFees && setIsPriceLoading(false)
@@ -155,7 +155,7 @@ export default function Download({
           )[3]
         )
 
-        await downloadFile(web3, asset, accountId, validOrderTx)
+        await downloadFile(signer, asset, accountId, validOrderTx)
       } else {
         setStatusText(
           getOrderFeedback(
@@ -163,12 +163,13 @@ export default function Download({
             asset.accessDetails.datatoken?.symbol
           )[asset.accessDetails.type === 'fixed' ? 2 : 1]
         )
-        const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
-        if (!orderTx) {
+        const orderTx = await order(signer, asset, orderPriceAndFees, accountId)
+        const tx = await orderTx.wait()
+        if (!tx) {
           throw new Error()
         }
         setIsOwned(true)
-        setValidOrderTx(orderTx.transactionHash)
+        setValidOrderTx(tx?.transactionHash)
       }
     } catch (error) {
       LoggerInstance.error(error)
