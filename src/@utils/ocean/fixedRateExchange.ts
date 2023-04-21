@@ -1,5 +1,5 @@
 import { amountToUnits, PriceAndFees, unitsToAmount } from '@oceanprotocol/lib'
-import { ethers } from 'ethers'
+import { ethers, Signer } from 'ethers'
 import abiFre from '@oceanprotocol/contracts/artifacts/contracts/pools/fixedRate/FixedRateExchange.sol/FixedRateExchange.json'
 import { getOceanConfig } from '.'
 import { consumeMarketFixedSwapFee } from '../../../app.config'
@@ -13,7 +13,7 @@ export async function calcBaseInGivenDatatokensOut(
   fixedRateExchangeAddress: string,
   exchangeId: string,
   datatokenAmount: string,
-  provider: ethers.Signer | ethers.providers.Provider,
+  provider: Signer,
   consumeMarketFee = '0'
 ): Promise<PriceAndFees> {
   const fixedRateExchangeContract = new ethers.Contract(
@@ -38,21 +38,25 @@ export async function calcBaseInGivenDatatokensOut(
 
   const priceAndFees = {
     baseTokenAmount: await unitsToAmount(
+      provider,
       fixedRateExchange.baseToken,
       outDT.baseTokenAmount,
       fixedRateExchange.btDecimals
     ),
     marketFeeAmount: await unitsToAmount(
+      provider,
       fixedRateExchange.baseToken,
       outDT.marketFeeAmount,
       fixedRateExchange.btDecimals
     ),
     oceanFeeAmount: await unitsToAmount(
+      provider,
       fixedRateExchange.baseToken,
       outDT.oceanFeeAmount,
       fixedRateExchange.btDecimals
     ),
     consumeMarketFeeAmount: await unitsToAmount(
+      provider,
       fixedRateExchange.baseToken,
       outDT.consumeMarketFeeAmount,
       fixedRateExchange.btDecimals
@@ -67,7 +71,7 @@ export async function calcBaseInGivenDatatokensOut(
 export async function getFixedBuyPrice(
   accessDetails: AccessDetails,
   chainId: number,
-  provider: ethers.providers.Provider
+  provider: Signer
 ): Promise<PriceAndFees> {
   const config = getOceanConfig(chainId)
   const estimatedPrice = await calcBaseInGivenDatatokensOut(

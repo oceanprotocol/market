@@ -9,8 +9,7 @@ import {
   NftCreateData
 } from '@oceanprotocol/lib'
 import { SvgWaves } from './SvgWaves'
-import Web3 from 'web3'
-import { TransactionReceipt } from 'web3-core'
+import { Signer, ethers } from 'ethers'
 
 // https://docs.opensea.io/docs/metadata-standards
 export interface NftMetadata {
@@ -99,7 +98,7 @@ export function decodeTokenURI(tokenURI: string): NftMetadata {
 export async function setNftMetadata(
   asset: Asset | DDO,
   accountId: string,
-  web3: Web3,
+  signer: Signer,
   signal: AbortSignal
 ): Promise<TransactionReceipt> {
   const encryptedDdo = await ProviderInstance.encrypt(
@@ -111,7 +110,7 @@ export async function setNftMetadata(
   LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
 
   const metadataHash = getHash(JSON.stringify(asset))
-  const nft = new Nft(web3)
+  const nft = new Nft(signer)
 
   // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
   const flags = '0x2'
@@ -133,10 +132,10 @@ export async function setNftMetadata(
 export async function setNFTMetadataAndTokenURI(
   asset: Asset | DDO,
   accountId: string,
-  web3: Web3,
+  signer: Signer,
   nftMetadata: NftMetadata,
   signal: AbortSignal
-): Promise<TransactionReceipt> {
+): Promise<ethers.providers.TransactionResponse> {
   const encryptedDdo = await ProviderInstance.encrypt(
     asset,
     asset.chainId,
@@ -159,7 +158,7 @@ export async function setNFTMetadataAndTokenURI(
       external_url: externalUrl
     })
   ).toString('base64')
-  const nft = new Nft(web3)
+  const nft = new Nft(signer)
 
   // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
   const flags = '0x02'

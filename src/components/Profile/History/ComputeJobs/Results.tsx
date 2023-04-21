@@ -12,8 +12,7 @@ import FormHelp from '@shared/FormInput/Help'
 import content from '../../../../../content/pages/history.json'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getAsset } from '@utils/aquarius'
-import { useAccount } from 'wagmi'
-import { useWeb3Legacy } from '@context/Web3Legacy'
+import { useAccount, useSigner } from 'wagmi'
 
 export default function Results({
   job
@@ -22,7 +21,7 @@ export default function Results({
 }): ReactElement {
   const providerInstance = new Provider()
   const { address: accountId } = useAccount()
-  const { web3 } = useWeb3Legacy()
+  const { data: signer } = useSigner()
 
   const [datasetProvider, setDatasetProvider] = useState<string>()
   const newCancelToken = useCancelToken()
@@ -65,8 +64,7 @@ export default function Results({
     try {
       const jobResult = await providerInstance.getComputeResultUrl(
         datasetProvider,
-        web3,
-        accountId,
+        signer,
         job.jobId,
         resultIndex
       )

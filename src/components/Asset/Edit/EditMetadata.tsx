@@ -27,7 +27,7 @@ import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
-import { useAccount, useProvider, useNetwork } from 'wagmi'
+import { useAccount, useProvider, useNetwork, useSigner } from 'wagmi'
 
 export default function Edit({
   asset
@@ -39,6 +39,7 @@ export default function Edit({
   const { address: accountId } = useAccount()
   const { chain } = useNetwork()
   const provider = useProvider()
+  const { data: signer } = useSigner()
   const newAbortController = useAbortController()
 
   const [success, setSuccess] = useState<string>()
@@ -72,11 +73,10 @@ export default function Edit({
 
     const fixedRateInstance = new FixedRateExchange(
       config.fixedRateExchangeAddress,
-      web3
+      signer
     )
 
     const setPriceResp = await fixedRateInstance.setRate(
-      accountId,
       asset.accessDetails.addressOrId,
       newPrice.toString()
     )
@@ -109,7 +109,7 @@ export default function Edit({
         (await updateFixedPrice(values.price))
 
       if (values.paymentCollector !== paymentCollector) {
-        const datatoken = new Datatoken(web3)
+        const datatoken = new Datatoken(signer)
         await datatoken.setPaymentCollector(
           asset?.datatokens[0].address,
           accountId,
@@ -159,7 +159,7 @@ export default function Edit({
       )
 
       if (values.assetState !== assetState) {
-        const nft = new Nft(web3)
+        const nft = new Nft(signer)
 
         await nft.setMetadataState(
           asset?.nftAddress,

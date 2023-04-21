@@ -14,7 +14,7 @@ import {
   UrlFile
 } from '@oceanprotocol/lib'
 import { QueryHeader } from '@shared/FormInput/InputElement/Headers'
-import Web3 from 'web3'
+import { Signer } from 'ethers'
 import { AbiItem } from 'web3-utils/types'
 import { getValidUntilTime } from './compute'
 
@@ -173,19 +173,18 @@ export async function getFileInfo(
 }
 
 export async function downloadFile(
-  web3: Web3,
+  signer: Signer,
   asset: AssetExtended,
   accountId: string,
   validOrderTx?: string
 ) {
   const downloadUrl = await ProviderInstance.getDownloadUrl(
     asset.id,
-    accountId,
     asset.services[0].id,
     0,
     validOrderTx || asset.accessDetails.validOrderTx,
     asset.services[0].serviceEndpoint,
-    web3
+    signer
   )
   await downloadFileBrowser(downloadUrl)
 }

@@ -6,7 +6,7 @@ export async function setMinterToPublisher(
   datatokenAddress: string,
   accountId: string,
   setError: (msg: string) => void
-): Promise<any> {
+): Promise<ethers.providers.TransactionResponse> {
   const datatokenInstance = new Datatoken(signer)
 
   const response = await datatokenInstance.removeMinter(
@@ -27,7 +27,7 @@ export async function setMinterToDispenser(
   datatokenAddress: string,
   accountId: string,
   setError: (msg: string) => void
-): Promise<any> {
+): Promise<ethers.providers.TransactionResponse> {
   const datatokenInstance = new Datatoken(signer)
 
   const response = await datatokenInstance.addMinter(

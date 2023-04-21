@@ -11,7 +11,8 @@ import {
   NftCreateData,
   NftFactory,
   Service,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
+  getEventFromTx
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds, normalizeFile } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
@@ -240,15 +241,18 @@ export async function createTokensAndPricing(
       )
 
       const result = await nftFactory.createNftWithDatatokenWithFixedRate(
-        accountId,
         nftCreateData,
         ercParams,
         freParams
       )
 
-      erc721Address = result.events.NFTCreated.returnValues[0]
-      datatokenAddress = result.events.TokenCreated.returnValues[0]
-      txHash = result.transactionHash
+      const trxReceipt = await result.wait()
+      const nftCreatedEvent = getEventFromTx(trxReceipt, 'NFTCreated')
+      const tokenCreatedEvent = getEventFromTx(trxReceipt, 'TokenCreated')
+
+      erc721Address = nftCreatedEvent.args.newTokenAddress
+      datatokenAddress = tokenCreatedEvent.args.newTokenAddress
+      txHash = trxReceipt.transactionHash
 
       LoggerInstance.log('[publish] createNftErcWithFixedRate tx', txHash)
 
@@ -272,14 +276,17 @@ export async function createTokensAndPricing(
       )
 
       const result = await nftFactory.createNftWithDatatokenWithDispenser(
-        accountId,
         nftCreateData,
         ercParams,
         dispenserParams
       )
-      erc721Address = result.events.NFTCreated.returnValues[0]
-      datatokenAddress = result.events.TokenCreated.returnValues[0]
-      txHash = result.transactionHash
+      const trxReceipt = await result.wait()
+      const nftCreatedEvent = getEventFromTx(trxReceipt, 'NFTCreated')
+      const tokenCreatedEvent = getEventFromTx(trxReceipt, 'TokenCreated')
+
+      erc721Address = nftCreatedEvent.args.newTokenAddress
+      datatokenAddress = tokenCreatedEvent.args.newTokenAddress
+      txHash = trxReceipt.transactionHash
 
       LoggerInstance.log('[publish] createNftErcWithDispenser tx', txHash)
 

@@ -45,8 +45,8 @@ import { handleComputeOrder } from '@utils/order'
 import { getComputeFeedback } from '@utils/feedback'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
-import { useAccount } from 'wagmi'
-import { useWeb3Legacy } from '@context/Web3Legacy'
+import { useAccount, useSigner } from 'wagmi'
+import { sign } from 'core-js/core/number'
 
 const refreshInterval = 10000 // 10 sec.
 
@@ -65,7 +65,7 @@ export default function Compute({
 }): ReactElement {
   const { address: accountId } = useAccount()
   const { chainIds } = useUserPreferences()
-  const { web3 } = useWeb3Legacy()
+  const { data: signer } = useSigner()
 
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
@@ -144,21 +144,22 @@ export default function Compute({
     const feeValidity = providerData?.datasets?.[0]?.providerFee?.validUntil
 
     const feeAmount = await unitsToAmount(
-      !isSupportedOceanNetwork || !isAssetNetwork
-        ? await getDummyWeb3(asset?.chainId)
-        : web3,
+      // !isSupportedOceanNetwork || !isAssetNetwork
+      //   ? await getDummyWeb3(asset?.chainId)
+      //   : web3,
+      signer,
       providerFeeToken,
       providerFeeAmount
     )
     setProviderFeeAmount(feeAmount)
 
-    const datatoken = new Datatoken(
-      await getDummyWeb3(asset?.chainId),
-      null,
-      null,
-      minAbi
-    )
-
+    const datatoken = new Datatoken(signer, null, null, minAbi)
+    // const datatoken = new Datatoken(
+    //   await getDummyWeb3(asset?.chainId),
+    //   null,
+    //   null,
+    //   minAbi
+    // )
     setProviderFeesSymbol(await datatoken.getSymbol(providerFeeToken))
 
     const computeDuration = asset.accessDetails.validProviderFees
