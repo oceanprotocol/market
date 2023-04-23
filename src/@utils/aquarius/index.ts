@@ -57,6 +57,13 @@ export function generateBaseQuery(
               'nft.state': 5
             }
           }
+        ],
+        must: [
+          {
+            terms: {
+              'metadata.tags.keyword': ['RegenRangersODC']
+            }
+          }
         ]
       }
     })
