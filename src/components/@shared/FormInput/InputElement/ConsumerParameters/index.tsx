@@ -1,19 +1,24 @@
-import { Field, useField } from 'formik'
-import React, { ReactElement, useEffect, useState } from 'react'
-import CreatableSelect from 'react-select/creatable'
+import { Field, useField, useFormikContext } from 'formik'
+import React, { ReactElement, useEffect } from 'react'
+import Select from 'react-select'
 import Input, { InputProps } from '../..'
-import { AlgorithmConsumerParameter } from '../../../../Publish/_types'
+import {
+  AlgorithmConsumerParameter,
+  FormPublishData
+} from '../../../../Publish/_types'
 import Button from '../../../atoms/Button'
 import Tabs from '../../../atoms/Tabs'
-import creatableSelectStyles from '../TagsAutoComplete/index.module.css'
+import styles from './index.module.css'
+import InputOptions from './InputOptions'
+import Label from '../../Label'
 
 const defaultParam: AlgorithmConsumerParameter = {
-  name: 'parameter',
-  label: 'Label',
-  type: 'text',
+  name: '',
+  label: '',
+  type: 'select',
   default: '',
   required: false,
-  description: 'Description',
+  description: '',
   options: []
 }
 
@@ -26,88 +31,153 @@ export const paramTypes: AlgorithmConsumerParameter['type'][] = [
 ]
 
 export function ConsumerParameters(props: InputProps): ReactElement {
-  const [showOptions, setShowOptions] = useState([])
+  const { errors, setFieldTouched, validateField, touched } =
+    useFormikContext<FormPublishData>()
 
   const [field, meta, helpers] = useField<AlgorithmConsumerParameter[]>(
     props.name
   )
 
-  const addParameter = () => {
+  useEffect(() => {
+    if (field.value.length === 0) helpers.setValue([defaultParam])
+  }, [])
+
+  const addParameter = (index: number) => {
+    // validate parameter before allowing the creation of a new one
+    validateField('metadata.consumerParameters')
+    Object.keys(defaultParam).forEach((param) =>
+      setFieldTouched(`metadata.consumerParameters[${index}].${param}`, true)
+    )
+    console.log(touched, errors)
+    if (errors?.metadata?.consumerParameters) return
+
     helpers.setValue([...field.value, defaultParam])
-    setShowOptions([...showOptions, false])
   }
 
   const deleteParameter = (index: number) => {
     helpers.setValue(field.value.filter((p, i) => i !== index))
-    setShowOptions(showOptions.splice(index, 1))
   }
 
+  const resetOptionsAndDefault = (
+    currentType: AlgorithmConsumerParameter['type'],
+    index: number
+  ) => {
+    if (currentType === 'select' && field.value[index].type === 'multiselect')
+      return
+    if (currentType === 'multiselect' && field.value[index].type === 'select')
+      return
+
+    helpers.setValue(
+      field.value.map((p, i) => {
+        if (i !== index) return p
+
+        return {
+          ...p,
+          options: defaultParam.options,
+          default: defaultParam.default
+        }
+      })
+    )
+  }
+
+  console.log(field)
+
   return (
-    <div>
-      <Button
-        style="primary"
-        type="button"
-        size="small"
-        onClick={() => {
-          addParameter()
-        }}
-      >
-        Add parameter
-      </Button>
+    <div className={styles.container}>
       <Tabs
         items={field.value.map((param, index) => {
           return {
-            title: param.name,
+            title: param?.name || 'New parameter',
             content: (
               <div>
-                {props.fields?.map((subField) => {
+                {props.fields?.map((subField: InputProps) => {
                   if (subField.name === 'options') {
-                    return field.value[index]?.type?.includes('select') ? (
-                      <Field
+                    return ['select', 'multiselect'].includes(
+                      field.value[index]?.type
+                    ) ? (
+                      <InputOptions
                         {...subField}
-                        component={CreatableSelect}
-                        name={`${field.name}[${index}].options`}
-                        components={{
-                          DropdownIndicator: () => null,
-                          IndicatorSeparator: () => null
-                        }}
-                        className={creatableSelectStyles.select}
-                        hideSelectedOptions
-                        isMulti
-                        isClearable={false}
-                        noOptionsMessage={() =>
-                          'Start typing to create options for the user to select.'
-                        }
-                        defaultValue={field.value[index]?.options?.map((o) => ({
-                          value: o,
-                          label: o
-                        }))}
-                        onChange={(value) =>
-                          helpers.setValue([
-                            ...field.value.map((p, i) => {
-                              if (i !== index) return p
-
-                              return {
-                                ...p,
-                                options: value.map((v) => v.value)
-                              }
-                            })
-                          ])
-                        }
-                        theme={(theme) => ({
-                          ...theme,
-                          colors: {
-                            ...theme.colors,
-                            primary25: 'var(--border-color)'
-                          }
-                        })}
+                        key={`${field.name}[${index}].${subField.name}`}
+                        name="metadata.consumerParameters"
+                        label="Options"
+                        required
+                        optionIndex={index}
                       />
-                    ) : (
-                      <></>
-                    )
+                    ) : null
                   }
 
                   if (subField.name === 'default') {
+                    if (
+                      ['select', 'multiselect'].includes(
+                        field.value[index]?.type
+                      )
+                    )
+                      return (
+                        <div key={`${field.name}[${index}].${subField.name}`}>
+                          <Label htmlFor={subField.name}>
+                            {subField?.label}
+                            {subField?.required && (
+                              <span
+                                title="Required"
+                                className={styles.required}
+                              >
+                                *
+                              </span>
+                            )}
+                          </Label>
+                          <Field
+                            {...subField}
+                            label="Options"
+                            component={Select}
+                            name={`${field.name}[${index}].options`}
+                            key={`${field.name}[${index}].${subField.name}`}
+                            components={{
+                              DropdownIndicator: () => null,
+                              IndicatorSeparator: () => null
+                            }}
+                            className={styles.select}
+                            hideSelectedOptions
+                            isMulti={field.value[index]?.type === 'multiselect'}
+                            isClearable
+                            noOptionsMessage={() => 'No options available'}
+                            options={field.value[index]?.options?.map(
+                              (option) => {
+                                const values = Object.entries(option)
+                                return {
+                                  value: values[0][0],
+                                  label: values[0][1]
+                                }
+                              }
+                            )}
+                            onChange={(option) => {
+                              helpers.setValue(
+                                field.value.map((p, i) => {
+                                  if (i !== index) return p
+
+                                  return {
+                                    ...p,
+                                    default: !option
+                                      ? undefined
+                                      : field.value[index]?.type === 'select'
+                                      ? { [option.value]: option.label }
+                                      : option.map((v) => ({
+                                          [v.value]: v.label
+                                        }))
+                                  }
+                                })
+                              )
+                            }}
+                            theme={(theme) => ({
+                              ...theme,
+                              colors: {
+                                ...theme.colors,
+                                primary25: 'var(--border-color)'
+                              }
+                            })}
+                          />
+                        </div>
+                      )
+
                     return (
                       <Field
                         {...subField}
@@ -115,12 +185,15 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                         name={`${field.name}[${index}].${subField.name}`}
                         key={`${field.name}[${index}].${subField.name}`}
                         type={
-                          field.value[index].type.includes('select')
+                          field.value[index].type.includes('boolean')
                             ? 'select'
                             : field.value[index].type
                         }
-                        multiple={field.value[index].type === 'multiselect'}
-                        options={field.value[index].options}
+                        options={
+                          field.value[index].type.includes('boolean')
+                            ? ['true', 'false']
+                            : field.value[index].options
+                        }
                       />
                     )
                   }
@@ -131,20 +204,36 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                       component={Input}
                       name={`${field.name}[${index}].${subField.name}`}
                       key={`${field.name}[${index}].${subField.name}`}
+                      onChange={(e) => {
+                        resetOptionsAndDefault(e.target.value, index)
+                        field.onChange(e)
+                      }}
                     />
                   )
                 })}
-
-                <Button
-                  style="primary"
-                  type="button"
-                  size="small"
-                  onClick={() => {
-                    deleteParameter(index)
-                  }}
-                >
-                  Delete parameter
-                </Button>
+                <div className={styles.actions}>
+                  <Button
+                    style="ghost"
+                    size="small"
+                    disabled={field.value.length === 1}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      deleteParameter(index)
+                    }}
+                  >
+                    Delete parameter
+                  </Button>
+                  <Button
+                    style="primary"
+                    size="small"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      addParameter(index)
+                    }}
+                  >
+                    Add parameter
+                  </Button>
+                </div>
               </div>
             )
           }

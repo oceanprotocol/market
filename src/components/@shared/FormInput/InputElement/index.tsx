@@ -62,7 +62,7 @@ export default function InputElement({
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
   const darkMode = useDarkMode(false, appConfig?.darkModeConfig)
-
+  if (label === 'Default Value') console.log(props)
   switch (props.type) {
     case 'select': {
       const sortedOptions =

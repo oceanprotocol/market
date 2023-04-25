@@ -38,7 +38,7 @@ const validationConsumerParameters: {
   required: Yup.boolean().required('Required'),
   default: Yup.mixed().when('type', {
     is: 'multiselect',
-    then: Yup.array().of(Yup.string()).required(),
+    then: Yup.array().of(Yup.object()).required(),
     otherwise: Yup.string().required()
   }),
   options: Yup.array().when('type', {

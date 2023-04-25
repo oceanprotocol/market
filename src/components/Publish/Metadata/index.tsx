@@ -145,6 +145,24 @@ export default function MetadataFields(): ReactElement {
               />
             </>
           )}
+          <Field
+            {...getFieldContent(
+              'usesConsumerParameters',
+              content.metadata.fields
+            )}
+            component={Input}
+            name="metadata.usesConsumerParameters"
+          />
+          {values.metadata.usesConsumerParameters && (
+            <Field
+              {...getFieldContent(
+                'consumerParameters',
+                content.metadata.fields
+              )}
+              component={Input}
+              name="metadata.consumerParameters"
+            />
+          )}
         </>
       )}
 

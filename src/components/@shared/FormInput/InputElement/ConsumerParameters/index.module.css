@@ -1,0 +1,18 @@
+.container {
+  border: 1px solid var(--border-color);
+}
+
+.select {
+  composes: select from '../TagsAutoComplete/index.module.css';
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.required {
+  composes: required from '../../index.module.css';
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacer);
+}
