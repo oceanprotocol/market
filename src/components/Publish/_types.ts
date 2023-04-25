@@ -36,6 +36,7 @@ export interface FormPublishData {
     dockerImageCustomTag?: string
     dockerImageCustomEntrypoint?: string
     dockerImageCustomChecksum?: string
+    usesConsumerParameters?: boolean
     consumerParameters?: AlgorithmConsumerParameter[]
   }
   services: FormPublishService[]
@@ -80,8 +81,13 @@ export interface AlgorithmConsumerParameter {
   label: string
   required: boolean
   description: string
-  default: string | boolean | number
-  options?: string[]
+  default:
+    | string
+    | boolean
+    | number
+    | { [key: string]: string }
+    | { [key: string]: string }[]
+  options?: { [key: string]: string }[]
 }
 
 export type MetadataAlgorithmExtended = MetadataAlgorithm & {
