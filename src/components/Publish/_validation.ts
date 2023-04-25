@@ -19,6 +19,12 @@ const validationConsumerParameters: {
       // TODO: revert any
       // from is not yet correctly typed: https://github.com/jquense/yup/issues/398#issuecomment-916693907
       const [parentFormObj, nextParentFormObj] = (context as any).from
+      if (
+        !nextParentFormObj?.value?.consumerParameters ||
+        nextParentFormObj.value.consumerParameters.length === 1
+      )
+        return true
+
       const { consumerParameters } = nextParentFormObj.value
       const occasions = consumerParameters.filter(
         (params) => params.name === name
@@ -38,7 +44,7 @@ const validationConsumerParameters: {
   options: Yup.array().when('type', {
     is: (value) => ['select', 'multiselect'].includes(value),
     then: Yup.array()
-      .of(Yup.string())
+      .of(Yup.object())
       .min(1, 'At least one option needs to be defined')
       .required('Required')
   })
@@ -63,6 +69,7 @@ const validationMetadata = {
   termsAndConditions: Yup.boolean()
     .required('Required')
     .isTrue('Please agree to the Terms and Conditions.'),
+  usesConsumerParameters: Yup.boolean(),
   consumerParameters: Yup.array().of(
     Yup.object().shape(validationConsumerParameters)
   )
