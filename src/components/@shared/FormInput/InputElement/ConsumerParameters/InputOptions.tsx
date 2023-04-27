@@ -17,8 +17,12 @@ export interface InputOption {
 
 export default function InputOptions({
   optionIndex,
+  defaultOptions = [],
   ...props
-}: InputProps & { optionIndex: number }): ReactElement {
+}: InputProps & {
+  optionIndex: number
+  defaultOptions: InputOption[]
+}): ReactElement {
   const [field, meta, helpers] = useField(props.name)
 
   const [currentValue, setCurrentValue] = useState('')
@@ -26,7 +30,7 @@ export default function InputOptions({
   const [disabledButton, setDisabledButton] = useState(true)
   const [hasError, setHasError] = useState(false)
 
-  const [options, setOptions] = useState<InputOption[]>([])
+  const [options, setOptions] = useState<InputOption[]>(defaultOptions)
 
   const addOption = () => {
     const hasError = options.some((option) =>
@@ -109,13 +113,15 @@ export default function InputOptions({
           {hasError && <p className={styles.error}>The key must be unique</p>}
         </div>
 
-        <InputElement
-          className={`${styles.input}`}
-          name={`${name}.label`}
-          placeholder={'label'}
-          value={`${currentLabel}`}
-          onChange={handleChange}
-        />
+        <div>
+          <InputElement
+            className={`${styles.input}`}
+            name={`${name}.label`}
+            placeholder={'label'}
+            value={`${currentLabel}`}
+            onChange={handleChange}
+          />
+        </div>
 
         <Button
           style="primary"
