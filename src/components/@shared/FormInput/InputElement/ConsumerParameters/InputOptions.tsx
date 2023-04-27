@@ -7,9 +7,12 @@ import Markdown from '@shared/Markdown'
 import Button from '@shared/atoms/Button'
 import { InputProps } from '@shared/FormInput'
 import { useField } from 'formik'
+import classNames from 'classnames/bind'
+
+const cx = classNames.bind(styles)
 
 export interface InputOption {
-  [key: string]: string
+  [value: string]: string
 }
 
 export default function InputOptions({
@@ -18,21 +21,30 @@ export default function InputOptions({
 }: InputProps & { optionIndex: number }): ReactElement {
   const [field, meta, helpers] = useField(props.name)
 
-  const [currentKey, setCurrentKey] = useState('')
   const [currentValue, setCurrentValue] = useState('')
+  const [currentLabel, setCurrentLabel] = useState('')
   const [disabledButton, setDisabledButton] = useState(true)
+  const [hasError, setHasError] = useState(false)
 
   const [options, setOptions] = useState<InputOption[]>([])
 
   const addOption = () => {
+    const hasError = options.some((option) =>
+      Object.keys(option).includes(currentValue)
+    )
+    if (hasError) {
+      setHasError(hasError)
+      return
+    }
+
     setOptions([
       ...options,
       {
-        [currentKey]: currentValue
+        [currentValue]: currentLabel
       }
     ])
-    setCurrentKey('')
     setCurrentValue('')
+    setCurrentLabel('')
   }
 
   const removeOption = (i: number) => {
@@ -40,15 +52,15 @@ export default function InputOptions({
       (option, optionIndex) => optionIndex !== i
     )
     setOptions(newOptions)
-    setCurrentKey('')
     setCurrentValue('')
+    setCurrentLabel('')
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    const checkType = e.target.name.search('key')
+    const checkType = e.target.name.search('value')
     checkType > 0
-      ? setCurrentKey(e.target.value)
-      : setCurrentValue(e.target.value)
+      ? setCurrentValue(e.target.value)
+      : setCurrentLabel(e.target.value)
 
     return e
   }
@@ -68,11 +80,12 @@ export default function InputOptions({
   }, [options])
 
   useEffect(() => {
-    setDisabledButton(!currentKey || !currentValue)
-  }, [currentKey, currentValue])
+    setDisabledButton(!currentValue || !currentLabel)
+    setHasError(false)
+  }, [currentValue, currentLabel])
 
   return (
-    <div>
+    <div className={cx({ container: true, hasError })}>
       <Label htmlFor={props.name}>
         {props?.label}
         {props?.required && (
@@ -86,18 +99,21 @@ export default function InputOptions({
       </Label>
 
       <div className={styles.headersContainer}>
-        <InputElement
-          name={`${name}.key`}
-          placeholder={'key'}
-          value={`${currentKey}`}
-          onChange={handleChange}
-        />
+        <div className={styles.valueContainer}>
+          <InputElement
+            name={`${name}.value`}
+            placeholder={'value'}
+            value={`${currentValue}`}
+            onChange={handleChange}
+          />
+          {hasError && <p className={styles.error}>The key must be unique</p>}
+        </div>
 
         <InputElement
           className={`${styles.input}`}
-          name={`${name}.value`}
-          placeholder={'value'}
-          value={`${currentValue}`}
+          name={`${name}.label`}
+          placeholder={'label'}
+          value={`${currentLabel}`}
           onChange={handleChange}
         />
 
@@ -119,13 +135,13 @@ export default function InputOptions({
           return (
             <div className={styles.headersAddedContainer} key={`option_${i}`}>
               <InputElement
-                name={`option[${i}].key`}
+                name={`option[${i}].value`}
                 value={Object.keys(option)[0]}
                 disabled
               />
 
               <InputElement
-                name={`option[${i}].value`}
+                name={`option[${i}].label`}
                 value={Object.values(option)[0]}
                 disabled
               />

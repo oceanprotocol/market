@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-between;
   gap: 0 calc(var(--spacer) / 4);
-  margin-bottom: calc(var(--spacer) / 2);
 }
 
 .headersAddedContainer {
@@ -10,4 +9,39 @@
   justify-content: space-between;
   gap: 0 calc(var(--spacer) / 4);
   margin-bottom: calc(var(--spacer) / 2);
+}
+
+.valueContainer {
+  position: relative;
+  width: 100%;
+}
+
+.error {
+  display: inline-block;
+  font-size: var(--font-size-mini);
+  line-height: 1.2;
+  font-weight: var(--font-weight-bold);
+  color: var(--brand-white);
+  background: var(--brand-alert-red);
+  border-radius: var(--border-radius);
+  padding: 0.2rem 0.4rem;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+}
+
+.hasError label {
+  color: var(--brand-alert-red);
+}
+
+.hasError .headersContainer .valueContainer input,
+.hasError .headersContainer .valueContainer input:focus,
+.hasError .headersContainer .valueContainer [class*='prefix'],
+.hasError .headersContainer .valueContainer [class*='postfix'] {
+  color: var(--brand-alert-red);
+  border-color: var(--brand-alert-red);
+}
+
+.required {
+  composes: required from '../../index.module.css';
 }
