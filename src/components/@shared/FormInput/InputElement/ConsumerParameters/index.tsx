@@ -307,7 +307,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                       addParameter(index)
                     }}
                   >
-                    Add parameter
+                    Add new parameter
                   </Button>
                 </div>
               </div>
