@@ -3,8 +3,9 @@ import { ConfigHelper, Config } from '@oceanprotocol/lib'
 export function getDevelopmentConfig(): Config {
   // we need to hardcoded these values from Barge (see 'development' object in console)
   return {
-    // subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI, // uncomment if on macOs
-    // metadataCacheUri: process.env.NEXT_PUBLIC_METADATACACHE_URI, // uncomment if on macOs
+    subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI, // uncomment if on macOs
+    metadataCacheUri: process.env.NEXT_PUBLIC_METADATACACHE_URI, // uncomment if on macOs
+    providerUri: process.env.NEXT_PUBLIC_PROVIDER_URL, // uncomment if on macOs
     fixedRateExchangeAddress:
       process.env.NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS,
     dispenserAddress: process.env.NEXT_PUBLIC_DISPENSER_ADDRESS,
@@ -30,5 +31,6 @@ export function getOceanConfig(network: string | number): Config {
   if (network === 8996) {
     config = { ...config, ...getDevelopmentConfig() }
   }
+  console.log('oceanConfig', config)
   return config as Config
 }
