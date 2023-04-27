@@ -36,17 +36,36 @@ const validationConsumerParameters: {
   description: Yup.string().required('Required'),
   label: Yup.string().required('Required'),
   required: Yup.boolean().required('Required'),
-  default: Yup.mixed().when('type', {
-    is: 'multiselect',
-    then: Yup.array().of(Yup.object()).required(),
-    otherwise: Yup.string().required()
-  }),
+  // default: Yup.mixed<any>()
+  //   .when('type', {
+  //     is: 'multiselect',
+  //     then: Yup.array().of(Yup.object()).required('Required').nullable(true)
+  //   })
+  //   .when('type', {
+  //     is: 'select',
+  //     then: Yup.object().required('Required').nullable(true)
+  //   })
+  //   .when('type', {
+  //     is: 'boolean',
+  //     then: Yup.string()
+  //       .matches(/true|false/g, { excludeEmptyString: true })
+  //       .required('Required')
+  //       .nullable(true)
+  //   })
+  //   .when('type', {
+  //     is: 'number',
+  //     then: Yup.number().required('Required').nullable(true),
+  //     otherwise: Yup.string().required('Required').nullable(true)
+  //   })
+  //   .nullable(true),
+  default: Yup.mixed().required('Required'),
   options: Yup.array().when('type', {
     is: (value) => ['select', 'multiselect'].includes(value),
     then: Yup.array()
       .of(Yup.object())
       .min(1, 'At least one option needs to be defined')
-      .required('Required')
+      .required('Required'),
+    otherwise: Yup.array()
   })
 }
 
