@@ -19,7 +19,12 @@ import { getEncryptedFiles } from '@utils/provider'
 import slugify from 'slugify'
 import Web3 from 'web3'
 import { algorithmContainerPresets } from './_constants'
-import { FormPublishData, MetadataAlgorithmContainer } from './_types'
+import {
+  AlgorithmConsumerParameter,
+  FormPublishData,
+  MetadataAlgorithmContainer,
+  MetadataAlgorithmExtended
+} from './_types'
 import {
   marketFeeAddress,
   publisherMarketOrderFee,
@@ -57,6 +62,22 @@ function transformTags(originalTags: string[]): string[] {
   return transformedTags
 }
 
+function transformConsumerParameters(
+  parameters: AlgorithmConsumerParameter[]
+): AlgorithmConsumerParameter[] {
+  if (!parameters?.length) return
+
+  const transformedValues = parameters.map((param) => {
+    return param.type === 'select' || param.type === 'multiselect'
+      ? param
+      : param.type === 'boolean'
+      ? { ...param, options: undefined, default: param.default === 'true' }
+      : { ...param, options: undefined }
+  })
+
+  return transformedValues
+}
+
 export async function transformPublishFormToDdo(
   values: FormPublishData,
   // Those 2 are only passed during actual publishing process
@@ -77,7 +98,9 @@ export async function transformPublishFormToDdo(
     dockerImageCustom,
     dockerImageCustomTag,
     dockerImageCustomEntrypoint,
-    dockerImageCustomChecksum
+    dockerImageCustomChecksum,
+    usesConsumerParameters,
+    consumerParameters
   } = metadata
   const { access, files, links, providerUrl, timeout } = services[0]
 
@@ -96,7 +119,10 @@ export async function transformPublishFormToDdo(
   const linksTransformed = links?.length &&
     links[0].valid && [sanitizeUrl(links[0].url)]
 
-  const newMetadata: Metadata = {
+  const consumerParametersTransformed =
+    usesConsumerParameters && transformConsumerParameters(consumerParameters)
+
+  const newMetadata: Metadata & { algorithm?: MetadataAlgorithmExtended } = {
     created: currentTime,
     updated: currentTime,
     type,
@@ -133,7 +159,8 @@ export async function transformPublishFormToDdo(
               dockerImage === 'custom'
                 ? dockerImageCustomChecksum
                 : algorithmContainerPresets.checksum
-          }
+          },
+          consumerParameters: consumerParametersTransformed
         }
       })
   }
