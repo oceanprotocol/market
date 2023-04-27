@@ -2,13 +2,38 @@
   border: 1px solid var(--border-color);
 }
 
+.selectContainer,
+.optionsContainer {
+  position: relative;
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
 .select {
   composes: select from '../TagsAutoComplete/index.module.css';
-  margin-bottom: calc(var(--spacer) / 2);
 }
 
 .required {
   composes: required from '../../index.module.css';
+}
+
+.hasError .select [class$='control'],
+.hasError .select [class$='control']:hover,
+.hasError .select [class$='control']:focus-within,
+.hasError .select [class$='menu'] {
+  color: var(--brand-alert-red);
+  border-color: var(--brand-alert-red);
+}
+
+.optionsContainer.hasError * {
+  border-color: var(--brand-alert-red);
+}
+
+.hasError label {
+  color: var(--brand-alert-red);
+}
+
+.error {
+  composes: error from '../../index.module.css';
 }
 
 .actions {
