@@ -29,6 +29,7 @@ import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
 import { MetadataAlgorithmExtended } from '@components/Publish/_types'
+import { transformConsumerParameters } from '@components/Publish/_utils'
 
 export default function Edit({
   asset
@@ -97,6 +98,13 @@ export default function Edit({
         links: linksTransformed,
         author: values.author,
         tags: values.tags
+      }
+
+      if (asset.metadata.type === 'algorithm') {
+        updatedMetadata.algorithm.consumerParameters =
+          !values.usesConsumerParameters
+            ? undefined
+            : transformConsumerParameters(values.consumerParameters)
       }
 
       asset?.accessDetails?.type === 'fixed' &&

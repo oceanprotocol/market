@@ -62,7 +62,7 @@ function transformTags(originalTags: string[]): string[] {
   return transformedTags
 }
 
-function transformConsumerParameters(
+export function transformConsumerParameters(
   parameters: AlgorithmConsumerParameter[]
 ): AlgorithmConsumerParameter[] {
   if (!parameters?.length) return

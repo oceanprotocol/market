@@ -2,6 +2,45 @@ import { FileInfo } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import web3 from 'web3'
 import { testLinks } from '../../../@utils/yup'
+import { AlgorithmConsumerParameter } from '@components/Publish/_types'
+import { SchemaLike } from 'yup/lib/types'
+import { paramTypes } from '@components/@shared/FormInput/InputElement/ConsumerParameters'
+
+const validationConsumerParameters: {
+  [key in keyof AlgorithmConsumerParameter]: SchemaLike
+} = {
+  name: Yup.string()
+    .test('unique', 'Parameter names must be unique', (name, context) => {
+      // TODO: revert any
+      // from is not yet correctly typed: https://github.com/jquense/yup/issues/398#issuecomment-916693907
+      const [parentFormObj, nextParentFormObj] = (context as any).from
+      if (
+        !nextParentFormObj?.value?.consumerParameters ||
+        nextParentFormObj.value.consumerParameters.length === 1
+      )
+        return true
+
+      const { consumerParameters } = nextParentFormObj.value
+      const occasions = consumerParameters.filter(
+        (params) => params.name === name
+      )
+      return occasions.length === 1
+    })
+    .required('Required'),
+  type: Yup.string().oneOf(paramTypes).required('Required'),
+  description: Yup.string().required('Required'),
+  label: Yup.string().required('Required'),
+  required: Yup.boolean().required('Required'),
+  default: Yup.mixed().required('Required'),
+  options: Yup.array().when('type', {
+    is: 'select',
+    then: Yup.array()
+      .of(Yup.object())
+      .min(1, 'At least one option needs to be defined')
+      .required('Required'),
+    otherwise: Yup.array()
+  })
+}
 
 export const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -37,6 +76,10 @@ export const validationSchema = Yup.object().shape({
   timeout: Yup.string().required('Required'),
   author: Yup.string().nullable(),
   tags: Yup.array<string[]>().nullable(),
+  usesConsumerParameters: Yup.boolean(),
+  consumerParameters: Yup.array().of(
+    Yup.object().shape(validationConsumerParameters)
+  ),
   paymentCollector: Yup.string().test(
     'ValidAddress',
     'Must be a valid Ethereum Address.',
