@@ -70,7 +70,17 @@ export const initialValues: FormPublishData = {
     dockerImageCustomTag: '',
     dockerImageCustomEntrypoint: '',
     usesConsumerParameters: false,
-    consumerParameters: []
+    consumerParameters: [
+      {
+        name: '',
+        label: '',
+        description: '',
+        type: 'text',
+        options: [],
+        default: '',
+        required: false
+      }
+    ]
   },
   services: [
     {

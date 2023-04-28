@@ -38,7 +38,7 @@ const validationConsumerParameters: {
   required: Yup.boolean().required('Required'),
   default: Yup.mixed().required('Required'),
   options: Yup.array().when('type', {
-    is: (value) => ['select', 'multiselect'].includes(value),
+    is: 'select',
     then: Yup.array()
       .of(Yup.object())
       .min(1, 'At least one option needs to be defined')

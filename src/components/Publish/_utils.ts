@@ -68,11 +68,9 @@ function transformConsumerParameters(
   if (!parameters?.length) return
 
   const transformedValues = parameters.map((param) => {
-    return param.type === 'select' || param.type === 'multiselect'
-      ? param
-      : param.type === 'boolean'
-      ? { ...param, options: undefined, default: param.default === 'true' }
-      : { ...param, options: undefined }
+    return param.type === 'select'
+      ? { ...param, options: JSON.stringify(param.options) }
+      : { ...param, options: undefined, default: param.default.toString() }
   })
 
   return transformedValues

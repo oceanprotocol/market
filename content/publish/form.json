@@ -115,7 +115,7 @@
             "label": "Parameter Type",
             "help": "The type of the parameter to ask for. This influences how the parameter is displayed for the consumer before the algorithm is used.",
             "type": "select",
-            "options": ["number", "text", "boolean", "select", "multiselect"],
+            "options": ["number", "text", "boolean", "select"],
             "required": true
           },
           {

@@ -73,7 +73,6 @@ export type AlgorithmConsumerParameterType =
   | 'text'
   | 'boolean'
   | 'select'
-  | 'multiselect'
 
 export interface AlgorithmConsumerParameter {
   name: string
@@ -81,12 +80,7 @@ export interface AlgorithmConsumerParameter {
   label: string
   required: boolean
   description: string
-  default:
-    | string
-    | boolean
-    | number
-    | { [key: string]: string }
-    | { [key: string]: string }[]
+  default: string | boolean | number
   options?: { [key: string]: string }[]
 }
 
