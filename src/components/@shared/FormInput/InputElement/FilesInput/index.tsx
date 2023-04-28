@@ -155,7 +155,6 @@ export default function FilesInput(props: InputProps): ReactElement {
               <div className={`${styles.textblock}`}>
                 {props.innerFields &&
                   props.innerFields.map((innerField: any, i: number) => {
-                    console.log(innerField)
                     return (
                       <>
                         <Field
