@@ -1,11 +1,19 @@
 import { ConfigHelper, Config } from '@oceanprotocol/lib'
 
-export function getDevelopmentConfig(): Config {
-  // we need to hardcoded these values from Barge (see 'development' object in console)
+/**
+  This function takes a Config object as an input and returns a new sanitized Config object
+  The new Config object has the same properties as the input object, but with some values replaced by environment variables if they exist
+  Also adds missing contract addresses deployed when running barge locally
+  @param {Config} config - The input Config object
+  @returns {Config} A new Config object
+*/
+export function sanitizeDevelopmentConfig(config: Config): Config {
   return {
-    subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI, // uncomment if on macOs
-    metadataCacheUri: process.env.NEXT_PUBLIC_METADATACACHE_URI, // uncomment if on macOs
-    providerUri: process.env.NEXT_PUBLIC_PROVIDER_URL, // uncomment if on macOs
+    subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI || config.subgraphUri,
+    metadataCacheUri:
+      process.env.NEXT_PUBLIC_METADATACACHE_URI || config.metadataCacheUri,
+    providerUri: process.env.NEXT_PUBLIC_PROVIDER_URL || config.providerUri,
+    nodeUri: process.env.NEXT_PUBLIC_RPC_URL || config.nodeUri,
     fixedRateExchangeAddress:
       process.env.NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS,
     dispenserAddress: process.env.NEXT_PUBLIC_DISPENSER_ADDRESS,
@@ -29,7 +37,7 @@ export function getOceanConfig(network: string | number): Config {
       : process.env.NEXT_PUBLIC_INFURA_PROJECT_ID
   ) as Config
   if (network === 8996) {
-    config = { ...config, ...getDevelopmentConfig() }
+    config = { ...config, ...sanitizeDevelopmentConfig(config) }
   }
   console.log('oceanConfig', config)
   return config as Config
