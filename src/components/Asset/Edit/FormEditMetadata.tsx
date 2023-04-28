@@ -130,6 +130,24 @@ export default function FormEditMetadata({
       />
 
       <Field {...getFieldContent('tags', data)} component={Input} name="tags" />
+
+      {asset.metadata.type === 'algorithm' && (
+        <>
+          <Field
+            {...getFieldContent('usesConsumerParameters', data)}
+            component={Input}
+            name="usesConsumerParameters"
+          />
+          {values.usesConsumerParameters && (
+            <Field
+              {...getFieldContent('consumerParameters', data)}
+              component={Input}
+              name="consumerParameters"
+            />
+          )}
+        </>
+      )}
+
       <Field
         {...getFieldContent('paymentCollector', data)}
         component={Input}

@@ -28,6 +28,7 @@ import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
+import { MetadataAlgorithmExtended } from '@components/Publish/_types'
 
 export default function Edit({
   asset
@@ -180,7 +181,7 @@ export default function Edit({
     <Formik
       enableReinitialize
       initialValues={getInitialValues(
-        asset?.metadata,
+        asset?.metadata as Metadata & { algorithm?: MetadataAlgorithmExtended },
         asset?.services[0]?.timeout,
         asset?.accessDetails?.price || '0',
         paymentCollector,

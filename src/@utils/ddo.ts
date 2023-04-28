@@ -2,7 +2,10 @@ import {
   ComputeEditForm,
   MetadataEditForm
 } from '@components/Asset/Edit/_types'
-import { FormPublishData } from '@components/Publish/_types'
+import {
+  AlgorithmConsumerParameter,
+  FormPublishData
+} from '@components/Publish/_types'
 import {
   Arweave,
   Asset,
@@ -187,4 +190,23 @@ export function previewDebugPatch(
   )
 
   return buildValuesPreview
+}
+
+export function parseConsumerParameters(
+  consumerParameters: AlgorithmConsumerParameter[]
+): AlgorithmConsumerParameter[] {
+  if (!consumerParameters?.length) return []
+
+  return consumerParameters.map((param) =>
+    param.type === 'select'
+      ? {
+          ...param,
+          options: JSON.parse(param.options as string)
+        }
+      : param.type === 'number'
+      ? { ...param, default: Number(param.default) }
+      : param.type === 'boolean'
+      ? { ...param, default: param.default === 'true' }
+      : param
+  )
 }
