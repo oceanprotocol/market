@@ -76,7 +76,7 @@
       },
       {
         "name": "usesConsumerParameters",
-        "label": "Consumer parameters",
+        "label": "Uses consumer parameters",
         "help": "Define consumer parameters to be submitted to the algorithm before usage.",
         "type": "checkbox",
         "options": ["This algorithm uses consumer parameters"],
@@ -84,6 +84,7 @@
       },
       {
         "name": "consumerParameters",
+        "label": "Consumer parameters",
         "type": "consumerParameters",
         "required": false,
         "fields": [
