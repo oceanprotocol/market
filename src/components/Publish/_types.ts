@@ -81,7 +81,7 @@ export interface AlgorithmConsumerParameter {
   required: boolean
   description: string
   default: string | boolean | number
-  options?: { [key: string]: string }[]
+  options?: string | { [key: string]: string }[]
 }
 
 export type MetadataAlgorithmExtended = MetadataAlgorithm & {

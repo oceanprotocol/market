@@ -108,7 +108,11 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                           label="Options"
                           required
                           optionIndex={index}
-                          defaultOptions={field.value[index]?.options}
+                          defaultOptions={
+                            field.value[index]?.options as {
+                              [key: string]: string
+                            }[]
+                          }
                         />
                         {showError('options', index) && (
                           <div className={styles.error}>
@@ -137,7 +141,11 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                           field.value[index].type === 'boolean'
                             ? ['true', 'false']
                             : field.value[index].type === 'select'
-                            ? getStringOptions(field.value[index]?.options)
+                            ? getStringOptions(
+                                field.value[index]?.options as {
+                                  [key: string]: string
+                                }[]
+                              )
                             : field.value[index].options
                         }
                       />
