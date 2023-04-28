@@ -12,7 +12,7 @@ import { CancelToken } from 'axios'
 import { getAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
+import { getOceanConfig, sanitizeDevelopmentConfig } from '@utils/ocean'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
@@ -179,13 +179,13 @@ function AssetProvider({
   // -----------------------------------
   useEffect(() => {
     if (!asset?.chainId) return
-
+    const config = getOceanConfig(asset?.chainId)
     const oceanConfig = {
-      ...getOceanConfig(asset?.chainId),
+      ...config,
 
       // add local dev values
       ...(asset?.chainId === 8996 && {
-        ...getDevelopmentConfig()
+        ...sanitizeDevelopmentConfig(config)
       })
     }
     setOceanConfig(oceanConfig)
