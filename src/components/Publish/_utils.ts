@@ -69,8 +69,17 @@ export function transformConsumerParameters(
 
   const transformedValues = parameters.map((param) => {
     return param.type === 'select'
-      ? { ...param, options: JSON.stringify(param.options) }
-      : { ...param, options: undefined, default: param.default.toString() }
+      ? {
+          ...param,
+          required: param.required === 'required',
+          options: JSON.stringify(param.options)
+        }
+      : {
+          ...param,
+          required: param.required === 'required',
+          options: undefined,
+          default: param.default.toString()
+        }
   })
 
   return transformedValues

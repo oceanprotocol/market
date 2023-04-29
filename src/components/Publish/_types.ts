@@ -78,7 +78,7 @@ export interface AlgorithmConsumerParameter {
   name: string
   type: AlgorithmConsumerParameterType
   label: string
-  required: boolean
+  required: boolean | string
   description: string
   default: string | boolean | number
   options?: string | { [key: string]: string }[]

@@ -129,14 +129,14 @@
           {
             "name": "default",
             "label": "Default Value",
-            "required": true,
-            "placeholder": "Define the default value for the current parameter"
+            "placeholder": "Define the default value for the current parameter",
+            "required": true
           },
           {
             "name": "required",
             "label": "Required",
-            "options": ["Parameter Required"],
-            "type": "checkbox",
+            "options": ["optional", "required"],
+            "type": "select",
             "required": true
           }
         ]

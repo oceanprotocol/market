@@ -78,7 +78,7 @@ export const initialValues: FormPublishData = {
         type: 'text',
         options: [],
         default: '',
-        required: false
+        required: ''
       }
     ]
   },
