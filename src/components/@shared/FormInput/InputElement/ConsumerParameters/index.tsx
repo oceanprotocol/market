@@ -31,12 +31,12 @@ export function ConsumerParameters(props: InputProps): ReactElement {
 
   const addParameter = (index: number) => {
     // validate parameter before allowing the creation of a new one
-    validateField('metadata.consumerParameters')
+    validateField(field.name)
     Object.keys(initialValues.metadata.consumerParameters[0]).forEach((param) =>
-      setFieldTouched(`metadata.consumerParameters[${index}].${param}`, true)
+      setFieldTouched(`${field.name}[${index}].${param}`, true)
     )
 
-    if (errors?.metadata?.consumerParameters) return
+    if (errors?.[field.name]) return
 
     helpers.setValue([
       ...field.value,
@@ -56,8 +56,8 @@ export function ConsumerParameters(props: InputProps): ReactElement {
     if (parameterName !== 'type') return
     if (field.value[index].type === parameterType) return
 
-    setFieldTouched(`metadata.consumerParameters[${index}].options`, false)
-    setFieldTouched(`metadata.consumerParameters[${index}].default`, false)
+    setFieldTouched(`${field.name}[${index}].options`, false)
+    setFieldTouched(`${field.name}[${index}].default`, false)
     helpers.setValue(
       field.value.map((p, i) => {
         if (i !== index) return p
@@ -72,8 +72,8 @@ export function ConsumerParameters(props: InputProps): ReactElement {
   }
 
   const showError = (name: string, index: number): boolean => {
-    const error = errors?.metadata?.consumerParameters?.[index]?.[name]
-    const isTouched = touched?.metadata?.consumerParameters?.[index]?.[name]
+    const error = errors?.[field.name]?.[index]?.[name]
+    const isTouched = touched?.[field.name]?.[index]?.[name]
 
     return error && isTouched
   }
@@ -104,7 +104,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                       >
                         <InputOptions
                           {...subField}
-                          name="metadata.consumerParameters"
+                          name={field.name}
                           label="Options"
                           required
                           optionIndex={index}
