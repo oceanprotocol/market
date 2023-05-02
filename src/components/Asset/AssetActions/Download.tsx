@@ -87,10 +87,11 @@ export default function Download({
           ZERO_ADDRESS,
           signer
         )
+        console.log('_orderPriceAndFees')
         setOrderPriceAndFees(_orderPriceAndFees)
         !orderPriceAndFees && setIsPriceLoading(false)
       } catch (error) {
-        LoggerInstance.error(error.message)
+        LoggerInstance.error('getOrderPriceAndFees', error)
         setIsPriceLoading(false)
       }
     }
@@ -110,6 +111,10 @@ export default function Download({
   }, [dtBalance])
 
   useEffect(() => {
+    console.log('orderPriceAndFees :', orderPriceAndFees)
+    console.log('accountId :', accountId)
+    console.log('isUnsupportedPricing :', isUnsupportedPricing)
+    console.log('asset?.accessDetails?.type :', asset?.accessDetails?.type)
     if (
       (asset?.accessDetails?.type === 'fixed' && !orderPriceAndFees) ||
       !isMounted ||
@@ -129,6 +134,8 @@ export default function Download({
       !asset?.accessDetails.isPurchasable ||
       !isAssetNetwork ||
       ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
+
+    console.log('isDisabled :', isDisabled)
 
     setIsDisabled(isDisabled)
   }, [
