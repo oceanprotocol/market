@@ -11,6 +11,7 @@ import styles from './index.module.css'
 import InputOptions from './InputOptions'
 import classNames from 'classnames/bind'
 import { initialValues } from '@components/Publish/_constants'
+import { getObjectPropertyByPath } from '@utils/index'
 
 const cx = classNames.bind(styles)
 
@@ -36,7 +37,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
       setFieldTouched(`${field.name}[${index}].${param}`, true)
     )
 
-    if (errors?.[field.name]) return
+    if (getObjectPropertyByPath(errors, field.name)) return
 
     helpers.setValue([
       ...field.value,
@@ -48,7 +49,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
     helpers.setValue(field.value.filter((p, i) => i !== index))
   }
 
-  const resetOptionsAndDefault = (
+  const resetDefaultValue = (
     parameterName: string,
     parameterType: AlgorithmConsumerParameter['type'],
     index: number
@@ -56,7 +57,6 @@ export function ConsumerParameters(props: InputProps): ReactElement {
     if (parameterName !== 'type') return
     if (field.value[index].type === parameterType) return
 
-    setFieldTouched(`${field.name}[${index}].options`, false)
     setFieldTouched(`${field.name}[${index}].default`, false)
     helpers.setValue(
       field.value.map((p, i) => {
@@ -71,15 +71,14 @@ export function ConsumerParameters(props: InputProps): ReactElement {
     )
   }
 
-  const showError = (name: string, index: number): boolean => {
-    const error = errors?.[field.name]?.[index]?.[name]
-    const isTouched = touched?.[field.name]?.[index]?.[name]
-
-    return error && isTouched
-  }
+  const showError = (name: string, index: number): boolean =>
+    [errors, touched].every(
+      (object) =>
+        !!getObjectPropertyByPath(object, `${field.name}[${index}].${name}`)
+    )
 
   const getStringOptions = (options: { [key: string]: string }[]): string[] => {
-    if (!options.length) return []
+    if (!options?.length) return []
 
     return options.map((option) => Object.keys(option)[0])
   }
@@ -133,7 +132,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                         name={`${field.name}[${index}].${subField.name}`}
                         key={`${field.name}[${index}].${subField.name}`}
                         type={
-                          field.value[index].type.includes('boolean')
+                          field.value[index].type === 'boolean'
                             ? 'select'
                             : field.value[index].type
                         }
@@ -159,11 +158,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                       name={`${field.name}[${index}].${subField.name}`}
                       key={`${field.name}[${index}].${subField.name}`}
                       onChange={(e) => {
-                        resetOptionsAndDefault(
-                          subField.name,
-                          e.target.value,
-                          index
-                        )
+                        resetDefaultValue(subField.name, e.target.value, index)
                         field.onChange(e)
                       }}
                     />
