@@ -23,8 +23,8 @@ export function Steps({
   useEffect(() => {
     if (!chain?.id || !accountId) return
 
-    setFieldValue('user.chain?.id', chain?.id)
-    setFieldValue('user.address', accountId)
+    setFieldValue('user.chainId', chain?.id)
+    setFieldValue('user.accountId', accountId)
   }, [chain?.id, accountId, setFieldValue])
 
   useEffect(() => {
