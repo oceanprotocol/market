@@ -134,10 +134,16 @@ export default function Edit({
         )
         updatedFiles = filesEncrypted
       }
-      const updatedService: Service = {
+      const updatedService: ServiceExtended = {
         ...asset.services[0],
         timeout: mapTimeoutStringToSeconds(values.timeout),
         files: updatedFiles
+      }
+      if (asset.metadata.type === 'algorithm') {
+        updatedService.consumerParameters = !values.service
+          ?.usesConsumerParameters
+          ? undefined
+          : transformConsumerParameters(values.service.consumerParameters)
       }
 
       // TODO: remove version update at a later time
@@ -190,7 +196,7 @@ export default function Edit({
       enableReinitialize
       initialValues={getInitialValues(
         asset?.metadata as Metadata & { algorithm?: MetadataAlgorithmExtended },
-        asset?.services[0]?.timeout,
+        asset?.services[0],
         asset?.accessDetails?.price || '0',
         paymentCollector,
         assetState

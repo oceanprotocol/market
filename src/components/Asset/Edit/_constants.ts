@@ -4,7 +4,7 @@ import { ComputeEditForm, MetadataEditForm } from './_types'
 
 export function getInitialValues(
   metadata: MetadataExtended,
-  timeout: number,
+  service: ServiceExtended,
   price: string,
   paymentCollector: string,
   assetState: string
@@ -15,7 +15,7 @@ export function getInitialValues(
     price,
     links: [{ url: '', type: 'url' }],
     files: [{ url: '', type: 'ipfs' }],
-    timeout: secondsToString(timeout),
+    timeout: secondsToString(service?.timeout),
     author: metadata?.author,
     tags: metadata?.tags,
     usesConsumerParameters: metadata?.algorithm?.consumerParameters?.length > 0,
@@ -23,7 +23,11 @@ export function getInitialValues(
       metadata?.algorithm?.consumerParameters
     ),
     paymentCollector,
-    assetState
+    assetState,
+    service: {
+      usesConsumerParameters: service?.consumerParameters?.length > 0,
+      consumerParameters: parseConsumerParameters(service?.consumerParameters)
+    }
   }
 }
 

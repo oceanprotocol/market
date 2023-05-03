@@ -40,6 +40,10 @@ export interface FormPublishData {
     dockerImageCustomChecksum?: string
     usesConsumerParameters?: boolean
     consumerParameters?: AlgorithmConsumerParameter[]
+    service?: {
+      usesConsumerParameters?: boolean
+      consumerParameters?: AlgorithmConsumerParameter[]
+    }
   }
   services: FormPublishService[]
   pricing: PricePublishOptions

@@ -13,6 +13,10 @@ export interface MetadataEditForm {
   usesConsumerParameters?: boolean
   consumerParameters?: AlgorithmConsumerParameter[]
   assetState?: string
+  service?: {
+    usesConsumerParameters?: boolean
+    consumerParameters?: AlgorithmConsumerParameter[]
+  }
 }
 
 export interface ComputeEditForm {
