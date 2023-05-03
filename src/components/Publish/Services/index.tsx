@@ -20,7 +20,7 @@ export default function ServicesFields(): ReactElement {
 
   // connect with Form state, use for conditional field rendering
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
-  console.log(values)
+
   // name and title should be download, but option value should be access, probably the best way would be to change the component so that option is an object like {name,value}
   const accessTypeOptions = [
     {
