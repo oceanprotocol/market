@@ -109,7 +109,11 @@ const validationService = {
     url: Yup.string().url('Must be a valid URL.').required('Required'),
     valid: Yup.boolean().isTrue().required('Valid Provider is required.'),
     custom: Yup.boolean()
-  })
+  }),
+  usesConsumerParameters: Yup.boolean(),
+  consumerParameters: Yup.array().of(
+    Yup.object().shape(validationConsumerParameters)
+  )
 }
 
 const validationPricing = {

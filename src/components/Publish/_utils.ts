@@ -184,7 +184,7 @@ export async function transformPublishFormToDdo(
     files[0].valid &&
     (await getEncryptedFiles(file, chainId, providerUrl.url))
 
-  const newService: Service = {
+  const newService: ServiceExtended = {
     id: getHash(datatokenAddress + filesEncrypted),
     type: access,
     files: filesEncrypted || '',
@@ -193,7 +193,10 @@ export async function transformPublishFormToDdo(
     timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
       compute: values.services[0].computeOptions
-    })
+    }),
+    consumerParameters:
+      values.services[0].usesConsumerParameters &&
+      transformConsumerParameters(values.services[0].consumerParameters)
   }
 
   const newDdo: DDO = {

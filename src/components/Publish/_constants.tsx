@@ -84,7 +84,9 @@ export const initialValues: FormPublishData = {
         valid: true,
         custom: false
       },
-      computeOptions
+      computeOptions,
+      usesConsumerParameters: false,
+      consumerParameters: []
     }
   ],
   pricing: {

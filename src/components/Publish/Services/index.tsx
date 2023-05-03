@@ -20,7 +20,7 @@ export default function ServicesFields(): ReactElement {
 
   // connect with Form state, use for conditional field rendering
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
-
+  console.log(values)
   // name and title should be download, but option value should be access, probably the best way would be to change the component so that option is an object like {name,value}
   const accessTypeOptions = [
     {
@@ -108,6 +108,28 @@ export default function ServicesFields(): ReactElement {
         component={Input}
         name="services[0].timeout"
       />
+      {values.metadata.type === 'algorithm' && (
+        <>
+          <Field
+            {...getFieldContent(
+              'usesConsumerParameters',
+              content.services.fields
+            )}
+            component={Input}
+            name="services[0].usesConsumerParameters"
+          />
+          {values.services[0].usesConsumerParameters && (
+            <Field
+              {...getFieldContent(
+                'consumerParameters',
+                content.services.fields
+              )}
+              component={Input}
+              name="services[0].consumerParameters"
+            />
+          )}
+        </>
+      )}
     </>
   )
 }

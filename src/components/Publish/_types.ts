@@ -14,6 +14,8 @@ export interface FormPublishService {
   providerUrl: { url: string; valid: boolean; custom: boolean }
   algorithmPrivacy?: boolean
   computeOptions?: ServiceComputeOptions
+  usesConsumerParameters?: boolean
+  consumerParameters?: AlgorithmConsumerParameter[]
 }
 
 export interface FormPublishData {

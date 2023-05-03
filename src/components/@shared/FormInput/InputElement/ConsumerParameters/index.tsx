@@ -10,7 +10,6 @@ import Tabs from '../../../atoms/Tabs'
 import styles from './index.module.css'
 import InputOptions from './InputOptions'
 import classNames from 'classnames/bind'
-import { initialValues } from '@components/Publish/_constants'
 import { getObjectPropertyByPath } from '@utils/index'
 
 const cx = classNames.bind(styles)
@@ -47,16 +46,13 @@ export function ConsumerParameters(props: InputProps): ReactElement {
   const addParameter = (index: number) => {
     // validate parameter before allowing the creation of a new one
     validateField(field.name)
-    Object.keys(initialValues.metadata.consumerParameters[0]).forEach((param) =>
+    Object.keys(defaultParam).forEach((param) =>
       setFieldTouched(`${field.name}[${index}].${param}`, true)
     )
 
     if (getObjectPropertyByPath(errors, field.name)) return
 
-    helpers.setValue([
-      ...field.value,
-      { ...initialValues.metadata.consumerParameters[0] }
-    ])
+    helpers.setValue([...field.value, { ...defaultParam }])
   }
 
   const deleteParameter = (index: number) => {
@@ -77,9 +73,9 @@ export function ConsumerParameters(props: InputProps): ReactElement {
         if (i !== index) return p
 
         return {
-          ...initialValues.metadata.consumerParameters[0],
+          ...defaultParam,
           ...p,
-          default: initialValues.metadata.consumerParameters[0].default
+          default: defaultParam.default
         }
       })
     )
