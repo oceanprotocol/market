@@ -1,5 +1,5 @@
 import { ErrorMessage, Field, useField, useFormikContext } from 'formik'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import Input, { InputProps } from '../..'
 import {
   AlgorithmConsumerParameter,
@@ -15,6 +15,16 @@ import { getObjectPropertyByPath } from '@utils/index'
 
 const cx = classNames.bind(styles)
 
+const defaultParam: AlgorithmConsumerParameter = {
+  name: '',
+  label: '',
+  description: '',
+  type: 'text',
+  options: [],
+  default: '',
+  required: ''
+}
+
 export const paramTypes: AlgorithmConsumerParameter['type'][] = [
   'number',
   'text',
@@ -29,6 +39,10 @@ export function ConsumerParameters(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField<AlgorithmConsumerParameter[]>(
     props.name
   )
+
+  useEffect(() => {
+    if (field.value.length === 0) helpers.setValue([{ ...defaultParam }])
+  }, [])
 
   const addParameter = (index: number) => {
     // validate parameter before allowing the creation of a new one
