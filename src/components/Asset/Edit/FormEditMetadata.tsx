@@ -138,7 +138,8 @@ export default function FormEditMetadata({
             component={Input}
             name="usesConsumerParameters"
           />
-          {values.usesConsumerParameters && (
+          {(values as unknown as FormPublishData['metadata'])
+            .usesConsumerParameters && (
             <Field
               {...getFieldContent('consumerParameters', data)}
               component={Input}

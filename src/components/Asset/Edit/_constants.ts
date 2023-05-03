@@ -1,10 +1,9 @@
-import { Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
+import { ServiceComputeOptions } from '@oceanprotocol/lib'
 import { parseConsumerParameters, secondsToString } from '@utils/ddo'
 import { ComputeEditForm, MetadataEditForm } from './_types'
-import { MetadataAlgorithmExtended } from '@components/Publish/_types'
 
 export function getInitialValues(
-  metadata: Metadata & { algorithm?: MetadataAlgorithmExtended },
+  metadata: MetadataExtended,
   timeout: number,
   price: string,
   paymentCollector: string,

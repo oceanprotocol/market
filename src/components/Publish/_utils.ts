@@ -129,7 +129,7 @@ export async function transformPublishFormToDdo(
   const consumerParametersTransformed =
     usesConsumerParameters && transformConsumerParameters(consumerParameters)
 
-  const newMetadata: Metadata & { algorithm?: MetadataAlgorithmExtended } = {
+  const newMetadata: MetadataExtended = {
     created: currentTime,
     updated: currentTime,
     type,

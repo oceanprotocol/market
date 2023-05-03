@@ -91,7 +91,7 @@ export default function Edit({
       let updatedFiles = asset.services[0].files
       const linksTransformed = values.links?.length &&
         values.links[0].valid && [sanitizeUrl(values.links[0].url)]
-      const updatedMetadata: Metadata = {
+      const updatedMetadata: MetadataExtended = {
         ...asset.metadata,
         name: values.name,
         description: values.description,
