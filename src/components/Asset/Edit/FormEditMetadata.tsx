@@ -8,6 +8,7 @@ import { getFileInfo } from '@utils/provider'
 import { getFieldContent } from '@utils/form'
 import { isGoogleUrl } from '@utils/url'
 import styles from './FormEditMetadata.module.css'
+import { MetadataEditForm } from './_types'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,
@@ -30,7 +31,7 @@ export default function FormEditMetadata({
 }): ReactElement {
   const { asset } = useAsset()
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
-
+  console.log(values, values?.services)
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
   // https://github.com/oceanprotocol/market/pull/324#discussion_r561132310
@@ -139,8 +140,7 @@ export default function FormEditMetadata({
             component={Input}
             name="usesConsumerParameters"
           />
-          {(values as unknown as FormPublishData['metadata'])
-            .usesConsumerParameters && (
+          {(values as unknown as MetadataEditForm).usesConsumerParameters && (
             <Field
               {...getFieldContent('consumerParameters', data)}
               component={Input}
@@ -169,7 +169,7 @@ export default function FormEditMetadata({
               component={Input}
               name="service.usesConsumerParameters"
             />
-            {(values as unknown as FormPublishData['metadata']).service
+            {(values as unknown as MetadataEditForm).service
               .usesConsumerParameters && (
               <Field
                 {...getFieldContent('serviceConsumerParameters', data)}
