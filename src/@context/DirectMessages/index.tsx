@@ -10,7 +10,7 @@ import React, {
 import { useInterval } from '@hooks/useInterval'
 import { Orbis } from '@orbisclub/orbis-sdk'
 import { accountTruncate } from '@utils/wallet'
-import { useAccount, useProvider } from 'wagmi'
+import { useAccount, useSigner, useProvider } from 'wagmi'
 import { didToAddress, sleep } from '@shared/DirectMessages/_utils'
 import { getEnsName } from '@utils/ens'
 import usePrevious from '@hooks/usePrevious'
@@ -33,6 +33,7 @@ const CONVERSATION_CONTEXT =
 
 function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   const { address: accountId } = useAccount()
+  const { data: signer } = useSigner()
   const web3Provider = useProvider()
   const prevAccountId = usePrevious(accountId)
 
@@ -82,12 +83,14 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     address: string
     lit?: boolean
   }) => {
+    console.log('lit:', lit)
+    console.log('web3Provider:', web3Provider)
     const res = await orbis.connect_v2({
-      provider: web3Provider,
+      provider: signer.provider,
       chain: 'ethereum',
       lit
     })
-
+    console.log('res', res)
     if (res.status === 200) {
       const { data } = await orbis.getProfile(res.did)
       setAccount(data)
@@ -99,7 +102,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       })
       return data
     } else {
-      await connectOrbis({ address })
+      // await connectOrbis({ address })
     }
   }
 
@@ -129,6 +132,8 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   }) => {
     const sessionString = ceramicSessions[address.toLowerCase()] || '-'
     const res = await orbis.isConnected(sessionString)
+    console.log('is connected res: ', res)
+    console.log('is connected status: ', res.status)
     if (
       res.status === 200 &&
       didToAddress(res.did) === accountId.toLowerCase()
@@ -138,8 +143,17 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       setAccount(data)
       return data
     } else if (autoConnect) {
-      const data = await connectOrbis({ address, lit })
-      return data
+      console.log('autoconect : ', autoConnect)
+      console.log('address : ', address)
+      console.log('autoconect : ', lit)
+      try {
+        const data = await connectOrbis({ address, lit })
+        console.log('autoconect : ', data)
+        return data
+      } catch (err) {
+        console.log('error: ', err)
+        return null
+      }
     } else {
       resetStates()
       removeLitSignature()
