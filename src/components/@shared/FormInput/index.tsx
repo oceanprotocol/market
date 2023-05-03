@@ -83,15 +83,6 @@ function checkError(form: any, field: FieldInputProps<any>) {
     !field.name.endsWith('.links') &&
     !field.name.endsWith('consumerParameters')
   )
-
-  // if (
-  //   (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
-  //     form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]) ||
-  //   (form?.touched[field?.name] &&
-  //     form?.errors[field?.name]
-  // ) {
-  //   return true
-  // }
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {
