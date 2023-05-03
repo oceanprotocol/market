@@ -83,14 +83,12 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     address: string
     lit?: boolean
   }) => {
-    console.log('lit:', lit)
-    console.log('web3Provider:', web3Provider)
+    const signerProvide: any = signer?.provider
     const res = await orbis.connect_v2({
-      provider: signer.provider,
+      provider: signerProvide.provider,
       chain: 'ethereum',
       lit
     })
-    console.log('res', res)
     if (res.status === 200) {
       const { data } = await orbis.getProfile(res.did)
       setAccount(data)
@@ -132,8 +130,6 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
   }) => {
     const sessionString = ceramicSessions[address.toLowerCase()] || '-'
     const res = await orbis.isConnected(sessionString)
-    console.log('is connected res: ', res)
-    console.log('is connected status: ', res.status)
     if (
       res.status === 200 &&
       didToAddress(res.did) === accountId.toLowerCase()
@@ -143,15 +139,10 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       setAccount(data)
       return data
     } else if (autoConnect) {
-      console.log('autoconect : ', autoConnect)
-      console.log('address : ', address)
-      console.log('autoconect : ', lit)
       try {
         const data = await connectOrbis({ address, lit })
-        console.log('autoconect : ', data)
         return data
       } catch (err) {
-        console.log('error: ', err)
         return null
       }
     } else {

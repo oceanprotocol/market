@@ -12,7 +12,6 @@ const BodyContent = () => {
   const { address: accountId } = useAccount()
 
   const handleActivation = async (e: React.MouseEvent) => {
-    console.log('handle acctivation accountId: ', accountId)
     e.preventDefault()
     if (accountId) {
       await checkOrbisConnection({
