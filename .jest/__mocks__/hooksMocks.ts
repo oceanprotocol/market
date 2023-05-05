@@ -1,6 +1,6 @@
 import marketMetadata from '../__fixtures__/marketMetadata'
 import userPreferences from '../__fixtures__/userPreferences'
-import web3 from '../__fixtures__/web3'
+import { network } from '../__fixtures__/wagni'
 import { asset } from '../__fixtures__/datasetWithAccessDetails'
 
 jest.mock('../../src/@context/MarketMetadata', () => ({
@@ -13,4 +13,8 @@ jest.mock('../../src/@context/UserPreferences', () => ({
 
 jest.mock('../../../@context/Asset', () => ({
   useAsset: () => ({ asset })
+}))
+
+jest.mock('wagmi', () => ({
+  useNetwork: () => ({ network })
 }))
