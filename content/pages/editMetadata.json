@@ -320,16 +320,16 @@
             "required": false
           },
           {
-            "name": "default",
-            "label": "Default Value",
-            "placeholder": "Define the default value for the current parameter",
-            "required": true
-          },
-          {
             "name": "required",
             "label": "Required",
             "options": ["optional", "required"],
             "type": "select",
+            "required": true
+          },
+          {
+            "name": "default",
+            "label": "Default Value",
+            "placeholder": "Define the default value for the current parameter",
             "required": true
           }
         ]
