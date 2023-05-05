@@ -108,7 +108,7 @@ export default function ServicesFields(): ReactElement {
         component={Input}
         name="services[0].timeout"
       />
-      {values.metadata.type === 'algorithm' && (
+      {values.services[0].access === 'compute' && (
         <>
           <Field
             {...getFieldContent(

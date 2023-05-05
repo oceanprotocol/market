@@ -31,7 +31,7 @@ export default function FormEditMetadata({
 }): ReactElement {
   const { asset } = useAsset()
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
-  console.log(values, values?.services)
+
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
   // https://github.com/oceanprotocol/market/pull/324#discussion_r561132310
@@ -162,7 +162,8 @@ export default function FormEditMetadata({
       />
       <div className={styles.serviceContainer}>
         <h4>Service</h4>
-        {asset.metadata.type === 'algorithm' && (
+        {(asset.services[0]?.type === 'algorithm' ||
+          asset.services[0]?.type === 'compute') && (
           <>
             <Field
               {...getFieldContent('usesServiceConsumerParameters', data)}
