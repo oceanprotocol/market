@@ -268,9 +268,21 @@ export default function FormStartCompute({
   // }, [updateTabs])
 
   const tabs = []
+  if (asset?.services[0]?.consumerParameters) {
+    tabs.push({
+      title: 'Data Service',
+      content: (
+        <ConsumerParameters
+          parameters={parseConsumerParameters(
+            asset.services[0]?.consumerParameters
+          )}
+        />
+      )
+    })
+  }
   if (selectedAlgorithmAsset?.services[0]?.consumerParameters) {
     tabs.push({
-      title: 'Algo service',
+      title: 'Algo Service',
       content: (
         <ConsumerParameters
           parameters={parseConsumerParameters(
@@ -282,7 +294,7 @@ export default function FormStartCompute({
   }
   if (selectedAlgorithmAsset?.metadata?.algorithm?.consumerParameters) {
     tabs.push({
-      title: 'Algo service',
+      title: 'Algo Params',
       content: (
         <ConsumerParameters
           parameters={parseConsumerParameters(
