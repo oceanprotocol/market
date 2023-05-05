@@ -16,5 +16,6 @@ jest.mock('../../../@context/Asset', () => ({
 }))
 
 jest.mock('wagmi', () => ({
-  useNetwork: () => ({ network })
+  useNetwork: () => ({ network }),
+  useSwitchNetwork: () => jest.fn()
 }))
