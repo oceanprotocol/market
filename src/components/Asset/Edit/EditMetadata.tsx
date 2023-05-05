@@ -139,11 +139,10 @@ export default function Edit({
         timeout: mapTimeoutStringToSeconds(values.timeout),
         files: updatedFiles
       }
-      if (asset.metadata.type === 'algorithm') {
-        updatedService.consumerParameters = !values.service
-          ?.usesConsumerParameters
-          ? undefined
-          : transformConsumerParameters(values.service.consumerParameters)
+      if (values?.service?.consumerParameters) {
+        updatedService.consumerParameters = transformConsumerParameters(
+          values.service.consumerParameters
+        )
       }
 
       // TODO: remove version update at a later time

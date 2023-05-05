@@ -272,7 +272,7 @@
         "label": "Uses consumer parameters",
         "help": "Define consumer parameters to be submitted to the algorithm before usage.",
         "type": "checkbox",
-        "options": ["This algorithm uses consumer parameters"],
+        "options": ["This asset uses consumer parameters"],
         "required": false
       },
       {
