@@ -138,6 +138,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                     return (
                       <Field
                         {...subField}
+                        required={field.value[index].required === 'required'}
                         component={Input}
                         name={`${field.name}[${index}].${subField.name}`}
                         key={`${field.name}[${index}].${subField.name}`}
