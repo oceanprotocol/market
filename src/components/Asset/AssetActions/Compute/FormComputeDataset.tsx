@@ -16,6 +16,9 @@ import Alert from '@shared/atoms/Alert'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
+import ConsumerParameters from './ConsumerParameters'
+import Tabs from '@components/@shared/atoms/Tabs'
+import { parseConsumerParameters } from '@utils/ddo'
 
 export default function FormStartCompute({
   algorithms,
@@ -232,6 +235,64 @@ export default function FormStartCompute({
     })
   }, [balance, dtBalance, datasetSymbol, algorithmSymbol, totalPrices])
 
+  // const updateTabs = useCallback(() => {
+  //   const tabs = []
+  //   if (selectedAlgorithmAsset?.services[0]?.consumerParameters) {
+  //     tabs.push({
+  //       title: 'Algo service',
+  //       content: (
+  //         <ConsumerParameters
+  //           parameters={selectedAlgorithmAsset.services[0]?.consumerParameters}
+  //         />
+  //       )
+  //     })
+  //   }
+  //   if (selectedAlgorithmAsset?.metadata?.algorithm?.consumerParameters) {
+  //     tabs.push({
+  //       title: 'Algo service',
+  //       content: (
+  //         <ConsumerParameters
+  //           parameters={
+  //             selectedAlgorithmAsset.metadata?.algorithm?.consumerParameters
+  //           }
+  //         />
+  //       )
+  //     })
+  //   }
+  //   return tabs
+  // }, [selectedAlgorithmAsset])
+  // const [tabs, setTabs] = useState(updateTabs())
+
+  // useEffect(() => {
+  //   setTabs(updateTabs())
+  // }, [updateTabs])
+
+  const tabs = []
+  if (selectedAlgorithmAsset?.services[0]?.consumerParameters) {
+    tabs.push({
+      title: 'Algo service',
+      content: (
+        <ConsumerParameters
+          parameters={parseConsumerParameters(
+            selectedAlgorithmAsset.services[0]?.consumerParameters
+          )}
+        />
+      )
+    })
+  }
+  if (selectedAlgorithmAsset?.metadata?.algorithm?.consumerParameters) {
+    tabs.push({
+      title: 'Algo service',
+      content: (
+        <ConsumerParameters
+          parameters={parseConsumerParameters(
+            selectedAlgorithmAsset.metadata?.algorithm?.consumerParameters
+          )}
+        />
+      )
+    })
+  }
+
   return (
     <Form className={styles.form}>
       <Alert
@@ -250,7 +311,11 @@ export default function FormStartCompute({
           />
         )
       })}
-
+      {selectedAlgorithmAsset && (
+        <div className={styles.consumerParamsContainer}>
+          <Tabs items={tabs} />
+        </div>
+      )}
       <PriceOutput
         hasPreviousOrder={hasPreviousOrder}
         assetTimeout={assetTimeout}

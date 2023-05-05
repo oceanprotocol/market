@@ -1,0 +1,34 @@
+/* .container {
+  min-height: fit-content;
+  max-height: 50vh;
+} */
+
+.container > label {
+  margin-bottom: calc(var(--spacer) / 2);
+  text-align: center;
+}
+
+.parametersContainer {
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2);
+  border: 1px solid var(--border-color);
+  background-color: var(--background-highlight);
+  border-radius: var(--border-radius);
+  margin-bottom: calc(var(--spacer) / 2);
+  font-size: var(--font-size-small);
+  min-height: 250px;
+  max-height: 30vh;
+
+  /* smooth overflow scrolling for pre-iOS 13 */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.parametersContainer div {
+  margin-bottom: calc(var(--spacer));
+}
+
+.description {
+  font-size: var(--font-size-small);
+  color: var(--brand-grey-light);
+  margin-bottom: calc(var(--spacer) / 4);
+}

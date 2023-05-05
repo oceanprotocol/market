@@ -31,6 +31,14 @@ export const paramTypes: AlgorithmConsumerParameter['type'][] = [
   'select'
 ]
 
+export const getConsumerParameterStringOptions = (
+  options: { [key: string]: string }[]
+): string[] => {
+  if (!options?.length) return []
+
+  return options.map((option) => Object.keys(option)[0])
+}
+
 export function ConsumerParameters(props: InputProps): ReactElement {
   const { errors, setFieldTouched, validateField, touched } =
     useFormikContext<FormPublishData>()
@@ -86,12 +94,6 @@ export function ConsumerParameters(props: InputProps): ReactElement {
       (object) =>
         !!getObjectPropertyByPath(object, `${field.name}[${index}].${name}`)
     )
-
-  const getStringOptions = (options: { [key: string]: string }[]): string[] => {
-    if (!options?.length) return []
-
-    return options.map((option) => Object.keys(option)[0])
-  }
 
   return (
     <div className={styles.container}>
@@ -150,7 +152,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                           field.value[index].type === 'boolean'
                             ? ['true', 'false']
                             : field.value[index].type === 'select'
-                            ? getStringOptions(
+                            ? getConsumerParameterStringOptions(
                                 field.value[index]?.options as {
                                   [key: string]: string
                                 }[]
