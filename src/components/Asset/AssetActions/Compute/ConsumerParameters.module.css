@@ -1,7 +1,3 @@
-.container {
-  max-height: 50vh;
-}
-
 .parameterGroupContainer > label {
   margin-bottom: calc(var(--spacer) / 2);
   text-align: center;
@@ -12,14 +8,18 @@
   border: 1px solid var(--border-color);
   background-color: var(--background-highlight);
   border-radius: var(--border-radius);
-  margin-bottom: calc(var(--spacer) / 2);
+  margin-bottom: var(--spacer);
   font-size: var(--font-size-small);
-  min-height: 250px;
+  min-height: fit-content;
   max-height: 30vh;
 
   /* smooth overflow scrolling for pre-iOS 13 */
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+.parameterGroupContainer:last-child .parametersContainer {
+  margin-bottom: 0;
 }
 
 .parameter {
@@ -37,11 +37,10 @@
 
 .parameterDetails {
   padding-left: 1rem;
-  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .parameterDetails > label {
-  position: relative;
   margin-bottom: 0;
 }
 
