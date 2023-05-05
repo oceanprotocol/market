@@ -22,11 +22,11 @@ export default function ConsumerParameters({
   const groupedParameters = [
     {
       title: 'Required Parameters',
-      content: parameters.filter((param) => param.required)
+      content: parameters.filter((param) => param.required === 'required')
     },
     {
       title: 'Optional Parameters',
-      content: parameters.filter((param) => !param.required)
+      content: parameters.filter((param) => param.required === 'optional')
     }
   ]
 
