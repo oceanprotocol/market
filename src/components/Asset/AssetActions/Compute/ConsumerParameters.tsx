@@ -1,5 +1,5 @@
 import { AlgorithmConsumerParameter } from '@components/Publish/_types'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import styles from './ConsumerParameters.module.css'
 import Label from '@components/@shared/FormInput/Label'
 import InputElement from '@components/@shared/FormInput/InputElement'
@@ -17,40 +17,76 @@ export default function ConsumerParameters({
     parameters.forEach((param) => (defaultValues[param.name] = param.default))
 
     setSelectedValues(defaultValues)
-  }, [])
+  }, [parameters])
 
-  console.log(selectedValues)
-  console.log(parameters)
-  const requiredParameters = parameters.filter((param) => param.required)
-  const optionalParameters = parameters.filter((param) => !param.required)
+  const groupedParameters = [
+    {
+      title: 'Required Parameters',
+      content: parameters.filter((param) => param.required)
+    },
+    {
+      title: 'Optional Parameters',
+      content: parameters.filter((param) => !param.required)
+    }
+  ]
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    paramName: string
+  ) => {
+    const updatedSelectedValues = {
+      ...selectedValues,
+      [paramName]: e.target.value
+    }
+    setSelectedValues(updatedSelectedValues)
+  }
+
   return (
     <div className={styles.container}>
-      <Label htmlFor="required parameters">Required parameters</Label>
-      <div className={styles.parametersContainer}>
-        {parameters?.map((param) => (
-          <div key={param.name}>
-            <Label htmlFor={param.name}>{param.label}</Label>
-            <p className={styles.description}>{param.description}</p>
-            <p className={styles.description}>{`type: ${param.type}`}</p>
-            <InputElement
-              name={param.name}
-              type={param.type === 'boolean' ? 'select' : param.type}
-              options={
-                param.type === 'boolean'
-                  ? ['true', 'false']
-                  : param.type === 'select'
-                  ? getConsumerParameterStringOptions(
-                      param?.options as {
-                        [key: string]: string
-                      }[]
-                    )
-                  : param.options
-              }
-              default={param.default}
-            />
-          </div>
-        ))}
-      </div>
+      {groupedParameters.map(
+        (parameterGroup) =>
+          parameterGroup.content.length > 0 && (
+            <div
+              key={parameterGroup.title}
+              className={styles.parameterGroupContainer}
+            >
+              <Label htmlFor={parameterGroup.title}>
+                {parameterGroup.title}
+              </Label>
+              <div className={styles.parametersContainer}>
+                {parameterGroup.content?.map((param) => (
+                  <div key={param.name} className={styles.parameter}>
+                    <div key={param.name} className={styles.parameterDetails}>
+                      <Label htmlFor={param.name}>{param.label}</Label>
+                      <p className={styles.type}>{`type: ${param.type}`}</p>
+                      <p className={styles.description}>{param.description}</p>
+                      <InputElement
+                        name={param.name}
+                        label={param.label}
+                        type={param.type === 'boolean' ? 'select' : param.type}
+                        options={
+                          param.type === 'boolean'
+                            ? ['true', 'false']
+                            : param.type === 'select'
+                            ? getConsumerParameterStringOptions(
+                                param?.options as {
+                                  [key: string]: string
+                                }[]
+                              )
+                            : (param.options as unknown as string[])
+                        }
+                        value={selectedValues[param.name]}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                          handleChange(e, param.name)
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+      )}
     </div>
   )
 }

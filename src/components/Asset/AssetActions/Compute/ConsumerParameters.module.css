@@ -1,9 +1,8 @@
-/* .container {
-  min-height: fit-content;
+.container {
   max-height: 50vh;
-} */
+}
 
-.container > label {
+.parameterGroupContainer > label {
   margin-bottom: calc(var(--spacer) / 2);
   text-align: center;
 }
@@ -23,12 +22,39 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.parametersContainer div {
-  margin-bottom: calc(var(--spacer));
+.parameter {
+  margin-left: -1rem;
+  margin-right: -1rem;
+  margin-bottom: calc(var(--spacer) / 2);
+  padding-bottom: calc(var(--spacer) / 2);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.parameter:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+
+.parameterDetails {
+  padding-left: 1rem;
+  padding-left: 1rem;
+}
+
+.parameterDetails > label {
+  position: relative;
+  margin-bottom: 0;
+}
+
+.description,
+.type {
+  color: var(--brand-grey-light);
+  margin-bottom: calc(var(--spacer) / 4);
 }
 
 .description {
   font-size: var(--font-size-small);
-  color: var(--brand-grey-light);
-  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.type {
+  font-size: var(--font-size-mini);
 }
