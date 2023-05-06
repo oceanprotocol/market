@@ -162,23 +162,19 @@ export default function FormEditMetadata({
       />
       <div className={styles.serviceContainer}>
         <h4>Service</h4>
-        {(asset.services[0]?.type === 'algorithm' ||
-          asset.services[0]?.type === 'compute') && (
-          <>
-            <Field
-              {...getFieldContent('usesServiceConsumerParameters', data)}
-              component={Input}
-              name="service.usesConsumerParameters"
-            />
-            {(values as unknown as MetadataEditForm).service
-              .usesConsumerParameters && (
-              <Field
-                {...getFieldContent('serviceConsumerParameters', data)}
-                component={Input}
-                name="service.consumerParameters"
-              />
-            )}
-          </>
+
+        <Field
+          {...getFieldContent('usesServiceConsumerParameters', data)}
+          component={Input}
+          name="service.usesConsumerParameters"
+        />
+        {(values as unknown as MetadataEditForm).service
+          .usesConsumerParameters && (
+          <Field
+            {...getFieldContent('serviceConsumerParameters', data)}
+            component={Input}
+            name="service.consumerParameters"
+          />
         )}
       </div>
 
