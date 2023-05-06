@@ -108,27 +108,17 @@ export default function ServicesFields(): ReactElement {
         component={Input}
         name="services[0].timeout"
       />
-      {values.services[0].access === 'compute' && (
-        <>
-          <Field
-            {...getFieldContent(
-              'usesConsumerParameters',
-              content.services.fields
-            )}
-            component={Input}
-            name="services[0].usesConsumerParameters"
-          />
-          {values.services[0].usesConsumerParameters && (
-            <Field
-              {...getFieldContent(
-                'consumerParameters',
-                content.services.fields
-              )}
-              component={Input}
-              name="services[0].consumerParameters"
-            />
-          )}
-        </>
+      <Field
+        {...getFieldContent('usesConsumerParameters', content.services.fields)}
+        component={Input}
+        name="services[0].usesConsumerParameters"
+      />
+      {values.services[0].usesConsumerParameters && (
+        <Field
+          {...getFieldContent('consumerParameters', content.services.fields)}
+          component={Input}
+          name="services[0].consumerParameters"
+        />
       )}
     </>
   )
