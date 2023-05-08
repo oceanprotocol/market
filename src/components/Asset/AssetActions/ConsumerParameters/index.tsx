@@ -9,7 +9,7 @@ export default function ConsumerParameters({
   selectedAlgorithmAsset
 }: {
   asset: AssetExtended
-  selectedAlgorithmAsset: AssetExtended
+  selectedAlgorithmAsset?: AssetExtended
 }): ReactElement {
   const [tabs, setTabs] = useState<TabsItem[]>([])
 

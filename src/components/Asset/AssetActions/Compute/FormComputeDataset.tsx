@@ -16,7 +16,7 @@ import Alert from '@shared/atoms/Alert'
 import { getTokenBalanceFromSymbol } from '@utils/web3'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
-import ConsumerParameters from './ConsumerParameters'
+import ConsumerParameters from '../ConsumerParameters'
 
 export default function FormStartCompute({
   algorithms,
