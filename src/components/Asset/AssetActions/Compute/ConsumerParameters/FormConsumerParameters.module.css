@@ -1,4 +1,4 @@
-.parameterGroupContainer > label {
+.container > label {
   margin-bottom: calc(var(--spacer) / 2);
   text-align: center;
 }
@@ -8,18 +8,19 @@
   border: 1px solid var(--border-color);
   background-color: var(--background-highlight);
   border-radius: var(--border-radius);
-  margin-bottom: var(--spacer);
   font-size: var(--font-size-small);
-  min-height: fit-content;
-  max-height: 30vh;
+  min-height: 200px;
+  max-height: 50vh;
 
   /* smooth overflow scrolling for pre-iOS 13 */
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-.parameterGroupContainer:last-child .parametersContainer {
+.parameter > div {
   margin-bottom: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .parameter {
@@ -31,29 +32,5 @@
 }
 
 .parameter:last-child {
-  border-bottom: 0;
-  margin-bottom: 0;
-}
-
-.parameterDetails {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.parameterDetails > label {
-  margin-bottom: 0;
-}
-
-.description,
-.type {
-  color: var(--brand-grey-light);
-  margin-bottom: calc(var(--spacer) / 4);
-}
-
-.description {
-  font-size: var(--font-size-small);
-}
-
-.type {
-  font-size: var(--font-size-mini);
+  border: none;
 }
