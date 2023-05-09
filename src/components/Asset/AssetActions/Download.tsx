@@ -17,6 +17,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
+import ConsumerParameters from './ConsumerParameters'
 
 export default function Download({
   asset,
@@ -212,18 +213,12 @@ export default function Download({
               />
             ) : (
               <>
-                {isPriceLoading ? (
-                  <Loader message="Calculating full price (including fees)" />
-                ) : (
-                  <Price
-                    price={asset.stats?.price}
-                    orderPriceAndFees={orderPriceAndFees}
-                    conversion
-                    size="large"
-                  />
+                {asset && <ConsumerParameters asset={asset} />}
+                {!isInPurgatory && (
+                  <div className={styles.buttonBuy}>
+                    <PurchaseButton />
+                  </div>
                 )}
-
-                {!isInPurgatory && <PurchaseButton />}
               </>
             )}
           </>
@@ -238,8 +233,19 @@ export default function Download({
         <div className={styles.filewrapper}>
           <FileIcon file={file} isLoading={fileIsLoading} small />
         </div>
-        <AssetAction asset={asset} />
+        {isPriceLoading ? (
+          <Loader message="Calculating full price (including fees)" />
+        ) : (
+          <Price
+            className={styles.price}
+            price={asset.stats?.price}
+            orderPriceAndFees={orderPriceAndFees}
+            conversion
+            size="large"
+          />
+        )}
       </div>
+      <AssetAction asset={asset} />
 
       {asset?.metadata?.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute

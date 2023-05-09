@@ -61,7 +61,7 @@ export default function ConsumerParameters({
 
   return (
     <div className={styles.container}>
-      <Tabs items={tabs} />
+      {tabs.length > 0 && <Tabs items={tabs} />}
     </div>
   )
 }
