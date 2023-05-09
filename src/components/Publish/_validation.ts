@@ -2,56 +2,12 @@ import { FileInfo } from '@oceanprotocol/lib'
 import { MAX_DECIMALS } from '@utils/constants'
 import { getMaxDecimalsValidation } from '@utils/numbers'
 import * as Yup from 'yup'
-import { SchemaLike } from 'yup/lib/types'
 import { testLinks } from '../../@utils/yup'
-import { paramTypes } from '../@shared/FormInput/InputElement/ConsumerParameters'
-import { AlgorithmConsumerParameter } from './_types'
+import { validationConsumerParameters } from '@components/@shared/FormInput/InputElement/ConsumerParameters/validationConsumerParameters'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
 // hint, hint: https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
-
-const validationConsumerParameters: {
-  [key in keyof AlgorithmConsumerParameter]: SchemaLike
-} = {
-  name: Yup.string()
-    .test('unique', 'Parameter names must be unique', (name, context) => {
-      // TODO: revert any
-      // from is not yet correctly typed: https://github.com/jquense/yup/issues/398#issuecomment-916693907
-      const [parentFormObj, nextParentFormObj] = (context as any).from
-      if (
-        !nextParentFormObj?.value?.consumerParameters ||
-        nextParentFormObj.value.consumerParameters.length === 1
-      )
-        return true
-
-      const { consumerParameters } = nextParentFormObj.value
-      const occasions = consumerParameters.filter(
-        (params) => params.name === name
-      )
-      return occasions.length === 1
-    })
-    .required('Required'),
-  type: Yup.string().oneOf(paramTypes).required('Required'),
-  description: Yup.string().required('Required'),
-  label: Yup.string().required('Required'),
-  required: Yup.string().oneOf(['optional', 'required']).required('Required'),
-  default: Yup.mixed().when('required', {
-    is: 'optional',
-    then: Yup.mixed()
-      .nullable()
-      .transform((value) => value || null),
-    otherwise: Yup.mixed().required('Required')
-  }),
-  options: Yup.array().when('type', {
-    is: 'select',
-    then: Yup.array()
-      .of(Yup.object())
-      .min(1, 'At least one option needs to be defined')
-      .required('Required'),
-    otherwise: Yup.array()
-  })
-}
 
 const validationMetadata = {
   type: Yup.string()
