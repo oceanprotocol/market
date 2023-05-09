@@ -1,10 +1,10 @@
-import { AlgorithmConsumerParameter } from '@components/Publish/_types'
+import { ConsumerParameter } from '@components/Publish/_types'
 import * as Yup from 'yup'
 import { SchemaLike } from 'yup/lib/types'
 import { paramTypes } from '.'
 
 export const validationConsumerParameters: {
-  [key in keyof AlgorithmConsumerParameter]: SchemaLike
+  [key in keyof ConsumerParameter]: SchemaLike
 } = {
   name: Yup.string()
     .test('unique', 'Parameter names must be unique', (name, context) => {

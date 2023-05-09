@@ -2,10 +2,7 @@ import {
   ComputeEditForm,
   MetadataEditForm
 } from '@components/Asset/Edit/_types'
-import {
-  AlgorithmConsumerParameter,
-  FormPublishData
-} from '@components/Publish/_types'
+import { ConsumerParameter, FormPublishData } from '@components/Publish/_types'
 import {
   Arweave,
   Asset,
@@ -193,8 +190,8 @@ export function previewDebugPatch(
 }
 
 export function parseConsumerParameters(
-  consumerParameters: AlgorithmConsumerParameter[]
-): AlgorithmConsumerParameter[] {
+  consumerParameters: ConsumerParameter[]
+): ConsumerParameter[] {
   if (!consumerParameters?.length) return []
 
   return consumerParameters.map((param) => {

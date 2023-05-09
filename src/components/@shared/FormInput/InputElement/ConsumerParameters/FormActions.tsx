@@ -2,10 +2,7 @@ import React, { ReactElement } from 'react'
 import Button from '@components/@shared/atoms/Button'
 import styles from './FormActions.module.css'
 import { useField, useFormikContext } from 'formik'
-import {
-  AlgorithmConsumerParameter,
-  FormPublishData
-} from '@components/Publish/_types'
+import { ConsumerParameter, FormPublishData } from '@components/Publish/_types'
 import { getObjectPropertyByPath } from '@utils/index'
 import { defaultConsumerParam } from '.'
 
@@ -18,8 +15,7 @@ export default function FormActions({
 }): ReactElement {
   const { errors, setFieldTouched, validateField } =
     useFormikContext<FormPublishData>()
-  const [field, meta, helpers] =
-    useField<AlgorithmConsumerParameter[]>(fieldName)
+  const [field, meta, helpers] = useField<ConsumerParameter[]>(fieldName)
 
   const addParameter = (index: number) => {
     // validate parameter before allowing the creation of a new one

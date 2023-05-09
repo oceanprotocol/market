@@ -15,7 +15,7 @@ export interface FormPublishService {
   algorithmPrivacy?: boolean
   computeOptions?: ServiceComputeOptions
   usesConsumerParameters?: boolean
-  consumerParameters?: AlgorithmConsumerParameter[]
+  consumerParameters?: ConsumerParameter[]
 }
 
 export interface FormPublishData {
@@ -39,10 +39,10 @@ export interface FormPublishData {
     dockerImageCustomEntrypoint?: string
     dockerImageCustomChecksum?: string
     usesConsumerParameters?: boolean
-    consumerParameters?: AlgorithmConsumerParameter[]
+    consumerParameters?: ConsumerParameter[]
     service?: {
       usesConsumerParameters?: boolean
-      consumerParameters?: AlgorithmConsumerParameter[]
+      consumerParameters?: ConsumerParameter[]
     }
   }
   services: FormPublishService[]
@@ -74,15 +74,11 @@ export interface MetadataAlgorithmContainer {
   checksum: string
 }
 
-export type AlgorithmConsumerParameterType =
-  | 'number'
-  | 'text'
-  | 'boolean'
-  | 'select'
+export type ConsumerParameterType = 'number' | 'text' | 'boolean' | 'select'
 
-export interface AlgorithmConsumerParameter {
+export interface ConsumerParameter {
   name: string
-  type: AlgorithmConsumerParameterType
+  type: ConsumerParameterType
   label: string
   required: boolean | string
   description: string
@@ -91,5 +87,5 @@ export interface AlgorithmConsumerParameter {
 }
 
 export type MetadataAlgorithmExtended = MetadataAlgorithm & {
-  consumerParameters: AlgorithmConsumerParameter[]
+  consumerParameters: ConsumerParameter[]
 }

@@ -1,10 +1,7 @@
 import React, { ReactElement } from 'react'
 import Input, { InputProps } from '../..'
 import { Field, useField, useFormikContext } from 'formik'
-import {
-  AlgorithmConsumerParameter,
-  FormPublishData
-} from '@components/Publish/_types'
+import { ConsumerParameter, FormPublishData } from '@components/Publish/_types'
 import { defaultConsumerParam } from '.'
 
 export default function ConsumerParameterInput({
@@ -16,12 +13,11 @@ export default function ConsumerParameterInput({
   inputName: string
 }): ReactElement {
   const { setFieldTouched } = useFormikContext<FormPublishData>()
-  const [field, meta, helpers] =
-    useField<AlgorithmConsumerParameter[]>(inputName)
+  const [field, meta, helpers] = useField<ConsumerParameter[]>(inputName)
 
   const resetDefaultValue = (
     parameterName: string,
-    parameterType: AlgorithmConsumerParameter['type'],
+    parameterType: ConsumerParameter['type'],
     index: number
   ) => {
     if (parameterName !== 'type') return

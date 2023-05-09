@@ -1,7 +1,7 @@
 import { useField } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
 import { InputProps } from '../..'
-import { AlgorithmConsumerParameter } from '../../../../Publish/_types'
+import { ConsumerParameter } from '../../../../Publish/_types'
 import Tabs from '../../../atoms/Tabs'
 import styles from './index.module.css'
 import FormActions from './FormActions'
@@ -9,7 +9,7 @@ import DefaultInput from './DefaultInput'
 import SelectInput from './SelectInput'
 import ConsumerParameterInput from './Input'
 
-export const defaultConsumerParam: AlgorithmConsumerParameter = {
+export const defaultConsumerParam: ConsumerParameter = {
   name: '',
   label: '',
   description: '',
@@ -19,7 +19,7 @@ export const defaultConsumerParam: AlgorithmConsumerParameter = {
   required: ''
 }
 
-export const paramTypes: AlgorithmConsumerParameter['type'][] = [
+export const paramTypes: ConsumerParameter['type'][] = [
   'number',
   'text',
   'boolean',
@@ -27,9 +27,7 @@ export const paramTypes: AlgorithmConsumerParameter['type'][] = [
 ]
 
 export function ConsumerParameters(props: InputProps): ReactElement {
-  const [field, meta, helpers] = useField<AlgorithmConsumerParameter[]>(
-    props.name
-  )
+  const [field, meta, helpers] = useField<ConsumerParameter[]>(props.name)
 
   useEffect(() => {
     if (field.value.length === 0)

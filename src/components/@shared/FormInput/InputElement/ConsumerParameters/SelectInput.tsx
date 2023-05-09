@@ -1,10 +1,7 @@
 import React, { ReactElement } from 'react'
 import { InputProps } from '../..'
 import { ErrorMessage, useField, useFormikContext } from 'formik'
-import {
-  AlgorithmConsumerParameter,
-  FormPublishData
-} from '@components/Publish/_types'
+import { ConsumerParameter, FormPublishData } from '@components/Publish/_types'
 import InputOptions from './InputOptions'
 import styles from './SelectInput.module.css'
 import { getObjectPropertyByPath } from '@utils/index'
@@ -21,7 +18,7 @@ export default function SelectInput({
   inputName: string
 }): ReactElement {
   const { errors, touched } = useFormikContext<FormPublishData>()
-  const [field] = useField<AlgorithmConsumerParameter[]>(inputName)
+  const [field] = useField<ConsumerParameter[]>(inputName)
 
   const showError = (name: string, index: number): boolean =>
     [errors, touched].every(
