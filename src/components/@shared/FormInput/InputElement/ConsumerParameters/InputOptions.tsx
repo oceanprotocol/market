@@ -72,11 +72,11 @@ export default function InputOptions({
   useEffect(() => {
     if (!field?.value || !helpers) return
     helpers.setValue(
-      field.value.map((p, i) => {
-        if (i !== optionIndex) return p
+      field.value.map((currentParam, i) => {
+        if (i !== optionIndex) return currentParam
 
         return {
-          ...p,
+          ...currentParam,
           options: [...options]
         }
       })
