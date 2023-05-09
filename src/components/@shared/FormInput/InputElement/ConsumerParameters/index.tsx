@@ -1,4 +1,4 @@
-import { ErrorMessage, Field, useField, useFormikContext } from 'formik'
+import { Field, useField, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
 import Input, { InputProps } from '../..'
 import {
@@ -7,13 +7,9 @@ import {
 } from '../../../../Publish/_types'
 import Tabs from '../../../atoms/Tabs'
 import styles from './index.module.css'
-import InputOptions from './InputOptions'
-import classNames from 'classnames/bind'
-import { getObjectPropertyByPath } from '@utils/index'
 import FormActions from './FormActions'
 import DefaultInput from './DefaultInput'
-
-const cx = classNames.bind(styles)
+import SelectInput from './SelectInput'
 
 const defaultParam: AlgorithmConsumerParameter = {
   name: '',
@@ -33,8 +29,7 @@ export const paramTypes: AlgorithmConsumerParameter['type'][] = [
 ]
 
 export function ConsumerParameters(props: InputProps): ReactElement {
-  const { errors, setFieldTouched, touched } =
-    useFormikContext<FormPublishData>()
+  const { setFieldTouched } = useFormikContext<FormPublishData>()
 
   const [field, meta, helpers] = useField<AlgorithmConsumerParameter[]>(
     props.name
@@ -66,12 +61,6 @@ export function ConsumerParameters(props: InputProps): ReactElement {
     )
   }
 
-  const showError = (name: string, index: number): boolean =>
-    [errors, touched].every(
-      (object) =>
-        !!getObjectPropertyByPath(object, `${field.name}[${index}].${name}`)
-    )
-
   return (
     <div className={styles.container}>
       <Tabs
@@ -83,33 +72,12 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                 {props.fields?.map((subField: InputProps) => {
                   if (subField.name === 'options') {
                     return field.value[index]?.type === 'select' ? (
-                      <div
-                        key={`${field.name}[${index}].${subField.name}`}
-                        className={cx({
-                          optionsContainer: true,
-                          hasError: showError('options', index)
-                        })}
-                      >
-                        <InputOptions
-                          {...subField}
-                          name={field.name}
-                          label="Options"
-                          required
-                          optionIndex={index}
-                          defaultOptions={
-                            field.value[index]?.options as {
-                              [key: string]: string
-                            }[]
-                          }
-                        />
-                        {showError('options', index) && (
-                          <div className={styles.error}>
-                            <ErrorMessage
-                              name={`${field.name}[${index}].options`}
-                            />
-                          </div>
-                        )}
-                      </div>
+                      <SelectInput
+                        key={`${field.name}[${index}].${props.name}`}
+                        {...subField}
+                        index={index}
+                        fieldName={props.name}
+                      />
                     ) : null
                   }
 
