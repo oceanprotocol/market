@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import Button from '@components/@shared/atoms/Button'
-import styles from './Actions.module.css'
+import styles from './FormActions.module.css'
 import { useField, useFormikContext } from 'formik'
 import {
   AlgorithmConsumerParameter,
@@ -18,7 +18,7 @@ const defaultParam: AlgorithmConsumerParameter = {
   required: ''
 }
 
-export default function Actions({
+export default function FormActions({
   fieldName,
   index
 }: {

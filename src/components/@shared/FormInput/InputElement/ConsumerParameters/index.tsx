@@ -10,7 +10,7 @@ import styles from './index.module.css'
 import InputOptions from './InputOptions'
 import classNames from 'classnames/bind'
 import { getObjectPropertyByPath } from '@utils/index'
-import Actions from './Actions'
+import FormActions from './FormActions'
 
 const cx = classNames.bind(styles)
 
@@ -159,7 +159,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                     />
                   )
                 })}
-                <Actions fieldName={props.name} index={index} />
+                <FormActions fieldName={props.name} index={index} />
               </div>
             )
           }
