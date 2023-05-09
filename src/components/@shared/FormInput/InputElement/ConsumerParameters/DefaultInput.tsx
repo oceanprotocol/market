@@ -24,7 +24,6 @@ export default function DefaultInput({
       {...props}
       required={field.value[index].required === 'required'}
       component={Input}
-      name={`${field.name}[${index}].${props.name}`}
       type={
         field.value[index].type === 'boolean'
           ? 'select'

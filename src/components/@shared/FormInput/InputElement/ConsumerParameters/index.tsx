@@ -1,17 +1,15 @@
-import { Field, useField, useFormikContext } from 'formik'
+import { useField } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
-import Input, { InputProps } from '../..'
-import {
-  AlgorithmConsumerParameter,
-  FormPublishData
-} from '../../../../Publish/_types'
+import { InputProps } from '../..'
+import { AlgorithmConsumerParameter } from '../../../../Publish/_types'
 import Tabs from '../../../atoms/Tabs'
 import styles from './index.module.css'
 import FormActions from './FormActions'
 import DefaultInput from './DefaultInput'
 import SelectInput from './SelectInput'
+import ConsumerParameterInput from './Input'
 
-const defaultParam: AlgorithmConsumerParameter = {
+export const defaultConsumerParam: AlgorithmConsumerParameter = {
   name: '',
   label: '',
   description: '',
@@ -29,37 +27,14 @@ export const paramTypes: AlgorithmConsumerParameter['type'][] = [
 ]
 
 export function ConsumerParameters(props: InputProps): ReactElement {
-  const { setFieldTouched } = useFormikContext<FormPublishData>()
-
   const [field, meta, helpers] = useField<AlgorithmConsumerParameter[]>(
     props.name
   )
 
   useEffect(() => {
-    if (field.value.length === 0) helpers.setValue([{ ...defaultParam }])
+    if (field.value.length === 0)
+      helpers.setValue([{ ...defaultConsumerParam }])
   }, [])
-
-  const resetDefaultValue = (
-    parameterName: string,
-    parameterType: AlgorithmConsumerParameter['type'],
-    index: number
-  ) => {
-    if (parameterName !== 'type') return
-    if (field.value[index].type === parameterType) return
-
-    setFieldTouched(`${field.name}[${index}].default`, false)
-    helpers.setValue(
-      field.value.map((p, i) => {
-        if (i !== index) return p
-
-        return {
-          ...defaultParam,
-          ...p,
-          default: defaultParam.default
-        }
-      })
-    )
-  }
 
   return (
     <div className={styles.container}>
@@ -84,8 +59,9 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                   if (subField.name === 'default') {
                     return (
                       <DefaultInput
-                        key={`${field.name}[${index}].${props.name}`}
+                        key={`${field.name}[${index}].${subField.name}`}
                         {...subField}
+                        name={`${field.name}[${index}].${subField.name}`}
                         index={index}
                         fieldName={props.name}
                       />
@@ -93,15 +69,12 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                   }
 
                   return (
-                    <Field
-                      {...subField}
-                      component={Input}
-                      name={`${field.name}[${index}].${subField.name}`}
+                    <ConsumerParameterInput
                       key={`${field.name}[${index}].${subField.name}`}
-                      onChange={(e) => {
-                        resetDefaultValue(subField.name, e.target.value, index)
-                        field.onChange(e)
-                      }}
+                      {...subField}
+                      name={`${field.name}[${index}].${subField.name}`}
+                      index={index}
+                      fieldName={props.name}
                     />
                   )
                 })}
