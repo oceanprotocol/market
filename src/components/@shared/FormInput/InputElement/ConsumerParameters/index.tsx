@@ -1,13 +1,13 @@
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useField } from 'formik'
-import React, { ReactElement, useEffect } from 'react'
 import { InputProps } from '../..'
 import { ConsumerParameter } from '../../../../Publish/_types'
 import Tabs from '../../../atoms/Tabs'
-import styles from './index.module.css'
 import FormActions from './FormActions'
 import DefaultInput from './DefaultInput'
 import SelectInput from './SelectInput'
 import ConsumerParameterInput from './Input'
+import styles from './index.module.css'
 
 export const defaultConsumerParam: ConsumerParameter = {
   name: '',
@@ -29,6 +29,8 @@ export const paramTypes: ConsumerParameter['type'][] = [
 export function ConsumerParameters(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField<ConsumerParameter[]>(props.name)
 
+  const [tabIndex, setTabIndex] = useState(0)
+
   useEffect(() => {
     if (field.value.length === 0)
       helpers.setValue([{ ...defaultConsumerParam }])
@@ -37,6 +39,8 @@ export function ConsumerParameters(props: InputProps): ReactElement {
   return (
     <div className={styles.container}>
       <Tabs
+        selectedIndex={tabIndex}
+        onIndexSelected={setTabIndex}
         items={field.value.map((param, index) => {
           return {
             title: param?.name || 'New parameter',
@@ -76,7 +80,12 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                     />
                   )
                 })}
-                <FormActions fieldName={props.name} index={index} />
+                <FormActions
+                  fieldName={props.name}
+                  index={index}
+                  onParameterAdded={setTabIndex}
+                  onParameterDeleted={setTabIndex}
+                />
               </div>
             )
           }
