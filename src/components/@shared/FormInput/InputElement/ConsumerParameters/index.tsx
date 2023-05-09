@@ -5,12 +5,12 @@ import {
   AlgorithmConsumerParameter,
   FormPublishData
 } from '../../../../Publish/_types'
-import Button from '../../../atoms/Button'
 import Tabs from '../../../atoms/Tabs'
 import styles from './index.module.css'
 import InputOptions from './InputOptions'
 import classNames from 'classnames/bind'
 import { getObjectPropertyByPath } from '@utils/index'
+import Actions from './Actions'
 
 const cx = classNames.bind(styles)
 
@@ -32,7 +32,7 @@ export const paramTypes: AlgorithmConsumerParameter['type'][] = [
 ]
 
 export function ConsumerParameters(props: InputProps): ReactElement {
-  const { errors, setFieldTouched, validateField, touched } =
+  const { errors, setFieldTouched, touched } =
     useFormikContext<FormPublishData>()
 
   const [field, meta, helpers] = useField<AlgorithmConsumerParameter[]>(
@@ -42,22 +42,6 @@ export function ConsumerParameters(props: InputProps): ReactElement {
   useEffect(() => {
     if (field.value.length === 0) helpers.setValue([{ ...defaultParam }])
   }, [])
-
-  const addParameter = (index: number) => {
-    // validate parameter before allowing the creation of a new one
-    validateField(field.name)
-    Object.keys(defaultParam).forEach((param) =>
-      setFieldTouched(`${field.name}[${index}].${param}`, true)
-    )
-
-    if (getObjectPropertyByPath(errors, field.name)) return
-
-    helpers.setValue([...field.value, { ...defaultParam }])
-  }
-
-  const deleteParameter = (index: number) => {
-    helpers.setValue(field.value.filter((p, i) => i !== index))
-  }
 
   const resetDefaultValue = (
     parameterName: string,
@@ -175,30 +159,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                     />
                   )
                 })}
-
-                <div className={styles.actions}>
-                  <Button
-                    style="ghost"
-                    size="small"
-                    disabled={field.value.length === 1}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      deleteParameter(index)
-                    }}
-                  >
-                    Delete parameter
-                  </Button>
-                  <Button
-                    style="primary"
-                    size="small"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      addParameter(index)
-                    }}
-                  >
-                    Add new parameter
-                  </Button>
-                </div>
+                <Actions fieldName={props.name} index={index} />
               </div>
             )
           }
