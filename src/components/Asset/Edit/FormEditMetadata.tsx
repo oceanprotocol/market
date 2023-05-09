@@ -9,6 +9,7 @@ import { getFieldContent } from '@utils/form'
 import { isGoogleUrl } from '@utils/url'
 import styles from './FormEditMetadata.module.css'
 import { MetadataEditForm } from './_types'
+import consumerParametersContent from '../../../../content/publish/consumerParameters.json'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,
@@ -136,13 +137,19 @@ export default function FormEditMetadata({
       {asset.metadata.type === 'algorithm' && (
         <>
           <Field
-            {...getFieldContent('usesConsumerParameters', data)}
+            {...getFieldContent(
+              'usesConsumerParameters',
+              consumerParametersContent.consumerParameters.fields
+            )}
             component={Input}
             name="usesConsumerParameters"
           />
           {(values as unknown as MetadataEditForm).usesConsumerParameters && (
             <Field
-              {...getFieldContent('consumerParameters', data)}
+              {...getFieldContent(
+                'consumerParameters',
+                consumerParametersContent.consumerParameters.fields
+              )}
               component={Input}
               name="consumerParameters"
             />
@@ -164,14 +171,20 @@ export default function FormEditMetadata({
         <h4>Service</h4>
 
         <Field
-          {...getFieldContent('usesServiceConsumerParameters', data)}
+          {...getFieldContent(
+            'usesConsumerParameters',
+            consumerParametersContent.consumerParameters.fields
+          )}
           component={Input}
           name="service.usesConsumerParameters"
         />
         {(values as unknown as MetadataEditForm).service
           .usesConsumerParameters && (
           <Field
-            {...getFieldContent('serviceConsumerParameters', data)}
+            {...getFieldContent(
+              'consumerParameters',
+              consumerParametersContent.consumerParameters.fields
+            )}
             component={Input}
             name="service.consumerParameters"
           />

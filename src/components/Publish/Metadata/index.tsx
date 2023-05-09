@@ -3,6 +3,7 @@ import Input from '@shared/FormInput'
 import { Field, useField, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
 import content from '../../../../content/publish/form.json'
+import consumerParametersContent from '../../../../content/publish/consumerParameters.json'
 import { FormPublishData } from '../_types'
 import IconDataset from '@images/dataset.svg'
 import IconAlgorithm from '@images/algorithm.svg'
@@ -148,7 +149,7 @@ export default function MetadataFields(): ReactElement {
           <Field
             {...getFieldContent(
               'usesConsumerParameters',
-              content.metadata.fields
+              consumerParametersContent.consumerParameters.fields
             )}
             component={Input}
             name="metadata.usesConsumerParameters"
@@ -157,7 +158,7 @@ export default function MetadataFields(): ReactElement {
             <Field
               {...getFieldContent(
                 'consumerParameters',
-                content.metadata.fields
+                consumerParametersContent.consumerParameters.fields
               )}
               component={Input}
               name="metadata.consumerParameters"
