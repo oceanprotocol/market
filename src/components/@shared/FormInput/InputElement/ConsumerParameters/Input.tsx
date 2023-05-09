@@ -9,15 +9,15 @@ import { defaultConsumerParam } from '.'
 
 export default function ConsumerParameterInput({
   index,
-  fieldName,
+  inputName,
   ...props
 }: InputProps & {
   index: number
-  fieldName: string
+  inputName: string
 }): ReactElement {
   const { setFieldTouched } = useFormikContext<FormPublishData>()
   const [field, meta, helpers] =
-    useField<AlgorithmConsumerParameter[]>(fieldName)
+    useField<AlgorithmConsumerParameter[]>(inputName)
 
   const resetDefaultValue = (
     parameterName: string,

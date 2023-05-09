@@ -5,13 +5,13 @@ import { AlgorithmConsumerParameter } from '@components/Publish/_types'
 
 export default function DefaultInput({
   index,
-  fieldName,
+  inputName,
   ...props
 }: InputProps & {
   index: number
-  fieldName: string
+  inputName: string
 }): ReactElement {
-  const [field] = useField<AlgorithmConsumerParameter[]>(fieldName)
+  const [field] = useField<AlgorithmConsumerParameter[]>(inputName)
 
   const getStringOptions = (options: { [key: string]: string }[]): string[] => {
     if (!options?.length) return []

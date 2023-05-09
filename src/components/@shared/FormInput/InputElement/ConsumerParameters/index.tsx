@@ -51,7 +51,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                         key={`${field.name}[${index}].${props.name}`}
                         {...subField}
                         index={index}
-                        fieldName={props.name}
+                        inputName={props.name}
                       />
                     ) : null
                   }
@@ -63,7 +63,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                         {...subField}
                         name={`${field.name}[${index}].${subField.name}`}
                         index={index}
-                        fieldName={props.name}
+                        inputName={props.name}
                       />
                     )
                   }
@@ -74,7 +74,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                       {...subField}
                       name={`${field.name}[${index}].${subField.name}`}
                       index={index}
-                      fieldName={props.name}
+                      inputName={props.name}
                     />
                   )
                 })}

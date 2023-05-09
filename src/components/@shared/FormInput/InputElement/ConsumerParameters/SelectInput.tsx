@@ -14,14 +14,14 @@ const cx = classNames.bind(styles)
 
 export default function SelectInput({
   index,
-  fieldName,
+  inputName,
   ...props
 }: InputProps & {
   index: number
-  fieldName: string
+  inputName: string
 }): ReactElement {
   const { errors, touched } = useFormikContext<FormPublishData>()
-  const [field] = useField<AlgorithmConsumerParameter[]>(fieldName)
+  const [field] = useField<AlgorithmConsumerParameter[]>(inputName)
 
   const showError = (name: string, index: number): boolean =>
     [errors, touched].every(
