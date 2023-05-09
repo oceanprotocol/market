@@ -11,6 +11,7 @@ import InputOptions from './InputOptions'
 import classNames from 'classnames/bind'
 import { getObjectPropertyByPath } from '@utils/index'
 import FormActions from './FormActions'
+import DefaultInput from './DefaultInput'
 
 const cx = classNames.bind(styles)
 
@@ -71,12 +72,6 @@ export function ConsumerParameters(props: InputProps): ReactElement {
         !!getObjectPropertyByPath(object, `${field.name}[${index}].${name}`)
     )
 
-  const getStringOptions = (options: { [key: string]: string }[]): string[] => {
-    if (!options?.length) return []
-
-    return options.map((option) => Object.keys(option)[0])
-  }
-
   return (
     <div className={styles.container}>
       <Tabs
@@ -120,28 +115,11 @@ export function ConsumerParameters(props: InputProps): ReactElement {
 
                   if (subField.name === 'default') {
                     return (
-                      <Field
+                      <DefaultInput
+                        key={`${field.name}[${index}].${props.name}`}
                         {...subField}
-                        required={field.value[index].required === 'required'}
-                        component={Input}
-                        name={`${field.name}[${index}].${subField.name}`}
-                        key={`${field.name}[${index}].${subField.name}`}
-                        type={
-                          field.value[index].type === 'boolean'
-                            ? 'select'
-                            : field.value[index].type
-                        }
-                        options={
-                          field.value[index].type === 'boolean'
-                            ? ['true', 'false']
-                            : field.value[index].type === 'select'
-                            ? getStringOptions(
-                                field.value[index]?.options as {
-                                  [key: string]: string
-                                }[]
-                              )
-                            : field.value[index].options
-                        }
+                        index={index}
+                        fieldName={props.name}
                       />
                     )
                   }
