@@ -14,7 +14,6 @@ import MarketMetadataProvider from '@context/MarketMetadata'
 import { WagmiConfig } from 'wagmi'
 import { ConnectKitProvider } from 'connectkit'
 import { connectKitTheme, wagmiClient } from '@utils/wallet'
-import Web3LegacyProvider from '@context/Web3Legacy'
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
 import { useRouter } from 'next/router'
@@ -48,25 +47,23 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
           options={{ initialChainId: 0 }}
           customTheme={connectKitTheme}
         >
-          <Web3LegacyProvider>
-            <MarketMetadataProvider>
-              <UrqlProvider>
-                <UserPreferencesProvider>
-                  <PricesProvider>
-                    <ConsentProvider>
-                      <OrbisProvider>
-                        <PostHogProvider client={posthog}>
-                          <App>
-                            <Component {...pageProps} />
-                          </App>
-                        </PostHogProvider>
-                      </OrbisProvider>
-                    </ConsentProvider>
-                  </PricesProvider>
-                </UserPreferencesProvider>
-              </UrqlProvider>
-            </MarketMetadataProvider>
-          </Web3LegacyProvider>
+          <MarketMetadataProvider>
+            <UrqlProvider>
+              <UserPreferencesProvider>
+                <PricesProvider>
+                  <ConsentProvider>
+                    <OrbisProvider>
+                      <PostHogProvider client={posthog}>
+                        <App>
+                          <Component {...pageProps} />
+                        </App>
+                      </PostHogProvider>
+                    </OrbisProvider>
+                  </ConsentProvider>
+                </PricesProvider>
+              </UserPreferencesProvider>
+            </UrqlProvider>
+          </MarketMetadataProvider>
         </ConnectKitProvider>
       </WagmiConfig>
     </>

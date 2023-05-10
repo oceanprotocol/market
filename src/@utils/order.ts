@@ -13,9 +13,8 @@ import {
   ProviderInstance,
   ProviderInitialize
 } from '@oceanprotocol/lib'
-import { Signer, ethers, BigNumber } from 'ethers'
+import { Signer, ethers } from 'ethers'
 import { getOceanConfig } from './ocean'
-import { TransactionReceipt } from 'web3-eth'
 import {
   marketFeeAddress,
   consumeMarketOrderFee,
