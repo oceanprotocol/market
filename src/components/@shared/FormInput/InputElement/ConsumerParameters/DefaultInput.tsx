@@ -22,7 +22,6 @@ export default function DefaultInput({
   return (
     <Field
       {...props}
-      required={field.value[index].required === 'required'}
       component={Input}
       type={
         field.value[index].type === 'boolean'
