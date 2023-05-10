@@ -1,26 +1,4 @@
 .container {
   border: 1px solid var(--border-color);
-}
-
-.optionsContainer {
-  position: relative;
-  margin-bottom: calc(var(--spacer) / 2);
-}
-
-.optionsContainer.hasError * {
-  border-color: var(--brand-alert-red);
-}
-
-.hasError label {
-  color: var(--brand-alert-red);
-}
-
-.error {
-  composes: error from '../../index.module.css';
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  gap: var(--spacer);
+  border-radius: var(--border-radius);
 }

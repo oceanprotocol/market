@@ -1,4 +1,4 @@
-import { AlgorithmConsumerParameter } from '@components/Publish/_types'
+import { ConsumerParameter } from '@components/Publish/_types'
 import { FileInfo } from '@oceanprotocol/lib'
 export interface MetadataEditForm {
   name: string
@@ -11,11 +11,11 @@ export interface MetadataEditForm {
   author?: string
   tags?: string[]
   usesConsumerParameters?: boolean
-  consumerParameters?: AlgorithmConsumerParameter[]
+  consumerParameters?: ConsumerParameter[]
   assetState?: string
   service?: {
     usesConsumerParameters?: boolean
-    consumerParameters?: AlgorithmConsumerParameter[]
+    consumerParameters?: ConsumerParameter[]
   }
 }
 

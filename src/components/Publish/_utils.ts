@@ -20,7 +20,7 @@ import slugify from 'slugify'
 import Web3 from 'web3'
 import { algorithmContainerPresets } from './_constants'
 import {
-  AlgorithmConsumerParameter,
+  ConsumerParameter,
   FormPublishData,
   MetadataAlgorithmContainer,
   MetadataAlgorithmExtended
@@ -63,15 +63,18 @@ function transformTags(originalTags: string[]): string[] {
 }
 
 export function transformConsumerParameters(
-  parameters: AlgorithmConsumerParameter[]
-): AlgorithmConsumerParameter[] {
+  parameters: ConsumerParameter[]
+): ConsumerParameter[] {
   if (!parameters?.length) return
 
   const transformedValues = parameters.map((param) => {
     return param.type === 'select'
       ? {
           ...param,
-          required: param.required === 'required',
+          required:
+            typeof param.required === 'boolean'
+              ? param.required
+              : param.required === 'required',
           options: JSON.stringify(param.options)
         }
       : {
