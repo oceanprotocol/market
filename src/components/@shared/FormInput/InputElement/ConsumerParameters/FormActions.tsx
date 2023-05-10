@@ -8,29 +8,46 @@ import { defaultConsumerParam } from '.'
 
 export default function FormActions({
   fieldName,
-  index
+  index,
+  onParameterAdded,
+  onParameterDeleted
 }: {
   fieldName: string
   index: number
+  onParameterAdded?: (index: number) => void
+  onParameterDeleted?: (previousIndex: number) => void
 }): ReactElement {
   const { errors, setFieldTouched, validateField } =
     useFormikContext<FormPublishData>()
   const [field, meta, helpers] = useField<ConsumerParameter[]>(fieldName)
 
+  const setParamPropsTouched = (index: number, touched = true) => {
+    Object.keys(defaultConsumerParam).forEach((param) => {
+      setFieldTouched(`${field.name}[${index}].${param}`, touched)
+    })
+  }
+
   const addParameter = (index: number) => {
     // validate parameter before allowing the creation of a new one
     validateField(field.name)
-    Object.keys(defaultConsumerParam).forEach((param) =>
-      setFieldTouched(`${field.name}[${index}].${param}`, true)
-    )
+    setParamPropsTouched(index)
 
-    if (getObjectPropertyByPath(errors, field.name)) return
+    // Check errors on current tab before creating a new param
+    if (getObjectPropertyByPath(errors, `${field.name}[${index}]`)) return
 
     helpers.setValue([...field.value, { ...defaultConsumerParam }])
+
+    onParameterAdded && onParameterAdded(field.value.length)
   }
 
   const deleteParameter = (index: number) => {
     helpers.setValue(field.value.filter((p, i) => i !== index))
+
+    // Reset index on formik
+    setParamPropsTouched(index, false)
+
+    const previousIndex = Math.max(0, index - 1)
+    onParameterDeleted && onParameterDeleted(previousIndex)
   }
 
   return (
