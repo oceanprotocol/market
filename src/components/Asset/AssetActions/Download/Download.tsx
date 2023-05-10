@@ -3,9 +3,9 @@ import FileIcon from '@shared/FileIcon'
 import Price from '@shared/Price'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
-import ButtonBuy from './ButtonBuy'
+import ButtonBuy from '../ButtonBuy'
 import { secondsToString } from '@utils/ddo'
-import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
+import AlgorithmDatasetsListForCompute from '../Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
 import { FileInfo, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
@@ -17,7 +17,9 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
-import ConsumerParameters from './ConsumerParameters'
+import ConsumerParameters from '../ConsumerParameters'
+import { Form, Formik, useFormikContext } from 'formik'
+import { validationSchema } from './_validation'
 
 export default function Download({
   asset,
@@ -171,16 +173,16 @@ export default function Download({
     setIsLoading(false)
   }
 
-  const PurchaseButton = () => (
+  const PurchaseButton = ({ isValid }: { isValid?: boolean }) => (
     <ButtonBuy
       action="download"
-      disabled={isDisabled}
+      disabled={isDisabled || !isValid}
       hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
       btSymbol={asset?.accessDetails?.baseToken?.symbol}
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
-      onClick={handleOrderOrDownload}
+      type="submit"
       assetTimeout={secondsToString(asset?.services?.[0]?.timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
@@ -195,6 +197,8 @@ export default function Download({
   )
 
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
+    const { isValid } = useFormikContext()
+
     return (
       <div>
         {isOrderDisabled ? (
@@ -216,7 +220,7 @@ export default function Download({
                 {asset && <ConsumerParameters asset={asset} />}
                 {!isInPurgatory && (
                   <div className={styles.buttonBuy}>
-                    <PurchaseButton />
+                    <PurchaseButton isValid={isValid} />
                   </div>
                 )}
               </>
@@ -228,31 +232,39 @@ export default function Download({
   }
 
   return (
-    <aside className={styles.consume}>
-      <div className={styles.info}>
-        <div className={styles.filewrapper}>
-          <FileIcon file={file} isLoading={fileIsLoading} small />
-        </div>
-        {isPriceLoading ? (
-          <Loader message="Calculating full price (including fees)" />
-        ) : (
-          <Price
-            className={styles.price}
-            price={asset.stats?.price}
-            orderPriceAndFees={orderPriceAndFees}
-            conversion
-            size="large"
-          />
-        )}
-      </div>
-      <AssetAction asset={asset} />
+    <Formik
+      initialValues={{ dataService: undefined }}
+      validationSchema={validationSchema}
+      onSubmit={handleOrderOrDownload}
+    >
+      <Form>
+        <aside className={styles.consume}>
+          <div className={styles.info}>
+            <div className={styles.filewrapper}>
+              <FileIcon file={file} isLoading={fileIsLoading} small />
+            </div>
+            {isPriceLoading ? (
+              <Loader message="Calculating full price (including fees)" />
+            ) : (
+              <Price
+                className={styles.price}
+                price={asset.stats?.price}
+                orderPriceAndFees={orderPriceAndFees}
+                conversion
+                size="large"
+              />
+            )}
+          </div>
+          <AssetAction asset={asset} />
 
-      {asset?.metadata?.type === 'algorithm' && (
-        <AlgorithmDatasetsListForCompute
-          algorithmDid={asset.id}
-          asset={asset}
-        />
-      )}
-    </aside>
+          {asset?.metadata?.type === 'algorithm' && (
+            <AlgorithmDatasetsListForCompute
+              algorithmDid={asset.id}
+              asset={asset}
+            />
+          )}
+        </aside>
+      </Form>
+    </Formik>
   )
 }

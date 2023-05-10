@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
-import Download from './Download'
+import Download from './Download/Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import { compareAsBN } from '@utils/numbers'
 import { useAsset } from '@context/Asset'

@@ -24,6 +24,7 @@
 }
 
 .parameter {
+  position: relative;
   margin-left: -1rem;
   margin-right: -1rem;
   margin-bottom: calc(var(--spacer) / 2);
@@ -33,4 +34,21 @@
 
 .parameter:last-child {
   border: none;
+}
+
+.hasError label {
+  color: var(--brand-alert-red);
+}
+
+.hasError input,
+.hasError input:focus,
+.hasError [class*='prefix'],
+.hasError [class*='postfix'] {
+  color: var(--brand-alert-red);
+  border-color: var(--brand-alert-red);
+}
+
+.error {
+  composes: error from '../../../@shared/FormInput/index.module.css';
+  right: 1rem;
 }
