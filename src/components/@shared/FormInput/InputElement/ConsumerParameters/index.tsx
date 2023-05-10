@@ -6,7 +6,7 @@ import Tabs from '../../../atoms/Tabs'
 import FormActions from './FormActions'
 import DefaultInput from './DefaultInput'
 import SelectInput from './SelectInput'
-import ConsumerParameterInput from './Input'
+import ConsumerParameterInput from './ConsumerParameterInput'
 import styles from './index.module.css'
 
 export const defaultConsumerParam: ConsumerParameter = {

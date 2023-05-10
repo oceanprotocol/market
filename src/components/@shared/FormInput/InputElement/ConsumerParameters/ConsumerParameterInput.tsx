@@ -37,10 +37,20 @@ export default function ConsumerParameterInput({
     )
   }
 
+  const getFieldValue = (fieldName: string, parameter: ConsumerParameter) => {
+    const valueKey = fieldName.split('.').slice(-1)[0]
+    const value = parameter[valueKey]
+
+    if (valueKey !== 'required' || typeof value === 'string') return value
+
+    return value ? 'required' : 'optional'
+  }
+
   return (
     <Field
       {...props}
       component={Input}
+      value={getFieldValue(props.name, field.value[index])}
       onChange={(e) => {
         resetDefaultValue(props.name, e.target.value, index)
         field.onChange(e)

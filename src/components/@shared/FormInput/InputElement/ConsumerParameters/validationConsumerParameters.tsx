@@ -27,7 +27,9 @@ export const validationConsumerParameters: {
   type: Yup.string().oneOf(paramTypes).required('Required'),
   description: Yup.string().required('Required'),
   label: Yup.string().required('Required'),
-  required: Yup.string().oneOf(['optional', 'required']).required('Required'),
+  required: Yup.mixed()
+    .oneOf(['optional', 'required', true, false])
+    .required('Required'),
   default: Yup.mixed().required('Required'),
   options: Yup.array().when('type', {
     is: 'select',

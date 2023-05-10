@@ -194,21 +194,16 @@ export function parseConsumerParameters(
 ): ConsumerParameter[] {
   if (!consumerParameters?.length) return []
 
-  return consumerParameters.map((param) => {
-    const updatedParam = {
-      ...param,
-      required: param.required === true ? 'required' : 'optional'
-    }
-
-    return updatedParam.type === 'select'
+  return consumerParameters.map((param) =>
+    param.type === 'select'
       ? {
-          ...updatedParam,
-          options: JSON.parse(updatedParam.options as string)
+          ...param,
+          options: JSON.parse(param.options as string)
         }
-      : updatedParam.type === 'number'
-      ? { ...updatedParam, default: Number(updatedParam.default) }
-      : updatedParam.type === 'boolean'
-      ? { ...updatedParam, default: updatedParam.default === 'true' }
-      : updatedParam
-  })
+      : param.type === 'number'
+      ? { ...param, default: Number(param.default) }
+      : param.type === 'boolean'
+      ? { ...param, default: param.default === 'true' }
+      : param
+  )
 }

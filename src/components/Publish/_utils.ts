@@ -71,7 +71,10 @@ export function transformConsumerParameters(
     return param.type === 'select'
       ? {
           ...param,
-          required: param.required === 'required',
+          required:
+            typeof param.required === 'boolean'
+              ? param.required
+              : param.required === 'required',
           options: JSON.stringify(param.options)
         }
       : {
