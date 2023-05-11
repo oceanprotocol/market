@@ -104,6 +104,11 @@ export default function Compute({
   const [isLoadingJobs, setIsLoadingJobs] = useState(false)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const [retry, setRetry] = useState<boolean>(false)
+  const [userCustomParameters, setUserCustomParameters] = useState<{
+    dataService: { [key: string]: any }
+    algoService: { [key: string]: any }
+    algoParams: { [key: string]: any }
+  }>()
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
@@ -347,7 +352,9 @@ export default function Compute({
       const computeService = getServiceByName(asset, 'compute')
       const computeAlgorithm: ComputeAlgorithm = {
         documentId: selectedAlgorithmAsset.id,
-        serviceId: selectedAlgorithmAsset.services[0].id
+        serviceId: selectedAlgorithmAsset.services[0].id,
+        algocustomdata: userCustomParameters?.algoParams,
+        userdata: userCustomParameters?.algoService
       }
 
       const allowed = await isOrderable(
@@ -404,7 +411,8 @@ export default function Compute({
       const computeAsset: ComputeAsset = {
         documentId: asset.id,
         serviceId: asset.services[0].id,
-        transferTxId: datasetOrderTx
+        transferTxId: datasetOrderTx,
+        userdata: userCustomParameters?.dataService
       }
       computeAlgorithm.transferTxId = algorithmOrderTx
       const output: ComputeOutput = {
@@ -517,6 +525,7 @@ export default function Compute({
             selectedComputeAssetTimeout={secondsToString(
               selectedAlgorithmAsset?.services[0]?.timeout
             )}
+            setUserCustomParameters={setUserCustomParameters}
             // lazy comment when removing pricingStepText
             stepText={computeStatusText}
             isConsumable={isConsumablePrice}

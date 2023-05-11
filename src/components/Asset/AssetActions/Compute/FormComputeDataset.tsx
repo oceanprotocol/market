@@ -9,7 +9,7 @@ import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
-import { Asset, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import { Asset, UserCustomParameters, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
@@ -17,6 +17,8 @@ import { getTokenBalanceFromSymbol } from '@utils/web3'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
 import ConsumerParameters from '../ConsumerParameters'
+import { transformConsumerParametersForConsumption } from '@utils/ddo'
+import { ConsumerParameter } from '@components/Publish/_types'
 
 export default function FormStartCompute({
   algorithms,
@@ -39,6 +41,7 @@ export default function FormStartCompute({
   dtBalanceSelectedComputeAsset,
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
+  setUserCustomParameters,
   stepText,
   isConsumable,
   consumableFeedback,
@@ -68,6 +71,9 @@ export default function FormStartCompute({
   dtBalanceSelectedComputeAsset?: string
   selectedComputeAssetType?: string
   selectedComputeAssetTimeout?: string
+  setUserCustomParameters: React.Dispatch<
+    React.SetStateAction<UserCustomParameters>
+  >
   stepText: string
   isConsumable: boolean
   consumableFeedback: string
@@ -79,8 +85,15 @@ export default function FormStartCompute({
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
   const { accountId, balance, isSupportedOceanNetwork } = useWeb3()
-  const { isValid, values }: FormikContextType<{ algorithm: string }> =
-    useFormikContext()
+  const {
+    isValid,
+    values
+  }: FormikContextType<{
+    algorithm: string
+    dataService: ConsumerParameter[]
+    algoService: ConsumerParameter[]
+    algoParams: ConsumerParameter[]
+  }> = useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
 
   const [datasetOrderPrice, setDatasetOrderPrice] = useState(
@@ -119,6 +132,19 @@ export default function FormStartCompute({
     }
     fetchAlgorithmAssetExtended()
   }, [values.algorithm, accountId, isConsumable])
+
+  useEffect(() => {
+    if (!values) return
+
+    const output = {}
+    Object.entries(values).forEach((value) => {
+      if (value[0] === 'algorithm') return
+      output[value[0]] = transformConsumerParametersForConsumption(
+        value[1] as ConsumerParameter[]
+      )
+    })
+    setUserCustomParameters(output)
+  }, [setUserCustomParameters, values])
 
   //
   // Set price for calculation output
