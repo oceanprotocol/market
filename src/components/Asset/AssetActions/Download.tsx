@@ -163,7 +163,13 @@ export default function Download({
             asset.accessDetails.datatoken?.symbol
           )[asset.accessDetails.type === 'fixed' ? 2 : 1]
         )
-        const orderTx = await order(signer, asset, orderPriceAndFees, accountId)
+        const orderTx = await order(
+          signer,
+          asset,
+          orderPriceAndFees,
+          accountId,
+          hasDatatoken
+        )
         const tx = await orderTx.wait()
         if (!tx) {
           throw new Error()

@@ -56,6 +56,7 @@ export async function order(
   asset: AssetExtended,
   orderPriceAndFees: OrderPriceAndFees,
   accountId: string,
+  hasDatatoken: boolean,
   providerFees?: ProviderFees,
   computeConsumerAddress?: string
 ): Promise<ethers.providers.TransactionResponse> {
@@ -96,35 +97,36 @@ export async function order(
       } as FreOrderParams
 
       if (asset.accessDetails.templateId === 1) {
-        // buy datatoken
-        const txApprove = await approve(
-          signer,
-          config,
-          accountId,
-          asset.accessDetails.baseToken.address,
-          config.fixedRateExchangeAddress,
-          await amountToUnits(
+        if (!hasDatatoken) {
+          // buy datatoken
+          const txApprove = await approve(
             signer,
-            asset?.accessDetails?.baseToken?.address,
-            orderPriceAndFees.price
-          ),
-          false
-        )
-        if (!txApprove) {
-          return
+            config,
+            accountId,
+            asset.accessDetails.baseToken.address,
+            config.fixedRateExchangeAddress,
+            await amountToUnits(
+              signer,
+              asset?.accessDetails?.baseToken?.address,
+              orderPriceAndFees.price
+            ),
+            false
+          )
+          if (!txApprove) {
+            return
+          }
+          const fre = new FixedRateExchange(
+            config.fixedRateExchangeAddress,
+            signer
+          )
+          const freTx = await fre.buyDatatokens(
+            asset.accessDetails?.addressOrId,
+            '1',
+            orderPriceAndFees.price,
+            marketFeeAddress,
+            consumeMarketFixedSwapFee
+          )
         }
-        const fre = new FixedRateExchange(
-          config.fixedRateExchangeAddress,
-          signer
-        )
-        const freTx = await fre.buyDatatokens(
-          asset.accessDetails?.addressOrId,
-          '1',
-          orderPriceAndFees.price,
-          marketFeeAddress,
-          consumeMarketFixedSwapFee
-        )
-
         return await datatoken.startOrder(
           asset.accessDetails.datatoken.address,
           orderParams.consumer,
@@ -259,6 +261,7 @@ export async function handleComputeOrder(
   orderPriceAndFees: OrderPriceAndFees,
   accountId: string,
   initializeData: ProviderComputeInitialize,
+  hasDatatoken,
   computeConsumerAddress?: string
 ): Promise<string> {
   LoggerInstance.log(
@@ -315,6 +318,7 @@ export async function handleComputeOrder(
       asset,
       orderPriceAndFees,
       accountId,
+      hasDatatoken,
       initializeData.providerFee,
       computeConsumerAddress
     )

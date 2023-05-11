@@ -115,7 +115,7 @@ export default function Compute({
 
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
-  async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
+  async function checkAssetDTBalance(asset: DDO) {
     if (!asset?.services[0].datatokenAddress) return
     const datatokenInstance = new Datatoken(signer)
     const dtBalance = await datatokenInstance.balance(
@@ -125,7 +125,6 @@ export default function Compute({
     setAlgorithmDTBalance(new Decimal(dtBalance).toString())
     const hasAlgoDt = Number(dtBalance) >= 1
     setHasAlgoAssetDatatoken(hasAlgoDt)
-    return hasAlgoDt
   }
 
   async function setComputeFees(
@@ -379,6 +378,7 @@ export default function Compute({
         algoOrderPriceAndFees,
         accountId,
         initializedProviderResponse.algorithm,
+        hasAlgoAssetDatatoken,
         computeEnv.consumerAddress
       )
       if (!algorithmOrderTx) throw new Error('Failed to order algorithm.')
@@ -397,6 +397,7 @@ export default function Compute({
         datasetOrderPriceAndFees,
         accountId,
         initializedProviderResponse.datasets[0],
+        hasDatatoken,
         computeEnv.consumerAddress
       )
       if (!datasetOrderTx) throw new Error('Failed to order dataset.')
