@@ -5,6 +5,7 @@ import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import ButtonBuy from '../ButtonBuy'
 import {
+  parseConsumerParameters,
   secondsToString,
   transformConsumerParametersForConsumption
 } from '@utils/ddo'
@@ -241,7 +242,11 @@ export default function Download({
 
   return (
     <Formik
-      initialValues={{ dataService: undefined }}
+      initialValues={{
+        dataService: parseConsumerParameters(
+          asset?.services[0].consumerParameters
+        )
+      }}
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         const dataParams = transformConsumerParametersForConsumption(
