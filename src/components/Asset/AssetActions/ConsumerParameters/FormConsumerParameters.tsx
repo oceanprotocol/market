@@ -20,12 +20,6 @@ export default function FormConsumerParameters({
   const { errors, setFieldTouched } = useFormikContext()
   const [field, meta, helpers] = useField<ConsumerParameter[]>(name)
 
-  useEffect(() => {
-    if (field.value) return
-
-    helpers.setValue([...parameters])
-  }, [])
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     setFieldTouched(`${field.name}[${index}].default`, true)
     helpers.setValue(

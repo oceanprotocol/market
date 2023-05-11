@@ -1,4 +1,5 @@
 import { ConsumerParameter } from '@components/Publish/_types'
+import { parseConsumerParameters } from '@utils/ddo'
 import * as Yup from 'yup'
 
 export const ConsumerParametersConsumeSchema = Yup.array()
@@ -28,16 +29,23 @@ export const validationSchema: Yup.SchemaOf<{
   algoParams: ConsumerParametersConsumeSchema
 })
 
-export function getInitialValues(): {
+export function getInitialValues(
+  asset?: AssetExtended,
+  selectedAlgorithmAsset?: AssetExtended
+): {
   algorithm: string
   dataService?: ConsumerParameter[]
   algoService?: ConsumerParameter[]
   algoParams?: ConsumerParameter[]
 } {
   return {
-    algorithm: undefined,
-    dataService: undefined,
-    algoService: undefined,
-    algoParams: undefined
+    algorithm: selectedAlgorithmAsset?.id,
+    dataService: parseConsumerParameters(asset?.services[0].consumerParameters),
+    algoService: parseConsumerParameters(
+      selectedAlgorithmAsset?.services[0].consumerParameters
+    ),
+    algoParams: parseConsumerParameters(
+      selectedAlgorithmAsset?.metadata?.algorithm.consumerParameters
+    )
   }
 }

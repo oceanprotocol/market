@@ -486,9 +486,10 @@ export default function Compute({
         </>
       ) : (
         <Formik
-          initialValues={getInitialValues()}
+          initialValues={getInitialValues(asset, selectedAlgorithmAsset)}
           validateOnMount
           validationSchema={validationSchema}
+          enableReinitialize
           onSubmit={async (values) => {
             if (!values.algorithm) return
             await startJob()
