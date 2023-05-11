@@ -12,7 +12,8 @@ import {
   Ipfs,
   Service,
   Smartcontract,
-  UrlFile
+  UrlFile,
+  UserCustomParameters
 } from '@oceanprotocol/lib'
 import { checkJson } from './codemirror'
 
@@ -210,7 +211,7 @@ export function parseConsumerParameters(
 
 export function transformConsumerParametersForConsumption(
   parameters: ConsumerParameter[]
-): { [key: string]: any } {
+): UserCustomParameters {
   if (!parameters?.length) return
 
   const output = {}
