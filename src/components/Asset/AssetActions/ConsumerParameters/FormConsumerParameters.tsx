@@ -1,5 +1,5 @@
 import { ConsumerParameter } from '@components/Publish/_types'
-import React, { ChangeEvent, ReactElement, useEffect } from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 import styles from './FormConsumerParameters.module.css'
 import Label from '@components/@shared/FormInput/Label'
 import { getConsumerParameterStringOptions } from '@components/@shared/FormInput/InputElement/ConsumerParameters'
