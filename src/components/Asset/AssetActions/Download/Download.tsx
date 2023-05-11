@@ -4,10 +4,18 @@ import Price from '@shared/Price'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import ButtonBuy from '../ButtonBuy'
-import { secondsToString } from '@utils/ddo'
+import {
+  secondsToString,
+  transformConsumerParametersForConsumption
+} from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from '../Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
-import { FileInfo, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import {
+  FileInfo,
+  LoggerInstance,
+  UserCustomParameters,
+  ZERO_ADDRESS
+} from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
@@ -135,7 +143,7 @@ export default function Download({
     orderPriceAndFees
   ])
 
-  async function handleOrderOrDownload() {
+  async function handleOrderOrDownload(dataParams?: UserCustomParameters) {
     setIsLoading(true)
 
     try {
@@ -147,7 +155,7 @@ export default function Download({
           )[3]
         )
 
-        await downloadFile(web3, asset, accountId, validOrderTx)
+        await downloadFile(web3, asset, accountId, validOrderTx, dataParams)
       } else {
         setStatusText(
           getOrderFeedback(
@@ -235,7 +243,12 @@ export default function Download({
     <Formik
       initialValues={{ dataService: undefined }}
       validationSchema={validationSchema}
-      onSubmit={handleOrderOrDownload}
+      onSubmit={async (values) => {
+        const dataParams = transformConsumerParametersForConsumption(
+          values?.dataService
+        )
+        await handleOrderOrDownload(dataParams)
+      }}
     >
       <Form>
         <aside className={styles.consume}>

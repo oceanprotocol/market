@@ -207,3 +207,14 @@ export function parseConsumerParameters(
       : param
   )
 }
+
+export function transformConsumerParametersForConsumption(
+  parameters: ConsumerParameter[]
+): { [key: string]: any } {
+  if (!parameters?.length) return
+
+  const output = {}
+  parameters.forEach((param) => (output[param.name] = param.default))
+
+  return output
+}

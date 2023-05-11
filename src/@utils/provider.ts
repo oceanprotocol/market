@@ -11,7 +11,8 @@ import {
   LoggerInstance,
   ProviderComputeInitializeResults,
   ProviderInstance,
-  UrlFile
+  UrlFile,
+  UserCustomParameters
 } from '@oceanprotocol/lib'
 import { QueryHeader } from '@shared/FormInput/InputElement/Headers'
 import Web3 from 'web3'
@@ -176,7 +177,8 @@ export async function downloadFile(
   web3: Web3,
   asset: AssetExtended,
   accountId: string,
-  validOrderTx?: string
+  validOrderTx?: string,
+  userCustomParameters?: UserCustomParameters
 ) {
   const downloadUrl = await ProviderInstance.getDownloadUrl(
     asset.id,
@@ -185,7 +187,8 @@ export async function downloadFile(
     0,
     validOrderTx || asset.accessDetails.validOrderTx,
     asset.services[0].serviceEndpoint,
-    web3
+    web3,
+    userCustomParameters
   )
   await downloadFileBrowser(downloadUrl)
 }
