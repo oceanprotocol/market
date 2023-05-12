@@ -105,8 +105,8 @@ export default function Compute({
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const [retry, setRetry] = useState<boolean>(false)
   const [userCustomParameters, setUserCustomParameters] = useState<{
-    dataService: { [key: string]: any }
-    algoService: { [key: string]: any }
+    dataServiceParams: { [key: string]: any }
+    algoServiceParams: { [key: string]: any }
     algoParams: { [key: string]: any }
   }>()
 
@@ -354,7 +354,7 @@ export default function Compute({
         documentId: selectedAlgorithmAsset.id,
         serviceId: selectedAlgorithmAsset.services[0].id,
         algocustomdata: userCustomParameters?.algoParams,
-        userdata: userCustomParameters?.algoService
+        userdata: userCustomParameters?.algoServiceParams
       }
 
       const allowed = await isOrderable(
@@ -412,7 +412,7 @@ export default function Compute({
         documentId: asset.id,
         serviceId: asset.services[0].id,
         transferTxId: datasetOrderTx,
-        userdata: userCustomParameters?.dataService
+        userdata: userCustomParameters?.dataServiceParams
       }
       computeAlgorithm.transferTxId = algorithmOrderTx
       const output: ComputeOutput = {

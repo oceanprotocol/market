@@ -243,14 +243,14 @@ export default function Download({
   return (
     <Formik
       initialValues={{
-        dataService: parseConsumerParameters(
+        dataServiceParams: parseConsumerParameters(
           asset?.services[0].consumerParameters
         )
       }}
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         const dataParams = transformConsumerParametersForConsumption(
-          values?.dataService
+          values?.dataServiceParams
         )
         await handleOrderOrDownload(dataParams)
       }}

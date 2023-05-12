@@ -20,7 +20,7 @@ export default function ConsumerParameters({
         title: 'Data Service',
         content: (
           <FormConsumerParameters
-            name="dataService"
+            name="dataServiceParams"
             parameters={parseConsumerParameters(
               asset.services[0].consumerParameters
             )}
@@ -33,7 +33,7 @@ export default function ConsumerParameters({
         title: 'Algo Service',
         content: (
           <FormConsumerParameters
-            name="algoService"
+            name="algoServiceParams"
             parameters={parseConsumerParameters(
               selectedAlgorithmAsset.services[0].consumerParameters
             )}

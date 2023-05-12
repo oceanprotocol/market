@@ -90,8 +90,8 @@ export default function FormStartCompute({
     values
   }: FormikContextType<{
     algorithm: string
-    dataService: FormConsumerParameter[]
-    algoService: FormConsumerParameter[]
+    dataServiceParams: FormConsumerParameter[]
+    algoServiceParams: FormConsumerParameter[]
     algoParams: FormConsumerParameter[]
   }> = useFormikContext()
   const { asset, isAssetNetwork } = useAsset()

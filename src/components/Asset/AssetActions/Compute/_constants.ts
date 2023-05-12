@@ -19,13 +19,13 @@ export const ConsumerParametersConsumeSchema = Yup.array()
 
 export const validationSchema: Yup.SchemaOf<{
   algorithm: string
-  dataService: any
-  algoService: any
+  dataServiceParams: any
+  algoServiceParams: any
   algoParams: any
 }> = Yup.object().shape({
   algorithm: Yup.string().required('Required'),
-  dataService: ConsumerParametersConsumeSchema,
-  algoService: ConsumerParametersConsumeSchema,
+  dataServiceParams: ConsumerParametersConsumeSchema,
+  algoServiceParams: ConsumerParametersConsumeSchema,
   algoParams: ConsumerParametersConsumeSchema
 })
 
@@ -34,14 +34,16 @@ export function getInitialValues(
   selectedAlgorithmAsset?: AssetExtended
 ): {
   algorithm: string
-  dataService?: FormConsumerParameter[]
-  algoService?: FormConsumerParameter[]
+  dataServiceParams?: FormConsumerParameter[]
+  algoServiceParams?: FormConsumerParameter[]
   algoParams?: FormConsumerParameter[]
 } {
   return {
     algorithm: selectedAlgorithmAsset?.id,
-    dataService: parseConsumerParameters(asset?.services[0].consumerParameters),
-    algoService: parseConsumerParameters(
+    dataServiceParams: parseConsumerParameters(
+      asset?.services[0].consumerParameters
+    ),
+    algoServiceParams: parseConsumerParameters(
       selectedAlgorithmAsset?.services[0].consumerParameters
     ),
     algoParams: parseConsumerParameters(
