@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useField } from 'formik'
 import { InputProps } from '../..'
-import { ConsumerParameter } from '../../../../Publish/_types'
+import { FormConsumerParameter } from '../../../../Publish/_types'
 import Tabs from '../../../atoms/Tabs'
 import FormActions from './FormActions'
 import DefaultInput from './DefaultInput'
@@ -9,7 +9,7 @@ import SelectInput from './SelectInput'
 import ConsumerParameterInput from './ConsumerParameterInput'
 import styles from './index.module.css'
 
-export const defaultConsumerParam: ConsumerParameter = {
+export const defaultConsumerParam: FormConsumerParameter = {
   name: '',
   label: '',
   description: '',
@@ -19,7 +19,7 @@ export const defaultConsumerParam: ConsumerParameter = {
   required: ''
 }
 
-export const paramTypes: ConsumerParameter['type'][] = [
+export const paramTypes: FormConsumerParameter['type'][] = [
   'number',
   'text',
   'boolean',
@@ -35,7 +35,7 @@ export const getConsumerParameterStringOptions = (
 }
 
 export function ConsumerParameters(props: InputProps): ReactElement {
-  const [field, meta, helpers] = useField<ConsumerParameter[]>(props.name)
+  const [field, meta, helpers] = useField<FormConsumerParameter[]>(props.name)
 
   const [tabIndex, setTabIndex] = useState(0)
 
