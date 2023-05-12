@@ -44,9 +44,13 @@ export default function ConsumerParameterInput({
     fieldName: string,
     parameter: FormConsumerParameter
   ) => {
+    // split the input name to every "." and keep the last
+    // word which corresponds to the field name
     const valueKey = fieldName.split('.').slice(-1)[0]
     const value = parameter[valueKey]
 
+    // convert the boolean values assigned to the "required" field
+    // into the select component options ["required", "optional"]
     if (valueKey !== 'required' || typeof value === 'string') return value
 
     return value ? 'required' : 'optional'
