@@ -1,4 +1,4 @@
-import { ConsumerParameter } from '@components/Publish/_types'
+import { FormConsumerParameter } from '@components/Publish/_types'
 import React, { ChangeEvent, ReactElement } from 'react'
 import styles from './FormConsumerParameters.module.css'
 import Label from '@components/@shared/FormInput/Label'
@@ -16,10 +16,10 @@ export default function FormConsumerParameters({
   parameters
 }: {
   name: string
-  parameters: ConsumerParameter[]
+  parameters: FormConsumerParameter[]
 }): ReactElement {
   const { errors, setFieldTouched } = useFormikContext()
-  const [field, meta, helpers] = useField<ConsumerParameter[]>(name)
+  const [field, meta, helpers] = useField<FormConsumerParameter[]>(name)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     setFieldTouched(`${field.name}[${index}].default`, true)
@@ -41,7 +41,7 @@ export default function FormConsumerParameters({
   const showError = (name: string, index: number): boolean =>
     !!getObjectPropertyByPath(errors, `${field.name}[${index}].${name}`)
 
-  const getParameterOptions = (parameter: ConsumerParameter): string[] => {
+  const getParameterOptions = (parameter: FormConsumerParameter): string[] => {
     if (!parameter.options && parameter.type !== 'boolean') return []
 
     const updatedOptions =
@@ -60,7 +60,10 @@ export default function FormConsumerParameters({
     return updatedOptions
   }
 
-  const getParameterValue = (parameter: ConsumerParameter, index: number) => {
+  const getParameterValue = (
+    parameter: FormConsumerParameter,
+    index: number
+  ) => {
     if (parameter.type === 'boolean') {
       if (parameter.default === 'true') return 'true'
       if (parameter.default === 'false') return 'false'

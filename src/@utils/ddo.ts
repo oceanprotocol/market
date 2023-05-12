@@ -227,7 +227,7 @@ export function parseConsumerParameters(
 }
 
 export function transformConsumerParametersForConsumption(
-  parameters: ConsumerParameter[]
+  parameters: FormConsumerParameter[]
 ): UserCustomParameters {
   if (!parameters?.length) return
 

@@ -18,7 +18,7 @@ import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
 import ConsumerParameters from '../ConsumerParameters'
 import { transformConsumerParametersForConsumption } from '@utils/ddo'
-import { ConsumerParameter } from '@components/Publish/_types'
+import { FormConsumerParameter } from '@components/Publish/_types'
 
 export default function FormStartCompute({
   algorithms,
@@ -90,9 +90,9 @@ export default function FormStartCompute({
     values
   }: FormikContextType<{
     algorithm: string
-    dataService: ConsumerParameter[]
-    algoService: ConsumerParameter[]
-    algoParams: ConsumerParameter[]
+    dataService: FormConsumerParameter[]
+    algoService: FormConsumerParameter[]
+    algoParams: FormConsumerParameter[]
   }> = useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
 
@@ -140,7 +140,7 @@ export default function FormStartCompute({
     Object.entries(values).forEach((value) => {
       if (value[0] === 'algorithm') return
       output[value[0]] = transformConsumerParametersForConsumption(
-        value[1] as ConsumerParameter[]
+        value[1] as FormConsumerParameter[]
       )
     })
     setUserCustomParameters(output)

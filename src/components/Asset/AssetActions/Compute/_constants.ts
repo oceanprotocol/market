@@ -1,4 +1,4 @@
-import { ConsumerParameter } from '@components/Publish/_types'
+import { FormConsumerParameter } from '@components/Publish/_types'
 import { parseConsumerParameters } from '@utils/ddo'
 import * as Yup from 'yup'
 
@@ -34,9 +34,9 @@ export function getInitialValues(
   selectedAlgorithmAsset?: AssetExtended
 ): {
   algorithm: string
-  dataService?: ConsumerParameter[]
-  algoService?: ConsumerParameter[]
-  algoParams?: ConsumerParameter[]
+  dataService?: FormConsumerParameter[]
+  algoService?: FormConsumerParameter[]
+  algoParams?: FormConsumerParameter[]
 } {
   return {
     algorithm: selectedAlgorithmAsset?.id,
