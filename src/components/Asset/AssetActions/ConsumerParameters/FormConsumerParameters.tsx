@@ -7,6 +7,7 @@ import { ErrorMessage, Field, useField, useFormikContext } from 'formik'
 import Input from '@components/@shared/FormInput'
 import { getObjectPropertyByPath } from '@utils/index'
 import classNames from 'classnames/bind'
+import { parseConsumerParameterDefaultValue } from '@utils/ddo'
 
 const cx = classNames.bind(styles)
 
@@ -28,7 +29,10 @@ export default function FormConsumerParameters({
 
         return {
           ...currentParam,
-          default: e.target.value
+          default: parseConsumerParameterDefaultValue(
+            currentParam.type,
+            e.target.value
+          )
         }
       })
     )
@@ -36,6 +40,34 @@ export default function FormConsumerParameters({
 
   const showError = (name: string, index: number): boolean =>
     !!getObjectPropertyByPath(errors, `${field.name}[${index}].${name}`)
+
+  const getParameterOptions = (parameter: ConsumerParameter): string[] => {
+    if (!parameter.options && parameter.type !== 'boolean') return []
+
+    const updatedOptions =
+      parameter.type === 'boolean'
+        ? ['true', 'false']
+        : parameter.type === 'select'
+        ? getConsumerParameterStringOptions(
+            parameter?.options as {
+              [key: string]: string
+            }[]
+          )
+        : (parameter.options as unknown as string[])
+
+    if (!parameter.required) updatedOptions.unshift('')
+
+    return updatedOptions
+  }
+
+  const getParameterValue = (parameter: ConsumerParameter, index: number) => {
+    if (parameter.type === 'boolean') {
+      if (parameter.default === 'true') return 'true'
+      if (parameter.default === 'false') return 'false'
+    }
+
+    return field?.value?.[index]?.default
+  }
 
   return (
     <div className={styles.container}>
@@ -57,26 +89,10 @@ export default function FormConsumerParameters({
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleChange(e, index)
               }
-              options={
-                param.type === 'boolean'
-                  ? ['true', 'false']
-                  : param.type === 'select'
-                  ? getConsumerParameterStringOptions(
-                      param?.options as {
-                        [key: string]: string
-                      }[]
-                    )
-                  : (param.options as unknown as string[])
-              }
+              options={getParameterOptions(param)}
               size="small"
               type={param.type === 'boolean' ? 'select' : param.type}
-              value={
-                typeof param.default === 'boolean' && param.default
-                  ? 'true'
-                  : typeof param.default === 'boolean' && !param.default
-                  ? 'false'
-                  : (field?.value?.[index]?.default as string | number)
-              }
+              value={getParameterValue(param, index)}
             />
             {showError('default', index) && (
               <div className={styles.error}>

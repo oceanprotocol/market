@@ -190,6 +190,21 @@ export function previewDebugPatch(
   return buildValuesPreview
 }
 
+export function parseConsumerParameterDefaultValue(
+  type: ConsumerParameter['type'],
+  value: ConsumerParameter['default']
+) {
+  if (!value || !type) return
+
+  if (type === 'number') return Number(value)
+  if (type === 'boolean') {
+    if (value === 'true') return true
+    if (value === 'false') return false
+  }
+
+  return value
+}
+
 export function parseConsumerParameters(
   consumerParameters: ConsumerParameter[]
 ): ConsumerParameter[] {
@@ -201,11 +216,10 @@ export function parseConsumerParameters(
           ...param,
           options: JSON.parse(param.options as string)
         }
-      : param.type === 'number'
-      ? { ...param, default: Number(param.default) }
-      : param.type === 'boolean'
-      ? { ...param, default: param.default === 'true' }
-      : param
+      : {
+          ...param,
+          default: parseConsumerParameterDefaultValue(param.type, param.default)
+        }
   )
 }
 
