@@ -1,8 +1,4 @@
-import {
-  FileInfo,
-  MetadataAlgorithm,
-  ServiceComputeOptions
-} from '@oceanprotocol/lib'
+import { FileInfo, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
 export interface FormPublishService {
@@ -15,7 +11,7 @@ export interface FormPublishService {
   algorithmPrivacy?: boolean
   computeOptions?: ServiceComputeOptions
   usesConsumerParameters?: boolean
-  consumerParameters?: ConsumerParameter[]
+  consumerParameters?: FormConsumerParameter[]
 }
 
 export interface FormPublishData {
@@ -39,10 +35,10 @@ export interface FormPublishData {
     dockerImageCustomEntrypoint?: string
     dockerImageCustomChecksum?: string
     usesConsumerParameters?: boolean
-    consumerParameters?: ConsumerParameter[]
+    consumerParameters?: FormConsumerParameter[]
     service?: {
       usesConsumerParameters?: boolean
-      consumerParameters?: ConsumerParameter[]
+      consumerParameters?: FormConsumerParameter[]
     }
   }
   services: FormPublishService[]
@@ -74,18 +70,12 @@ export interface MetadataAlgorithmContainer {
   checksum: string
 }
 
-export type ConsumerParameterType = 'number' | 'text' | 'boolean' | 'select'
-
-export interface ConsumerParameter {
+export interface FormConsumerParameter {
   name: string
-  type: ConsumerParameterType
+  type: 'text' | 'number' | 'boolean' | 'select'
   label: string
   required: boolean | string
   description: string
   default: string | boolean | number
   options?: string | { [key: string]: string }[]
-}
-
-export type MetadataAlgorithmExtended = MetadataAlgorithm & {
-  consumerParameters: ConsumerParameter[]
 }

@@ -4,6 +4,8 @@ import { Metadata } from '@oceanprotocol/lib'
 // ambiant types despite the above imports
 declare global {
   interface MetadataExtended extends Metadata {
-    algorithm?: MetadataAlgorithmExtended
+    algorithm?: MetadataAlgorithm & {
+      consumerParameters: ConsumerParameter[]
+    }
   }
 }

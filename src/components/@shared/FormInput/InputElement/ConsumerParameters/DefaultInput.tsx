@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import Input, { InputProps } from '../..'
 import { Field, useField } from 'formik'
-import { ConsumerParameter } from '@components/Publish/_types'
+import { FormConsumerParameter } from '@components/Publish/_types'
 
 export default function DefaultInput({
   index,
@@ -11,7 +11,7 @@ export default function DefaultInput({
   index: number
   inputName: string
 }): ReactElement {
-  const [field] = useField<ConsumerParameter[]>(inputName)
+  const [field] = useField<FormConsumerParameter[]>(inputName)
 
   const getStringOptions = (options: { [key: string]: string }[]): string[] => {
     if (!options?.length) return []

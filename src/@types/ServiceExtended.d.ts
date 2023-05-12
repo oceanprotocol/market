@@ -4,6 +4,6 @@ import { Service } from '@oceanprotocol/lib'
 // ambiant types despite the above imports
 declare global {
   interface ServiceExtended extends Service {
-    consumerParameters?: ConsumerParameter
+    consumerParameters?: ConsumerParameter[]
   }
 }

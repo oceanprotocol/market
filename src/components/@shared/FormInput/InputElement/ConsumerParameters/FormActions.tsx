@@ -2,7 +2,10 @@ import React, { ReactElement } from 'react'
 import Button from '@components/@shared/atoms/Button'
 import styles from './FormActions.module.css'
 import { useField, useFormikContext } from 'formik'
-import { ConsumerParameter, FormPublishData } from '@components/Publish/_types'
+import {
+  FormConsumerParameter,
+  FormPublishData
+} from '@components/Publish/_types'
 import { getObjectPropertyByPath } from '@utils/index'
 import { defaultConsumerParam } from '.'
 
@@ -19,7 +22,7 @@ export default function FormActions({
 }): ReactElement {
   const { errors, setFieldTouched, validateField } =
     useFormikContext<FormPublishData>()
-  const [field, meta, helpers] = useField<ConsumerParameter[]>(fieldName)
+  const [field, meta, helpers] = useField<FormConsumerParameter[]>(fieldName)
 
   const setParamPropsTouched = (index: number, touched = true) => {
     Object.keys(defaultConsumerParam).forEach((param) => {

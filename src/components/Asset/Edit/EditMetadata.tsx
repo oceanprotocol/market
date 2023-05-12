@@ -2,10 +2,8 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import { Formik } from 'formik'
 import {
   LoggerInstance,
-  Metadata,
   FixedRateExchange,
   Asset,
-  Service,
   Datatoken,
   Nft
 } from '@oceanprotocol/lib'
@@ -28,7 +26,6 @@ import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
-import { MetadataAlgorithmExtended } from '@components/Publish/_types'
 import { transformConsumerParameters } from '@components/Publish/_utils'
 
 export default function Edit({
@@ -194,7 +191,7 @@ export default function Edit({
     <Formik
       enableReinitialize
       initialValues={getInitialValues(
-        asset?.metadata as Metadata & { algorithm?: MetadataAlgorithmExtended },
+        asset?.metadata,
         asset?.services[0],
         asset?.accessDetails?.price || '0',
         paymentCollector,

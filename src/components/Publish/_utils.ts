@@ -7,10 +7,8 @@ import {
   DispenserCreationParams,
   getHash,
   LoggerInstance,
-  Metadata,
   NftCreateData,
   NftFactory,
-  Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds, normalizeFile } from '@utils/ddo'
@@ -20,10 +18,9 @@ import slugify from 'slugify'
 import Web3 from 'web3'
 import { algorithmContainerPresets } from './_constants'
 import {
-  ConsumerParameter,
+  FormConsumerParameter,
   FormPublishData,
-  MetadataAlgorithmContainer,
-  MetadataAlgorithmExtended
+  MetadataAlgorithmContainer
 } from './_types'
 import {
   marketFeeAddress,
@@ -63,29 +60,28 @@ function transformTags(originalTags: string[]): string[] {
 }
 
 export function transformConsumerParameters(
-  parameters: ConsumerParameter[]
+  parameters: FormConsumerParameter[]
 ): ConsumerParameter[] {
   if (!parameters?.length) return
 
   const transformedValues = parameters.map((param) => {
-    return param.type === 'select'
-      ? {
-          ...param,
-          required:
-            typeof param.required === 'boolean'
-              ? param.required
-              : param.required === 'required',
-          options: JSON.stringify(param.options)
-        }
-      : {
-          ...param,
-          required: param.required === 'required',
-          options: undefined,
-          default: param.default.toString()
-        }
+    const options =
+      param.type === 'select' ? JSON.stringify(param.options) : param.options
+
+    const required =
+      typeof param.required === 'boolean'
+        ? param.required
+        : param.required === 'required'
+
+    return {
+      ...param,
+      options,
+      required,
+      default: param.default.toString()
+    }
   })
 
-  return transformedValues
+  return transformedValues as ConsumerParameter[]
 }
 
 export async function transformPublishFormToDdo(
