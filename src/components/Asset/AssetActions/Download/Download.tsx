@@ -5,7 +5,6 @@ import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import ButtonBuy from '../ButtonBuy'
 import {
-  parseConsumerParameters,
   secondsToString,
   transformConsumerParametersForConsumption
 } from '@utils/ddo'
@@ -26,7 +25,9 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
-import ConsumerParameters from '../ConsumerParameters'
+import ConsumerParameters, {
+  generateFormConsumerParameters
+} from '../ConsumerParameters'
 import { Form, Formik, useFormikContext } from 'formik'
 import { validationSchema } from './_validation'
 
@@ -243,7 +244,7 @@ export default function Download({
   return (
     <Formik
       initialValues={{
-        dataServiceParams: parseConsumerParameters(
+        dataServiceParams: generateFormConsumerParameters(
           asset?.services[0].consumerParameters
         )
       }}

@@ -1,12 +1,12 @@
 import { FormConsumerParameter } from '@components/Publish/_types'
-import { parseConsumerParameters } from '@utils/ddo'
 import * as Yup from 'yup'
+import { generateFormConsumerParameters } from '../ConsumerParameters'
 
 export const ConsumerParametersConsumeSchema = Yup.array()
   .of(
     Yup.object().shape({
       required: Yup.boolean().required('required'),
-      default: Yup.mixed().when('required', {
+      value: Yup.mixed().when('required', {
         is: false,
         then: Yup.mixed()
           .nullable()
@@ -40,13 +40,13 @@ export function getInitialValues(
 } {
   return {
     algorithm: selectedAlgorithmAsset?.id,
-    dataServiceParams: parseConsumerParameters(
+    dataServiceParams: generateFormConsumerParameters(
       asset?.services[0].consumerParameters
     ),
-    algoServiceParams: parseConsumerParameters(
+    algoServiceParams: generateFormConsumerParameters(
       selectedAlgorithmAsset?.services[0].consumerParameters
     ),
-    algoParams: parseConsumerParameters(
+    algoParams: generateFormConsumerParameters(
       selectedAlgorithmAsset?.metadata?.algorithm.consumerParameters
     )
   }

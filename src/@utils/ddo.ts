@@ -193,9 +193,9 @@ export function previewDebugPatch(
   return buildValuesPreview
 }
 
-export function parseConsumerParameterDefaultValue(
-  type: ConsumerParameter['type'],
-  value: ConsumerParameter['default']
+export function parseFormConsumerParameterValue(
+  type: FormConsumerParameter['type'],
+  value: FormConsumerParameter['value']
 ) {
   if (!value || !type) return
 
@@ -221,7 +221,7 @@ export function parseConsumerParameters(
         }
       : {
           ...param,
-          default: parseConsumerParameterDefaultValue(param.type, param.default)
+          default: parseFormConsumerParameterValue(param.type, param.default)
         }
   )
 }
@@ -232,7 +232,13 @@ export function transformConsumerParametersForConsumption(
   if (!parameters?.length) return
 
   const output = {}
-  parameters.forEach((param) => (output[param.name] = param.default))
+  parameters.forEach(
+    (param) =>
+      (output[param.name] = parseFormConsumerParameterValue(
+        param.type,
+        param.value
+      ))
+  )
 
   return output
 }

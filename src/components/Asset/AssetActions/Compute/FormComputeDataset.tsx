@@ -17,7 +17,6 @@ import { getTokenBalanceFromSymbol } from '@utils/web3'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
 import ConsumerParameters from '../ConsumerParameters'
-import { transformConsumerParametersForConsumption } from '@utils/ddo'
 import { FormConsumerParameter } from '@components/Publish/_types'
 
 export default function FormStartCompute({
@@ -136,14 +135,11 @@ export default function FormStartCompute({
   useEffect(() => {
     if (!values) return
 
-    const output = {}
-    Object.entries(values).forEach((value) => {
-      if (value[0] === 'algorithm') return
-      output[value[0]] = transformConsumerParametersForConsumption(
-        value[1] as FormConsumerParameter[]
-      )
+    setUserCustomParameters({
+      dataServiceParams: values.dataServiceParams,
+      algoServiceParams: values.algoServiceParams,
+      algoParams: values.algoParams
     })
-    setUserCustomParameters(output)
   }, [setUserCustomParameters, values])
 
   //

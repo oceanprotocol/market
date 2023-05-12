@@ -26,7 +26,11 @@ import { getInitialValues, validationSchema } from './_constants'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import { getServiceByName, secondsToString } from '@utils/ddo'
+import {
+  getServiceByName,
+  secondsToString,
+  transformConsumerParametersForConsumption
+} from '@utils/ddo'
 import {
   isOrderable,
   getAlgorithmAssetSelectionList,
@@ -48,6 +52,7 @@ import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useAsset } from '@context/Asset'
+import { FormConsumerParameter } from '@components/Publish/_types'
 
 const refreshInterval = 10000 // 10 sec.
 export default function Compute({
@@ -105,9 +110,9 @@ export default function Compute({
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const [retry, setRetry] = useState<boolean>(false)
   const [userCustomParameters, setUserCustomParameters] = useState<{
-    dataServiceParams: { [key: string]: any }
-    algoServiceParams: { [key: string]: any }
-    algoParams: { [key: string]: any }
+    dataServiceParams: FormConsumerParameter[]
+    algoServiceParams: FormConsumerParameter[]
+    algoParams: FormConsumerParameter[]
   }>()
 
   const hasDatatoken = Number(dtBalance) >= 1
@@ -353,10 +358,14 @@ export default function Compute({
       const computeAlgorithm: ComputeAlgorithm = {
         documentId: selectedAlgorithmAsset.id,
         serviceId: selectedAlgorithmAsset.services[0].id,
-        algocustomdata: userCustomParameters?.algoParams,
-        userdata: userCustomParameters?.algoServiceParams
+        algocustomdata: transformConsumerParametersForConsumption(
+          userCustomParameters?.algoParams
+        ),
+        userdata: transformConsumerParametersForConsumption(
+          userCustomParameters?.algoServiceParams
+        )
       }
-
+      console.log(computeAlgorithm)
       const allowed = await isOrderable(
         asset,
         computeService.id,
@@ -412,7 +421,9 @@ export default function Compute({
         documentId: asset.id,
         serviceId: asset.services[0].id,
         transferTxId: datasetOrderTx,
-        userdata: userCustomParameters?.dataServiceParams
+        userdata: transformConsumerParametersForConsumption(
+          userCustomParameters?.dataServiceParams
+        )
       }
       computeAlgorithm.transferTxId = algorithmOrderTx
       const output: ComputeOutput = {

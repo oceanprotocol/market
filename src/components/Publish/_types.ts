@@ -78,4 +78,5 @@ export interface FormConsumerParameter {
   description: string
   default: string | boolean | number
   options?: string | { [key: string]: string }[]
+  value?: string | boolean | number
 }
