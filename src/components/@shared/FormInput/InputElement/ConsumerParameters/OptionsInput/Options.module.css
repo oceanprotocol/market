@@ -47,5 +47,5 @@
 }
 
 .required {
-  composes: required from '../../index.module.css';
+  composes: required from '../../../index.module.css';
 }

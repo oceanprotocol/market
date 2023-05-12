@@ -1,18 +1,18 @@
 import React, { ReactElement } from 'react'
-import { InputProps } from '../..'
+import { InputProps } from '../../..'
 import { ErrorMessage, useField, useFormikContext } from 'formik'
 import {
   FormConsumerParameter,
   FormPublishData
 } from '@components/Publish/_types'
-import InputOptions from './InputOptions'
-import styles from './SelectInput.module.css'
+import Options from './Options'
+import styles from './index.module.css'
 import { getObjectPropertyByPath } from '@utils/index'
 import classNames from 'classnames/bind'
 
 const cx = classNames.bind(styles)
 
-export default function SelectInput({
+export default function OptionsInput({
   index,
   inputName,
   ...props
@@ -36,7 +36,7 @@ export default function SelectInput({
         hasError: showError('options', index)
       })}
     >
-      <InputOptions
+      <Options
         {...props}
         name={field.name}
         label="Options"

@@ -7,7 +7,7 @@ import {
 } from '@components/Publish/_types'
 import { defaultConsumerParam } from '.'
 
-export default function ConsumerParameterInput({
+export default function TypeInput({
   index,
   inputName,
   ...props
@@ -40,27 +40,10 @@ export default function ConsumerParameterInput({
     )
   }
 
-  const getFieldValue = (
-    fieldName: string,
-    parameter: FormConsumerParameter
-  ) => {
-    // split the input name to every "." and keep the last
-    // word which corresponds to the field name
-    const valueKey = fieldName.split('.').slice(-1)[0]
-    const value = parameter[valueKey]
-
-    // convert the boolean values assigned to the "required" field
-    // into the select component options ["required", "optional"]
-    if (valueKey !== 'required' || typeof value === 'string') return value
-
-    return value ? 'required' : 'optional'
-  }
-
   return (
     <Field
       {...props}
       component={Input}
-      value={getFieldValue(props.name, field.value[index])}
       onChange={(e) => {
         resetDefaultValue(props.name, e.target.value, index)
         field.onChange(e)
