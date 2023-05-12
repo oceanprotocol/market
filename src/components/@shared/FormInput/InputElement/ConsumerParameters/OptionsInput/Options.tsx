@@ -1,7 +1,7 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
-import InputElement from '..'
-import Label from '../../Label'
-import styles from './InputOptions.module.css'
+import InputElement from '../..'
+import Label from '../../../Label'
+import styles from './Options.module.css'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import Button from '@shared/atoms/Button'
@@ -11,17 +11,17 @@ import classNames from 'classnames/bind'
 
 const cx = classNames.bind(styles)
 
-export interface InputOption {
+export interface Options {
   [value: string]: string
 }
 
-export default function InputOptions({
+export default function Options({
   optionIndex,
   defaultOptions = [],
   ...props
 }: InputProps & {
   optionIndex: number
-  defaultOptions: InputOption[]
+  defaultOptions: Options[]
 }): ReactElement {
   const [field, meta, helpers] = useField(props.name)
 
@@ -30,7 +30,7 @@ export default function InputOptions({
   const [disabledButton, setDisabledButton] = useState(true)
   const [hasError, setHasError] = useState(false)
 
-  const [options, setOptions] = useState<InputOption[]>(defaultOptions)
+  const [options, setOptions] = useState<Options[]>(defaultOptions)
 
   const addOption = () => {
     const hasError = options.some((option) =>

@@ -12,5 +12,5 @@
 }
 
 .error {
-  composes: error from '../../index.module.css';
+  composes: error from '../../../index.module.css';
 }

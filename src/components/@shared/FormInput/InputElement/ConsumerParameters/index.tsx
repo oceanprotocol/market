@@ -1,13 +1,14 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useField } from 'formik'
-import { InputProps } from '../..'
+import { Field, useField } from 'formik'
+import Input, { InputProps } from '../..'
 import { FormConsumerParameter } from '../../../../Publish/_types'
 import Tabs from '../../../atoms/Tabs'
 import FormActions from './FormActions'
 import DefaultInput from './DefaultInput'
-import SelectInput from './SelectInput'
-import ConsumerParameterInput from './ConsumerParameterInput'
+import OptionsInput from './OptionsInput'
 import styles from './index.module.css'
+import RequiredInput from './RequiredInput'
+import TypeInput from './TypeInput'
 
 export const defaultConsumerParam: FormConsumerParameter = {
   name: '',
@@ -57,7 +58,7 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                 {props.fields?.map((subField: InputProps) => {
                   if (subField.name === 'options') {
                     return field.value[index]?.type === 'select' ? (
-                      <SelectInput
+                      <OptionsInput
                         key={`${field.name}[${index}].${props.name}`}
                         {...subField}
                         index={index}
@@ -78,13 +79,36 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                     )
                   }
 
+                  if (subField.name === 'type') {
+                    return (
+                      <TypeInput
+                        key={`${field.name}[${index}].${subField.name}`}
+                        {...subField}
+                        name={`${field.name}[${index}].${subField.name}`}
+                        index={index}
+                        inputName={props.name}
+                      />
+                    )
+                  }
+
+                  if (subField.name === 'required') {
+                    return (
+                      <RequiredInput
+                        key={`${field.name}[${index}].${subField.name}`}
+                        {...subField}
+                        name={`${field.name}[${index}].${subField.name}`}
+                        index={index}
+                        inputName={props.name}
+                      />
+                    )
+                  }
+
                   return (
-                    <ConsumerParameterInput
+                    <Field
                       key={`${field.name}[${index}].${subField.name}`}
                       {...subField}
                       name={`${field.name}[${index}].${subField.name}`}
-                      index={index}
-                      inputName={props.name}
+                      component={Input}
                     />
                   )
                 })}

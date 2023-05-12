@@ -2,7 +2,7 @@ import { FileInfo } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import web3 from 'web3'
 import { testLinks } from '../../../@utils/yup'
-import { validationConsumerParameters } from '@components/@shared/FormInput/InputElement/ConsumerParameters/validationConsumerParameters'
+import { validationConsumerParameters } from '@components/@shared/FormInput/InputElement/ConsumerParameters/_validation'
 
 export const validationSchema = Yup.object().shape({
   name: Yup.string()
