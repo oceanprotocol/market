@@ -51,7 +51,7 @@
             "label": "Select Options",
             "placeholder": "Define the options for the user to select from",
             "type": "creatableSelect",
-            "required": false
+            "required": true
           },
           {
             "name": "required",

@@ -13,10 +13,12 @@ export default function DefaultInput({
 }): ReactElement {
   const [field] = useField<FormConsumerParameter[]>(inputName)
 
-  const getStringOptions = (options: { [key: string]: string }[]): string[] => {
+  const getStringOptions = (
+    options: { key: string; value: string }[]
+  ): string[] => {
     if (!options?.length) return []
 
-    return options.map((option) => Object.keys(option)[0])
+    return options.map((option) => option.key)
   }
 
   return (
@@ -32,11 +34,7 @@ export default function DefaultInput({
         field.value[index].type === 'boolean'
           ? ['true', 'false']
           : field.value[index].type === 'select'
-          ? getStringOptions(
-              field.value[index]?.options as {
-                [key: string]: string
-              }[]
-            )
+          ? getStringOptions(field.value[index]?.options)
           : field.value[index].options
       }
     />

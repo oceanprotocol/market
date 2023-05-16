@@ -14,7 +14,7 @@ import {
   UrlFile,
   UserCustomParameters
 } from '@oceanprotocol/lib'
-import { QueryHeader } from '@shared/FormInput/InputElement/Headers'
+import { KeyValuePair } from '@components/@shared/FormInput/InputElement/KeyValueInput'
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils/types'
 import { getValidUntilTime } from './compute'
@@ -96,7 +96,7 @@ export async function getFileInfo(
   providerUrl: string,
   storageType: string,
   query?: string,
-  headers?: QueryHeader[],
+  headers?: KeyValuePair[],
   abi?: string,
   chainId?: number,
   method?: string

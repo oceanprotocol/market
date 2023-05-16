@@ -213,17 +213,17 @@ export function parseConsumerParameters(
 ): FormConsumerParameter[] {
   if (!consumerParameters?.length) return []
 
-  return consumerParameters.map((param) =>
-    param.type === 'select'
-      ? {
-          ...param,
-          options: JSON.parse(param.options as string)
-        }
-      : {
-          ...param,
-          default: parseFormConsumerParameterValue(param.type, param.default)
-        }
-  )
+  return consumerParameters.map((param) => ({
+    ...param,
+    required: param.required ? 'required' : 'optional',
+    options: param.type === 'select' ? JSON.parse(param.options) : [],
+    default:
+      param.type === 'boolean'
+        ? param.default === 'true'
+        : param.type === 'number'
+        ? Number(param.default)
+        : param.default
+  }))
 }
 
 export function transformConsumerParametersForConsumption(
