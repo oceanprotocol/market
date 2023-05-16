@@ -8,7 +8,7 @@ import { LoggerInstance, FileInfo } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import styles from './index.module.css'
 import { useWeb3 } from '@context/Web3'
-import InputHeaders from '../Headers'
+import InputKeyValue from '../KeyValueInput'
 import Button from '@shared/atoms/Button'
 import Loader from '@shared/atoms/Loader'
 import { checkJson } from '@utils/codemirror'
@@ -160,7 +160,9 @@ export default function FilesInput(props: InputProps): ReactElement {
                         <Field
                           key={i}
                           component={
-                            innerField.type === 'headers' ? InputHeaders : Input
+                            innerField.type === 'headers'
+                              ? InputKeyValue
+                              : Input
                           }
                           {...innerField}
                           name={`${field.name}[0].${innerField.value}`}
