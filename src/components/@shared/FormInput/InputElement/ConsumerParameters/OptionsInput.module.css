@@ -1,0 +1,16 @@
+.container {
+  position: relative;
+}
+
+.container.hasError * {
+  border-color: var(--brand-alert-red);
+}
+
+.hasError label {
+  color: var(--brand-alert-red);
+}
+
+.error {
+  composes: error from '../../index.module.css';
+  top: 100%;
+}

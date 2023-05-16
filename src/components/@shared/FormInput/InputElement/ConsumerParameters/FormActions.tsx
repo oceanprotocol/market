@@ -8,6 +8,7 @@ import {
 } from '@components/Publish/_types'
 import { getObjectPropertyByPath } from '@utils/index'
 import { defaultConsumerParam } from '.'
+import { toast } from 'react-toastify'
 
 export default function FormActions({
   fieldName,
@@ -36,7 +37,12 @@ export default function FormActions({
     setParamPropsTouched(index)
 
     // Check errors on current tab before creating a new param
-    if (getObjectPropertyByPath(errors, `${field.name}[${index}]`)) return
+    if (getObjectPropertyByPath(errors, `${field.name}[${index}]`)) {
+      toast.error(
+        'Cannot add new parameter. Current parameter definition contains errors.'
+      )
+      return
+    }
 
     helpers.setValue([...field.value, { ...defaultConsumerParam }])
 

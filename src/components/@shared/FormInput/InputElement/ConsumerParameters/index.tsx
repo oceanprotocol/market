@@ -7,7 +7,6 @@ import FormActions from './FormActions'
 import DefaultInput from './DefaultInput'
 import OptionsInput from './OptionsInput'
 import styles from './index.module.css'
-import RequiredInput from './RequiredInput'
 import TypeInput from './TypeInput'
 
 export const defaultConsumerParam: FormConsumerParameter = {
@@ -15,9 +14,9 @@ export const defaultConsumerParam: FormConsumerParameter = {
   label: '',
   description: '',
   type: 'text',
-  options: [],
+  options: undefined,
   default: '',
-  required: ''
+  required: 'optional'
 }
 
 export const paramTypes: FormConsumerParameter['type'][] = [
@@ -53,8 +52,8 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                       <OptionsInput
                         key={`${field.name}[${index}].${props.name}`}
                         {...subField}
-                        index={index}
-                        inputName={props.name}
+                        name={`${field.name}[${index}].${subField.name}`}
+                        value={field.value[index][subField.name]}
                       />
                     ) : null
                   }
@@ -74,18 +73,6 @@ export function ConsumerParameters(props: InputProps): ReactElement {
                   if (subField.name === 'type') {
                     return (
                       <TypeInput
-                        key={`${field.name}[${index}].${subField.name}`}
-                        {...subField}
-                        name={`${field.name}[${index}].${subField.name}`}
-                        index={index}
-                        inputName={props.name}
-                      />
-                    )
-                  }
-
-                  if (subField.name === 'required') {
-                    return (
-                      <RequiredInput
                         key={`${field.name}[${index}].${subField.name}`}
                         {...subField}
                         name={`${field.name}[${index}].${subField.name}`}

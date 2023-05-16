@@ -66,12 +66,14 @@ export function transformConsumerParameters(
 
   const transformedValues = parameters.map((param) => {
     const options =
-      param.type === 'select' ? JSON.stringify(param.options) : param.options
+      param.type === 'select'
+        ? // Transform from { key: string, value: string } into { key: value }
+          JSON.stringify(
+            param.options?.map((opt) => ({ [opt.key]: opt.value }))
+          )
+        : undefined
 
-    const required =
-      typeof param.required === 'boolean'
-        ? param.required
-        : param.required === 'required'
+    const required = param.required === 'required'
 
     return {
       ...param,
