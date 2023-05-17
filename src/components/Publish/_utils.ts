@@ -127,8 +127,9 @@ export async function transformPublishFormToDdo(
   const linksTransformed = links?.length &&
     links[0].valid && [sanitizeUrl(links[0].url)]
 
-  const consumerParametersTransformed =
-    usesConsumerParameters && transformConsumerParameters(consumerParameters)
+  const consumerParametersTransformed = usesConsumerParameters
+    ? transformConsumerParameters(consumerParameters)
+    : undefined
 
   const newMetadata: MetadataExtended = {
     created: currentTime,
@@ -195,9 +196,9 @@ export async function transformPublishFormToDdo(
     ...(access === 'compute' && {
       compute: values.services[0].computeOptions
     }),
-    consumerParameters:
-      values.services[0].usesConsumerParameters &&
-      transformConsumerParameters(values.services[0].consumerParameters)
+    consumerParameters: values.services[0].usesConsumerParameters
+      ? transformConsumerParameters(values.services[0].consumerParameters)
+      : undefined
   }
 
   const newDdo: DDO = {
