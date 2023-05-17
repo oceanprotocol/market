@@ -12,6 +12,8 @@ export default function DefaultInput({
   inputName: string
 }): ReactElement {
   const [field] = useField<FormConsumerParameter[]>(inputName)
+  const fieldType = field.value[index]?.type
+  const fieldOptions = field.value[index]?.options
 
   const getStringOptions = (
     options: { key: string; value: string }[]
@@ -25,17 +27,13 @@ export default function DefaultInput({
     <Field
       {...props}
       component={Input}
-      type={
-        field.value[index].type === 'boolean'
-          ? 'select'
-          : field.value[index].type
-      }
+      type={fieldType === 'boolean' ? 'select' : fieldType}
       options={
-        field.value[index].type === 'boolean'
+        fieldType === 'boolean'
           ? ['true', 'false']
-          : field.value[index].type === 'select'
-          ? getStringOptions(field.value[index]?.options)
-          : field.value[index].options
+          : fieldType === 'select'
+          ? getStringOptions(fieldOptions)
+          : fieldOptions
       }
     />
   )
