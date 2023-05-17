@@ -22,15 +22,11 @@ import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
 import { useWeb3 } from '@context/Web3'
 import { Formik } from 'formik'
-import { getInitialValues, validationSchema } from './_constants'
+import { getComputeValidationSchema, getInitialValues } from './_constants'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import {
-  getServiceByName,
-  secondsToString,
-  transformConsumerParametersForConsumption
-} from '@utils/ddo'
+import { getServiceByName, secondsToString } from '@utils/ddo'
 import {
   isOrderable,
   getAlgorithmAssetSelectionList,
@@ -358,14 +354,10 @@ export default function Compute({
       const computeAlgorithm: ComputeAlgorithm = {
         documentId: selectedAlgorithmAsset.id,
         serviceId: selectedAlgorithmAsset.services[0].id,
-        algocustomdata: transformConsumerParametersForConsumption(
-          userCustomParameters?.algoParams
-        ),
-        userdata: transformConsumerParametersForConsumption(
-          userCustomParameters?.algoServiceParams
-        )
+        algocustomdata: userCustomParameters?.algoParams,
+        userdata: userCustomParameters?.algoServiceParams
       }
-      console.log(computeAlgorithm)
+
       const allowed = await isOrderable(
         asset,
         computeService.id,
@@ -421,9 +413,7 @@ export default function Compute({
         documentId: asset.id,
         serviceId: asset.services[0].id,
         transferTxId: datasetOrderTx,
-        userdata: transformConsumerParametersForConsumption(
-          userCustomParameters?.dataServiceParams
-        )
+        userdata: userCustomParameters?.dataServiceParams
       }
       computeAlgorithm.transferTxId = algorithmOrderTx
       const output: ComputeOutput = {
@@ -499,7 +489,11 @@ export default function Compute({
         <Formik
           initialValues={getInitialValues(asset, selectedAlgorithmAsset)}
           validateOnMount
-          validationSchema={validationSchema}
+          validationSchema={getComputeValidationSchema(
+            asset.services[0].consumerParameters,
+            selectedAlgorithmAsset?.services[0].consumerParameters,
+            selectedAlgorithmAsset?.metadata?.algorithm?.consumerParameters
+          )}
           enableReinitialize
           onSubmit={async (values) => {
             if (!values.algorithm) return

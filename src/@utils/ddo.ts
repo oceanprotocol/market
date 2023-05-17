@@ -225,20 +225,3 @@ export function parseConsumerParameters(
         : param.default
   }))
 }
-
-export function transformConsumerParametersForConsumption(
-  parameters: FormConsumerParameter[]
-): UserCustomParameters {
-  if (!parameters?.length) return
-
-  const output = {}
-  parameters.forEach(
-    (param) =>
-      (output[param.name] = parseFormConsumerParameterValue(
-        param.type,
-        param.value
-      ))
-  )
-
-  return output
-}

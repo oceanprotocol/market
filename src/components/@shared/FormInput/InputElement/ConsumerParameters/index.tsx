@@ -26,14 +26,6 @@ export const paramTypes: FormConsumerParameter['type'][] = [
   'select'
 ]
 
-export const getConsumerParameterStringOptions = (
-  options: { [key: string]: string }[]
-): string[] => {
-  if (!options?.length) return []
-
-  return options.map((option) => Object.keys(option)[0])
-}
-
 export function ConsumerParameters(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField<FormConsumerParameter[]>(props.name)
 

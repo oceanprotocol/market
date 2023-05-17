@@ -1,8 +1,12 @@
 import * as Yup from 'yup'
-import { ConsumerParametersConsumeSchema } from '../Compute/_constants'
+import { getUserCustomParameterValidationSchema } from '../ConsumerParameters/_validation'
 
-export const validationSchema: Yup.SchemaOf<{
+export function getDownloadValidationSchema(
+  parameters: ConsumerParameter[]
+): Yup.SchemaOf<{
   dataServiceParams: any
-}> = Yup.object().shape({
-  dataServiceParams: ConsumerParametersConsumeSchema
-})
+}> {
+  return Yup.object().shape({
+    dataServiceParams: getUserCustomParameterValidationSchema(parameters)
+  })
+}

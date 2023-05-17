@@ -2,39 +2,6 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import FormConsumerParameters from './FormConsumerParameters'
 import styles from './index.module.css'
 import Tabs, { TabsItem } from '@components/@shared/atoms/Tabs'
-import { FormConsumerParameter } from '@components/Publish/_types'
-
-const getFormParameterValue = (
-  type: ConsumerParameter['type'],
-  value: string | number | boolean
-) => {
-  if (type === 'boolean') {
-    if (value === '') return ''
-    if (value) return 'true'
-    return 'false'
-  }
-
-  return value
-}
-
-export function generateFormConsumerParameters(
-  consumerParameters: ConsumerParameter[]
-): FormConsumerParameter[] {
-  if (!consumerParameters?.length) return
-
-  return consumerParameters.map((param) => {
-    const formParam = {
-      ...param,
-      value: getFormParameterValue(param.type, param.default)
-    }
-
-    if (param.type === 'select') {
-      formParam.options = JSON.parse(param.options as string)
-    }
-
-    return formParam
-  })
-}
 
 export default function ConsumerParameters({
   asset,
@@ -53,9 +20,7 @@ export default function ConsumerParameters({
         content: (
           <FormConsumerParameters
             name="dataServiceParams"
-            parameters={generateFormConsumerParameters(
-              asset.services[0].consumerParameters
-            )}
+            parameters={asset.services[0].consumerParameters}
           />
         )
       })
@@ -66,9 +31,7 @@ export default function ConsumerParameters({
         content: (
           <FormConsumerParameters
             name="algoServiceParams"
-            parameters={generateFormConsumerParameters(
-              selectedAlgorithmAsset.services[0].consumerParameters
-            )}
+            parameters={selectedAlgorithmAsset.services[0].consumerParameters}
           />
         )
       })
@@ -79,9 +42,9 @@ export default function ConsumerParameters({
         content: (
           <FormConsumerParameters
             name="algoParams"
-            parameters={generateFormConsumerParameters(
+            parameters={
               selectedAlgorithmAsset.metadata?.algorithm.consumerParameters
-            )}
+            }
           />
         )
       })

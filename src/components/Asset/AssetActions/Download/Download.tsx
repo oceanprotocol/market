@@ -4,10 +4,7 @@ import Price from '@shared/Price'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import ButtonBuy from '../ButtonBuy'
-import {
-  secondsToString,
-  transformConsumerParametersForConsumption
-} from '@utils/ddo'
+import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from '../Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
 import {
@@ -25,11 +22,10 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
-import ConsumerParameters, {
-  generateFormConsumerParameters
-} from '../ConsumerParameters'
+import ConsumerParameters from '../ConsumerParameters'
 import { Form, Formik, useFormikContext } from 'formik'
-import { validationSchema } from './_validation'
+import { getDownloadValidationSchema } from './_validation'
+import { getDefaultValues } from '../ConsumerParameters/FormConsumerParameters'
 
 export default function Download({
   asset,
@@ -244,16 +240,15 @@ export default function Download({
   return (
     <Formik
       initialValues={{
-        dataServiceParams: generateFormConsumerParameters(
+        dataServiceParams: getDefaultValues(
           asset?.services[0].consumerParameters
         )
       }}
-      validationSchema={validationSchema}
+      validationSchema={getDownloadValidationSchema(
+        asset?.services[0].consumerParameters
+      )}
       onSubmit={async (values) => {
-        const dataParams = transformConsumerParametersForConsumption(
-          values?.dataServiceParams
-        )
-        await handleOrderOrDownload(dataParams)
+        await handleOrderOrDownload(values?.dataServiceParams)
       }}
     >
       <Form>

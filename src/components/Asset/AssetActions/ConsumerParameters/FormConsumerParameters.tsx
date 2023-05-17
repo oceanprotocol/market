@@ -1,34 +1,48 @@
-import { FormConsumerParameter } from '@components/Publish/_types'
 import React, { ReactElement } from 'react'
-import styles from './FormConsumerParameters.module.css'
-import Label from '@components/@shared/FormInput/Label'
-import { getConsumerParameterStringOptions } from '@components/@shared/FormInput/InputElement/ConsumerParameters'
-import { Field, useField } from 'formik'
 import Input from '@components/@shared/FormInput'
+import Label from '@components/@shared/FormInput/Label'
+import { Field, useField } from 'formik'
+import styles from './FormConsumerParameters.module.css'
+import { UserCustomParameters } from '@oceanprotocol/lib'
+
+export function getDefaultValues(
+  parameters: ConsumerParameter[]
+): UserCustomParameters {
+  const defaults = {}
+  parameters.forEach((param) => {
+    Object.assign(defaults, {
+      [param.name]:
+        param.type === 'number'
+          ? Number(param.default)
+          : param.type === 'boolean'
+          ? param.default === 'true'
+          : param.default
+    })
+  })
+
+  return defaults
+}
 
 export default function FormConsumerParameters({
   name,
   parameters
 }: {
   name: string
-  parameters: FormConsumerParameter[]
+  parameters: ConsumerParameter[]
 }): ReactElement {
-  const [field] = useField<FormConsumerParameter[]>(name)
+  const [field] = useField<UserCustomParameters[]>(name)
 
-  const getParameterOptions = (parameter: FormConsumerParameter): string[] => {
+  const getParameterOptions = (parameter: ConsumerParameter): string[] => {
     if (!parameter.options && parameter.type !== 'boolean') return []
 
     const updatedOptions =
       parameter.type === 'boolean'
         ? ['true', 'false']
         : parameter.type === 'select'
-        ? getConsumerParameterStringOptions(
-            parameter?.options as {
-              [key: string]: string
-            }[]
-          )
-        : (parameter.options as unknown as string[])
+        ? JSON.parse(parameter.options)?.map((option) => Object.keys(option)[0])
+        : []
 
+    // add empty option, if parameter is optional
     if (!parameter.required) updatedOptions.unshift('')
 
     return updatedOptions
@@ -40,19 +54,17 @@ export default function FormConsumerParameters({
         Input the consumer parameters
       </Label>
       <div className={styles.parametersContainer}>
-        {parameters?.map((param, index) => {
-          const { default: defaultValue, ...fields } = param
-
+        {parameters?.map((param) => {
           return (
             <div key={param.name} className={styles.parameter}>
               <Field
-                {...fields}
+                {...param}
                 component={Input}
-                name={`${name}[${index}].value`}
+                name={`${name}.${param.name}`}
                 options={getParameterOptions(param)}
                 size="small"
                 type={param.type === 'boolean' ? 'select' : param.type}
-                value={field.value[index].value}
+                value={field.value[param.name]}
               />
             </div>
           )
