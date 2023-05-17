@@ -193,21 +193,6 @@ export function previewDebugPatch(
   return buildValuesPreview
 }
 
-export function parseFormConsumerParameterValue(
-  type: FormConsumerParameter['type'],
-  value: FormConsumerParameter['value']
-) {
-  if (!value || !type) return
-
-  if (type === 'number') return Number(value)
-  if (type === 'boolean') {
-    if (value === 'true') return true
-    if (value === 'false') return false
-  }
-
-  return value
-}
-
 export function parseConsumerParameters(
   consumerParameters: ConsumerParameter[]
 ): FormConsumerParameter[] {
@@ -216,7 +201,16 @@ export function parseConsumerParameters(
   return consumerParameters.map((param) => ({
     ...param,
     required: param.required ? 'required' : 'optional',
-    options: param.type === 'select' ? JSON.parse(param.options) : [],
+    options:
+      param.type === 'select'
+        ? JSON.parse(param.options)?.map((option) => {
+            const key = Object.keys(option)[0]
+            return {
+              key,
+              value: option[key]
+            }
+          })
+        : [],
     default:
       param.type === 'boolean'
         ? param.default === 'true'
