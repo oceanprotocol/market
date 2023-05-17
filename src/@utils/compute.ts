@@ -102,14 +102,12 @@ export async function isOrderable(
       return false
     }
     if (algorithm.documentId) {
-      const algoServiceParams: Service = getServiceById(
+      const algoService: Service = getServiceById(
         algorithmDDO,
         algorithm.serviceId
       )
-      if (algoServiceParams && algoServiceParams.type === 'compute') {
-        if (
-          algoServiceParams.serviceEndpoint !== datasetService.serviceEndpoint
-        ) {
+      if (algoService && algoService.type === 'compute') {
+        if (algoService.serviceEndpoint !== datasetService.serviceEndpoint) {
           this.logger.error(
             'ERROR: Both assets with compute service are not served by the same provider'
           )
