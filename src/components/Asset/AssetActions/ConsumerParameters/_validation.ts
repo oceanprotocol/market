@@ -1,13 +1,12 @@
 import * as Yup from 'yup'
 import { SchemaLike } from 'yup/lib/types'
-import { getDefaultValues } from './FormConsumerParameters'
 
 export function getUserCustomParameterValidationSchema(
   parameters: ConsumerParameter[]
 ): SchemaLike {
   const shape = {}
 
-  parameters.forEach((parameter) => {
+  parameters?.forEach((parameter) => {
     const schemaBase =
       parameter.type === 'number'
         ? Yup.number()

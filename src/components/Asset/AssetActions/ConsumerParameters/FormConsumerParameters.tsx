@@ -9,7 +9,7 @@ export function getDefaultValues(
   parameters: ConsumerParameter[]
 ): UserCustomParameters {
   const defaults = {}
-  parameters.forEach((param) => {
+  parameters?.forEach((param) => {
     Object.assign(defaults, {
       [param.name]:
         param.type === 'number'
