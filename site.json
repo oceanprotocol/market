@@ -1,0 +1,21 @@
+{
+  "siteTitle": "Nagarro Ocean Market",
+  "siteTagline": "A marketplace to find, publish and sell your datasets over the blockchain.",
+  "siteUrl": "https://01oceanmarket.netlify.app",
+  "siteImage": "/share.png",
+  "copyright": "All Rights Reserved. Powered by ",
+  "menu": [
+    {
+      "name": "Publish",
+      "link": "/publish/1"
+    },
+    {
+      "name": "Profile",
+      "link": "/profile"
+    }
+  ],
+  "announcement": "[Lock your OCEAN](https://df.oceandao.org/) to get veOCEAN, earn rewards and curate data.",
+  "warning": {
+    "ctd": "Please note that Compute-to-Data is still in alpha phase."
+  }
+}
