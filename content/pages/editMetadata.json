@@ -211,7 +211,7 @@
       {
         "name": "usesServiceConsumerParameters",
         "label": "User defined parameters",
-        "help": "User defined parameters are used to filter or query the published dataset.",
+        "help": "User defined parameters are used to filter or query the published asset.",
         "type": "checkbox",
         "options": ["This asset uses user defined parameters"],
         "required": false
