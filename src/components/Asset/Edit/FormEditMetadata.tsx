@@ -137,10 +137,7 @@ export default function FormEditMetadata({
       {asset.metadata.type === 'algorithm' && (
         <>
           <Field
-            {...getFieldContent(
-              'usesConsumerParameters',
-              consumerParametersContent.consumerParameters.fields
-            )}
+            {...getFieldContent('usesConsumerParameters', data)}
             component={Input}
             name="usesConsumerParameters"
           />
@@ -171,10 +168,7 @@ export default function FormEditMetadata({
         <h4>Service</h4>
 
         <Field
-          {...getFieldContent(
-            'usesConsumerParameters',
-            consumerParametersContent.consumerParameters.fields
-          )}
+          {...getFieldContent('usesServiceConsumerParameters', data)}
           component={Input}
           name="service.usesConsumerParameters"
         />

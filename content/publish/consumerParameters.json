@@ -2,16 +2,8 @@
   "consumerParameters": {
     "fields": [
       {
-        "name": "usesConsumerParameters",
-        "label": "Uses consumer parameters",
-        "help": "Define consumer parameters to be submitted to the algorithm before usage.",
-        "type": "checkbox",
-        "options": ["This asset uses consumer parameters"],
-        "required": false
-      },
-      {
         "name": "consumerParameters",
-        "label": "Consumer parameters",
+        "label": "Custom parameters",
         "type": "consumerParameters",
         "required": false,
         "fields": [
@@ -19,7 +11,7 @@
             "name": "name",
             "label": "Parameter Name",
             "placeholder": "custom_parameter",
-            "help": "The name of the parameter to ask for. This will be the JSON key handed to the algorithm for this parameter.",
+            "help": "The name of the parameter to ask for. This will be the JSON key for this parameter.",
             "type": "text",
             "required": true
           },
@@ -34,14 +26,14 @@
           {
             "name": "description",
             "label": "Description",
-            "placeholder": "A custom parameter changing the behaviour of the algorithm.",
+            "placeholder": "A custom parameter changing the asset's behaviour.",
             "type": "text",
             "required": true
           },
           {
             "name": "type",
             "label": "Parameter Type",
-            "help": "The type of the parameter to ask for. This influences how the parameter is displayed for the consumer before the algorithm is used.",
+            "help": "The type of the parameter to ask for. This influences how the parameter is displayed for the consumer before the asset is used.",
             "type": "select",
             "options": ["number", "text", "boolean", "select"],
             "required": true
