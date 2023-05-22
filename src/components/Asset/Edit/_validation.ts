@@ -39,9 +39,15 @@ export const validationSchema = Yup.object().shape({
   author: Yup.string().nullable(),
   tags: Yup.array<string[]>().nullable(),
   usesConsumerParameters: Yup.boolean(),
-  consumerParameters: Yup.array().of(
-    Yup.object().shape(validationConsumerParameters)
-  ),
+  consumerParameters: Yup.array().when('usesConsumerParameters', {
+    is: true,
+    then: Yup.array()
+      .of(Yup.object().shape(validationConsumerParameters))
+      .required('Required'),
+    otherwise: Yup.array()
+      .nullable()
+      .transform((value) => value || null)
+  }),
   paymentCollector: Yup.string().test(
     'ValidAddress',
     'Must be a valid Ethereum Address.',
@@ -52,9 +58,15 @@ export const validationSchema = Yup.object().shape({
   retireAsset: Yup.string(),
   service: Yup.object().shape({
     usesConsumerParameters: Yup.boolean(),
-    consumerParameters: Yup.array().of(
-      Yup.object().shape(validationConsumerParameters)
-    )
+    consumerParameters: Yup.array().when('usesConsumerParameters', {
+      is: true,
+      then: Yup.array()
+        .of(Yup.object().shape(validationConsumerParameters))
+        .required('Required'),
+      otherwise: Yup.array()
+        .nullable()
+        .transform((value) => value || null)
+    })
   })
 })
 
