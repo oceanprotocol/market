@@ -29,9 +29,15 @@ const validationMetadata = {
     .required('Required')
     .isTrue('Please agree to the Terms and Conditions.'),
   usesConsumerParameters: Yup.boolean(),
-  consumerParameters: Yup.array().of(
-    Yup.object().shape(validationConsumerParameters)
-  )
+  consumerParameters: Yup.array().when('usesConsumerParameters', {
+    is: true,
+    then: Yup.array()
+      .of(Yup.object().shape(validationConsumerParameters))
+      .required('Required'),
+    otherwise: Yup.array()
+      .nullable()
+      .transform((value) => value || null)
+  })
 }
 
 const validationService = {
@@ -67,9 +73,15 @@ const validationService = {
     custom: Yup.boolean()
   }),
   usesConsumerParameters: Yup.boolean(),
-  consumerParameters: Yup.array().of(
-    Yup.object().shape(validationConsumerParameters)
-  )
+  consumerParameters: Yup.array().when('usesConsumerParameters', {
+    is: true,
+    then: Yup.array()
+      .of(Yup.object().shape(validationConsumerParameters))
+      .required('Required'),
+    otherwise: Yup.array()
+      .nullable()
+      .transform((value) => value || null)
+  })
 }
 
 const validationPricing = {

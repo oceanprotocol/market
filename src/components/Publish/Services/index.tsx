@@ -103,10 +103,7 @@ export default function ServicesFields(): ReactElement {
         name="services[0].timeout"
       />
       <Field
-        {...getFieldContent(
-          'usesConsumerParameters',
-          consumerParametersContent.consumerParameters.fields
-        )}
+        {...getFieldContent('usesConsumerParameters', content.services.fields)}
         component={Input}
         name="services[0].usesConsumerParameters"
       />

@@ -142,7 +142,7 @@ export default function MetadataFields(): ReactElement {
           <Field
             {...getFieldContent(
               'usesConsumerParameters',
-              consumerParametersContent.consumerParameters.fields
+              content.metadata.fields
             )}
             component={Input}
             name="metadata.usesConsumerParameters"
