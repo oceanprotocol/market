@@ -3,28 +3,35 @@ import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
-import { getDummyWeb3 } from '@utils/web3'
-import { Asset, Datatoken, LoggerInstance } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { getPaymentCollector } from '@utils/ocean'
+import { useProvider } from 'wagmi'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
-  const [paymentCollector, setPaymentCollector] = useState<string>()
   const { isInPurgatory, assetState } = useAsset()
+  const provider = useProvider()
+
+  const [paymentCollector, setPaymentCollector] = useState<string>()
 
   useEffect(() => {
+    if (!ddo || !provider) return
+
     async function getInitialPaymentCollector() {
       try {
-        if (!ddo) return
-        const web3 = await getDummyWeb3(ddo.chainId)
-        const datatoken = new Datatoken(web3)
-        setPaymentCollector(
-          await datatoken.getPaymentCollector(ddo.datatokens[0].address)
+        const paymentCollector = await getPaymentCollector(
+          ddo.datatokens[0].address,
+          provider
         )
+        setPaymentCollector(paymentCollector)
       } catch (error) {
-        LoggerInstance.error('[MetaFull: getInitialPaymentCollector]', error)
+        LoggerInstance.error(
+          '[MetaFull: getInitialPaymentCollector]',
+          error.message
+        )
       }
     }
     getInitialPaymentCollector()
-  }, [ddo])
+  }, [ddo, provider])
 
   function DockerImage() {
     const containerInfo = ddo?.metadata?.algorithm?.container

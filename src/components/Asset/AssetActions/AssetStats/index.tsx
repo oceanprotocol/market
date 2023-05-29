@@ -1,16 +1,16 @@
 import { useAsset } from '@context/Asset'
 import { useUserPreferences } from '@context/UserPreferences'
-import { useWeb3 } from '@context/Web3'
 import Tooltip from '@shared/atoms/Tooltip'
 import { formatNumber } from '@utils/numbers'
 import { getNftOwnAllocation } from '@utils/veAllocation'
 import React, { useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
 import styles from './index.module.css'
 
 export default function AssetStats() {
   const { locale } = useUserPreferences()
   const { asset } = useAsset()
-  const { accountId } = useWeb3()
+  const { address: accountId } = useAccount()
 
   const [ownAllocation, setOwnAllocation] = useState(0)
 

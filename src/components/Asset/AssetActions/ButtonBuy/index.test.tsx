@@ -16,7 +16,8 @@ const downloadProps: ButtonBuyProps = {
   priceType: 'fixed',
   isConsumable: true,
   isBalanceSufficient: true,
-  consumableFeedback: 'TEST: consumableFeedback'
+  consumableFeedback: 'TEST: consumableFeedback',
+  isAccountConnected: true
 }
 
 const computeProps: ButtonBuyProps = {
@@ -114,7 +115,7 @@ describe('Asset/AssetActions/ButtonBuy', () => {
     render(<ButtonBuy {...computeProps} />)
     expect(
       screen.getByText(
-        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Connect to the correct network to interact with this asset. The C2D resources required to start the job are available, no payment is required for them. Please note that network gas fees still apply, even when using free assets.'
+        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Additionally, the selected selectedComputeAssetType is free to use. The C2D resources required to start the job are available, no payment is required for them. Please note that network gas fees still apply, even when using free assets.'
       )
     ).toBeInTheDocument()
   })
@@ -123,7 +124,7 @@ describe('Asset/AssetActions/ButtonBuy', () => {
     render(<ButtonBuy {...computeProps} priceType="free" />)
     expect(
       screen.getByText(
-        'This algorithm is free to use. Connect to the correct network to interact with this asset. The C2D resources required to start the job are available, no payment is required for them. Please note that network gas fees still apply, even when using free assets.'
+        'This algorithm is free to use. Additionally, the selected selectedComputeAssetType is free to use. The C2D resources required to start the job are available, no payment is required for them. Please note that network gas fees still apply, even when using free assets.'
       )
     ).toBeInTheDocument()
   })
@@ -132,7 +133,7 @@ describe('Asset/AssetActions/ButtonBuy', () => {
     render(<ButtonBuy {...computeProps} algorithmPriceType="fixed" />)
     expect(
       screen.getByText(
-        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Connect to the correct network to interact with this asset. The C2D resources required to start the job are available, no payment is required for them.'
+        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Additionally, you will buy 1 dtSymbol for the selectedComputeAssetType and send it back to the publisher. The C2D resources required to start the job are available, no payment is required for them.'
       )
     ).toBeInTheDocument()
   })

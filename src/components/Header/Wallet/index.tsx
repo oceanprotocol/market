@@ -4,10 +4,10 @@ import Details from './Details'
 import Tooltip from '@shared/atoms/Tooltip'
 import Network from './Network'
 import styles from './index.module.css'
-import { useWeb3 } from '@context/Web3'
+import { useAccount } from 'wagmi'
 
 export default function Wallet(): ReactElement {
-  const { accountId } = useWeb3()
+  const { address: accountId } = useAccount()
 
   return (
     <div className={styles.wallet}>

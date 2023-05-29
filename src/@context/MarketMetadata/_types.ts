@@ -7,7 +7,6 @@ export interface OpcFee {
 
 export interface AppConfig {
   metadataCacheUri: string
-  infuraProjectId: string
   chainIds: number[]
   chainIdsSupported: number[]
   defaultDatatokenTemplateIndex: number
@@ -49,4 +48,5 @@ export interface MarketMetadataProviderValue {
   siteContent: SiteContent
   appConfig: AppConfig
   getOpcFeeForToken: (tokenAddress: string, chainId: number) => string
+  approvedBaseTokens: TokenInfo[]
 }
