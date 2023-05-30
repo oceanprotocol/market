@@ -1,10 +1,10 @@
-import { ServiceComputeOptions } from '@oceanprotocol/lib'
+import { Metadata, Service, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { parseConsumerParameters, secondsToString } from '@utils/ddo'
 import { ComputeEditForm, MetadataEditForm } from './_types'
 
 export function getInitialValues(
-  metadata: MetadataExtended,
-  service: ServiceExtended,
+  metadata: Metadata,
+  service: Service,
   price: string,
   paymentCollector: string,
   assetState: string

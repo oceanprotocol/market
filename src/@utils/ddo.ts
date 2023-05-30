@@ -9,14 +9,14 @@ import {
 import {
   Arweave,
   Asset,
+  ConsumerParameter,
   DDO,
   FileInfo,
   GraphqlQuery,
   Ipfs,
   Service,
   Smartcontract,
-  UrlFile,
-  UserCustomParameters
+  UrlFile
 } from '@oceanprotocol/lib'
 import { checkJson } from './codemirror'
 

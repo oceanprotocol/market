@@ -5,7 +5,9 @@ import {
   FixedRateExchange,
   Asset,
   Datatoken,
-  Nft
+  Nft,
+  Metadata,
+  Service
 } from '@oceanprotocol/lib'
 import { validationSchema } from './_validation'
 import { getInitialValues } from './_constants'
@@ -94,7 +96,7 @@ export default function Edit({
       let updatedFiles = asset.services[0].files
       const linksTransformed = values.links?.length &&
         values.links[0].valid && [sanitizeUrl(values.links[0].url)]
-      const updatedMetadata: MetadataExtended = {
+      const updatedMetadata: Metadata = {
         ...asset.metadata,
         name: values.name,
         description: values.description,
@@ -139,7 +141,7 @@ export default function Edit({
         )
         updatedFiles = filesEncrypted
       }
-      const updatedService: ServiceExtended = {
+      const updatedService: Service = {
         ...asset.services[0],
         timeout: mapTimeoutStringToSeconds(values.timeout),
         files: updatedFiles

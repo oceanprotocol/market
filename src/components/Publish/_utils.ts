@@ -10,7 +10,10 @@ import {
   NftCreateData,
   NftFactory,
   ZERO_ADDRESS,
-  getEventFromTx
+  getEventFromTx,
+  ConsumerParameter,
+  Metadata,
+  Service
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds, normalizeFile } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
@@ -132,7 +135,7 @@ export async function transformPublishFormToDdo(
     ? transformConsumerParameters(consumerParameters)
     : undefined
 
-  const newMetadata: MetadataExtended = {
+  const newMetadata: Metadata = {
     created: currentTime,
     updated: currentTime,
     type,
@@ -187,7 +190,7 @@ export async function transformPublishFormToDdo(
     files[0].valid &&
     (await getEncryptedFiles(file, chainId, providerUrl.url))
 
-  const newService: ServiceExtended = {
+  const newService: Service = {
     id: getHash(datatokenAddress + filesEncrypted),
     type: access,
     files: filesEncrypted || '',
