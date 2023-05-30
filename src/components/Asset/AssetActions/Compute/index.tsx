@@ -20,7 +20,6 @@ import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
-import { useWeb3 } from '@context/Web3'
 import { Formik } from 'formik'
 import { getComputeValidationSchema, getInitialValues } from './_constants'
 import FormStartComputeDataset from './FormComputeDataset'
@@ -44,13 +43,13 @@ import { useAbortController } from '@hooks/useAbortController'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { handleComputeOrder } from '@utils/order'
 import { getComputeFeedback } from '@utils/feedback'
-import { getDummyWeb3 } from '@utils/web3'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
-import { useAsset } from '@context/Asset'
+import { useAccount, useSigner } from 'wagmi'
 import { FormConsumerParameter } from '@components/Publish/_types'
 
 const refreshInterval = 10000 // 10 sec.
+
 export default function Compute({
   asset,
   dtBalance,
@@ -64,9 +63,9 @@ export default function Compute({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3, isSupportedOceanNetwork, networkId } = useWeb3()
+  const { address: accountId } = useAccount()
   const { chainIds } = useUserPreferences()
-  const { isAssetNetwork } = useAsset()
+  const { data: signer } = useSigner()
 
   const newAbortController = useAbortController()
   const newCancelToken = useCancelToken()
@@ -122,10 +121,9 @@ export default function Compute({
 
   const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
 
-  async function checkAssetDTBalance(asset: DDO): Promise<boolean> {
+  async function checkAssetDTBalance(asset: DDO) {
     if (!asset?.services[0].datatokenAddress) return
-    const web3 = await getDummyWeb3(asset?.chainId)
-    const datatokenInstance = new Datatoken(web3)
+    const datatokenInstance = new Datatoken(signer)
     const dtBalance = await datatokenInstance.balance(
       asset?.services[0].datatokenAddress,
       accountId || ZERO_ADDRESS // if the user is not connected, we use ZERO_ADDRESS as accountId
@@ -133,7 +131,6 @@ export default function Compute({
     setAlgorithmDTBalance(new Decimal(dtBalance).toString())
     const hasAlgoDt = Number(dtBalance) >= 1
     setHasAlgoAssetDatatoken(hasAlgoDt)
-    return hasAlgoDt
   }
 
   async function setComputeFees(
@@ -151,21 +148,22 @@ export default function Compute({
     const feeValidity = providerData?.datasets?.[0]?.providerFee?.validUntil
 
     const feeAmount = await unitsToAmount(
-      !isSupportedOceanNetwork || !isAssetNetwork
-        ? await getDummyWeb3(asset?.chainId)
-        : web3,
+      // !isSupportedOceanNetwork || !isAssetNetwork
+      //   ? await getDummyWeb3(asset?.chainId)
+      //   : web3,
+      signer,
       providerFeeToken,
       providerFeeAmount
     )
     setProviderFeeAmount(feeAmount)
 
-    const datatoken = new Datatoken(
-      await getDummyWeb3(asset?.chainId),
-      null,
-      null,
-      minAbi
-    )
-
+    const datatoken = new Datatoken(signer)
+    // const datatoken = new Datatoken(
+    //   await getDummyWeb3(asset?.chainId),
+    //   null,
+    //   null,
+    //   minAbi
+    // )
     setProviderFeesSymbol(await datatoken.getSymbol(providerFeeToken))
 
     const computeDuration = asset.accessDetails.validProviderFees
@@ -185,6 +183,7 @@ export default function Compute({
       const algorithmOrderPriceAndFees = await getOrderPriceAndFees(
         selectedAlgorithmAsset,
         ZERO_ADDRESS,
+        signer,
         algoProviderFees
       )
       if (!algorithmOrderPriceAndFees)
@@ -203,6 +202,7 @@ export default function Compute({
       const datasetPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
+        signer,
         datasetProviderFees
       )
       if (!datasetPriceAndFees)
@@ -381,11 +381,12 @@ export default function Compute({
       )
 
       const algorithmOrderTx = await handleComputeOrder(
-        web3,
+        signer,
         selectedAlgorithmAsset,
         algoOrderPriceAndFees,
         accountId,
         initializedProviderResponse.algorithm,
+        hasAlgoAssetDatatoken,
         computeEnv.consumerAddress
       )
       if (!algorithmOrderTx) throw new Error('Failed to order algorithm.')
@@ -399,11 +400,12 @@ export default function Compute({
       )
 
       const datasetOrderTx = await handleComputeOrder(
-        web3,
+        signer,
         asset,
         datasetOrderPriceAndFees,
         accountId,
         initializedProviderResponse.datasets[0],
+        hasDatatoken,
         computeEnv.consumerAddress
       )
       if (!datasetOrderTx) throw new Error('Failed to order dataset.')
@@ -423,8 +425,7 @@ export default function Compute({
       setComputeStatusText(getComputeFeedback()[4])
       const response = await ProviderInstance.computeStart(
         asset.services[0].serviceEndpoint,
-        web3,
-        accountId,
+        signer,
         computeEnv?.id,
         computeAsset,
         computeAlgorithm,

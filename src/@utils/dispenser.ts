@@ -1,14 +1,13 @@
 import { LoggerInstance, Datatoken } from '@oceanprotocol/lib'
-import Web3 from 'web3'
-import { TransactionReceipt } from 'web3-core'
+import { Signer, ethers } from 'ethers'
 
 export async function setMinterToPublisher(
-  web3: Web3,
+  signer: Signer,
   datatokenAddress: string,
   accountId: string,
   setError: (msg: string) => void
-): Promise<TransactionReceipt> {
-  const datatokenInstance = new Datatoken(web3)
+): Promise<ethers.providers.TransactionResponse> {
+  const datatokenInstance = new Datatoken(signer)
 
   const response = await datatokenInstance.removeMinter(
     datatokenAddress,
@@ -24,12 +23,12 @@ export async function setMinterToPublisher(
 }
 
 export async function setMinterToDispenser(
-  web3: Web3,
+  signer: Signer,
   datatokenAddress: string,
   accountId: string,
   setError: (msg: string) => void
-): Promise<TransactionReceipt> {
-  const datatokenInstance = new Datatoken(web3)
+): Promise<ethers.providers.TransactionResponse> {
+  const datatokenInstance = new Datatoken(signer)
 
   const response = await datatokenInstance.addMinter(
     datatokenAddress,

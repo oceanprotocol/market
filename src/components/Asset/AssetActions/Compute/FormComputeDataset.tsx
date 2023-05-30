@@ -7,15 +7,16 @@ import { compareAsBN } from '@utils/numbers'
 import ButtonBuy from '../ButtonBuy'
 import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
-import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset, UserCustomParameters, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import Alert from '@shared/atoms/Alert'
-import { getTokenBalanceFromSymbol } from '@utils/web3'
+import { getTokenBalanceFromSymbol } from '@utils/wallet'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
+import { useAccount } from 'wagmi'
+import useBalance from '@hooks/useBalance'
+import useNetworkMetadata from '@hooks/useNetworkMetadata'
 import ConsumerParameters from '../ConsumerParameters'
 import { FormConsumerParameter } from '@components/Publish/_types'
 
@@ -83,7 +84,9 @@ export default function FormStartCompute({
   retry: boolean
 }): ReactElement {
   const { siteContent } = useMarketMetadata()
-  const { accountId, balance, isSupportedOceanNetwork } = useWeb3()
+  const { address: accountId, isConnected } = useAccount()
+  const { balance } = useBalance()
+  const { isSupportedOceanNetwork } = useNetworkMetadata()
   const {
     isValid,
     values
@@ -331,6 +334,7 @@ export default function FormStartCompute({
         isSupportedOceanNetwork={isSupportedOceanNetwork}
         hasProviderFee={providerFeeAmount && providerFeeAmount !== '0'}
         retry={retry}
+        isAccountConnected={isConnected}
       />
     </Form>
   )

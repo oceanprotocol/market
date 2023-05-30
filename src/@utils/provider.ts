@@ -12,11 +12,11 @@ import {
   ProviderComputeInitializeResults,
   ProviderInstance,
   UrlFile,
+  AbiItem,
   UserCustomParameters
 } from '@oceanprotocol/lib'
 import { KeyValuePair } from '@components/@shared/FormInput/InputElement/KeyValueInput'
-import Web3 from 'web3'
-import { AbiItem } from 'web3-utils/types'
+import { Signer } from 'ethers'
 import { getValidUntilTime } from './compute'
 
 export async function initializeProviderForCompute(
@@ -174,7 +174,7 @@ export async function getFileInfo(
 }
 
 export async function downloadFile(
-  web3: Web3,
+  signer: Signer,
   asset: AssetExtended,
   accountId: string,
   validOrderTx?: string,
@@ -182,12 +182,11 @@ export async function downloadFile(
 ) {
   const downloadUrl = await ProviderInstance.getDownloadUrl(
     asset.id,
-    accountId,
     asset.services[0].id,
     0,
     validOrderTx || asset.accessDetails.validOrderTx,
     asset.services[0].serviceEndpoint,
-    web3,
+    signer,
     userCustomParameters
   )
   await downloadFileBrowser(downloadUrl)

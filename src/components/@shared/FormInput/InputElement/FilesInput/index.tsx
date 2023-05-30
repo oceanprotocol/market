@@ -7,8 +7,8 @@ import { getFileInfo, checkValidProvider } from '@utils/provider'
 import { LoggerInstance, FileInfo } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import styles from './index.module.css'
-import { useWeb3 } from '@context/Web3'
-import InputKeyValue from '../KeyValueInput'
+import { useNetwork } from 'wagmi'
+import InputHeaders from '../Headers'
 import Button from '@shared/atoms/Button'
 import Loader from '@shared/atoms/Loader'
 import { checkJson } from '@utils/codemirror'
@@ -21,7 +21,8 @@ export default function FilesInput(props: InputProps): ReactElement {
   const [isLoading, setIsLoading] = useState(false)
   const [disabledButton, setDisabledButton] = useState(true)
   const { asset } = useAsset()
-  const { chainId } = useWeb3()
+  const { chain } = useNetwork()
+  const chainId = chain?.id
 
   const providerUrl = props.form?.values?.services
     ? props.form?.values?.services[0].providerUrl.url
@@ -60,7 +61,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         query,
         headers,
         abi,
-        chainId,
+        chain?.id,
         method
       )
 
@@ -160,9 +161,7 @@ export default function FilesInput(props: InputProps): ReactElement {
                         <Field
                           key={i}
                           component={
-                            innerField.type === 'headers'
-                              ? InputKeyValue
-                              : Input
+                            innerField.type === 'headers' ? InputHeaders : Input
                           }
                           {...innerField}
                           name={`${field.name}[0].${innerField.value}`}

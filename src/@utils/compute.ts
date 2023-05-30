@@ -143,12 +143,8 @@ export async function getComputeEnviroment(
     const computeEnvs = await ProviderInstance.getComputeEnvironments(
       asset.services[0].serviceEndpoint
     )
-    const computeEnv = Array.isArray(computeEnvs)
-      ? computeEnvs[0]
-      : computeEnvs[asset.chainId][0]
-
-    if (!computeEnv) return null
-    return computeEnv
+    if (!computeEnvs[asset.chainId][0]) return null
+    return computeEnvs[asset.chainId][0]
   } catch (e) {
     LoggerInstance.error('[compute] Fetch compute enviroment: ', e.message)
   }

@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useWeb3 } from '@context/Web3'
 import { AssetWithOwnAllocation, getOwnAllocations } from '@utils/veAllocation'
 import styles from './index.module.css'
 import {
@@ -12,9 +11,10 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import AssetListTable from './AssetListTable'
+import { useAccount } from 'wagmi'
 
 export default function Allocations(): ReactElement {
-  const { accountId } = useWeb3()
+  const { address: accountId } = useAccount()
   const { chainIds } = useUserPreferences()
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()

@@ -9,13 +9,13 @@ import {
   LoggerInstance,
   NftCreateData,
   NftFactory,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
+  getEventFromTx
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds, normalizeFile } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
 import slugify from 'slugify'
-import Web3 from 'web3'
 import { algorithmContainerPresets } from './_constants'
 import {
   FormConsumerParameter,
@@ -30,6 +30,7 @@ import {
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
 import { getContainerChecksum } from '@utils/docker'
+import { parseEther } from 'ethers/lib/utils'
 
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
@@ -232,8 +233,7 @@ export async function createTokensAndPricing(
   values: FormPublishData,
   accountId: string,
   config: Config,
-  nftFactory: NftFactory,
-  web3: Web3
+  nftFactory: NftFactory
 ) {
   const nftCreateData: NftCreateData = generateNftCreateData(
     values.metadata.nft,
@@ -280,15 +280,18 @@ export async function createTokensAndPricing(
       )
 
       const result = await nftFactory.createNftWithDatatokenWithFixedRate(
-        accountId,
         nftCreateData,
         ercParams,
         freParams
       )
 
-      erc721Address = result.events.NFTCreated.returnValues[0]
-      datatokenAddress = result.events.TokenCreated.returnValues[0]
-      txHash = result.transactionHash
+      const trxReceipt = await result.wait()
+      const nftCreatedEvent = getEventFromTx(trxReceipt, 'NFTCreated')
+      const tokenCreatedEvent = getEventFromTx(trxReceipt, 'TokenCreated')
+
+      erc721Address = nftCreatedEvent.args.newTokenAddress
+      datatokenAddress = tokenCreatedEvent.args.newTokenAddress
+      txHash = trxReceipt.transactionHash
 
       LoggerInstance.log('[publish] createNftErcWithFixedRate tx', txHash)
 
@@ -300,8 +303,8 @@ export async function createTokensAndPricing(
       // both will be just 1 for the market
       const dispenserParams: DispenserCreationParams = {
         dispenserAddress: config.dispenserAddress,
-        maxTokens: web3.utils.toWei('1'),
-        maxBalance: web3.utils.toWei('1'),
+        maxTokens: parseEther('1').toString(),
+        maxBalance: parseEther('1').toString(),
         withMint: true,
         allowedSwapper: ZERO_ADDRESS
       }
@@ -312,14 +315,17 @@ export async function createTokensAndPricing(
       )
 
       const result = await nftFactory.createNftWithDatatokenWithDispenser(
-        accountId,
         nftCreateData,
         ercParams,
         dispenserParams
       )
-      erc721Address = result.events.NFTCreated.returnValues[0]
-      datatokenAddress = result.events.TokenCreated.returnValues[0]
-      txHash = result.transactionHash
+      const trxReceipt = await result.wait()
+      const nftCreatedEvent = getEventFromTx(trxReceipt, 'NFTCreated')
+      const tokenCreatedEvent = getEventFromTx(trxReceipt, 'TokenCreated')
+
+      erc721Address = nftCreatedEvent.args.newTokenAddress
+      datatokenAddress = tokenCreatedEvent.args.newTokenAddress
+      txHash = trxReceipt.transactionHash
 
       LoggerInstance.log('[publish] createNftErcWithDispenser tx', txHash)
 

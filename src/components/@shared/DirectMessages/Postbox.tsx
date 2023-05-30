@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import styles from './Postbox.module.css'
 import { useOrbis } from '@context/DirectMessages'
 import SendIcon from '@images/send.svg'
-import { accountTruncate } from '@utils/web3'
+import { accountTruncate } from '@utils/wallet'
 import { didToAddress } from './_utils'
 import {
   IOrbisMessage,

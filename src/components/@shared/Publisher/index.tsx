@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
 import Link from 'next/link'
-import { accountTruncate } from '@utils/web3'
+import { accountTruncate } from '@utils/wallet'
 import { getEnsName } from '@utils/ens'
 import { useIsMounted } from '@hooks/useIsMounted'
 

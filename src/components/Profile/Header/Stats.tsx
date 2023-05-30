@@ -8,14 +8,14 @@ import { useProfile } from '@context/Profile'
 import { getLocked } from '@utils/veAllocation'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Button from '@shared/atoms/Button'
-import { useWeb3 } from '@context/Web3'
+import { useAccount } from 'wagmi'
 
 export default function Stats({
   accountId
 }: {
   accountId: string
 }): ReactElement {
-  const web3 = useWeb3()
+  const { address } = useAccount()
   const { chainIds } = useUserPreferences()
   const { assets, assetsTotal, sales } = useProfile()
 
@@ -73,7 +73,7 @@ export default function Stats({
       <NumberUnit label="Published" value={assetsTotal} />
       <NumberUnit
         label={
-          lockedOcean === 0 && accountId === web3.accountId ? (
+          lockedOcean === 0 && accountId === address ? (
             <Button
               className={styles.link}
               style="text"

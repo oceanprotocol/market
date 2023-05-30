@@ -4,24 +4,24 @@ import { useUserPreferences } from '@context/UserPreferences'
 import Button from '@shared/atoms/Button'
 import AddToken from '@shared/AddToken'
 import Conversion from '@shared/Price/Conversion'
-import { useWeb3 } from '@context/Web3'
 import { useOrbis } from '@context/DirectMessages'
 import { getOceanConfig } from '@utils/ocean'
+import { useNetwork, useDisconnect, useAccount, useConnect } from 'wagmi'
+import { useModal } from 'connectkit'
 import styles from './Details.module.css'
+import useBalance from '@hooks/useBalance'
+import useNetworkMetadata from '@hooks/useNetworkMetadata'
 
 export default function Details(): ReactElement {
-  const {
-    accountId,
-    web3ProviderInfo,
-    web3Modal,
-    connect,
-    logout,
-    networkData,
-    networkId,
-    balance
-  } = useWeb3()
-  const { checkOrbisConnection, disconnectOrbis } = useOrbis()
+  const { chain } = useNetwork()
+  const { connector: activeConnector, address: accountId } = useAccount()
+  const { connect } = useConnect()
+  const { setOpen } = useModal()
+  const { disconnect } = useDisconnect()
+  const { balance } = useBalance()
+  const { networkData } = useNetworkMetadata()
   const { locale } = useUserPreferences()
+  const { checkOrbisConnection, disconnectOrbis } = useOrbis()
 
   const [mainCurrency, setMainCurrency] = useState<string>()
   const [oceanTokenMetadata, setOceanTokenMetadata] = useState<{
@@ -30,19 +30,19 @@ export default function Details(): ReactElement {
   }>()
 
   useEffect(() => {
-    if (!networkId) return
+    if (!chain?.id) return
 
     const symbol = networkData?.nativeCurrency.symbol
     setMainCurrency(symbol)
 
-    const oceanConfig = getOceanConfig(networkId)
+    const oceanConfig = getOceanConfig(chain.id)
 
     oceanConfig &&
       setOceanTokenMetadata({
         address: oceanConfig.oceanTokenAddress,
         symbol: oceanConfig.oceanTokenSymbol
       })
-  }, [networkData, networkId])
+  }, [networkData, chain?.id])
 
   return (
     <div className={styles.details}>
@@ -68,10 +68,10 @@ export default function Details(): ReactElement {
         <li className={styles.actions}>
           <div title="Connected provider" className={styles.walletInfo}>
             <span className={styles.walletLogoWrap}>
-              <img className={styles.walletLogo} src={web3ProviderInfo?.logo} />
-              {web3ProviderInfo?.name}
+              {/* <img className={styles.walletLogo} src={activeConnector?.logo} /> */}
+              {activeConnector?.name}
             </span>
-            {web3ProviderInfo?.name === 'MetaMask' && (
+            {activeConnector?.name === 'MetaMask' && (
               <AddToken
                 address={oceanTokenMetadata?.address}
                 symbol={oceanTokenMetadata?.symbol}
@@ -84,7 +84,6 @@ export default function Details(): ReactElement {
               style="text"
               size="small"
               onClick={async () => {
-                await web3Modal?.clearCachedProvider()
                 connect()
                 checkOrbisConnection({ address: accountId })
               }}
@@ -95,7 +94,7 @@ export default function Details(): ReactElement {
               style="text"
               size="small"
               onClick={() => {
-                logout()
+                disconnect()
                 disconnectOrbis(accountId)
                 location.reload()
               }}

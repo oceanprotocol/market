@@ -7,11 +7,13 @@ import Free from './Free'
 import content from '../../../../content/price.json'
 import styles from './index.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import { useWeb3 } from '@context/Web3'
+import { useNetwork } from 'wagmi'
 
 export default function PricingFields(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { approvedBaseTokens, chainId } = useWeb3()
+  const { chain } = useNetwork()
+  const { approvedBaseTokens } = useMarketMetadata()
+
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { pricing } = values
@@ -21,6 +23,23 @@ export default function PricingFields(): ReactElement {
     approvedBaseTokens?.find((token) =>
       token.name.toLowerCase().includes('ocean')
     ) || approvedBaseTokens?.[0]
+
+  const isBaseTokenSet = !!approvedBaseTokens?.find(
+    (token) => token?.address === values?.pricing?.baseToken?.address
+  )
+
+  useEffect(() => {
+    if (!approvedBaseTokens?.length) return
+    if (isBaseTokenSet) return
+    setFieldValue('pricing.baseToken', defaultBaseToken)
+  }, [
+    approvedBaseTokens,
+    chain?.id,
+    defaultBaseToken,
+    isBaseTokenSet,
+    setFieldValue,
+    values.pricing.baseToken
+  ])
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {

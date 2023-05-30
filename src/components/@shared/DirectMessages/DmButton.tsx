@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './DmButton.module.css'
-import { useWeb3 } from '@context/Web3'
+import { useAccount, useConnect } from 'wagmi'
 import { useOrbis } from '@context/DirectMessages'
 
 export default function DmButton({
@@ -11,7 +11,7 @@ export default function DmButton({
   accountId: string
   text?: string
 }) {
-  const { accountId: ownAccountId, connect } = useWeb3()
+  const { address: ownAccountId } = useAccount()
   const {
     checkOrbisConnection,
     getConversationByDid,
@@ -24,10 +24,9 @@ export default function DmButton({
   const [isCreatingConversation, setIsCreatingConversation] = useState(false)
 
   const handleActivation = async () => {
-    const resConnect = await connect()
-    if (resConnect) {
+    if (ownAccountId) {
       await checkOrbisConnection({
-        address: resConnect,
+        address: ownAccountId,
         autoConnect: true,
         lit: true
       })

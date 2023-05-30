@@ -5,12 +5,12 @@ import { FormikContextType, useFormikContext } from 'formik'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import { useWeb3 } from '@context/Web3'
 import { useRouter } from 'next/router'
 import Tooltip from '@shared/atoms/Tooltip'
 import AvailableNetworks from '@components/Publish/AvailableNetworks'
 import Info from '@images/info.svg'
 import Loader from '@shared/atoms/Loader'
+import useNetworkMetadata from '@hooks/useNetworkMetadata'
 
 export default function Actions({
   scrollToRef,
@@ -20,21 +20,19 @@ export default function Actions({
   did: string
 }): ReactElement {
   const router = useRouter()
-  const { isSupportedOceanNetwork } = useWeb3()
+  const { isSupportedOceanNetwork } = useNetworkMetadata()
   const {
     values,
     errors,
     isValid,
     isSubmitting
   }: FormikContextType<FormPublishData> = useFormikContext()
-  const { connect, accountId } = useWeb3()
+  // async function handleActivation(e: FormEvent<HTMLButtonElement>) {
+  //   // prevent accidentially submitting a form the button might be in
+  //   e.preventDefault()
 
-  async function handleActivation(e: FormEvent<HTMLButtonElement>) {
-    // prevent accidentially submitting a form the button might be in
-    e.preventDefault()
-
-    await connect()
-  }
+  //   await connect()
+  // }
 
   function handleAction(action: string) {
     const currentStep: string = router.query.step as string
@@ -92,11 +90,12 @@ export default function Actions({
             >
               Continue
             </Button>
-          ) : !accountId ? (
-            <Button type="submit" style="primary" onClick={handleActivation}>
-              Connect Wallet
-            </Button>
-          ) : !isSupportedOceanNetwork ? (
+          ) : // !address ? (
+          // <Button type="submit" style="primary" onClick={handleActivation}>
+          //   Connect Wallet
+          // </Button>
+          // ) :
+          !isSupportedOceanNetwork ? (
             <Tooltip content={<AvailableNetworks />}>
               <Button
                 type="submit"

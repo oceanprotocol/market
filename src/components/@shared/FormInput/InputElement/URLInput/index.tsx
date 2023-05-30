@@ -7,7 +7,6 @@ import InputGroup from '@shared/FormInput/InputGroup'
 import InputElement from '@shared/FormInput/InputElement'
 import isUrl from 'is-url-superb'
 import { isCID } from '@utils/ipfs'
-import web3 from 'web3'
 export interface URLInputProps {
   submitText: string
   handleButtonClick(e: React.SyntheticEvent, data: string): void

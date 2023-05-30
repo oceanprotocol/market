@@ -2,7 +2,7 @@ import { render, fireEvent, screen } from '@testing-library/react'
 import React from 'react'
 import WalletNetworkSwitcher from './'
 
-jest.mock('../../../@utils/web3', () => ({
+jest.mock('../../../@utils/wallet', () => ({
   addCustomNetwork: () => jest.fn()
 }))
 
