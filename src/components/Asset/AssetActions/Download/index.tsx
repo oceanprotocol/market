@@ -2,11 +2,10 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import FileIcon from '@shared/FileIcon'
 import Price from '@shared/Price'
 import { useAsset } from '@context/Asset'
-import { useWeb3 } from '@context/Web3'
 import ButtonBuy from '../ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from '../Compute/AlgorithmDatasetsListForCompute'
-import styles from './Download.module.css'
+import styles from './index.module.css'
 import {
   FileInfo,
   LoggerInstance,
@@ -22,6 +21,8 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
+import { useAccount, useSigner } from 'wagmi'
+import useNetworkMetadata from '@hooks/useNetworkMetadata'
 import ConsumerParameters from '../ConsumerParameters'
 import { Form, Formik, useFormikContext } from 'formik'
 import { getDownloadValidationSchema } from './_validation'
@@ -42,7 +43,9 @@ export default function Download({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3, isSupportedOceanNetwork } = useWeb3()
+  const { address: accountId, isConnected } = useAccount()
+  const { data: signer } = useSigner()
+  const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const isMounted = useIsMounted()
@@ -81,16 +84,24 @@ export default function Download({
     async function init() {
       if (
         asset.accessDetails.addressOrId === ZERO_ADDRESS ||
-        asset.accessDetails.type === 'free' ||
-        isLoading
+        asset.accessDetails.type === 'free'
       )
         return
 
-      !orderPriceAndFees && setIsPriceLoading(true)
+      try {
+        !orderPriceAndFees && setIsPriceLoading(true)
 
-      const _orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
-      setOrderPriceAndFees(_orderPriceAndFees)
-      !orderPriceAndFees && setIsPriceLoading(false)
+        const _orderPriceAndFees = await getOrderPriceAndFees(
+          asset,
+          ZERO_ADDRESS,
+          signer
+        )
+        setOrderPriceAndFees(_orderPriceAndFees)
+        !orderPriceAndFees && setIsPriceLoading(false)
+      } catch (error) {
+        LoggerInstance.error('getOrderPriceAndFees', error)
+        setIsPriceLoading(false)
+      }
     }
 
     init()
@@ -101,7 +112,7 @@ export default function Download({
      * Not adding isLoading and getOpcFeeForToken because we set these here. It is a compromise
      */
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asset, accountId, getOpcFeeForToken, isUnsupportedPricing])
+  }, [asset, getOpcFeeForToken, isUnsupportedPricing])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
@@ -153,7 +164,7 @@ export default function Download({
           )[3]
         )
 
-        await downloadFile(web3, asset, accountId, validOrderTx, dataParams)
+        await downloadFile(signer, asset, accountId, validOrderTx, dataParams)
       } else {
         setStatusText(
           getOrderFeedback(
@@ -161,12 +172,19 @@ export default function Download({
             asset.accessDetails.datatoken?.symbol
           )[asset.accessDetails.type === 'fixed' ? 2 : 1]
         )
-        const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
-        if (!orderTx) {
+        const orderTx = await order(
+          signer,
+          asset,
+          orderPriceAndFees,
+          accountId,
+          hasDatatoken
+        )
+        const tx = await orderTx.wait()
+        if (!tx) {
           throw new Error()
         }
         setIsOwned(true)
-        setValidOrderTx(orderTx.transactionHash)
+        setValidOrderTx(tx.transactionHash)
       }
     } catch (error) {
       LoggerInstance.error(error)
@@ -199,6 +217,7 @@ export default function Download({
       consumableFeedback={consumableFeedback}
       retry={retry}
       isSupportedOceanNetwork={isSupportedOceanNetwork}
+      isAccountConnected={isConnected}
     />
   )
 
