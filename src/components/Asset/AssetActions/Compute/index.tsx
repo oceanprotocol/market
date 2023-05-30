@@ -46,6 +46,9 @@ import { getComputeFeedback } from '@utils/feedback'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useAccount, useSigner } from 'wagmi'
+import { getDummySigner } from '@utils/wallet'
+import useNetworkMetadata from '@hooks/useNetworkMetadata'
+import { useAsset } from '@context/Asset'
 
 const refreshInterval = 10000 // 10 sec.
 
@@ -103,6 +106,8 @@ export default function Compute({
   const [isLoadingJobs, setIsLoadingJobs] = useState(false)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const [retry, setRetry] = useState<boolean>(false)
+  const { isSupportedOceanNetwork } = useNetworkMetadata()
+  const { isAssetNetwork } = useAsset()
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
@@ -142,22 +147,15 @@ export default function Compute({
     const feeValidity = providerData?.datasets?.[0]?.providerFee?.validUntil
 
     const feeAmount = await unitsToAmount(
-      // !isSupportedOceanNetwork || !isAssetNetwork
-      //   ? await getDummyWeb3(asset?.chainId)
-      //   : web3,
-      signer,
+      !isSupportedOceanNetwork || !isAssetNetwork
+        ? await getDummySigner(asset?.chainId)
+        : signer,
       providerFeeToken,
       providerFeeAmount
     )
     setProviderFeeAmount(feeAmount)
 
-    const datatoken = new Datatoken(signer)
-    // const datatoken = new Datatoken(
-    //   await getDummyWeb3(asset?.chainId),
-    //   null,
-    //   null,
-    //   minAbi
-    // )
+    const datatoken = new Datatoken(await getDummySigner(asset?.chainId))
     setProviderFeesSymbol(await datatoken.getSymbol(providerFeeToken))
 
     const computeDuration = asset.accessDetails.validProviderFees
