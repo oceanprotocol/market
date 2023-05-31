@@ -122,7 +122,8 @@ export default function Compute({
 
   async function checkAssetDTBalance(asset: DDO) {
     if (!asset?.services[0].datatokenAddress) return
-    const datatokenInstance = new Datatoken(signer)
+    const dummySigner = await getDummySigner(asset?.chainId)
+    const datatokenInstance = new Datatoken(dummySigner)
     const dtBalance = await datatokenInstance.balance(
       asset?.services[0].datatokenAddress,
       accountId || ZERO_ADDRESS // if the user is not connected, we use ZERO_ADDRESS as accountId
