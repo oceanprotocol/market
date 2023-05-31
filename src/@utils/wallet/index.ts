@@ -16,19 +16,10 @@ export async function getDummySigner(chainId: number): Promise<Signer> {
   // Get config from ocean lib
   const config = getOceanConfig(chainId)
   try {
-    // Create a provider using the provided node URI
-    const provider = new ethers.providers.JsonRpcProvider(config?.nodeUri)
-
-    // Create a dummy wallet
     const privateKey =
-      '0x0000000000000000000000000000000000000000000000000000000000000000'
-    const wallet = new ethers.Wallet(privateKey)
-
-    // Connect the wallet to the provider
-    const signer = wallet.connect(provider)
-
-    // Return the signer
-    return signer
+      '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+    const provider = new ethers.providers.JsonRpcProvider(config.nodeUri)
+    return new ethers.Wallet(privateKey, provider)
   } catch (error) {
     throw new Error(`Failed to create dummy signer: ${error.message}`)
   }
