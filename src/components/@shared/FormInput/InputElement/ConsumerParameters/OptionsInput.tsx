@@ -18,7 +18,13 @@ export default function OptionsInput(props: KeyValueInputProps): ReactElement {
 
   return (
     <div className={cx({ container: true, hasError: hasError() })}>
-      <Field {...props} component={InputKeyValue} uniqueKeys />
+      <Field
+        {...props}
+        component={InputKeyValue}
+        uniqueKeys
+        keyPlaceholder="value"
+        valuePlaceholder="label"
+      />
 
       {hasError() && (
         <div className={styles.error}>

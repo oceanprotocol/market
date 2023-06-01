@@ -24,11 +24,15 @@ export interface KeyValuePair {
 export interface KeyValueInputProps extends Omit<InputProps, 'value'> {
   value: KeyValuePair[]
   uniqueKeys?: boolean
+  keyPlaceholder?: string
+  valuePlaceholder?: string
 }
 
 export default function InputKeyValue({
   uniqueKeys = false,
   value,
+  keyPlaceholder = 'key',
+  valuePlaceholder = 'value',
   ...props
 }: KeyValueInputProps): ReactElement {
   const { label, help, prominentHelp, form, field } = props
@@ -108,16 +112,17 @@ export default function InputKeyValue({
 
       <div className={styles.pairsContainer}>
         <InputElement
+          className={styles.keyInput}
           name={`${field.name}.key`}
-          placeholder={'key'}
+          placeholder={keyPlaceholder}
           value={`${currentKey}`}
           onChange={handleChange}
         />
 
         <InputElement
-          className={`${styles.input}`}
+          className={styles.input}
           name={`${field.name}.value`}
-          placeholder={'value'}
+          placeholder={valuePlaceholder}
           value={`${currentValue}`}
           onChange={handleChange}
         />
@@ -135,7 +140,9 @@ export default function InputKeyValue({
         </Button>
 
         {uniqueKeys && !hasOnlyUniqueKeys && (
-          <p className={styles.error}>The key must be unique</p>
+          <p
+            className={styles.error}
+          >{`The ${keyPlaceholder} field must be unique`}</p>
         )}
       </div>
 

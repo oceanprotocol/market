@@ -17,8 +17,8 @@
   color: var(--brand-alert-red);
 }
 
-.hasError .pairsContainer input,
-.hasError .pairsContainer input:focus,
+.hasError .pairsContainer .keyInput,
+.hasError .pairsContainer .keyInput:focus,
 .hasError .pairsContainer [class*='prefix'],
 .hasError .pairsContainer [class*='postfix'] {
   color: var(--brand-alert-red);
