@@ -1,3 +1,4 @@
+import { ConsumerParameter } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { SchemaLike } from 'yup/lib/types'
 

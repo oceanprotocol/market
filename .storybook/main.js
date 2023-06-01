@@ -43,7 +43,10 @@ module.exports = {
       crypto: false,
       os: false,
       stream: false,
-      assert: false
+      assert: false,
+      tls: false,
+      net: false,
+      zlib: false
     })
     config.resolve.fallback = fallback
 

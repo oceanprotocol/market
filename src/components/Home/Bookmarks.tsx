@@ -7,8 +7,8 @@ import Tooltip from '@shared/atoms/Tooltip'
 import AssetTitle from '@shared/AssetListTitle'
 import { getAssetsFromDids } from '@utils/aquarius'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { useWeb3 } from '@context/Web3'
 import { useMarketMetadata } from '@context/MarketMetadata'
+import { useAccount } from 'wagmi'
 
 const columns: TableOceanColumn<AssetExtended>[] = [
   {
@@ -38,7 +38,7 @@ const columns: TableOceanColumn<AssetExtended>[] = [
 
 export default function Bookmarks(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { accountId } = useWeb3()
+  const { address: accountId } = useAccount()
   const { bookmarks } = useUserPreferences()
 
   const [pinned, setPinned] = useState<AssetExtended[]>()

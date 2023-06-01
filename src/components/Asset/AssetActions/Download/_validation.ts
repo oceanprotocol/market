@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { getUserCustomParameterValidationSchema } from '../ConsumerParameters/_validation'
+import { ConsumerParameter } from '@oceanprotocol/lib'
 
 export function getDownloadValidationSchema(
   parameters: ConsumerParameter[]

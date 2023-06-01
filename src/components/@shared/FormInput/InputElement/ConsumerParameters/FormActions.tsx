@@ -52,9 +52,6 @@ export default function FormActions({
   const deleteParameter = (index: number) => {
     helpers.setValue(field.value.filter((p, i) => i !== index))
 
-    // Reset index on formik
-    setParamPropsTouched(index, false)
-
     const previousIndex = Math.max(0, index - 1)
     onParameterDeleted && onParameterDeleted(previousIndex)
   }

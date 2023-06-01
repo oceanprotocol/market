@@ -1,4 +1,4 @@
-import { UserCustomParameters } from '@oceanprotocol/lib'
+import { ConsumerParameter, UserCustomParameters } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { getDefaultValues } from '../ConsumerParameters/FormConsumerParameters'
 import { getUserCustomParameterValidationSchema } from '../ConsumerParameters/_validation'
