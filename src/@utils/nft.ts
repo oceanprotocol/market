@@ -113,7 +113,7 @@ export async function setNftMetadata(
   const nft = new Nft(signer)
 
   // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
-  const flags = '0x2'
+  const flags = ethers.utils.hexlify(2)
 
   const setMetadataTx = await nft.setMetadata(
     asset.nftAddress,
