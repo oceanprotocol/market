@@ -3,26 +3,26 @@ import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import { getPaymentCollector } from '@utils/ocean'
 import { useProvider } from 'wagmi'
+import { getDummySigner } from '@utils/wallet'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
   const { isInPurgatory, assetState } = useAsset()
-  const provider = useProvider()
 
   const [paymentCollector, setPaymentCollector] = useState<string>()
 
   useEffect(() => {
-    if (!ddo || !provider) return
+    if (!ddo) return
 
     async function getInitialPaymentCollector() {
       try {
-        const paymentCollector = await getPaymentCollector(
-          ddo.datatokens[0].address,
-          provider
+        const signer = await getDummySigner(ddo.chainId)
+        const datatoken = new Datatoken(signer)
+        setPaymentCollector(
+          await datatoken.getPaymentCollector(ddo.datatokens[0].address)
         )
-        setPaymentCollector(paymentCollector)
       } catch (error) {
         LoggerInstance.error(
           '[MetaFull: getInitialPaymentCollector]',
@@ -31,7 +31,7 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
       }
     }
     getInitialPaymentCollector()
-  }, [ddo, provider])
+  }, [ddo])
 
   function DockerImage() {
     const containerInfo = ddo?.metadata?.algorithm?.container

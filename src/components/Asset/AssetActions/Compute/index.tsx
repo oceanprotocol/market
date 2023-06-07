@@ -13,7 +13,6 @@ import {
   ComputeOutput,
   ProviderComputeInitializeResults,
   unitsToAmount,
-  minAbi,
   ProviderFees
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
@@ -46,6 +45,9 @@ import { getComputeFeedback } from '@utils/feedback'
 import { initializeProviderForCompute } from '@utils/provider'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useAccount, useSigner } from 'wagmi'
+import { getDummySigner } from '@utils/wallet'
+import useNetworkMetadata from '@hooks/useNetworkMetadata'
+import { useAsset } from '@context/Asset'
 import { FormConsumerParameter } from '@components/Publish/_types'
 
 const refreshInterval = 10000 // 10 sec.
@@ -109,6 +111,8 @@ export default function Compute({
     algoServiceParams: FormConsumerParameter[]
     algoParams: FormConsumerParameter[]
   }>()
+  const { isSupportedOceanNetwork } = useNetworkMetadata()
+  const { isAssetNetwork } = useAsset()
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
@@ -123,7 +127,8 @@ export default function Compute({
 
   async function checkAssetDTBalance(asset: DDO) {
     if (!asset?.services[0].datatokenAddress) return
-    const datatokenInstance = new Datatoken(signer)
+    const dummySigner = await getDummySigner(asset?.chainId)
+    const datatokenInstance = new Datatoken(dummySigner)
     const dtBalance = await datatokenInstance.balance(
       asset?.services[0].datatokenAddress,
       accountId || ZERO_ADDRESS // if the user is not connected, we use ZERO_ADDRESS as accountId
@@ -148,22 +153,15 @@ export default function Compute({
     const feeValidity = providerData?.datasets?.[0]?.providerFee?.validUntil
 
     const feeAmount = await unitsToAmount(
-      // !isSupportedOceanNetwork || !isAssetNetwork
-      //   ? await getDummyWeb3(asset?.chainId)
-      //   : web3,
-      signer,
+      !isSupportedOceanNetwork || !isAssetNetwork
+        ? await getDummySigner(asset?.chainId)
+        : signer,
       providerFeeToken,
       providerFeeAmount
     )
     setProviderFeeAmount(feeAmount)
 
-    const datatoken = new Datatoken(signer)
-    // const datatoken = new Datatoken(
-    //   await getDummyWeb3(asset?.chainId),
-    //   null,
-    //   null,
-    //   minAbi
-    // )
+    const datatoken = new Datatoken(await getDummySigner(asset?.chainId))
     setProviderFeesSymbol(await datatoken.getSymbol(providerFeeToken))
 
     const computeDuration = asset.accessDetails.validProviderFees

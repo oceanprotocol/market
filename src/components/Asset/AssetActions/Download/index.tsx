@@ -93,8 +93,7 @@ export default function Download({
 
         const _orderPriceAndFees = await getOrderPriceAndFees(
           asset,
-          ZERO_ADDRESS,
-          signer
+          ZERO_ADDRESS
         )
         setOrderPriceAndFees(_orderPriceAndFees)
         !orderPriceAndFees && setIsPriceLoading(false)

@@ -160,7 +160,7 @@ function getAccessDetailsFromTokenPrice(
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
   accountId: string,
-  signer: Signer,
+  signer?: Signer,
   providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {

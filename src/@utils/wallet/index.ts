@@ -1,12 +1,29 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { createClient, erc20ABI } from 'wagmi'
 import { mainnet, polygon, bsc, goerli, polygonMumbai } from 'wagmi/chains'
-import { ethers, Contract } from 'ethers'
+import { ethers, Contract, Signer, providers } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { getDefaultClient } from 'connectkit'
 import { energyWeb, moonriver } from './chains'
 import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { getOceanConfig } from '../ocean'
+
+export async function getDummySigner(chainId: number): Promise<Signer> {
+  if (typeof chainId !== 'number') {
+    throw new Error('Chain ID must be a number')
+  }
+
+  // Get config from ocean lib
+  const config = getOceanConfig(chainId)
+  try {
+    const privateKey =
+      '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+    const provider = new ethers.providers.JsonRpcProvider(config.nodeUri)
+    return new ethers.Wallet(privateKey, provider)
+  } catch (error) {
+    throw new Error(`Failed to create dummy signer: ${error.message}`)
+  }
+}
 
 // Wagmi client
 export const wagmiClient = createClient(
