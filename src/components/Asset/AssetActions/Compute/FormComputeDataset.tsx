@@ -8,9 +8,8 @@ import ButtonBuy from '../ButtonBuy'
 import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../content/pages/startComputeDataset.json'
-import { Asset, UserCustomParameters, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import { Asset, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
-import { useMarketMetadata } from '@context/MarketMetadata'
 import { getTokenBalanceFromSymbol } from '@utils/wallet'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
@@ -41,7 +40,6 @@ export default function FormStartCompute({
   dtBalanceSelectedComputeAsset,
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
-  setUserCustomParameters,
   stepText,
   isConsumable,
   consumableFeedback,
@@ -71,9 +69,6 @@ export default function FormStartCompute({
   dtBalanceSelectedComputeAsset?: string
   selectedComputeAssetType?: string
   selectedComputeAssetTimeout?: string
-  setUserCustomParameters: React.Dispatch<
-    React.SetStateAction<UserCustomParameters>
-  >
   stepText: string
   isConsumable: boolean
   consumableFeedback: string
@@ -83,7 +78,6 @@ export default function FormStartCompute({
   validUntil?: string
   retry: boolean
 }): ReactElement {
-  const { siteContent } = useMarketMetadata()
   const { address: accountId, isConnected } = useAccount()
   const { balance } = useBalance()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
@@ -134,16 +128,6 @@ export default function FormStartCompute({
     }
     fetchAlgorithmAssetExtended()
   }, [values.algorithm, accountId, isConsumable])
-
-  useEffect(() => {
-    if (!values) return
-
-    setUserCustomParameters({
-      dataServiceParams: values.dataServiceParams,
-      algoServiceParams: values.algoServiceParams,
-      algoParams: values.algoParams
-    })
-  }, [setUserCustomParameters, values])
 
   //
   // Set price for calculation output

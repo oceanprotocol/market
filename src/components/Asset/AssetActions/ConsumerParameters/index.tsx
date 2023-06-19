@@ -2,6 +2,35 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import FormConsumerParameters from './FormConsumerParameters'
 import styles from './index.module.css'
 import Tabs, { TabsItem } from '@components/@shared/atoms/Tabs'
+import { ConsumerParameter, UserCustomParameters } from '@oceanprotocol/lib'
+
+export function parseConsumerParameterValues(
+  formValues?: UserCustomParameters,
+  parameters?: ConsumerParameter[]
+): UserCustomParameters {
+  if (!formValues) return
+
+  const parsedValues = {}
+  Object.entries(formValues)?.forEach((userCustomParameter) => {
+    const [userCustomParameterKey, userCustomParameterValue] =
+      userCustomParameter
+
+    const { type } = parameters.find(
+      (param) => param.name === userCustomParameterKey
+    )
+
+    Object.assign(parsedValues, {
+      [userCustomParameterKey]:
+        type === 'select' && userCustomParameterValue === ''
+          ? undefined
+          : type === 'boolean'
+          ? userCustomParameterValue === 'true'
+          : userCustomParameterValue
+    })
+  })
+
+  return parsedValues
+}
 
 export default function ConsumerParameters({
   asset,

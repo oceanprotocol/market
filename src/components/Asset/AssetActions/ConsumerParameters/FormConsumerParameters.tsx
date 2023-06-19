@@ -15,7 +15,7 @@ export function getDefaultValues(
         param.type === 'number'
           ? Number(param.default)
           : param.type === 'boolean'
-          ? param.default === 'true'
+          ? param.default.toString()
           : param.default
     })
   })
@@ -55,10 +55,12 @@ export default function FormConsumerParameters({
       </Label>
       <div className={styles.parametersContainer}>
         {parameters?.map((param) => {
+          const { default: paramDefault, ...rest } = param
+
           return (
             <div key={param.name} className={styles.parameter}>
               <Field
-                {...param}
+                {...rest}
                 component={Input}
                 name={`${name}.${param.name}`}
                 options={getParameterOptions(param)}

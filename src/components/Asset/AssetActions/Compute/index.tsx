@@ -13,7 +13,8 @@ import {
   ComputeOutput,
   ProviderComputeInitializeResults,
   unitsToAmount,
-  ProviderFees
+  ProviderFees,
+  UserCustomParameters
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -48,7 +49,7 @@ import { useAccount, useSigner } from 'wagmi'
 import { getDummySigner } from '@utils/wallet'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
 import { useAsset } from '@context/Asset'
-import { FormConsumerParameter } from '@components/Publish/_types'
+import { parseConsumerParameterValues } from '../ConsumerParameters'
 
 const refreshInterval = 10000 // 10 sec.
 
@@ -106,11 +107,6 @@ export default function Compute({
   const [isLoadingJobs, setIsLoadingJobs] = useState(false)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const [retry, setRetry] = useState<boolean>(false)
-  const [userCustomParameters, setUserCustomParameters] = useState<{
-    dataServiceParams: FormConsumerParameter[]
-    algoServiceParams: FormConsumerParameter[]
-    algoParams: FormConsumerParameter[]
-  }>()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { isAssetNetwork } = useAsset()
 
@@ -343,7 +339,11 @@ export default function Compute({
     toast.error(errorMsg)
   }, [error])
 
-  async function startJob(): Promise<void> {
+  async function startJob(userCustomParameters: {
+    dataServiceParams?: UserCustomParameters
+    algoServiceParams?: UserCustomParameters
+    algoParams?: UserCustomParameters
+  }): Promise<void> {
     try {
       setIsOrdering(true)
       setIsOrdered(false)
@@ -446,6 +446,32 @@ export default function Compute({
     }
   }
 
+  const onSubmit = async (values: {
+    algorithm: string
+    dataServiceParams?: UserCustomParameters
+    algoServiceParams?: UserCustomParameters
+    algoParams?: UserCustomParameters
+  }) => {
+    if (!values.algorithm) return
+
+    const userCustomParameters = {
+      dataServiceParams: parseConsumerParameterValues(
+        values?.dataServiceParams,
+        asset.services[0].consumerParameters
+      ),
+      algoServiceParams: parseConsumerParameterValues(
+        values?.algoServiceParams,
+        selectedAlgorithmAsset?.services[0].consumerParameters
+      ),
+      algoParams: parseConsumerParameterValues(
+        values?.algoParams,
+        selectedAlgorithmAsset?.metadata?.algorithm?.consumerParameters
+      )
+    }
+
+    await startJob(userCustomParameters)
+  }
+
   return (
     <>
       <div
@@ -494,10 +520,7 @@ export default function Compute({
             selectedAlgorithmAsset?.metadata?.algorithm?.consumerParameters
           )}
           enableReinitialize
-          onSubmit={async (values) => {
-            if (!values.algorithm) return
-            await startJob()
-          }}
+          onSubmit={onSubmit}
         >
           <FormStartComputeDataset
             algorithms={algorithmList}
@@ -530,7 +553,6 @@ export default function Compute({
             selectedComputeAssetTimeout={secondsToString(
               selectedAlgorithmAsset?.services[0]?.timeout
             )}
-            setUserCustomParameters={setUserCustomParameters}
             // lazy comment when removing pricingStepText
             stepText={computeStatusText}
             isConsumable={isConsumablePrice}
