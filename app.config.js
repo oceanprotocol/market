@@ -11,12 +11,10 @@ module.exports = {
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [1, 137, 56, 246, 1285],
+  chainIds: [1, 137],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 137, 56, 246, 1285, 5, 80001],
-
-  infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
+  chainIdsSupported: [1, 137, 5, 80001],
 
   defaultDatatokenTemplateIndex: 2,
   // The ETH address the marketplace fee will be sent to.

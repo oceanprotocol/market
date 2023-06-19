@@ -8,12 +8,12 @@ import Button from '@shared/atoms/Button'
 import { LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { FormPublishData } from '@components/Publish/_types'
 import { getOceanConfig } from '@utils/ocean'
-import { useWeb3 } from '@context/Web3'
 import axios from 'axios'
 import { useCancelToken } from '@hooks/useCancelToken'
+import { useNetwork } from 'wagmi'
 
 export default function CustomProvider(props: InputProps): ReactElement {
-  const { chainId } = useWeb3()
+  const { chain } = useNetwork()
   const newCancelToken = useCancelToken()
   const { initialValues, setFieldError } = useFormikContext<FormPublishData>()
   const [field, meta, helpers] = useField(props.name)
@@ -40,7 +40,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
       const providerResponse = await axios.get(field.value.url, {
         cancelToken: newCancelToken()
       })
-      const userChainId = chainId || 1
+      const userChainId = chain?.id || 1
       const providerChain =
         providerResponse?.data?.chainId || providerResponse?.data?.chainIds
 
@@ -71,7 +71,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
   function handleDefault(e: React.SyntheticEvent) {
     e.preventDefault()
 
-    const oceanConfig = getOceanConfig(chainId)
+    const oceanConfig = getOceanConfig(chain?.id)
     const providerUrl =
       oceanConfig?.providerUri || initialValues.services[0].providerUrl.url
 

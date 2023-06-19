@@ -1,30 +1,38 @@
 import React, { FormEvent } from 'react'
 import Caret from '@images/caret.svg'
-import { accountTruncate } from '@utils/web3'
-import Loader from '@shared/atoms/Loader'
+import { accountTruncate } from '@utils/wallet'
+// import Loader from '@shared/atoms/Loader'
 import styles from './Account.module.css'
-import { useWeb3 } from '@context/Web3'
 import Avatar from '@shared/atoms/Avatar'
+import { useAccount, useEnsName, useEnsAvatar } from 'wagmi'
+import { useModal } from 'connectkit'
 
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { accountId, accountEns, accountEnsAvatar, web3Modal, connect } =
-    useWeb3()
+  const { address: accountId } = useAccount()
+  const { data: accountEns } = useEnsName({ address: accountId, chainId: 1 })
+  const { data: accountEnsAvatar } = useEnsAvatar({
+    address: accountId,
+    chainId: 1
+  })
+  const { setOpen } = useModal()
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in
     e.preventDefault()
 
-    await connect()
+    setOpen(true)
   }
 
-  return !accountId && web3Modal?.cachedProvider ? (
-    // Improve user experience for cached provider when connecting takes some time
-    <button className={styles.button} onClick={(e) => e.preventDefault()}>
-      <Loader />
-    </button>
-  ) : accountId ? (
+  // return
+  // !accountId && provider ? (
+  //   // Improve user experience for cached provider when connecting takes some time
+  //   <button className={styles.button} onClick={(e) => e.preventDefault()}>
+  //     <Loader />
+  //   </button>
+  // ) :
+  return accountId ? (
     <button
       className={styles.button}
       aria-label="Account"

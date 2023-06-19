@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styles from './Header.module.css'
-import { useWeb3 } from '@context/Web3'
+import { useAccount } from 'wagmi'
 import { useOrbis } from '@context/DirectMessages'
 import { didToAddress } from './_utils'
 import { toast } from 'react-toastify'
@@ -10,7 +10,7 @@ import ChevronUp from '@images/chevronup.svg'
 import Copy from '@images/copy.svg'
 
 export default function Header() {
-  const { accountId } = useWeb3()
+  const { address: accountId } = useAccount()
   const {
     conversations,
     conversationId,

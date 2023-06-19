@@ -1,7 +1,7 @@
 import { isCID } from '@utils/ipfs'
 import isUrl from 'is-url-superb'
 import * as Yup from 'yup'
-import web3 from 'web3'
+import { ethers } from 'ethers'
 import { isGoogleUrl } from './url/index'
 
 export function testLinks(isEdit?: boolean) {
@@ -49,7 +49,7 @@ export function testLinks(isEdit?: boolean) {
           : 'Transaction ID not valid.'
         break
       case 'smartcontract':
-        validField = web3.utils.isAddress(value?.toString())
+        validField = ethers.utils.isAddress(value?.toString())
         errorMessage = !value?.toString()
           ? 'Address required.'
           : 'Address not valid.'

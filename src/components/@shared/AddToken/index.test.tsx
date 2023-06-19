@@ -3,7 +3,7 @@ import React from 'react'
 import testRender from '../../../../.jest/testRender'
 import AddToken from './index'
 
-jest.mock('../../../@utils/web3', () => ({ addTokenToWallet: jest.fn() }))
+jest.mock('../../../@utils/wallet', () => ({ addTokenToWallet: jest.fn() }))
 
 describe('@shared/AddToken', () => {
   const propsBase = {
