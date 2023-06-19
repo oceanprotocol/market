@@ -58,10 +58,33 @@ export function generateBaseQuery(
             }
           }
         ],
-        must: [
+        should: [
           {
             terms: {
               'metadata.tags.keyword': ['RegenRangersODC']
+            }
+          },
+          {
+            terms: {
+              'id.keyword': [
+                'did:op:92067fe74892465ad77bb989abe48f67b76dfbb72bf547caa1805dfccb195f88',
+                'did:op:447ed4c1808d31f8aef9591fffea5f78a19a8518291174a9f1c159ff3c499669',
+                'did:op:7e984edf15c1b97d1ce4da9a01bc28d775d8c378305337da89868c859b5f5708',
+                'did:op:3ea3f29bba2b8db2a578603812a9750b74dd95f085a9840305bf0e910dcad240',
+                'did:op:a501d6eb47978d929ac2a9d4304a7997bcba9c2f11eaf9ebd8019ea4108645af',
+                'did:op:bd9991b34d925b3a7e3c8da7239ba9d6830d11794b76616201d5d3c16eb5064d',
+                'did:op:3a5f6705369b2a461753d292519fcf76d17bb5360cef9ef4b414f1397ebe2332',
+                'did:op:7df1cc9918f35163938ca219510a774c9ed80f8331c2743886fc54623acff218',
+                'did:op:8b133e8d3d2b37e94e25485e7c98503e505461b9095e78af6960666b5cdd4cf6',
+                'did:op:1d319077f7879e48b01aad52e4a69fc0ea06594c908575df4bd5cd015338b8cf',
+                'did:op:eac43d546ba84e5b82ddf4d2fbf4db9290711e8d2c2a167bce148b7209d41623',
+                'did:op:b2d554a5e09989bd81f1c54295fafab2a2784fb87ede3390a7103946f65df331',
+                'did:op:f5373f2561910d13d442a2598e5b52b6e831020fef0157319b963b9bed0a615b',
+                'did:op:8f69894fee4cbbeb5c8a5df9a2af58d3683bd8c989974b4a998dea2fb4d3e5cb',
+                'did:op:d0714e46ae0bf3f7c3488109d0bdd406f7f026ef5e99e9d25c4ce7ae61d7b572',
+                'did:op:1875f69b9ffe36d394f2aabd76e9e1f7a2b3f69c238fd9ddec177877c42f4117',
+                'did:op:80bdd287b517eebaed0fc7010d7909b3708d2d0ecb741c58168f89b3ebd012cc'
+              ]
             }
           }
         ]
