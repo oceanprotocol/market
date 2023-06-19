@@ -39,6 +39,7 @@ export function getFilterTerm(
   }
 }
 
+// hardcoded did
 export function generateBaseQuery(
   baseQueryParams: BaseQueryParams
 ): SearchQuery {
@@ -55,6 +56,24 @@ export function generateBaseQuery(
           {
             term: {
               'nft.state': 5
+            }
+          }
+        ],
+        must: [
+          {
+            terms: {
+              'id.keyword': [
+                'did:op:9e890d2eb962c2221ff2cbb3dfc9997e207c0ed183744ead91d434de739a01d6',
+                'did:op:7a32ff999b0e6a1c6cb44ab0d5dbca24a90b73015bcea47fde955ea71b79e154',
+                'did:op:08853d39b7640f790e49558296f2c71b084a107940dcea1cb4e4b1876196a496',
+                'did:op:8c4faf78510eac8c638477a9694d83ded91b0b265c88eb6cc04558bb787686db',
+                'did:op:800bad638251d750da5f918638079e093a55882343488ef765f8b808af76016f',
+                'did:op:6dc2c2f3360fde58abfdec3451331c3f736321190d7950614c6f6f1226d8583a',
+                'did:op:a8d3519a97cc7a0cd77ca021bf8755f6903e6eb14765597e4a9be202086aa699',
+                'did:op:c95a2da454c603f9a20330f8946657805d7f53d0a402d6a9e7080f8e0907fd2d',
+                'did:op:6ee8f13263e00383308a6e40b9645e26eb0d59d2cf4dabac114976b9d8d67470',
+                'did:op:c3223f0aa79fd07e52f54c9c85c8c3728c1b7724160b1c350e5c158cd3e433e2'
+              ]
             }
           }
         ]
