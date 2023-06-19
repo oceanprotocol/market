@@ -34,7 +34,7 @@ export default function HomePage(): ReactElement {
     const baseParamsSales = {
       chainIds,
       esPaginationOptions: {
-        size: 6
+        size: 12
       },
       sortOptions: {
         sortBy: SortTermOptions.Orders
@@ -55,7 +55,7 @@ export default function HomePage(): ReactElement {
 
   return (
     <>
-      <section className={styles.section}>
+      {/* <section className={styles.section}>
         <h3>Your Bookmarks</h3>
         <Bookmarks />
       </section>
@@ -65,14 +65,14 @@ export default function HomePage(): ReactElement {
       <SectionQueryResult
         title="Highest veOCEAN Allocations"
         query={queryMostAllocation}
-      />
+      /> */}
 
       <SectionQueryResult title="Most Sales" query={queryMostSales} />
       {/* <MostViews /> */}
       <TopSales title="Publishers With Most Sales" />
       <TopTags title="Top Tags By Sales" />
 
-      <SectionQueryResult
+      {/* <SectionQueryResult
         title="Recently Published"
         query={queryLatest}
         action={
@@ -80,7 +80,7 @@ export default function HomePage(): ReactElement {
             All datasets and algorithms →
           </Button>
         }
-      />
+      /> */}
     </>
   )
 }
