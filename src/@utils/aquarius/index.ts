@@ -39,6 +39,7 @@ export function getFilterTerm(
   }
 }
 
+// hardcoded did
 export function generateBaseQuery(
   baseQueryParams: BaseQueryParams
 ): SearchQuery {
