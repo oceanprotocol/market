@@ -30,7 +30,8 @@ export const wagmiClient = createClient(
     appName: 'Ocean Market',
     infuraId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID,
     // TODO: mapping between appConfig.chainIdsSupported and wagmi chainId
-    chains: [mainnet, polygon, goerli, polygonMumbai]
+    chains: [mainnet, polygon, goerli, polygonMumbai],
+    walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
   })
 )
 
