@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { FormPublishData } from '@components/Publish/_types'
 import classNames from 'classnames/bind'
 import { ErrorMessage, Field, useFormikContext } from 'formik'
-import { getObjectPropertyByPath } from '../../../../../@utils'
+import { getObjectPropertyByPath } from '@utils'
 import InputKeyValue, { KeyValueInputProps } from '../KeyValueInput'
 import styles from './OptionsInput.module.css'
 
