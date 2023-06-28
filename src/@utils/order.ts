@@ -99,7 +99,7 @@ export async function order(
       if (asset.accessDetails.templateId === 1) {
         if (!hasDatatoken) {
           // buy datatoken
-          const txApprove = await approve(
+          const tx: any = await approve(
             signer,
             config,
             accountId,
@@ -112,6 +112,7 @@ export async function order(
             ),
             false
           )
+          const txApprove = await tx.wait()
           if (!txApprove) {
             return
           }
@@ -136,7 +137,7 @@ export async function order(
         )
       }
       if (asset.accessDetails.templateId === 2) {
-        const txApprove = await approve(
+        const tx: any = await approve(
           signer,
           config,
           accountId,
@@ -149,6 +150,7 @@ export async function order(
           ),
           false
         )
+        const txApprove = await tx.wait()
         if (!txApprove) {
           return
         }
