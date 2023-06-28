@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Field, useField } from 'formik'
 import Input, { InputProps } from '../..'
-import { FormConsumerParameter } from '../../../../Publish/_types'
+import { FormConsumerParameter } from '@components/Publish/_types'
 import Tabs from '@shared/atoms/Tabs'
 import FormActions from './FormActions'
 import DefaultInput from './DefaultInput'
