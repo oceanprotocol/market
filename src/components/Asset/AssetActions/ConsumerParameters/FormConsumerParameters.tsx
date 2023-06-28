@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
-import Input from '@components/@shared/FormInput'
-import Label from '@components/@shared/FormInput/Label'
+import Input from '@shared/FormInput'
+import Label from '@shared/FormInput/Label'
 import { Field, useField } from 'formik'
 import styles from './FormConsumerParameters.module.css'
 import { ConsumerParameter, UserCustomParameters } from '@oceanprotocol/lib'
