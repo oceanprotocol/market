@@ -18,7 +18,7 @@ import Markdown from '@shared/Markdown'
 import FormHelp from './Help'
 import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { BoxSelectionOption } from '@shared/FormInput/InputElement/BoxSelection'
-import { getObjectPropertyByPath } from '@utils'
+import { getObjectPropertyByPath } from '@utils/index'
 
 const cx = classNames.bind(styles)
 
