@@ -4,7 +4,7 @@
 }
 
 .parametersContainer {
-  composes: selection from '../../../@shared/FormInput/InputElement/AssetSelection/index.module.css';
+  composes: selection from '@shared/FormInput/InputElement/AssetSelection/index.module.css';
 
   padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2);
   max-height: 50vh;
