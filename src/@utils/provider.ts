@@ -15,7 +15,7 @@ import {
   AbiItem,
   UserCustomParameters
 } from '@oceanprotocol/lib'
-import { KeyValuePair } from '@components/@shared/FormInput/InputElement/KeyValueInput'
+import { KeyValuePair } from '@shared/FormInput/InputElement/KeyValueInput'
 import { Signer } from 'ethers'
 import { getValidUntilTime } from './compute'
 
