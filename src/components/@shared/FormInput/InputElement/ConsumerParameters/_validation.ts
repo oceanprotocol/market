@@ -1,16 +1,27 @@
-import { FormConsumerParameter } from '@components/Publish/_types'
+import {
+  FormConsumerParameter,
+  FormPublishData,
+  FormPublishService
+} from '@components/Publish/_types'
 import * as Yup from 'yup'
 import { SchemaLike } from 'yup/lib/types'
 import { paramTypes } from '.'
+
+interface TestContextExtended extends Yup.TestContext {
+  from: {
+    value: FormPublishData['metadata'] | FormPublishService
+  }[]
+}
 
 export const validationConsumerParameters: {
   [key in keyof FormConsumerParameter]: SchemaLike
 } = {
   name: Yup.string()
     .test('unique', 'Parameter names must be unique', (name, context) => {
-      // TODO: revert any
-      // from is not yet correctly typed: https://github.com/jquense/yup/issues/398#issuecomment-916693907
-      const [parentFormObj, nextParentFormObj] = (context as any).from
+      const [parentFormObj, nextParentFormObj] = (
+        context as TestContextExtended
+      ).from
+
       if (
         !nextParentFormObj?.value?.consumerParameters ||
         nextParentFormObj.value.consumerParameters.length === 1
