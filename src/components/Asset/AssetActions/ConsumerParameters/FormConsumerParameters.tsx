@@ -62,6 +62,7 @@ export default function FormConsumerParameters({
               <Field
                 {...rest}
                 component={Input}
+                help={param.description}
                 name={`${name}.${param.name}`}
                 options={getParameterOptions(param)}
                 size="small"
