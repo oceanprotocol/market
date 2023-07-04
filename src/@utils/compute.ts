@@ -148,7 +148,7 @@ export async function getComputeEnviroment(
     if (!computeEnvs[asset.chainId][0]) return null
     return computeEnvs[asset.chainId][0]
   } catch (e) {
-    const message = getErrorMessage(e)
+    const message = getErrorMessage(JSON.parse(e.message))
     LoggerInstance.error(
       '[Compute to Data] Fetch compute environment:',
       message
@@ -261,7 +261,7 @@ async function getJobs(
       })
     }
   } catch (err) {
-    const message = getErrorMessage(err)
+    const message = getErrorMessage(JSON.parse(err.message))
     LoggerInstance.error('[Compute to Data] Error:', message)
     toast.error(message)
   }

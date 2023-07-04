@@ -147,7 +147,7 @@ export default function PublishPage({
           newAbortController()
         )
       } catch (error) {
-        const message = getErrorMessage(error)
+        const message = getErrorMessage(JSON.parse(error.message))
         LoggerInstance.error('[Provider Encrypt] Error:', message)
       }
 
