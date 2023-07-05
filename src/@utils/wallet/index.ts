@@ -4,7 +4,6 @@ import { mainnet, polygon, bsc, goerli, polygonMumbai } from 'wagmi/chains'
 import { ethers, Contract, Signer, providers } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { getDefaultClient } from 'connectkit'
-import { energyWeb, moonriver } from './chains'
 import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { getOceanConfig } from '../ocean'
 
@@ -31,7 +30,8 @@ export const wagmiClient = createClient(
     appName: 'Ocean Market',
     infuraId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID,
     // TODO: mapping between appConfig.chainIdsSupported and wagmi chainId
-    chains: [mainnet, polygon, bsc, energyWeb, moonriver, goerli, polygonMumbai]
+    chains: [mainnet, polygon, goerli, polygonMumbai],
+    walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
   })
 )
 
