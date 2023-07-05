@@ -111,34 +111,13 @@ export async function order(
             orderPriceAndFees.price,
             false
           )
-          console.log('typeof(tx) ', typeof tx)
           const txApprove = typeof tx !== 'number' ? await tx.wait() : tx
-          console.log('txApprove', txApprove)
           if (!txApprove) {
             return
           }
           const fre = new FixedRateExchange(
             config.fixedRateExchangeAddress,
             signer
-          )
-          console.log(
-            ' await fixedRate.getDatatokenSupply(exchangeId)',
-            await fre.getDatatokenSupply(asset.accessDetails?.addressOrId)
-          )
-
-          console.log(
-            ' await fixedRate.getBasetokenSupply(exchangeId)',
-            await fre.getBasetokenSupply(asset.accessDetails?.addressOrId)
-          )
-          console.log(
-            'await signer.getAddress(), ==',
-            await signer.getAddress()
-          )
-          console.log('account id ==', accountId)
-          console.log('orderPriceAndFees.price, ==', orderPriceAndFees.price)
-          console.log(
-            '  asset.accessDetails?.addressOrId ==',
-            asset.accessDetails?.addressOrId
           )
           const freTx = await fre.buyDatatokens(
             asset.accessDetails?.addressOrId,
@@ -147,9 +126,7 @@ export async function order(
             marketFeeAddress,
             consumeMarketFixedSwapFee
           )
-          console.log('freTx ==', freTx)
           const buyDtTx = await freTx.wait()
-          console.log('buyDtTx ==', buyDtTx)
         }
         return await datatoken.startOrder(
           asset.accessDetails.datatoken.address,
@@ -167,17 +144,10 @@ export async function order(
           asset.accessDetails.baseToken.address,
           asset.accessDetails.datatoken.address,
           orderPriceAndFees.price,
-          // await amountToUnits(
-          //   signer,
-          //   asset?.accessDetails?.baseToken?.address,
-
-          // ),
           false
         )
-        console.log('tx 2', tx)
-        // const txApprove = await tx.wait()
+
         const txApprove = typeof tx !== 'number' ? await tx.wait() : tx
-        console.log('txApprove 2', txApprove)
         if (!txApprove) {
           return
         }
