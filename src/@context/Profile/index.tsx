@@ -16,9 +16,9 @@ import {
   getUserSales
 } from '@utils/aquarius'
 import axios, { CancelToken } from 'axios'
-import web3 from 'web3'
 import { useMarketMetadata } from '../MarketMetadata'
 import { getEnsProfile } from '@utils/ens'
+import { isAddress } from 'ethers/lib/utils'
 
 interface ProfileProviderValue {
   profile: Profile
@@ -64,7 +64,7 @@ function ProfileProvider({
   // when accountId is no ETH address
   //
   useEffect(() => {
-    const isEthAddress = web3.utils.isAddress(accountId)
+    const isEthAddress = isAddress(accountId)
     setIsEthAddress(isEthAddress)
   }, [accountId])
 

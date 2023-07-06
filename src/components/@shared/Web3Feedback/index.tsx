@@ -33,11 +33,11 @@ export default function Web3Feedback({
     if (!accountId) {
       setState('error')
       setTitle('No account connected')
-      setMessage('Please connect your Web3 wallet.')
+      setMessage('Please connect your wallet.')
     } else if (isAssetNetwork === false) {
       setState('error')
       setTitle('Not connected to asset network')
-      setMessage('Please connect your Web3 wallet.')
+      setMessage('Please connect your wallet.')
     } else if (isGraphSynced === false) {
       setState('warning')
       setTitle('Data out of sync')

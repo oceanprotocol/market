@@ -36,7 +36,9 @@ module.exports = (phase, { defaultConfig }) => {
         crypto: false,
         os: false,
         stream: false,
-        assert: false
+        assert: false,
+        tls: false,
+        net: false
       })
       config.resolve.fallback = fallback
 

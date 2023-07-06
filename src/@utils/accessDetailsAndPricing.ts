@@ -9,13 +9,14 @@ import {
   ProviderFees,
   ProviderInstance
 } from '@oceanprotocol/lib'
-import { getFixedBuyPrice } from './fixedRateExchange'
+import { getFixedBuyPrice } from './ocean/fixedRateExchange'
 import Decimal from 'decimal.js'
 import {
   consumeMarketOrderFee,
   publisherMarketOrderFee,
   customProviderUrl
 } from '../../app.config'
+import { Signer } from 'ethers'
 
 const tokenPriceQuery = gql`
   query TokenPriceQuery($datatokenId: ID!, $account: String) {
@@ -159,7 +160,8 @@ function getAccessDetailsFromTokenPrice(
  */
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
-  accountId?: string,
+  accountId: string,
+  signer?: Signer,
   providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
@@ -188,7 +190,11 @@ export async function getOrderPriceAndFees(
 
   // fetch price and swap fees
   if (asset?.accessDetails?.type === 'fixed') {
-    const fixed = await getFixedBuyPrice(asset?.accessDetails, asset?.chainId)
+    const fixed = await getFixedBuyPrice(
+      asset?.accessDetails,
+      asset?.chainId,
+      signer
+    )
     orderPriceAndFee.price = fixed.baseTokenAmount
     orderPriceAndFee.opcFee = fixed.oceanFeeAmount
     orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount

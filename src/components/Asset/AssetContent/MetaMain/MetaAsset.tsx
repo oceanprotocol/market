@@ -1,10 +1,10 @@
 import { useAsset } from '@context/Asset'
-import { useWeb3 } from '@context/Web3'
 import { Asset } from '@oceanprotocol/lib'
 import AddToken from '@shared/AddToken'
 import ExplorerLink from '@shared/ExplorerLink'
 import Publisher from '@shared/Publisher'
 import React, { ReactElement } from 'react'
+import { useAccount } from 'wagmi'
 import styles from './MetaAsset.module.css'
 
 export default function MetaAsset({
@@ -15,7 +15,7 @@ export default function MetaAsset({
   isBlockscoutExplorer: boolean
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
-  const { web3ProviderInfo } = useWeb3()
+  const { connector: activeConnector } = useAccount()
 
   const dataTokenSymbol = asset?.datatokens[0]?.symbol
 
@@ -36,7 +36,7 @@ export default function MetaAsset({
         >
           {`Accessed with ${dataTokenSymbol}`}
         </ExplorerLink>
-        {web3ProviderInfo?.name === 'MetaMask' && isAssetNetwork && (
+        {activeConnector?.name === 'MetaMask' && isAssetNetwork && (
           <span className={styles.addWrap}>
             <AddToken
               address={asset?.services[0].datatokenAddress}

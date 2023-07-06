@@ -14,9 +14,6 @@ module.exports = {
   chainIds: [
     1,
     137,
-    56,
-    246,
-    1285,
     process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true' ? 8996 : null
   ],
 
@@ -24,9 +21,6 @@ module.exports = {
   chainIdsSupported: [
     1,
     137,
-    56,
-    246,
-    1285,
     5,
     80001,
     process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true' ? 8996 : null

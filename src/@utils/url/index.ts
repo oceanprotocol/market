@@ -10,6 +10,10 @@ export function sanitizeUrl(url: string) {
 export const isGoogleUrl = (url: string): boolean => {
   if (!url || !isUrl(url)) return
 
-  const googleUrl = new URL(url)
-  return googleUrl.hostname.endsWith('google.com')
+  const urlString = new URL(url)
+  const googleUrl = urlString.hostname.endsWith('google.com')
+  const isGoogleStorage = urlString.hostname.endsWith(
+    'storage.cloud.google.com'
+  )
+  return isGoogleStorage ? false : googleUrl
 }

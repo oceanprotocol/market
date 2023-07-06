@@ -13,9 +13,8 @@ import {
   ProviderInstance,
   ProviderInitialize
 } from '@oceanprotocol/lib'
-import Web3 from 'web3'
+import { Signer, ethers } from 'ethers'
 import { getOceanConfig } from './ocean'
-import { TransactionReceipt } from 'web3-eth'
 import {
   marketFeeAddress,
   consumeMarketOrderFee,
@@ -45,23 +44,24 @@ async function initializeProvider(
 }
 
 /**
- * @param web3
+ * @param signer
  * @param asset
  * @param orderPriceAndFees
  * @param accountId
  * @param providerFees
  * @param computeConsumerAddress
- * @returns {TransactionReceipt} receipt of the order
+ * @returns {ethers.providers.TransactionResponse | BigNumber} receipt of the order
  */
 export async function order(
-  web3: Web3,
+  signer: Signer,
   asset: AssetExtended,
   orderPriceAndFees: OrderPriceAndFees,
   accountId: string,
+  hasDatatoken: boolean,
   providerFees?: ProviderFees,
   computeConsumerAddress?: string
-): Promise<TransactionReceipt> {
-  const datatoken = new Datatoken(web3)
+): Promise<ethers.providers.TransactionResponse> {
+  const datatoken = new Datatoken(signer)
   const config = getOceanConfig(asset.chainId)
 
   const initializeData = await initializeProvider(
@@ -97,37 +97,39 @@ export async function order(
         marketFeeAddress
       } as FreOrderParams
 
-      if (asset.accessDetails?.templateId === 1) {
-        // buy datatoken
-        const txApprove = await approve(
-          web3,
-          config,
-          accountId,
-          asset.accessDetails.baseToken.address,
-          config.fixedRateExchangeAddress,
-          await amountToUnits(
-            web3,
-            asset?.accessDetails?.baseToken?.address,
-            orderPriceAndFees.price
-          ),
-          false
-        )
-        if (!txApprove) {
-          return
+      if (asset.accessDetails.templateId === 1) {
+        if (!hasDatatoken) {
+          // buy datatoken
+          const txApprove = await approve(
+            signer,
+            config,
+            accountId,
+            asset.accessDetails.baseToken.address,
+            config.fixedRateExchangeAddress,
+            await amountToUnits(
+              signer,
+              asset?.accessDetails?.baseToken?.address,
+              orderPriceAndFees.price
+            ),
+            false
+          )
+          if (!txApprove) {
+            return
+          }
+          const fre = new FixedRateExchange(
+            config.fixedRateExchangeAddress,
+            signer
+          )
+          const freTx = await fre.buyDatatokens(
+            asset.accessDetails?.addressOrId,
+            '1',
+            orderPriceAndFees.price,
+            marketFeeAddress,
+            consumeMarketFixedSwapFee
+          )
         }
-        const fre = new FixedRateExchange(config.fixedRateExchangeAddress, web3)
-        const freTx = await fre.buyDatatokens(
-          accountId,
-          asset.accessDetails?.addressOrId,
-          '1',
-          orderPriceAndFees.price,
-          marketFeeAddress,
-          consumeMarketFixedSwapFee
-        )
-
         return await datatoken.startOrder(
           asset.accessDetails.datatoken.address,
-          accountId,
           orderParams.consumer,
           orderParams.serviceIndex,
           orderParams._providerFee,
@@ -136,13 +138,13 @@ export async function order(
       }
       if (asset.accessDetails?.templateId === 2) {
         const txApprove = await approve(
-          web3,
+          signer,
           config,
           accountId,
           asset.accessDetails.baseToken.address,
           asset.accessDetails.datatoken.address,
           await amountToUnits(
-            web3,
+            signer,
             asset?.accessDetails?.baseToken?.address,
             orderPriceAndFees.price
           ),
@@ -153,7 +155,6 @@ export async function order(
         }
         return await datatoken.buyFromFreAndOrder(
           asset.accessDetails.datatoken.address,
-          accountId,
           orderParams,
           freParams
         )
@@ -161,17 +162,15 @@ export async function order(
       break
     }
     case 'free': {
-      if (asset.accessDetails?.templateId === 1) {
-        const dispenser = new Dispenser(config.dispenserAddress, web3)
+      if (asset.accessDetails.templateId === 1) {
+        const dispenser = new Dispenser(config.dispenserAddress, signer)
         const dispenserTx = await dispenser.dispense(
           asset.accessDetails?.datatoken.address,
-          accountId,
           '1',
           accountId
         )
         return await datatoken.startOrder(
           asset.accessDetails.datatoken.address,
-          accountId,
           orderParams.consumer,
           orderParams.serviceIndex,
           orderParams._providerFee,
@@ -181,7 +180,6 @@ export async function order(
       if (asset.accessDetails?.templateId === 2) {
         return await datatoken.buyFromDispenserAndOrder(
           asset.services[0].datatokenAddress,
-          accountId,
           orderParams,
           config.dispenserAddress
         )
@@ -192,7 +190,7 @@ export async function order(
 
 /**
  * called when having a valid order, but with expired provider access, requires approval of the provider fee
- * @param web3
+ * @param signer
  * @param asset
  * @param accountId
  * @param validOrderTx
@@ -200,13 +198,13 @@ export async function order(
  * @returns {TransactionReceipt} receipt of the order
  */
 export async function reuseOrder(
-  web3: Web3,
+  signer: Signer,
   asset: AssetExtended,
   accountId: string,
   validOrderTx: string,
   providerFees?: ProviderFees
-): Promise<TransactionReceipt> {
-  const datatoken = new Datatoken(web3)
+): Promise<ethers.providers.TransactionResponse> {
+  const datatoken = new Datatoken(signer)
   const initializeData = await initializeProvider(
     asset,
     accountId,
@@ -215,7 +213,6 @@ export async function reuseOrder(
 
   const tx = await datatoken.reuseOrder(
     asset.accessDetails.datatoken.address,
-    accountId,
     validOrderTx,
     providerFees || initializeData.providerFee
   )
@@ -226,16 +223,16 @@ export async function reuseOrder(
 async function approveProviderFee(
   asset: AssetExtended,
   accountId: string,
-  web3: Web3,
+  signer: Signer,
   providerFeeAmount: string
-): Promise<TransactionReceipt> {
+): Promise<ethers.providers.TransactionResponse> {
   const config = getOceanConfig(asset.chainId)
   const baseToken =
     asset?.accessDetails?.type === 'free'
       ? getOceanConfig(asset.chainId).oceanTokenAddress
       : asset?.accessDetails?.baseToken?.address
   const txApproveWei = await approveWei(
-    web3,
+    signer,
     config,
     accountId,
     baseToken,
@@ -250,7 +247,7 @@ async function approveProviderFee(
  * - have validOrder and no providerFees -> then order is valid, providerFees are valid, it returns the valid order value
  * - have validOrder and providerFees -> then order is valid but providerFees are not valid, we need to call reuseOrder and pay only providerFees
  * - no validOrder -> we need to call order, to pay 1 DT & providerFees
- * @param web3
+ * @param signer
  * @param asset
  * @param orderPriceAndFees
  * @param accountId
@@ -260,11 +257,12 @@ async function approveProviderFee(
  * @returns {Promise<string>} tx id
  */
 export async function handleComputeOrder(
-  web3: Web3,
+  signer: Signer,
   asset: AssetExtended,
   orderPriceAndFees: OrderPriceAndFees,
   accountId: string,
   initializeData: ProviderComputeInitialize,
+  hasDatatoken,
   computeConsumerAddress?: string
 ): Promise<string> {
   LoggerInstance.log(
@@ -289,7 +287,7 @@ export async function handleComputeOrder(
       const txApproveProvider = await approveProviderFee(
         asset,
         accountId,
-        web3,
+        signer,
         initializeData.providerFee.providerFeeAmount
       )
 
@@ -302,30 +300,33 @@ export async function handleComputeOrder(
     if (initializeData?.validOrder) {
       LoggerInstance.log('[compute] Calling reuseOrder ...', initializeData)
       const txReuseOrder = await reuseOrder(
-        web3,
+        signer,
         asset,
         accountId,
         initializeData.validOrder,
         initializeData.providerFee
       )
       if (!txReuseOrder) throw new Error('Failed to reuse order!')
-      LoggerInstance.log('[compute] Reused order:', txReuseOrder)
-      return txReuseOrder?.transactionHash
+      const tx = await txReuseOrder.wait()
+      LoggerInstance.log('[compute] Reused order:', tx)
+      return tx?.transactionHash
     }
 
     LoggerInstance.log('[compute] Calling order ...', initializeData)
 
     const txStartOrder = await order(
-      web3,
+      signer,
       asset,
       orderPriceAndFees,
       accountId,
+      hasDatatoken,
       initializeData.providerFee,
       computeConsumerAddress
     )
 
-    LoggerInstance.log('[compute] Order succeeded', txStartOrder)
-    return txStartOrder?.transactionHash
+    const tx = await txStartOrder.wait()
+    LoggerInstance.log('[compute] Order succeeded', tx)
+    return tx?.transactionHash
   } catch (error) {
     toast.error(error.message)
     LoggerInstance.error(`[compute] ${error.message}`)

@@ -11,13 +11,13 @@ import {
   LoggerInstance,
   ProviderComputeInitializeResults,
   ProviderInstance,
-  UrlFile
+  UrlFile,
+  AbiItem
 } from '@oceanprotocol/lib'
 // if customProviderUrl is set, we need to call provider using this custom endpoint
 import { customProviderUrl } from '../../app.config'
 import { QueryHeader } from '@shared/FormInput/InputElement/Headers'
-import Web3 from 'web3'
-import { AbiItem } from 'web3-utils/types'
+import { Signer } from 'ethers'
 import { getValidUntilTime } from './compute'
 
 export async function initializeProviderForCompute(
@@ -191,19 +191,18 @@ export async function getFileInfo(
 }
 
 export async function downloadFile(
-  web3: Web3,
+  signer: Signer,
   asset: AssetExtended,
   accountId: string,
   validOrderTx?: string
 ) {
   const downloadUrl = await ProviderInstance.getDownloadUrl(
     asset.id,
-    accountId,
     asset.services[0].id,
     0,
     validOrderTx || asset.accessDetails.validOrderTx,
     customProviderUrl || asset.services[0].serviceEndpoint,
-    web3
+    signer
   )
   await downloadFileBrowser(downloadUrl)
 }

@@ -2,19 +2,18 @@ import React from 'react'
 import styles from './index.module.css'
 import Conversation from './Conversation'
 import { useOrbis } from '@context/DirectMessages'
-import { useWeb3 } from '@context/Web3'
+import { useAccount, useConnect } from 'wagmi'
 import Header from './Header'
 import List from './List'
 import walletStyles from '../../Header/Wallet/Account.module.css'
 
 const BodyContent = () => {
   const { account, conversationId, checkOrbisConnection } = useOrbis()
-  const { accountId, connect } = useWeb3()
+  const { address: accountId } = useAccount()
 
   const handleActivation = async (e: React.MouseEvent) => {
     e.preventDefault()
-    const resConnect = await connect()
-    if (resConnect) {
+    if (accountId) {
       await checkOrbisConnection({
         address: accountId,
         autoConnect: true,

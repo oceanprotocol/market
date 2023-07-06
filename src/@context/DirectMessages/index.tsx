@@ -9,8 +9,8 @@ import React, {
 } from 'react'
 import { useInterval } from '@hooks/useInterval'
 import { Orbis } from '@orbisclub/orbis-sdk'
-import { useWeb3 } from '../Web3'
-import { accountTruncate } from '@utils/web3'
+import { accountTruncate } from '@utils/wallet'
+import { useAccount, useSigner, useProvider } from 'wagmi'
 import { didToAddress, sleep } from '@shared/DirectMessages/_utils'
 import { getEnsName } from '@utils/ens'
 import usePrevious from '@hooks/usePrevious'
@@ -32,7 +32,9 @@ const CONVERSATION_CONTEXT =
   process.env.NEXT_PUBLIC_ORBIS_CONTEXT || 'ocean_market' // Can be changed to whatever
 
 function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
-  const { web3Provider, accountId } = useWeb3()
+  const { address: accountId } = useAccount()
+  const { data: signer } = useSigner()
+  const web3Provider = useProvider()
   const prevAccountId = usePrevious(accountId)
 
   const [ceramicSessions, setCeramicSessions] = useLocalStorage<string[]>(
@@ -81,12 +83,12 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
     address: string
     lit?: boolean
   }) => {
+    const signerProvide: any = signer?.provider
     const res = await orbis.connect_v2({
-      provider: web3Provider,
+      provider: signerProvide.provider,
       chain: 'ethereum',
       lit
     })
-
     if (res.status === 200) {
       const { data } = await orbis.getProfile(res.did)
       setAccount(data)
@@ -98,7 +100,7 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       })
       return data
     } else {
-      await connectOrbis({ address })
+      // await connectOrbis({ address })
     }
   }
 
@@ -137,8 +139,12 @@ function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
       setAccount(data)
       return data
     } else if (autoConnect) {
-      const data = await connectOrbis({ address, lit })
-      return data
+      try {
+        const data = await connectOrbis({ address, lit })
+        return data
+      } catch (err) {
+        return null
+      }
     } else {
       resetStates()
       removeLitSignature()

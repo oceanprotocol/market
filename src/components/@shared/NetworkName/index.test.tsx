@@ -15,18 +15,6 @@ describe('@shared/NetworkName', () => {
     render(<NetworkName networkId={137} />)
   })
 
-  it('renders BSC', () => {
-    render(<NetworkName networkId={56} />)
-  })
-
-  it('renders Energy Web', () => {
-    render(<NetworkName networkId={246} />)
-  })
-
-  it('renders Moonriver', () => {
-    render(<NetworkName networkId={1285} />)
-  })
-
   it('renders icon fallback', () => {
     render(<NetworkName networkId={99999} />)
   })

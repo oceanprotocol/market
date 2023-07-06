@@ -2,8 +2,6 @@ import React, { FormEvent, ReactElement } from 'react'
 import Button from '../../../@shared/atoms/Button'
 import styles from './index.module.css'
 import Loader from '../../../@shared/atoms/Loader'
-import { useWeb3 } from '@context/Web3'
-import Web3 from 'web3'
 
 export interface ButtonBuyProps {
   action: 'download' | 'compute'
@@ -31,6 +29,7 @@ export interface ButtonBuyProps {
   algorithmPriceType?: string
   isAlgorithmConsumable?: boolean
   isSupportedOceanNetwork?: boolean
+  isAccountConnected?: boolean
   hasProviderFee?: boolean
   retry?: boolean
 }
@@ -46,13 +45,13 @@ function getConsumeHelpText(
   isBalanceSufficient: boolean,
   consumableFeedback: string,
   isSupportedOceanNetwork: boolean,
-  web3: Web3,
+  isAccountConnected: boolean,
   priceType: string
 ) {
   const text =
     isConsumable === false
       ? consumableFeedback
-      : hasPreviousOrder && web3 && isSupportedOceanNetwork
+      : hasPreviousOrder && isAccountConnected && isSupportedOceanNetwork
       ? `You bought this ${assetType} already allowing you to use it without paying again.`
       : hasDatatoken
       ? `You own ${dtBalance} ${dtSymbol} allowing you to use this dataset by spending 1 ${dtSymbol}, but without paying ${btSymbol} again.`
@@ -74,7 +73,7 @@ function getAlgoHelpText(
   hasDatatokenSelectedComputeAsset: boolean,
   isBalanceSufficient: boolean,
   isSupportedOceanNetwork: boolean,
-  web3: Web3,
+  isAccountConnected: boolean,
   algorithmPriceType: string
 ) {
   const text =
@@ -82,11 +81,13 @@ function getAlgoHelpText(
     isConsumable === false ||
     isAlgorithmConsumable === false
       ? ''
-      : hasPreviousOrderSelectedComputeAsset && web3 && isSupportedOceanNetwork
+      : hasPreviousOrderSelectedComputeAsset &&
+        isAccountConnected &&
+        isSupportedOceanNetwork
       ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
       : hasDatatokenSelectedComputeAsset
       ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
-      : web3 && !isSupportedOceanNetwork
+      : isAccountConnected && !isSupportedOceanNetwork
       ? `Connect to the correct network to interact with this asset.`
       : isBalanceSufficient === false
       ? ''
@@ -115,7 +116,7 @@ function getComputeAssetHelpText(
   selectedComputeAssetType?: string,
   isAlgorithmConsumable?: boolean,
   isSupportedOceanNetwork?: boolean,
-  web3?: Web3,
+  isAccountConnected?: boolean,
   hasProviderFee?: boolean
 ) {
   const computeAssetHelpText = getConsumeHelpText(
@@ -129,7 +130,7 @@ function getComputeAssetHelpText(
     isBalanceSufficient,
     consumableFeedback,
     isSupportedOceanNetwork,
-    web3,
+    isAccountConnected,
     priceType
   )
 
@@ -143,7 +144,7 @@ function getComputeAssetHelpText(
     hasDatatokenSelectedComputeAsset,
     isBalanceSufficient,
     isSupportedOceanNetwork,
-    web3,
+    isAccountConnected,
     algorithmPriceType
   )
 
@@ -183,9 +184,9 @@ export default function ButtonBuy({
   isAlgorithmConsumable,
   hasProviderFee,
   retry,
-  isSupportedOceanNetwork
+  isSupportedOceanNetwork,
+  isAccountConnected
 }: ButtonBuyProps): ReactElement {
-  const { web3 } = useWeb3()
   const buttonText = retry
     ? 'Retry'
     : action === 'download'
@@ -216,7 +217,7 @@ export default function ButtonBuy({
         isBalanceSufficient,
         consumableFeedback,
         isSupportedOceanNetwork,
-        web3,
+        isAccountConnected,
         priceType
       )
     } else {
@@ -239,7 +240,7 @@ export default function ButtonBuy({
         selectedComputeAssetType,
         isAlgorithmConsumable,
         isSupportedOceanNetwork,
-        web3,
+        isAccountConnected,
         hasProviderFee
       )
     }

@@ -10,7 +10,6 @@ import React, {
 import { Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { getAsset } from '@utils/aquarius'
-import { useWeb3 } from './Web3'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, sanitizeDevelopmentConfig } from '@utils/ocean'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
@@ -18,6 +17,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
 import { assetStateToString } from '@utils/assetState'
 import { isValidDid } from '@utils/ddo'
+import { useAccount, useNetwork } from 'wagmi'
 
 export interface AssetProviderValue {
   isInPurgatory: boolean
@@ -44,8 +44,9 @@ function AssetProvider({
   children: ReactNode
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
+  const { address: accountId } = useAccount()
+  const { chain } = useNetwork()
 
-  const { chainId, accountId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
   const [asset, setAsset] = useState<AssetExtended>()
@@ -158,11 +159,11 @@ function AssetProvider({
   // Check user network against asset network
   // -----------------------------------
   useEffect(() => {
-    if (!chainId || !asset?.chainId) return
+    if (!chain?.id || !asset?.chainId) return
 
-    const isAssetNetwork = chainId === asset?.chainId
+    const isAssetNetwork = chain?.id === asset?.chainId
     setIsAssetNetwork(isAssetNetwork)
-  }, [chainId, asset?.chainId])
+  }, [chain?.id, asset?.chainId])
 
   // -----------------------------------
   // Asset owner check against wallet user

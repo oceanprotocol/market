@@ -7,7 +7,7 @@ import Copy from '@shared/atoms/Copy'
 import Avatar from '@shared/atoms/Avatar'
 import styles from './Account.module.css'
 import { useProfile } from '@context/Profile'
-import { accountTruncate } from '@utils/web3'
+import { accountTruncate } from '@utils/wallet'
 
 export default function Account({
   accountId
