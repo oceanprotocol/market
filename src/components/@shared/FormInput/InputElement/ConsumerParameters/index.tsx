@@ -43,7 +43,10 @@ export function ConsumerParameters(props: InputProps): ReactElement {
         onIndexSelected={setTabIndex}
         items={field.value.map((param, index) => {
           return {
-            title: param?.name || 'New parameter',
+            title:
+              param?.name?.length > 15
+                ? `${param?.name?.slice(0, 15)}...`
+                : param?.name || 'New parameter',
             content: (
               <div>
                 {props.fields?.map((subField: InputProps) => {
