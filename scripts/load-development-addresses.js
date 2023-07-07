@@ -12,25 +12,65 @@ function getLocalAddresses() {
   return data.development
 }
 
-const addresses = getLocalAddresses() 
-const envVars = []
-envVars.push(`NEXT_PUBLIC_NFT_FACTORY_ADDRESS='${addresses.ERC721Factory}'`)
-envVars.push(
-  `NEXT_PUBLIC_OPF_COMMUNITY_FEE_COLECTOR='${addresses.OPFCommunityFeeCollector}'`
-)
-envVars.push(
-  `NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS='${addresses.FixedPrice}'`
-)
-envVars.push(`NEXT_PUBLIC_DISPENSER_ADDRESS='${addresses.Dispenser}'`)
-envVars.push(`NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS='${addresses.Ocean}'`)
-envVars.push(`NEXT_PUBLIC_MARKET_DEVELOPMENT='true'`)
-envVars.push(`#NEXT_PUBLIC_PROVIDER_URL='http://127.0.0.1:8030' # only for mac`)
-envVars.push(`#NEXT_PUBLIC_SUBGRAPH_URI='http://127.0.0.1:9000' # only for mac`)
-envVars.push(`#NEXT_PUBLIC_METADATACACHE_URI='http://127.0.0.1:5000' # only for mac`)
+function updateEnvVariable(key, value) {
+  fs.readFile('.env', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err)
+      return
+    }
 
-var stream = fs.createWriteStream('.env', { flags: 'a' })
+    const lines = data.split('\n')
 
-envVars.forEach((envVar) => {
-  stream.write('\n' + envVar)
-})
-stream.end()
+    let keyExists = false
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      if (line.startsWith(key + '=')) {
+        lines[i] = `${key}=${value}`
+        keyExists = true
+        break
+      }
+    }
+
+    if (!keyExists) {
+      lines.push(`${key}=${value}`)
+    }
+
+    const updatedContent = lines.join('\n')
+    fs.writeFile('.env', updatedContent, 'utf8', (err) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+      console.log(
+        `Successfully ${
+          keyExists ? 'updated' : 'added'
+        } the ${key} environment variable.`
+      )
+    })
+  })
+}
+
+const addresses = getLocalAddresses()
+updateEnvVariable('NEXT_PUBLIC_NFT_FACTORY_ADDRESS', addresses.ERC721Factory)
+updateEnvVariable(
+  'NEXT_PUBLIC_OPF_COMMUNITY_FEE_COLECTOR',
+  addresses.OPFCommunityFeeCollector
+)
+updateEnvVariable(
+  'NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS',
+  addresses.FixedPrice
+)
+updateEnvVariable('NEXT_PUBLIC_DISPENSER_ADDRESS', addresses.Dispenser)
+updateEnvVariable('NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS', addresses.Ocean)
+updateEnvVariable('NEXT_PUBLIC_MARKET_DEVELOPMENT', true)
+updateEnvVariable(
+  '#NEXT_PUBLIC_PROVIDER_URL',
+  '"http://127.0.0.1:8030" # only for mac'
+)
+updateEnvVariable(
+  `#NEXT_PUBLIC_SUBGRAPH_URI',"http://127.0.0.1:9000" # only for mac`
+)
+updateEnvVariable(
+  '#NEXT_PUBLIC_METADATACACHE_URI',
+  '"http://127.0.0.1:5000" # only for mac'
+)
