@@ -10,8 +10,8 @@
           {
             "name": "name",
             "label": "Parameter Name",
-            "placeholder": "custom_parameter",
-            "help": "The name of the parameter to ask for. This will be the JSON key for this parameter.",
+            "placeholder": "e.g. iterations",
+            "help": "The parameter name (this is sent as HTTP param or key towards algo).",
             "type": "text",
             "required": true
           },
@@ -19,21 +19,22 @@
           {
             "name": "label",
             "label": "Parameter Label",
-            "placeholder": "Custom Parameter",
+            "placeholder": "e.g. Iterations",
+            "help": "The field label which is displayed.",
             "type": "text",
             "required": true
           },
           {
             "name": "description",
             "label": "Description",
-            "placeholder": "A custom parameter changing the asset's behaviour.",
+            "placeholder": "e.g. How many iterations should the algorithm perform.",
             "type": "text",
             "required": true
           },
           {
             "name": "type",
             "label": "Parameter Type",
-            "help": "The type of the parameter to ask for. This influences how the parameter is displayed for the consumer before the asset is used.",
+            "help": "The field type (text, number, boolean, select). This influences how the parameter is displayed for the consumer before the asset is used.",
             "type": "select",
             "options": ["number", "text", "boolean", "select"],
             "required": true
@@ -41,7 +42,7 @@
           {
             "name": "options",
             "label": "Select Options",
-            "placeholder": "Define the options for the user to select from",
+            "help": "For select types, a list of options.",
             "type": "creatableSelect",
             "required": true
           },
@@ -55,7 +56,7 @@
           {
             "name": "default",
             "label": "Default Value",
-            "placeholder": "Define the default value for the current parameter",
+            "placeholder": "e.g. 6",
             "required": true
           }
         ]
