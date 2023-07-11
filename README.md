@@ -75,10 +75,12 @@ cd barge
 ./start_ocean.sh --with-thegraph
 ```
 
-Barge will deploy contracts to the local Ganache node which will take some time. At the end the compiled artifacts need to imported over to this project as environment variables. The `set-barge-env` script will do that for you and set the env variables to use this local connection in `.env` in the app.
+Barge will deploy contracts to the local Ganache node which will take some time. At the end the compiled artifacts need to imported over to this project as environment variables. The `set-barge-env` script will do that for you and set the env variables to use this local connection in `.env` in the app. You also need to append the `chainIdsSupported` array with the barge's ganache chainId (`8996`) in the `app.config.js` file.
 
 If you are using `macOS` operating system you should also make same changes to the provider url since the default barge ip can not be accessed due to some network constraints on `macOs`. So we should be using the `127.0.0.1:8030` (if you have changed the provider port please use that here as well) for each direct call from the market to provider, but we should keep the internal barge url `http://172.15.0.4:8030/` (this is the default ip:port for provider in barge, if changed please use the according url). So on inside `src/@utils/provider.ts` if on `macOS` you can hardcode this env variable `NEXT_PUBLIC_PROVIDER_URL` or set
 `127.0.0.1:8030` as `providerUrl` on all the methods that call `ProviderInstance` methods. (eg: `getEncryptedFiles`, `getFileDidInfo`, `downloadFile` etc). You should use the same provider url for `src/@utils/nft.ts` inside `setNFTMetadataAndTokenURI` and `setNftMetadata` and `src/components/Publish/index.tsx` inisde `encrypt` method (if you set the env variable there's no need to do this). You also need to use local ip's for the subgraph (`127.0.0.1` instead of `172.15.0.15`) and the metadatacache (`127.0.0.1` instead of `172.15.0.5`).
+
+Once you want to switch back to using the market agains remote networks you need to comment or remove the env vars that are set by `set-barge-env` script.
 
 ```bash
 cd market
