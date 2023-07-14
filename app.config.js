@@ -14,7 +14,7 @@ module.exports = {
   chainIds: [1, 137],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 137, 5, 80001],
+  chainIdsSupported: [1, 137, 5, 80001, 11155111],
 
   defaultDatatokenTemplateIndex: 2,
   // The ETH address the marketplace fee will be sent to.
