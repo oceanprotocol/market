@@ -5,6 +5,7 @@ import {
   TokenPriceQuery_token as TokenPrice
 } from '../@types/subgraph/TokenPriceQuery'
 import {
+  getErrorMessage,
   LoggerInstance,
   ProviderFees,
   ProviderInstance
@@ -17,6 +18,7 @@ import {
   customProviderUrl
 } from '../../app.config'
 import { Signer } from 'ethers'
+import { toast } from 'react-toastify'
 
 const tokenPriceQuery = gql`
   query TokenPriceQuery($datatokenId: ID!, $account: String) {
@@ -83,7 +85,6 @@ function getAccessDetailsFromTokenPrice(
   timeout?: number
 ): AccessDetails {
   const accessDetails = {} as AccessDetails
-
   // Return early when no supported pricing schema found.
   if (
     tokenPrice?.dispensers?.length === 0 &&
@@ -177,15 +178,22 @@ export async function getOrderPriceAndFees(
   } as OrderPriceAndFees
 
   // fetch provider fee
-  const initializeData =
-    !providerFees &&
-    (await ProviderInstance.initialize(
-      asset?.id,
-      asset?.services[0].id,
-      0,
-      accountId,
-      customProviderUrl || asset?.services[0].serviceEndpoint
-    ))
+  let initializeData
+  try {
+    initializeData =
+      !providerFees &&
+      (await ProviderInstance.initialize(
+        asset?.id,
+        asset?.services[0].id,
+        0,
+        accountId,
+        customProviderUrl || asset?.services[0].serviceEndpoint
+      ))
+  } catch (error) {
+    const message = getErrorMessage(JSON.parse(error.message))
+    LoggerInstance.error('[Initialize Provider] Error:', message)
+    toast.error(message)
+  }
   orderPriceAndFee.providerFee = providerFees || initializeData.providerFee
 
   // fetch price and swap fees

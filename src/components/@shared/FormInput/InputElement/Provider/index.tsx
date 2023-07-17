@@ -5,12 +5,17 @@ import { InputProps } from '@shared/FormInput'
 import FileInfo from '../FilesInput/Info'
 import styles from './index.module.css'
 import Button from '@shared/atoms/Button'
-import { LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
+import {
+  LoggerInstance,
+  ProviderInstance,
+  getErrorMessage
+} from '@oceanprotocol/lib'
 import { FormPublishData } from '@components/Publish/_types'
 import { getOceanConfig } from '@utils/ocean'
 import axios from 'axios'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useNetwork } from 'wagmi'
+import { toast } from 'react-toastify'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const { chain } = useNetwork()
@@ -56,8 +61,9 @@ export default function CustomProvider(props: InputProps): ReactElement {
       // if all good, add provider to formik state
       helpers.setValue({ url: field.value.url, valid: isValid, custom: true })
     } catch (error) {
-      setFieldError(`${field.name}.url`, error.message)
-      LoggerInstance.error(error.message)
+      const message = getErrorMessage(JSON.parse(error.message))
+      setFieldError(`${field.name}.url`, message)
+      LoggerInstance.error('[Custom Provider]:', message)
     } finally {
       setIsLoading(false)
     }
