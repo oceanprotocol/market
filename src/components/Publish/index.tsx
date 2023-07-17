@@ -139,8 +139,9 @@ export default function PublishPage({
       setDdo(ddo)
       LoggerInstance.log('[publish] Got new DDO', ddo)
 
+      let ddoEncrypted: string
       try {
-        const ddoEncrypted = await ProviderInstance.encrypt(
+        ddoEncrypted = await ProviderInstance.encrypt(
           ddo,
           ddo.chainId,
           values.services[0].providerUrl.url,
