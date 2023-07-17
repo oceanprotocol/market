@@ -41,7 +41,6 @@ export function getOceanConfig(network: string | number): Config {
   if (network === 8996) {
     config = { ...config, ...sanitizeDevelopmentConfig(config) }
   }
-  console.log('oceanConfig', config)
   return config as Config
 }
 
