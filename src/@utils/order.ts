@@ -11,7 +11,8 @@ import {
   ProviderComputeInitialize,
   ProviderFees,
   ProviderInstance,
-  ProviderInitialize
+  ProviderInitialize,
+  getErrorMessage
 } from '@oceanprotocol/lib'
 import { Signer, ethers } from 'ethers'
 import { getOceanConfig } from './ocean'
@@ -38,7 +39,9 @@ async function initializeProvider(
     )
     return provider
   } catch (error) {
-    LoggerInstance.log('[Initialize Provider] Error:', error)
+    const message = getErrorMessage(JSON.parse(error.message))
+    LoggerInstance.log('[Initialize Provider] Error:', message)
+    toast.error(message)
   }
 }
 
@@ -99,19 +102,16 @@ export async function order(
       if (asset.accessDetails.templateId === 1) {
         if (!hasDatatoken) {
           // buy datatoken
-          const txApprove = await approve(
+          const tx: any = await approve(
             signer,
             config,
-            accountId,
+            await signer.getAddress(),
             asset.accessDetails.baseToken.address,
             config.fixedRateExchangeAddress,
-            await amountToUnits(
-              signer,
-              asset?.accessDetails?.baseToken?.address,
-              orderPriceAndFees.price
-            ),
+            orderPriceAndFees.price,
             false
           )
+          const txApprove = typeof tx !== 'number' ? await tx.wait() : tx
           if (!txApprove) {
             return
           }
@@ -126,6 +126,7 @@ export async function order(
             marketFeeAddress,
             consumeMarketFixedSwapFee
           )
+          const buyDtTx = await freTx.wait()
         }
         return await datatoken.startOrder(
           asset.accessDetails.datatoken.address,
@@ -136,19 +137,17 @@ export async function order(
         )
       }
       if (asset.accessDetails.templateId === 2) {
-        const txApprove = await approve(
+        const tx: any = await approve(
           signer,
           config,
           accountId,
           asset.accessDetails.baseToken.address,
           asset.accessDetails.datatoken.address,
-          await amountToUnits(
-            signer,
-            asset?.accessDetails?.baseToken?.address,
-            orderPriceAndFees.price
-          ),
+          orderPriceAndFees.price,
           false
         )
+
+        const txApprove = typeof tx !== 'number' ? await tx.wait() : tx
         if (!txApprove) {
           return
         }
