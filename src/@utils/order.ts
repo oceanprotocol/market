@@ -19,7 +19,8 @@ import { getOceanConfig } from './ocean'
 import {
   marketFeeAddress,
   consumeMarketOrderFee,
-  consumeMarketFixedSwapFee
+  consumeMarketFixedSwapFee,
+  customProviderUrl
 } from '../../app.config'
 import { toast } from 'react-toastify'
 
@@ -35,7 +36,7 @@ async function initializeProvider(
       asset.services[0].id,
       0,
       accountId,
-      asset.services[0].serviceEndpoint
+      customProviderUrl || asset.services[0].serviceEndpoint
     )
     return provider
   } catch (error) {
@@ -136,7 +137,7 @@ export async function order(
           orderParams._consumeMarketFee
         )
       }
-      if (asset.accessDetails.templateId === 2) {
+      if (asset.accessDetails?.templateId === 2) {
         const tx: any = await approve(
           signer,
           config,
@@ -175,7 +176,7 @@ export async function order(
           orderParams._consumeMarketFee
         )
       }
-      if (asset.accessDetails.templateId === 2) {
+      if (asset.accessDetails?.templateId === 2) {
         return await datatoken.buyFromDispenserAndOrder(
           asset.services[0].datatokenAddress,
           orderParams,

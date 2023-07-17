@@ -14,7 +14,8 @@ import { getFixedBuyPrice } from './ocean/fixedRateExchange'
 import Decimal from 'decimal.js'
 import {
   consumeMarketOrderFee,
-  publisherMarketOrderFee
+  publisherMarketOrderFee,
+  customProviderUrl
 } from '../../app.config'
 import { Signer } from 'ethers'
 import { toast } from 'react-toastify'
@@ -186,7 +187,7 @@ export async function getOrderPriceAndFees(
         asset?.services[0].id,
         0,
         accountId,
-        asset?.services[0].serviceEndpoint
+        customProviderUrl || asset?.services[0].serviceEndpoint
       ))
   } catch (error) {
     const message = getErrorMessage(JSON.parse(error.message))

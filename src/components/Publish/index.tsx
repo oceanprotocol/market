@@ -23,6 +23,7 @@ import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
+import { customProviderUrl } from '../../../app.config'
 import { useAccount, useNetwork, useSigner } from 'wagmi'
 
 export default function PublishPage({
@@ -144,7 +145,7 @@ export default function PublishPage({
         ddoEncrypted = await ProviderInstance.encrypt(
           ddo,
           ddo.chainId,
-          values.services[0].providerUrl.url,
+          customProviderUrl || values.services[0].providerUrl.url,
           newAbortController()
         )
       } catch (error) {
@@ -165,7 +166,6 @@ export default function PublishPage({
           status: 'success'
         }
       }))
-
       return { ddo, ddoEncrypted }
     } catch (error) {
       LoggerInstance.error('[publish] error', error.message)
