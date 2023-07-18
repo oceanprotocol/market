@@ -10,6 +10,7 @@
     "build:static": "npm run build && next export",
     "serve": "serve -s public/",
     "pregenerate": "bash scripts/pregenerate.sh",
+    "set-barge-env": "bash scripts/barge-env.sh",
     "test": "npm run pregenerate && npm run lint && npm run type-check && npm run jest",
     "jest": "jest -c .jest/jest.config.js",
     "jest:watch": "jest -c .jest/jest.config.js --watch",

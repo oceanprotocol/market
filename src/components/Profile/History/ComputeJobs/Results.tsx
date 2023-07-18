@@ -1,6 +1,7 @@
 import {
   ComputeResultType,
   downloadFileBrowser,
+  getErrorMessage,
   LoggerInstance,
   Provider
 } from '@oceanprotocol/lib'
@@ -13,6 +14,7 @@ import content from '../../../../../content/pages/history.json'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getAsset } from '@utils/aquarius'
 import { useAccount, useSigner } from 'wagmi'
+import { toast } from 'react-toastify'
 
 export default function Results({
   job
@@ -70,7 +72,9 @@ export default function Results({
       )
       await downloadFileBrowser(jobResult)
     } catch (error) {
-      LoggerInstance.error(error.message)
+      const message = getErrorMessage(JSON.parse(error.message))
+      LoggerInstance.error('[Provider Get c2d results url] Error:', message)
+      toast.error(message)
     }
   }
 

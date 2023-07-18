@@ -13,11 +13,17 @@ import { Steps } from './Steps'
 import { FormPublishData } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import useNftFactory from '@hooks/useNftFactory'
-import { ProviderInstance, LoggerInstance, DDO } from '@oceanprotocol/lib'
+import {
+  ProviderInstance,
+  LoggerInstance,
+  DDO,
+  getErrorMessage
+} from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
+import { customProviderUrl } from '../../../app.config'
 import { useAccount, useNetwork, useSigner } from 'wagmi'
 
 export default function PublishPage({
@@ -134,12 +140,18 @@ export default function PublishPage({
       setDdo(ddo)
       LoggerInstance.log('[publish] Got new DDO', ddo)
 
-      const ddoEncrypted = await ProviderInstance.encrypt(
-        ddo,
-        ddo.chainId,
-        values.services[0].providerUrl.url,
-        newAbortController()
-      )
+      let ddoEncrypted: string
+      try {
+        ddoEncrypted = await ProviderInstance.encrypt(
+          ddo,
+          ddo.chainId,
+          customProviderUrl || values.services[0].providerUrl.url,
+          newAbortController()
+        )
+      } catch (error) {
+        const message = getErrorMessage(JSON.parse(error.message))
+        LoggerInstance.error('[Provider Encrypt] Error:', message)
+      }
 
       if (!ddoEncrypted)
         throw new Error('No encrypted DDO received. Please try again.')
@@ -154,7 +166,6 @@ export default function PublishPage({
           status: 'success'
         }
       }))
-
       return { ddo, ddoEncrypted }
     } catch (error) {
       LoggerInstance.error('[publish] error', error.message)
