@@ -29,7 +29,8 @@ import {
   marketFeeAddress,
   publisherMarketOrderFee,
   publisherMarketFixedSwapFee,
-  defaultDatatokenTemplateIndex
+  defaultDatatokenTemplateIndex,
+  customProviderUrl
 } from '../../../app.config'
 import { sanitizeUrl } from '@utils/url'
 import { getContainerChecksum } from '@utils/docker'
@@ -244,14 +245,15 @@ export async function createTokensAndPricing(
     values.metadata.transferable
   )
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
-
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
   const ercParams: DatatokenCreateParams = {
     templateIndex: defaultDatatokenTemplateIndex,
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
-    feeToken: values.pricing.baseToken.address,
+    feeToken:
+      process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS ||
+      values.pricing.baseToken.address,
     feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
@@ -267,10 +269,14 @@ export async function createTokensAndPricing(
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
-        baseTokenAddress: values.pricing.baseToken.address,
+        baseTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS
+          ? process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS
+          : values.pricing.baseToken.address,
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
-        baseTokenDecimals: values.pricing.baseToken.decimals,
+        baseTokenDecimals: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS
+          ? 18
+          : values.pricing.baseToken.decimals,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
         marketFee: publisherMarketFixedSwapFee,
