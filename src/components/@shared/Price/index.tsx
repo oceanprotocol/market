@@ -17,7 +17,8 @@ export default function Price({
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
   if (!price && !orderPriceAndFees) return
-
+  console.log('orderPriceAndFees == ', orderPriceAndFees)
+  console.log('price == ', price)
   return (
     <PriceUnit
       price={Number(orderPriceAndFees?.price) || price?.value}

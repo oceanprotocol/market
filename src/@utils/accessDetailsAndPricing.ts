@@ -91,6 +91,7 @@ function getAccessDetailsFromTokenPrice(
     tokenPrice?.fixedRateExchanges?.length === 0
   ) {
     accessDetails.type = 'NOT_SUPPORTED'
+    console.log('access details not supported')
     return accessDetails
   }
 
@@ -176,7 +177,7 @@ export async function getOrderPriceAndFees(
     },
     opcFee: '0'
   } as OrderPriceAndFees
-
+  console.log('order prices ', orderPriceAndFee)
   // fetch provider fee
   let initializeData
   try {

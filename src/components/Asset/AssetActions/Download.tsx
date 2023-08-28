@@ -56,7 +56,6 @@ export default function Download({
   const isUnsupportedPricing =
     !asset?.accessDetails ||
     !asset.services.length ||
-    asset?.stats?.price?.value === undefined ||
     asset?.accessDetails?.type === 'NOT_SUPPORTED' ||
     (asset?.accessDetails?.type === 'fixed' &&
       !asset?.accessDetails?.baseToken?.symbol)
