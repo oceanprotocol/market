@@ -6,7 +6,12 @@ import ButtonBuy from './ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
-import { FileInfo, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import {
+  AssetPrice,
+  FileInfo,
+  LoggerInstance,
+  ZERO_ADDRESS
+} from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
@@ -52,6 +57,14 @@ export default function Download({
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
+
+  const price: AssetPrice = asset.stats.price.value
+    ? asset?.stats?.price
+    : {
+        value: Number(asset.accessDetails.price),
+        tokenSymbol: asset?.accessDetails?.baseToken?.symbol,
+        tokenAddress: asset?.accessDetails?.baseToken?.address
+      }
 
   const isUnsupportedPricing =
     !asset?.accessDetails ||
@@ -233,7 +246,7 @@ export default function Download({
                   <Loader message="Calculating full price (including fees)" />
                 ) : (
                   <Price
-                    price={asset.stats?.price}
+                    price={price}
                     orderPriceAndFees={orderPriceAndFees}
                     conversion
                     size="large"

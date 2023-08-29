@@ -15,7 +15,8 @@ import {
   unitsToAmount,
   minAbi,
   ProviderFees,
-  getErrorMessage
+  getErrorMessage,
+  AssetPrice
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -109,6 +110,14 @@ export default function Compute({
   const [retry, setRetry] = useState<boolean>(false)
   const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { isAssetNetwork } = useAsset()
+
+  const price: AssetPrice = asset.stats.price.value
+    ? asset?.stats?.price
+    : {
+        value: Number(asset.accessDetails.price),
+        tokenSymbol: asset?.accessDetails?.baseToken?.symbol,
+        tokenAddress: asset?.accessDetails?.baseToken?.address
+      }
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
@@ -455,7 +464,7 @@ export default function Compute({
           />
         ) : (
           <Price
-            price={asset.stats?.price}
+            price={price}
             orderPriceAndFees={datasetOrderPriceAndFees}
             conversion
             size="large"
