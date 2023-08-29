@@ -111,8 +111,6 @@ function getAccessDetailsFromTokenPrice(
     // the last valid order should be the last reuse order tx id if there is one
     accessDetails.validOrderTx = reusedOrder?.tx || order?.tx
   }
-  console.log('tokenPrice.templateId ', tokenPrice.templateId)
-  console.log(typeof tokenPrice.templateId)
   accessDetails.templateId =
     typeof tokenPrice.templateId === 'string'
       ? parseInt(tokenPrice.templateId)
