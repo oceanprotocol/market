@@ -58,10 +58,10 @@ export default function Download({
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
 
-  const price: AssetPrice = asset.stats.price.value
+  const price: AssetPrice = asset?.stats?.price?.value
     ? asset?.stats?.price
     : {
-        value: Number(asset.accessDetails.price),
+        value: Number(asset?.accessDetails?.price),
         tokenSymbol: asset?.accessDetails?.baseToken?.symbol,
         tokenAddress: asset?.accessDetails?.baseToken?.address
       }

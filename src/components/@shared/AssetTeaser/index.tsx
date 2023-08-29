@@ -33,7 +33,7 @@ export default function AssetTeaser({
   const price: AssetPrice = asset.stats.price.value
     ? asset?.stats?.price
     : {
-        value: Number(asset.accessDetails.price),
+        value: Number(asset?.accessDetails?.price),
         tokenSymbol: asset?.accessDetails?.baseToken?.symbol,
         tokenAddress: asset?.accessDetails?.baseToken?.address
       }
