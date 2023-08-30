@@ -30,7 +30,7 @@ export default function AssetTeaser({
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
   const { orders, allocated } = asset.stats
-  const price: AssetPrice = asset.stats.price.value
+  const price: AssetPrice = asset?.stats?.price?.value
     ? asset?.stats?.price
     : {
         value: Number(asset?.accessDetails?.price),
