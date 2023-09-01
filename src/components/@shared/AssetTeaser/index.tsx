@@ -29,16 +29,11 @@ export default function AssetTeaser({
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = asset.nft
-  const { orders, allocated } = asset.stats
-  const price: AssetPrice = asset?.stats?.price?.value
-    ? asset?.stats?.price
-    : {
-        value: Number(asset?.accessDetails?.price),
-        tokenSymbol: asset?.accessDetails?.baseToken?.symbol,
-        tokenAddress: asset?.accessDetails?.baseToken?.address
-      }
+  const { orders, allocated, price } = asset.stats
   const isUnsupportedPricing =
-    !asset.services.length || asset?.accessDetails?.type === 'NOT_SUPPORTED'
+    !asset.services.length ||
+    price.value === undefined ||
+    asset?.accessDetails?.type === 'NOT_SUPPORTED'
   const { locale } = useUserPreferences()
 
   return (
