@@ -43,7 +43,7 @@ export default function ConsumerParameters({
 
   const updateTabs = useCallback(() => {
     const tabs = []
-    if (asset?.services[0]?.consumerParameters) {
+    if (asset?.services[0]?.consumerParameters?.length > 0) {
       tabs.push({
         title: 'Data Service',
         content: (
@@ -54,7 +54,7 @@ export default function ConsumerParameters({
         )
       })
     }
-    if (selectedAlgorithmAsset?.services[0]?.consumerParameters) {
+    if (selectedAlgorithmAsset?.services[0]?.consumerParameters?.length > 0) {
       tabs.push({
         title: 'Algo Service',
         content: (
@@ -65,7 +65,10 @@ export default function ConsumerParameters({
         )
       })
     }
-    if (selectedAlgorithmAsset?.metadata?.algorithm?.consumerParameters) {
+    if (
+      selectedAlgorithmAsset?.metadata?.algorithm?.consumerParameters?.length >
+      0
+    ) {
       tabs.push({
         title: 'Algo Params',
         content: (
