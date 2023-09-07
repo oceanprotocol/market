@@ -1,8 +1,9 @@
-import { MAX_DECIMALS } from '@utils/constants'
-import * as Yup from 'yup'
-import { getMaxDecimalsValidation } from '@utils/numbers'
 import { FileInfo } from '@oceanprotocol/lib'
-import { testLinks } from '../../@utils/yup'
+import { MAX_DECIMALS } from '@utils/constants'
+import { getMaxDecimalsValidation } from '@utils/numbers'
+import * as Yup from 'yup'
+import { testLinks } from '@utils/yup'
+import { validationConsumerParameters } from '@components/@shared/FormInput/InputElement/ConsumerParameters/_validation'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
@@ -26,7 +27,17 @@ const validationMetadata = {
   tags: Yup.array<string[]>().nullable(),
   termsAndConditions: Yup.boolean()
     .required('Required')
-    .isTrue('Please agree to the Terms and Conditions.')
+    .isTrue('Please agree to the Terms and Conditions.'),
+  usesConsumerParameters: Yup.boolean(),
+  consumerParameters: Yup.array().when('usesConsumerParameters', {
+    is: true,
+    then: Yup.array()
+      .of(Yup.object().shape(validationConsumerParameters))
+      .required('Required'),
+    otherwise: Yup.array()
+      .nullable()
+      .transform((value) => value || null)
+  })
 }
 
 const validationService = {
@@ -60,6 +71,16 @@ const validationService = {
     url: Yup.string().url('Must be a valid URL.').required('Required'),
     valid: Yup.boolean().isTrue().required('Valid Provider is required.'),
     custom: Yup.boolean()
+  }),
+  usesConsumerParameters: Yup.boolean(),
+  consumerParameters: Yup.array().when('usesConsumerParameters', {
+    is: true,
+    then: Yup.array()
+      .of(Yup.object().shape(validationConsumerParameters))
+      .required('Required'),
+    otherwise: Yup.array()
+      .nullable()
+      .transform((value) => value || null)
   })
 }
 

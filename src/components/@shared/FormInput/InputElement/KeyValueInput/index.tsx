@@ -1,28 +1,60 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
-import InputElement from '../../InputElement'
+import React, {
+  ChangeEvent,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState
+} from 'react'
+import InputElement from '..'
 import Label from '../../Label'
 import styles from './index.module.css'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import Button from '@shared/atoms/Button'
 import { InputProps } from '@shared/FormInput'
+import classNames from 'classnames/bind'
 
-export interface QueryHeader {
+const cx = classNames.bind(styles)
+
+export interface KeyValuePair {
   key: string
   value: string
 }
 
-export default function InputHeaders(props: InputProps): ReactElement {
+export interface KeyValueInputProps extends Omit<InputProps, 'value'> {
+  value: KeyValuePair[]
+  uniqueKeys?: boolean
+  keyPlaceholder?: string
+  valuePlaceholder?: string
+}
+
+export default function InputKeyValue({
+  uniqueKeys = false,
+  value,
+  keyPlaceholder = 'key',
+  valuePlaceholder = 'value',
+  ...props
+}: KeyValueInputProps): ReactElement {
   const { label, help, prominentHelp, form, field } = props
 
   const [currentKey, setCurrentKey] = useState('')
   const [currentValue, setCurrentValue] = useState('')
   const [disabledButton, setDisabledButton] = useState(true)
+  const [hasOnlyUniqueKeys, setHasOnlyUniqueKeys] = useState(true)
 
-  const [headers, setHeaders] = useState([] as QueryHeader[])
+  const [pairs, setPairs] = useState(value || [])
 
-  const addHeader = () => {
-    setHeaders((prev) => [
+  const currentKeyExists = useCallback(() => {
+    return pairs.some((pair) => pair.key === currentKey)
+  }, [currentKey, pairs])
+
+  const addPair = () => {
+    if (currentKeyExists()) {
+      setHasOnlyUniqueKeys(false)
+      if (uniqueKeys) return
+    }
+
+    setPairs((prev) => [
       ...prev,
       {
         key: currentKey,
@@ -33,9 +65,9 @@ export default function InputHeaders(props: InputProps): ReactElement {
     setCurrentValue('')
   }
 
-  const removeHeader = (i: number) => {
-    const newHeaders = headers.filter((header, index) => index !== i)
-    setHeaders(newHeaders)
+  const removePair = (index: number) => {
+    const newPairs = pairs.filter((pair, pairIndex) => pairIndex !== index)
+    setPairs(newPairs)
     setCurrentKey('')
     setCurrentValue('')
   }
@@ -50,15 +82,22 @@ export default function InputHeaders(props: InputProps): ReactElement {
   }
 
   useEffect(() => {
-    form.setFieldValue(`${field.name}`, headers)
-  }, [headers])
+    form.setFieldValue(`${field.name}`, pairs)
+  }, [pairs])
 
   useEffect(() => {
-    setDisabledButton(!currentKey || !currentValue)
-  }, [currentKey, currentValue])
+    setDisabledButton(
+      !currentKey || !currentValue || (uniqueKeys && currentKeyExists())
+    )
+    setHasOnlyUniqueKeys(!currentKeyExists())
+  }, [currentKey, currentValue, uniqueKeys, currentKeyExists])
 
   return (
-    <div>
+    <div
+      className={cx({
+        hasError: uniqueKeys && !hasOnlyUniqueKeys
+      })}
+    >
       <Label htmlFor={props.name}>
         {label}
         {props.required && (
@@ -71,18 +110,19 @@ export default function InputHeaders(props: InputProps): ReactElement {
         )}
       </Label>
 
-      <div className={styles.headersContainer}>
+      <div className={styles.pairsContainer}>
         <InputElement
+          className={styles.keyInput}
           name={`${field.name}.key`}
-          placeholder={'key'}
+          placeholder={keyPlaceholder}
           value={`${currentKey}`}
           onChange={handleChange}
         />
 
         <InputElement
-          className={`${styles.input}`}
+          className={styles.input}
           name={`${field.name}.value`}
-          placeholder={'value'}
+          placeholder={valuePlaceholder}
           value={`${currentValue}`}
           onChange={handleChange}
         />
@@ -92,26 +132,32 @@ export default function InputHeaders(props: InputProps): ReactElement {
           size="small"
           onClick={(e: React.SyntheticEvent) => {
             e.preventDefault()
-            addHeader()
+            addPair()
           }}
           disabled={disabledButton}
         >
           add
         </Button>
+
+        {uniqueKeys && !hasOnlyUniqueKeys && (
+          <p
+            className={styles.error}
+          >{`The ${keyPlaceholder} field must be unique`}</p>
+        )}
       </div>
 
-      {headers.length > 0 &&
-        headers.map((header, i) => {
+      {pairs.length > 0 &&
+        pairs.map((header, i) => {
           return (
-            <div className={styles.headersAddedContainer} key={`header_${i}`}>
+            <div className={styles.pairsAddedContainer} key={`pair_${i}`}>
               <InputElement
-                name={`header[${i}].key`}
+                name={`pair[${i}].key`}
                 value={`${header.key}`}
                 disabled
               />
 
               <InputElement
-                name={`header[${i}].key`}
+                name={`pair[${i}].value`}
                 value={`${header.value}`}
                 disabled
               />
@@ -121,7 +167,7 @@ export default function InputHeaders(props: InputProps): ReactElement {
                 size="small"
                 onClick={(e: React.SyntheticEvent) => {
                   e.preventDefault()
-                  removeHeader(i)
+                  removePair(i)
                 }}
                 disabled={false}
               >

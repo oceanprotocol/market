@@ -7,6 +7,9 @@ import { FormPublishData } from '@components/Publish/_types'
 import { getFileInfo } from '@utils/provider'
 import { getFieldContent } from '@utils/form'
 import { isGoogleUrl } from '@utils/url'
+import styles from './FormEditMetadata.module.css'
+import { MetadataEditForm } from './_types'
+import consumerParametersContent from '../../../../content/publish/consumerParameters.json'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,
@@ -130,6 +133,27 @@ export default function FormEditMetadata({
       />
 
       <Field {...getFieldContent('tags', data)} component={Input} name="tags" />
+
+      {asset.metadata.type === 'algorithm' && (
+        <>
+          <Field
+            {...getFieldContent('usesConsumerParameters', data)}
+            component={Input}
+            name="usesConsumerParameters"
+          />
+          {(values as unknown as MetadataEditForm).usesConsumerParameters && (
+            <Field
+              {...getFieldContent(
+                'consumerParameters',
+                consumerParametersContent.consumerParameters.fields
+              )}
+              component={Input}
+              name="consumerParameters"
+            />
+          )}
+        </>
+      )}
+
       <Field
         {...getFieldContent('paymentCollector', data)}
         component={Input}
@@ -140,6 +164,26 @@ export default function FormEditMetadata({
         component={Input}
         name="assetState"
       />
+      <div className={styles.serviceContainer}>
+        <h4>Service</h4>
+
+        <Field
+          {...getFieldContent('usesServiceConsumerParameters', data)}
+          component={Input}
+          name="service.usesConsumerParameters"
+        />
+        {(values as unknown as MetadataEditForm).service
+          .usesConsumerParameters && (
+          <Field
+            {...getFieldContent(
+              'consumerParameters',
+              consumerParametersContent.consumerParameters.fields
+            )}
+            component={Input}
+            name="service.consumerParameters"
+          />
+        )}
+      </div>
 
       <FormActions />
     </Form>

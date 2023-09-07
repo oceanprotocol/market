@@ -1,0 +1,35 @@
+.pairsContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0 calc(var(--spacer) / 4);
+  margin-bottom: var(--spacer);
+  position: relative;
+}
+
+.pairsAddedContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0 calc(var(--spacer) / 4);
+  margin-bottom: var(--spacer);
+}
+
+.hasError label {
+  color: var(--brand-alert-red);
+}
+
+.hasError .pairsContainer .keyInput,
+.hasError .pairsContainer .keyInput:focus,
+.hasError .pairsContainer [class*='prefix'],
+.hasError .pairsContainer [class*='postfix'] {
+  color: var(--brand-alert-red);
+  border-color: var(--brand-alert-red);
+}
+
+.required {
+  composes: required from '../../index.module.css';
+}
+
+.error {
+  composes: error from '../../index.module.css';
+  top: 100%;
+}

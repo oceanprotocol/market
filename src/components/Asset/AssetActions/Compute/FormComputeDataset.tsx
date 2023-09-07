@@ -10,14 +10,14 @@ import { useAsset } from '@context/Asset'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
-import { useMarketMetadata } from '@context/MarketMetadata'
-import Alert from '@shared/atoms/Alert'
 import { getTokenBalanceFromSymbol } from '@utils/wallet'
 import { MAX_DECIMALS } from '@utils/constants'
 import Decimal from 'decimal.js'
 import { useAccount } from 'wagmi'
 import useBalance from '@hooks/useBalance'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
+import ConsumerParameters from '../ConsumerParameters'
+import { FormConsumerParameter } from '@components/Publish/_types'
 
 export default function FormStartCompute({
   algorithms,
@@ -78,12 +78,18 @@ export default function FormStartCompute({
   validUntil?: string
   retry: boolean
 }): ReactElement {
-  const { siteContent } = useMarketMetadata()
   const { address: accountId, isConnected } = useAccount()
   const { balance } = useBalance()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
-  const { isValid, values }: FormikContextType<{ algorithm: string }> =
-    useFormikContext()
+  const {
+    isValid,
+    values
+  }: FormikContextType<{
+    algorithm: string
+    dataServiceParams: FormConsumerParameter[]
+    algoServiceParams: FormConsumerParameter[]
+    algoParams: FormConsumerParameter[]
+  }> = useFormikContext()
   const { asset, isAssetNetwork } = useAsset()
 
   const [datasetOrderPrice, setDatasetOrderPrice] = useState(
@@ -249,7 +255,12 @@ export default function FormStartCompute({
           />
         )
       })}
-
+      {asset && selectedAlgorithmAsset && (
+        <ConsumerParameters
+          asset={asset}
+          selectedAlgorithmAsset={selectedAlgorithmAsset}
+        />
+      )}
       <PriceOutput
         hasPreviousOrder={hasPreviousOrder}
         assetTimeout={assetTimeout}

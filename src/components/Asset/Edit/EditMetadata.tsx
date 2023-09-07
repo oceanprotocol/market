@@ -2,12 +2,12 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import { Formik } from 'formik'
 import {
   LoggerInstance,
-  Metadata,
   FixedRateExchange,
   Asset,
-  Service,
   Datatoken,
-  Nft
+  Nft,
+  Metadata,
+  Service
 } from '@oceanprotocol/lib'
 import { validationSchema } from './_validation'
 import { getInitialValues } from './_constants'
@@ -28,6 +28,7 @@ import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
 import { useAccount, useProvider, useNetwork, useSigner } from 'wagmi'
+import { transformConsumerParameters } from '@components/Publish/_utils'
 
 export default function Edit({
   asset
@@ -104,6 +105,13 @@ export default function Edit({
         tags: values.tags
       }
 
+      if (asset.metadata.type === 'algorithm') {
+        updatedMetadata.algorithm.consumerParameters =
+          !values.usesConsumerParameters
+            ? undefined
+            : transformConsumerParameters(values.consumerParameters)
+      }
+
       asset?.accessDetails?.type === 'fixed' &&
         values.price !== asset.accessDetails.price &&
         (await updateFixedPrice(values.price))
@@ -137,6 +145,11 @@ export default function Edit({
         ...asset.services[0],
         timeout: mapTimeoutStringToSeconds(values.timeout),
         files: updatedFiles
+      }
+      if (values?.service?.consumerParameters) {
+        updatedService.consumerParameters = transformConsumerParameters(
+          values.service.consumerParameters
+        )
       }
 
       // TODO: remove version update at a later time
@@ -189,7 +202,7 @@ export default function Edit({
       enableReinitialize
       initialValues={getInitialValues(
         asset?.metadata,
-        asset?.services[0]?.timeout,
+        asset?.services[0],
         asset?.accessDetails?.price || '0',
         paymentCollector,
         assetState

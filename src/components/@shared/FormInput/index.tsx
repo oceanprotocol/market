@@ -10,7 +10,7 @@ import React, {
 import InputElement from './InputElement'
 import Label from './Label'
 import styles from './index.module.css'
-import { ErrorMessage, FieldInputProps } from 'formik'
+import { ErrorMessage, FieldInputProps, useField } from 'formik'
 import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
@@ -18,6 +18,7 @@ import Markdown from '@shared/Markdown'
 import FormHelp from './Help'
 import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { BoxSelectionOption } from '@shared/FormInput/InputElement/BoxSelection'
+import { getObjectPropertyByPath } from '@utils/index'
 
 const cx = classNames.bind(styles)
 
@@ -71,21 +72,17 @@ export interface InputProps {
   disclaimerValues?: string[]
 }
 
-function checkError(
-  form: any,
-  parsedFieldName: string[],
-  field: FieldInputProps<any>
-) {
-  if (
-    (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
-      form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]) ||
-    (form?.touched[field?.name] &&
-      form?.errors[field?.name] &&
-      field.name !== 'files' &&
-      field.name !== 'links')
-  ) {
-    return true
-  }
+function checkError(form: any, field: FieldInputProps<any>) {
+  const touched = getObjectPropertyByPath(form?.touched, field?.name)
+  const errors = getObjectPropertyByPath(form?.errors, field?.name)
+
+  return (
+    touched &&
+    errors &&
+    !field.name.endsWith('.files') &&
+    !field.name.endsWith('.links') &&
+    !field.name.endsWith('consumerParameters')
+  )
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {
@@ -102,13 +99,10 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   } = props
 
   const isFormikField = typeof field !== 'undefined'
-  const isNestedField = field?.name?.includes('.')
   // TODO: this feels hacky as it assumes nested `values` store. But we can't use the
   // `useField()` hook in here to get `meta.error` so we have to match against form?.errors?
   // handling flat and nested data at same time.
-  const parsedFieldName =
-    isFormikField && (isNestedField ? field?.name.split('.') : [field?.name])
-  const hasFormikError = checkError(form, parsedFieldName, field)
+  const hasFormikError = checkError(form, field)
 
   const styleClasses = cx({
     field: true,
@@ -123,7 +117,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     if (disclaimer && disclaimerValues) {
       setDisclaimerVisible(
         disclaimerValues.includes(
-          props.form?.values[parsedFieldName[0]]?.[parsedFieldName[1]]
+          getObjectPropertyByPath(props.form?.values, field?.name)
         )
       )
     }
