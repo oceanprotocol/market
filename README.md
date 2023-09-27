@@ -42,7 +42,7 @@ The app is a React app built with [Next.js](https://nextjs.org) + TypeScript + C
 Prerequisites:
 
 - [Node.js](https://nodejs.org/en/) (required). Check the [.nvmrc](.nvmrc) file to make sure you are using the correct version of Node.js.
-- [nvm](https://github.com/nvm-sh/nvm) (recommended). This is the recommend way to manage Node.js versions.
+- [nvm](https://github.com/nvm-sh/nvm) (recommended). This is the recommended way to manage Node.js versions.
 - [Git](https://git-scm.com/) is required to follow the instructions below.
 
 To start local development:
@@ -80,7 +80,7 @@ Barge will deploy contracts to the local Ganache node which will take some time.
 If you are using `macOS` operating system you should also make same changes to the provider url since the default barge ip can not be accessed due to some network constraints on `macOs`. So we should be using the `127.0.0.1:8030` (if you have changed the provider port please use that here as well) for each direct call from the market to provider, but we should keep the internal barge url `http://172.15.0.4:8030/` (this is the default ip:port for provider in barge, if changed please use the according url). So on inside `src/@utils/provider.ts` if on `macOS` you can hardcode this env variable `NEXT_PUBLIC_PROVIDER_URL` or set
 `127.0.0.1:8030` as `providerUrl` on all the methods that call `ProviderInstance` methods. (eg: `getEncryptedFiles`, `getFileDidInfo`, `downloadFile` etc). You should use the same provider url for `src/@utils/nft.ts` inside `setNFTMetadataAndTokenURI` and `setNftMetadata` and `src/components/Publish/index.tsx` inisde `encrypt` method (if you set the env variable there's no need to do this). You also need to use local ip's for the subgraph (`127.0.0.1` instead of `172.15.0.15`) and the metadatacache (`127.0.0.1` instead of `172.15.0.5`).
 
-Once you want to switch back to using the market agains remote networks you need to comment or remove the env vars that are set by `set-barge-env` script.
+Once you want to switch back to using the market against remote networks you need to comment or remove the env vars that are set by `set-barge-env` script.
 
 ```bash
 cd market
@@ -298,7 +298,7 @@ Test runs utilize [Jest](https://jestjs.io/) as test runner and [Testing Library
 
 All created Storybook stories will automatically run as individual tests by using the [StoryShots Addon](https://storybook.js.org/addons/@storybook/addon-storyshots).
 
-Creating Storybook stories for a component will provide good coverage of a component in many cases. Additional tests for dedicated component functionality which can't be done with Storybook are created as usual [Testing Library](https://testing-library.com/docs/react-testing-library/intro) tests, but you can also [import exisiting Storybook stories](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-testing-library) into those tests.
+Creating Storybook stories for a component will provide good coverage of a component in many cases. Additional tests for dedicated component functionality which can't be done with Storybook are created as usual [Testing Library](https://testing-library.com/docs/react-testing-library/intro) tests, but you can also [import existing Storybook stories](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-testing-library) into those tests.
 
 Executing linting, type checking, and full test run:
 
