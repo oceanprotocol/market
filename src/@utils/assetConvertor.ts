@@ -14,7 +14,7 @@ export async function transformAssetToAssetSelection(
       getServiceByName(asset, 'compute') || getServiceByName(asset, 'access')
 
     if (
-      asset?.stats?.price?.value &&
+      asset?.stats?.price?.value >= 0 &&
       algoService?.serviceEndpoint === datasetProviderEndpoint
     ) {
       let selected = false
