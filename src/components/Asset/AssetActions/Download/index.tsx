@@ -4,7 +4,7 @@ import Price from '@shared/Price'
 import { useAsset } from '@context/Asset'
 import ButtonBuy from '../ButtonBuy'
 import { secondsToString } from '@utils/ddo'
-import styles from './Download.module.css'
+import styles from './index.module.css'
 import AlgorithmDatasetsListForCompute from '../Compute/AlgorithmDatasetsListForCompute'
 import {
   AssetPrice,
