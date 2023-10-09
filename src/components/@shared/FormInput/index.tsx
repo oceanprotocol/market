@@ -10,7 +10,7 @@ import React, {
 import InputElement from './InputElement'
 import Label from './Label'
 import styles from './index.module.css'
-import { ErrorMessage, FieldInputProps } from 'formik'
+import { ErrorMessage, FieldInputProps, useField } from 'formik'
 import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
@@ -18,6 +18,7 @@ import Markdown from '@shared/Markdown'
 import FormHelp from './Help'
 import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { BoxSelectionOption } from '@shared/FormInput/InputElement/BoxSelection'
+import { getObjectPropertyByPath } from '@utils/index'
 
 const cx = classNames.bind(styles)
 

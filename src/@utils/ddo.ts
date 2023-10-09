@@ -2,10 +2,14 @@ import {
   ComputeEditForm,
   MetadataEditForm
 } from '@components/Asset/Edit/_types'
-import { FormPublishData } from '@components/Publish/_types'
+import {
+  FormConsumerParameter,
+  FormPublishData
+} from '@components/Publish/_types'
 import {
   Arweave,
   Asset,
+  ConsumerParameter,
   DDO,
   FileInfo,
   GraphqlQuery,
@@ -187,4 +191,31 @@ export function previewDebugPatch(
   )
 
   return buildValuesPreview
+}
+
+export function parseConsumerParameters(
+  consumerParameters: ConsumerParameter[]
+): FormConsumerParameter[] {
+  if (!consumerParameters?.length) return []
+
+  return consumerParameters.map((param) => ({
+    ...param,
+    required: param.required ? 'required' : 'optional',
+    options:
+      param.type === 'select'
+        ? JSON.parse(param.options)?.map((option) => {
+            const key = Object.keys(option)[0]
+            return {
+              key,
+              value: option[key]
+            }
+          })
+        : [],
+    default:
+      param.type === 'boolean'
+        ? param.default === 'true'
+        : param.type === 'number'
+        ? Number(param.default)
+        : param.default
+  }))
 }

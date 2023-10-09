@@ -1,0 +1,66 @@
+{
+  "consumerParameters": {
+    "fields": [
+      {
+        "name": "consumerParameters",
+        "label": "Custom parameters",
+        "type": "consumerParameters",
+        "required": false,
+        "fields": [
+          {
+            "name": "name",
+            "label": "Parameter Name",
+            "placeholder": "e.g. iterations",
+            "help": "The parameter name (this is sent as HTTP param or key towards algo).",
+            "type": "text",
+            "required": true
+          },
+
+          {
+            "name": "label",
+            "label": "Parameter Label",
+            "placeholder": "e.g. Iterations",
+            "help": "The field label which is displayed.",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "description",
+            "label": "Description",
+            "placeholder": "e.g. How many iterations should the algorithm perform.",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "type",
+            "label": "Parameter Type",
+            "help": "The field type (text, number, boolean, select). This influences how the parameter is displayed for the consumer before the asset is used.",
+            "type": "select",
+            "options": ["number", "text", "boolean", "select"],
+            "required": true
+          },
+          {
+            "name": "options",
+            "label": "Select Options",
+            "help": "For select types, a list of options.",
+            "type": "creatableSelect",
+            "required": true
+          },
+          {
+            "name": "required",
+            "label": "Required",
+            "options": ["optional", "required"],
+            "type": "select",
+            "required": true
+          },
+          {
+            "name": "default",
+            "label": "Default Value",
+            "placeholder": "e.g. 6",
+            "required": true
+          }
+        ]
+      }
+    ]
+  }
+}

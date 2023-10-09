@@ -13,11 +13,12 @@ import {
   ProviderInstance,
   UrlFile,
   AbiItem,
+  UserCustomParameters,
   getErrorMessage
 } from '@oceanprotocol/lib'
 // if customProviderUrl is set, we need to call provider using this custom endpoint
 import { customProviderUrl } from '../../app.config'
-import { QueryHeader } from '@shared/FormInput/InputElement/Headers'
+import { KeyValuePair } from '@shared/FormInput/InputElement/KeyValueInput'
 import { Signer } from 'ethers'
 import { getValidUntilTime } from './compute'
 import { toast } from 'react-toastify'
@@ -110,7 +111,7 @@ export async function getFileInfo(
   providerUrl: string,
   storageType: string,
   query?: string,
-  headers?: QueryHeader[],
+  headers?: KeyValuePair[],
   abi?: string,
   chainId?: number,
   method?: string
@@ -226,7 +227,8 @@ export async function downloadFile(
   signer: Signer,
   asset: AssetExtended,
   accountId: string,
-  validOrderTx?: string
+  validOrderTx?: string,
+  userCustomParameters?: UserCustomParameters
 ) {
   let downloadUrl
   try {
@@ -236,7 +238,8 @@ export async function downloadFile(
       0,
       validOrderTx || asset.accessDetails.validOrderTx,
       customProviderUrl || asset.services[0].serviceEndpoint,
-      signer
+      signer,
+      userCustomParameters
     )
   } catch (error) {
     const message = getErrorMessage(JSON.parse(error.message))

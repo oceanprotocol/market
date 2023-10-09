@@ -13,17 +13,18 @@ import {
   ComputeOutput,
   ProviderComputeInitializeResults,
   unitsToAmount,
-  minAbi,
   ProviderFees,
   getErrorMessage,
-  AssetPrice
+  AssetPrice,
+  UserCustomParameters,
+  getErrorMessage
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
 import { Formik } from 'formik'
-import { getInitialValues, validationSchema } from './_constants'
+import { getComputeValidationSchema, getInitialValues } from './_constants'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '@shared/SuccessConfetti'
@@ -51,6 +52,7 @@ import { useAccount, useSigner } from 'wagmi'
 import { getDummySigner } from '@utils/wallet'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
 import { useAsset } from '@context/Asset'
+import { parseConsumerParameterValues } from '../ConsumerParameters'
 
 const refreshInterval = 10000 // 10 sec.
 
@@ -348,7 +350,11 @@ export default function Compute({
     toast.error(errorMsg)
   }, [error])
 
-  async function startJob(): Promise<void> {
+  async function startJob(userCustomParameters: {
+    dataServiceParams?: UserCustomParameters
+    algoServiceParams?: UserCustomParameters
+    algoParams?: UserCustomParameters
+  }): Promise<void> {
     try {
       setIsOrdering(true)
       setIsOrdered(false)
@@ -356,7 +362,9 @@ export default function Compute({
       const computeService = getServiceByName(asset, 'compute')
       const computeAlgorithm: ComputeAlgorithm = {
         documentId: selectedAlgorithmAsset.id,
-        serviceId: selectedAlgorithmAsset.services[0].id
+        serviceId: selectedAlgorithmAsset.services[0].id,
+        algocustomdata: userCustomParameters?.algoParams,
+        userdata: userCustomParameters?.algoServiceParams
       }
 
       const allowed = await isOrderable(
@@ -415,7 +423,8 @@ export default function Compute({
       const computeAsset: ComputeAsset = {
         documentId: asset.id,
         serviceId: asset.services[0].id,
-        transferTxId: datasetOrderTx
+        transferTxId: datasetOrderTx,
+        userdata: userCustomParameters?.dataServiceParams
       }
       computeAlgorithm.transferTxId = algorithmOrderTx
       const output: ComputeOutput = {
@@ -447,6 +456,32 @@ export default function Compute({
     } finally {
       setIsOrdering(false)
     }
+  }
+
+  const onSubmit = async (values: {
+    algorithm: string
+    dataServiceParams?: UserCustomParameters
+    algoServiceParams?: UserCustomParameters
+    algoParams?: UserCustomParameters
+  }) => {
+    if (!values.algorithm) return
+
+    const userCustomParameters = {
+      dataServiceParams: parseConsumerParameterValues(
+        values?.dataServiceParams,
+        asset.services[0].consumerParameters
+      ),
+      algoServiceParams: parseConsumerParameterValues(
+        values?.algoServiceParams,
+        selectedAlgorithmAsset?.services[0].consumerParameters
+      ),
+      algoParams: parseConsumerParameterValues(
+        values?.algoParams,
+        selectedAlgorithmAsset?.metadata?.algorithm?.consumerParameters
+      )
+    }
+
+    await startJob(userCustomParameters)
   }
 
   return (
@@ -489,13 +524,15 @@ export default function Compute({
         </>
       ) : (
         <Formik
-          initialValues={getInitialValues()}
+          initialValues={getInitialValues(asset, selectedAlgorithmAsset)}
           validateOnMount
-          validationSchema={validationSchema}
-          onSubmit={async (values) => {
-            if (!values.algorithm) return
-            await startJob()
-          }}
+          validationSchema={getComputeValidationSchema(
+            asset.services[0].consumerParameters,
+            selectedAlgorithmAsset?.services[0].consumerParameters,
+            selectedAlgorithmAsset?.metadata?.algorithm?.consumerParameters
+          )}
+          enableReinitialize
+          onSubmit={onSubmit}
         >
           <FormStartComputeDataset
             algorithms={algorithmList}

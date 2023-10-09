@@ -97,7 +97,7 @@
     "@types/remove-markdown": "^0.3.1",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.57.0",
-    "@uiw/codemirror-themes": "^4.19.1",
+    "@uiw/codemirror-themes": "^4.21.12",
     "apollo": "^2.34.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.41.0",

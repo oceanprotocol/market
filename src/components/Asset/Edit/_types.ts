@@ -1,3 +1,4 @@
+import { FormConsumerParameter } from '@components/Publish/_types'
 import { FileInfo } from '@oceanprotocol/lib'
 export interface MetadataEditForm {
   name: string
@@ -9,7 +10,13 @@ export interface MetadataEditForm {
   links?: FileInfo[]
   author?: string
   tags?: string[]
+  usesConsumerParameters?: boolean
+  consumerParameters?: FormConsumerParameter[]
   assetState?: string
+  service?: {
+    usesConsumerParameters?: boolean
+    consumerParameters?: FormConsumerParameter[]
+  }
 }
 
 export interface ComputeEditForm {

@@ -4,6 +4,7 @@ import React, { ReactElement, useEffect } from 'react'
 import IconDownload from '@images/download.svg'
 import IconCompute from '@images/compute.svg'
 import content from '../../../../content/publish/form.json'
+import consumerParametersContent from '../../../../content/publish/consumerParameters.json'
 import { getFieldContent } from '@utils/form'
 import { FormPublishData } from '../_types'
 import Alert from '@shared/atoms/Alert'
@@ -101,6 +102,21 @@ export default function ServicesFields(): ReactElement {
         component={Input}
         name="services[0].timeout"
       />
+      <Field
+        {...getFieldContent('usesConsumerParameters', content.services.fields)}
+        component={Input}
+        name="services[0].usesConsumerParameters"
+      />
+      {values.services[0].usesConsumerParameters && (
+        <Field
+          {...getFieldContent(
+            'consumerParameters',
+            consumerParametersContent.consumerParameters.fields
+          )}
+          component={Input}
+          name="services[0].consumerParameters"
+        />
+      )}
     </>
   )
 }

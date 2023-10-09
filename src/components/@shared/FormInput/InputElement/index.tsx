@@ -16,6 +16,7 @@ import TabsFile from '@shared/atoms/TabsFile'
 import useDarkMode from '@oceanprotocol/use-dark-mode'
 import appConfig from '../../../../../app.config'
 import { extensions, oceanTheme } from '@utils/codemirror'
+import { ConsumerParameters } from './ConsumerParameters'
 
 const cx = classNames.bind(styles)
 
@@ -129,6 +130,9 @@ export default function InputElement({
           }}
         />
       )
+
+    case 'consumerParameters':
+      return <ConsumerParameters {...field} form={form} {...props} />
 
     case 'textarea':
       return <textarea id={props.name} className={styles.textarea} {...props} />

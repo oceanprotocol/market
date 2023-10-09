@@ -7,19 +7,24 @@ import {
   DispenserCreationParams,
   getHash,
   LoggerInstance,
-  Metadata,
   NftCreateData,
   NftFactory,
-  Service,
   ZERO_ADDRESS,
-  getEventFromTx
+  getEventFromTx,
+  ConsumerParameter,
+  Metadata,
+  Service
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds, normalizeFile } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
 import slugify from 'slugify'
 import { algorithmContainerPresets } from './_constants'
-import { FormPublishData, MetadataAlgorithmContainer } from './_types'
+import {
+  FormConsumerParameter,
+  FormPublishData,
+  MetadataAlgorithmContainer
+} from './_types'
 import {
   marketFeeAddress,
   publisherMarketOrderFee,
@@ -59,6 +64,33 @@ function transformTags(originalTags: string[]): string[] {
   return transformedTags
 }
 
+export function transformConsumerParameters(
+  parameters: FormConsumerParameter[]
+): ConsumerParameter[] {
+  if (!parameters?.length) return
+
+  const transformedValues = parameters.map((param) => {
+    const options =
+      param.type === 'select'
+        ? // Transform from { key: string, value: string } into { key: value }
+          JSON.stringify(
+            param.options?.map((opt) => ({ [opt.key]: opt.value }))
+          )
+        : undefined
+
+    const required = param.required === 'required'
+
+    return {
+      ...param,
+      options,
+      required,
+      default: param.default.toString()
+    }
+  })
+
+  return transformedValues as ConsumerParameter[]
+}
+
 export async function transformPublishFormToDdo(
   values: FormPublishData,
   // Those 2 are only passed during actual publishing process
@@ -79,7 +111,9 @@ export async function transformPublishFormToDdo(
     dockerImageCustom,
     dockerImageCustomTag,
     dockerImageCustomEntrypoint,
-    dockerImageCustomChecksum
+    dockerImageCustomChecksum,
+    usesConsumerParameters,
+    consumerParameters
   } = metadata
   const { access, files, links, providerUrl, timeout } = services[0]
 
@@ -97,6 +131,10 @@ export async function transformPublishFormToDdo(
     files[0].valid && [sanitizeUrl(files[0].url)]
   const linksTransformed = links?.length &&
     links[0].valid && [sanitizeUrl(links[0].url)]
+
+  const consumerParametersTransformed = usesConsumerParameters
+    ? transformConsumerParameters(consumerParameters)
+    : undefined
 
   const newMetadata: Metadata = {
     created: currentTime,
@@ -135,7 +173,8 @@ export async function transformPublishFormToDdo(
               dockerImage === 'custom'
                 ? dockerImageCustomChecksum
                 : algorithmContainerPresets.checksum
-          }
+          },
+          consumerParameters: consumerParametersTransformed
         }
       })
   }
@@ -161,7 +200,10 @@ export async function transformPublishFormToDdo(
     timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
       compute: values.services[0].computeOptions
-    })
+    }),
+    consumerParameters: values.services[0].usesConsumerParameters
+      ? transformConsumerParameters(values.services[0].consumerParameters)
+      : undefined
   }
 
   const newDdo: DDO = {
