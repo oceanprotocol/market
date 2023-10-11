@@ -72,15 +72,16 @@ export default function MarketStats(): ReactElement {
         LoggerInstance.error('Error fetching global stats: ', error.message)
       }
     }
-
-    const veTotals = await getTotalAllocatedAndLocked()
-    total.veAllocated = veTotals.totalAllocated
-    total.veLocked = veTotals.totalLocked
-    setTotal(total)
-
     setData(newData)
   }, [mainChainIds])
 
+  async function addVeTotals(partialTotals: StatsTotal) {
+    const total: StatsTotal = { ...partialTotals }
+    const veTotals = await getTotalAllocatedAndLocked()
+    total.veAllocated = veTotals.totalAllocated
+    total.veLocked = veTotals.totalLocked
+    return total
+  }
   //
   // 1. Fetch Data
   //
@@ -108,8 +109,10 @@ export default function MarketStats(): ReactElement {
         LoggerInstance.error('Error data manipulation: ', error.message)
       }
     }
-
-    setTotal(newTotal)
+    async function setTotalAllocatedAndLocked() {
+      setTotal(await addVeTotals(newTotal))
+    }
+    setTotalAllocatedAndLocked()
   }, [data, mainChainIds])
 
   return (
