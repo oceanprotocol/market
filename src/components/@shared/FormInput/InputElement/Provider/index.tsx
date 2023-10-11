@@ -76,7 +76,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
       // if all good, add provider to formik state
       helpers.setValue({ url: field.value.url, valid: isValid, custom: true })
     } catch (error) {
-      const message = getErrorMessage(JSON.parse(error.message))
+      const message = getErrorMessage(error.message)
       setFieldError(`${field.name}.url`, message)
       LoggerInstance.error('[Custom Provider]:', message)
     } finally {

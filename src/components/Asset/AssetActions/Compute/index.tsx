@@ -439,7 +439,7 @@ export default function Compute({
       setRefetchJobs(!refetchJobs)
       initPriceAndFees()
     } catch (error) {
-      const message = getErrorMessage(JSON.parse(error.message))
+      const message = getErrorMessage(error.message)
       LoggerInstance.error('[Compute] Error:', message)
       setError(message)
       setRetry(true)
