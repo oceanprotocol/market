@@ -193,7 +193,7 @@ export async function getOrderPriceAndFees(
         customProviderUrl || asset?.services[0].serviceEndpoint
       ))
   } catch (error) {
-    const message = getErrorMessage(error.message)
+    const message = getErrorMessage(JSON.parse(error.message))
     LoggerInstance.error('[Initialize Provider] Error:', message)
     toast.error(message)
   }
