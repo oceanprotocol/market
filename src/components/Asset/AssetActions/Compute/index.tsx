@@ -498,20 +498,14 @@ export default function Compute({
       </div>
 
       {isUnsupportedPricing ? null : asset.metadata.type === 'algorithm' ? (
-        <>
-          {asset.services[0].type === 'compute' && (
-            <Alert
-              text={
-                "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed datasets though!"
-              }
-              state="info"
-            />
-          )}
-          <AlgorithmDatasetsListForCompute
-            algorithmDid={asset.id}
-            asset={asset}
+        asset.services[0].type === 'compute' && (
+          <Alert
+            text={
+              "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed datasets though!"
+            }
+            state="info"
           />
-        </>
+        )
       ) : (
         <Formik
           initialValues={getInitialValues(asset, selectedAlgorithmAsset)}
