@@ -4,6 +4,7 @@ import { getMaxDecimalsValidation } from '@utils/numbers'
 import * as Yup from 'yup'
 import { testLinks } from '@utils/yup'
 import { validationConsumerParameters } from '@components/@shared/FormInput/InputElement/ConsumerParameters/_validation'
+import { validationAlgorithmContianerParameters } from '@components/@shared/FormInput/InputElement/ContainerInput/_validation'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
@@ -25,6 +26,15 @@ const validationMetadata = {
     .required('Required'),
   author: Yup.string().required('Required'),
   tags: Yup.array<string[]>().nullable(),
+  dockerImage: Yup.string().when('type', {
+    is: 'algorithm',
+    then: Yup.array()
+      .of(Yup.object().shape(validationAlgorithmContianerParameters))
+      .required('Required'),
+    otherwise: Yup.array()
+      .nullable()
+      .transform((value) => value || null)
+  }),
   termsAndConditions: Yup.boolean()
     .required('Required')
     .isTrue('Please agree to the Terms and Conditions.'),
