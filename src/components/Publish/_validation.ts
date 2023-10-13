@@ -4,7 +4,6 @@ import { getMaxDecimalsValidation } from '@utils/numbers'
 import * as Yup from 'yup'
 import { testLinks } from '@utils/yup'
 import { validationConsumerParameters } from '@components/@shared/FormInput/InputElement/ConsumerParameters/_validation'
-import { validationAlgorithmContianerParameters } from '@components/@shared/FormInput/InputElement/ContainerInput/_validation'
 
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
