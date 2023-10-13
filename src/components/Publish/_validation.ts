@@ -28,12 +28,15 @@ const validationMetadata = {
   tags: Yup.array<string[]>().nullable(),
   dockerImage: Yup.string().when('type', {
     is: 'algorithm',
-    then: Yup.array()
-      .of(Yup.object().shape(validationAlgorithmContianerParameters))
-      .required('Required'),
-    otherwise: Yup.array()
-      .nullable()
-      .transform((value) => value || null)
+    then: Yup.string().required('Required')
+  }),
+  dockerImageCustomChecksum: Yup.string().when('type', {
+    is: 'algorithm',
+    then: Yup.string().required('Required')
+  }),
+  dockerImageCustomEntrypoint: Yup.string().when('type', {
+    is: 'algorithm',
+    then: Yup.string().required('Required')
   }),
   termsAndConditions: Yup.boolean()
     .required('Required')
