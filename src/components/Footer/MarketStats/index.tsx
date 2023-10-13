@@ -16,6 +16,7 @@ import Markdown from '@shared/Markdown'
 import content from '../../../../content/footer.json'
 import { getTotalAllocatedAndLocked } from '@utils/veAllocation'
 import PriceUnit from '@shared/Price/PriceUnit'
+import Loader from '@components/@shared/atoms/Loader'
 
 const initialTotal: StatsTotal = {
   nfts: 0,
@@ -23,6 +24,14 @@ const initialTotal: StatsTotal = {
   orders: 0,
   veAllocated: 0,
   veLocked: 0
+}
+
+function LoaderArea() {
+  return (
+    <div className={styles.loaderWrap}>
+      <Loader />
+    </div>
+  )
 }
 
 export default function MarketStats(): ReactElement {
@@ -33,6 +42,7 @@ export default function MarketStats(): ReactElement {
     [chainId: number]: FooterStatsValuesGlobalStatistics
   }>()
   const [total, setTotal] = useState(initialTotal)
+  const [loading, setLoading] = useState<boolean>(false)
 
   //
   // Set the main chain ids we want to display stats for
@@ -94,6 +104,7 @@ export default function MarketStats(): ReactElement {
   //
   useEffect(() => {
     if (!data || !mainChainIds?.length) return
+    setLoading(true)
     const newTotal: StatsTotal = total
 
     for (const chainId of mainChainIds) {
@@ -111,11 +122,14 @@ export default function MarketStats(): ReactElement {
     }
     async function setTotalAllocatedAndLocked() {
       setTotal(await addVeTotals(newTotal))
+      setLoading(false)
     }
     setTotalAllocatedAndLocked()
   }, [data, mainChainIds])
 
-  return (
+  return loading ? (
+    <LoaderArea />
+  ) : (
     <div className={styles.stats}>
       <div>
         <MarketStatsTotal total={total} />{' '}
