@@ -16,7 +16,10 @@ import {
 import { order } from '@utils/order'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
-import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
+import {
+  getAvailablePrice,
+  getOrderPriceAndFees
+} from '@utils/accessDetailsAndPricing'
 import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
@@ -65,14 +68,7 @@ export default function Download({
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
 
-  const price: AssetPrice = asset?.stats?.price?.value
-    ? asset?.stats?.price
-    : {
-        value: Number(asset?.accessDetails?.price),
-        tokenSymbol: asset?.accessDetails?.baseToken?.symbol,
-        tokenAddress: asset?.accessDetails?.baseToken?.address
-      }
-
+  const price: AssetPrice = getAvailablePrice(asset)
   const isUnsupportedPricing =
     !asset?.accessDetails ||
     !asset.services.length ||
@@ -295,7 +291,7 @@ export default function Download({
             ) : (
               <Price
                 className={styles.price}
-                price={asset.stats?.price}
+                price={price}
                 orderPriceAndFees={orderPriceAndFees}
                 conversion
                 size="large"

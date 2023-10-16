@@ -42,7 +42,10 @@ import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { Decimal } from 'decimal.js'
 import { useAbortController } from '@hooks/useAbortController'
-import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
+import {
+  getAvailablePrice,
+  getOrderPriceAndFees
+} from '@utils/accessDetailsAndPricing'
 import { handleComputeOrder } from '@utils/order'
 import { getComputeFeedback } from '@utils/feedback'
 import { initializeProviderForCompute } from '@utils/provider'
@@ -112,13 +115,7 @@ export default function Compute({
   const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { isAssetNetwork } = useAsset()
 
-  const price: AssetPrice = asset?.stats?.price?.value
-    ? asset?.stats?.price
-    : {
-        value: Number(asset?.accessDetails?.price),
-        tokenSymbol: asset?.accessDetails?.baseToken?.symbol,
-        tokenAddress: asset?.accessDetails?.baseToken?.address
-      }
+  const price: AssetPrice = getAvailablePrice(asset)
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
@@ -507,20 +504,14 @@ export default function Compute({
       </div>
 
       {isUnsupportedPricing ? null : asset.metadata.type === 'algorithm' ? (
-        <>
-          {asset.services[0].type === 'compute' && (
-            <Alert
-              text={
-                "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed datasets though!"
-              }
-              state="info"
-            />
-          )}
-          <AlgorithmDatasetsListForCompute
-            algorithmDid={asset.id}
-            asset={asset}
+        asset.services[0].type === 'compute' && (
+          <Alert
+            text={
+              "This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed datasets though!"
+            }
+            state="info"
           />
-        </>
+        )
       ) : (
         <Formik
           initialValues={getInitialValues(asset, selectedAlgorithmAsset)}

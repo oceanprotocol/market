@@ -13,7 +13,10 @@ export async function transformAssetToAssetSelection(
     const algoService =
       getServiceByName(asset, 'compute') || getServiceByName(asset, 'access')
 
-    if (algoService?.serviceEndpoint === datasetProviderEndpoint) {
+    if (
+      asset?.stats?.price?.value >= 0 &&
+      algoService?.serviceEndpoint === datasetProviderEndpoint
+    ) {
       let selected = false
       selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
         if (algorithm.did === asset.id) {

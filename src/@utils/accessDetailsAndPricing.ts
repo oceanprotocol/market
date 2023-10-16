@@ -5,6 +5,7 @@ import {
   TokenPriceQuery_token as TokenPrice
 } from '../@types/subgraph/TokenPriceQuery'
 import {
+  AssetPrice,
   getErrorMessage,
   LoggerInstance,
   ProviderFees,
@@ -253,4 +254,15 @@ export async function getAccessDetails(
   } catch (error) {
     LoggerInstance.error('Error getting access details: ', error.message)
   }
+}
+
+export function getAvailablePrice(asset: AssetExtended) {
+  const price: AssetPrice = asset?.stats?.price?.value
+    ? asset?.stats?.price
+    : {
+        value: Number(asset?.accessDetails?.price),
+        tokenSymbol: asset?.accessDetails?.baseToken?.symbol,
+        tokenAddress: asset?.accessDetails?.baseToken?.address
+      }
+  return price
 }
