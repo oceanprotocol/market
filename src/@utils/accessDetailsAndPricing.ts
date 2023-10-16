@@ -256,7 +256,7 @@ export async function getAccessDetails(
   }
 }
 
-export function getAvailablePrice(asset: AssetExtended) {
+export function getAvailablePrice(asset: AssetExtended): AssetPrice {
   const price: AssetPrice = asset?.stats?.price?.value
     ? asset?.stats?.price
     : {
