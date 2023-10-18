@@ -14,6 +14,7 @@ import {
   ProviderComputeInitializeResults,
   unitsToAmount,
   ProviderFees,
+  AssetPrice,
   UserCustomParameters,
   getErrorMessage
 } from '@oceanprotocol/lib'
@@ -41,7 +42,10 @@ import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { Decimal } from 'decimal.js'
 import { useAbortController } from '@hooks/useAbortController'
-import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
+import {
+  getAvailablePrice,
+  getOrderPriceAndFees
+} from '@utils/accessDetailsAndPricing'
 import { handleComputeOrder } from '@utils/order'
 import { getComputeFeedback } from '@utils/feedback'
 import { initializeProviderForCompute } from '@utils/provider'
@@ -110,6 +114,8 @@ export default function Compute({
   const [retry, setRetry] = useState<boolean>(false)
   const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { isAssetNetwork } = useAsset()
+
+  const price: AssetPrice = getAvailablePrice(asset)
 
   const hasDatatoken = Number(dtBalance) >= 1
   const isComputeButtonDisabled =
@@ -489,7 +495,7 @@ export default function Compute({
           />
         ) : (
           <Price
-            price={asset.stats?.price}
+            price={price}
             orderPriceAndFees={datasetOrderPriceAndFees}
             conversion
             size="large"

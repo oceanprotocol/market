@@ -10,6 +10,7 @@ import styles from './index.module.css'
 import { getServiceByName } from '@utils/ddo'
 import { useUserPreferences } from '@context/UserPreferences'
 import { formatNumber } from '@utils/numbers'
+import { AssetPrice } from '@oceanprotocol/lib'
 
 export declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -31,7 +32,7 @@ export default function AssetTeaser({
   const { orders, allocated, price } = asset.stats
   const isUnsupportedPricing =
     !asset.services.length ||
-    asset?.stats?.price?.value === undefined ||
+    price.value === undefined ||
     asset?.accessDetails?.type === 'NOT_SUPPORTED'
   const { locale } = useUserPreferences()
 
