@@ -40,7 +40,7 @@ async function initializeProvider(
     )
     return provider
   } catch (error) {
-    const message = getErrorMessage(JSON.parse(error.message))
+    const message = getErrorMessage(error.message)
     LoggerInstance.log('[Initialize Provider] Error:', message)
     toast.error(message)
   }

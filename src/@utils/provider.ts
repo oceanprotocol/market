@@ -57,7 +57,7 @@ export async function initializeProviderForCompute(
       accountId
     )
   } catch (error) {
-    const message = getErrorMessage(JSON.parse(error.message))
+    const message = getErrorMessage(error.message)
     LoggerInstance.error('[Initialize Provider] Error:', message)
     toast.error(message)
     return null
@@ -79,7 +79,7 @@ export async function getEncryptedFiles(
     )
     return response
   } catch (error) {
-    const message = getErrorMessage(JSON.parse(error.message))
+    const message = getErrorMessage(error.message)
     LoggerInstance.error('[Provider Encrypt] Error:', message)
     toast.error(message)
   }
@@ -100,9 +100,10 @@ export async function getFileDidInfo(
     )
     return response
   } catch (error) {
-    const message = getErrorMessage(JSON.parse(error.message))
+    const message = getErrorMessage(error.message)
     LoggerInstance.error('[Initialize check file did] Error:', message)
-    toast.error(message)
+    toast.error(`[Initialize check file did] Error: ${message}`)
+    throw new Error(`[Initialize check file did] Error: ${message}`)
   }
 }
 
@@ -137,7 +138,7 @@ export async function getFileInfo(
           customProviderUrl || providerUrl
         )
       } catch (error) {
-        const message = getErrorMessage(JSON.parse(error.message))
+        const message = getErrorMessage(error.message)
         LoggerInstance.error('[Provider Get File info] Error:', message)
         toast.error(message)
       }
@@ -154,7 +155,7 @@ export async function getFileInfo(
           customProviderUrl || providerUrl
         )
       } catch (error) {
-        const message = getErrorMessage(JSON.parse(error.message))
+        const message = getErrorMessage(error.message)
         LoggerInstance.error('[Provider Get File info] Error:', message)
         toast.error(message)
       }
@@ -173,7 +174,7 @@ export async function getFileInfo(
           customProviderUrl || providerUrl
         )
       } catch (error) {
-        const message = getErrorMessage(JSON.parse(error.message))
+        const message = getErrorMessage(error.message)
         LoggerInstance.error('[Provider Get File info] Error:', message)
         toast.error(message)
       }
@@ -193,7 +194,7 @@ export async function getFileInfo(
           customProviderUrl || providerUrl
         )
       } catch (error) {
-        const message = getErrorMessage(JSON.parse(error.message))
+        const message = getErrorMessage(error.message)
         LoggerInstance.error('[Provider Get File info] Error:', message)
         toast.error(message)
       }
@@ -213,7 +214,7 @@ export async function getFileInfo(
           customProviderUrl || providerUrl
         )
       } catch (error) {
-        const message = getErrorMessage(JSON.parse(error.message))
+        const message = getErrorMessage(error.message)
         LoggerInstance.error('[Provider Get File info] Error:', message)
         toast.error(message)
       }
@@ -242,7 +243,7 @@ export async function downloadFile(
       userCustomParameters
     )
   } catch (error) {
-    const message = getErrorMessage(JSON.parse(error.message))
+    const message = getErrorMessage(error.message)
     LoggerInstance.error('[Provider Get download url] Error:', message)
     toast.error(message)
   }
@@ -256,7 +257,7 @@ export async function checkValidProvider(
     const response = await ProviderInstance.isValidProvider(providerUrl)
     return response
   } catch (error) {
-    const message = getErrorMessage(JSON.parse(error.message))
+    const message = getErrorMessage(error.message)
     LoggerInstance.error('[Provider Check] Error:', message)
     toast.error(message)
   }

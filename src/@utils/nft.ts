@@ -113,7 +113,7 @@ export async function setNftMetadata(
       signal
     )
   } catch (err) {
-    const message = getErrorMessage(JSON.parse(err.message))
+    const message = getErrorMessage(err.message)
     LoggerInstance.error('[Encrypt Data] Error:', message)
     toast.error(message)
   }
@@ -155,7 +155,7 @@ export async function setNFTMetadataAndTokenURI(
       signal
     )
   } catch (err) {
-    const message = getErrorMessage(JSON.parse(err.message))
+    const message = getErrorMessage(err.message)
     LoggerInstance.error('[Encrypt Data] Error:', message)
     toast.error(message)
   }
