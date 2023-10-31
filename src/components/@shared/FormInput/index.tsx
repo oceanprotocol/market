@@ -77,16 +77,16 @@ function checkError(
   parsedFieldName: string[],
   field: FieldInputProps<any>
 ) {
-  if (
-    (form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
-      form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]) ||
-    (form?.touched[field?.name] &&
-      form?.errors[field?.name] &&
-      field.name !== 'files' &&
-      field.name !== 'links')
-  ) {
-    return true
-  }
+  const touched = getObjectPropertyByPath(form?.touched, field?.name)
+  const errors = getObjectPropertyByPath(form?.errors, field?.name)
+
+  return (
+    touched &&
+    errors &&
+    !field.name.endsWith('.files') &&
+    !field.name.endsWith('.links') &&
+    !field.name.endsWith('consumerParameters')
+  )
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {
