@@ -14,7 +14,7 @@ export function getInitialValues(
     description: metadata?.description,
     price,
     links: [{ url: '', type: 'url' }],
-    files: [{ url: '', type: 'ipfs' }],
+    files: [{ url: '', type: 'hidden' }],
     timeout: secondsToString(service?.timeout),
     author: metadata?.author,
     tags: metadata?.tags,
