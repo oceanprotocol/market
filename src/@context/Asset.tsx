@@ -119,25 +119,6 @@ function AssetProvider({
   )
 
   // -----------------------------------
-  // Helper: Get and set asset access details
-  // -----------------------------------
-  const fetchAccessDetails = useCallback(async (): Promise<void> => {
-    if (!asset?.chainId || !asset?.services?.length) return
-
-    const accessDetails = await getAccessDetails(
-      asset.chainId,
-      asset.services[0].datatokenAddress,
-      asset.services[0].timeout,
-      accountId
-    )
-    setAsset((prevState) => ({
-      ...prevState,
-      accessDetails
-    }))
-    LoggerInstance.log(`[asset] Got access details for ${did}`, accessDetails)
-  }, [asset?.chainId, asset?.services, accountId, did])
-
-  // -----------------------------------
   // 1. Get and set asset based on passed DID
   // -----------------------------------
   useEffect(() => {
@@ -145,15 +126,6 @@ function AssetProvider({
 
     fetchAsset(newCancelToken())
   }, [appConfig?.metadataCacheUri, fetchAsset, newCancelToken, isMounted])
-
-  // -----------------------------------
-  // 2. Attach access details to asset
-  // -----------------------------------
-  useEffect(() => {
-    if (!isMounted) return
-
-    fetchAccessDetails()
-  }, [accountId, fetchAccessDetails, isMounted])
 
   // -----------------------------------
   // Check user network against asset network
