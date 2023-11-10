@@ -208,7 +208,7 @@ export default function Compute({
       )
       if (!datasetPriceAndFees)
         throw new Error('Error setting dataset price and fees!')
-      
+
       setDatasetOrderPriceAndFees(datasetPriceAndFees)
     }
   }
