@@ -187,8 +187,6 @@ export default function Compute({
         signer,
         algoProviderFees
       )
-      console.log(algorithmOrderPriceAndFees)
-
       if (!algorithmOrderPriceAndFees)
         throw new Error('Error setting algorithm price and fees!')
 
@@ -210,8 +208,7 @@ export default function Compute({
       )
       if (!datasetPriceAndFees)
         throw new Error('Error setting dataset price and fees!')
-
-      console.log(datasetPriceAndFees)
+      
       setDatasetOrderPriceAndFees(datasetPriceAndFees)
     }
   }
@@ -244,7 +241,6 @@ export default function Compute({
           asset.metadata.type
         )[0]
       )
-      console.log(initializedProvider?.datasets?.[0]?.providerFee)
 
       await setDatasetPrice(initializedProvider?.datasets?.[0]?.providerFee)
       setComputeStatusText(
@@ -272,7 +268,6 @@ export default function Compute({
   }, [asset?.accessDetails, accountId, isUnsupportedPricing])
 
   useEffect(() => {
-    console.log(selectedAlgorithmAsset)
     if (!selectedAlgorithmAsset?.accessDetails) return
 
     setIsRequestingAlgoOrderPrice(true)
