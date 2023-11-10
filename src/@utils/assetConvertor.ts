@@ -1,6 +1,7 @@
 import { PublisherTrustedAlgorithm, Asset } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { getServiceByName } from './ddo'
+import normalizeUrl from 'normalize-url'
 
 export async function transformAssetToAssetSelection(
   datasetProviderEndpoint: string,
@@ -15,7 +16,8 @@ export async function transformAssetToAssetSelection(
 
     if (
       asset?.stats?.price?.value >= 0 &&
-      algoService?.serviceEndpoint === datasetProviderEndpoint
+      normalizeUrl(algoService?.serviceEndpoint) ===
+        normalizeUrl(datasetProviderEndpoint)
     ) {
       let selected = false
       selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
