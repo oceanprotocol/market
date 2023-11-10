@@ -169,7 +169,7 @@ export function getQueryString(
     sort: { sortBy: SortTermOptions.Created },
     filters: [getFilterTerm('metadata.type', 'algorithm')],
     esPaginationOptions: {
-      size: 2000
+      size: 3000
     }
   } as BaseQueryParams
   algorithmDidList?.length > 0 &&
