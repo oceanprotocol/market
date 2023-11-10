@@ -241,6 +241,7 @@ export default function Compute({
           asset.metadata.type
         )[0]
       )
+
       await setDatasetPrice(initializedProvider?.datasets?.[0]?.providerFee)
       setComputeStatusText(
         getComputeFeedback(
