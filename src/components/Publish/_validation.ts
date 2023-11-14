@@ -47,14 +47,17 @@ const validationMetadata = {
     .required('Required')
     .isTrue('Please agree to the Terms and Conditions.'),
   usesConsumerParameters: Yup.boolean(),
-  consumerParameters: Yup.array().when('usesConsumerParameters', {
-    is: true,
-    then: Yup.array()
-      .of(Yup.object().shape(validationConsumerParameters))
-      .required('Required'),
-    otherwise: Yup.array()
-      .nullable()
-      .transform((value) => value || null)
+  consumerParameters: Yup.array().when('type', {
+    is: 'algorithm',
+    then: Yup.array().when('usesConsumerParameters', {
+      is: true,
+      then: Yup.array()
+        .of(Yup.object().shape(validationConsumerParameters))
+        .required('Required'),
+      otherwise: Yup.array()
+        .nullable()
+        .transform((value) => value || null)
+    })
   })
 }
 
