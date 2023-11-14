@@ -31,11 +31,17 @@ const validationMetadata = {
   }),
   dockerImageCustomChecksum: Yup.string().when('type', {
     is: 'algorithm',
-    then: Yup.string().required('Required')
+    then: Yup.string().when('dockerImage', {
+      is: 'custom',
+      then: Yup.string().required('Required')
+    })
   }),
   dockerImageCustomEntrypoint: Yup.string().when('type', {
     is: 'algorithm',
-    then: Yup.string().required('Required')
+    then: Yup.string().when('dockerImage', {
+      is: 'custom',
+      then: Yup.string().required('Required')
+    })
   }),
   termsAndConditions: Yup.boolean()
     .required('Required')
