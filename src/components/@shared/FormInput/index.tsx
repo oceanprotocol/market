@@ -72,11 +72,7 @@ export interface InputProps {
   disclaimerValues?: string[]
 }
 
-function checkError(
-  form: any,
-  parsedFieldName: string[],
-  field: FieldInputProps<any>
-) {
+function checkError(form: any, field: FieldInputProps<any>) {
   const touched = getObjectPropertyByPath(form?.touched, field?.name)
   const errors = getObjectPropertyByPath(form?.errors, field?.name)
 
@@ -85,7 +81,8 @@ function checkError(
     errors &&
     !field.name.endsWith('.files') &&
     !field.name.endsWith('.links') &&
-    !field.name.endsWith('consumerParameters')
+    !field.name.endsWith('consumerParameters') &&
+    !field.name.endsWith('.providerUrl')
   )
 }
 
@@ -109,7 +106,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   // handling flat and nested data at same time.
   const parsedFieldName =
     isFormikField && (isNestedField ? field?.name.split('.') : [field?.name])
-  const hasFormikError = checkError(form, parsedFieldName, field)
+  const hasFormikError = checkError(form, field)
 
   const styleClasses = cx({
     field: true,
