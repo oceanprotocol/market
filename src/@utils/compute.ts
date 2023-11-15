@@ -167,7 +167,10 @@ export function getQueryString(
   const baseParams = {
     chainIds: [chainId],
     sort: { sortBy: SortTermOptions.Created },
-    filters: [getFilterTerm('metadata.type', 'algorithm')]
+    filters: [getFilterTerm('metadata.type', 'algorithm')],
+    esPaginationOptions: {
+      size: 3000
+    }
   } as BaseQueryParams
   algorithmDidList?.length > 0 &&
     baseParams.filters.push(getFilterTerm('_id', algorithmDidList))
@@ -200,7 +203,6 @@ export async function getAlgorithmsForAsset(
     ),
     token
   )
-
   const algorithms: Asset[] = gueryResults?.results
   return algorithms
 }

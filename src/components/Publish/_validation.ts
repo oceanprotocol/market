@@ -31,24 +31,33 @@ const validationMetadata = {
   }),
   dockerImageCustomChecksum: Yup.string().when('type', {
     is: 'algorithm',
-    then: Yup.string().required('Required')
+    then: Yup.string().when('dockerImage', {
+      is: 'custom',
+      then: Yup.string().required('Required')
+    })
   }),
   dockerImageCustomEntrypoint: Yup.string().when('type', {
     is: 'algorithm',
-    then: Yup.string().required('Required')
+    then: Yup.string().when('dockerImage', {
+      is: 'custom',
+      then: Yup.string().required('Required')
+    })
   }),
   termsAndConditions: Yup.boolean()
     .required('Required')
     .isTrue('Please agree to the Terms and Conditions.'),
   usesConsumerParameters: Yup.boolean(),
-  consumerParameters: Yup.array().when('usesConsumerParameters', {
-    is: true,
-    then: Yup.array()
-      .of(Yup.object().shape(validationConsumerParameters))
-      .required('Required'),
-    otherwise: Yup.array()
-      .nullable()
-      .transform((value) => value || null)
+  consumerParameters: Yup.array().when('type', {
+    is: 'algorithm',
+    then: Yup.array().when('usesConsumerParameters', {
+      is: true,
+      then: Yup.array()
+        .of(Yup.object().shape(validationConsumerParameters))
+        .required('Required'),
+      otherwise: Yup.array()
+        .nullable()
+        .transform((value) => value || null)
+    })
   })
 }
 
