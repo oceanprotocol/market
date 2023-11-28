@@ -18,7 +18,7 @@ export function NetworkIcon({ name }: { name: string }): ReactElement {
     ? BscIcon
     : name.includes('Energy Web')
     ? EnergywebIcon
-    : name.includes('Optimism')
+    : name.includes('OP Mainnet')
     ? OptimismIcon
     : EthIcon // ETH icon as fallback
 
