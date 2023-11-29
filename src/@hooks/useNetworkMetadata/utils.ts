@@ -28,6 +28,9 @@ export function getNetworkDisplayName(data: EthereumListsChain): string {
     case 137:
       displayName = 'Polygon'
       break
+    case 10:
+      displayName = 'OP Mainnet'
+      break
     case 1285:
       displayName = 'Moonriver'
       break

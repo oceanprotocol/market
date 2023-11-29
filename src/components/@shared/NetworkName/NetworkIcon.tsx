@@ -4,6 +4,7 @@ import PolygonIcon from '@images/polygon.svg'
 import MoonbeamIcon from '@images/moonbeam.svg'
 import BscIcon from '@images/bsc.svg'
 import EnergywebIcon from '@images/energyweb.svg'
+import OptimismIcon from '@images/optimism.svg'
 import styles from './index.module.css'
 
 export function NetworkIcon({ name }: { name: string }): ReactElement {
@@ -17,6 +18,8 @@ export function NetworkIcon({ name }: { name: string }): ReactElement {
     ? BscIcon
     : name.includes('Energy Web')
     ? EnergywebIcon
+    : name.includes('OP Mainnet')
+    ? OptimismIcon
     : EthIcon // ETH icon as fallback
 
   return <IconMapped className={styles.icon} />
