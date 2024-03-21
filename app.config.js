@@ -14,7 +14,7 @@ module.exports = {
   chainIds: [1, 137, 10],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 137, 10, 5, 80001, 11155111],
+  chainIdsSupported: [1, 137, 10, 80001, 11155111],
 
   customProviderUrl: process.env.NEXT_PUBLIC_PROVIDER_URL,
 
