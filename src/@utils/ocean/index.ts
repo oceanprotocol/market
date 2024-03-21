@@ -51,8 +51,8 @@ export function getDevelopmentConfig(): Config {
     // fixedRateExchangeAddress: contractAddresses.development?.FixedRateExchange,
     // metadataContractAddress: contractAddresses.development?.Metadata,
     // oceanTokenAddress: contractAddresses.development?.Ocean,
-    // There is no subgraph in barge so we hardcode the Goerli one for now
-    subgraphUri: 'https://v4.subgraph.goerli.oceanprotocol.com'
+    // There is no subgraph in barge so we hardcode the Polygon Mumbai one for now
+    subgraphUri: 'https://v4.subgraph.mumbai.oceanprotocol.com'
   } as Config
 }
 

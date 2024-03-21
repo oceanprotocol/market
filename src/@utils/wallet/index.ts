@@ -4,7 +4,6 @@ import {
   mainnet,
   polygon,
   optimism,
-  goerli,
   polygonMumbai,
   sepolia
 } from 'wagmi/chains'
@@ -37,7 +36,7 @@ export const wagmiClient = createClient(
     appName: 'Ocean Market',
     infuraId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID,
     // TODO: mapping between appConfig.chainIdsSupported and wagmi chainId
-    chains: [mainnet, polygon, optimism, goerli, polygonMumbai, sepolia],
+    chains: [mainnet, polygon, optimism, polygonMumbai, sepolia],
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
   })
 )
