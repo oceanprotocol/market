@@ -4,8 +4,6 @@ description: Buy, mint, and sell all sorts of data on the Ocean Market
 
 # Guide to the Ocean Market
 
-<figure><img src="../.gitbook/assets/gif/shopping-minions.gif" alt=""><figcaption><p>Retail therapy mood!</p></figcaption></figure>
-
 ### What is the [Ocean Market](https://market.oceanprotocol.com/)? 🛒
 
 The Ocean Market is a place for buyers + sellers of top-notch data and algorithms to exchange goods. The market also gives you easy-to-use publishing and purchasing tools to monetize your intellectual property. 🤑 What's not to love? 💕
@@ -17,14 +15,16 @@ The Ocean Market is a place for buyers + sellers of top-notch data and algorithm
 
 #### **Learn to:**
 
-* [Publish an NFT](publish-data-nfts.md)
-* [Download NFT Assets](buy-data-nfts.md)
-* [Host Your Assets](asset-hosting/README.md)
+* Publish an NFT
+* Download NFT Assets
+* Host Your Assets
+
+For more information visit the [Ocean Docs](https://docs.oceanprotocol.com/)
 
 #### Getting Basic 💁‍♀️
 
 **If you are new to web3** and blockchain technologies then we suggest you first get familiar with some Web3 basics:
 
-* [Wallet Basics](../user-guides/wallets/README.md) 👛
-* [Set Up MetaMask](../user-guides/wallets/metamask-setup.md) 🦊
-* [Manage Your OCEAN](../user-guides/wallets-and-ocean.md) 🪙
+* Wallet Basics 👛
+* Set Up MetaMask 🦊
+* Manage Your OCEAN 🪙

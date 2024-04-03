@@ -16,11 +16,11 @@ Using Ocean Market is already a big improvement on the alternatives that are out
 
 ## Fork Ocean Market
 
-The first step is to log into Github and navigate to the [Ocean Market repository](https://github.com/oceanprotocol/market), you’ll need to log in or create a Github account. Now you need to click “Fork” in the top right-hand corner. If you are a member of an organization on Github, it will give you the option to clone it into either your personal account or the organization. Choose whichever is suitable for you.
+The first step is to log into Github and navigate to the Ocean Market repository, you’ll need to log in or create a Github account. Now you need to click “Fork” in the top right-hand corner. If you are a member of an organization on Github, it will give you the option to clone it into either your personal account or the organization. Choose whichever is suitable for you.
 
 ## Clone the market locally
 
-Now we need to clone the market fork locally so that we can start making changes to the code. Upon forking Ocean Market, GitHub will take you to the repository page. Here, you should copy the URL of the repository. To do this, click on the green “Code” button and then click the copy icon to copy the HTTPS URL. Make sure that you have git installed and set up and installed on your computer before proceeding. See [this guide](https://git-scm.com/) if you’re not familiar with git.
+Now we need to clone the market fork locally so that we can start making changes to the code. Upon forking Ocean Market, GitHub will take you to the repository page. Here, you should copy the URL of the repository. To do this, click on the green “Code” button and then click the copy icon to copy the HTTPS URL. Make sure that you have git installed and set up and installed on your computer before proceeding. See this guide if you’re not familiar with git.
 
 ## Install the dependencies
 
@@ -44,12 +44,10 @@ npm start
 
 The above command will build the development bundle and run it locally.
 
-<figure><img src="../../.gitbook/assets/market/Screenshot 2023-06-13 at 14.39.17.png" alt=""><figcaption><p>Forking Ocean Market</p></figcaption></figure>
+## Great Job!
 
-Great news - your marketplace has successfully been built and is now running locally. Let’s check it out! Open your browser and navigate to http://localhost:8000/. You’ll see that you have a full-on clone of Ocean Market running locally. Give it a go and test out publishing and consuming assets - everything works!
+Your marketplace has successfully been built and is now running locally. Let’s check it out! Open your browser and navigate to http://localhost:8000/. You’ll see that you have a full-on clone of Ocean Market running locally. Give it a go and test out publishing and consuming assets - everything works!
 
 That’s all that’s required to get a clone of Ocean market working. The whole process is made simple because your clone can happily use all the smart contracts and backend components that are maintained by Ocean Protocol Foundation.
-
-<figure><img src="../../.gitbook/assets/market/Screenshot 2023-06-13 at 14.43.25.png" alt=""><figcaption><p>Forking Ocean Market</p></figcaption></figure>
 
 So you’ve got a fully functioning marketplace at this point, which is pretty cool. But it doesn’t really look like your marketplace. Right now, it’s still just a clone of Ocean Market - the same branding, name, logo, etc. The next few steps focus on personalizing your marketplace.
