@@ -19,9 +19,9 @@ Using Ocean Market is already a big improvement on the alternatives that are out
 
 The tutorial covers:
 
-* [Forking and running Ocean Market locally](forking-ocean-market.md)
-* [Customizing your fork of Ocean market](customising-your-market.md)
-* [Quick deployment of Ocean Market](deploying-market.md)
+* Forking and running Ocean Market locally
+* Customizing your fork of Ocean market
+* Quick deployment of Ocean Market
 
 ## Preparation
 
