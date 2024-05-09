@@ -1,12 +1,6 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { createClient, erc20ABI } from 'wagmi'
-import {
-  mainnet,
-  polygon,
-  optimism,
-  polygonMumbai,
-  sepolia
-} from 'wagmi/chains'
+import { mainnet, polygon, optimism, sepolia } from 'wagmi/chains'
 import { ethers, Contract, Signer } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { getDefaultClient } from 'connectkit'
@@ -36,7 +30,7 @@ export const wagmiClient = createClient(
     appName: 'Ocean Market',
     infuraId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID,
     // TODO: mapping between appConfig.chainIdsSupported and wagmi chainId
-    chains: [mainnet, polygon, optimism, polygonMumbai, sepolia],
+    chains: [mainnet, polygon, optimism, sepolia],
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
   })
 )
