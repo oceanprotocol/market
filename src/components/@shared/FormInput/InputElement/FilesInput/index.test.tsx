@@ -46,7 +46,7 @@ const mockFieldArwave = {
 
 const mockFieldGraphQL = {
   value:
-    'https://v4.subgraph.mumbai.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
+    'https://v4.subgraph.sepolia.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
   checked: false,
   onChange: jest.fn(),
   onBlur: jest.fn(),
@@ -201,7 +201,7 @@ describe('@shared/FormInput/InputElement/FilesInput', () => {
           {
             type: 'graphql',
             valid: true,
-            url: 'https://v4.subgraph.mumbai.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
+            url: 'https://v4.subgraph.sepolia.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
             query:
               'query{\n            nfts(orderBy: createdTimestamp,orderDirection:desc){\n                 id\n                 symbol\n                 createdTimestamp\n            }\n           }',
             checksum: false
