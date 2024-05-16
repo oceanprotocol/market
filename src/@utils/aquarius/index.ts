@@ -1,5 +1,4 @@
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
-import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../../app.config'
@@ -7,7 +6,6 @@ import {
   SortDirectionOptions,
   SortTermOptions
 } from '../../@types/aquarius/SearchQuery'
-import { transformAssetToAssetSelection } from '../assetConvertor'
 
 export interface UserSales {
   id: string
@@ -204,41 +202,6 @@ export async function getAssetsFromDids(
   } catch (error) {
     LoggerInstance.error(error.message)
   }
-}
-
-export async function getAlgorithmDatasetsForCompute(
-  algorithmId: string,
-  datasetProviderUri: string,
-  datasetChainId?: number,
-  cancelToken?: CancelToken
-): Promise<AssetSelectionAsset[]> {
-  const baseQueryParams = {
-    chainIds: [datasetChainId],
-    nestedQuery: {
-      must: {
-        match: {
-          'services.compute.publisherTrustedAlgorithms.did': {
-            query: algorithmId
-          }
-        }
-      }
-    },
-    sortOptions: {
-      sortBy: SortTermOptions.Created,
-      sortDirection: SortDirectionOptions.Descending
-    }
-  } as BaseQueryParams
-
-  const query = generateBaseQuery(baseQueryParams)
-  const computeDatasets = await queryMetadata(query, cancelToken)
-  if (computeDatasets?.totalResults === 0) return []
-
-  const datasets = await transformAssetToAssetSelection(
-    datasetProviderUri,
-    computeDatasets.results,
-    []
-  )
-  return datasets
 }
 
 export async function getPublishedAssets(

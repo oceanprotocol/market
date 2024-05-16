@@ -1,7 +1,4 @@
-import {
-  ComputeEditForm,
-  MetadataEditForm
-} from '@components/Asset/Edit/_types'
+import { MetadataEditForm } from '@components/Asset/Edit/_types'
 import {
   FormConsumerParameter,
   FormPublishData
@@ -171,7 +168,7 @@ export function normalizeFile(
 }
 
 export function previewDebugPatch(
-  values: FormPublishData | Partial<MetadataEditForm> | ComputeEditForm,
+  values: FormPublishData | Partial<MetadataEditForm>,
   chainId: number
 ) {
   // handle file's object property dynamically

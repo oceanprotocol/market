@@ -4,7 +4,7 @@ import styles from './index.module.css'
 import Loader from '../../../@shared/atoms/Loader'
 
 export interface ButtonBuyProps {
-  action: 'download' | 'compute'
+  action: 'download'
   disabled: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
@@ -261,7 +261,6 @@ export default function ButtonBuy({
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className={action === 'compute' ? styles.actionsCenter : ''}
           >
             {buttonText}
           </Button>

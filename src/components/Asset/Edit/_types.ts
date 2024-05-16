@@ -18,9 +18,3 @@ export interface MetadataEditForm {
     consumerParameters?: FormConsumerParameter[]
   }
 }
-
-export interface ComputeEditForm {
-  allowAllPublishedAlgorithms: boolean
-  publisherTrustedAlgorithms: string[]
-  publisherTrustedAlgorithmPublishers: string[]
-}

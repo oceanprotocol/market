@@ -198,9 +198,6 @@ export async function transformPublishFormToDdo(
     datatokenAddress,
     serviceEndpoint: providerUrl.url,
     timeout: mapTimeoutStringToSeconds(timeout),
-    ...(access === 'compute' && {
-      compute: values.services[0].computeOptions
-    }),
     consumerParameters: values.services[0].usesConsumerParameters
       ? transformConsumerParameters(values.services[0].consumerParameters)
       : undefined

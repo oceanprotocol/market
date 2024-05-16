@@ -46,7 +46,6 @@ export default function Edit({
   const [success, setSuccess] = useState<string>()
   const [paymentCollector, setPaymentCollector] = useState<string>()
   const [error, setError] = useState<string>()
-  const isComputeType = asset?.services[0]?.type === 'compute'
   const hasFeedback = error || success
 
   useEffect(() => {
@@ -235,7 +234,6 @@ export default function Edit({
             <FormEditMetadata
               data={content.form.data}
               showPrice={asset?.accessDetails?.type === 'fixed'}
-              isComputeDataset={isComputeType}
             />
 
             <Web3Feedback

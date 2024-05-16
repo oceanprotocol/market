@@ -14,13 +14,11 @@ const cx = classNames.bind(styles)
 const clearFilters = [{ display: 'Clear', value: '' }]
 
 const serviceFilterItems = [
-  { display: 'datasets', value: FilterByTypeOptions.Data },
-  { display: 'algorithms', value: FilterByTypeOptions.Algorithm }
+  { display: 'datasets', value: FilterByTypeOptions.Data }
 ]
 
 const accessFilterItems = [
-  { display: 'download ', value: FilterByAccessOptions.Download },
-  { display: 'compute ', value: FilterByAccessOptions.Compute }
+  { display: 'download ', value: FilterByAccessOptions.Download }
 ]
 
 export default function FilterPrice({
@@ -63,10 +61,7 @@ export default function FilterPrice({
   }
 
   async function handleSelectedFilter(isSelected: boolean, value: string) {
-    if (
-      value === FilterByAccessOptions.Download ||
-      value === FilterByAccessOptions.Compute
-    ) {
+    if (value === FilterByAccessOptions.Download) {
       if (isSelected) {
         if (accessSelections.length > 1) {
           // both selected -> select the other one
