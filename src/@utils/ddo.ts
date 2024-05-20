@@ -22,10 +22,7 @@ export function isValidDid(did: string): boolean {
   return regex.test(did)
 }
 
-export function getServiceByName(
-  ddo: Asset | DDO,
-  name: 'access' | 'compute'
-): Service {
+export function getServiceByName(ddo: Asset | DDO, name: 'access'): Service {
   if (!ddo) return
 
   const service = ddo.services.filter((service) => service.type === name)[0]
