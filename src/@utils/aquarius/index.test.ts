@@ -13,6 +13,8 @@ const defaultBaseQueryReturn = {
         { terms: { chainId: [1, 3] } },
         { term: { 'purgatory.state': false } },
         { bool: { must_not: [{ term: { 'nft.state': 5 } }] } }
+        // { term: { 'services.type': 'access' } },
+        // { term: { 'metadata.type': 'dataset' } }
       ]
     }
   },
@@ -59,6 +61,10 @@ describe('@utils/aquarius', () => {
           sortBy: SortTermOptions.Created,
           sortDirection: SortDirectionOptions.Ascending
         }
+        // filters: [
+        //   getFilterTerm('services.type', 'access'),
+        //   getFilterTerm('metadata.type', 'dataset')
+        // ]
       })
     ).toStrictEqual({
       ...defaultBaseQueryReturn,

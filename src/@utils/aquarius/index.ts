@@ -41,9 +41,9 @@ export function generateBaseQuery(
   baseQueryParams: BaseQueryParams
 ): SearchQuery {
   const filters: unknown[] = [
-    getFilterTerm('_index', 'aquarius'),
-    getFilterTerm('metadata.type', 'dataset'),
-    getFilterTerm('services.type', 'access')
+    getFilterTerm('_index', 'aquarius')
+    // getFilterTerm('metadata.type', 'dataset'),
+    // getFilterTerm('services.type', 'access')
   ]
   baseQueryParams.filters && filters.push(...baseQueryParams.filters)
   baseQueryParams.chainIds &&
@@ -226,10 +226,6 @@ export async function getPublishedAssets(
   filters.push(getFilterTerm('services.type', 'access'))
   filters.push(getFilterTerm('metadata.type', 'dataset'))
 
-  accesType !== undefined &&
-    filters.push(getFilterTerm('services.type', 'access'))
-  type !== undefined && filters.push(getFilterTerm('metadata.type', type))
-
   const baseQueryParams = {
     chainIds,
     filters,
@@ -275,9 +271,9 @@ async function getTopPublishers(
 ): Promise<PagedAssets> {
   const filters: FilterTerm[] = []
 
-  accesType !== undefined &&
-    filters.push(getFilterTerm('services.type', accesType))
-  type !== undefined && filters.push(getFilterTerm('metadata.type', type))
+  // accesType !== undefined &&
+  //   filters.push(getFilterTerm('services.type', 'access'))
+  // type !== undefined && filters.push(getFilterTerm('metadata.type', 'dataset'))
 
   const baseQueryParams = {
     chainIds,
