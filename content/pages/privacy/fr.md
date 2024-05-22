@@ -34,10 +34,10 @@ Pour des informations détaillées sur les opérations de traitement, la licéit
 
 **Visiter le marché Ocean**
 
-Lorsque vous visitez Ocean Market, votre adresse IP est traitée par Netlify, un fournisseur de services qui héberge notre marché. Netlify dessert notre marché en utilisant un Content Delivery Network (un réseau géographiquement distribué) avec des serveurs situés en dehors et à l&#39;intérieur de l&#39;Espace économique européen. Nous utilisons des clauses contractuelles types (CCT) pour fournir des garanties appropriées au traitement de vos données personnelles. Vous avez le droit de recevoir une copie des présentes CCT.
+Lorsque vous visitez Ocean Market, votre adresse IP est traitée par Vercel, un fournisseur de services qui héberge notre marché. Vercel dessert notre marché en utilisant un Content Delivery Network (un réseau géographiquement distribué) avec des serveurs situés en dehors et à l&#39;intérieur de l&#39;Espace économique européen. Nous utilisons des clauses contractuelles types (CCT) pour fournir des garanties appropriées au traitement de vos données personnelles. Vous avez le droit de recevoir une copie des présentes CCT.
 
-- Vous trouverez ici la [**CCT** &#8599;](https://www.netlify.com/v3/static/pdf/netlify-dpa.pdf) de Netlify.
-- Vous trouverez ici la [**politique de confidentialité** &#8599;](https://www.netlify.com/) de Netlify.
+- Vous trouverez ici la [**CCT** &#8599;](https://vercel.com/legal/dpa) de Vercel.
+- Vous trouverez ici la [**politique de confidentialité** &#8599;](https://vercel.com/legal/privacy-policy) de Vercel.
 
 **Utilisation des fonctionnalités du marché Ocean**
 
@@ -54,29 +54,7 @@ Si vous nous contactez par e-mail, notre fournisseur de services (mail), Google 
 
 Nous traitons vos données personnelles aux finssuivantes.
 
-## 4.1 Fourniture de Ocean Market et création de fichiers journaux
-
-Nous collectons et utilisons votre adresse IP pour fournir l&#39;accès à Ocean Market hébergé chez Netlify. De plus, Ocean utilise Netlify Analytics pour collecter et stocker votre adresse IP. Vos données personnelles ne quitteront jamais notre service et nous ne vous suivrons pas sur à travers d&#39;autres sites.
-
-**Fins:**
-
-La collecte et l&#39;utilisation de votre adresse IP sont nécessaires pour fournir l&#39;accès à Ocean Market, car il s&#39;agit d&#39;une exigence technique pour assurer la communication entre votre appareil et notre marché.
-
-Ocean utilise Netlify Analytics pour distinguer les visiteurs uniques en fonction des adresses IP. Ce processus nous aide à mieux comprendre combien d&#39;utilisateurs visitent Ocean Market et dans quels pays se trouvent les utilisateurs. Nous utilisons ces informations pour mesurer les tendances du trafic et de la popularité afin d&#39;améliorer notre service.
-
-**Base juridique:**
-
-La base juridique de ce traitement est notre intérêt légitime, conformément à Art. 6(1)(f) RGPD
-
-**Intérêts légitimes :**
-
-Notre intérêt légitime est de vous fournir Ocean Market et ses fonctionnalités, ainsi que de les améliorer.
-
-**Période de conservation :**
-
-Nous conservons votre adresse IP pendant 30 jours.
-
-## 4.2 Consommation et staking
+## 4.1 Consommation et staking
 
 Lorsque vous consommez ou stakez sur set de données, nous collectons votre adresse de votre portefeuille et la divulguons en la transmettant à un contrat intelligent (smart contract) stocké sur la blockchain.
 
@@ -92,7 +70,7 @@ La base juridique de ce traitement est l&#39;article 6, paragraphe 1, point b), 
 
 Ocean divulgue votre adresse de votre portefeuille en la transmettant à un contrat intelligent (smart contract) stocké dans un format lisible par machine en permanence sur la chaîne (on-chain) pour permettre une piste d&#39;audit immuable.
 
-## 4.3 Fonctionnalité de publication
+## 4.2 Fonctionnalité de publication
 
 Lorsque vous publiez un set de données, nous collectons votre adresse de votre portefeuille et votre nom d&#39;auteur et les divulguons en les transmettant à un contrat intelligent (smart contract) stocké sur la Blockchain. Notez que l'adresse de votre portefeuille sera liée au nom que vous avez fourni. Notez également que vous pouvez utiliser un pseudonyme comme nom d&#39;auteur.
 
@@ -108,7 +86,7 @@ La base juridique de ce traitement est l&#39;article 6, paragraphe 1, point b), 
 
 Ocean divulgue votre adresse de votre portefeuille et le nom de l&#39;auteur en le transmettant à un contrat intelligent (smart contract) stocké dans un format lisible par machine en permanence sur la chaîne (on-chain) pour permettre une piste d&#39;audit.
 
-## 4.4 Affichage des ressources de données
+## 4.3 Affichage des ressources de données
 
 Lorsque vous avez publié un set de données, nous récupérons, organisons et stockons votre adresse de votre portefeuille et votre nom d&#39;auteur sur un cache de métadonnées géré par Ocean. De plus, nous montrons votre set données sur Ocean Market.
 
@@ -128,7 +106,7 @@ Notre intérêt légitime est d&#39;améliorer l&#39;expérience utilisateur en 
 
 Votre adresse de votre portefeuille et votre nom sont stockés en permanence sur notre cache de métadonnées.
 
-## 4.5 Historique
+## 4.4 Historique
 
 Lhistorique de Ocean Market est un outil de transparence que vous pouvez utiliser pour visualiser vos transactions relatives à Ocean Market. Lorsque vous utilisez l&#39;historique, nous collectons votre adresse de votre portefeuille. Ensuite, nous récupérons les transactions respectives et pertinentes stockées sur la blockchain (plus précisément, à partir du cache de métadonnées) et les organisons dans une table.
 
@@ -148,7 +126,7 @@ Notre intérêt légitime à fournir l&#39;historique est de vous offrir la poss
 
 Dès que vous déconnectez votre portefeuille, nous supprimons les entrées de la table d&#39;historique de votre navigateur.
 
-## 4.6 Contact par e-mail
+## 4.5 Contact par e-mail
 
 Si vous nous contactez par e-mail, Ocean collectera, utilisera et stockera votre adresse e-mail, et toute autre information que vous nous fournissez dans votre message, tel que votre nom.
 
