@@ -33,10 +33,10 @@ For detailed information about the processing operations, lawfulness, purposes, 
 
 **Visiting Ocean Market**
 
-When you visit Ocean Market, your IP address is processed by Netlify, a service provider that hosts our market. Netlify serves our market using a Content Delivery Network (a geographically distributed network) with servers located out of and within the European Economic Area. We use Standard Contractual Clauses (SCC) to provide appropriate safeguards to the processing of your personal data. You have the right to receive a copy of these SCC.
+When you visit Ocean Market, your IP address is processed by Vercel, a service provider that hosts our market. Vercel serves our market using a Content Delivery Network (a geographically distributed network) with servers located out of and within the European Economic Area. We use Standard Contractual Clauses (SCC) to provide appropriate safeguards to the processing of your personal data. You have the right to receive a copy of these SCC.
 
-- Here you can find Netlify&#39;s [**SCC** &#8599;](https://www.netlify.com/v3/static/pdf/netlify-dpa.pdf).
-- Here you can find Netlify&#39;s [**privacy policy** &#8599;](https://www.netlify.com/gdpr-ccpa).
+- Here you can find Vercel&#39;s [**SCC** &#8599;](https://vercel.com/legal/dpa).
+- Here you can find Vercel&#39;s [**privacy policy** &#8599;](https://vercel.com/legal/privacy-policy).
 
 **Using Ocean Market functionalities**
 
@@ -53,29 +53,7 @@ If you contact us per e-mail, our (mail) service provider Google Workspace, supp
 
 We process your personal data for the following purposes.
 
-## 4.1 Providing Ocean Market and creating log files
-
-We collect and use your IP address for providing Ocean Market hosted at Netlify. Moreover, OPF uses Netlify Analytics to collect and store your IP address. Your personal data will never leave our service, and we will not track you across sites.
-
-**Purposes:**
-
-Collecting and using your IP address is necessary for providing Ocean Market because it is a technical requirement for ensuring communication between your device and our market.
-
-OPF uses Netlify Analytics to distinguish unique visitors based on IP addresses. This process helps us understand better how many users visit Ocean Market and in which countries the users are located. We use that information to measure traffic and popularity trends to improve our service.
-
-**Legal basis:**
-
-The legal basis for this processing is our legitimate interest, according to Art. 6(1)(f) GDPR.
-
-**Legitimate interests:**
-
-Our legitimate interest is to provide Ocean Market and its functionalities to you and to improve them.
-
-**Retention period:**
-
-We store your IP address for 30 days.
-
-## 4.2 Consume and stake functionality
+## 4.1 Consume and stake functionality
 
 When consuming or staking on a data asset, we collect your wallet address and disclose it by transmitting it to a smart contract stored on the blockchain.
 
@@ -91,7 +69,7 @@ The legal basis for this processing is Article 6(1)(b) GDPR, as the processing i
 
 OPF discloses your wallet address by transmitting it to a smart contract stored in machine-readable format permanently on-chain to enable an immutable audit trail.
 
-## 4.3 Publish functionality
+## 4.2 Publish functionality
 
 When you publish a data asset, we collect your wallet address and author name and disclose it by transmitting it to a smart contract stored on the blockchain. Please note that your wallet address will be linked to your given name. Please also note that you can use a pseudonym as the author&#39;s name.
 
@@ -107,7 +85,7 @@ The legal basis for this processing is Article 6(1)(b) GDPR, as the processing i
 
 OPF discloses your wallet address and author name by transmitting it to a smart contract stored in machine-readable format permanently on-chain to enable an audit trail.
 
-## 4.4 Showing data assets
+## 4.3 Showing data assets
 
 When you published a data asset, we retrieve, organize, and store your wallet address and author name on a metadata cache operated by OPF. Moreover, we show your asset on Ocean Market.
 
@@ -127,7 +105,7 @@ Our legitimate interest is to enhance the user experience by improving the perfo
 
 Your wallet address and name are stored permanently on our metadata cache.
 
-## 4.5 History table
+## 4.4 History table
 
 Ocean Market&#39;s history table is a transparency tool that you can use to overview your transactions relating to Ocean Market. When you use the history table, we collect your wallet address. Then we retrieve the respective and relevant transactions stored on the blockchain (more precisely, from the metadata cache) and organize them in a table.
 
@@ -147,7 +125,7 @@ Our legitimate interest in providing the history table is to offer you the possi
 
 As soon as you disconnect your wallet, we will remove the history table entries from your browser.
 
-## 4.6 Contact via e-mail
+## 4.5 Contact via e-mail
 
 If you contact us via e-mail, OPF will collect, use and store your e-mail address, and any other information you provide us is your message, such as your name.
 
