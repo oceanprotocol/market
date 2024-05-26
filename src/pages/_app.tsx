@@ -15,11 +15,7 @@ import MarketMetadataProvider from '@context/MarketMetadata'
 import { WagmiConfig } from 'wagmi'
 import { ConnectKitProvider } from 'connectkit'
 import { connectKitTheme, wagmiClient } from '@utils/wallet'
-import posthog from 'posthog-js'
-import { PostHogProvider } from 'posthog-js/react'
 import { useRouter } from 'next/router'
-
-
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })
