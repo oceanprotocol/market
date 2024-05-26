@@ -1,6 +1,7 @@
 // import App from "next/app";
 import React, { ReactElement, useEffect } from 'react'
 import type { AppProps /*, AppContext */ } from 'next/app'
+import { GoogleTagManager } from '@next/third-parties/google'
 import { UserPreferencesProvider } from '@context/UserPreferences'
 import PricesProvider from '@context/Prices'
 import UrqlProvider from '@context/UrqlProvider'
@@ -42,6 +43,7 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
 
   return (
     <>
+      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GA_ID} />
       <WagmiConfig client={wagmiClient}>
         <ConnectKitProvider
           options={{ initialChainId: 0 }}
