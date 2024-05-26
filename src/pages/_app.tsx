@@ -19,13 +19,7 @@ import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
 import { useRouter } from 'next/router'
 
-// Check that PostHog is client-side (used to handle Next.js SSR)
-if (typeof window !== 'undefined') {
-  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.posthog.com',
-    persistence: 'memory'
-  })
-}
+
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })
@@ -55,11 +49,9 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
                 <PricesProvider>
                   <ConsentProvider>
                     <OrbisProvider>
-                      <PostHogProvider client={posthog}>
                         <App>
                           <Component {...pageProps} />
                         </App>
-                      </PostHogProvider>
                     </OrbisProvider>
                   </ConsentProvider>
                 </PricesProvider>
