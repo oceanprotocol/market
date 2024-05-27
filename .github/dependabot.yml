@@ -1,8 +1,8 @@
-version: 2
-updates:
-  - package-ecosystem: npm
-    directory: '/'
-    schedule:
-      interval: monthly
-      time: '03:00'
-      timezone: Europe/Berlin
+# version: 2
+# updates:
+#   - package-ecosystem: npm
+#     directory: '/'
+#     schedule:
+#       interval: monthly
+#       time: '03:00'
+#       timezone: Europe/Berlin
