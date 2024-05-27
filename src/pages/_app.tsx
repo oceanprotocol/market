@@ -33,9 +33,9 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
                 <PricesProvider>
                   <ConsentProvider>
                     <OrbisProvider>
-                        <App>
-                          <Component {...pageProps} />
-                        </App>
+                      <App>
+                        <Component {...pageProps} />
+                      </App>
                     </OrbisProvider>
                   </ConsentProvider>
                 </PricesProvider>
