@@ -34,10 +34,10 @@ Detaillierte Informationen über unsere Verarbeitungsvorgänge, die Rechtmäßig
 
 **Visiting Ocean Market**
 
-Wenn du Ocean Market besuchst, wird deine IP-Adresse von Netlify verarbeitet, ein Auftragsverarbeiter, der unseren Markt hostet. Ocean Market wird von Netlify über ein Content Delivery Network (ein geografisch verteiltes Netzwerk) bereitgestellt, deren Server sich innerhalb und außerhalb des Europäischen Wirtschaftsraums befinden. Wir verwenden Standardvertragsklauseln (SCC), um angemessene Schutzmaßnahmen für die Verarbeitung deiner personenbezogenen Daten zu gewährleisten. Du hast das Recht, eine Kopie dieser SCC zu erhalten.
+Wenn du Ocean Market besuchst, wird deine IP-Adresse von Vercel verarbeitet, ein Auftragsverarbeiter, der unseren Markt hostet. Ocean Market wird von Vercel über ein Content Delivery Network (ein geografisch verteiltes Netzwerk) bereitgestellt, deren Server sich innerhalb und außerhalb des Europäischen Wirtschaftsraums befinden. Wir verwenden Standardvertragsklauseln (SCC), um angemessene Schutzmaßnahmen für die Verarbeitung deiner personenbezogenen Daten zu gewährleisten. Du hast das Recht, eine Kopie dieser SCC zu erhalten.
 
-- Hier findest du Netlify&#39;s [**SCC** &#8599;](https://www.netlify.com/v3/static/pdf/netlify-dpa.pdf).
-- Hier findest du Netlify&#39;s [**Datenschutzerklärung** &#8599;](https://www.netlify.com/gdpr-ccpa).
+- Hier findest du Vercel&#39;s [**SCC** &#8599;](https://vercel.com/legal/dpa).
+- Hier findest du Vercel&#39;s [**Datenschutzerklärung** &#8599;](https://vercel.com/legal/privacy-policy).
 
 **Nutzung von Ocean Market Funktionalitäten**
 
@@ -54,29 +54,7 @@ Wenn du mit uns per E-Mail in Kontakt trittst, unterstützt uns der (Mail-)Diens
 
 Wir verarbeiten deine personenbezogene Daten zu folgenden Zwecken.
 
-## 4.1 Bereitstellung der Website und Erstellung von Logfiles
-
-Wir erheben und verwenden deine IP-Adresse für die Bereitstellung von Ocean Market. Ocean Market wird von unserem Auftragsverarbeiter Netlify gehostet. Außerdem nutzt OPF Netlify Analytics, um deine IP-Adresse zu erfassen und zu speichern. Deine persönlichen Daten verlassen niemals unseren Service, und wir verfolgen dich nicht über verschiedene Websites hinweg.
-
-**Zwecke:**
-
-Die Erhebung und Nutzung deiner IP-Adresse ist für die Bereitstellung von Ocean Market notwendig, da dies eine technische Voraussetzung ist, um die Kommunikation zwischen deinem Gerät und unserem Markt zu gewährleisten.
-
-OPF verwendet Netlify Analytics, um einzelne Besucher anhand von IP-Adressen zu unterscheiden. Dieser Prozess hilft uns, besser zu verstehen, wie viele Nutzer Ocean Market besuchen und in welchen Ländern sich die Nutzer befinden. Wir verwenden diese Informationen, indem wir den Netwerkverkehr und die Beliebtheitstrends messen, um unseren Service zu verbessern.
-
-**Rechtsgrundlage:**
-
-Die Rechtsgrundlage für diese Verarbeitung ist unser berechtigtes Interesse, gemäß Art. 6(1)(f) DSGVO.
-
-**Berechtigtes Interesse:**
-
-Unser berechtigtes Interesse besteht darin, dir Ocean Market und seine Funktionalitäten zur Verfügung zu stellen und diese zu verbessern.
-
-**Aufbewahrungsdauer:**
-
-Wir speichern deine IP-Addresse für 30 Tage.
-
-## 4.2 Consume- und Stake-Funktionalität
+## 4.1 Consume- und Stake-Funktionalität
 
 Wenn du die Consume- oder Stake-Funktionalität nutzt, erheben wir deine Wallet Addresse und legen diese offen, indem wir ihn an einen auf der Blockchain gespeicherten Smart Cotract übertragen.
 
@@ -92,7 +70,7 @@ Die Rechtsgrundlage für diese Verarbeitung ist Artikel 6(1)(b) DSGVO, da die Ve
 
 OPF legt deine Wallet Addresse offen, indem diese an einen Smart Contract übermittelt wird, der in maschinenlesbarem Format dauerhaft auf der Blockchain gespeichert wird, um einen unveränderlichen Audit-Trail zu ermöglichen.
 
-## 4.3 Publish-Funktionalität
+## 4.2 Publish-Funktionalität
 
 Wenn du ein Data Asset veröffentlichst, erheben, wir deine Wallet Addresse und deinen Autornamen und transferieren diese zu einem Smart Contract, der auf der Blockchain gespeichert ist. Bitte beachte, dass deine Wallet Addresse mit deinem angegebenen Namen verknüpft wird. Bitte beachte außerdem, dass du ein Pseudonym als Autornamen benutzen kannst.
 
@@ -108,7 +86,7 @@ Die Rechtsgrundlage für diese Verarbeitung ist Artikel 6(1)(b) DSGVO, da die Ve
 
 OPF legt deine Wallet Addresse und deinen Autornamen offen, indem diese an einen Smart Contract übermittelt werden, der in maschinenlesbarem Format dauerhaft auf der Blockchain gespeichert wird, um einen unveränderlichen Audit-Trail zu ermöglichen.
 
-## 4.4 Anzeige deiner Data Assets
+## 4.3 Anzeige deiner Data Assets
 
 Wenn du ein Data Asset veröffentlicht hast, erheben, organisieren und speichern wir deine Wallet Addresse und deinen Autornamen auf einem von OPF betriebenen Metadaten-Cache und zeigen dein Asset auf Ocean Market an.
 
@@ -128,7 +106,7 @@ Unser berechtigtes Interesse ist es, das Nutzererlebnis durch Verbesserung der P
 
 Deine Wallet Addresse und dein Autorname werden permanent in unserem Metadaten Cache gespeichert.
 
-## 4.5 History Table
+## 4.4 History Table
 
 Die History Table von Ocean Market ist ein Transparenz-Tool, mit dem du einen Überblick über deine auf Ocean Market getättigten Transaktion erhalten kannst. Wenn du die History Table nutzt, erheben wir deine Wallet Addresse. Danach rufen wir die relevanten und mit dir in Zusammenhang stehenden Transaktionen von der Blockchain ab (genauer gesagt, aus dem Metadaten Cache) und organisieren diese in der History Table.
 
@@ -148,7 +126,7 @@ Unser berechtigtes Interesse an der Bereitstellung der History Table besteht dar
 
 Sobald du die Verbindung zu deinem Wallet trennst, werden wir die History Table Einträge aus deinem Browser entfernen.
 
-## 4.6 Kontakt via E-Mail
+## 4.5 Kontakt via E-Mail
 
 Wenn du uns per E-Mail kontaktierst, erheben, nutzen und speichern wir deine E-Mail addresse und alle anderen Informationen, die du uns in deiner Nachricht zukommen lässt, wie zum Beispiel dein Name.
 

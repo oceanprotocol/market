@@ -34,10 +34,10 @@ Para obtener información detallada sobre las operaciones de procesamiento, la l
 
 **Visitas al** **Ocean** **Market**
 
-Cuando visita Ocean Market, su dirección IP es procesada por Netlify, un proveedor de servicios que aloja nuestro mercado. Netlify sirve a nuestro mercado mediante una red de distribución de contenidos (una red distribuida geográficamente) con servidores ubicados fuera y dentro del Espacio Económico Europeo. Usamos Cláusulas Contractuales Tipo (Standard Contractual Clauses o SCC e inglés) para brindar las garantías adecuadas para el procesamiento de sus datos personales. Tiene derecho a recibir una copia de estas SCC.
+Cuando visita Ocean Market, su dirección IP es procesada por Vercel, un proveedor de servicios que aloja nuestro mercado. Vercel sirve a nuestro mercado mediante una red de distribución de contenidos (una red distribuida geográficamente) con servidores ubicados fuera y dentro del Espacio Económico Europeo. Usamos Cláusulas Contractuales Tipo (Standard Contractual Clauses o SCC e inglés) para brindar las garantías adecuadas para el procesamiento de sus datos personales. Tiene derecho a recibir una copia de estas SCC.
 
-- Aquí puede encontrar las [**SCC** &#8599;](https://www.netlify.com/v3/static/pdf/netlify-dpa.pdf) de Netlify.
-- Aquí puede encontrar la [**política de privacidad** &#8599;](https://www.netlify.com/gdpr-ccpa) de Netlify.
+- Aquí puede encontrar las [**SCC** &#8599;](https://vercel.com/legal/dpa) de Vercel.
+- Aquí puede encontrar la [**política de privacidad** &#8599;](https://vercel.com/legal/privacy-policy) de Vercel.
 
 **Uso de las funciones de Ocean Market**
 
@@ -54,29 +54,7 @@ Si se comunica con nosotros por correo electrónico, nuestro proveedor de servic
 
 Procesamos sus datos personales para los siguientes fines:
 
-## 4.1 Proporcionar Ocean Market y crear archivos de registro
-
-Recopilamos y usamos su dirección IP para proporcionar Ocean Market alojado en Netlify. Además, Ocean Protocol utiliza Netlify Analytics para recopilar y almacenar su dirección IP. Sus datos personales nunca abandonarán nuestro servicio y no lo rastreamos a través de los sitios.
-
-**Propósitos:**
-
-La recopilación y el uso de su dirección IP es necesaria para proporcionar Ocean Market, ya que es un requisito técnico que hace posible garantizar la comunicación entre su dispositivo y nuestro mercado.
-
-Ocean Protocol utiliza Netlify Analytics para distinguir visitantes únicos de acuerdo a sus direcciones IP. Este proceso nos ayuda a comprender mejor cuántos usuarios visitan Ocean Market y en qué países se encuentran los usuarios. Usamos esa información para medir el tráfico y las tendencias de popularidad para mejorar nuestro servicio.
-
-**Base legal:**
-
-La base legal para este procesamiento es nuestro interés legítimo, de acuerdo con el Art. 6(1)(f) del GDPR.
-
-**Intereses legítimos:**
-
-Nuestro interés legítimo es proporcionarle Ocean Market y sus funcionalidades y mejorarlas.
-
-**Periodo de conservación:**
-
-Almacenamos su dirección IP por 30 días.
-
-## 4.2 Funcionalidad de consumo y participación
+## 4.1 Funcionalidad de consumo y participación
 
 Al consumir o apostar por un activo de datos, recopilamos su dirección de cartera y la divulgamos transmitiéndola a un contrato inteligente almacenado en la blockchain.
 
@@ -92,7 +70,7 @@ La base legal para este procesamiento es el Artículo 6(1)(b) del GDPR, ya que e
 
 Ocean Protocol divulga su dirección de cartera transmitiéndola a un contrato inteligente (Smart Contract) almacenado en formato legible por máquina de forma permanente en cadena para permitir una pista de auditoría inmutable.
 
-## 4.3 Funcionalidad de publicación
+## 4.2 Funcionalidad de publicación
 
 Cuando publica un activo de datos, recopilamos su dirección de cartera y nombre de autor y los divulgamos transmitiéndolos a un contrato inteligente almacenado en la blockchain. Tenga en cuenta que la dirección de su cartera estará vinculada a su nombre. Tenga en cuenta también que puede utilizar un seudónimo como nombre de autor.
 
@@ -108,7 +86,7 @@ La base legal para este procesamiento es el Artículo 6(1)(b) del GDPR, ya que e
 
 Ocean Protocol divulga su dirección de cartera y nombre de autor transmitiéndolos a un contrato inteligente almacenado en formato legible por máquina de forma permanente en cadena para habilitar una pista de auditoría.
 
-## 4.4 Mostrar activos de datos
+## 4.3 Mostrar activos de datos
 
 Cuando publica un activo de datos, recuperamos, organizamos y almacenamos su dirección de cartera y nombre de autor en una caché de metadatos operada por Ocean Protocol. Además, mostramos su activo en Ocean Market.
 
@@ -128,7 +106,7 @@ Nuestro interés legítimo es mejorar la experiencia del usuario optimizando el 
 
 Su dirección de cartera y nombre se almacenan permanentemente en nuestra caché de metadatos.
 
-## 4.5 Tabla historial
+## 4.4 Tabla historial
 
 La tabla de historial de Ocean Market es una herramienta de transparencia que puede utilizar para revisar sus transacciones relacionadas con Ocean Market. Cuando utiliza la tabla de historial, recopilamos su dirección de cartera. Luego, recuperamos las transacciones respectivas y relevantes almacenadas en la blockchain (más precisamente, en la caché de metadatos) y las organizamos en una tabla.
 
@@ -148,7 +126,7 @@ Nuestro interés legítimo al proporcionar la tabla de historial es ofrecerle la
 
 Tan pronto como desconecte su billetera, eliminaremos las entradas de la tabla de historial de su navegador.
 
-## 4.6 Contacto por correo electrónico
+## 4.5 Contacto por correo electrónico
 
 Si se comunica con nosotros por correo electrónico, Ocean Protocol recopilará, utilizará y almacenará su dirección de correo electrónico y cualquier otra información que nos proporcione en su mensaje, como su nombre.
 
