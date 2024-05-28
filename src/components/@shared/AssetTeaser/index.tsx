@@ -68,18 +68,6 @@ export default function AssetTeaser({
           )}
         </div>
         <footer className={styles.footer}>
-          {allocated && allocated > 0 ? (
-            <span className={styles.typeLabel}>
-              {allocated < 0 ? (
-                ''
-              ) : (
-                <>
-                  <strong>{formatNumber(allocated, locale, '0')}</strong>{' '}
-                  veOCEAN
-                </>
-              )}
-            </span>
-          ) : null}
           {orders && orders > 0 ? (
             <span className={styles.typeLabel}>
               {orders < 0 ? (
