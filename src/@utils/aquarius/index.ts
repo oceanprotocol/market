@@ -40,11 +40,7 @@ export function getFilterTerm(
 export function generateBaseQuery(
   baseQueryParams: BaseQueryParams
 ): SearchQuery {
-  const filters: unknown[] = [
-    getFilterTerm('_index', 'aquarius')
-    // getFilterTerm('metadata.type', 'dataset'),
-    // getFilterTerm('services.type', 'access')
-  ]
+  const filters: unknown[] = [getFilterTerm('_index', 'aquarius')]
   baseQueryParams.filters && filters.push(...baseQueryParams.filters)
   baseQueryParams.chainIds &&
     filters.push(getFilterTerm('chainId', baseQueryParams.chainIds))
