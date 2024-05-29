@@ -61,10 +61,6 @@ describe('@utils/aquarius', () => {
           sortBy: SortTermOptions.Created,
           sortDirection: SortDirectionOptions.Ascending
         }
-        // filters: [
-        //   getFilterTerm('services.type', 'access'),
-        //   getFilterTerm('metadata.type', 'dataset')
-        // ]
       })
     ).toStrictEqual({
       ...defaultBaseQueryReturn,
