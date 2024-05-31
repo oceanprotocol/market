@@ -69,9 +69,3 @@ export const validationSchema = Yup.object().shape({
     })
   })
 })
-
-export const computeSettingsValidationSchema = Yup.object().shape({
-  allowAllPublishedAlgorithms: Yup.boolean().nullable(),
-  publisherTrustedAlgorithms: Yup.array().nullable(),
-  publisherTrustedAlgorithmPublishers: Yup.array().nullable()
-})

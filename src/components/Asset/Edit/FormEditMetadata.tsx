@@ -28,7 +28,7 @@ export default function FormEditMetadata({
 }: {
   data: FormFieldContent[]
   showPrice: boolean
-  isComputeDataset: boolean
+  isComputeDataset?: boolean
 }): ReactElement {
   const { asset } = useAsset()
   const { values, setFieldValue } = useFormikContext<FormPublishData>()

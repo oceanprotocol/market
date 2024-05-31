@@ -7,10 +7,8 @@ import Publisher from '@shared/Publisher'
 import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './index.module.css'
-import { getServiceByName } from '@utils/ddo'
 import { useUserPreferences } from '@context/UserPreferences'
 import { formatNumber } from '@utils/numbers'
-import { AssetPrice } from '@oceanprotocol/lib'
 
 export declare type AssetTeaserProps = {
   asset: AssetExtended
@@ -26,8 +24,7 @@ export default function AssetTeaser({
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
-  const isCompute = Boolean(getServiceByName(asset, 'compute'))
-  const accessType = isCompute ? 'compute' : 'access'
+  const accessType = 'access'
   const { owner } = asset.nft
   const { orders, allocated, price } = asset.stats
   const isUnsupportedPricing =
@@ -71,18 +68,6 @@ export default function AssetTeaser({
           )}
         </div>
         <footer className={styles.footer}>
-          {allocated && allocated > 0 ? (
-            <span className={styles.typeLabel}>
-              {allocated < 0 ? (
-                ''
-              ) : (
-                <>
-                  <strong>{formatNumber(allocated, locale, '0')}</strong>{' '}
-                  veOCEAN
-                </>
-              )}
-            </span>
-          ) : null}
           {orders && orders > 0 ? (
             <span className={styles.typeLabel}>
               {orders < 0 ? (

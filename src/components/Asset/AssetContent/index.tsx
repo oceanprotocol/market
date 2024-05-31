@@ -30,6 +30,10 @@ export default function AssetContent({
   const [receipts, setReceipts] = useState([])
   const [nftPublisher, setNftPublisher] = useState<string>()
 
+  const hasActions = Boolean(
+    asset?.services.filter((service) => service.type !== 'compute')[0]
+  )
+
   useEffect(() => {
     if (!receipts.length) return
 
@@ -74,7 +78,7 @@ export default function AssetContent({
         </div>
 
         <div className={styles.actions}>
-          <AssetActions asset={asset} />
+          {hasActions && <AssetActions asset={asset} />}
           {isOwner && isAssetNetwork && (
             <div className={styles.ownerActions}>
               <Button style="text" size="small" to={`/asset/${asset?.id}/edit`}>
@@ -82,14 +86,14 @@ export default function AssetContent({
               </Button>
             </div>
           )}
-          <div className={styles.ownerActions}>
-            <DmButton accountId={asset?.nft?.owner} />
-          </div>
           <Web3Feedback
             networkId={asset?.chainId}
             accountId={accountId}
             isAssetNetwork={isAssetNetwork}
           />
+          <div className={styles.ownerActions}>
+            <DmButton accountId={asset?.nft?.owner} />
+          </div>
           <RelatedAssets />
         </div>
       </article>

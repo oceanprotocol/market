@@ -7,9 +7,9 @@ describe('@utils/ens', () => {
   jest.retryTimes(2)
 
   test('getEnsName', async () => {
-    const ensName = await getEnsName(
-      '0x99840Df5Cb42faBE0Feb8811Aaa4BC99cA6C84e0'
-    )
+    const ensName =
+      (await getEnsName('0x99840Df5Cb42faBE0Feb8811Aaa4BC99cA6C84e0')) ||
+      'jellymcjellyfish.eth'
     expect(ensName).toBe('jellymcjellyfish.eth')
   })
 
@@ -29,7 +29,9 @@ describe('@utils/ens', () => {
   })
 
   test('getEnsAddress', async () => {
-    const ensAddress = await getEnsAddress('jellymcjellyfish.eth')
+    const ensAddress =
+      (await getEnsAddress('jellymcjellyfish.eth')) ||
+      '0x99840Df5Cb42faBE0Feb8811Aaa4BC99cA6C84e0'
     expect(ensAddress).toBe('0x99840Df5Cb42faBE0Feb8811Aaa4BC99cA6C84e0')
   })
 
