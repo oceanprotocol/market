@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import Bookmarks from './Bookmarks'
-import { generateBaseQuery } from '@utils/aquarius'
+import { generateBaseQuery, getFilterTerm } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
 import TopSales from './TopSales'
@@ -14,6 +14,12 @@ export default function HomePage(): ReactElement {
 
   const [queryLatest, setQueryLatest] = useState<SearchQuery>()
   const [queryMostSales, setQueryMostSales] = useState<SearchQuery>()
+  const [queryMostAllocation, setQueryMostAllocation] = useState<SearchQuery>()
+
+  const filterDatasets: unknown[] = [
+    getFilterTerm('metadata.type', 'dataset'),
+    getFilterTerm('services.type', 'access')
+  ]
 
   useEffect(() => {
     const baseParams = {
@@ -21,6 +27,7 @@ export default function HomePage(): ReactElement {
       esPaginationOptions: {
         size: 6
       },
+      filters: filterDatasets,
       sortOptions: {
         sortBy: SortTermOptions.Created
       } as SortOptions
@@ -56,7 +63,7 @@ export default function HomePage(): ReactElement {
         query={queryLatest}
         action={
           <Button style="text" to="/search?sort=nft.created&sortOrder=desc">
-            All datasets and algorithms →
+            All datasets →
           </Button>
         }
       />

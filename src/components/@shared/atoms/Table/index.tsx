@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import DataTable, { TableProps, TableColumn } from 'react-data-table-component'
 import Loader from '../Loader'
 import Pagination from '@shared/Pagination'
-import { PaginationComponent } from 'react-data-table-component/dist/src/DataTable/types'
+import { PaginationComponent } from 'react-data-table-component/dist/DataTable/types'
 import Empty from './Empty'
 import { customStyles } from './_styles'
 

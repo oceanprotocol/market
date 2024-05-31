@@ -113,9 +113,9 @@ export function getSearchQuery(
     }
   }
   accessType !== undefined &&
-    filters.push(getFilterTerm('services.type', accessType))
+    filters.push(getFilterTerm('services.type', 'access'))
   serviceType !== undefined &&
-    filters.push(getFilterTerm('metadata.type', serviceType))
+    filters.push(getFilterTerm('metadata.type', 'dataset'))
 
   const baseQueryParams = {
     chainIds,
