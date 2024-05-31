@@ -46,7 +46,7 @@
     "dom-confetti": "^0.2.2",
     "ethers": "^5.7.2",
     "filesize": "^10.1.2",
-    "formik": "^2.4.6",
+    "formik": "^2.4.2",
     "gray-matter": "^4.0.3",
     "is-ipfs": "^8.0.4",
     "is-url-superb": "^6.1.0",
