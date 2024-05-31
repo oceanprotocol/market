@@ -13,8 +13,6 @@ const defaultBaseQueryReturn = {
         { terms: { chainId: [1, 3] } },
         { term: { 'purgatory.state': false } },
         { bool: { must_not: [{ term: { 'nft.state': 5 } }] } }
-        // { term: { 'services.type': 'access' } },
-        // { term: { 'metadata.type': 'dataset' } }
       ]
     }
   },

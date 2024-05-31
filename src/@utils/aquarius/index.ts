@@ -267,9 +267,9 @@ async function getTopPublishers(
 ): Promise<PagedAssets> {
   const filters: FilterTerm[] = []
 
-  // accesType !== undefined &&
-  //   filters.push(getFilterTerm('services.type', 'access'))
-  // type !== undefined && filters.push(getFilterTerm('metadata.type', 'dataset'))
+  accesType !== undefined &&
+    filters.push(getFilterTerm('services.type', 'access'))
+  type !== undefined && filters.push(getFilterTerm('metadata.type', 'dataset'))
 
   const baseQueryParams = {
     chainIds,
