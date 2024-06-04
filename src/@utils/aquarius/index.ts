@@ -40,7 +40,11 @@ export function getFilterTerm(
 export function generateBaseQuery(
   baseQueryParams: BaseQueryParams
 ): SearchQuery {
-  const filters: unknown[] = [getFilterTerm('_index', 'aquarius')]
+  const filters: unknown[] = [
+    getFilterTerm('_index', 'aquarius'),
+    getFilterTerm('services.type', 'access'),
+    getFilterTerm('metadata.type', 'dataset')
+  ]
   baseQueryParams.filters && filters.push(...baseQueryParams.filters)
   baseQueryParams.chainIds &&
     filters.push(getFilterTerm('chainId', baseQueryParams.chainIds))
@@ -219,8 +223,8 @@ export async function getPublishedAssets(
 
   filters.push(getFilterTerm('nft.state', [0, 4, 5]))
   filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
-  filters.push(getFilterTerm('services.type', 'access'))
-  filters.push(getFilterTerm('metadata.type', 'dataset'))
+  // filters.push(getFilterTerm('services.type', 'access'))
+  // filters.push(getFilterTerm('metadata.type', 'dataset'))
 
   const baseQueryParams = {
     chainIds,

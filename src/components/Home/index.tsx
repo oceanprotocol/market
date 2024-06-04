@@ -16,10 +16,7 @@ export default function HomePage(): ReactElement {
   const [queryMostSales, setQueryMostSales] = useState<SearchQuery>()
   const [queryMostAllocation, setQueryMostAllocation] = useState<SearchQuery>()
 
-  const filterDatasets: unknown[] = [
-    getFilterTerm('metadata.type', 'dataset'),
-    getFilterTerm('services.type', 'access')
-  ]
+  const filterDatasets: unknown[] = []
 
   useEffect(() => {
     const baseParams = {

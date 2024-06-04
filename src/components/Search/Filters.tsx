@@ -13,13 +13,9 @@ const cx = classNames.bind(styles)
 
 const clearFilters = [{ display: 'Clear', value: '' }]
 
-const serviceFilterItems = [
-  { display: 'datasets', value: FilterByTypeOptions.Data }
-]
+const serviceFilterItems = []
 
-const accessFilterItems = [
-  { display: 'download ', value: FilterByAccessOptions.Download }
-]
+const accessFilterItems = []
 
 export default function FilterPrice({
   serviceType,

@@ -22,9 +22,7 @@ export function generateQuery(
       tags && {
         terms: { 'metadata.tags.keyword': tags }
       },
-      owner && { term: { 'nft.owner.keyword': owner } },
-      getFilterTerm('services.type', 'access'),
-      getFilterTerm('metadata.type', 'dataset')
+      owner && { term: { 'nft.owner.keyword': owner } }
     ],
     sort: {
       'stats.orders': 'desc'
