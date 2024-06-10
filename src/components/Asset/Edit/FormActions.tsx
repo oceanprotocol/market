@@ -4,7 +4,7 @@ import { useAsset } from '@context/Asset'
 import Button from '@shared/atoms/Button'
 import styles from './FormActions.module.css'
 import Link from 'next/link'
-import { ComputeEditForm, MetadataEditForm } from './_types'
+import { MetadataEditForm } from './_types'
 
 export default function FormActions({
   handleClick
@@ -12,8 +12,7 @@ export default function FormActions({
   handleClick?: () => void
 }): ReactElement {
   const { isAssetNetwork, asset } = useAsset()
-  const { isValid }: FormikContextType<MetadataEditForm | ComputeEditForm> =
-    useFormikContext()
+  const { isValid }: FormikContextType<MetadataEditForm> = useFormikContext()
 
   const isSubmitDisabled = !isValid || !isAssetNetwork
 

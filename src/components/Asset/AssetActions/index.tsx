@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import Compute from './Compute'
 import Download from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import { compareAsBN } from '@utils/numbers'
@@ -39,9 +38,6 @@ export default function AssetActions({
   const [dtBalance, setDtBalance] = useState<string>()
   const [fileMetadata, setFileMetadata] = useState<FileInfo>()
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
-  const isCompute = Boolean(
-    asset?.services.filter((service) => service.type === 'compute')[0]
-  )
 
   // Get and set file info
   useEffect(() => {
@@ -149,22 +145,13 @@ export default function AssetActions({
 
   return (
     <div className={styles.actions}>
-      {isCompute ? (
-        <Compute
-          asset={asset}
-          dtBalance={dtBalance}
-          file={fileMetadata}
-          fileIsLoading={fileIsLoading}
-        />
-      ) : (
-        <Download
-          asset={asset}
-          dtBalance={dtBalance}
-          isBalanceSufficient={isBalanceSufficient}
-          file={fileMetadata}
-          fileIsLoading={fileIsLoading}
-        />
-      )}
+      <Download
+        asset={asset}
+        dtBalance={dtBalance}
+        isBalanceSufficient={isBalanceSufficient}
+        file={fileMetadata}
+        fileIsLoading={fileIsLoading}
+      />
       <AssetStats />
     </div>
   )

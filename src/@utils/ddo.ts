@@ -1,7 +1,4 @@
-import {
-  ComputeEditForm,
-  MetadataEditForm
-} from '@components/Asset/Edit/_types'
+import { MetadataEditForm } from '@components/Asset/Edit/_types'
 import {
   FormConsumerParameter,
   FormPublishData
@@ -25,10 +22,7 @@ export function isValidDid(did: string): boolean {
   return regex.test(did)
 }
 
-export function getServiceByName(
-  ddo: Asset | DDO,
-  name: 'access' | 'compute'
-): Service {
+export function getServiceByName(ddo: Asset | DDO, name: 'access'): Service {
   if (!ddo) return
 
   const service = ddo.services.filter((service) => service.type === name)[0]
@@ -171,7 +165,7 @@ export function normalizeFile(
 }
 
 export function previewDebugPatch(
-  values: FormPublishData | Partial<MetadataEditForm> | ComputeEditForm,
+  values: FormPublishData | Partial<MetadataEditForm>,
   chainId: number
 ) {
   // handle file's object property dynamically

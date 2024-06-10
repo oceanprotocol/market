@@ -2,14 +2,10 @@ import {
   Arweave,
   GraphqlQuery,
   Smartcontract,
-  ComputeAlgorithm,
-  ComputeAsset,
-  ComputeEnvironment,
   downloadFileBrowser,
   FileInfo,
   Ipfs,
   LoggerInstance,
-  ProviderComputeInitializeResults,
   ProviderInstance,
   UrlFile,
   AbiItem,
@@ -20,49 +16,7 @@ import {
 import { customProviderUrl } from '../../app.config'
 import { KeyValuePair } from '@shared/FormInput/InputElement/KeyValueInput'
 import { Signer } from 'ethers'
-import { getValidUntilTime } from './compute'
 import { toast } from 'react-toastify'
-import { tr } from 'date-fns/locale'
-
-export async function initializeProviderForCompute(
-  dataset: AssetExtended,
-  algorithm: AssetExtended,
-  accountId: string,
-  computeEnv: ComputeEnvironment = null
-): Promise<ProviderComputeInitializeResults> {
-  const computeAsset: ComputeAsset = {
-    documentId: dataset.id,
-    serviceId: dataset.services[0].id,
-    transferTxId: dataset.accessDetails.validOrderTx
-  }
-  const computeAlgo: ComputeAlgorithm = {
-    documentId: algorithm.id,
-    serviceId: algorithm.services[0].id,
-    transferTxId: algorithm.accessDetails.validOrderTx
-  }
-
-  const validUntil = getValidUntilTime(
-    computeEnv?.maxJobDuration,
-    dataset.services[0].timeout,
-    algorithm.services[0].timeout
-  )
-
-  try {
-    return await ProviderInstance.initializeCompute(
-      [computeAsset],
-      computeAlgo,
-      computeEnv?.id,
-      validUntil,
-      customProviderUrl || dataset.services[0].serviceEndpoint,
-      accountId
-    )
-  } catch (error) {
-    const message = getErrorMessage(error.message)
-    LoggerInstance.error('[Initialize Provider] Error:', message)
-    toast.error(message)
-    return null
-  }
-}
 
 // TODO: Why do we have these one line functions ?!?!?!
 export async function getEncryptedFiles(

@@ -20,34 +20,6 @@ const downloadProps: ButtonBuyProps = {
   isAccountConnected: true
 }
 
-const computeProps: ButtonBuyProps = {
-  action: 'compute',
-  disabled: false,
-  hasPreviousOrder: false,
-  hasDatatoken: false,
-  btSymbol: 'btSymbol',
-  dtSymbol: 'dtSymbol',
-  dtBalance: '100000000000',
-  assetTimeout: '1 day',
-  assetType: 'algorithm',
-  hasPreviousOrderSelectedComputeAsset: false,
-  hasDatatokenSelectedComputeAsset: false,
-  dtSymbolSelectedComputeAsset: 'dtSymbol',
-  dtBalanceSelectedComputeAsset: 'dtBalance',
-  selectedComputeAssetType: 'selectedComputeAssetType',
-  stepText: ' ',
-  isLoading: false,
-  type: 'submit',
-  priceType: 'fixed',
-  algorithmPriceType: 'free',
-  isBalanceSufficient: true,
-  isConsumable: true,
-  consumableFeedback: 'consumableFeedback',
-  isAlgorithmConsumable: true,
-  hasProviderFee: false,
-  retry: false
-}
-
 describe('Asset/AssetActions/ButtonBuy', () => {
   //  TESTS FOR LOADING
   it('Renders Buy button without crashing', () => {
@@ -101,76 +73,6 @@ describe('Asset/AssetActions/ButtonBuy', () => {
       />
     )
     const button = screen.getByText('Buy')
-    expect(button).toContainHTML('<button')
-  })
-
-  // TESTS FOR COMPUTE
-  it('Renders "Buy Compute Job" button for compute without crashing', () => {
-    render(<ButtonBuy {...computeProps} />)
-    const button = screen.getByText('Buy Compute Job')
-    expect(button).toContainHTML('<button')
-  })
-
-  it('Renders correct message for fixed-priced compute asset with free algorithm', () => {
-    render(<ButtonBuy {...computeProps} />)
-    expect(
-      screen.getByText(
-        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Additionally, the selected selectedComputeAssetType is free to use. The C2D resources required to start the job are available, no payment is required for them. Please note that network gas fees still apply, even when using free assets.'
-      )
-    ).toBeInTheDocument()
-  })
-
-  it('Renders correct message for free compute asset with free algorithm', () => {
-    render(<ButtonBuy {...computeProps} priceType="free" />)
-    expect(
-      screen.getByText(
-        'This algorithm is free to use. Additionally, the selected selectedComputeAssetType is free to use. The C2D resources required to start the job are available, no payment is required for them. Please note that network gas fees still apply, even when using free assets.'
-      )
-    ).toBeInTheDocument()
-  })
-
-  it('Renders correct message for free compute asset with free algorithm', () => {
-    render(<ButtonBuy {...computeProps} algorithmPriceType="fixed" />)
-    expect(
-      screen.getByText(
-        'To use this algorithm, you will buy 1 dtSymbol and immediately send it back to the publisher. Additionally, you will buy 1 dtSymbol for the selectedComputeAssetType and send it back to the publisher. The C2D resources required to start the job are available, no payment is required for them.'
-      )
-    ).toBeInTheDocument()
-  })
-
-  it('Renders "Buy Compute Job" button for compute without crashing', () => {
-    render(<ButtonBuy {...computeProps} hasDatatokenSelectedComputeAsset />)
-    const button = screen.getByText('Buy Compute Job')
-    expect(button).toContainHTML('<button')
-  })
-
-  it('Renders "Start Compute Job" button', () => {
-    render(
-      <ButtonBuy
-        {...computeProps}
-        hasPreviousOrder
-        hasPreviousOrderSelectedComputeAsset
-      />
-    )
-    const button = screen.getByText('Start Compute Job')
-    expect(button).toContainHTML('<button')
-  })
-
-  it('Renders "Order Compute Job" button', () => {
-    render(<ButtonBuy {...computeProps} priceType="free" hasProviderFee />)
-    const button = screen.getByText('Order Compute Job')
-    expect(button).toContainHTML('<button')
-  })
-
-  it('Renders "Order Compute Job" button', () => {
-    render(<ButtonBuy {...computeProps} priceType="free" hasProviderFee />)
-    const button = screen.getByText('Order Compute Job')
-    expect(button).toContainHTML('<button')
-  })
-
-  it('Renders "retry" button for compute without crashing', () => {
-    render(<ButtonBuy {...computeProps} retry />)
-    const button = screen.getByText('Retry')
     expect(button).toContainHTML('<button')
   })
 })

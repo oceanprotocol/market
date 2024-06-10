@@ -1,4 +1,5 @@
 import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
+import { getFilterTerm } from '../../../@utils/aquarius'
 
 export function generateQuery(
   chainIds: number[],

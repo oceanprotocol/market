@@ -14,16 +14,12 @@ import { useMarketMetadata } from '@context/MarketMetadata'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
 import content from '../../../../content/footer.json'
-import { getTotalAllocatedAndLocked } from '@utils/veAllocation'
-import PriceUnit from '@shared/Price/PriceUnit'
 import Loader from '@components/@shared/atoms/Loader'
 
 const initialTotal: StatsTotal = {
   nfts: 0,
   datatokens: 0,
-  orders: 0,
-  veAllocated: 0,
-  veLocked: 0
+  orders: 0
 }
 
 function LoaderArea() {
@@ -85,13 +81,6 @@ export default function MarketStats(): ReactElement {
     setData(newData)
   }, [mainChainIds])
 
-  async function addVeTotals(partialTotals: StatsTotal) {
-    const total: StatsTotal = { ...partialTotals }
-    const veTotals = await getTotalAllocatedAndLocked()
-    total.veAllocated = veTotals.totalAllocated
-    total.veLocked = veTotals.totalLocked
-    return total
-  }
   //
   // 1. Fetch Data
   //
@@ -121,7 +110,7 @@ export default function MarketStats(): ReactElement {
       }
     }
     async function setTotalAllocatedAndLocked() {
-      setTotal(await addVeTotals(newTotal))
+      setTotal(newTotal)
       setLoading(false)
     }
     setTotalAllocatedAndLocked()
@@ -139,22 +128,6 @@ export default function MarketStats(): ReactElement {
             <Markdown className={styles.note} text={content.stats.note} />
           }
         />
-      </div>
-      <div>
-        <PriceUnit
-          decimals="0"
-          price={total.veLocked}
-          symbol="OCEAN"
-          size="small"
-        />{' '}
-        locked.{' '}
-        <PriceUnit
-          decimals="0"
-          price={total.veAllocated}
-          symbol="veOCEAN"
-          size="small"
-        />{' '}
-        allocated.
       </div>
     </div>
   )

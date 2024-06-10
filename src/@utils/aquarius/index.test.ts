@@ -10,6 +10,8 @@ const defaultBaseQueryReturn = {
     bool: {
       filter: [
         { term: { _index: 'aquarius' } },
+        { term: { 'services.type': 'access' } },
+        { term: { 'metadata.type': 'dataset' } },
         { terms: { chainId: [1, 3] } },
         { term: { 'purgatory.state': false } },
         { bool: { must_not: [{ term: { 'nft.state': 5 } }] } }

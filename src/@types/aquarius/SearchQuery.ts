@@ -17,13 +17,11 @@ export enum SortTermOptions {
 // and gets imported in components.
 
 export enum FilterByTypeOptions {
-  Data = 'dataset',
-  Algorithm = 'algorithm'
+  Data = 'dataset'
 }
 
 export enum FilterByAccessOptions {
-  Download = 'access',
-  Compute = 'compute'
+  Download = 'access'
 }
 
 declare global {

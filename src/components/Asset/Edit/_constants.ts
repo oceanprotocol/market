@@ -1,6 +1,6 @@
-import { Metadata, Service, ServiceComputeOptions } from '@oceanprotocol/lib'
+import { Metadata, Service } from '@oceanprotocol/lib'
 import { parseConsumerParameters, secondsToString } from '@utils/ddo'
-import { ComputeEditForm, MetadataEditForm } from './_types'
+import { MetadataEditForm } from './_types'
 
 export function getInitialValues(
   metadata: Metadata,
@@ -28,21 +28,5 @@ export function getInitialValues(
       usesConsumerParameters: service?.consumerParameters?.length > 0,
       consumerParameters: parseConsumerParameters(service?.consumerParameters)
     }
-  }
-}
-
-export function getComputeSettingsInitialValues({
-  publisherTrustedAlgorithms,
-  publisherTrustedAlgorithmPublishers
-}: ServiceComputeOptions): ComputeEditForm {
-  const allowAllPublishedAlgorithms = publisherTrustedAlgorithms === null
-  const publisherTrustedAlgorithmsForForm = allowAllPublishedAlgorithms
-    ? null
-    : publisherTrustedAlgorithms.map((algo) => algo.did)
-
-  return {
-    allowAllPublishedAlgorithms,
-    publisherTrustedAlgorithms: publisherTrustedAlgorithmsForForm,
-    publisherTrustedAlgorithmPublishers
   }
 }

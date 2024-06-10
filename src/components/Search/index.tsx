@@ -55,6 +55,11 @@ export default function SearchPage({
     [router]
   )
 
+  const parsedWithFilters = {
+    ...parsed,
+    serviceType: 'access',
+    accessType: 'dataset'
+  }
   const fetchAssets = useCallback(
     async (parsed: queryString.ParsedQuery<string>, chainIds: number[]) => {
       setLoading(true)
@@ -76,7 +81,7 @@ export default function SearchPage({
 
   useEffect(() => {
     if (!parsed || !chainIds) return
-    fetchAssets(parsed, chainIds)
+    fetchAssets(parsedWithFilters, chainIds)
   }, [parsed, chainIds, newCancelToken, fetchAssets])
 
   return (

@@ -12,7 +12,6 @@ import MetadataFields from './Metadata'
 import ServicesFields from './Services'
 import Preview from './Preview'
 import Submission from './Submission'
-import { ServiceComputeOptions } from '@oceanprotocol/lib'
 import contentFeedback from '../../../content/publish/feedback.json'
 
 export const wizardSteps: StepContent[] = [
@@ -43,13 +42,6 @@ export const wizardSteps: StepContent[] = [
   }
 ]
 
-const computeOptions: ServiceComputeOptions = {
-  allowRawAlgorithm: false,
-  allowNetworkAccess: true,
-  publisherTrustedAlgorithmPublishers: [],
-  publisherTrustedAlgorithms: []
-}
-
 export const initialValues: FormPublishData = {
   user: {
     stepCurrent: 1,
@@ -64,13 +56,7 @@ export const initialValues: FormPublishData = {
     author: '',
     description: '',
     tags: [],
-    termsAndConditions: false,
-    dockerImage: '',
-    dockerImageCustom: '',
-    dockerImageCustomTag: '',
-    dockerImageCustomEntrypoint: '',
-    usesConsumerParameters: false,
-    consumerParameters: []
+    termsAndConditions: false
   },
   services: [
     {
@@ -84,7 +70,6 @@ export const initialValues: FormPublishData = {
         valid: true,
         custom: false
       },
-      computeOptions,
       usesConsumerParameters: false,
       consumerParameters: []
     }

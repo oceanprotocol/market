@@ -1,5 +1,4 @@
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
-import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../../app.config'
@@ -7,7 +6,6 @@ import {
   SortDirectionOptions,
   SortTermOptions
 } from '../../@types/aquarius/SearchQuery'
-import { transformAssetToAssetSelection } from '../assetConvertor'
 
 export interface UserSales {
   id: string
@@ -42,7 +40,11 @@ export function getFilterTerm(
 export function generateBaseQuery(
   baseQueryParams: BaseQueryParams
 ): SearchQuery {
-  const filters: unknown[] = [getFilterTerm('_index', 'aquarius')]
+  const filters: unknown[] = [
+    getFilterTerm('_index', 'aquarius'),
+    getFilterTerm('services.type', 'access'),
+    getFilterTerm('metadata.type', 'dataset')
+  ]
   baseQueryParams.filters && filters.push(...baseQueryParams.filters)
   baseQueryParams.chainIds &&
     filters.push(getFilterTerm('chainId', baseQueryParams.chainIds))
@@ -206,41 +208,6 @@ export async function getAssetsFromDids(
   }
 }
 
-export async function getAlgorithmDatasetsForCompute(
-  algorithmId: string,
-  datasetProviderUri: string,
-  datasetChainId?: number,
-  cancelToken?: CancelToken
-): Promise<AssetSelectionAsset[]> {
-  const baseQueryParams = {
-    chainIds: [datasetChainId],
-    nestedQuery: {
-      must: {
-        match: {
-          'services.compute.publisherTrustedAlgorithms.did': {
-            query: algorithmId
-          }
-        }
-      }
-    },
-    sortOptions: {
-      sortBy: SortTermOptions.Created,
-      sortDirection: SortDirectionOptions.Descending
-    }
-  } as BaseQueryParams
-
-  const query = generateBaseQuery(baseQueryParams)
-  const computeDatasets = await queryMetadata(query, cancelToken)
-  if (computeDatasets?.totalResults === 0) return []
-
-  const datasets = await transformAssetToAssetSelection(
-    datasetProviderUri,
-    computeDatasets.results,
-    []
-  )
-  return datasets
-}
-
 export async function getPublishedAssets(
   accountId: string,
   chainIds: number[],
@@ -256,9 +223,8 @@ export async function getPublishedAssets(
 
   filters.push(getFilterTerm('nft.state', [0, 4, 5]))
   filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
-  accesType !== undefined &&
-    filters.push(getFilterTerm('services.type', accesType))
-  type !== undefined && filters.push(getFilterTerm('metadata.type', type))
+  // filters.push(getFilterTerm('services.type', 'access'))
+  // filters.push(getFilterTerm('metadata.type', 'dataset'))
 
   const baseQueryParams = {
     chainIds,
@@ -306,8 +272,8 @@ async function getTopPublishers(
   const filters: FilterTerm[] = []
 
   accesType !== undefined &&
-    filters.push(getFilterTerm('services.type', accesType))
-  type !== undefined && filters.push(getFilterTerm('metadata.type', type))
+    filters.push(getFilterTerm('services.type', 'access'))
+  type !== undefined && filters.push(getFilterTerm('metadata.type', 'dataset'))
 
   const baseQueryParams = {
     chainIds,

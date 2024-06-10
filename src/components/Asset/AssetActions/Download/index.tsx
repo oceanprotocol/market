@@ -5,7 +5,6 @@ import { useAsset } from '@context/Asset'
 import ButtonBuy from '../ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import styles from './index.module.css'
-import AlgorithmDatasetsListForCompute from '../Compute/AlgorithmDatasetsListForCompute'
 import {
   AssetPrice,
   FileInfo,
@@ -299,13 +298,6 @@ export default function Download({
             )}
           </div>
           <AssetAction asset={asset} />
-
-          {asset?.metadata?.type === 'algorithm' && (
-            <AlgorithmDatasetsListForCompute
-              algorithmDid={asset.id}
-              asset={asset}
-            />
-          )}
         </aside>
       </Form>
     </Formik>

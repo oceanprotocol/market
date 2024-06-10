@@ -11,8 +11,7 @@ export async function transformAssetToAssetSelection(
   const algorithmList: AssetSelectionAsset[] = []
 
   for (const asset of assets) {
-    const algoService =
-      getServiceByName(asset, 'compute') || getServiceByName(asset, 'access')
+    const algoService = getServiceByName(asset, 'access')
 
     if (
       asset?.stats?.price?.value >= 0 &&
