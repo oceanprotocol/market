@@ -2,12 +2,12 @@
 
 ### Prerequisites
 
-* A server for hosting Ocean Marketplace. 
+* A server for hosting Metaschool Marketplace. 
 * Obtain API key for wanted network.
 
-### Push your customized Ocean Market code to your Git repository
+### Push your customized Metaschool Market code to your Git repository
 
-In case you customized the Ocean Market using the tutorial from this chapter (link), push your code to a Git repository.
+In case you customized the Metaschool Market using the tutorial from this chapter (link), push your code to a Git repository.
 
 ### Create a directory
 
@@ -47,7 +47,7 @@ NEXT_PUBLIC_METADATACACHE_URI=https://v4.aquarius.oceanprotocol.com
 
 ### Create a \`Dockerfile\` file and copy the below content into it.
 
-In the following Dockerfile, replace \<YOUR\_GIT\_REPO\_URL> with the url of your Ocean Market fork repository or use "https://github.com/oceanprotocol/market.git" if you want to deploy the standard image of Ocean Market.
+In the following Dockerfile, replace \<YOUR\_GIT\_REPO\_URL> with the url of your Metaschool Market fork repository or use "https://github.com/oceanprotocol/market.git" if you want to deploy the standard image of Metaschool Market.
 
 <pre class="language-docker" data-title="Dockerfile"><code class="lang-docker">FROM node:16
 <strong>RUN git clone &#x3C;YOUR_GIT_REPO_URL> /usr/app/market

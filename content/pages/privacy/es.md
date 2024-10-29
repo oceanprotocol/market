@@ -1,6 +1,6 @@
 ---
 title: Política de privacidad
-description: Esta política de privacidad le informa sobre cómo Ocean Protocol Foundation Ltd. procesa sus datos personales cuando visita Ocean Market y cuando utiliza una de nuestras funcionalidades de mercado. Además, esta política de privacidad le informa sobre sus derechos.
+description: Esta política de privacidad le informa sobre cómo Ocean Protocol Foundation Ltd. procesa sus datos personales cuando visita Metaschool Market y cuando utiliza una de nuestras funcionalidades de mercado. Además, esta política de privacidad le informa sobre sus derechos.
 ---
 
 # 1. Controlador
@@ -18,7 +18,7 @@ E-mail: [gdpr@oceanprotocol.com](gdpr@oceanprotocol.com)
 
 Los datos personales son cualquier información que pueda estar (directa o indirectamente) relacionada con usted. Ocean Protocol procesa una cantidad mínima de datos personales, ya que creemos que sus datos personales le pertenecen. Procesamos los siguientes datos personales:
 
-**Dirección IP** : Su dirección IP se procesa cuando visita Ocean Market.
+**Dirección IP** : Su dirección IP se procesa cuando visita Metaschool Market.
 
 Si está utilizando una de nuestras funcionalidades de mercado, Ocean Protocol también procesa los siguientes datos personales:
 
@@ -34,14 +34,14 @@ Para obtener información detallada sobre las operaciones de procesamiento, la l
 
 **Visitas al** **Ocean** **Market**
 
-Cuando visita Ocean Market, su dirección IP es procesada por Vercel, un proveedor de servicios que aloja nuestro mercado. Vercel sirve a nuestro mercado mediante una red de distribución de contenidos (una red distribuida geográficamente) con servidores ubicados fuera y dentro del Espacio Económico Europeo. Usamos Cláusulas Contractuales Tipo (Standard Contractual Clauses o SCC e inglés) para brindar las garantías adecuadas para el procesamiento de sus datos personales. Tiene derecho a recibir una copia de estas SCC.
+Cuando visita Metaschool Market, su dirección IP es procesada por Vercel, un proveedor de servicios que aloja nuestro mercado. Vercel sirve a nuestro mercado mediante una red de distribución de contenidos (una red distribuida geográficamente) con servidores ubicados fuera y dentro del Espacio Económico Europeo. Usamos Cláusulas Contractuales Tipo (Standard Contractual Clauses o SCC e inglés) para brindar las garantías adecuadas para el procesamiento de sus datos personales. Tiene derecho a recibir una copia de estas SCC.
 
 - Aquí puede encontrar las [**SCC** &#8599;](https://vercel.com/legal/dpa) de Vercel.
 - Aquí puede encontrar la [**política de privacidad** &#8599;](https://vercel.com/legal/privacy-policy) de Vercel.
 
-**Uso de las funciones de Ocean Market**
+**Uso de las funciones de Metaschool Market**
 
-Si utiliza las funciones de Ocean Market, divulgamos su dirección de cartera y nombre de autor (si corresponde) transmitiéndolos a un contrato inteligente. Este contrato inteligente se almacena en formato legible por máquina en una blockchain o cadena de bloques pública que se almacena de forma redundante en nodos de todo el mundo. Dado que el almacenamiento se encuentra distribuido globalmente, su dirección de cartera y nombre de autor (si corresponde) se procesan en países que no poseen una decisión de adecuación de conformidad con el Art. 45 del GDPR. La tecnología subyacente de la blockchain garantiza la seguridad (integridad, disponibilidad, autenticidad y no repudio) de sus datos personales por diseño y por defecto. Además, sus derechos descritos en el capítulo siete siguen siendo válidos. Por ejemplo, si rectifica su nombre de autor en Ocean Market, los cambios también se adoptarán automáticamente en los nodos que contienen una copia del contrato inteligente.
+Si utiliza las funciones de Metaschool Market, divulgamos su dirección de cartera y nombre de autor (si corresponde) transmitiéndolos a un contrato inteligente. Este contrato inteligente se almacena en formato legible por máquina en una blockchain o cadena de bloques pública que se almacena de forma redundante en nodos de todo el mundo. Dado que el almacenamiento se encuentra distribuido globalmente, su dirección de cartera y nombre de autor (si corresponde) se procesan en países que no poseen una decisión de adecuación de conformidad con el Art. 45 del GDPR. La tecnología subyacente de la blockchain garantiza la seguridad (integridad, disponibilidad, autenticidad y no repudio) de sus datos personales por diseño y por defecto. Además, sus derechos descritos en el capítulo siete siguen siendo válidos. Por ejemplo, si rectifica su nombre de autor en Metaschool Market, los cambios también se adoptarán automáticamente en los nodos que contienen una copia del contrato inteligente.
 
 **Contacto por correo electrónico**
 
@@ -60,7 +60,7 @@ Al consumir o apostar por un activo de datos, recopilamos su dirección de carte
 
 **Propósito:**
 
-Ocean Market procesa su dirección de cartera para permitirle firmar transacciones de blockchain. La transacción que contiene su dirección de cartera se almacenará permanentemente en cadena para que usted y el proveedor de activos puedan probar la adquisición y el consumo de activos.
+Metaschool Market procesa su dirección de cartera para permitirle firmar transacciones de blockchain. La transacción que contiene su dirección de cartera se almacenará permanentemente en cadena para que usted y el proveedor de activos puedan probar la adquisición y el consumo de activos.
 
 **Base legal:**
 
@@ -76,7 +76,7 @@ Cuando publica un activo de datos, recopilamos su dirección de cartera y nombre
 
 **Propósito:**
 
-Necesitamos procesar su dirección de cartera para vincular su publicación a su dirección de cartera. Procesamos su nombre para habilitar la función de búsqueda y filtrado en Ocean Market. La transacción que contiene su dirección de cartera pública y nombre de autor se almacenará permanentemente en cadena para que pueda demostrar la propiedad y las ventas de los activos.
+Necesitamos procesar su dirección de cartera para vincular su publicación a su dirección de cartera. Procesamos su nombre para habilitar la función de búsqueda y filtrado en Metaschool Market. La transacción que contiene su dirección de cartera pública y nombre de autor se almacenará permanentemente en cadena para que pueda demostrar la propiedad y las ventas de los activos.
 
 **Base legal:**
 
@@ -88,11 +88,11 @@ Ocean Protocol divulga su dirección de cartera y nombre de autor transmitiéndo
 
 ## 4.3 Mostrar activos de datos
 
-Cuando publica un activo de datos, recuperamos, organizamos y almacenamos su dirección de cartera y nombre de autor en una caché de metadatos operada por Ocean Protocol. Además, mostramos su activo en Ocean Market.
+Cuando publica un activo de datos, recuperamos, organizamos y almacenamos su dirección de cartera y nombre de autor en una caché de metadatos operada por Ocean Protocol. Además, mostramos su activo en Metaschool Market.
 
 **Propósitos:**
 
-Recuperar datos de la blockchain requiere mucho tiempo. Por lo tanto, recuperamos, organizamos y almacenamos sus datos personales en una caché para mejorar el rendimiento de Ocean Market. Mostramos su activo de datos en Ocean Market para que los visitantes puedan encontrarlo, consumirlo y participar en él.
+Recuperar datos de la blockchain requiere mucho tiempo. Por lo tanto, recuperamos, organizamos y almacenamos sus datos personales en una caché para mejorar el rendimiento de Metaschool Market. Mostramos su activo de datos en Metaschool Market para que los visitantes puedan encontrarlo, consumirlo y participar en él.
 
 **Base legal:**
 
@@ -100,7 +100,7 @@ La base legal para este procesamiento es nuestro interés legítimo, de acuerdo 
 
 **Intereses legítimos:**
 
-Nuestro interés legítimo es mejorar la experiencia del usuario optimizando el rendimiento de Ocean Market.
+Nuestro interés legítimo es mejorar la experiencia del usuario optimizando el rendimiento de Metaschool Market.
 
 **Período de retención:**
 
@@ -108,11 +108,11 @@ Su dirección de cartera y nombre se almacenan permanentemente en nuestra caché
 
 ## 4.4 Tabla historial
 
-La tabla de historial de Ocean Market es una herramienta de transparencia que puede utilizar para revisar sus transacciones relacionadas con Ocean Market. Cuando utiliza la tabla de historial, recopilamos su dirección de cartera. Luego, recuperamos las transacciones respectivas y relevantes almacenadas en la blockchain (más precisamente, en la caché de metadatos) y las organizamos en una tabla.
+La tabla de historial de Metaschool Market es una herramienta de transparencia que puede utilizar para revisar sus transacciones relacionadas con Metaschool Market. Cuando utiliza la tabla de historial, recopilamos su dirección de cartera. Luego, recuperamos las transacciones respectivas y relevantes almacenadas en la blockchain (más precisamente, en la caché de metadatos) y las organizamos en una tabla.
 
 **Propósito:**
 
-Necesitamos recopilar su dirección de cartera para recuperar cada transacción que realizó en Ocean Market. Recuperamos y organizamos sus datos de transacciones públicas para que pueda ver rápidamente todas las acciones que realizó en Ocean Market.
+Necesitamos recopilar su dirección de cartera para recuperar cada transacción que realizó en Metaschool Market. Recuperamos y organizamos sus datos de transacciones públicas para que pueda ver rápidamente todas las acciones que realizó en Metaschool Market.
 
 **Base legal:**
 
@@ -120,7 +120,7 @@ La base legal para este procesamiento es nuestro interés legítimo, de acuerdo 
 
 **Intereses legítimos:**
 
-Nuestro interés legítimo al proporcionar la tabla de historial es ofrecerle la posibilidad de revisar sus transacciones realizadas en Ocean Market.
+Nuestro interés legítimo al proporcionar la tabla de historial es ofrecerle la posibilidad de revisar sus transacciones realizadas en Metaschool Market.
 
 **Período de retención:**
 
@@ -151,15 +151,15 @@ Ocean Protocol elimina sus datos personales tan pronto como ya no los necesitemo
 
 Una cookie es un pequeño archivo que almacena la configuración de Internet. Su navegador web lo descarga en la primera visita a un sitio web. La próxima vez que abra ese sitio web con el mismo dispositivo, la cookie y la información almacenada en él se enviarán al sitio web que lo creó (cookie de origen) o a otro sitio web al que pertenece (cookie de terceros). Esto permite que el sitio web detecte que usted lo ha abierto previamente con ese navegador y, en algunos casos, variar el contenido mostrado.
 
-Ocean Market no utiliza cookies con fines analíticos o de marketing. Por el contrario, utilizamos una cookie funcional propia que no transmite sus datos personales. Esta cookie se utiliza para mejorar su experiencia de usuario y se eliminará una vez que cierre su navegador.
+Metaschool Market no utiliza cookies con fines analíticos o de marketing. Por el contrario, utilizamos una cookie funcional propia que no transmite sus datos personales. Esta cookie se utiliza para mejorar su experiencia de usuario y se eliminará una vez que cierre su navegador.
 
-Ocean Market también utiliza almacenamiento local y almacenamiento de sesiones, cuya funcionalidad es similar a la de las cookies. Usamos su almacenamiento web para recordar las preferencias de su página y mejorar su experiencia de usuario. Tampoco almacenamos datos personales en el almacenamiento local ni en el almacenamiento de sesiones. Su navegador eliminará el almacenamiento de la sesión una vez que cierre su navegador.
+Metaschool Market también utiliza almacenamiento local y almacenamiento de sesiones, cuya funcionalidad es similar a la de las cookies. Usamos su almacenamiento web para recordar las preferencias de su página y mejorar su experiencia de usuario. Tampoco almacenamos datos personales en el almacenamiento local ni en el almacenamiento de sesiones. Su navegador eliminará el almacenamiento de la sesión una vez que cierre su navegador.
 
 En la configuración de su navegador tiene la opción de deshabilitar las cookies o eliminar las cookies y el almacenamiento web del disco duro de su computadora en cualquier momento.
 
 # 6. Enlaces externos
 
-Ocean Market contiene enlaces a sitios web externos que están más allá del control y la responsabilidad de Ocean Protocol. Marcamos los enlaces externos con esta flecha: &#8599;.
+Metaschool Market contiene enlaces a sitios web externos que están más allá del control y la responsabilidad de Ocean Protocol. Marcamos los enlaces externos con esta flecha: &#8599;.
 
 # 7. Sus derechos
 
@@ -175,19 +175,19 @@ Tiene derecho a obtener sin dilación indebida la rectificación de los datos pe
 
 Si publicó un activo de datos, tenga en cuenta que puede modificar los metadatos proporcionados (como el nombre de autor) en cualquier momento mediante la realización de los siguientes pasos:
 
-- Visite su activo publicado en Ocean Market ([market.oceanprotocol.com](https://market.oceanprotocol.com)).
+- Visite su activo publicado en Metaschool Market ([market.oceanprotocol.com](https://market.oceanprotocol.com)).
 - Valide su identidad.
 - Haga clic en &quot;EDIT METADATA&quot; y realice los cambios.
 - Guarde sus cambios haciendo clic en &quot;SUBMIT&quot;.
 - Confirme los cambios.
 
-Tenga en cuenta que debe pagar tarifas de gas para la confirmación de los cambios (a medida que se emite una nueva transacción). Después de la modificación, la versión anterior de los metadatos de sus activos de datos ya no estará visible en Ocean Market. Además, puede cambiar el contenido de su activo de datos en cualquier momento.
+Tenga en cuenta que debe pagar tarifas de gas para la confirmación de los cambios (a medida que se emite una nueva transacción). Después de la modificación, la versión anterior de los metadatos de sus activos de datos ya no estará visible en Metaschool Market. Además, puede cambiar el contenido de su activo de datos en cualquier momento.
 
 ## 7.3 Derecho de supresión (Art. 17 del GDPR)
 
 Tiene derecho a obtener sin dilación indebida la supresión de sus datos personales, cuando los fundamentos legales definidos en el Art. 17 del GDPR se aplican.
 
-Sí publicó un activo de datos, podría sobrescribir el nombre de autor proporcionado con un marcador de posición siguiendo los pasos que se enumeran en el capítulo 7.2. Si desea deshabilitar la visualización de su activo de datos en Ocean Market, lea el capítulo 7.4.
+Sí publicó un activo de datos, podría sobrescribir el nombre de autor proporcionado con un marcador de posición siguiendo los pasos que se enumeran en el capítulo 7.2. Si desea deshabilitar la visualización de su activo de datos en Metaschool Market, lea el capítulo 7.4.
 
 Tenga en cuenta que no es posible borrar el historial de transacciones de la blockchain debido a razones técnicas. Sin embargo, el estado actual de la red ya no contendrá los metadatos anteriores.
 
@@ -197,7 +197,7 @@ Además, debido a razones técnicas, no puede borrar la dirección de cartera pr
 
 Además, tiene derecho a obtener la limitación del procesamiento de sus datos personales cuando los fundamentos legales definidos en el Art. 18 del GDPR se aplican.
 
-Si publicó un activo de datos y tiene una cuenta de GitHub, puede utilizar nuestro Purgatory, un mecanismo para ocultar cualquier activo de datos de Ocean Market, realizando los siguientes pasos:
+Si publicó un activo de datos y tiene una cuenta de GitHub, puede utilizar nuestro Purgatory, un mecanismo para ocultar cualquier activo de datos de Metaschool Market, realizando los siguientes pasos:
 
 - Visite [**Purgatory** &#8599;](https://github.com/oceanprotocol/list-purgatory/blob/main/list-assets.json).
 - Inicie sesión en su cuenta de GitHub.

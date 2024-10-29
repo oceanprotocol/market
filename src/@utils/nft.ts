@@ -171,7 +171,7 @@ export async function setNFTMetadataAndTokenURI(
   const encodedMetadata = Buffer.from(
     JSON.stringify({
       ...nftMetadata,
-      description: `${nftMetadata.description}\n\nView on Ocean Market: ${externalUrl}`,
+      description: `${nftMetadata.description}\n\nView on Metaschool Market: ${externalUrl}`,
       external_url: externalUrl
     })
   ).toString('base64')

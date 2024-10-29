@@ -1,6 +1,6 @@
 ---
 title: Politique de confidentialité
-description: Cette politique de confidentialité vous informe sur la façon dont Ocean Protocol Foundation traite vos données personnelles lorsque vous visitez le Ocean Market et lorsque vous utilisez l'une de nos fonctionnalités de marché. De plus, cette politique de confidentialité vous informe de vos droits.
+description: Cette politique de confidentialité vous informe sur la façon dont Ocean Protocol Foundation traite vos données personnelles lorsque vous visitez le Metaschool Market et lorsque vous utilisez l'une de nos fonctionnalités de marché. De plus, cette politique de confidentialité vous informe de vos droits.
 ---
 
 # 1. Contrôleur
@@ -18,7 +18,7 @@ Courriel : [gdpr@oceanprotocol.com](gdpr@oceanprotocol.com)
 
 Les données personnelles sont toutes les informations qui peuvent être (directement ou indirectement) liées à vous. Ocean traite une quantité minimale de données personnelles, car nous pensons que vos données personnelles vous appartiennent. Nous traitons les données personnelles suivantes.
 
-**Adresse IP** : Votre adresse IP est traitée lors de la visite de Ocean Market.
+**Adresse IP** : Votre adresse IP est traitée lors de la visite de Metaschool Market.
 
 Si vous utilisez l&#39;une de nos fonctionnalités du marché, Ocean traite également les données personnelles suivantes.
 
@@ -34,14 +34,14 @@ Pour des informations détaillées sur les opérations de traitement, la licéit
 
 **Visiter le marché Ocean**
 
-Lorsque vous visitez Ocean Market, votre adresse IP est traitée par Vercel, un fournisseur de services qui héberge notre marché. Vercel dessert notre marché en utilisant un Content Delivery Network (un réseau géographiquement distribué) avec des serveurs situés en dehors et à l&#39;intérieur de l&#39;Espace économique européen. Nous utilisons des clauses contractuelles types (CCT) pour fournir des garanties appropriées au traitement de vos données personnelles. Vous avez le droit de recevoir une copie des présentes CCT.
+Lorsque vous visitez Metaschool Market, votre adresse IP est traitée par Vercel, un fournisseur de services qui héberge notre marché. Vercel dessert notre marché en utilisant un Content Delivery Network (un réseau géographiquement distribué) avec des serveurs situés en dehors et à l&#39;intérieur de l&#39;Espace économique européen. Nous utilisons des clauses contractuelles types (CCT) pour fournir des garanties appropriées au traitement de vos données personnelles. Vous avez le droit de recevoir une copie des présentes CCT.
 
 - Vous trouverez ici la [**CCT** &#8599;](https://vercel.com/legal/dpa) de Vercel.
 - Vous trouverez ici la [**politique de confidentialité** &#8599;](https://vercel.com/legal/privacy-policy) de Vercel.
 
 **Utilisation des fonctionnalités du marché Ocean**
 
-Si vous utilisez les fonctionnalités de Ocean Market, nous divulguons votre adresse de votre portefeuille et votre nom d&#39;auteur (le cas échéant) en les transmettant à un contrat intelligent (smart contract). Ce contrat intelligent est stocké dans un format lisible par machine sur une blockchain publique qui est stockée de manière redondante sur des nœuds dans le monde entier. Compte tenu du stockage distribué à l&#39;échelle mondiale, votre adresse de votre portefeuille et votre nom d&#39;auteur (le cas échéant) sont traités dans des pays sans décision d&#39;adéquation conformément à l&#39;article 45 du RGPD. La technologie sous-jacente de la blockchain assure la sécurité (intégrité, disponibilité, authenticité et non-répudiation) de vos données personnelles par conception et par défaut. De plus, vos droits décrits au chapitre sept restent exécutoires. Par exemple, si vous rectifiez le nom de votre auteur sur Ocean Market, les modifications seront également automatiquement adoptées sur les nœuds qui contiennent une copie du contrat intelligent.
+Si vous utilisez les fonctionnalités de Metaschool Market, nous divulguons votre adresse de votre portefeuille et votre nom d&#39;auteur (le cas échéant) en les transmettant à un contrat intelligent (smart contract). Ce contrat intelligent est stocké dans un format lisible par machine sur une blockchain publique qui est stockée de manière redondante sur des nœuds dans le monde entier. Compte tenu du stockage distribué à l&#39;échelle mondiale, votre adresse de votre portefeuille et votre nom d&#39;auteur (le cas échéant) sont traités dans des pays sans décision d&#39;adéquation conformément à l&#39;article 45 du RGPD. La technologie sous-jacente de la blockchain assure la sécurité (intégrité, disponibilité, authenticité et non-répudiation) de vos données personnelles par conception et par défaut. De plus, vos droits décrits au chapitre sept restent exécutoires. Par exemple, si vous rectifiez le nom de votre auteur sur Metaschool Market, les modifications seront également automatiquement adoptées sur les nœuds qui contiennent une copie du contrat intelligent.
 
 **Contact par e-mail**
 
@@ -60,7 +60,7 @@ Lorsque vous consommez ou stakez sur set de données, nous collectons votre adre
 
 **Fins:**
 
-Ocean Market traite votre adresse de votre portefeuille pour vous permettre de signer des transactions blockchain. La transaction contenant votre adresse de votre portefeuille sera stockée en permanence sur la chaîne afin que vous et le fournisseur d&#39;actifs puissiez prouver l&#39;acquisition et la consommation d&#39;actifs.
+Metaschool Market traite votre adresse de votre portefeuille pour vous permettre de signer des transactions blockchain. La transaction contenant votre adresse de votre portefeuille sera stockée en permanence sur la chaîne afin que vous et le fournisseur d&#39;actifs puissiez prouver l&#39;acquisition et la consommation d&#39;actifs.
 
 **Base juridique:**
 
@@ -76,7 +76,7 @@ Lorsque vous publiez un set de données, nous collectons votre adresse de votre 
 
 **Fins:**
 
-Nous devons traiter votre adresse de votre portefeuille pour lier votre publication à votre adresse. Nous traitons votre nom pour activer la fonctionnalité de recherche et de filtrage sur Ocean Market. La transaction contenant votre adresse de votre portefeuille et le nom de l&#39;auteur sera stockée en permanence sur la chaîne afin que vous puissiez prouver la propriété et la vente des actifs.
+Nous devons traiter votre adresse de votre portefeuille pour lier votre publication à votre adresse. Nous traitons votre nom pour activer la fonctionnalité de recherche et de filtrage sur Metaschool Market. La transaction contenant votre adresse de votre portefeuille et le nom de l&#39;auteur sera stockée en permanence sur la chaîne afin que vous puissiez prouver la propriété et la vente des actifs.
 
 **Base juridique:**
 
@@ -88,11 +88,11 @@ Ocean divulgue votre adresse de votre portefeuille et le nom de l&#39;auteur en 
 
 ## 4.3 Affichage des ressources de données
 
-Lorsque vous avez publié un set de données, nous récupérons, organisons et stockons votre adresse de votre portefeuille et votre nom d&#39;auteur sur un cache de métadonnées géré par Ocean. De plus, nous montrons votre set données sur Ocean Market.
+Lorsque vous avez publié un set de données, nous récupérons, organisons et stockons votre adresse de votre portefeuille et votre nom d&#39;auteur sur un cache de métadonnées géré par Ocean. De plus, nous montrons votre set données sur Metaschool Market.
 
 **Fins:**
 
-La récupération de données à partir de la blockchain prend du temps. Par conséquent, nous récupérons, organisons et stockons vos données personnelles sur un cache pour améliorer les performances de Ocean Market. Nous montrons votre set de données sur Ocean Market, afin que les visiteurs puissent trouver, consommer et staker.
+La récupération de données à partir de la blockchain prend du temps. Par conséquent, nous récupérons, organisons et stockons vos données personnelles sur un cache pour améliorer les performances de Metaschool Market. Nous montrons votre set de données sur Metaschool Market, afin que les visiteurs puissent trouver, consommer et staker.
 
 **Base juridique:**
 
@@ -100,7 +100,7 @@ La base juridique de ce traitement est notre intérêt légitime, conformément 
 
 **Intérêts légitimes:**
 
-Notre intérêt légitime est d&#39;améliorer l&#39;expérience utilisateur en améliorant les performances de Ocean Market.
+Notre intérêt légitime est d&#39;améliorer l&#39;expérience utilisateur en améliorant les performances de Metaschool Market.
 
 **Période de conservation:**
 
@@ -108,11 +108,11 @@ Votre adresse de votre portefeuille et votre nom sont stockés en permanence sur
 
 ## 4.4 Historique
 
-Lhistorique de Ocean Market est un outil de transparence que vous pouvez utiliser pour visualiser vos transactions relatives à Ocean Market. Lorsque vous utilisez l&#39;historique, nous collectons votre adresse de votre portefeuille. Ensuite, nous récupérons les transactions respectives et pertinentes stockées sur la blockchain (plus précisément, à partir du cache de métadonnées) et les organisons dans une table.
+Lhistorique de Metaschool Market est un outil de transparence que vous pouvez utiliser pour visualiser vos transactions relatives à Metaschool Market. Lorsque vous utilisez l&#39;historique, nous collectons votre adresse de votre portefeuille. Ensuite, nous récupérons les transactions respectives et pertinentes stockées sur la blockchain (plus précisément, à partir du cache de métadonnées) et les organisons dans une table.
 
 **Fins:**
 
-Nous devons collecter votre adresse de votre portefeuille pour récupérer chaque transaction que vous avez effectuée sur Ocean Market. Nous récupérons et organisons vos données de transaction publiques afin que vous puissiez rapidement avoir un aperçu de toutes les actions que vous avez effectuées sur Ocean Market.
+Nous devons collecter votre adresse de votre portefeuille pour récupérer chaque transaction que vous avez effectuée sur Metaschool Market. Nous récupérons et organisons vos données de transaction publiques afin que vous puissiez rapidement avoir un aperçu de toutes les actions que vous avez effectuées sur Metaschool Market.
 
 **Base juridique:**
 
@@ -120,7 +120,7 @@ La base juridique de ce traitement est notre intérêt légitime, conformément 
 
 **Intérêts légitimes:**
 
-Notre intérêt légitime à fournir l&#39;historique est de vous offrir la possibilité de visualiser et avoir une vue d&#39;ensemble de vos transactions effectuées sur Ocean Market.
+Notre intérêt légitime à fournir l&#39;historique est de vous offrir la possibilité de visualiser et avoir une vue d&#39;ensemble de vos transactions effectuées sur Metaschool Market.
 
 **Période de conservation:**
 
@@ -151,15 +151,15 @@ Ocean supprime vos données personnelles dès que nous n&#39;en avons plus besoi
 
 Un cookie est un petit fichier qui stocke les paramètres Internet. Votre navigateur Web le télécharge lors de la première visite sur un site Web. La prochaine fois que vous ouvrez ce site Web avec le même appareil, le cookie et les informations qui y sont stockées sont soit renvoyés au site Web qui l&#39;a créé (cookie de première partie), soit envoyés à un autre site Web auquel il appartient (cookie tiers). Cela permet au site Web de détecter que vous l&#39;avez déjà ouvert avec ce navigateur et, dans certains cas, de faire varier le contenu affiché.
 
-Ocean Market n&#39;utilise pas de cookies à des fins d&#39;analyse ou de marketing. Au lieu de cela, nous utilisons un cookie de première partie fonctionnel qui ne transmet pas de données personnelles vous concernant. Son cookie est utilisé pour améliorer votre expérience utilisateur et sera supprimé une fois que vous aurez fermé votre navigateur.
+Metaschool Market n&#39;utilise pas de cookies à des fins d&#39;analyse ou de marketing. Au lieu de cela, nous utilisons un cookie de première partie fonctionnel qui ne transmet pas de données personnelles vous concernant. Son cookie est utilisé pour améliorer votre expérience utilisateur et sera supprimé une fois que vous aurez fermé votre navigateur.
 
-Ocean Market utilise également le stockage local et le stockage de session, qui ont des fonctionnalités similaires aux cookies. Nous utilisons votre stockage Web pour mémoriser vos préférences de page et améliorer votre expérience utilisateur. Nous ne stockons pas non plus de données personnelles dans le stockage local et le stockage de session. Votre navigateur supprimera le stockage de session une fois que vous le fermerez.
+Metaschool Market utilise également le stockage local et le stockage de session, qui ont des fonctionnalités similaires aux cookies. Nous utilisons votre stockage Web pour mémoriser vos préférences de page et améliorer votre expérience utilisateur. Nous ne stockons pas non plus de données personnelles dans le stockage local et le stockage de session. Votre navigateur supprimera le stockage de session une fois que vous le fermerez.
 
 Vous avez la possibilité de désactiver les cookies, supprimer les cookies et le stockage Web du disque dur de votre ordinateur à tout moment dans les paramètres de votre navigateur.
 
 # 6. Liens externes
 
-Ocean Market contient des liens vers des sites Web externes qui sont hors du contrôle et de la responsabilité de Ocean. Nous marquons les liens externes en utilisant ceci: &#8599;.
+Metaschool Market contient des liens vers des sites Web externes qui sont hors du contrôle et de la responsabilité de Ocean. Nous marquons les liens externes en utilisant ceci: &#8599;.
 
 # 7. Vos droits
 
@@ -175,19 +175,19 @@ Vous avez le droit d&#39;obtenir sans retard injustifié la rectification de don
 
 Si vous avez publié un set de données, veuillez noter que vous pouvez modifier les métadonnées que vous avez fournies (comme le nom de l&#39;auteur) à tout moment en procédant comme suit.
 
-- Visitez votre actif publié sur Ocean Market ([market.oceanprotocol.com](https://market.oceanprotocol.com)).
+- Visitez votre actif publié sur Metaschool Market ([market.oceanprotocol.com](https://market.oceanprotocol.com)).
 - Validez votre identité avec votre clé privée.
 - Cliquez sur « EDIT METADATA » et apportez vos modifications.
 - Enregistrez vos modifications en cliquant sur « SUBMIT ».
 - Confirmez les modifications avec votre clé privée.
 
-Veuillez noter que vous devez payer des frais de gas (fees) pour la confirmation des changements (car une nouvelle transaction est émise). Après modification, la version précédente de vos métadonnées du set de données ne sera plus visible sur Ocean Market. En outre, vous pouvez modifier le contenu de votre set de données à tout moment.
+Veuillez noter que vous devez payer des frais de gas (fees) pour la confirmation des changements (car une nouvelle transaction est émise). Après modification, la version précédente de vos métadonnées du set de données ne sera plus visible sur Metaschool Market. En outre, vous pouvez modifier le contenu de votre set de données à tout moment.
 
 ## 7.3 Droit à l&#39;effacement (art. 17 du RGPD)
 
 Vous avez le droit d&#39;obtenir sans retard injustifié l&#39;effacement des données personnelles vous concernant, lorsque les fondements juridiques définis à l&#39;article 17 du RGPD s&#39;appliquent.
 
-Si vous avez publié un set de données, vous devez remplacer le nom d&#39;auteur fourni par un espace réservé en effectuant les étapes énumérées au chapitre 7.2. Si vous souhaitez désactiver l&#39;affichage de votre set de données sur Ocean Market, veuillez lire le chapitre 7.4.
+Si vous avez publié un set de données, vous devez remplacer le nom d&#39;auteur fourni par un espace réservé en effectuant les étapes énumérées au chapitre 7.2. Si vous souhaitez désactiver l&#39;affichage de votre set de données sur Metaschool Market, veuillez lire le chapitre 7.4.
 
 Notez qu&#39;il n&#39;est pas possible d&#39;effacer l&#39;historique des transactions de la blockchain pour des raisons techniques. Mais l&#39;état actuel du réseau ne contiendra plus les anciennes métadonnées.
 

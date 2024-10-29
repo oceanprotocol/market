@@ -6,17 +6,17 @@ description: >-
 
 # Retrieve datatoken/data NFT addresses & Chain ID
 
-### How to find the network, datatoken address, and data NFT address from an Ocean Market link?
+### How to find the network, datatoken address, and data NFT address from an Metaschool Market link?
 
-If you are given an Ocean Market link, then the network and datatoken address for the asset is visible on the Ocean Market webpage. For example, given this asset's Ocean Market link: [https://odc.oceanprotocol.com/asset/did:op:1b26eda361c6b6d307c8a139c4aaf36aa74411215c31b751cad42e59881f92c1](https://odc.oceanprotocol.com/asset/did:op:1b26eda361c6b6d307c8a139c4aaf36aa74411215c31b751cad42e59881f92c1) the webpage shows that this asset is hosted on the Mumbai network, and one simply clicks the datatoken's hyperlink to reveal the datatoken's address as shown in the screenshot below:
+If you are given an Metaschool Market link, then the network and datatoken address for the asset is visible on the Metaschool Market webpage. For example, given this asset's Metaschool Market link: [https://odc.oceanprotocol.com/asset/did:op:1b26eda361c6b6d307c8a139c4aaf36aa74411215c31b751cad42e59881f92c1](https://odc.oceanprotocol.com/asset/did:op:1b26eda361c6b6d307c8a139c4aaf36aa74411215c31b751cad42e59881f92c1) the webpage shows that this asset is hosted on the Mumbai network, and one simply clicks the datatoken's hyperlink to reveal the datatoken's address as shown in the screenshot below:
 
-<figure><img src="../.gitbook/assets/market/marketplace_data.jpg" alt="" width="563"><figcaption><p>See the Network and Datatoken Address for an Ocean Market asset by visiting the asset's Ocean Market page.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/market/marketplace_data.jpg" alt="" width="563"><figcaption><p>See the Network and Datatoken Address for an Metaschool Market asset by visiting the asset's Metaschool Market page.</p></figcaption></figure>
 
 #### More Detailed Info:
 
-You can access all the information for the Ocean Market asset also by **enabling Debug mode**. To do this, follow these steps:
+You can access all the information for the Metaschool Market asset also by **enabling Debug mode**. To do this, follow these steps:
 
-**Step 1** - Click the Settings button in the top right corner of the Ocean Market
+**Step 1** - Click the Settings button in the top right corner of the Metaschool Market
 
 <figure><img src="../.gitbook/assets/market/Click-Settings.png" alt=""><figcaption><p>Click the Settings button</p></figcaption></figure>
 

@@ -1,6 +1,6 @@
 ---
-title: Deployment of Ocean Market
-description: Step by step guide to a quick deployment of Ocean Market
+title: Deployment of Metaschool Market
+description: Step by step guide to a quick deployment of Metaschool Market
 ---
 
 # Build and host your Data Marketplace

@@ -1,11 +1,11 @@
 ---
 title: Customising Market
-description: Step by step guide to customizing your fork of Ocean market
+description: Step by step guide to customizing your fork of Metaschool Market
 ---
 
 # Customising a Market
 
-So you’ve got a fully functioning data marketplace at this point, which is pretty cool. But it doesn’t really look like your data marketplace. Right now, it’s still just a clone of Ocean Market — the same branding, name, logo, etc. The next few steps focus on personalizing your data marketplace.
+So you’ve got a fully functioning data marketplace at this point, which is pretty cool. But it doesn’t really look like your data marketplace. Right now, it’s still just a clone of Metaschool Market — the same branding, name, logo, etc. The next few steps focus on personalizing your data marketplace.
 
 * Change your Market Name
 * Change the Logo
@@ -17,9 +17,9 @@ So you’ve got a fully functioning data marketplace at this point, which is pre
 
 It’s now time to open up your favorite code editor and start getting stuck into the code. The first thing we will be doing is changing the name of your marketplace. A decent code editor (such as VS Code) makes this incredibly simple by searching and replacing all the places where the name appears.
 
-Let’s start by searching and replacing `Ocean Marketplace`. In VS Code there is a magnifying glass symbol in the left-hand panel (arrow 1 in the image below) that will open up the interface for searching and replacing text. Type “Ocean Marketplace” into the first textbox, and the name of your marketplace into the second textbox (arrow 2). To make things simple, there is a button to the right of the second textbox (arrow 3) that will replace all instances at once. You can take a moment to review all the text you’re changing if you wish, and then click this button.
+Let’s start by searching and replacing `Metaschool Marketplace`. In VS Code there is a magnifying glass symbol in the left-hand panel (arrow 1 in the image below) that will open up the interface for searching and replacing text. Type “Metaschool Marketplace” into the first textbox, and the name of your marketplace into the second textbox (arrow 2). To make things simple, there is a button to the right of the second textbox (arrow 3) that will replace all instances at once. You can take a moment to review all the text you’re changing if you wish, and then click this button.
 
-Next up, we need to repeat the process but this time we’ll be searching for and replacing `Ocean Market`.
+Next up, we need to repeat the process but this time we’ll be searching for and replacing `Metaschool Market`.
 On line 3 in this file, you can enter the tagline that you want for your marketplace.
 
 ## Change the Logo
@@ -64,7 +64,7 @@ You can change these colors as much as you wish until you’re happy with how ev
 
 ### Change Fonts
 
-The final part of the styling that we’ll alter in this guide is the fonts. This is an important step because the font used in Ocean Market is one of the few elements of the market that are **copyright protected**. If you want to use the same font you’ll need to purchase a license. The other copyrighted elements are the logo and the name — which we have already changed.
+The final part of the styling that we’ll alter in this guide is the fonts. This is an important step because the font used in Metaschool Market is one of the few elements of the market that are **copyright protected**. If you want to use the same font you’ll need to purchase a license. The other copyrighted elements are the logo and the name — which we have already changed.
 
 If you don’t already have a brand font, head over to Google Fonts to pick some fonts that suit the brand you’re trying to create. Google makes it nice and easy to see how they’ll look, and it’s simple to import them into your project.
 
@@ -86,7 +86,7 @@ Open up `src/components/Publish/Metadata/index.tsx` and change line 33 so that i
 
 Great, now our publish page explains that users should be publishing photos and the photo is provided as an asset type option. We’ll also leave the algorithm as an option in case some data scientists want to do some analysis or image transformation on the photos.
 
-There is one more thing that is fun to change before we move away from the publish form. You’ll notice that Ocean Market now has a cool SVG generation feature that creates the images for the Data NFT. It creates a series of pink waves. Let’s change this so that it uses our brand colors in the waves!
+There is one more thing that is fun to change before we move away from the publish form. You’ll notice that Metaschool Market now has a cool SVG generation feature that creates the images for the Data NFT. It creates a series of pink waves. Let’s change this so that it uses our brand colors in the waves!
 
 Open up `/src/@utils/SvgWaves.ts` and have a look at lines 27 to 30 where the colors are specified. Currently, the pink color is the one used in the SVG generator. You can replace this with your own brand color:
 
@@ -149,14 +149,14 @@ Now that’s it; you now have a fully functioning photo marketplace that operate
 
 ### Using a custom Provider
 
-You have the flexibility to tailor the ocean market according to your preferences by directing it to a predetermined custom provider deployment. This customization option allows you to choose a specific default provider, in addition to the option of manually specifying it when publishing an asset. To make use of this feature, you need to uncomment the designated line and modify the URL for your custom provider in the previously generated `.env` file. Look for the key labeled `NEXT_PUBLIC_PROVIDER_URL` and update its associated URL accordingly.
+You have the flexibility to tailor the Metaschool Market according to your preferences by directing it to a predetermined custom provider deployment. This customization option allows you to choose a specific default provider, in addition to the option of manually specifying it when publishing an asset. To make use of this feature, you need to uncomment the designated line and modify the URL for your custom provider in the previously generated `.env` file. Look for the key labeled `NEXT_PUBLIC_PROVIDER_URL` and update its associated URL accordingly.
 
 ### Using a custom MetadataCache
 
-If you intend to utilize the ocean market with a custom Aquarius deployment, you can also make set a custom MetadataCache flag. To do this, you will need to update the same file mentioned earlier. However, instead of modifying the `NEXT_PUBLIC_PROVIDER_URL` key, you should update the `NEXT_PUBLIC_METADATACACHE_URI` key. By updating this key, you can specify the URI for your custom Aquarius deployment, enabling you to take advantage of the ocean market with your preferred metadata cache setup.
+If you intend to utilize the Metaschool Market with a custom Aquarius deployment, you can also make set a custom MetadataCache flag. To do this, you will need to update the same file mentioned earlier. However, instead of modifying the `NEXT_PUBLIC_PROVIDER_URL` key, you should update the `NEXT_PUBLIC_METADATACACHE_URI` key. By updating this key, you can specify the URI for your custom Aquarius deployment, enabling you to take advantage of the Metaschool Market with your preferred metadata cache setup.
 
 ### Using a custom subgraph
 
-Using a custom subgraph with the ocean market requires additional steps due to the differences in deployment. Unlike the multi-network deployment of the provider and Aquarius services, each network supported by the ocean market has a separate subgraph deployment. This means that while the provider and Aquarius services can be handled by a single deployment across all networks, the subgraph requires specific handling for each network.
+Using a custom subgraph with the Metaschool Market requires additional steps due to the differences in deployment. Unlike the multi-network deployment of the provider and Aquarius services, each network supported by the Metaschool Market has a separate subgraph deployment. This means that while the provider and Aquarius services can be handled by a single deployment across all networks, the subgraph requires specific handling for each network.
 
-To utilize a custom subgraph, you will need to implement additional logic within the `getOceanConfig` function located in the `src/utils/ocean.ts` file. By modifying this function, you can ensure that the market uses the desired custom subgraph for the selected network. This is particularly relevant if your market aims to support multiple networks and you do not want to enforce the use of the same subgraph across all networks. By incorporating the necessary logic within `getOceanConfig`, you can ensure the market utilizes the appropriate custom subgraph for each network, enabling the desired level of customization. If the mentioned scenario doesn't apply to your situation, there is another approach you can take. Similar to the previously mentioned examples, you can modify the `.env` file by updating the key labeled `NEXT_PUBLIC_SUBGRAPH_URI`. By making changes to this key, you can configure the ocean market to utilize your preferred subgraph deployment. This alternative method allows you to customize the market's behavior and ensure it utilizes the desired subgraph, even if you don't require different subgraph deployments for each network.
+To utilize a custom subgraph, you will need to implement additional logic within the `getOceanConfig` function located in the `src/utils/ocean.ts` file. By modifying this function, you can ensure that the market uses the desired custom subgraph for the selected network. This is particularly relevant if your market aims to support multiple networks and you do not want to enforce the use of the same subgraph across all networks. By incorporating the necessary logic within `getOceanConfig`, you can ensure the market utilizes the appropriate custom subgraph for each network, enabling the desired level of customization. If the mentioned scenario doesn't apply to your situation, there is another approach you can take. Similar to the previously mentioned examples, you can modify the `.env` file by updating the key labeled `NEXT_PUBLIC_SUBGRAPH_URI`. By making changes to this key, you can configure the Metaschool Market to utilize your preferred subgraph deployment. This alternative method allows you to customize the market's behavior and ensure it utilizes the desired subgraph, even if you don't require different subgraph deployments for each network.

@@ -101,6 +101,7 @@
     "@uiw/codemirror-themes": "^4.22.1",
     "apollo": "^2.34.0",
     "cross-env": "^7.0.3",
+    "css-loader": "^7.1.2",
     "eslint": "^8.57.0",
     "eslint-config-oceanprotocol": "^2.0.4",
     "eslint-config-prettier": "^9.1.0",
@@ -118,6 +119,7 @@
     "process": "^0.11.10",
     "serve": "^14.2.3",
     "stream-http": "^3.2.0",
+    "style-loader": "^4.0.0",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^4.9.3"
   },
