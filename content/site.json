@@ -14,7 +14,7 @@
       "link": "/profile"
     }
   ],
-  "announcement": "",
+  "announcement": "Ocean Market is part of the old version of the Ocean stack and is not actively maintained. See the docs to learn about Ocean Node and the new stack.",
   "warning": {
     "ctd": "Please note that Compute-to-Data is still in alpha phase."
   }
