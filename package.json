@@ -31,7 +31,7 @@
     "@loadable/component": "^5.16.4",
     "@next/third-parties": "^14.2.3",
     "@oceanprotocol/art": "^3.2.0",
-    "@oceanprotocol/lib": "^3.2.0",
+    "@oceanprotocol/lib": "^4.0.1",
     "@oceanprotocol/typographies": "^0.1.0",
     "@oceanprotocol/use-dark-mode": "^2.4.3",
     "@orbisclub/orbis-sdk": "^0.4.89",
