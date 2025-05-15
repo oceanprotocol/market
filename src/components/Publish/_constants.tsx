@@ -1,5 +1,5 @@
 import React from 'react'
-import { allowFixedPricing } from '../../../app.config'
+import { allowFixedPricing } from '../../../app.config.cjs'
 import {
   FormPublishData,
   MetadataAlgorithmContainer,

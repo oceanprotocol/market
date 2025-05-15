@@ -23,7 +23,7 @@ import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
-import { customProviderUrl } from '../../../app.config'
+import { customProviderUrl } from '../../../app.config.cjs'
 import { useAccount, useNetwork, useSigner } from 'wagmi'
 
 export default function PublishPage({

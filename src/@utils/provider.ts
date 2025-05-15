@@ -13,7 +13,7 @@ import {
   getErrorMessage
 } from '@oceanprotocol/lib'
 // if customProviderUrl is set, we need to call provider using this custom endpoint
-import { customProviderUrl } from '../../app.config'
+import { customProviderUrl } from '../../app.config.cjs'
 import { KeyValuePair } from '@shared/FormInput/InputElement/KeyValueInput'
 import { Signer } from 'ethers'
 import { toast } from 'react-toastify'
