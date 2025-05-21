@@ -2,11 +2,10 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './Fees.module.css'
 import Input from '@shared/FormInput'
-import { getOpcFees } from '@utils/subgraph'
-import { OpcFeesQuery_opc as OpcFeesData } from '../../../@types/subgraph/OpcFeesQuery'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Decimal from 'decimal.js'
 import { useNetwork } from 'wagmi'
+import useFactoryRouter from '@hooks/useRouter'
 
 const Default = ({
   title,
@@ -42,16 +41,14 @@ export default function Fees({
   const [oceanCommunitySwapFee, setOceanCommunitySwapFee] = useState<string>('')
   const { chain } = useNetwork()
   const { appConfig } = useMarketMetadata()
-
+  const { fees } = useFactoryRouter()
   useEffect(() => {
-    getOpcFees(chain?.id || 1).then((response: OpcFeesData) => {
-      setOceanCommunitySwapFee(
-        response?.swapOceanFee
-          ? new Decimal(response.swapOceanFee).mul(100).toString()
-          : '0'
-      )
-    })
-  }, [chain?.id])
+    setOceanCommunitySwapFee(
+      fees.swapOceanFee
+        ? new Decimal(fees.swapOceanFee).mul(100).toString()
+        : '0'
+    )
+  }, [chain?.id, fees])
 
   return (
     <>

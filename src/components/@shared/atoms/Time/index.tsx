@@ -22,7 +22,7 @@ export default function Time({
   useEffect(() => {
     if (!date) return
 
-    const dateNew = isUnix ? new Date(Number(date) * 1000) : new Date(date)
+    const dateNew = isUnix ? new Date(Number(date)) : new Date(date)
     setDateIso(dateNew.toISOString())
     setDateNew(dateNew)
   }, [date, isUnix])

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import Time from '@shared/atoms/Time'
 import AssetTitle from '@shared/AssetListTitle'
@@ -30,14 +30,19 @@ export default function ComputeDownloads({
 }: {
   accountId: string
 }): ReactElement {
-  const { downloads, isDownloadsLoading } = useProfile()
+  const { downloads, downloadsTotal, isDownloadsLoading, handlePageChange } =
+    useProfile()
   const { chainIds } = useUserPreferences()
 
   return accountId ? (
     <Table
       columns={columns}
       data={downloads}
-      paginationPerPage={10}
+      pagination
+      paginationServer
+      paginationPerPage={9}
+      paginationTotalRows={downloadsTotal}
+      onChangePage={handlePageChange}
       isLoading={isDownloadsLoading}
       emptyMessage={chainIds.length === 0 ? 'No network selected' : null}
     />

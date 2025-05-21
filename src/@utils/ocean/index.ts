@@ -20,7 +20,8 @@ export function sanitizeDevelopmentConfig(config: Config): Config {
       process.env.NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS,
     dispenserAddress: process.env.NEXT_PUBLIC_DISPENSER_ADDRESS,
     oceanTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
-    nftFactoryAddress: process.env.NEXT_PUBLIC_NFT_FACTORY_ADDRESS
+    nftFactoryAddress: process.env.NEXT_PUBLIC_NFT_FACTORY_ADDRESS,
+    routerFactoryAddress: process.env.NEXT_PUBLIC_ROUTER_FACTORY_ADDRESS
   } as Config
 }
 

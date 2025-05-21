@@ -1,17 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
 import Web3Feedback from './'
-import { useGraphSyncStatus } from '../../../@hooks/useGraphSyncStatus'
-
-jest.mock('../../../@hooks/useGraphSyncStatus')
 
 describe('@shared/Web3Feedback', () => {
-  ;(useGraphSyncStatus as jest.Mock).mockImplementation(() => ({
-    isGraphSynced: true,
-    blockGraph: '333333',
-    blockHead: '333333'
-  }))
-
   it('renders without crashing', () => {
     render(<Web3Feedback networkId={1} accountId="0xxxx" />)
   })
@@ -26,9 +17,6 @@ describe('@shared/Web3Feedback', () => {
   })
 
   it('renders isGraphSynced === false', async () => {
-    ;(useGraphSyncStatus as jest.Mock).mockImplementation(() => ({
-      isGraphSynced: false
-    }))
     render(
       <Web3Feedback networkId={1} accountId="0xxxx" isAssetNetwork={true} />
     )
@@ -41,9 +29,6 @@ describe('@shared/Web3Feedback', () => {
   })
 
   it('do nothing if nothing to show', async () => {
-    ;(useGraphSyncStatus as jest.Mock).mockImplementation(() => ({
-      isGraphSynced: true
-    }))
     render(
       <Web3Feedback networkId={1} accountId="0xxxx" isAssetNetwork={true} />
     )

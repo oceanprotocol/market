@@ -7,12 +7,12 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { getUserTokenOrders } from '@utils/subgraph'
 import { useUserPreferences } from '../UserPreferences'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import {
   getDownloadAssets,
   getPublishedAssets,
+  getUserOrders,
   getUserSales
 } from '@utils/aquarius'
 import axios, { CancelToken } from 'axios'
@@ -30,6 +30,7 @@ interface ProfileProviderValue {
   isDownloadsLoading: boolean
   sales: number
   ownAccount: boolean
+  handlePageChange: (pageNumber: number) => void
 }
 
 const ProfileContext = createContext({} as ProfileProviderValue)
@@ -152,34 +153,46 @@ function ProfileProvider({
   const [downloadsTotal, setDownloadsTotal] = useState(0)
   const [isDownloadsLoading, setIsDownloadsLoading] = useState<boolean>()
   const [downloadsInterval, setDownloadsInterval] = useState<NodeJS.Timeout>()
+  const [currentPage, setCurrentPage] = useState(1)
 
   const fetchDownloads = useCallback(
-    async (cancelToken: CancelToken) => {
+    async (cancelToken: CancelToken, page = 1) => {
       if (!accountId || !chainIds) return
 
       const dtList: string[] = []
-      const tokenOrders = await getUserTokenOrders(accountId, chainIds)
-
-      for (let i = 0; i < tokenOrders?.length; i++) {
-        dtList.push(tokenOrders[i].datatoken.address)
+      const orders = await getUserOrders(accountId, cancelToken)
+      for (let i = 0; i < orders?.results?.length; i++) {
+        dtList.push(orders.results[i].datatokenAddress)
       }
 
-      const downloads = await getDownloadAssets(
+      const { downloadedAssets, totalResults } = await getDownloadAssets(
         dtList,
-        tokenOrders,
+        // tokenOrders,
         chainIds,
         cancelToken,
-        ownAccount
+        ownAccount,
+        page
       )
-      setDownloads(downloads)
-      setDownloadsTotal(downloads.length)
+      setDownloads(downloadedAssets)
+      setDownloadsTotal(totalResults)
       LoggerInstance.log(
-        `[profile] Fetched ${downloads.length} download orders.`,
+        `[profile] Fetched ${downloadedAssets.length} download orders.`,
         downloads
       )
     },
-    [accountId, chainIds, ownAccount]
+    [accountId, chainIds, downloads, ownAccount]
   )
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  useEffect(() => {
+    const cancelToken = axios.CancelToken.source()
+    fetchDownloads(cancelToken.token, currentPage)
+
+    return () => cancelToken.cancel('Request cancelled.')
+  }, [currentPage, fetchDownloads])
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source()
@@ -241,6 +254,7 @@ function ProfileProvider({
         downloads,
         downloadsTotal,
         isDownloadsLoading,
+        handlePageChange,
         ownAccount,
         sales
       }}
