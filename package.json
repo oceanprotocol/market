@@ -30,7 +30,7 @@
     "@codemirror/language": "^6.10.1",
     "@coingecko/cryptoformat": "^0.5.4",
     "@loadable/component": "^5.16.4",
-    "@next/third-parties": "^14.2.3",
+    "@next/third-parties": "^15.2.3",
     "@oceanprotocol/art": "^3.2.0",
     "@oceanprotocol/lib": "^4.0.1",
     "@oceanprotocol/typographies": "^0.1.0",
