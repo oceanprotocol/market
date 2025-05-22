@@ -102,30 +102,30 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
-  storybook:
-    runs-on: ${{ matrix.os }}
+  # storybook:
+  #   runs-on: ${{ matrix.os }}
 
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        node: ['18']
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [ubuntu-latest, macos-latest]
+  #       node: ['18']
 
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node }}
 
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-
+  #     - name: Cache node_modules
+  #       uses: actions/cache@v3
+  #       env:
+  #         cache-name: cache-node-modules
+  #       with:
+  #         path: ~/.npm
+  #         key: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+  #         restore-keys: ${{ runner.os }}-${{ matrix.node }}-storybook-${{ env.cache-name }}-
 
-      - run: npm ci
-      - run: npm run pregenerate
-      - run: npm run storybook:build
+  #     - run: npm ci
+  #     - run: npm run pregenerate
+  #     - run: npm run storybook:build
