@@ -39,6 +39,7 @@ declare global {
   type Filters = FilterByTypeOptions | FilterByAccessOptions
 
   interface SearchQuery {
+    index?: string
     from?: number
     size?: number
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

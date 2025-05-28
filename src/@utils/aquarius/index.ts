@@ -45,7 +45,7 @@ export function getDynamicPricingMustNot(): // eslint-disable-next-line camelcas
 FilterTerm | undefined {
   return allowDynamicPricing === 'true'
     ? undefined
-    : getFilterTerm('stats.price.type', 'pool')
+    : getFilterTerm('price.type', 'pool')
 }
 export function getWhitelistShould(): FilterTerm[] {
   const { whitelists } = addressConfig

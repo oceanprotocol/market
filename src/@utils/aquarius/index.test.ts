@@ -2,23 +2,47 @@ import {
   SortDirectionOptions,
   SortTermOptions
 } from '../../@types/aquarius/SearchQuery'
-import { escapeEsReservedCharacters, getFilterTerm, generateBaseQuery } from '.'
+import {
+  escapeEsReservedCharacters,
+  getFilterTerm,
+  generateBaseQuery,
+  getWhitelistShould
+} from '.'
 
-const defaultBaseQueryReturn = {
+const defaultBaseQueryReturn: SearchQuery = {
   from: 0,
+  index: 'op_ddo_v4.1.0',
   query: {
     bool: {
       filter: [
-        { term: { _index: 'aquarius' } },
-        { term: { 'services.type': 'access' } },
-        { term: { 'metadata.type': 'dataset' } },
         { terms: { chainId: [1, 3] } },
+        // { term: { _index: 'aquarius' } },
         { term: { 'purgatory.state': false } },
-        { bool: { must_not: [{ term: { 'nft.state': 5 } }] } }
+        {
+          bool: {
+            must_not: [
+              { term: { 'nft.state': 5 } },
+              { term: { 'price.type': 'pool' } }
+            ]
+          }
+        }
       ]
     }
   },
   size: 1000
+}
+
+// add whitelist filtering
+if (getWhitelistShould()?.length > 0) {
+  const whitelistQuery = {
+    bool: {
+      should: [...getWhitelistShould()],
+      minimum_should_match: 1
+    }
+  }
+  Object.hasOwn(defaultBaseQueryReturn.query.bool, 'must')
+    ? defaultBaseQueryReturn.query.bool.must.push(whitelistQuery)
+    : (defaultBaseQueryReturn.query.bool.must = [whitelistQuery])
 }
 
 describe('@utils/aquarius', () => {
