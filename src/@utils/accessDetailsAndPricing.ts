@@ -1,15 +1,13 @@
-import { gql, OperationResult } from 'urql'
-import { fetchData, getQueryContext } from './subgraph'
-import {
-  TokenPriceQuery,
-  TokenPriceQuery_token as TokenPrice
-} from '../@types/subgraph/TokenPriceQuery'
 import {
   AssetPrice,
+  Datatoken,
+  FixedRateExchange,
   getErrorMessage,
   LoggerInstance,
   ProviderFees,
-  ProviderInstance
+  ProviderInstance,
+  Service,
+  ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { getFixedBuyPrice } from './ocean/fixedRateExchange'
 import Decimal from 'decimal.js'
@@ -20,143 +18,7 @@ import {
 } from '../../app.config.cjs'
 import { Signer } from 'ethers'
 import { toast } from 'react-toastify'
-
-const tokenPriceQuery = gql`
-  query TokenPriceQuery($datatokenId: ID!, $account: String) {
-    token(id: $datatokenId) {
-      id
-      symbol
-      name
-      templateId
-      publishMarketFeeAddress
-      publishMarketFeeToken
-      publishMarketFeeAmount
-      orders(
-        where: { payer: $account }
-        orderBy: createdTimestamp
-        orderDirection: desc
-      ) {
-        tx
-        serviceIndex
-        createdTimestamp
-        providerFee
-        reuses(orderBy: createdTimestamp, orderDirection: desc) {
-          id
-          caller
-          createdTimestamp
-          tx
-          block
-        }
-      }
-      dispensers {
-        id
-        active
-        isMinter
-        maxBalance
-        token {
-          id
-          name
-          symbol
-        }
-      }
-      fixedRateExchanges {
-        id
-        exchangeId
-        price
-        publishMarketSwapFee
-        baseToken {
-          symbol
-          name
-          address
-          decimals
-        }
-        datatoken {
-          symbol
-          name
-          address
-        }
-        active
-      }
-    }
-  }
-`
-
-function getAccessDetailsFromTokenPrice(
-  tokenPrice: TokenPrice,
-  timeout?: number
-): AccessDetails {
-  const accessDetails = {} as AccessDetails
-  // Return early when no supported pricing schema found.
-  if (
-    tokenPrice?.dispensers?.length === 0 &&
-    tokenPrice?.fixedRateExchanges?.length === 0
-  ) {
-    accessDetails.type = 'NOT_SUPPORTED'
-    return accessDetails
-  }
-
-  if (tokenPrice?.orders?.length > 0) {
-    const order = tokenPrice.orders[0]
-    const providerFees: ProviderFees = order?.providerFee
-      ? JSON.parse(order.providerFee)
-      : null
-    accessDetails.validProviderFees =
-      providerFees?.validUntil &&
-      Date.now() / 1000 < Number(providerFees?.validUntil)
-        ? providerFees
-        : null
-    const reusedOrder = order?.reuses?.length > 0 ? order.reuses[0] : null
-    // asset is owned if there is an order and asset has timeout 0 (forever) or if the condition is valid
-    accessDetails.isOwned =
-      timeout === 0 || Date.now() / 1000 - order?.createdTimestamp < timeout
-    // the last valid order should be the last reuse order tx id if there is one
-    accessDetails.validOrderTx = reusedOrder?.tx || order?.tx
-  }
-  accessDetails.templateId =
-    typeof tokenPrice.templateId === 'string'
-      ? parseInt(tokenPrice.templateId)
-      : tokenPrice.templateId
-  // TODO: fetch order fee from sub query
-  accessDetails.publisherMarketOrderFee = tokenPrice?.publishMarketFeeAmount
-
-  // free is always the best price
-  if (tokenPrice?.dispensers?.length > 0) {
-    const dispenser = tokenPrice.dispensers[0]
-    accessDetails.type = 'free'
-    accessDetails.addressOrId = dispenser.token.id
-
-    accessDetails.price = '0'
-    accessDetails.isPurchasable = dispenser.active
-    accessDetails.datatoken = {
-      address: dispenser.token.id,
-      name: dispenser.token.name,
-      symbol: dispenser.token.symbol
-    }
-  }
-
-  // checking for fixed price
-  if (tokenPrice?.fixedRateExchanges?.length > 0) {
-    const fixed = tokenPrice.fixedRateExchanges[0]
-    accessDetails.type = 'fixed'
-    accessDetails.addressOrId = fixed.exchangeId
-    accessDetails.price = fixed.price
-    // in theory we should check dt balance here, we can skip this because in the market we always create fre with minting capabilities.
-    accessDetails.isPurchasable = fixed.active
-    accessDetails.baseToken = {
-      address: fixed.baseToken.address,
-      name: fixed.baseToken.name,
-      symbol: fixed.baseToken.symbol,
-      decimals: fixed.baseToken.decimals
-    }
-    accessDetails.datatoken = {
-      address: fixed.datatoken.address,
-      name: fixed.datatoken.name,
-      symbol: fixed.datatoken.symbol
-    }
-  }
-
-  return accessDetails
-}
+import { getDummySigner } from './wallet'
 
 /**
  * This will be used to get price including fees before ordering
@@ -165,12 +27,14 @@ function getAccessDetailsFromTokenPrice(
  */
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
+  service: Service,
+  accessDetails: AccessDetails,
   accountId: string,
   signer?: Signer,
   providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
-    price: String(asset?.stats?.price?.value || '0'),
+    price: accessDetails.price || '0',
     publisherMarketOrderFee: publisherMarketOrderFee || '0',
     publisherMarketFixedSwapFee: '0',
     consumeMarketOrderFee: consumeMarketOrderFee || '0',
@@ -186,83 +50,152 @@ export async function getOrderPriceAndFees(
     initializeData =
       !providerFees &&
       (await ProviderInstance.initialize(
-        asset?.id,
-        asset?.services[0].id,
+        asset.id,
+        service.id,
         0,
         accountId,
-        customProviderUrl || asset?.services[0].serviceEndpoint
+        customProviderUrl || service.serviceEndpoint
       ))
   } catch (error) {
     const message = getErrorMessage(error.message)
     LoggerInstance.error('[Initialize Provider] Error:', message)
+
+    // Customize error message for accountId non included in allow list
+    if (
+      // TODO: verify if the error code is correctly resolved by the provider
+      message.includes('ConsumableCodes.CREDENTIAL_NOT_IN_ALLOW_LIST') ||
+      message.includes('denied with code: 3')
+    ) {
+      if (accountId !== ZERO_ADDRESS) {
+        toast.error(
+          `Consumer address not found in allow list for service ${asset.id}. Access has been denied.`
+        )
+      }
+      return
+    }
+    // Customize error message for accountId included in deny list
+    if (
+      // TODO: verify if the error code is correctly resolved by the provider
+      message.includes('ConsumableCodes.CREDENTIAL_IN_DENY_LIST') ||
+      message.includes('denied with code: 4')
+    ) {
+      if (accountId !== ZERO_ADDRESS) {
+        toast.error(
+          `Consumer address found in deny list for service ${asset.id}. Access has been denied.`
+        )
+      }
+      return
+    }
     toast.error(message)
   }
   orderPriceAndFee.providerFee = providerFees || initializeData.providerFee
 
   // fetch price and swap fees
-  if (asset?.accessDetails?.type === 'fixed') {
-    const fixed = await getFixedBuyPrice(
-      asset?.accessDetails,
-      asset?.chainId,
-      signer
-    )
-    orderPriceAndFee.price = fixed.baseTokenAmount
+  if (accessDetails.type === 'fixed') {
+    const fixed = await getFixedBuyPrice(accessDetails, asset.chainId, signer)
+    orderPriceAndFee.price = accessDetails.price
     orderPriceAndFee.opcFee = fixed.oceanFeeAmount
     orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount
     orderPriceAndFee.consumeMarketFixedSwapFee = fixed.consumeMarketFeeAmount
   }
 
-  // calculate full price, we assume that all the values are in ocean, otherwise this will be incorrect
-  orderPriceAndFee.price = new Decimal(+orderPriceAndFee.price || 0)
-    .add(new Decimal(+orderPriceAndFee?.consumeMarketOrderFee || 0))
-    .add(new Decimal(+orderPriceAndFee?.publisherMarketOrderFee || 0))
-    .toString()
+  const price = new Decimal(+accessDetails.price || 0)
+  const consumeMarketFeePercentage =
+    +orderPriceAndFee?.consumeMarketOrderFee || 0
+  const publisherMarketFeePercentage =
+    +orderPriceAndFee?.publisherMarketOrderFee || 0
 
+  // Calculate percentage-based fees
+  const consumeMarketFee = price.mul(consumeMarketFeePercentage).div(100)
+  const publisherMarketFee = price.mul(publisherMarketFeePercentage).div(100)
+
+  // Calculate total
+  const result = price.add(consumeMarketFee).add(publisherMarketFee).toString()
+  orderPriceAndFee.price = result
   return orderPriceAndFee
 }
 
 /**
  * @param {number} chainId
- * @param {string} datatokenAddress
- * @param {number} timeout timout of the service, this is needed to return order details
- * @param {string} account account that wants to buy, is needed to return order details
+ * @param {Service} service service of which you want access details to
  * @returns {Promise<AccessDetails>}
  */
 export async function getAccessDetails(
   chainId: number,
-  datatokenAddress: string,
-  timeout?: number,
-  account = ''
+  service: Service
 ): Promise<AccessDetails> {
-  try {
-    const queryContext = getQueryContext(Number(chainId))
-    const tokenQueryResult: OperationResult<
-      TokenPriceQuery,
-      { datatokenId: string; account: string }
-    > = await fetchData(
-      tokenPriceQuery,
-      {
-        datatokenId: datatokenAddress.toLowerCase(),
-        account: account?.toLowerCase()
-      },
-      queryContext
-    )
+  const signer = await getDummySigner(chainId)
+  const datatoken = new Datatoken(signer, chainId)
+  const { datatokenAddress } = service
 
-    const tokenPrice: TokenPrice = tokenQueryResult.data.token
-    const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
-    return accessDetails
-  } catch (error) {
-    LoggerInstance.error('Error getting access details: ', error.message)
+  const accessDetails: AccessDetails = {
+    type: 'NOT_SUPPORTED',
+    price: '0',
+    addressOrId: '',
+    baseToken: {
+      address: '',
+      name: '',
+      symbol: '',
+      decimals: 0
+    },
+    datatoken: {
+      address: datatokenAddress,
+      name: await datatoken.getName(datatokenAddress),
+      symbol: await datatoken.getSymbol(datatokenAddress),
+      decimals: 0
+    },
+    paymentCollector: await datatoken.getPaymentCollector(datatokenAddress),
+    templateId: await datatoken.getId(datatokenAddress),
+    // TODO these 4 records
+    isOwned: false,
+    validOrderTx: '', // should be possible to get from ocean-node - orders collection in typesense
+    isPurchasable: true,
+    publisherMarketOrderFee: '0'
   }
+
+  // if there is at least 1 dispenser => service is free and use first dispenser
+  const dispensers = await datatoken.getDispensers(datatokenAddress)
+  if (dispensers.length > 0) {
+    return {
+      ...accessDetails,
+      type: 'free',
+      addressOrId: dispensers[0],
+      price: '0'
+    }
+  }
+
+  // if there is 0 dispensers and at least 1 fixed rate => use first fixed rate to get the price details
+  const fixedRates = await datatoken.getFixedRates(datatokenAddress)
+  if (fixedRates.length > 0) {
+    const freAddress = fixedRates[0].contractAddress
+    const exchangeId = fixedRates[0].id
+    const fre = new FixedRateExchange(freAddress, signer)
+    const exchange = await fre.getExchange(exchangeId)
+
+    return {
+      ...accessDetails,
+      type: 'fixed',
+      addressOrId: exchangeId,
+      price: exchange.fixedRate,
+      baseToken: {
+        address: exchange.baseToken,
+        name: await datatoken.getName(exchange.baseToken), // reuse the datatoken instance since it is ERC20
+        symbol: await datatoken.getSymbol(exchange.baseToken),
+        decimals: parseInt(exchange.btDecimals)
+      }
+    }
+  }
+
+  // no dispensers and no fixed rates => service doesn't have price set up
+  return accessDetails
 }
 
-export function getAvailablePrice(asset: AssetExtended): AssetPrice {
-  const price: AssetPrice = asset?.stats?.price?.value
-    ? asset?.stats?.price
-    : {
-        value: Number(asset?.accessDetails?.price),
-        tokenSymbol: asset?.accessDetails?.baseToken?.symbol,
-        tokenAddress: asset?.accessDetails?.baseToken?.address
-      }
+export function getAvailablePrice(accessDetails: AccessDetails): AssetPrice {
+  const price: AssetPrice = {
+    value: Number(accessDetails.price),
+    tokenSymbol: accessDetails.baseToken?.symbol,
+    tokenAddress: accessDetails.baseToken?.address
+  }
+
   return price
 }

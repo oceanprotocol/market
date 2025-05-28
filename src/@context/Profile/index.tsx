@@ -167,7 +167,6 @@ function ProfileProvider({
 
       const { downloadedAssets, totalResults } = await getDownloadAssets(
         dtList,
-        // tokenOrders,
         chainIds,
         cancelToken,
         ownAccount,

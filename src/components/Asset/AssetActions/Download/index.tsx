@@ -10,6 +10,7 @@ import {
   FileInfo,
   LoggerInstance,
   UserCustomParameters,
+  Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
@@ -39,9 +40,14 @@ export default function Download({
   isBalanceSufficient,
   dtBalance,
   fileIsLoading,
-  consumableFeedback
+  consumableFeedback,
+  service,
+  accessDetails
 }: {
   asset: AssetExtended
+  service?: Service
+  accessDetails?: AccessDetails
+  serviceIndex?: number
   file: FileInfo
   isBalanceSufficient: boolean
   dtBalance: string
@@ -67,7 +73,7 @@ export default function Download({
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
 
-  const price: AssetPrice = getAvailablePrice(asset)
+  const price: AssetPrice = getAvailablePrice(accessDetails)
   const isUnsupportedPricing =
     !asset?.accessDetails ||
     !asset.services.length ||
@@ -98,6 +104,8 @@ export default function Download({
 
         const _orderPriceAndFees = await getOrderPriceAndFees(
           asset,
+          service,
+          accessDetails,
           ZERO_ADDRESS
         )
         setOrderPriceAndFees(_orderPriceAndFees)

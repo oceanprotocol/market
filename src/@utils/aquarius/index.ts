@@ -1,6 +1,5 @@
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { OrdersData_orders as OrdersData } from '../../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../../app.config.cjs'
 import {
   SortDirectionOptions,
@@ -123,7 +122,7 @@ export async function queryMetadata(
 ): Promise<PagedAssets> {
   try {
     const response: AxiosResponse<SearchResponse> = await axios.post(
-      `${metadataCacheUri}/api/aquarius/assets/query`,
+      `${metadataCacheUri}/api/aquarius/assets/metadata/query`,
       { ...query },
       { cancelToken }
     )
@@ -451,7 +450,7 @@ export async function getTagsList(
 
   try {
     const response: AxiosResponse<SearchResponse> = await axios.post(
-      `${metadataCacheUri}/api/aquarius/assets/query`,
+      `${metadataCacheUri}/api/aquarius/assets/metadata/query`,
       { ...query },
       { cancelToken }
     )
