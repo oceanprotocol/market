@@ -6,8 +6,8 @@ module.exports = {
   // const { appConfig } = useMarketMetadata()
   // return appConfig.metadataCacheUri
   metadataCacheUri:
-    process.env.NEXT_PUBLIC_METADATACACHE_URI ||
-    'https://v4.aquarius.oceanprotocol.com',
+    process.env.NEXT_PUBLIC_NODE_URL ||
+    'https://1.c2d.nodes.oceanprotocol.com:8000/',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
@@ -16,7 +16,7 @@ module.exports = {
   // List of all supported chainIds. Used to populate the Chains user preferences list.
   chainIdsSupported: [1, 137, 10, 11155111],
 
-  customProviderUrl: process.env.NEXT_PUBLIC_PROVIDER_URL,
+  customProviderUrl: process.env.NEXT_PUBLIC_NODE_URL,
 
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
