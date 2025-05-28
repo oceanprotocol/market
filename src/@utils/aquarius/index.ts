@@ -1,6 +1,7 @@
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { metadataCacheUri } from '../../../app.config.cjs'
+import { metadataCacheUri, allowDynamicPricing } from '../../../app.config.cjs'
+import addressConfig from '../../../address.config.cjs'
 import {
   SortDirectionOptions,
   SortTermOptions
@@ -24,44 +25,47 @@ export function escapeEsReservedCharacters(value: string): string {
  * @param value the value of the filter
  * @returns json structure of the es filter
  */
+type TFilterValue = string | number | boolean | number[] | string[]
+type TFilterKey = 'terms' | 'term' | 'match' | 'match_phrase'
 export function getFilterTerm(
   filterField: string,
-  value: string | number | boolean | number[] | string[]
+  value: TFilterValue,
+  key: TFilterKey = 'term'
 ): FilterTerm {
   const isArray = Array.isArray(value)
+  const useKey = key === 'term' ? (isArray ? 'terms' : 'term') : key
   return {
-    [isArray ? 'terms' : 'term']: {
+    [useKey]: {
       [filterField]: value
     }
   }
 }
 
-export function generateBaseQuery(
-  baseQueryParams: BaseQueryParams
+export function getDynamicPricingMustNot(): // eslint-disable-next-line camelcase
+FilterTerm | undefined {
+  return allowDynamicPricing === 'true'
+    ? undefined
+    : getFilterTerm('stats.price.type', 'pool')
+}
+export function getWhitelistShould(): FilterTerm[] {
+  const { whitelists } = addressConfig
+
+  const whitelistFilterTerms = Object.entries(whitelists)
+    .filter(([field, whitelist]) => whitelist.length > 0)
+    .map(([field, whitelist]) =>
+      whitelist.map((address) => getFilterTerm(field, address, 'match'))
+    )
+    .reduce((prev, cur) => prev.concat(cur), [])
+
+  return whitelistFilterTerms.length > 0 ? whitelistFilterTerms : []
+}
+
+export function generateBaseQuery( // need to follow this query to fetch data from elasticsearch
+  baseQueryParams: BaseQueryParams,
+  index?: string
 ): SearchQuery {
-  const filters: unknown[] = [
-    getFilterTerm('_index', 'aquarius'),
-    getFilterTerm('services.type', 'access'),
-    getFilterTerm('metadata.type', 'dataset')
-  ]
-  baseQueryParams.filters && filters.push(...baseQueryParams.filters)
-  baseQueryParams.chainIds &&
-    filters.push(getFilterTerm('chainId', baseQueryParams.chainIds))
-  !baseQueryParams.ignorePurgatory &&
-    filters.push(getFilterTerm('purgatory.state', false))
-  !baseQueryParams.ignoreState &&
-    filters.push({
-      bool: {
-        must_not: [
-          {
-            term: {
-              'nft.state': 5
-            }
-          }
-        ]
-      }
-    })
   const generatedQuery = {
+    index: index ?? 'op_ddo_v4.1.0',
     from: baseQueryParams.esPaginationOptions?.from || 0,
     size:
       baseQueryParams.esPaginationOptions?.size >= 0
@@ -70,7 +74,23 @@ export function generateBaseQuery(
     query: {
       bool: {
         ...baseQueryParams.nestedQuery,
-        filter: filters
+        filter: [
+          ...(baseQueryParams.filters || []),
+          ...(baseQueryParams.chainIds
+            ? [getFilterTerm('chainId', baseQueryParams.chainIds)]
+            : []),
+          ...(baseQueryParams.ignorePurgatory
+            ? []
+            : [getFilterTerm('purgatory.state', false)]),
+          {
+            bool: {
+              must_not: [
+                !baseQueryParams.ignoreState && getFilterTerm('nft.state', 5),
+                getDynamicPricingMustNot()
+              ]
+            }
+          }
+        ]
       }
     }
   } as SearchQuery
@@ -79,12 +99,27 @@ export function generateBaseQuery(
     generatedQuery.aggs = baseQueryParams.aggs
   }
 
-  if (baseQueryParams.sortOptions !== undefined)
+  if (baseQueryParams.sortOptions !== undefined) {
     generatedQuery.sort = {
-      [baseQueryParams.sortOptions.sortBy]:
+      [`${baseQueryParams.sortOptions.sortBy}`]:
         baseQueryParams.sortOptions.sortDirection ||
         SortDirectionOptions.Descending
     }
+  }
+
+  // add whitelist filtering
+  if (getWhitelistShould()?.length > 0) {
+    const whitelistQuery = {
+      bool: {
+        should: [...getWhitelistShould()],
+        minimum_should_match: 1
+      }
+    }
+    Object.hasOwn(generatedQuery.query.bool, 'must')
+      ? generatedQuery.query.bool.must.push(whitelistQuery)
+      : (generatedQuery.query.bool.must = [whitelistQuery])
+  }
+
   return generatedQuery
 }
 

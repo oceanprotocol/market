@@ -17,7 +17,7 @@ module.exports = {
   chainIdsSupported: [1, 137, 10, 11155111],
 
   customProviderUrl: process.env.NEXT_PUBLIC_NODE_URL,
-
+  allowDynamicPricing: process.env.NEXT_PUBLIC_ALLOW_DYNAMIC_PRICING || 'false',
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
   defaultDatatokenTemplateIndex: 2,
