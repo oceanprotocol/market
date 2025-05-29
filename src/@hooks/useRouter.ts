@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Router as FactoryRouter } from '@oceanprotocol/lib'
+import { Router as FactoryRouter, LoggerInstance } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 import { useNetwork, useSigner } from 'wagmi'
 import { ethers } from 'ethers'
@@ -21,7 +21,9 @@ function useFactoryRouter() {
   useEffect(() => {
     if (!signer || !chain?.id) return
     const config = getOceanConfig(chain.id)
-    setFactoryRouter(new FactoryRouter(config?.routerFactoryAddress, signer))
+    setFactoryRouter(
+      new FactoryRouter(config?.routerFactoryAddress, signer, config.chainId)
+    )
   }, [signer, chain?.id])
 
   const fetchFees = async (router: FactoryRouter) => {
@@ -31,7 +33,6 @@ function useFactoryRouter() {
         router.contract.getOPCConsumeFee(),
         router.contract.getOPCProviderFee()
       ])
-
       return {
         swapOceanFee: ethers.utils.formatUnits(opcFees[0], 18),
         swapNonOceanFee: ethers.utils.formatUnits(opcFees[1], 18),
@@ -92,35 +93,38 @@ function useFactoryRouter() {
     if (factoryRouter) {
       fetchApprovedTokens()
     }
-  }, [factoryRouter, fetchTokenDetails])
-
+  }, [factoryRouter])
   const getOpcData = async (chainIds: number[]) => {
-    const validChainIds = chainIds.filter((chainId) => {
-      const config = getOceanConfig(chainId)
-      return !!config?.routerFactoryAddress
-    })
-    const opcData = await Promise.all(
-      validChainIds.map(async (chainId) => {
+    const fetchOpcData = async (chainIds: number[]) => {
+      const validChainIds = chainIds.filter((chainId) => {
         const config = getOceanConfig(chainId)
-        const factory = new FactoryRouter(config?.routerFactoryAddress, signer)
-        const fees = await fetchFees(factory)
-        const approvedTokensAddresses =
-          await factory.contract.getApprovedTokens()
-        const tokenDetails: TokenDetails[] = await Promise.all(
-          approvedTokensAddresses.map((tokenAddress) =>
-            fetchTokenDetails(tokenAddress)
-          )
-        )
-        return {
-          chainId,
-          approvedTokens: tokenDetails.map((token) => token.address),
-          swapApprovedFee: fees.swapOceanFee,
-          swapNotApprovedFee: fees.swapNonOceanFee
-        }
+        return !!config?.routerFactoryAddress
       })
-    )
+      const opcData = await Promise.all(
+        validChainIds.map(async (chainId) => {
+          const fees = await fetchFees(factoryRouter)
+          const approvedTokensAddresses =
+            await factoryRouter.contract.getApprovedTokens()
+          const tokenDetails: TokenDetails[] = await Promise.all(
+            approvedTokensAddresses.map((tokenAddress) =>
+              fetchTokenDetails(tokenAddress)
+            )
+          )
+          return {
+            chainId,
+            approvedTokens: tokenDetails.map((token) => token.address),
+            swapApprovedFee: fees.swapOceanFee,
+            swapNotApprovedFee: fees.swapNonOceanFee
+          }
+        })
+      )
 
-    return opcData as OpcFee[]
+      return opcData as OpcFee[]
+    }
+
+    if (factoryRouter) {
+      return fetchOpcData(chainIds)
+    }
   }
 
   return { approvedTokens, fees, signer, getOpcData }

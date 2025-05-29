@@ -7,19 +7,21 @@ module.exports = {
   // return appConfig.metadataCacheUri
   metadataCacheUri:
     process.env.NEXT_PUBLIC_NODE_URL ||
-    'https://1.c2d.nodes.oceanprotocol.com:8000/',
+    'https://1.c2d.nodes.oceanprotocol.com:8000',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [1, 137, 10],
+  chainIds: [11155111, 8996],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 137, 10, 11155111],
+  chainIdsSupported: [11155111, 8996],
 
   customProviderUrl: process.env.NEXT_PUBLIC_NODE_URL,
   allowDynamicPricing: process.env.NEXT_PUBLIC_ALLOW_DYNAMIC_PRICING || 'false',
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
+  defaultDatatokenCap:
+    '115792089237316195423570985008687907853269984665640564039457',
   defaultDatatokenTemplateIndex: 2,
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
