@@ -18,7 +18,7 @@ import {
   consumeMarketOrderFee,
   consumeMarketFixedSwapFee,
   customProviderUrl
-} from '../../app.config'
+} from '../../app.config.cjs'
 import { toast } from 'react-toastify'
 
 async function initializeProvider(

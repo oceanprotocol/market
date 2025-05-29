@@ -17,7 +17,7 @@ import {
   consumeMarketOrderFee,
   publisherMarketOrderFee,
   customProviderUrl
-} from '../../app.config'
+} from '../../app.config.cjs'
 import { Signer } from 'ethers'
 import { toast } from 'react-toastify'
 

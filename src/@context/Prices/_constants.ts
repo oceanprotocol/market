@@ -1,5 +1,5 @@
 import { Prices } from './_types'
-import { coingeckoTokenIds } from '../../../app.config'
+import { coingeckoTokenIds } from '../../../app.config.cjs'
 
 export const initialData: Prices = coingeckoTokenIds.map((tokenId) => ({
   [tokenId]: {

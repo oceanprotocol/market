@@ -14,7 +14,7 @@ import ContainerInput from '@shared/FormInput/InputElement/ContainerInput'
 import TagsAutoComplete from './TagsAutoComplete'
 import TabsFile from '@shared/atoms/TabsFile'
 import useDarkMode from '@oceanprotocol/use-dark-mode'
-import appConfig from '../../../../../app.config'
+import appConfig from '../../../../../app.config.cjs'
 import { extensions, oceanTheme } from '@utils/codemirror'
 import { ConsumerParameters } from './ConsumerParameters'
 

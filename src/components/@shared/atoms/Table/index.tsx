@@ -38,7 +38,7 @@ export default function Table({
       <DataTable
         columns={columns}
         data={data}
-        pagination={pagination || data?.length >= 9}
+        pagination={pagination || (data && data.length >= paginationPerPage)}
         paginationPerPage={paginationPerPage || 10}
         noDataComponent={<Empty message={emptyMessage} />}
         progressPending={isLoading}

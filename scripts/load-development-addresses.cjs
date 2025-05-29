@@ -74,3 +74,4 @@ updateEnvVariable(
   '#NEXT_PUBLIC_METADATACACHE_URI',
   '"http://127.0.0.1:5000" # only for mac'
 )
+updateEnvVariable('#NEXT_PUBLIC_ROUTER_FACTORY_ADDRESS', addresses.Router)

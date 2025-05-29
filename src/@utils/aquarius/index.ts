@@ -1,7 +1,7 @@
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../../@types/subgraph/OrdersData'
-import { metadataCacheUri } from '../../../app.config'
+import { metadataCacheUri } from '../../../app.config.cjs'
 import {
   SortDirectionOptions,
   SortTermOptions
@@ -351,43 +351,75 @@ export async function getUserSales(
   }
 }
 
+export async function getUserOrders(
+  accountId: string,
+  cancelToken: CancelToken,
+  page?: number
+): Promise<PagedAssets> {
+  const filters: FilterTerm[] = []
+  filters.push(getFilterTerm('consumer.keyword', accountId))
+  filters.push({
+    exists: {
+      field: 'datatokenAddress'
+    }
+  })
+  const baseQueryparams = {
+    filters,
+    ignorePurgatory: true,
+    esPaginationOptions: {
+      from: Number(page) - 1 || 0,
+      size: 9
+    }
+  } as BaseQueryParams
+  const query = generateBaseQuery(baseQueryparams)
+  try {
+    return queryMetadata(query, cancelToken)
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
+  }
+}
+
 export async function getDownloadAssets(
   dtList: string[],
-  tokenOrders: OrdersData[],
   chainIds: number[],
   cancelToken: CancelToken,
-  ignoreState = false
-): Promise<DownloadedAsset[]> {
+  ignoreState = false,
+  page?: number
+): Promise<{ downloadedAssets: DownloadedAsset[]; totalResults: number }> {
+  const filters: FilterTerm[] = []
+  filters.push(getFilterTerm('services.datatokenAddress.keyword', dtList))
+  filters.push(getFilterTerm('services.type', 'access'))
   const baseQueryparams = {
     chainIds,
-    filters: [
-      getFilterTerm('services.datatokenAddress', dtList),
-      getFilterTerm('services.type', 'access')
-    ],
+    filters,
     ignorePurgatory: true,
-    ignoreState
+    ignoreState,
+    esPaginationOptions: {
+      from: Number(page) - 1 || 0,
+      size: 9
+    }
   } as BaseQueryParams
   const query = generateBaseQuery(baseQueryparams)
   try {
     const result = await queryMetadata(query, cancelToken)
     const downloadedAssets: DownloadedAsset[] = result.results
       .map((asset) => {
-        const order = tokenOrders.find(
-          ({ datatoken }) =>
-            datatoken?.address.toLowerCase() ===
-            asset.services[0].datatokenAddress.toLowerCase()
-        )
+        const timestamp = new Date(asset.event.datetime).getTime()
 
         return {
           asset,
           networkId: asset.chainId,
-          dtSymbol: order?.datatoken?.symbol,
-          timestamp: order?.createdTimestamp
+          dtSymbol: asset?.datatokens[0]?.symbol,
+          timestamp
         }
       })
       .sort((a, b) => b.timestamp - a.timestamp)
 
-    return downloadedAssets
+    return { downloadedAssets, totalResults: result.totalResults }
   } catch (error) {
     if (axios.isCancel(error)) {
       LoggerInstance.log(error.message)

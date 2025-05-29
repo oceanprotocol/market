@@ -12,7 +12,7 @@ export default function Stats({
   accountId: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { assets, assetsTotal, sales } = useProfile()
+  const { assets, assetsTotal, sales, downloadsTotal } = useProfile()
 
   const [totalSales, setTotalSales] = useState(0)
 
@@ -56,6 +56,7 @@ export default function Stats({
         value={sales < 0 ? 0 : sales}
       />
       <NumberUnit label="Published" value={assetsTotal} />
+      <NumberUnit label="Downloads" value={downloadsTotal} />
     </div>
   )
 }
