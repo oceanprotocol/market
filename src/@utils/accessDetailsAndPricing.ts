@@ -19,13 +19,17 @@ import {
 import { Signer } from 'ethers'
 import { toast } from 'react-toastify'
 import { getDummySigner } from './wallet'
+// import { Service } from 'src/@types/ddo/Service'
+import AssetExtended from 'src/@types/AssetExtended'
+import { CancelToken } from 'axios'
+import { getUserOrders } from './aquarius'
 
 /**
  * This will be used to get price including fees before ordering
  * @param {AssetExtended} asset
  * @return {Promise<OrdePriceAndFee>}
  */
-export async function getOrderPriceAndFees(
+export async function getOrderPriceAndFees( // this function give price
   asset: AssetExtended,
   service: Service,
   accessDetails: AccessDetails,
@@ -47,16 +51,21 @@ export async function getOrderPriceAndFees(
   // fetch provider fee
   let initializeData
   try {
-    initializeData =
-      !providerFees &&
-      (await ProviderInstance.initialize(
-        asset.id,
-        service.id,
-        0,
-        accountId,
-        customProviderUrl || service.serviceEndpoint
-      ))
+    const initialize = await ProviderInstance.initialize(
+      asset.id,
+      service.id,
+      0,
+      accountId,
+      customProviderUrl || service.serviceEndpoint
+    )
+    initializeData = !providerFees && initialize
   } catch (error) {
+    if (error.message.includes('Unexpected token')) {
+      // toast.error(
+      //   `Use the initializeCompute endpoint to initialize compute jobs`
+      // )
+      return
+    }
     const message = getErrorMessage(error.message)
     LoggerInstance.error('[Initialize Provider] Error:', message)
 
@@ -88,7 +97,7 @@ export async function getOrderPriceAndFees(
     }
     toast.error(message)
   }
-  orderPriceAndFee.providerFee = providerFees || initializeData.providerFee
+  orderPriceAndFee.providerFee = providerFees || initializeData?.providerFee
 
   // fetch price and swap fees
   if (accessDetails.type === 'fixed') {
@@ -122,7 +131,9 @@ export async function getOrderPriceAndFees(
  */
 export async function getAccessDetails(
   chainId: number,
-  service: Service
+  service: Service,
+  accountId: string,
+  cancelToken: CancelToken
 ): Promise<AccessDetails> {
   const signer = await getDummySigner(chainId)
   const datatoken = new Datatoken(signer, chainId)
@@ -151,6 +162,41 @@ export async function getAccessDetails(
     validOrderTx: '', // should be possible to get from ocean-node - orders collection in typesense
     isPurchasable: true,
     publisherMarketOrderFee: '0'
+  }
+  try {
+    // Check for past orders
+    let allOrders: any[] = []
+    let page = 1
+    let totalPages = 1
+
+    // Fetch all orders across all pages
+    while (page <= totalPages) {
+      const res = await getUserOrders(accountId, cancelToken, page)
+      allOrders = allOrders.concat(res?.results || [])
+      const orderTotal = res?.totalPages || 0
+      totalPages = orderTotal
+      page++
+    }
+
+    const order = allOrders.find(
+      (order) =>
+        order.datatokenAddress.toLowerCase() ===
+          datatokenAddress.toLowerCase() ||
+        order.payer.toLowerCase() === datatokenAddress.toLowerCase()
+    )
+    if (order) {
+      const orderTimestamp = order.timestamp
+      const timeout = Number(service.timeout)
+      const now = Date.now()
+
+      const isValid =
+        timeout === 0 ||
+        (orderTimestamp && orderTimestamp * 1000 + timeout * 1000 > now)
+      accessDetails.isOwned = isValid
+      accessDetails.validOrderTx = isValid ? order.orderId : ''
+    }
+  } catch (err) {
+    LoggerInstance.error('[getAccessDetails] Failed to fetch user orders', err)
   }
 
   // if there is at least 1 dispenser => service is free and use first dispenser
@@ -192,9 +238,13 @@ export async function getAccessDetails(
 
 export function getAvailablePrice(accessDetails: AccessDetails): AssetPrice {
   const price: AssetPrice = {
-    value: Number(accessDetails.price),
-    tokenSymbol: accessDetails.baseToken?.symbol,
-    tokenAddress: accessDetails.baseToken?.address
+    value: accessDetails?.price ? Number(accessDetails.price) : 0,
+    tokenSymbol: accessDetails?.baseToken?.symbol || '',
+    tokenAddress: accessDetails?.baseToken?.address || ''
+  }
+
+  if (!accessDetails?.price) {
+    console.warn('Missing price in accessDetails:', accessDetails)
   }
 
   return price

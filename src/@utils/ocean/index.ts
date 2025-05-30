@@ -21,11 +21,16 @@ export function sanitizeDevelopmentConfig(config: Config): Config {
     dispenserAddress: process.env.NEXT_PUBLIC_DISPENSER_ADDRESS,
     oceanTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
     nftFactoryAddress: process.env.NEXT_PUBLIC_NFT_FACTORY_ADDRESS,
-    routerFactoryAddress: process.env.NEXT_PUBLIC_ROUTER_FACTORY_ADDRESS
+    routerFactoryAddress: process.env.NEXT_PUBLIC_ROUTER_FACTORY_ADDRESS,
+    accessListFactory: process.env.NEXT_PUBLIC_ACCESS_LIST_FACTORY_ADDRESS
   } as Config
 }
 
 export function getOceanConfig(network: string | number): Config {
+  if (!network) {
+    console.warn('getOceanConfig: called with undefined network')
+    return undefined
+  }
   let config = new ConfigHelper().getConfig(
     network,
     network === 'polygon' ||
@@ -33,8 +38,6 @@ export function getOceanConfig(network: string | number): Config {
       network === 1287 ||
       network === 'bsc' ||
       network === 56 ||
-      network === 'gaiaxtestnet' ||
-      network === 2021000 ||
       network === 8996
       ? undefined
       : process.env.NEXT_PUBLIC_INFURA_PROJECT_ID
@@ -42,6 +45,12 @@ export function getOceanConfig(network: string | number): Config {
   if (network === 8996) {
     config = { ...config, ...sanitizeDevelopmentConfig(config) }
   }
+
+  // Override RPC URL for Sepolia if it's set (the reason is ocean.js supports only infura)
+  if (network === 11155111 && process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL) {
+    config.nodeUri = process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
+  }
+
   return config as Config
 }
 
@@ -52,7 +61,7 @@ export function getDevelopmentConfig(): Config {
     // fixedRateExchangeAddress: contractAddresses.development?.FixedRateExchange,
     // metadataContractAddress: contractAddresses.development?.Metadata,
     // oceanTokenAddress: contractAddresses.development?.Ocean,
-    // There is no subgraph in barge so we hardcode the Polygon Mumbai one for now
+    // There is no subgraph in barge so we hardcode the Sepolia one for now
     subgraphUri: 'https://v4.subgraph.sepolia.oceanprotocol.com'
   } as Config
 }

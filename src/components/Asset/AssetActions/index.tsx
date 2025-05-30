@@ -151,6 +151,7 @@ export default function AssetActions({
         isBalanceSufficient={isBalanceSufficient}
         file={fileMetadata}
         fileIsLoading={fileIsLoading}
+        accessDetails={asset.accessDetails} // Ensure this is passed
       />
       <AssetStats />
     </div>
