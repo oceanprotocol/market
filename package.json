@@ -32,7 +32,7 @@
     "@loadable/component": "^5.16.4",
     "@next/third-parties": "^15.2.3",
     "@oceanprotocol/art": "^3.2.0",
-    "@oceanprotocol/lib": "^4.0.1",
+    "@oceanprotocol/lib": "^4.1.3",
     "@oceanprotocol/typographies": "^0.1.0",
     "@oceanprotocol/use-dark-mode": "^2.4.3",
     "@orbisclub/orbis-sdk": "^0.4.89",
@@ -81,6 +81,7 @@
     "slugify": "^1.6.6",
     "swr": "^1.3.0",
     "urql": "^3.0.4",
+    "use-debounce": "^9.0.4",
     "wagmi": "^0.12.19",
     "yup": "^0.32.11"
   },

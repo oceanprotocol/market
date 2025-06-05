@@ -20,6 +20,7 @@ export default function AssetActions({
 }: {
   asset: AssetExtended
 }): ReactElement {
+  // console.log('Asset in Asset Action 1! ', asset)
   const { address: accountId } = useAccount()
   const { balance } = useBalance()
   const { chain } = useNetwork()

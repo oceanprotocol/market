@@ -59,7 +59,20 @@ function MarketMetadataProvider({
 
   useEffect(() => {
     if (isLoading) return
-    setApprovedBaseTokens(approvedBaseTokens)
+
+    const oceanToken: TokenInfo = {
+      address: appConfig.oceanTokenAddress,
+      name: 'OCEAN',
+      symbol: 'OCEAN',
+      decimals: 18
+    }
+
+    setApprovedBaseTokens((prevTokens = []) => {
+      const hasOceanToken = prevTokens.some(
+        (token) => token.address === oceanToken.address
+      )
+      return hasOceanToken ? prevTokens : [...prevTokens, oceanToken]
+    })
   }, [isLoading, approvedBaseTokens])
 
   return (

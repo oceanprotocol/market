@@ -6,13 +6,12 @@ import ButtonBuy from '../ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import styles from './index.module.css'
 import {
-  AssetPrice,
   FileInfo,
   LoggerInstance,
   UserCustomParameters,
-  Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
+import { AssetPrice, Service } from '@oceanprotocol/ddo-js'
 import { order } from '@utils/order'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
@@ -82,8 +81,8 @@ export default function Download({
       !asset?.accessDetails?.baseToken?.symbol)
 
   useEffect(() => {
-    Number(asset?.nft.state) === 4 && setIsOrderDisabled(true)
-  }, [asset?.nft.state])
+    Number(asset?.indexedMetadata.nft.state) === 4 && setIsOrderDisabled(true)
+  }, [asset?.indexedMetadata.nft.state])
 
   useEffect(() => {
     if (isUnsupportedPricing) return
@@ -165,6 +164,7 @@ export default function Download({
   ])
 
   async function handleOrderOrDownload(dataParams?: UserCustomParameters) {
+    console.log('In handleOrderOrDownload!!!')
     setIsLoading(true)
     setRetry(false)
     try {

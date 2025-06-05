@@ -11,10 +11,10 @@ module.exports = {
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [11155111, 8996],
+  chainIds: [11155420, 11155111, 8996],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [11155111, 8996],
+  chainIdsSupported: [11155420, 11155111, 8996],
 
   customProviderUrl: process.env.NEXT_PUBLIC_NODE_URL,
   allowDynamicPricing: process.env.NEXT_PUBLIC_ALLOW_DYNAMIC_PRICING || 'false',
@@ -61,7 +61,7 @@ module.exports = {
 
   // Tokens to fetch the spot prices from coingecko, against above currencies.
   // Refers to Coingecko API tokenIds.
-  coingeckoTokenIds: ['ocean-protocol', 'h2o', 'ethereum', 'matic-network'],
+  coingeckoTokenIds: ['ocean-protocol', 'ethereum', 'matic-network'],
 
   // Config for https://github.com/oceanprotocol/use-dark-mode
   darkModeConfig: {

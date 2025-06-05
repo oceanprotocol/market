@@ -7,7 +7,8 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
+import { Config, LoggerInstance } from '@oceanprotocol/lib'
+import { Purgatory } from '@oceanprotocol/ddo-js'
 import { CancelToken } from 'axios'
 import { getAsset } from '@utils/aquarius'
 import { useCancelToken } from '@hooks/useCancelToken'
@@ -43,6 +44,7 @@ function AssetProvider({
   did: string
   children: ReactNode
 }): ReactElement {
+  console.log('In Asset Provider!!!!!!!!!!!!')
   const { appConfig } = useMarketMetadata()
   const { address: accountId } = useAccount()
   const { chain } = useNetwork()
@@ -79,6 +81,11 @@ function AssetProvider({
       LoggerInstance.log('[asset] Fetching asset...')
       setLoading(true)
       const asset = await getAsset(did, token)
+      console.log('DDO Asset in AssetProvider!!!!!!!!!!!!', asset)
+      console.log(
+        'DDO Asset in AssetProvider!!!!!!!!!!!!',
+        asset.indexedMetadata.nft.state
+      )
 
       if (!asset) {
         setError(
@@ -89,13 +96,16 @@ function AssetProvider({
         return
       }
 
-      if (asset.nft.state === (1 | 2 | 3)) {
+      if (asset.indexedMetadata.nft.state === (1 | 2 | 3)) {
         setTitle(
           `This asset has been set as "${assetStateToString(
-            asset.nft.state
+            asset.indexedMetadata.nft.state
           )}" by the publisher`
         )
-        setError(`\`${did}\`` + `\n\nPublisher Address: ${asset.nft.owner}`)
+        setError(
+          `\`${did}\`` +
+            `\n\nPublisher Address: ${asset.indexedMetadata.nft.owner}`
+        )
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
         return
       }
@@ -106,10 +116,10 @@ function AssetProvider({
           ...asset
         }))
         setTitle(asset.metadata?.name)
-        setOwner(asset.nft?.owner)
-        setIsInPurgatory(asset.purgatory?.state)
-        setPurgatoryData(asset.purgatory)
-        setAssetState(assetStateToString(asset.nft.state))
+        setOwner(asset.indexedMetadata.nft?.owner)
+        setIsInPurgatory(asset.indexedMetadata.purgatory?.state)
+        setPurgatoryData(asset.indexedMetadata.purgatory)
+        setAssetState(assetStateToString(asset.indexedMetadata.nft.state))
         LoggerInstance.log('[asset] Got asset', asset)
       }
 
@@ -126,10 +136,11 @@ function AssetProvider({
 
     const accessDetails = await getAccessDetails(
       asset.chainId,
-      asset.services[0]
-      // asset.services[0].timeout,
-      // accountId
+      asset.services[0],
+      accountId,
+      newCancelToken()
     )
+    console.log('access details fetched!!', accessDetails)
     setAsset((prevState) => ({
       ...prevState,
       accessDetails
@@ -196,8 +207,8 @@ function AssetProvider({
   // Set Asset State as a string
   // -----------------------------------
   useEffect(() => {
-    if (!asset?.nft) return
-    setAssetState(assetStateToString(asset.nft.state))
+    if (!asset?.indexedMetadata.nft) return
+    setAssetState(assetStateToString(asset.indexedMetadata.nft.state))
   }, [asset])
 
   return (

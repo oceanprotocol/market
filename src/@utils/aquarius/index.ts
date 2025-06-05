@@ -1,4 +1,5 @@
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
+import { Asset } from '@oceanprotocol/ddo-js'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { metadataCacheUri, allowDynamicPricing } from '../../../app.config.cjs'
 import addressConfig from '../../../address.config.cjs'
@@ -6,6 +7,7 @@ import {
   SortDirectionOptions,
   SortTermOptions
 } from '../../@types/aquarius/SearchQuery'
+import { isValidDid } from '@utils/ddo'
 
 export interface UserSales {
   id: string
@@ -81,11 +83,12 @@ export function generateBaseQuery( // need to follow this query to fetch data fr
             : []),
           ...(baseQueryParams.ignorePurgatory
             ? []
-            : [getFilterTerm('purgatory.state', false)]),
+            : [getFilterTerm('indexedMetadata.purgatory.state', false)]),
           {
             bool: {
               must_not: [
-                !baseQueryParams.ignoreState && getFilterTerm('nft.state', 5),
+                !baseQueryParams.ignoreState &&
+                  getFilterTerm('indexedMetadata.nft.state', 5),
                 getDynamicPricingMustNot()
               ]
             }
@@ -124,7 +127,7 @@ export function generateBaseQuery( // need to follow this query to fetch data fr
 }
 
 export function transformQueryResult(
-  queryResult: SearchResponse,
+  queryResult,
   from = 0,
   size = 21
 ): PagedAssets {
@@ -133,21 +136,16 @@ export function transformQueryResult(
     page: 0,
     totalPages: 0,
     totalResults: 0,
-    aggregations: []
+    aggregations: {}
   }
+  result.results = queryResult.results
 
-  result.results = (queryResult.hits.hits || []).map(
-    (hit) => hit._source as Asset
-  )
+  result.totalResults =
+    queryResult.totalResults || queryResult.results.length || 0
 
-  result.aggregations = queryResult.aggregations
-  result.totalResults = queryResult.hits.total.value
-  result.totalPages =
-    result.totalResults / size < 1
-      ? Math.floor(result.totalResults / size)
-      : Math.ceil(result.totalResults / size)
-  result.page = from ? from / size + 1 : 1
-
+  result.totalPages = Math.ceil(result.totalResults / size)
+  result.page = from ? from + 1 : 1
+  result.aggregations = queryResult.aggregations || {}
   return result
 }
 
@@ -177,13 +175,24 @@ export async function getAsset(
   cancelToken: CancelToken
 ): Promise<Asset> {
   try {
+    if (!isValidDid(did)) {
+      console.log('DID is not valid!!!!!!!!!!!!')
+      return
+    }
+
     const response: AxiosResponse<Asset> = await axios.get(
       `${metadataCacheUri}/api/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
+    console.log('Asset Being fetched from Aqurious API Response', response)
     if (!response || response.status !== 200 || !response.data) return
 
     const data = { ...response.data }
+    console.log(
+      'Asset Being fetched from Aqurious API Response Data!!!!!!',
+      data
+    )
+
     return data
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -392,20 +401,15 @@ export async function getUserOrders(
 ): Promise<PagedAssets> {
   const filters: FilterTerm[] = []
   filters.push(getFilterTerm('consumer.keyword', accountId))
-  filters.push({
-    exists: {
-      field: 'datatokenAddress'
-    }
-  })
   const baseQueryparams = {
     filters,
     ignorePurgatory: true,
     esPaginationOptions: {
-      from: Number(page) - 1 || 0,
-      size: 9
+      from: page || 0,
+      size: 1000
     }
   } as BaseQueryParams
-  const query = generateBaseQuery(baseQueryparams)
+  const query = generateBaseQuery(baseQueryparams, 'order')
   try {
     return queryMetadata(query, cancelToken)
   } catch (error) {

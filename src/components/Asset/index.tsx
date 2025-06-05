@@ -9,6 +9,8 @@ import AssetContent from './AssetContent'
 export default function AssetDetails({ uri }: { uri: string }): ReactElement {
   const router = useRouter()
   const { asset, title, error, isInPurgatory, loading } = useAsset()
+  // console.log('DDO Asset in Component Asset!!!!!!!!!!!!', asset)
+
   const [pageTitle, setPageTitle] = useState<string>()
 
   useEffect(() => {

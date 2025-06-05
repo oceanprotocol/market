@@ -1,14 +1,13 @@
 import {
-  AssetPrice,
   Datatoken,
   FixedRateExchange,
   getErrorMessage,
   LoggerInstance,
   ProviderFees,
   ProviderInstance,
-  Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
+import { AssetPrice, Service } from '@oceanprotocol/ddo-js'
 import { getFixedBuyPrice } from './ocean/fixedRateExchange'
 import Decimal from 'decimal.js'
 import {
@@ -135,9 +134,28 @@ export async function getAccessDetails(
   accountId: string,
   cancelToken: CancelToken
 ): Promise<AccessDetails> {
+  console.log('I am in get access!!!!')
   const signer = await getDummySigner(chainId)
+  console.log('I am in get access!!!! chainid', chainId)
+  console.log('I am in get access!!!! signer', signer)
+
   const datatoken = new Datatoken(signer, chainId)
+  console.log('data token', datatoken)
   const { datatokenAddress } = service
+  console.log('I am in get access!!!! datatokenAddress', datatokenAddress)
+  try {
+    const datatokenname = await datatoken.getName(datatokenAddress)
+    console.log('name!!', datatokenname)
+    const symbol = await datatoken.getSymbol(datatokenAddress)
+    console.log('symbol!!', symbol)
+
+    const paymentCollector = await datatoken.getPaymentCollector(
+      datatokenAddress
+    )
+    console.log('nampayment colleter!!', paymentCollector)
+  } catch (error: any) {
+    console.log('error!!!', error)
+  }
 
   const accessDetails: AccessDetails = {
     type: 'NOT_SUPPORTED',
@@ -163,7 +181,9 @@ export async function getAccessDetails(
     isPurchasable: true,
     publisherMarketOrderFee: '0'
   }
+  console.log('access details in getaccess!', accessDetails)
   try {
+    console.log('I am in access details !!!')
     // Check for past orders
     let allOrders: any[] = []
     let page = 1
@@ -172,6 +192,8 @@ export async function getAccessDetails(
     // Fetch all orders across all pages
     while (page <= totalPages) {
       const res = await getUserOrders(accountId, cancelToken, page)
+      console.log('I am in get access!!!! getUserOrders', res)
+
       allOrders = allOrders.concat(res?.results || [])
       const orderTotal = res?.totalPages || 0
       totalPages = orderTotal
@@ -184,6 +206,7 @@ export async function getAccessDetails(
           datatokenAddress.toLowerCase() ||
         order.payer.toLowerCase() === datatokenAddress.toLowerCase()
     )
+    console.log('I am in access details !!! order', order)
     if (order) {
       const orderTimestamp = order.timestamp
       const timeout = Number(service.timeout)
@@ -233,14 +256,17 @@ export async function getAccessDetails(
   }
 
   // no dispensers and no fixed rates => service doesn't have price set up
+  // console.log('Access Details!!', accessDetails)
   return accessDetails
 }
 
 export function getAvailablePrice(accessDetails: AccessDetails): AssetPrice {
+  console.log('Access Details!!', accessDetails)
   const price: AssetPrice = {
-    value: accessDetails?.price ? Number(accessDetails.price) : 0,
-    tokenSymbol: accessDetails?.baseToken?.symbol || '',
-    tokenAddress: accessDetails?.baseToken?.address || ''
+    type: 'fixedrate',
+    price: accessDetails?.price ? Number(accessDetails.price).toString() : '0',
+    token: accessDetails?.baseToken?.symbol || '',
+    contract: accessDetails?.baseToken?.address || ''
   }
 
   if (!accessDetails?.price) {

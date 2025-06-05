@@ -23,6 +23,7 @@ function useNftFactory(): NftFactory {
     }
 
     const factory = new NftFactory(config.nftFactoryAddress, signer)
+    console.log('nft factory address', config.nftFactoryAddress)
     setNftFactory(factory)
   }, [signer, chain?.id])
 

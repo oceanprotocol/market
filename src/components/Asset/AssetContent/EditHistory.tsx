@@ -63,7 +63,7 @@ export default function EditHistory({
 
   const [result] = useQuery({
     query: getReceipts,
-    variables: { address: asset?.nft.address.toLowerCase() },
+    variables: { address: asset?.indexedMetadata.nft.address.toLowerCase() },
     context: queryContext,
     pause: !asset || !queryContext
   })

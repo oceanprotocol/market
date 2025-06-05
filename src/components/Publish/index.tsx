@@ -16,9 +16,9 @@ import useNftFactory from '@hooks/useNftFactory'
 import {
   ProviderInstance,
   LoggerInstance,
-  DDO,
   getErrorMessage
 } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/ddo-js'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
@@ -58,6 +58,7 @@ export default function PublishPage({
     erc721Address: string
     datatokenAddress: string
   }> {
+    console.log('in create method!!!!, ')
     setFeedback((prevState) => ({
       ...prevState,
       '1': {
@@ -69,10 +70,14 @@ export default function PublishPage({
 
     try {
       const config = getOceanConfig(chain?.id)
+      console.log('in create method!!!! config!!!!! , ', config)
+
       LoggerInstance.log('[publish] using config: ', config)
 
       const { erc721Address, datatokenAddress, txHash } =
         await createTokensAndPricing(values, accountId, config, nftFactory)
+      console.log('data in publish:', erc721Address, datatokenAddress)
+      console.log('data in publish: txHash!!!!', txHash)
 
       const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
       if (!isSuccess) throw new Error('No Token created. Please try again.')
@@ -243,6 +248,7 @@ export default function PublishPage({
   // Orchestrate publishing
   // --------------------------------------------------
   async function handleSubmit(values: FormPublishData) {
+    console.log('in handleSubmit!!!!!!!!!!')
     // Syncing variables with state, enabling retry of failed steps
     let _erc721Address = erc721Address
     let _datatokenAddress = datatokenAddress
@@ -251,11 +257,20 @@ export default function PublishPage({
     let _did = did
 
     if (!_erc721Address || !_datatokenAddress) {
+      console.log(
+        'in handleSubmit (!_erc721Address || !_datatokenAddress) !!!!!!!!!!',
+        values
+      )
       const { erc721Address, datatokenAddress } = await create(values)
       _erc721Address = erc721Address
       _datatokenAddress = datatokenAddress
       setErc721Address(erc721Address)
       setDatatokenAddress(datatokenAddress)
+      console.log(
+        'in handleSubmit (!_erc721Address || !_datatokenAddress) !!!!!!!!!!',
+        erc721Address,
+        datatokenAddress
+      )
     }
 
     if (!_ddo || !_ddoEncrypted) {

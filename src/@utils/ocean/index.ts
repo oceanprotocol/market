@@ -1,4 +1,5 @@
 import { ConfigHelper, Config } from '@oceanprotocol/lib'
+// import { Config } from '@oceanprotocol/ddo-js'
 import { ethers } from 'ethers'
 import abiDatatoken from '@oceanprotocol/contracts/artifacts/contracts/templates/ERC20TemplateEnterprise.sol/ERC20TemplateEnterprise.json'
 
@@ -11,10 +12,10 @@ import abiDatatoken from '@oceanprotocol/contracts/artifacts/contracts/templates
 */
 export function sanitizeDevelopmentConfig(config: Config): Config {
   return {
-    subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI || config.subgraphUri,
-    metadataCacheUri:
-      process.env.NEXT_PUBLIC_METADATACACHE_URI || config.metadataCacheUri,
-    providerUri: process.env.NEXT_PUBLIC_PROVIDER_URL || config.providerUri,
+    // subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI || config.subgraphUri,
+    // metadataCacheUri:
+    //   process.env.NEXT_PUBLIC_METADATACACHE_URI || config.metadataCacheUri,
+    web3Provider: process.env.NEXT_PUBLIC_PROVIDER_URL || config.web3Provider,
     nodeUri: process.env.NEXT_PUBLIC_RPC_URL || config.nodeUri,
     fixedRateExchangeAddress:
       process.env.NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS,
@@ -47,8 +48,19 @@ export function getOceanConfig(network: string | number): Config {
   }
 
   // Override RPC URL for Sepolia if it's set (the reason is ocean.js supports only infura)
-  if (network === 11155111 && process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL) {
-    config.nodeUri = process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
+  if (
+    (network === 11155420 || network === 11155111) &&
+    process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
+  ) {
+    // config.nodeUri = process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
+    // config.providerUri = process.env.NEXT_PUBLIC_NODE_URL
+    // config.metadataCacheUri = process.env.NEXT_PUBLIC_NODE_URL
+    // config.subgraphUri = process.env.NEXT_PUBLIC_SUBGRAPH_URI
+
+    config.nodeUri = process.env.NEXT_PUBLIC_NODE_URL
+    config.oceanNodeUri = process.env.NEXT_PUBLIC_NODE_URL
+    //   config.metadataCacheUri = process.env.NEXT_PUBLIC_NODE_URL
+    //   config.subgraphUri = process.env.NEXT_PUBLIC_NODE_URL
   }
 
   return config as Config
@@ -62,7 +74,7 @@ export function getDevelopmentConfig(): Config {
     // metadataContractAddress: contractAddresses.development?.Metadata,
     // oceanTokenAddress: contractAddresses.development?.Ocean,
     // There is no subgraph in barge so we hardcode the Sepolia one for now
-    subgraphUri: 'https://v4.subgraph.sepolia.oceanprotocol.com'
+    // subgraphUri: 'https://v4.subgraph.sepolia.oceanprotocol.com'
   } as Config
 }
 

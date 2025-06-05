@@ -98,7 +98,7 @@ export const assets: AssetExtended[] = [
       contract: '0x866e4ED7b001f40c4067d0a37d6d401a0B13EfD6',
       datetime: '2022-10-06T23:06:11',
       from: '0x58754d9b3dbB4ddF5AC3502AcB963743b15e6398',
-      tx: '0x8af31b8dae91094f0d559fa13c51b7fcb278f9cb8525c2e7badabacf77989a7a'
+      txid: '0x8af31b8dae91094f0d559fa13c51b7fcb278f9cb8525c2e7badabacf77989a7a'
     },
     id: 'did:op:dabbcf352e9d90d4e4f44a50440b0798a1a1d90e762ab2c7edba6ab4f2129deb',
     metadata: {
@@ -1482,7 +1482,7 @@ export const assets: AssetExtended[] = [
       contract: '0x3a1deC08e0367D8eCCBa714DF23949c105B7D06B',
       datetime: '2022-10-04T02:38:59',
       from: '0x8542472a8De568cD3B09A53368C1962d8DfDBE2f',
-      tx: '0x9f717d0386598349b0e19c45f7dcf2ead5b219b25e1fc08902ebe651c48398fb'
+      txid: '0x9f717d0386598349b0e19c45f7dcf2ead5b219b25e1fc08902ebe651c48398fb'
     },
     id: 'did:op:9442a55c25e9a0fd30231089ec34e430d0325ce0d3e03ab1aa27579eb56f7570',
     metadata: {

@@ -4,8 +4,6 @@ import styles from './MetaFull.module.css'
 import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
 import { Asset, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
-import { getPaymentCollector } from '@utils/ocean'
-import { useProvider } from 'wagmi'
 import { getDummySigner } from '@utils/wallet'
 
 export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
@@ -14,15 +12,23 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
   const [paymentCollector, setPaymentCollector] = useState<string>()
 
   useEffect(() => {
-    if (!ddo) return
+    console.log('[MetaFull] full DDO:', ddo)
+
+    if (!ddo.datatokens[0]?.address) {
+      LoggerInstance.error('Datatoken address missing from DDO')
+      return
+    }
 
     async function getInitialPaymentCollector() {
       try {
         const signer = await getDummySigner(ddo.chainId)
-        const datatoken = new Datatoken(signer)
-        setPaymentCollector(
-          await datatoken.getPaymentCollector(ddo.datatokens[0].address)
-        )
+        const datatoken = new Datatoken(signer, ddo.chainId)
+        const { address } = ddo.datatokens[0]
+
+        LoggerInstance.log('[MetaFull] Using datatoken address:', address)
+
+        const collector = await datatoken.getPaymentCollector(address)
+        setPaymentCollector(collector)
       } catch (error) {
         LoggerInstance.error(
           '[MetaFull: getInitialPaymentCollector]',
@@ -30,6 +36,7 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
         )
       }
     }
+
     getInitialPaymentCollector()
   }, [ddo])
 

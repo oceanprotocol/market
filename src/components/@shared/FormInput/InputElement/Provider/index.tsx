@@ -52,7 +52,8 @@ export default function CustomProvider(props: InputProps): ReactElement {
       const providerResponse = await axios.get(field.value.url, {
         cancelToken: newCancelToken()
       })
-      const userChainId = chain?.id || 1
+      const userChainId = String(chain?.id) || 1
+      console.log('user chain id', userChainId)
       const providerChain =
         providerResponse?.data?.chainId || providerResponse?.data?.chainIds
 
@@ -60,6 +61,10 @@ export default function CustomProvider(props: InputProps): ReactElement {
         providerChain === userChainId
           ? true
           : !!(providerChain.length > 0 && providerChain.includes(userChainId))
+
+      console.log('provider url providerchain!', providerChain)
+      console.log('provider url response!', isCompatible)
+      console.log('provider url response!', isCompatible)
 
       if (!isCompatible) {
         setFieldError(

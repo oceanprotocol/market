@@ -13,6 +13,7 @@ import { getOceanConfig } from '@utils/ocean'
 let urqlClient: Client
 
 function createUrqlClient(subgraphUri: string) {
+  // for now let's keep this file
   const client = createClient({
     url: `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
     exchanges: [dedupExchange, refocusExchange(), fetchExchange]
@@ -40,17 +41,17 @@ export default function UrqlClientProvider({
   useEffect(() => {
     const oceanConfig = getOceanConfig(1)
 
-    if (!oceanConfig?.subgraphUri) {
+    if (!oceanConfig?.nodeUri) {
       LoggerInstance.error(
-        'No subgraphUri defined, preventing UrqlProvider from initialization.'
+        'No NodeURI defined, preventing UrqlProvider from initialization.'
       )
       return
     }
 
-    const newClient = createUrqlClient(oceanConfig.subgraphUri)
+    const newClient = createUrqlClient(oceanConfig.nodeUri)
     urqlClient = newClient
     setClient(newClient)
-    LoggerInstance.log(`[URQL] Client connected to ${oceanConfig.subgraphUri}`)
+    LoggerInstance.log(`[URQL] Client connected to ${oceanConfig.nodeUri}`)
   }, [])
 
   return client ? <Provider value={client}>{children}</Provider> : <></>
