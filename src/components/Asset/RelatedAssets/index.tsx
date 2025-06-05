@@ -51,7 +51,7 @@ export default function RelatedAssets(): ReactElement {
               asset.nftAddress,
               4 - tagResults.length,
               null,
-              asset.nft.owner
+              asset.indexedMetadata.nft.owner
             )
           )
 

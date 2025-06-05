@@ -141,7 +141,7 @@ export function transformQueryResult(
   result.results = queryResult.results
 
   result.totalResults =
-    queryResult.totalResults || queryResult.results.length || 0
+    queryResult?.totalResults || queryResult?.results?.length || 0
 
   result.totalPages = Math.ceil(result.totalResults / size)
   result.page = from ? from + 1 : 1
@@ -154,11 +154,13 @@ export async function queryMetadata(
   cancelToken: CancelToken
 ): Promise<PagedAssets> {
   try {
+    console.log('metadataCacheUri', metadataCacheUri)
     const response: AxiosResponse<SearchResponse> = await axios.post(
       `${metadataCacheUri}/api/aquarius/assets/metadata/query`,
       { ...query },
       { cancelToken }
     )
+    console.log('response from queryMetadata', response)
     if (!response || response.status !== 200 || !response.data) return
     return transformQueryResult(response.data, query.from, query.size)
   } catch (error) {
@@ -410,6 +412,7 @@ export async function getUserOrders(
     }
   } as BaseQueryParams
   const query = generateBaseQuery(baseQueryparams, 'order')
+  console.log('query userorder', query)
   try {
     return queryMetadata(query, cancelToken)
   } catch (error) {

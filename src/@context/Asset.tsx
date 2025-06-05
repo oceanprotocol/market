@@ -44,10 +44,10 @@ function AssetProvider({
   did: string
   children: ReactNode
 }): ReactElement {
-  console.log('In Asset Provider!!!!!!!!!!!!')
   const { appConfig } = useMarketMetadata()
   const { address: accountId } = useAccount()
   const { chain } = useNetwork()
+  console.log('chain in AssetProvider', chain)
 
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()

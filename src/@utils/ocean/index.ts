@@ -15,8 +15,9 @@ export function sanitizeDevelopmentConfig(config: Config): Config {
     // subgraphUri: process.env.NEXT_PUBLIC_SUBGRAPH_URI || config.subgraphUri,
     // metadataCacheUri:
     //   process.env.NEXT_PUBLIC_METADATACACHE_URI || config.metadataCacheUri,
-    web3Provider: process.env.NEXT_PUBLIC_PROVIDER_URL || config.web3Provider,
-    nodeUri: process.env.NEXT_PUBLIC_RPC_URL || config.nodeUri,
+    web3Provider:
+      process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL || config.web3Provider,
+    nodeUri: process.env.NEXT_PUBLIC_NODE_URL || config.nodeUri,
     fixedRateExchangeAddress:
       process.env.NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS,
     dispenserAddress: process.env.NEXT_PUBLIC_DISPENSER_ADDRESS,
@@ -57,7 +58,7 @@ export function getOceanConfig(network: string | number): Config {
     // config.metadataCacheUri = process.env.NEXT_PUBLIC_NODE_URL
     // config.subgraphUri = process.env.NEXT_PUBLIC_SUBGRAPH_URI
 
-    config.nodeUri = process.env.NEXT_PUBLIC_NODE_URL
+    config.nodeUri = process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
     config.oceanNodeUri = process.env.NEXT_PUBLIC_NODE_URL
     //   config.metadataCacheUri = process.env.NEXT_PUBLIC_NODE_URL
     //   config.subgraphUri = process.env.NEXT_PUBLIC_NODE_URL

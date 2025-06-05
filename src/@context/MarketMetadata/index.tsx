@@ -40,7 +40,7 @@ function MarketMetadataProvider({
     if (signer) {
       getData()
     }
-  }, [getOpcData, signer])
+  }, [signer])
 
   const getOpcFeeForToken = useCallback(
     (tokenAddress: string, chainId: number): string => {

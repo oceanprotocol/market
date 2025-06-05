@@ -134,16 +134,15 @@ export async function getAccessDetails(
   accountId: string,
   cancelToken: CancelToken
 ): Promise<AccessDetails> {
-  console.log('I am in get access!!!!')
+  console.log('I am in get access!!!!', chainId)
   const signer = await getDummySigner(chainId)
-  console.log('I am in get access!!!! chainid', chainId)
-  console.log('I am in get access!!!! signer', signer)
 
   const datatoken = new Datatoken(signer, chainId)
   console.log('data token', datatoken)
   const { datatokenAddress } = service
   console.log('I am in get access!!!! datatokenAddress', datatokenAddress)
   try {
+    console.log('before taking name')
     const datatokenname = await datatoken.getName(datatokenAddress)
     console.log('name!!', datatokenname)
     const symbol = await datatoken.getSymbol(datatokenAddress)
@@ -223,7 +222,9 @@ export async function getAccessDetails(
   }
 
   // if there is at least 1 dispenser => service is free and use first dispenser
+  console.log('before dispensers')
   const dispensers = await datatoken.getDispensers(datatokenAddress)
+  console.log('after dispensers', dispensers)
   if (dispensers.length > 0) {
     return {
       ...accessDetails,
@@ -234,13 +235,17 @@ export async function getAccessDetails(
   }
 
   // if there is 0 dispensers and at least 1 fixed rate => use first fixed rate to get the price details
+  console.log('before fixed rates')
   const fixedRates = await datatoken.getFixedRates(datatokenAddress)
+  console.log('after fixed rates', fixedRates)
   if (fixedRates.length > 0) {
     const freAddress = fixedRates[0].contractAddress
     const exchangeId = fixedRates[0].id
+    console.log('freAddress', freAddress)
     const fre = new FixedRateExchange(freAddress, signer)
+    console.log('fre', fre, exchangeId)
     const exchange = await fre.getExchange(exchangeId)
-
+    console.log('exchange', exchange)
     return {
       ...accessDetails,
       type: 'fixed',
