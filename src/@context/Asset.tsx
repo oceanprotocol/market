@@ -47,7 +47,6 @@ function AssetProvider({
   const { appConfig } = useMarketMetadata()
   const { address: accountId } = useAccount()
   const { chain } = useNetwork()
-  console.log('chain in AssetProvider', chain)
 
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
@@ -81,11 +80,6 @@ function AssetProvider({
       LoggerInstance.log('[asset] Fetching asset...')
       setLoading(true)
       const asset = await getAsset(did, token)
-      console.log('DDO Asset in AssetProvider!!!!!!!!!!!!', asset)
-      console.log(
-        'DDO Asset in AssetProvider!!!!!!!!!!!!',
-        asset.indexedMetadata.nft.state
-      )
 
       if (!asset) {
         setError(

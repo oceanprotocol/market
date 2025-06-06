@@ -36,6 +36,14 @@ export async function getOrderPriceAndFees( // this function give price
   signer?: Signer,
   providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
+  console.log('getOrderPriceAndFees', {
+    asset,
+    service,
+    accessDetails,
+    accountId,
+    signer,
+    providerFees
+  })
   const orderPriceAndFee = {
     price: accessDetails.price || '0',
     publisherMarketOrderFee: publisherMarketOrderFee || '0',
@@ -50,6 +58,7 @@ export async function getOrderPriceAndFees( // this function give price
   // fetch provider fee
   let initializeData
   try {
+    console.log('before initializeProvider', asset, service, accountId)
     const initialize = await ProviderInstance.initialize(
       asset.id,
       service.id,
@@ -134,27 +143,10 @@ export async function getAccessDetails(
   accountId: string,
   cancelToken: CancelToken
 ): Promise<AccessDetails> {
-  console.log('I am in get access!!!!', chainId)
   const signer = await getDummySigner(chainId)
 
   const datatoken = new Datatoken(signer, chainId)
-  console.log('data token', datatoken)
   const { datatokenAddress } = service
-  console.log('I am in get access!!!! datatokenAddress', datatokenAddress)
-  try {
-    console.log('before taking name')
-    const datatokenname = await datatoken.getName(datatokenAddress)
-    console.log('name!!', datatokenname)
-    const symbol = await datatoken.getSymbol(datatokenAddress)
-    console.log('symbol!!', symbol)
-
-    const paymentCollector = await datatoken.getPaymentCollector(
-      datatokenAddress
-    )
-    console.log('nampayment colleter!!', paymentCollector)
-  } catch (error: any) {
-    console.log('error!!!', error)
-  }
 
   const accessDetails: AccessDetails = {
     type: 'NOT_SUPPORTED',
@@ -180,9 +172,7 @@ export async function getAccessDetails(
     isPurchasable: true,
     publisherMarketOrderFee: '0'
   }
-  console.log('access details in getaccess!', accessDetails)
   try {
-    console.log('I am in access details !!!')
     // Check for past orders
     let allOrders: any[] = []
     let page = 1
@@ -191,7 +181,6 @@ export async function getAccessDetails(
     // Fetch all orders across all pages
     while (page <= totalPages) {
       const res = await getUserOrders(accountId, cancelToken, page)
-      console.log('I am in get access!!!! getUserOrders', res)
 
       allOrders = allOrders.concat(res?.results || [])
       const orderTotal = res?.totalPages || 0
@@ -205,7 +194,6 @@ export async function getAccessDetails(
           datatokenAddress.toLowerCase() ||
         order.payer.toLowerCase() === datatokenAddress.toLowerCase()
     )
-    console.log('I am in access details !!! order', order)
     if (order) {
       const orderTimestamp = order.timestamp
       const timeout = Number(service.timeout)
@@ -222,9 +210,9 @@ export async function getAccessDetails(
   }
 
   // if there is at least 1 dispenser => service is free and use first dispenser
-  console.log('before dispensers')
+  console.log('before dispensers', datatokenAddress, signer, chainId)
   const dispensers = await datatoken.getDispensers(datatokenAddress)
-  console.log('after dispensers', dispensers)
+  console.log('dispensers', dispensers)
   if (dispensers.length > 0) {
     return {
       ...accessDetails,
@@ -235,28 +223,31 @@ export async function getAccessDetails(
   }
 
   // if there is 0 dispensers and at least 1 fixed rate => use first fixed rate to get the price details
-  console.log('before fixed rates')
   const fixedRates = await datatoken.getFixedRates(datatokenAddress)
   console.log('after fixed rates', fixedRates)
   if (fixedRates.length > 0) {
-    const freAddress = fixedRates[0].contractAddress
-    const exchangeId = fixedRates[0].id
-    console.log('freAddress', freAddress)
-    const fre = new FixedRateExchange(freAddress, signer)
-    console.log('fre', fre, exchangeId)
-    const exchange = await fre.getExchange(exchangeId)
-    console.log('exchange', exchange)
-    return {
-      ...accessDetails,
-      type: 'fixed',
-      addressOrId: exchangeId,
-      price: exchange.fixedRate,
-      baseToken: {
-        address: exchange.baseToken,
-        name: await datatoken.getName(exchange.baseToken), // reuse the datatoken instance since it is ERC20
-        symbol: await datatoken.getSymbol(exchange.baseToken),
-        decimals: parseInt(exchange.btDecimals)
+    try {
+      const freAddress = fixedRates[0].contractAddress
+      const exchangeId = fixedRates[0].id
+      console.log('freAddress', freAddress, signer)
+      const fre = new FixedRateExchange(freAddress, signer, chainId)
+      console.log('fre', fre, exchangeId)
+      const exchange = await fre.getExchange(exchangeId)
+      console.log('exchange', exchange)
+      return {
+        ...accessDetails,
+        type: 'fixed',
+        addressOrId: exchangeId,
+        price: exchange.fixedRate,
+        baseToken: {
+          address: exchange.baseToken,
+          name: await datatoken.getName(exchange.baseToken), // reuse the datatoken instance since it is ERC20
+          symbol: await datatoken.getSymbol(exchange.baseToken),
+          decimals: parseInt(exchange.btDecimals)
+        }
       }
+    } catch (error) {
+      console.log('error in getAccessDetails', error)
     }
   }
 

@@ -59,7 +59,7 @@ export function getOceanConfig(network: string | number): Config {
     // config.subgraphUri = process.env.NEXT_PUBLIC_SUBGRAPH_URI
 
     config.nodeUri = process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
-    config.oceanNodeUri = process.env.NEXT_PUBLIC_NODE_URL
+    // config.oceanNodeUri = process.env.NEXT_PUBLIC_NODE_URL
     //   config.metadataCacheUri = process.env.NEXT_PUBLIC_NODE_URL
     //   config.subgraphUri = process.env.NEXT_PUBLIC_NODE_URL
   }

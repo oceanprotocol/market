@@ -238,13 +238,11 @@ export async function createTokensAndPricing(
   config: Config,
   nftFactory: NftFactory
 ) {
-  console.log('I am in create Pricing!!!!')
   const nftCreateData: NftCreateData = generateNftCreateData(
     values.metadata.nft,
     accountId,
     values.metadata.transferable
   )
-  console.log(' Creating NFT with metadata!!!!!!!!!!', nftCreateData)
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
   const ercParams: DatatokenCreateParams = {
@@ -294,13 +292,6 @@ export async function createTokensAndPricing(
         ercParams,
         freParams
       )
-
-      console.log('Data pasing nftdata !!!!!!!!', nftCreateData)
-      console.log('Data pasing ercParams !!!!!!!!', ercParams)
-      console.log('Data pasing freParams !!!!!!!!', freParams)
-
-      console.log('I am in create Pricing NFT factory result!!!!', result)
-
       const trxReceipt = await result.wait()
       const nftCreatedEvent = getEventFromTx(trxReceipt, 'NFTCreated')
       const tokenCreatedEvent = getEventFromTx(trxReceipt, 'TokenCreated')

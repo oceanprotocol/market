@@ -12,10 +12,8 @@ function useNftFactory(): NftFactory {
     if (!signer || !chain?.id) return
 
     const networkId = chain.id
-    console.log('Calling getOceanConfig with:', networkId)
 
     const config = getOceanConfig(chain.id)
-    console.log('Network Config', config)
 
     if (!config) {
       console.error(`No config found for network ${networkId}`)
@@ -23,7 +21,6 @@ function useNftFactory(): NftFactory {
     }
 
     const factory = new NftFactory(config.nftFactoryAddress, signer)
-    console.log('nft factory address', config.nftFactoryAddress)
     setNftFactory(factory)
   }, [signer, chain?.id])
 

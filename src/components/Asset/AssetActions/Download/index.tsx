@@ -100,10 +100,10 @@ export default function Download({
 
       try {
         !orderPriceAndFees && setIsPriceLoading(true)
-
+        console.log('service', asset)
         const _orderPriceAndFees = await getOrderPriceAndFees(
           asset,
-          service,
+          service || asset.services[0],
           accessDetails,
           ZERO_ADDRESS
         )

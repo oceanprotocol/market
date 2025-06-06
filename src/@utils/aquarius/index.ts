@@ -154,13 +154,12 @@ export async function queryMetadata(
   cancelToken: CancelToken
 ): Promise<PagedAssets> {
   try {
-    console.log('metadataCacheUri', metadataCacheUri)
     const response: AxiosResponse<SearchResponse> = await axios.post(
       `${metadataCacheUri}/api/aquarius/assets/metadata/query`,
       { ...query },
       { cancelToken }
     )
-    console.log('response from queryMetadata', response)
+    console.log('response', response)
     if (!response || response.status !== 200 || !response.data) return
     return transformQueryResult(response.data, query.from, query.size)
   } catch (error) {
@@ -178,7 +177,6 @@ export async function getAsset(
 ): Promise<Asset> {
   try {
     if (!isValidDid(did)) {
-      console.log('DID is not valid!!!!!!!!!!!!')
       return
     }
 
@@ -186,14 +184,9 @@ export async function getAsset(
       `${metadataCacheUri}/api/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
-    console.log('Asset Being fetched from Aqurious API Response', response)
     if (!response || response.status !== 200 || !response.data) return
 
     const data = { ...response.data }
-    console.log(
-      'Asset Being fetched from Aqurious API Response Data!!!!!!',
-      data
-    )
 
     return data
   } catch (error) {

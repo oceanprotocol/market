@@ -53,7 +53,6 @@ export default function CustomProvider(props: InputProps): ReactElement {
         cancelToken: newCancelToken()
       })
       const userChainId = String(chain?.id) || 1
-      console.log('user chain id', userChainId)
       const providerChain =
         providerResponse?.data?.chainId || providerResponse?.data?.chainIds
 
@@ -61,10 +60,6 @@ export default function CustomProvider(props: InputProps): ReactElement {
         providerChain === userChainId
           ? true
           : !!(providerChain.length > 0 && providerChain.includes(userChainId))
-
-      console.log('provider url providerchain!', providerChain)
-      console.log('provider url response!', isCompatible)
-      console.log('provider url response!', isCompatible)
 
       if (!isCompatible) {
         setFieldError(

@@ -163,10 +163,17 @@ export async function getFileInfo(
         method
       }
       try {
+        console.log(
+          'before getFileInfo',
+          fileUrl,
+          customProviderUrl,
+          providerUrl
+        )
         response = await ProviderInstance.getFileInfo(
           fileUrl,
           customProviderUrl || providerUrl
         )
+        console.log('response from getFileInfo', response)
       } catch (error) {
         const message = getErrorMessage(error.message)
         LoggerInstance.error('[Provider Get File info] Error:', message)
