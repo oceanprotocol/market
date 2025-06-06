@@ -3,8 +3,9 @@ export enum SortDirectionOptions {
   Descending = 'desc'
 }
 
+// todo update this
 export enum SortTermOptions {
-  Created = 'nft.created',
+  Created = 'indexerMetadata.nft.created',
   Relevance = '_score',
   Orders = 'stats.orders',
   Allocated = 'stats.allocated',

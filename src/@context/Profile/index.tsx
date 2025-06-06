@@ -8,7 +8,7 @@ import React, {
   ReactNode
 } from 'react'
 import { useUserPreferences } from '../UserPreferences'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import {
   getDownloadAssets,
   getPublishedAssets,
@@ -19,6 +19,7 @@ import axios, { CancelToken } from 'axios'
 import { useMarketMetadata } from '../MarketMetadata'
 import { getEnsProfile } from '@utils/ens'
 import { isAddress } from 'ethers/lib/utils'
+import { Asset } from '@oceanprotocol/ddo-js'
 
 interface ProfileProviderValue {
   profile: Profile
