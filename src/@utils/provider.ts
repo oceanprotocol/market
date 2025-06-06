@@ -46,6 +46,7 @@ export async function getFileDidInfo(
   withChecksum = false
 ): Promise<FileInfo[]> {
   try {
+    console.log('here in getFileDidInfo', did, serviceId, providerUrl)
     const response = await ProviderInstance.checkDidFiles(
       did,
       serviceId,

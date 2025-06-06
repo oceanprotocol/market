@@ -53,6 +53,7 @@ export default function Download({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
+  console.log('asset', asset)
   const { address: accountId, isConnected } = useAccount()
   const { data: signer } = useSigner()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
@@ -81,8 +82,8 @@ export default function Download({
       !asset?.accessDetails?.baseToken?.symbol)
 
   useEffect(() => {
-    Number(asset?.indexedMetadata.nft.state) === 4 && setIsOrderDisabled(true)
-  }, [asset?.indexedMetadata.nft.state])
+    Number(asset?.indexedMetadata?.nft.state) === 4 && setIsOrderDisabled(true)
+  }, [asset?.indexedMetadata?.nft.state])
 
   useEffect(() => {
     if (isUnsupportedPricing) return
@@ -216,7 +217,7 @@ export default function Download({
       hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
       btSymbol={asset?.accessDetails?.baseToken?.symbol}
-      dtSymbol={asset?.indexedMetadata.stats[0]?.datatokenAddress}
+      dtSymbol={asset?.indexedMetadata?.stats[0]?.datatokenAddress}
       dtBalance={dtBalance}
       type="submit"
       assetTimeout={secondsToString(asset?.services?.[0]?.timeout)}
