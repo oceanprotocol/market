@@ -5,11 +5,11 @@ export enum SortDirectionOptions {
 
 // todo update this
 export enum SortTermOptions {
-  Created = 'indexerMetadata.nft.created',
+  Created = 'indexedMetadata.nft.created',
   Relevance = '_score',
-  Orders = 'stats.orders',
-  Allocated = 'stats.allocated',
-  Price = 'stats.price.value'
+  Orders = 'indexedMetadata.stats[0].orders',
+  Allocated = 'indexedMetadata.stats[0].allocated',
+  Price = 'indexedMetadata.stats[0].prices[0].price'
 }
 
 // Note: could not figure out how to get `enum` to be ambiant
@@ -40,7 +40,7 @@ declare global {
   type Filters = FilterByTypeOptions | FilterByAccessOptions
 
   interface SearchQuery {
-    index?: string
+    // index?: string
     from?: number
     size?: number
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

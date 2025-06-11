@@ -59,7 +59,10 @@ export default function HomePage(): ReactElement {
         title="Recently Published"
         query={queryLatest}
         action={
-          <Button style="text" to="/search?sort=nft.created&sortOrder=desc">
+          <Button
+            style="text"
+            to="/search?sort=indexedMetadata.nft.created&sortOrder=desc"
+          >
             All datasets →
           </Button>
         }

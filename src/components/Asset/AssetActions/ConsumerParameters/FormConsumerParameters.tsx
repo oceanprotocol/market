@@ -3,7 +3,8 @@ import Input from '@shared/FormInput'
 import Label from '@shared/FormInput/Label'
 import { Field, useField } from 'formik'
 import styles from './FormConsumerParameters.module.css'
-import { ConsumerParameter, UserCustomParameters } from '@oceanprotocol/lib'
+import { UserCustomParameters } from '@oceanprotocol/lib'
+import { ConsumerParameter } from '@oceanprotocol/ddo-js'
 
 export function getDefaultValues(
   parameters: ConsumerParameter[]

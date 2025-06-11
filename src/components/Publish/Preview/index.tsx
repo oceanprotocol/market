@@ -10,6 +10,9 @@ export default function Preview(): ReactElement {
   const [asset, setAsset] = useState<AssetExtended>()
   const { values } = useFormikContext<FormPublishData>()
 
+  console.log('Values... ', values)
+  console.log('Asset..', asset)
+
   useEffect(() => {
     async function makeDdo() {
       const asset = (await transformPublishFormToDdo(values)) as AssetExtended
@@ -34,13 +37,23 @@ export default function Preview(): ReactElement {
         validOrderTx: '',
         publisherMarketOrderFee: '0'
       }
-      asset.stats = {
+      asset.indexedMetadata.stats[0] = {
+        datatokenAddress: '0', // replace with actual value
+        name: values.metadata.name, // replace with actual value
+        symbol: values.pricing?.baseToken?.symbol || 'OCEAN', // adjust as needed
+        serviceId: '0',
         orders: null,
-        price: {
-          value: values.pricing.type === 'free' ? 0 : values.pricing.price,
-          tokenSymbol: values.pricing?.baseToken?.symbol || 'OCEAN',
-          tokenAddress: ZERO_ADDRESS
-        }
+        prices: [
+          {
+            type: 'dispenser',
+            price:
+              values.pricing.type === 'free'
+                ? '0'
+                : values.pricing.price.toString(),
+            token: values.pricing?.baseToken?.symbol || 'OCEAN',
+            contract: ZERO_ADDRESS
+          }
+        ]
       }
       setAsset(asset)
     }

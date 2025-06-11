@@ -16,10 +16,12 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
+  // console.log('Synbol,,,, In price', symbol)
+  console.log('Synbol,,,,', price.token)
   if (!price && !orderPriceAndFees) return
   return (
     <PriceUnit
-      price={Number(orderPriceAndFees?.price) || Number(price?.price) || 0}
+      price={Number(price?.price) || Number(price?.price) || 0}
       symbol={price?.token}
       className={className}
       size={size}

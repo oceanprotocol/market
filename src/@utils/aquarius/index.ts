@@ -102,11 +102,13 @@ export function generateBaseQuery( // need to follow this query to fetch data fr
     generatedQuery.aggs = baseQueryParams.aggs
   }
 
-  if (baseQueryParams.sortOptions !== undefined) {
+  if (
+    baseQueryParams.sortOptions?.sortBy !== undefined &&
+    baseQueryParams.sortOptions?.sortDirection !== undefined
+  ) {
     generatedQuery.sort = {
-      [`${baseQueryParams.sortOptions.sortBy}`]:
-        baseQueryParams.sortOptions.sortDirection ||
-        SortDirectionOptions.Descending
+      [baseQueryParams.sortOptions.sortBy]:
+        baseQueryParams.sortOptions.sortDirection
     }
   }
 
@@ -127,25 +129,23 @@ export function generateBaseQuery( // need to follow this query to fetch data fr
 }
 
 export function transformQueryResult(
-  queryResult,
+  queryResult: any,
   from = 0,
   size = 21
 ): PagedAssets {
+  const rawResults = queryResult[0] || []
+  const aggregations = queryResult[1] || {}
+
+  const pagedResults = rawResults.slice(from, from + size)
+
   const result: PagedAssets = {
-    results: [],
-    page: 0,
-    totalPages: 0,
-    totalResults: 0,
-    aggregations: {}
+    results: pagedResults,
+    page: from ? Math.floor(from / size) + 1 : 1,
+    totalPages: Math.ceil(rawResults.length / size),
+    totalResults: rawResults.length,
+    aggregations
   }
-  result.results = queryResult.results
 
-  result.totalResults =
-    queryResult?.totalResults || queryResult?.results?.length || 0
-
-  result.totalPages = Math.ceil(result.totalResults / size)
-  result.page = from ? from + 1 : 1
-  result.aggregations = queryResult.aggregations || {}
   return result
 }
 
@@ -159,8 +159,18 @@ export async function queryMetadata(
       { ...query },
       { cancelToken }
     )
-    console.log('response', response)
-    if (!response || response.status !== 200 || !response.data) return
+    console.log('response of the datas!!!', response)
+    console.log('response of the datas in data array!!!', response.data[0])
+
+    if (!response || response.status !== 200 || !response.data[0]) return
+    const transformedResult = transformQueryResult(
+      response.data,
+      query.from,
+      query.size
+    )
+    console.log('Query form', query.from)
+    console.log('Query size', query.size)
+    console.log('Transformed Result!', transformedResult)
     return transformQueryResult(response.data, query.from, query.size)
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -259,8 +269,10 @@ export async function getPublishedAssets(
 
   const filters: FilterTerm[] = []
 
-  filters.push(getFilterTerm('nft.state', [0, 4, 5]))
-  filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
+  filters.push(getFilterTerm('indexedMetadata.nft.state', [0, 4, 5]))
+  filters.push(
+    getFilterTerm('indexedMetadata.nft.owner', accountId.toLowerCase())
+  )
   // filters.push(getFilterTerm('services.type', 'access'))
   // filters.push(getFilterTerm('metadata.type', 'dataset'))
 
@@ -323,7 +335,7 @@ async function getTopPublishers(
     aggs: {
       topPublishers: {
         terms: {
-          field: 'nft.owner.keyword',
+          field: 'indexedMetadata.nft.owner.keyword',
           order: { totalSales: 'desc' }
         },
         aggs: {
@@ -382,6 +394,7 @@ export async function getUserSales(
 ): Promise<number> {
   try {
     const result = await getPublishedAssets(accountId, chainIds, null)
+    console.log('Get user published', result)
     const { totalOrders } = result.aggregations
     return totalOrders.value
   } catch (error) {

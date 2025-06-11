@@ -103,19 +103,48 @@ function AssetProvider({
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
         return
       }
-      if (asset) {
-        setError(undefined)
-        setAsset((prevState) => ({
-          ...prevState,
-          ...asset
-        }))
-        setTitle(asset.metadata?.name)
-        setOwner(asset.indexedMetadata.nft?.owner)
-        setIsInPurgatory(asset.indexedMetadata.purgatory?.state)
-        setPurgatoryData(asset.indexedMetadata.purgatory)
-        setAssetState(assetStateToString(asset.indexedMetadata.nft.state))
-        LoggerInstance.log('[asset] Got asset', asset)
+
+      let accessDetails: AccessDetails | undefined
+      // const services = asset?.services
+      const chainId = asset?.chainId
+
+      if (chainId) {
+        try {
+          const accessDetails = await getAccessDetails(
+            asset.chainId,
+            asset.services[0],
+            accountId,
+            newCancelToken()
+          )
+          console.log('access details fetched!!', accessDetails)
+          setAsset((prevState) => ({
+            ...prevState,
+            accessDetails
+          }))
+          LoggerInstance.log(
+            `[asset] Got access details for ${did}`,
+            accessDetails
+          )
+        } catch (err) {
+          LoggerInstance.error(
+            `[asset] Error fetching access details for ${did}`,
+            err
+          )
+        }
       }
+
+      setError(undefined)
+      setAsset((prevState) => ({
+        ...prevState,
+        ...asset,
+        accessDetails
+      }))
+      setTitle(asset.metadata?.name)
+      setOwner(asset.indexedMetadata.nft?.owner)
+      setIsInPurgatory(asset.indexedMetadata.purgatory?.state)
+      setPurgatoryData(asset.indexedMetadata.purgatory)
+      setAssetState(assetStateToString(asset.indexedMetadata.nft.state))
+      LoggerInstance.log('[asset] Got asset', asset)
 
       setLoading(false)
     },

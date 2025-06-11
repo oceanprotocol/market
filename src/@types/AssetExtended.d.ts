@@ -8,6 +8,6 @@ declare global {
     views?: number
     // indexedMetadata?: any
     event?: Event
-    // datatokens: Datatoken[]
+    datatokens?: Datatoken[]
   }
 }

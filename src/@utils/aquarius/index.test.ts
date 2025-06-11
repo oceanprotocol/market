@@ -11,12 +11,11 @@ import {
 
 const defaultBaseQueryReturn: SearchQuery = {
   from: 0,
-  index: 'op_ddo_v4.1.0',
   query: {
     bool: {
       filter: [
         { terms: { chainId: [1, 3] } },
-        // { term: { _index: 'aquarius' } },
+        { term: { _index: 'aquarius' } },
         { term: { 'purgatory.state': false } },
         {
           bool: {
@@ -89,7 +88,7 @@ describe('@utils/aquarius', () => {
     ).toStrictEqual({
       ...defaultBaseQueryReturn,
       sort: {
-        'nft.created': 'asc'
+        'indexedMetadata.nft.created': 'asc'
       }
     })
   })

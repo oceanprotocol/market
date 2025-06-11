@@ -59,7 +59,7 @@ export function getSearchQuery(
         : '**'
     const searchFields = [
       'id',
-      'nft.owner',
+      'indexedMetadata.nft.owner',
       'datatokens.address',
       'datatokens.name',
       'datatokens.symbol',

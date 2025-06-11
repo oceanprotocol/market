@@ -1,6 +1,6 @@
 module.exports = {
   whitelists: {
-    'nft.owner': [],
+    'indexedMetadata.nft.owner': [],
     'datatokens.address': []
   },
   featured: [
