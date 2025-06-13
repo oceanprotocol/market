@@ -166,13 +166,20 @@ function ProfileProvider({
         dtList.push(orders.results[i].datatokenAddress)
       }
 
-      const { downloadedAssets, totalResults } = await getDownloadAssets(
+      const result = await getDownloadAssets(
         dtList,
         chainIds,
         cancelToken,
         ownAccount,
         page
       )
+
+      if (!result) {
+        LoggerInstance.error('getDownloadAssets returned undefined')
+        return
+      }
+
+      const { downloadedAssets, totalResults } = result
       setDownloads(downloadedAssets)
       setDownloadsTotal(totalResults)
       LoggerInstance.log(

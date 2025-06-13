@@ -6,8 +6,6 @@ declare global {
   interface AssetExtended extends Asset {
     accessDetails?: AccessDetails
     views?: number
-    // indexedMetadata?: any
-    event?: Event
     datatokens?: Datatoken[]
   }
 }

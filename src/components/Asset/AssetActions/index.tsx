@@ -107,9 +107,10 @@ export default function AssetActions({
       try {
         const datatokenInstance = new Datatoken(web3Provider as any)
         const dtBalance = await datatokenInstance.balance(
-          asset.services[0].datatokenAddress,
+          asset.accessDetails?.baseToken.address,
           accountId
         )
+        console.log('DT Balance! ', dtBalance)
         setDtBalance(dtBalance)
       } catch (e) {
         LoggerInstance.error(e.message)

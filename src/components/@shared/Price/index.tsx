@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import { AssetPrice } from '@oceanprotocol/ddo-js'
 import PriceUnit from './PriceUnit'
+import { getOceanConfig } from '@utils/ocean'
 
 export default function Price({
   price,
@@ -16,13 +17,16 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
+  const oceanConfig = getOceanConfig(11155111)
+  const symbol = oceanConfig.oceanTokenSymbol
+
   // console.log('Synbol,,,, In price', symbol)
   console.log('Synbol,,,,', price.token)
   if (!price && !orderPriceAndFees) return
   return (
     <PriceUnit
       price={Number(price?.price) || Number(price?.price) || 0}
-      symbol={price?.token}
+      symbol={symbol}
       className={className}
       size={size}
       conversion={conversion}

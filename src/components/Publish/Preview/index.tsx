@@ -17,44 +17,6 @@ export default function Preview(): ReactElement {
     async function makeDdo() {
       const asset = (await transformPublishFormToDdo(values)) as AssetExtended
       // dummy BestPrice to trigger certain AssetActions
-      asset.accessDetails = {
-        type: values.pricing.type,
-        addressOrId: ZERO_ADDRESS,
-        templateId: 1,
-        price: `${values.pricing.price}`,
-        baseToken: {
-          address: ZERO_ADDRESS,
-          name: values.pricing?.baseToken?.symbol || 'OCEAN',
-          symbol: values.pricing?.baseToken?.symbol || 'OCEAN'
-        },
-        datatoken: {
-          address: ZERO_ADDRESS,
-          name: '',
-          symbol: ''
-        },
-        isPurchasable: true,
-        isOwned: false,
-        validOrderTx: '',
-        publisherMarketOrderFee: '0'
-      }
-      asset.indexedMetadata.stats[0] = {
-        datatokenAddress: '0', // replace with actual value
-        name: values.metadata.name, // replace with actual value
-        symbol: values.pricing?.baseToken?.symbol || 'OCEAN', // adjust as needed
-        serviceId: '0',
-        orders: null,
-        prices: [
-          {
-            type: 'dispenser',
-            price:
-              values.pricing.type === 'free'
-                ? '0'
-                : values.pricing.price.toString(),
-            token: values.pricing?.baseToken?.symbol || 'OCEAN',
-            contract: ZERO_ADDRESS
-          }
-        ]
-      }
       setAsset(asset)
     }
     makeDdo()

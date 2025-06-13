@@ -42,6 +42,8 @@ export default function Details(): ReactElement {
         address: oceanConfig.oceanTokenAddress,
         symbol: oceanConfig.oceanTokenSymbol
       })
+    console.log('ocean token address, ', oceanConfig.oceanTokenAddress)
+    console.log('ocean token address, ', oceanConfig.oceanTokenSymbol)
   }, [networkData, chain?.id])
 
   return (

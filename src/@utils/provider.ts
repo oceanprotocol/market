@@ -1,7 +1,5 @@
 import {
   Arweave,
-  GraphqlQuery,
-  Smartcontract,
   downloadFileBrowser,
   FileInfo,
   Ipfs,
@@ -70,7 +68,8 @@ export async function getFileInfo(
   headers?: KeyValuePair[],
   abi?: string,
   chainId?: number,
-  method?: string
+  method?: string,
+  withChecksum = false
 ): Promise<FileInfo[]> {
   let response
   const headersProvider = {}
@@ -90,7 +89,8 @@ export async function getFileInfo(
       try {
         response = await ProviderInstance.getFileInfo(
           fileIPFS,
-          customProviderUrl || providerUrl
+          customProviderUrl || providerUrl,
+          withChecksum
         )
       } catch (error) {
         const message = getErrorMessage(error.message)
@@ -107,46 +107,8 @@ export async function getFileInfo(
       try {
         response = await ProviderInstance.getFileInfo(
           fileArweave,
-          customProviderUrl || providerUrl
-        )
-      } catch (error) {
-        const message = getErrorMessage(error.message)
-        LoggerInstance.error('[Provider Get File info] Error:', message)
-        toast.error(message)
-      }
-      break
-    }
-    case 'graphql': {
-      const fileGraphql: GraphqlQuery = {
-        type: storageType,
-        url: file,
-        headers: headersProvider,
-        query
-      }
-      try {
-        response = await ProviderInstance.getFileInfo(
-          fileGraphql,
-          customProviderUrl || providerUrl
-        )
-      } catch (error) {
-        const message = getErrorMessage(error.message)
-        LoggerInstance.error('[Provider Get File info] Error:', message)
-        toast.error(message)
-      }
-      break
-    }
-    case 'smartcontract': {
-      // clean obj
-      const fileSmartContract: Smartcontract = {
-        chainId,
-        type: storageType,
-        address: file,
-        abi: JSON.parse(abi) as AbiItem
-      }
-      try {
-        response = await ProviderInstance.getFileInfo(
-          fileSmartContract,
-          customProviderUrl || providerUrl
+          customProviderUrl || providerUrl,
+          withChecksum
         )
       } catch (error) {
         const message = getErrorMessage(error.message)
@@ -164,17 +126,11 @@ export async function getFileInfo(
         method
       }
       try {
-        console.log(
-          'before getFileInfo',
-          fileUrl,
-          customProviderUrl,
-          providerUrl
-        )
         response = await ProviderInstance.getFileInfo(
           fileUrl,
-          customProviderUrl || providerUrl
+          customProviderUrl || providerUrl,
+          withChecksum
         )
-        console.log('response from getFileInfo', response)
       } catch (error) {
         const message = getErrorMessage(error.message)
         LoggerInstance.error('[Provider Get File info] Error:', message)
@@ -190,10 +146,18 @@ export async function downloadFile(
   signer: Signer,
   asset: AssetExtended,
   accountId: string,
+  // verifierSessionId: string,
   validOrderTx?: string,
   userCustomParameters?: UserCustomParameters
 ) {
   let downloadUrl
+  console.log(
+    'access details in id in download ',
+    asset.accessDetails.validOrderTx,
+    ' ',
+    validOrderTx
+  )
+  console.log('asset id ', asset.id)
   try {
     downloadUrl = await ProviderInstance.getDownloadUrl(
       asset.id,
@@ -204,6 +168,7 @@ export async function downloadFile(
       signer,
       userCustomParameters
     )
+    console.log('Download URL: ', downloadUrl)
   } catch (error) {
     const message = getErrorMessage(error.message)
     LoggerInstance.error('[Provider Get download url] Error:', message)

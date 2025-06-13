@@ -455,7 +455,9 @@ export async function getDownloadAssets(
     const result = await queryMetadata(query, cancelToken)
     const downloadedAssets: DownloadedAsset[] = result.results
       .map((asset) => {
-        const timestamp = new Date(asset.event.datetime).getTime()
+        const timestamp = new Date(
+          asset?.indexedMetadata?.event?.datetime
+        ).getTime()
 
         return {
           asset,

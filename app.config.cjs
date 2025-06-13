@@ -7,7 +7,7 @@ module.exports = {
   // return appConfig.metadataCacheUri
   metadataCacheUri:
     process.env.NEXT_PUBLIC_NODE_URL ||
-    'https://1.c2d.nodes.oceanprotocol.com:8000',
+    'https://2.c2d.nodes.oceanprotocol.com:8000',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
