@@ -1,4 +1,4 @@
-import { Metadata, Service } from '@oceanprotocol/lib'
+import { Metadata, Service } from '@oceanprotocol/ddo-js'
 import { parseConsumerParameters, secondsToString } from '@utils/ddo'
 import { MetadataEditForm } from './_types'
 

@@ -101,21 +101,28 @@ export default function AssetActions({
 
   // Get and set user DT balance
   useEffect(() => {
-    if (!web3Provider || !accountId || !isAssetNetwork) return
+    const isReady =
+      web3Provider &&
+      accountId &&
+      asset?.accessDetails?.baseToken?.address &&
+      isAssetNetwork
+
+    if (!isReady) return
 
     async function init() {
       try {
         const datatokenInstance = new Datatoken(web3Provider as any)
         const dtBalance = await datatokenInstance.balance(
-          asset.accessDetails?.baseToken.address,
+          asset.accessDetails.baseToken.address,
           accountId
         )
-        console.log('DT Balance! ', dtBalance)
+        console.log('DT Balance!', dtBalance)
         setDtBalance(dtBalance)
-      } catch (e) {
-        LoggerInstance.error(e.message)
+      } catch (e: any) {
+        LoggerInstance.error('[DT Balance Error]', e.message || e)
       }
     }
+
     init()
   }, [web3Provider, accountId, asset, isAssetNetwork])
 

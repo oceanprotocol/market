@@ -15,13 +15,13 @@ export const getSupportedChains = (chainIdsSupported: number[]): Chain[] => {
   const chains = supportedChains.map((chain) => {
     if (
       (chain.id === 11155111 || chain.id === 11155420) &&
-      process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
+      process.env.NEXT_PUBLIC_NODE_URI
     ) {
       return {
         ...chain,
         rpcUrls: {
-          public: { http: [process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL] },
-          default: { http: [process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL] }
+          public: { http: [process.env.NEXT_PUBLIC_NODE_URI] },
+          default: { http: [process.env.NEXT_PUBLIC_NODE_URI] }
         }
       }
     }

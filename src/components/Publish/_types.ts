@@ -1,4 +1,5 @@
-import { FileInfo, ServiceComputeOptions } from '@oceanprotocol/lib'
+import { FileInfo } from '@oceanprotocol/lib'
+import { ServiceComputeOptions } from '@oceanprotocol/ddo-js'
 import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
 export interface FormPublishService {

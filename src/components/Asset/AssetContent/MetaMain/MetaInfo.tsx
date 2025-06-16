@@ -12,7 +12,7 @@ export default function MetaInfo({
   nftPublisher: string
 }): ReactElement {
   const accessType = 'access'
-  const nftOwner = asset?.nft?.owner
+  const nftOwner = asset?.indexedMetadata?.nft?.owner
 
   return (
     <div className={styles.wrapper}>

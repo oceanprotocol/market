@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 import { getUserCustomParameterValidationSchema } from '../ConsumerParameters/_validation'
-import { ConsumerParameter } from '@oceanprotocol/lib'
+import { ConsumerParameter } from '@oceanprotocol/ddo-js'
 
 export function getDownloadValidationSchema(
   parameters: ConsumerParameter[]

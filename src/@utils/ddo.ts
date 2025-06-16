@@ -3,18 +3,8 @@ import {
   FormConsumerParameter,
   FormPublishData
 } from '@components/Publish/_types'
-import {
-  Arweave,
-  Asset,
-  ConsumerParameter,
-  DDO,
-  FileInfo,
-  GraphqlQuery,
-  Ipfs,
-  Service,
-  Smartcontract,
-  UrlFile
-} from '@oceanprotocol/lib'
+import { Arweave, FileInfo, Ipfs, UrlFile } from '@oceanprotocol/lib'
+import { Asset, ConsumerParameter, DDO, Service } from '@oceanprotocol/ddo-js'
 import { checkJson } from './codemirror'
 
 export function isValidDid(did: string): boolean {
@@ -129,27 +119,27 @@ export function normalizeFile(
       } as Arweave
       break
     }
-    case 'graphql': {
-      fileObj = {
-        type: storageType,
-        url: file[0]?.url || file?.url,
-        query: file[0]?.query || file?.query,
-        headers: headersProvider
-      } as GraphqlQuery
-      break
-    }
-    case 'smartcontract': {
-      // clean obj
-      fileObj = {
-        chainId,
-        type: storageType,
-        address: file[0]?.address || file?.address || file[0]?.url || file?.url,
-        abi: checkJson(file[0]?.abi || file?.abi)
-          ? JSON.parse(file[0]?.abi || file?.abi)
-          : file[0]?.abi || file?.abi
-      } as Smartcontract
-      break
-    }
+    // case 'graphql': {
+    //   fileObj = {
+    //     type: storageType,
+    //     url: file[0]?.url || file?.url,
+    //     query: file[0]?.query || file?.query,
+    //     headers: headersProvider
+    //   } as GraphqlQuery
+    //   break
+    // }
+    // case 'smartcontract': {
+    //   // clean obj
+    //   fileObj = {
+    //     chainId,
+    //     type: storageType,
+    //     address: file[0]?.address || file?.address || file[0]?.url || file?.url,
+    //     abi: checkJson(file[0]?.abi || file?.abi)
+    //       ? JSON.parse(file[0]?.abi || file?.abi)
+    //       : file[0]?.abi || file?.abi
+    //   } as Smartcontract
+    //   break
+    // }
     default: {
       fileObj = {
         type: 'url',
