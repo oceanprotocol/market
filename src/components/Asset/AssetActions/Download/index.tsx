@@ -286,6 +286,7 @@ export default function Download({
           values?.dataServiceParams,
           asset.services[0].consumerParameters
         )
+        console.log('Dataservice params  ', dataServiceParams)
 
         await handleOrderOrDownload(dataServiceParams)
       }}

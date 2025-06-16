@@ -159,17 +159,26 @@ export async function downloadFile(
   )
   console.log('asset id ', asset.id)
   try {
+    console.log('assset   ', asset)
+    console.log('user parameters ', userCustomParameters)
+    userCustomParameters = undefined
+    console.log('user parameters 1', userCustomParameters)
+    console.log('customProviderUrl ', customProviderUrl)
+    console.log('validOrderTx ', validOrderTx)
+    console.log('signer ', signer)
+
+    // console.log('service, ', asset)
     downloadUrl = await ProviderInstance.getDownloadUrl(
       asset.id,
       asset.services[0].id,
       0,
-      validOrderTx || asset.accessDetails.validOrderTx,
-      customProviderUrl || asset.services[0].serviceEndpoint,
-      signer,
-      userCustomParameters
+      asset.accessDetails.validOrderTx,
+      asset.services[0].serviceEndpoint,
+      signer
     )
     console.log('Download URL: ', downloadUrl)
   } catch (error) {
+    console.log('Error ', error)
     const message = getErrorMessage(error.message)
     LoggerInstance.error('[Provider Get download url] Error:', message)
     toast.error(message)
