@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useField, useFormikContext } from 'formik'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
@@ -16,6 +16,7 @@ import axios from 'axios'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useNetwork } from 'wagmi'
 import { toast } from 'react-toastify'
+import { customProviderUrl } from 'app.config.cjs'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const { chain } = useNetwork()
@@ -23,6 +24,10 @@ export default function CustomProvider(props: InputProps): ReactElement {
   const { initialValues, setFieldError } = useFormikContext<FormPublishData>()
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    helpers.setValue({ url: customProviderUrl, valid: true, custom: true })
+  }, [])
 
   async function handleValidation(e: React.SyntheticEvent) {
     e.preventDefault()
@@ -91,12 +96,12 @@ export default function CustomProvider(props: InputProps): ReactElement {
 
   function handleDefault(e: React.SyntheticEvent) {
     e.preventDefault()
-
-    const oceanConfig = getOceanConfig(chain?.id)
+    const oceanConfig = getOceanConfig(chain?.id || 100)
     const providerUrl =
-      oceanConfig?.nodeUri || initialValues.services[0].providerUrl.url
-
-    helpers.setValue({ url: providerUrl, valid: true, custom: false })
+      customProviderUrl ||
+      oceanConfig?.oceanNodeUri ||
+      initialValues.services[0].providerUrl.url
+    helpers.setValue({ url: providerUrl, valid: true, custom: true })
   }
 
   return field?.value?.valid === true ? (
