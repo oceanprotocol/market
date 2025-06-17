@@ -9,11 +9,9 @@ module.exports = {
     process.env.NEXT_PUBLIC_NODE_URL ||
     'https://2.c2d.nodes.oceanprotocol.com:8000',
 
-  // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
   chainIds: [11155420, 11155111, 8996],
 
-  // List of all supported chainIds. Used to populate the Chains user preferences list.
   chainIdsSupported: [11155420, 11155111, 8996],
 
   customProviderUrl: process.env.NEXT_PUBLIC_NODE_URL,
