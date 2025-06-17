@@ -17,6 +17,8 @@ export default function HomePage(): ReactElement {
   const [queryMostAllocation, setQueryMostAllocation] = useState<SearchQuery>()
 
   const filterDatasets: unknown[] = []
+  const now = Date.now()
+  const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000
 
   useEffect(() => {
     const baseParams = {
@@ -24,9 +26,19 @@ export default function HomePage(): ReactElement {
       esPaginationOptions: {
         size: 6
       },
-      filters: filterDatasets,
+      filters: [
+        {
+          range: {
+            'indexedMetadata.event.block': {
+              gte: 0
+            }
+          }
+        }
+      ],
       sortOptions: {
-        sortBy: SortTermOptions.Created
+        sortBy: SortTermOptions.Created,
+        sortOrder: 'desc',
+        missing: '_last'
       } as SortOptions
     } as BaseQueryParams
     setQueryLatest(generateBaseQuery(baseParams))
@@ -36,9 +48,20 @@ export default function HomePage(): ReactElement {
       esPaginationOptions: {
         size: 6
       },
+      filters: [
+        {
+          range: {
+            'indexedMetadata.stats.orders': {
+              gt: 0
+            }
+          }
+        }
+      ],
       sortOptions: {
-        sortBy: SortTermOptions.Orders
-      } as SortOptions
+        sortBy: SortTermOptions.Orders,
+        sortOrder: 'asc',
+        missing: '_last'
+      }
     } as BaseQueryParams
     setQueryMostSales(generateBaseQuery(baseParamsSales))
   }, [chainIds])

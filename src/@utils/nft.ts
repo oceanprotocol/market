@@ -174,9 +174,8 @@ export async function setNFTMetadataAndTokenURI(
       external_url: externalUrl
     })
   ).toString('base64')
-  const nft = new Nft(signer, asset.chainId) // added chainID it is used in OE market
+  const nft = new Nft(signer, asset.chainId)
 
-  // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
   const flags = '0x02'
 
   const metadataAndTokenURI: MetadataAndTokenURI = {

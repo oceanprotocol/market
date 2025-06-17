@@ -47,7 +47,7 @@ export function getDynamicPricingMustNot(): // eslint-disable-next-line camelcas
 FilterTerm | undefined {
   return allowDynamicPricing === 'true'
     ? undefined
-    : getFilterTerm('price.type', 'pool')
+    : getFilterTerm('indexedMetadata.stats.prices.type', 'pool')
 }
 export function getWhitelistShould(): FilterTerm[] {
   const { whitelists } = addressConfig
@@ -255,22 +255,15 @@ export async function getPublishedAssets(
   accountId: string,
   chainIds: number[],
   cancelToken: CancelToken,
+  ignorePurgatory = false,
   ignoreState = false,
-  page?: number,
-  type?: string,
-  accesType?: string
+  page?: number
 ): Promise<PagedAssets> {
   if (!accountId) return
-
   const filters: FilterTerm[] = []
-
-  filters.push(getFilterTerm('indexedMetadata.nft.state', [0, 4, 5]))
   filters.push(
     getFilterTerm('indexedMetadata.nft.owner', accountId.toLowerCase())
   )
-  // filters.push(getFilterTerm('services.type', 'access'))
-  // filters.push(getFilterTerm('metadata.type', 'dataset'))
-
   const baseQueryParams = {
     chainIds,
     filters,
@@ -285,16 +278,15 @@ export async function getPublishedAssets(
         }
       }
     },
-    ignorePurgatory: true,
+    ignorePurgatory,
     ignoreState,
     esPaginationOptions: {
-      from: (Number(page) - 1 || 0) * 9,
+      from: page || 0,
       size: 9
     }
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseQueryParams)
-
   try {
     const result = await queryMetadata(query, cancelToken)
     return result
@@ -388,11 +380,40 @@ export async function getUserSales(
   chainIds: number[]
 ): Promise<number> {
   try {
-    const result = await getPublishedAssets(accountId, chainIds, null)
-    const { totalOrders } = result.aggregations
-    return totalOrders.value
+    let page = 1
+    let totalOrders = 0
+    let assets: PagedAssets
+    const allResults: Asset[] = []
+
+    do {
+      assets = await getPublishedAssets(
+        accountId,
+        chainIds,
+        null,
+        false,
+        false,
+        page
+      )
+      // TODO stats is not in ddo
+      if (assets && assets.results) {
+        assets.results.forEach((asset) => {
+          const orders = asset?.indexedMetadata?.stats[0]?.orders || 0
+          totalOrders += orders
+        })
+        allResults.push(...assets.results)
+      }
+      page++
+    } while (
+      assets &&
+      assets.results &&
+      assets.results?.length > 0 &&
+      page <= assets.totalPages
+    )
+
+    return totalOrders
   } catch (error) {
-    LoggerInstance.error('Error getUserSales', error.message)
+    LoggerInstance.error('Error in getUserSales', error.message)
+    return 0
   }
 }
 
@@ -446,6 +467,8 @@ export async function getDownloadAssets(
   const query = generateBaseQuery(baseQueryparams)
   try {
     const result = await queryMetadata(query, cancelToken)
+    console.log('download result in aquraious', result)
+
     const downloadedAssets: DownloadedAsset[] = result.results
       .map((asset) => {
         const timestamp = new Date(
@@ -468,6 +491,7 @@ export async function getDownloadAssets(
     } else {
       LoggerInstance.error(error.message)
     }
+    return undefined
   }
 }
 

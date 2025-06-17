@@ -5,11 +5,12 @@ export enum SortDirectionOptions {
 
 // todo update this
 export enum SortTermOptions {
-  Created = 'indexedMetadata.nft.created',
+  Created = 'indexedMetadata.event.block',
   Relevance = '_score',
   Orders = 'indexedMetadata.stats.orders',
   Allocated = 'indexedMetadata.stats.allocated',
-  Price = 'indexedMetadata.stats.prices.price'
+  Price = 'indexedMetadata.stats.prices.price',
+  Sales = 'indexedMetadata.events.block'
 }
 
 // Note: could not figure out how to get `enum` to be ambiant
@@ -31,9 +32,17 @@ declare global {
     sortDirection?: SortDirectionOptions
   }
 
-  interface FilterTerm {
-    [property: string]: {
-      [property: string]: string | number | boolean | number[] | string[]
+  export interface FilterTerm {
+    term?: {
+      [field: string]: string | number | boolean | number[] | string[]
+    }
+    range?: {
+      [field: string]: {
+        gt?: number
+        gte?: number
+        lt?: number
+        lte?: number
+      }
     }
   }
 
