@@ -49,14 +49,8 @@ export default function MarketStatsTotal({
   const fetchAssets = useDebouncedCallback(
     async (parsed: queryString.ParsedQuery<string>, chainIds: number[]) => {
       setLoading(true)
-      // setTotalResults(undefined)
       const queryResult = await getResults(parsed, chainIds, newCancelToken())
       setQueryResult(queryResult)
-      console.log('Total assets found:', queryResult)
-
-      // setTotalResults(queryResult?.totalResults || 0)
-      console.log('Number of assets', queryResult?.totalResults)
-      // setTotalPagesNumber(queryResult?.totalPages || 0)
       setLoading(false)
     },
     500

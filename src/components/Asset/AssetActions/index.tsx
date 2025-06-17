@@ -20,7 +20,6 @@ export default function AssetActions({
 }: {
   asset: AssetExtended
 }): ReactElement {
-  console.log('Asset in Asset Action 1! ', asset)
   const { address: accountId } = useAccount()
   const { balance } = useBalance()
   const { chain } = useNetwork()
@@ -116,7 +115,6 @@ export default function AssetActions({
           asset.accessDetails.baseToken.address,
           accountId
         )
-        console.log('DT Balance!', dtBalance)
         setDtBalance(dtBalance)
       } catch (e: any) {
         LoggerInstance.error('[DT Balance Error]', e.message || e)

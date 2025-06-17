@@ -53,7 +53,6 @@ export default function Download({
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  console.log('asset', asset)
   const { address: accountId, isConnected } = useAccount()
   const { data: signer } = useSigner()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
@@ -101,7 +100,6 @@ export default function Download({
 
       try {
         !orderPriceAndFees && setIsPriceLoading(true)
-        console.log('service in download', asset)
         const _orderPriceAndFees = await getOrderPriceAndFees(
           asset,
           service || asset.services[0],
@@ -165,7 +163,6 @@ export default function Download({
   ])
 
   async function handleOrderOrDownload(dataParams?: UserCustomParameters) {
-    console.log('In handleOrderOrDownload!!!')
     setIsLoading(true)
     setRetry(false)
     try {
@@ -185,8 +182,6 @@ export default function Download({
             asset.accessDetails.datatoken?.symbol
           )[asset.accessDetails.type === 'fixed' ? 2 : 1]
         )
-        console.log('order price', orderPriceAndFees)
-        console.log('order accessDetails', accessDetails)
         const orderTx = await order(
           signer,
           asset,
@@ -286,8 +281,6 @@ export default function Download({
           values?.dataServiceParams,
           asset.services[0].consumerParameters
         )
-        console.log('Dataservice params  ', dataServiceParams)
-
         await handleOrderOrDownload(dataServiceParams)
       }}
     >

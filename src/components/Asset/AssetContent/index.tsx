@@ -23,8 +23,6 @@ export default function AssetContent({
 }: {
   asset: AssetExtended
 }): ReactElement {
-  // console.log('DDO Asset in Asset Content!!!!!!!!!!!!', asset)
-
   const { isInPurgatory, purgatoryData, isOwner, isAssetNetwork } = useAsset()
   const { address: accountId } = useAccount()
   const { debug } = useUserPreferences()

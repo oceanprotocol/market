@@ -48,7 +48,6 @@ export default function SectionQueryResult({
           setLoading(true)
 
           const result = await queryMetadata(query, newCancelToken())
-          console.log('result of all the datas!!!!', result)
           if (!isMounted()) return
           if (queryData && result?.totalResults > 0) {
             const sortedAssets = sortAssets(result.results, queryData)

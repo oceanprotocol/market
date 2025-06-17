@@ -116,7 +116,6 @@ function AssetProvider({
             accountId,
             newCancelToken()
           )
-          console.log('access details fetched!!', accessDetails)
           setAsset((prevState) => ({
             ...prevState,
             accessDetails
@@ -163,7 +162,6 @@ function AssetProvider({
       accountId,
       newCancelToken()
     )
-    console.log('access details fetched!!', accessDetails)
     setAsset((prevState) => ({
       ...prevState,
       accessDetails

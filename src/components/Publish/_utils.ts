@@ -286,9 +286,6 @@ export async function createTokensAndPricing(
         '[publish] Creating fixed pricing with freParams',
         freParams
       )
-      console.log(' Data freparams: ', freParams)
-      console.log(' Data freparams: ', nftCreateData)
-      console.log(' Data freparams: ', ercParams)
 
       const result = await nftFactory.createNftWithDatatokenWithFixedRate(
         nftCreateData,

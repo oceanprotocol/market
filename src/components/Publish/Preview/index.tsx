@@ -10,9 +10,6 @@ export default function Preview(): ReactElement {
   const [asset, setAsset] = useState<AssetExtended>()
   const { values } = useFormikContext<FormPublishData>()
 
-  console.log('Values... ', values)
-  console.log('Asset..', asset)
-
   useEffect(() => {
     async function makeDdo() {
       const asset = (await transformPublishFormToDdo(values)) as AssetExtended

@@ -20,8 +20,6 @@ export default function Price({
   const oceanConfig = getOceanConfig(11155111)
   const symbol = oceanConfig.oceanTokenSymbol
 
-  // console.log('Synbol,,,, In price', symbol)
-  console.log('Synbol,,,,', price.token)
   if (!price && !orderPriceAndFees) return
   return (
     <PriceUnit

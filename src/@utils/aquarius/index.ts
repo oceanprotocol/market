@@ -159,8 +159,6 @@ export async function queryMetadata(
       { ...query },
       { cancelToken }
     )
-    console.log('response of the datas!!!', response)
-    console.log('response of the datas in data array!!!', response.data[0])
 
     if (!response || response.status !== 200 || !response.data[0]) return
     const transformedResult = transformQueryResult(
@@ -168,9 +166,6 @@ export async function queryMetadata(
       query.from,
       query.size
     )
-    console.log('Query form', query.from)
-    console.log('Query size', query.size)
-    console.log('Transformed Result!', transformedResult)
     return transformQueryResult(response.data, query.from, query.size)
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -394,7 +389,6 @@ export async function getUserSales(
 ): Promise<number> {
   try {
     const result = await getPublishedAssets(accountId, chainIds, null)
-    console.log('Get user published', result)
     const { totalOrders } = result.aggregations
     return totalOrders.value
   } catch (error) {
@@ -418,7 +412,6 @@ export async function getUserOrders(
     }
   } as BaseQueryParams
   const query = generateBaseQuery(baseQueryparams, 'order')
-  console.log('query userorder', query)
   try {
     return queryMetadata(query, cancelToken)
   } catch (error) {

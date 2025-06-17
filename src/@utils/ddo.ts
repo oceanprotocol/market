@@ -146,7 +146,7 @@ export function normalizeFile(
         index: 0,
         url: file ? file[0]?.url || file?.url : null,
         headers: headersProvider,
-        method: file.method
+        method: file.method ? file.method : 'GET'
       } as UrlFile
       break
     }

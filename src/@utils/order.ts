@@ -85,9 +85,6 @@ export async function order(
 
   switch (asset.accessDetails?.type) {
     case 'fixed': {
-      console.log('In fixed price case')
-      // this assumes all fees are in ocean
-
       const freParams = {
         exchangeContract: config.fixedRateExchangeAddress,
         exchangeId: asset.accessDetails.addressOrId,

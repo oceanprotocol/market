@@ -17,8 +17,6 @@ export default function MetaFull({
   const [paymentCollector, setPaymentCollector] = useState<string>()
 
   useEffect(() => {
-    console.log('[MetaFull] full DDO:', ddo)
-
     if (!ddo.datatokens[0]?.address) {
       LoggerInstance.error('Datatoken address missing from DDO')
       return

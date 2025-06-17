@@ -44,7 +44,6 @@ export async function getFileDidInfo(
   withChecksum = false
 ): Promise<FileInfo[]> {
   try {
-    console.log('here in getFileDidInfo', did, serviceId, providerUrl)
     const response = await ProviderInstance.checkDidFiles(
       did,
       serviceId,
@@ -151,32 +150,18 @@ export async function downloadFile(
   userCustomParameters?: UserCustomParameters
 ) {
   let downloadUrl
-  console.log(
-    'access details in id in download ',
-    asset.accessDetails.validOrderTx,
-    ' ',
-    validOrderTx
-  )
-  console.log('asset id ', asset.id)
   try {
-    console.log('assset   ', asset)
-    console.log('user parameters ', userCustomParameters)
-    userCustomParameters = undefined
-    console.log('user parameters 1', userCustomParameters)
-    console.log('customProviderUrl ', customProviderUrl)
-    console.log('validOrderTx ', validOrderTx)
-    console.log('signer ', signer)
+    userCustomParameters = userCustomParameters || undefined
 
-    // console.log('service, ', asset)
     downloadUrl = await ProviderInstance.getDownloadUrl(
       asset.id,
       asset.services[0].id,
       0,
-      asset.accessDetails.validOrderTx,
-      asset.services[0].serviceEndpoint,
-      signer
+      validOrderTx || asset.accessDetails.validOrderTx,
+      customProviderUrl || asset.services[0].serviceEndpoint,
+      signer,
+      userCustomParameters
     )
-    console.log('Download URL: ', downloadUrl)
   } catch (error) {
     console.log('Error ', error)
     const message = getErrorMessage(error.message)

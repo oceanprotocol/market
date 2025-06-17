@@ -36,14 +36,6 @@ export async function getOrderPriceAndFees( // this function give price
   signer?: Signer,
   providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
-  console.log('getOrderPriceAndFees', {
-    asset,
-    service,
-    accessDetails,
-    accountId,
-    signer,
-    providerFees
-  })
   const orderPriceAndFee = {
     price: accessDetails.price || '0',
     publisherMarketOrderFee: publisherMarketOrderFee || '0',
@@ -58,7 +50,6 @@ export async function getOrderPriceAndFees( // this function give price
   // fetch provider fee
   let initializeData
   try {
-    console.log('before initializeProvider', asset, service, accountId)
     const initialize = await ProviderInstance.initialize(
       asset.id,
       service.id,
@@ -210,9 +201,7 @@ export async function getAccessDetails(
   }
 
   // if there is at least 1 dispenser => service is free and use first dispenser
-  console.log('before dispensers', datatokenAddress, signer, chainId)
   const dispensers = await datatoken.getDispensers(datatokenAddress)
-  console.log('dispensers', dispensers)
   if (dispensers.length > 0) {
     return {
       ...accessDetails,
@@ -224,16 +213,12 @@ export async function getAccessDetails(
 
   // if there is 0 dispensers and at least 1 fixed rate => use first fixed rate to get the price details
   const fixedRates = await datatoken.getFixedRates(datatokenAddress)
-  console.log('after fixed rates', fixedRates)
   if (fixedRates.length > 0) {
     try {
       const freAddress = fixedRates[0].contractAddress
       const exchangeId = fixedRates[0].id
-      console.log('freAddress', freAddress, signer)
       const fre = new FixedRateExchange(freAddress, signer, chainId)
-      console.log('fre', fre, exchangeId)
       const exchange = await fre.getExchange(exchangeId)
-      console.log('exchange', exchange)
       return {
         ...accessDetails,
         type: 'fixed',
@@ -251,13 +236,10 @@ export async function getAccessDetails(
     }
   }
 
-  // no dispensers and no fixed rates => service doesn't have price set up
-  // console.log('Access Details!!', accessDetails)
   return accessDetails
 }
 
 export function getAvailablePrice(accessDetails: AccessDetails): AssetPrice {
-  console.log('Access Details!!', accessDetails)
   const price: AssetPrice = {
     type: 'fixedrate',
     price: accessDetails?.price ? Number(accessDetails.price).toString() : '0',

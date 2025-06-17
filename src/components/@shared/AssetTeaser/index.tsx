@@ -33,9 +33,6 @@ export default function AssetTeaser({
     price === undefined ||
     asset?.accessDetails?.type === 'NOT_SUPPORTED'
   const { locale } = useUserPreferences()
-  console.log('Asset in Asset Teaser!!!', asset)
-  // const price = await getAvailablePrice(
-
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`} className={styles.link}>
