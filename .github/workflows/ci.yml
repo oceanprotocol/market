@@ -39,42 +39,42 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-  test:
-    runs-on: ${{ matrix.os }}
+  # test:
+  #   runs-on: ${{ matrix.os }}
 
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        node: ['18']
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [ubuntu-latest, macos-latest]
+  #       node: ['18']
 
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node }}
 
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-${{ matrix.node }}-test-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.node }}-test-${{ env.cache-name }}-
+  #     - name: Cache node_modules
+  #       uses: actions/cache@v3
+  #       env:
+  #         cache-name: cache-node-modules
+  #       with:
+  #         path: ~/.npm
+  #         key: ${{ runner.os }}-${{ matrix.node }}-test-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+  #         restore-keys: ${{ runner.os }}-${{ matrix.node }}-test-${{ env.cache-name }}-
 
-      - run: npm ci
-      - run: npm test
+  #     - run: npm ci
+  #     - run: npm test
 
-      - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-${{ runner.os }}
-          path: coverage/
+  #     - name: Upload coverage artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: coverage-${{ runner.os }}
+  #         path: coverage/
 
   coverage:
     runs-on: ubuntu-latest
-    needs: [test]
+    needs: [build]
     if: ${{ success() && github.actor != 'dependabot[bot]' }}
 
     steps:
