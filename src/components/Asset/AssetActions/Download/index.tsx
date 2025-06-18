@@ -214,7 +214,7 @@ export default function Download({
       hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
       btSymbol={asset?.accessDetails?.baseToken?.symbol}
-      dtSymbol={asset?.indexedMetadata?.stats[0]?.datatokenAddress}
+      dtSymbol={asset?.indexedMetadata?.stats[0]?.symbol}
       dtBalance={dtBalance}
       type="submit"
       assetTimeout={secondsToString(asset?.services?.[0]?.timeout)}

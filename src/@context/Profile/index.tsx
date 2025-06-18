@@ -150,8 +150,6 @@ function ProfileProvider({
           ownAccount,
           page
         )
-        console.log('download result in profile', result)
-
         if (!result) {
           LoggerInstance.error('getDownloadAssets returned undefined')
           setDownloads([])
