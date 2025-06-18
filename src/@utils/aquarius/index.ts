@@ -175,6 +175,62 @@ export async function queryMetadata(
     }
   }
 }
+export async function queryMetadataTags(
+  query: SearchQuery,
+  cancelToken: CancelToken
+): Promise<{ tags: any; pagedAssets: PagedAssets }> {
+  try {
+    const response: AxiosResponse<SearchResponse> = await axios.post(
+      `${metadataCacheUri}/api/aquarius/assets/metadata/query`,
+      { ...query },
+      { cancelToken }
+    )
+    if (!response || response.status !== 200 || !response.data[0]) {
+      LoggerInstance.warn('Invalid response or no data')
+      return {
+        tags: [],
+        pagedAssets: {
+          results: [],
+          page: 1,
+          totalPages: 0,
+          totalResults: 0,
+          aggregations: {}
+        }
+      }
+    }
+
+    const assets = response.data[0]
+    const uniqueTags = [
+      ...new Set(
+        assets
+          .filter((asset: any) => asset.metadata?.tags?.length > 0)
+          .flatMap((asset: any) => asset.metadata.tags)
+      )
+    ]
+    const transformedResult = transformQueryResult(
+      response.data,
+      query.from,
+      query.size
+    )
+    return { tags: uniqueTags, pagedAssets: transformedResult }
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log('Query canceled:', error.message)
+    } else {
+      LoggerInstance.error('Error in queryMetadataTags:', error.message)
+    }
+    return {
+      tags: [],
+      pagedAssets: {
+        results: [],
+        page: 1,
+        totalPages: 0,
+        totalResults: 0,
+        aggregations: {}
+      }
+    }
+  }
+}
 
 export async function getAsset(
   did: string,
@@ -307,6 +363,8 @@ async function getTopPublishers(
   accesType?: string
 ): Promise<PagedAssets> {
   const filters: FilterTerm[] = []
+  console.log('type ', type)
+  console.log('accesType ', accesType)
 
   accesType !== undefined &&
     filters.push(getFilterTerm('services.type', 'access'))
@@ -360,19 +418,38 @@ export async function getTopAssetsPublishers(
 ): Promise<UserSales[]> {
   const publishers: UserSales[] = []
 
-  const result = await getTopPublishers(chainIds, null)
-  const { topPublishers } = result.aggregations
-
-  for (let i = 0; i < topPublishers.buckets.length; i++) {
-    publishers.push({
-      id: topPublishers.buckets[i].key,
-      totalSales: parseInt(topPublishers.buckets[i].totalSales.value)
-    })
+  try {
+    const result = await getTopPublishers(chainIds, null)
+    console.log('Publisher result', result)
+    if (result.aggregations?.topPublishers?.buckets) {
+      const { topPublishers } = result.aggregations
+      for (const bucket of topPublishers.buckets) {
+        publishers.push({
+          id: bucket.key,
+          totalSales: parseInt(bucket.totalSales.value)
+        })
+      }
+    } else if (result.results && Array.isArray(result.results)) {
+      const publisherMap: { [key: string]: number } = {}
+      for (const asset of result.results) {
+        const publisherId = asset.owner || asset.nftAddress || asset.id
+        if (publisherId) {
+          publisherMap[publisherId] = (publisherMap[publisherId] || 0) + 1
+        }
+      }
+      for (const [id, totalSales] of Object.entries(publisherMap)) {
+        publishers.push({ id, totalSales })
+      }
+    } else {
+      console.warn('Unexpected response format from getTopPublishers:', result)
+      return []
+    }
+    publishers.sort((a, b) => b.totalSales - a.totalSales)
+    return publishers.slice(0, nrItems)
+  } catch (error) {
+    console.error('Error in getTopAssetsPublishers:', error.message)
+    return []
   }
-
-  publishers.sort((a, b) => b.totalSales - a.totalSales)
-
-  return publishers.slice(0, nrItems)
 }
 
 export async function getUserSales(
@@ -467,7 +544,6 @@ export async function getDownloadAssets(
   const query = generateBaseQuery(baseQueryparams)
   try {
     const result = await queryMetadata(query, cancelToken)
-    console.log('download result in aquraious', result)
 
     const downloadedAssets: DownloadedAsset[] = result.results
       .map((asset) => {
