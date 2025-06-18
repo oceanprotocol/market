@@ -7,65 +7,43 @@ import { useDebouncedCallback } from 'use-debounce'
 import queryString from 'query-string'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useUserPreferences } from '@context/UserPreferences'
+import { generateBaseQuery, queryStats } from '@utils/aquarius'
 
 export default function MarketStatsTotal({
   total
 }: {
   total: StatsTotal
 }): ReactElement {
-  const router = useRouter()
   const [parsed, setParsed] = useState<queryString.ParsedQuery<string>>()
   const { chainIds } = useUserPreferences()
+  const [totalOrders, setTotalOrders] = useState<number>(0)
+  const [totalAssets, setTotalAssets] = useState<number>(0)
   const [queryResult, setQueryResult] = useState<PagedAssets>()
   const [loading, setLoading] = useState<boolean>(true)
   const newCancelToken = useCancelToken()
-  const isSearchPage = true
+
+  const baseQueryParams = {
+    chainIds,
+    query: {},
+    esPaginationOptions: { from: 0, size: 0 }
+  } as BaseQueryParams
+
+  const fetchAssets = useDebouncedCallback(async () => {
+    const query = generateBaseQuery(baseQueryParams)
+
+    setLoading(true)
+    const result = await queryStats(query, newCancelToken())
+    console.log('Query Results ', result)
+    setTotalOrders(result.totalOrders)
+    setTotalAssets(result.pagedAssets.totalResults)
+    setLoading(false)
+  }, 500)
 
   useEffect(() => {
-    const parsed = queryString.parse(location.search, {
-      arrayFormat: 'separator'
-    })
-    setParsed(parsed)
-  }, [router])
+    if (!chainIds) return
 
-  const updatePage = useCallback(
-    (page: number) => {
-      const { pathname, query } = router
-      const newUrl = updateQueryStringParameter(
-        pathname +
-          '?' +
-          JSON.stringify(query)
-            .replace(/"|{|}/g, '')
-            .replace(/:/g, '=')
-            .replace(/,/g, '&'),
-        'page',
-        `${page}`
-      )
-      return router.push(newUrl)
-    },
-    [router]
-  )
-
-  const fetchAssets = useDebouncedCallback(
-    async (parsed: queryString.ParsedQuery<string>, chainIds: number[]) => {
-      setLoading(true)
-      const queryResult = await getResults(parsed, chainIds, newCancelToken())
-      setQueryResult(queryResult)
-      setLoading(false)
-    },
-    500
-  )
-  useEffect(() => {
-    if (!parsed || !queryResult) return
-    const { page } = parsed
-    if (queryResult.totalPages < Number(page)) updatePage(1)
-  }, [parsed, queryResult, updatePage])
-
-  useEffect(() => {
-    if (!parsed || !chainIds) return
-
-    fetchAssets(parsed, chainIds)
-  }, [parsed, chainIds, fetchAssets])
+    fetchAssets()
+  }, [chainIds, fetchAssets])
 
   return (
     <>
@@ -73,21 +51,15 @@ export default function MarketStatsTotal({
         <span>Loading statistics...</span>
       ) : (
         <>
-          <PriceUnit
-            price={queryResult?.totalResults || total.orders}
-            size="small"
-          />{' '}
-          orders across{' '}
-          <PriceUnit
-            price={queryResult?.totalResults || total.nfts}
-            size="small"
-          />{' '}
-          assets with{' '}
+          <PriceUnit price={totalOrders || total.orders} size="small" /> orders
+          across <PriceUnit price={totalAssets || total.nfts} size="small" />{' '}
+          assets
+          {/* with{' '}
           <PriceUnit
             price={queryResult?.totalResults || total.datatokens}
             size="small"
           />{' '}
-          different datatokens.
+          different datatokens. */}
           <div style={{ display: 'none' }}>
             Debug info:{' '}
             {JSON.stringify({

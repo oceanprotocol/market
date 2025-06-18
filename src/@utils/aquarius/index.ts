@@ -231,6 +231,63 @@ export async function queryMetadataTags(
     }
   }
 }
+export async function queryStats(
+  query: SearchQuery,
+  cancelToken: CancelToken
+): Promise<{ totalOrders: number; pagedAssets: PagedAssets }> {
+  try {
+    const response: AxiosResponse<SearchResponse> = await axios.post(
+      `${metadataCacheUri}/api/aquarius/assets/metadata/query`,
+      { ...query },
+      { cancelToken }
+    )
+
+    if (!response || response.status !== 200 || !response.data[0]) {
+      LoggerInstance.warn('Invalid response or no data')
+      return {
+        totalOrders: 0,
+        pagedAssets: {
+          results: [],
+          page: 1,
+          totalPages: 0,
+          totalResults: 0,
+          aggregations: {}
+        }
+      }
+    }
+
+    const assets = response.data[0]
+
+    const totalOrders = assets.reduce((sum: number, asset: any) => {
+      const orders = asset.indexedMetadata?.stats?.[0]?.orders || 0
+      return sum + (typeof orders === 'number' ? orders : 0)
+    }, 0)
+
+    const transformedResult = transformQueryResult(
+      response.data,
+      query.from,
+      query.size
+    )
+
+    return { totalOrders, pagedAssets: transformedResult }
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      LoggerInstance.log('Query canceled:', error.message)
+    } else {
+      LoggerInstance.error('Error in queryStats:', error.message)
+    }
+    return {
+      totalOrders: 0,
+      pagedAssets: {
+        results: [],
+        page: 1,
+        totalPages: 0,
+        totalResults: 0,
+        aggregations: {}
+      }
+    }
+  }
+}
 
 export async function getAsset(
   did: string,
