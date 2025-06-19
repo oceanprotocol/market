@@ -33,7 +33,6 @@ export default function MarketStatsTotal({
 
     setLoading(true)
     const result = await queryStats(query, newCancelToken())
-    console.log('Query Results ', result)
     setTotalOrders(result.totalOrders)
     setTotalAssets(result.pagedAssets.totalResults)
     setLoading(false)
