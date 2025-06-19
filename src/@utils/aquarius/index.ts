@@ -62,7 +62,7 @@ export function getWhitelistShould(): FilterTerm[] {
   return whitelistFilterTerms.length > 0 ? whitelistFilterTerms : []
 }
 
-export function generateBaseQuery( // need to follow this query to fetch data from elasticsearch
+export function generateBaseQuery(
   baseQueryParams: BaseQueryParams,
   index?: string
 ): SearchQuery {
@@ -87,6 +87,7 @@ export function generateBaseQuery( // need to follow this query to fetch data fr
           {
             bool: {
               must_not: [
+                getFilterTerm('chainId', 11155420), // remove this filter if you want 11155420 network later
                 !baseQueryParams.ignoreState &&
                   getFilterTerm('indexedMetadata.nft.state', 5),
                 getDynamicPricingMustNot()
@@ -205,10 +206,27 @@ export async function queryMetadataTags(
     const uniqueTags = [
       ...new Set(
         assets
-          .filter((asset: any) => asset.metadata?.tags?.length > 0)
+          .filter((asset: any) => {
+            // Check if metadata and tags exist, and tags is an array with length > 0
+            const hasValidTags =
+              asset.metadata &&
+              Array.isArray(asset.metadata.tags) &&
+              asset.metadata.tags.length > 0
+            if (!hasValidTags) {
+              LoggerInstance.warn(
+                `Asset skipped due to invalid tags: ${JSON.stringify({
+                  id: asset.id,
+                  chainId: asset.chainId,
+                  metadata: asset.metadata
+                })}`
+              )
+            }
+            return hasValidTags
+          })
           .flatMap((asset: any) => asset.metadata.tags)
       )
     ]
+
     const transformedResult = transformQueryResult(
       response.data,
       query.from,
@@ -422,8 +440,6 @@ async function getTopPublishers(
   accesType?: string
 ): Promise<PagedAssets> {
   const filters: FilterTerm[] = []
-  console.log('type ', type)
-  console.log('accesType ', accesType)
 
   accesType !== undefined &&
     filters.push(getFilterTerm('services.type', 'access'))
@@ -461,6 +477,7 @@ async function getTopPublishers(
 
   try {
     const result = await queryMetadata(query, cancelToken)
+    console.log('Result in Query call', result)
     return result
   } catch (error) {
     if (axios.isCancel(error)) {

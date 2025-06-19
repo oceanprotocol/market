@@ -13,10 +13,7 @@ export const getSupportedChains = (chainIdsSupported: number[]): Chain[] => {
   // Current version of wagmi doesn't support custom RPCs (e.g blastapi)
   // Override RPC URLs for chains if it's set in env
   const chains = supportedChains.map((chain) => {
-    if (
-      (chain.id === 11155111 || chain.id === 11155420) &&
-      process.env.NEXT_PUBLIC_NODE_URI
-    ) {
+    if (chain.id === 11155111 && process.env.NEXT_PUBLIC_NODE_URI) {
       return {
         ...chain,
         rpcUrls: {
