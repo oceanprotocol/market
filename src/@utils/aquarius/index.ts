@@ -102,13 +102,11 @@ export function generateBaseQuery( // need to follow this query to fetch data fr
     generatedQuery.aggs = baseQueryParams.aggs
   }
 
-  if (
-    baseQueryParams.sortOptions?.sortBy !== undefined &&
-    baseQueryParams.sortOptions?.sortDirection !== undefined
-  ) {
+  if (baseQueryParams.sortOptions !== undefined) {
     generatedQuery.sort = {
-      [baseQueryParams.sortOptions.sortBy]:
-        baseQueryParams.sortOptions.sortDirection
+      [`${baseQueryParams.sortOptions.sortBy}`]:
+        baseQueryParams.sortOptions.sortDirection ||
+        SortDirectionOptions.Descending
     }
   }
 
@@ -160,18 +158,22 @@ export async function queryMetadata(
       { cancelToken }
     )
 
-    if (!response || response.status !== 200 || !response.data[0]) return
+    if (!response || response.status !== 200 || !response.data[0]) {
+      console.log('Invalid response or empty data at index 0')
+      return
+    }
+
     const transformedResult = transformQueryResult(
       response.data,
       query.from,
       query.size
     )
-    return transformQueryResult(response.data, query.from, query.size)
+    return transformedResult
   } catch (error) {
     if (axios.isCancel(error)) {
-      LoggerInstance.log(error.message)
+      LoggerInstance.log('⚠️ Request cancelled:', error.message)
     } else {
-      LoggerInstance.error(error.message)
+      LoggerInstance.error('❌ Error occurred:', error.message)
     }
   }
 }
