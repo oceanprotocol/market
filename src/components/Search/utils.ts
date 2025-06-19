@@ -128,7 +128,7 @@ export function getSearchQuery(
     nestedQuery,
     esPaginationOptions: {
       from: page || 0,
-      size: Number(offset) || 21
+      size: Number(offset) || 1000
     },
     sortOptions: { sortBy: sort, sortDirection },
     filters

@@ -84,7 +84,7 @@ export default function HomePage(): ReactElement {
         action={
           <Button
             style="text"
-            to="/search?sort=indexedMetadata.nft.created&sortOrder=desc"
+            to="/search?sort=indexedMetadata.event.block&sortOrder=desc"
           >
             All datasets →
           </Button>
