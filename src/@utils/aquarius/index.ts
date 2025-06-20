@@ -130,22 +130,21 @@ export function generateBaseQuery(
 export function transformQueryResult(
   queryResult: any,
   from = 0,
-  size = 21
+  size = Number.MAX_SAFE_INTEGER
 ): PagedAssets {
-  const rawResults = queryResult[0] || []
-  const aggregations = queryResult[1] || {}
+  const rawResults = (queryResult || []).flat()
+  const aggregations = queryResult || {}
 
-  const pagedResults = rawResults.slice(from, from + size)
+  const effectiveSize = Math.max(size, rawResults.length + 1)
+  // const pagedResults = rawResults.slice(from, from + effectiveSize)
 
-  const result: PagedAssets = {
-    results: pagedResults,
-    page: from ? Math.floor(from / size) + 1 : 1,
-    totalPages: Math.ceil(rawResults.length / size),
+  return {
+    results: rawResults,
+    page: from ? Math.floor(from / effectiveSize) + 1 : 1,
+    totalPages: Math.ceil(rawResults.length / effectiveSize),
     totalResults: rawResults.length,
     aggregations
   }
-
-  return result
 }
 
 export async function queryMetadata(
@@ -178,6 +177,7 @@ export async function queryMetadata(
     }
   }
 }
+
 export async function queryMetadataTags(
   query: SearchQuery,
   cancelToken: CancelToken
@@ -212,6 +212,9 @@ export async function queryMetadataTags(
               asset.metadata &&
               Array.isArray(asset.metadata.tags) &&
               asset.metadata.tags.length > 0
+            // Check if asset has sales (orders > 0)
+            const hasSales = asset.indexedMetadata?.stats?.[0]?.orders > 0
+
             if (!hasValidTags) {
               LoggerInstance.warn(
                 `Asset skipped due to invalid tags: ${JSON.stringify({
@@ -220,8 +223,17 @@ export async function queryMetadataTags(
                   metadata: asset.metadata
                 })}`
               )
+            } else if (!hasSales) {
+              LoggerInstance.warn(
+                `Asset skipped due to zero sales: ${JSON.stringify({
+                  id: asset.id,
+                  chainId: asset.chainId,
+                  orders: asset.indexedMetadata?.stats?.[0]?.orders
+                })}`
+              )
             }
-            return hasValidTags
+
+            return hasValidTags && hasSales
           })
           .flatMap((asset: any) => asset.metadata.tags)
       )
@@ -415,7 +427,7 @@ export async function getPublishedAssets(
     ignoreState,
     esPaginationOptions: {
       from: page || 0,
-      size: 9
+      size: 1000
     }
   } as BaseQueryParams
 
@@ -469,7 +481,7 @@ async function getTopPublishers(
     },
     esPaginationOptions: {
       from: (Number(page) - 1 || 0) * 9,
-      size: 9
+      size: 1000
     }
   } as BaseQueryParams
 
@@ -477,7 +489,6 @@ async function getTopPublishers(
 
   try {
     const result = await queryMetadata(query, cancelToken)
-    console.log('Result in Query call', result)
     return result
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -496,7 +507,7 @@ export async function getTopAssetsPublishers(
 
   try {
     const result = await getTopPublishers(chainIds, null)
-    console.log('Publisher result', result)
+
     if (result.aggregations?.topPublishers?.buckets) {
       const { topPublishers } = result.aggregations
       for (const bucket of topPublishers.buckets) {
@@ -507,12 +518,35 @@ export async function getTopAssetsPublishers(
       }
     } else if (result.results && Array.isArray(result.results)) {
       const publisherMap: { [key: string]: number } = {}
+
       for (const asset of result.results) {
-        const publisherId = asset.owner || asset.nftAddress || asset.id
-        if (publisherId) {
-          publisherMap[publisherId] = (publisherMap[publisherId] || 0) + 1
+        // Extract owner from indexedMetadata.nft.owner
+        const owner = asset.indexedMetadata?.nft?.owner
+        if (!owner) {
+          console.warn('Asset missing owner:', {
+            id: asset.id,
+            nftAddress: asset.nftAddress,
+            indexedMetadata: asset.indexedMetadata
+          })
+          continue
         }
+
+        // Extract orders from indexedMetadata.stats[0].orders
+        const orders = asset.indexedMetadata?.stats?.[0]?.orders || 0
+        if (typeof orders !== 'number') {
+          console.warn('Invalid orders value for asset:', {
+            id: asset.id,
+            owner,
+            orders: asset.indexedMetadata?.stats?.[0]?.orders
+          })
+          continue
+        }
+
+        // Accumulate sales for the owner
+        publisherMap[owner] = (publisherMap[owner] || 0) + orders
       }
+
+      // Convert publisherMap to UserSales array
       for (const [id, totalSales] of Object.entries(publisherMap)) {
         publishers.push({ id, totalSales })
       }
@@ -520,6 +554,8 @@ export async function getTopAssetsPublishers(
       console.warn('Unexpected response format from getTopPublishers:', result)
       return []
     }
+
+    // Sort by totalSales (descending) and take top nrItems
     publishers.sort((a, b) => b.totalSales - a.totalSales)
     return publishers.slice(0, nrItems)
   } catch (error) {

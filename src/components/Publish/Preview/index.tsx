@@ -9,7 +9,6 @@ import { ZERO_ADDRESS } from '@oceanprotocol/lib'
 export default function Preview(): ReactElement {
   const [asset, setAsset] = useState<AssetExtended>()
   const { values } = useFormikContext<FormPublishData>()
-  console.log('values ', values)
 
   useEffect(() => {
     async function makeDdo() {
