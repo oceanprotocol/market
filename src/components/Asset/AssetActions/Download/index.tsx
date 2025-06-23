@@ -233,6 +233,7 @@ export default function Download({
 
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
     const { isValid } = useFormikContext()
+    const isPricingLoaded = !isPriceLoading && orderPriceAndFees
 
     return (
       <div>
@@ -242,23 +243,21 @@ export default function Download({
             state="info"
             text={`The publisher temporarily disabled ordering for this asset`}
           />
+        ) : !isPricingLoaded ? (
+          <Loader message="Loading pricing data..." />
+        ) : isUnsupportedPricing ? (
+          <Alert
+            className={styles.fieldWarning}
+            state="info"
+            text={`No pricing schema available for this asset.`}
+          />
         ) : (
           <>
-            {isUnsupportedPricing ? (
-              <Alert
-                className={styles.fieldWarning}
-                state="info"
-                text={`No pricing schema available for this asset.`}
-              />
-            ) : (
-              <>
-                {asset && <ConsumerParameters asset={asset} />}
-                {!isInPurgatory && (
-                  <div className={styles.buttonBuy}>
-                    <PurchaseButton isValid={isValid} />
-                  </div>
-                )}
-              </>
+            {asset && <ConsumerParameters asset={asset} />}
+            {!isInPurgatory && (
+              <div className={styles.buttonBuy}>
+                <PurchaseButton isValid={isValid} />
+              </div>
             )}
           </>
         )}
