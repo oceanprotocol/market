@@ -242,13 +242,14 @@ export async function getAccessDetails(
 export function getAvailablePrice(accessDetails: AccessDetails): AssetPrice {
   const price: AssetPrice = {
     type: 'fixedrate',
-    price: accessDetails?.price ? Number(accessDetails.price).toString() : '0',
+    price: Number(accessDetails?.price).toString(),
     token: accessDetails?.baseToken?.symbol || '',
     contract: accessDetails?.baseToken?.address || ''
   }
 
-  if (!accessDetails?.price) {
+  if (!accessDetails || accessDetails.price === undefined) {
     console.warn('Missing price in accessDetails:', accessDetails)
+    return null
   }
 
   return price

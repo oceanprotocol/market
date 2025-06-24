@@ -68,11 +68,11 @@ export default function Download({
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
   const [isOrderDisabled, setIsOrderDisabled] = useState(false)
+  const [assetPrice, setAssetPrice] = useState(null)
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
 
-  const price: AssetPrice = getAvailablePrice(accessDetails)
   const isUnsupportedPricing =
     !asset?.accessDetails ||
     !asset.services.length ||
@@ -80,6 +80,10 @@ export default function Download({
     (asset?.accessDetails?.type === 'fixed' &&
       !asset?.accessDetails?.baseToken?.symbol)
 
+  useEffect(() => {
+    const price: AssetPrice = getAvailablePrice(accessDetails)
+    setAssetPrice(price)
+  }, [accessDetails])
   useEffect(() => {
     Number(asset?.indexedMetadata?.nft.state) === 4 && setIsOrderDisabled(true)
   }, [asset?.indexedMetadata?.nft.state])
@@ -233,7 +237,9 @@ export default function Download({
 
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
     const { isValid } = useFormikContext()
-    const isPricingLoaded = !isPriceLoading && orderPriceAndFees
+    const isPricingLoaded =
+      asset?.accessDetails?.type === 'free' ||
+      (!isPriceLoading && orderPriceAndFees)
 
     return (
       <div>
@@ -294,7 +300,11 @@ export default function Download({
             ) : (
               <Price
                 className={styles.price}
-                price={price}
+                price={
+                  assetPrice?.price === null || assetPrice?.price === undefined
+                    ? null
+                    : assetPrice
+                }
                 orderPriceAndFees={orderPriceAndFees}
                 conversion
                 size="large"

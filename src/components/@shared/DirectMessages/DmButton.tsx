@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
-import styles from './DmButton.module.css'
-import { useAccount, useConnect } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { useOrbis } from '@context/DirectMessages'
 
 export default function DmButton({
