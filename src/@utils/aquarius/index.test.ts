@@ -20,8 +20,8 @@ const defaultBaseQueryReturn: SearchQuery = {
         {
           bool: {
             must_not: [
-              { term: { 'nft.state': 5 } },
-              { term: { 'price.type': 'pool' } }
+              { term: { 'indexedMetadata.nft.state': 5 } },
+              { term: { 'indexedMetadata.stats.prices.price.type': 'pool' } }
             ]
           }
         }
