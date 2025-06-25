@@ -9,7 +9,7 @@ export enum SortTermOptions {
   Relevance = '_score',
   Orders = 'indexedMetadata.stats.orders',
   Allocated = 'indexedMetadata.stats.allocated',
-  Price = 'indexedMetadata.stats.prices.price',
+  Price = 'indexedMetadata.stats.prices.price.keyword',
   Sales = 'indexedMetadata.events.block'
 }
 
