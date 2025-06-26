@@ -21,6 +21,7 @@ function useFactoryRouter() {
   useEffect(() => {
     if (!signer || !chain?.id) return
     const config = getOceanConfig(chain.id)
+    if (!config) return
     setFactoryRouter(
       new FactoryRouter(config?.routerFactoryAddress, signer, config.chainId)
     )
