@@ -19,7 +19,7 @@ module.exports = {
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
   oceanTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
-  oceanTokenSymbol: process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL || 'OCEAN',
+  oceanTokenSymbol: process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL || 'WETH',
   defaultDatatokenCap:
     '115792089237316195423570985008687907853269984665640564039457',
   defaultDatatokenTemplateIndex: 2,

@@ -62,8 +62,8 @@ function MarketMetadataProvider({
 
     const oceanToken: TokenInfo = {
       address: appConfig.oceanTokenAddress,
-      name: 'OCEAN',
-      symbol: 'OCEAN',
+      name: 'WETH',
+      symbol: 'WETH',
       decimals: 18
     }
 

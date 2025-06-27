@@ -10,14 +10,14 @@ The Ocean Market is a place for buyers + sellers of top-notch data and algorithm
 
 #### **You can:**
 
-* Buy access to unique data, algorithms, and compute jobs. 🛍️
-* Tokenize & monetize your intellectual property through blockchain technology. 💪
+- Buy access to unique data, algorithms, and compute jobs. 🛍️
+- Tokenize & monetize your intellectual property through blockchain technology. 💪
 
 #### **Learn to:**
 
-* Publish an NFT
-* Download NFT Assets
-* Host Your Assets
+- Publish an NFT
+- Download NFT Assets
+- Host Your Assets
 
 For more information visit the [Ocean Docs](https://docs.oceanprotocol.com/)
 
@@ -25,6 +25,6 @@ For more information visit the [Ocean Docs](https://docs.oceanprotocol.com/)
 
 **If you are new to web3** and blockchain technologies then we suggest you first get familiar with some Web3 basics:
 
-* Wallet Basics 👛
-* Set Up MetaMask 🦊
-* Manage Your OCEAN 🪙
+- Wallet Basics 👛
+- Set Up MetaMask 🦊
+- Manage Your WETH 🪙
