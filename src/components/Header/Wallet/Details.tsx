@@ -39,8 +39,10 @@ export default function Details(): ReactElement {
 
     oceanConfig &&
       setOceanTokenMetadata({
-        address: oceanConfig.oceanTokenAddress,
-        symbol: oceanConfig.oceanTokenSymbol
+        // address: oceanConfig.oceanTokenAddress,
+        // symbol: oceanConfig.oceanTokenSymbol
+        address: '0x5f207d42f869fd1c71d7f0f81a2a67fc20ff7323',
+        symbol: 'WETH'
       })
   }, [networkData, chain?.id])
 

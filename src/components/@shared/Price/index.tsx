@@ -18,8 +18,9 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
-  const oceanConfig = getOceanConfig(11155111)
-  const symbol = oceanConfig.oceanTokenSymbol
+  // const oceanConfig = getOceanConfig(11155111)
+  // const symbol = oceanConfig.oceanTokenSymbol
+  const symbol = 'WETH'
 
   if (!price && !orderPriceAndFees) return
   if (!price || price.price === undefined || price.price === null) {

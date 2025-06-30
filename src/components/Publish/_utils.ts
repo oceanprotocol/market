@@ -250,9 +250,10 @@ export async function createTokensAndPricing(
     minter: accountId,
     paymentCollector: accountId,
     mpFeeAddress: marketFeeAddress,
-    feeToken:
-      process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS ||
-      values.pricing.baseToken.address,
+    // feeToken:
+    //   process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS ||
+    //   values.pricing.baseToken.address,
+    feeToken: '0x5f207d42f869fd1c71d7f0f81a2a67fc20ff7323',
     feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
@@ -268,9 +269,10 @@ export async function createTokensAndPricing(
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
-        baseTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS
-          ? process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS
-          : values.pricing.baseToken.address,
+        // baseTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS
+        //   ? process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS
+        //   : values.pricing.baseToken.address,
+        baseTokenAddress: '0x5f207d42f869fd1c71d7f0f81a2a67fc20ff7323',
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
         baseTokenDecimals: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS

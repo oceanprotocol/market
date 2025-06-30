@@ -18,7 +18,8 @@ module.exports = {
   allowDynamicPricing: process.env.NEXT_PUBLIC_ALLOW_DYNAMIC_PRICING || 'false',
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
-  oceanTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
+  // oceanTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
+  oceanTokenAddress: '0x5f207d42f869fd1c71d7f0f81a2a67fc20ff7323',
   oceanTokenSymbol: process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL || 'WETH',
   defaultDatatokenCap:
     '115792089237316195423570985008687907853269984665640564039457',
