@@ -42,6 +42,7 @@ export default function Price({
       className={className}
       size={size}
       conversion={conversion}
+      decimals="4"
     />
   )
 }
