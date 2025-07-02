@@ -16,7 +16,8 @@ export default function MetaAsset({
   isBlockscoutExplorer: boolean
 }): ReactElement {
   const { chain } = useNetwork()
-  const oceanConfig = getOceanConfig(chain.id)
+  const chainId = chain?.id || 11155111
+  const oceanConfig = getOceanConfig(chainId)
   const symbol = oceanConfig.oceanTokenSymbol
   const { isAssetNetwork } = useAsset()
   const { connector: activeConnector } = useAccount()
