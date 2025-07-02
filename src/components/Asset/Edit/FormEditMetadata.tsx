@@ -95,6 +95,9 @@ export default function FormEditMetadata({
           {...getFieldContent('price', data)}
           component={Input}
           name="price"
+          type="number"
+          min="0.0001"
+          step="any"
         />
       )}
 
