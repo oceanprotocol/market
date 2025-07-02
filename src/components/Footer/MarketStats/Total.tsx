@@ -43,7 +43,6 @@ export default function MarketStatsTotal({
 
     fetchAssets()
   }, [chainIds, fetchAssets])
-  console.log('test')
 
   return (
     <>
