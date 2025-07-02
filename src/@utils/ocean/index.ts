@@ -17,8 +17,7 @@ export function sanitizeDevelopmentConfig(config: Config): Config {
     fixedRateExchangeAddress:
       process.env.NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS,
     dispenserAddress: process.env.NEXT_PUBLIC_DISPENSER_ADDRESS,
-    // oceanTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
-    oceanTokenAddress: '0x5f207d42f869fd1c71d7f0f81a2a67fc20ff7323',
+    oceanTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
     oceanTokenSymbol: process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL || 'WETH',
     nftFactoryAddress: process.env.NEXT_PUBLIC_NFT_FACTORY_ADDRESS,
     routerFactoryAddress: process.env.NEXT_PUBLIC_ROUTER_FACTORY_ADDRESS,

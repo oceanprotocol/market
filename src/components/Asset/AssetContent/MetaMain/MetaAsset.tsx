@@ -17,8 +17,7 @@ export default function MetaAsset({
 }): ReactElement {
   const { chain } = useNetwork()
   const oceanConfig = getOceanConfig(chain.id)
-  // const symbol = oceanConfig.oceanTokenSymbol
-  const symbol = 'WETH'
+  const symbol = oceanConfig.oceanTokenSymbol
   const { isAssetNetwork } = useAsset()
   const { connector: activeConnector } = useAccount()
 
