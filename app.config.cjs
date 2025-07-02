@@ -6,20 +6,22 @@ module.exports = {
   // const { appConfig } = useMarketMetadata()
   // return appConfig.metadataCacheUri
   metadataCacheUri:
-    process.env.NEXT_PUBLIC_METADATACACHE_URI ||
-    'https://v4.aquarius.oceanprotocol.com',
+    process.env.NEXT_PUBLIC_NODE_URL ||
+    'https://2.c2d.nodes.oceanprotocol.com:8000',
 
-  // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [1, 137, 10],
+  chainIds: [11155111, 8996],
 
-  // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 137, 10, 11155111],
+  chainIdsSupported: [11155111, 8996],
 
-  customProviderUrl: process.env.NEXT_PUBLIC_PROVIDER_URL,
-
+  customProviderUrl: process.env.NEXT_PUBLIC_NODE_URL,
+  allowDynamicPricing: process.env.NEXT_PUBLIC_ALLOW_DYNAMIC_PRICING || 'false',
   infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
+  oceanTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
+  oceanTokenSymbol: process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL || 'OCEAN',
+  defaultDatatokenCap:
+    '115792089237316195423570985008687907853269984665640564039457',
   defaultDatatokenTemplateIndex: 2,
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
@@ -59,7 +61,7 @@ module.exports = {
 
   // Tokens to fetch the spot prices from coingecko, against above currencies.
   // Refers to Coingecko API tokenIds.
-  coingeckoTokenIds: ['ocean-protocol', 'h2o', 'ethereum', 'matic-network'],
+  coingeckoTokenIds: ['ocean-protocol', 'ethereum', 'matic-network'],
 
   // Config for https://github.com/oceanprotocol/use-dark-mode
   darkModeConfig: {

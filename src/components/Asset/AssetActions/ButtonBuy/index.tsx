@@ -54,7 +54,7 @@ function getConsumeHelpText(
       : hasPreviousOrder && isAccountConnected && isSupportedOceanNetwork
       ? `You bought this ${assetType} already allowing you to use it without paying again.`
       : hasDatatoken
-      ? `You own ${dtBalance} ${dtSymbol} allowing you to use this dataset by spending 1 ${dtSymbol}, but without paying ${btSymbol} again.`
+      ? `To use this dataset, you will buy 1  ${dtSymbol} and immediately send it back to the publisher.`
       : isBalanceSufficient === false
       ? `You do not have enough ${btSymbol} in your wallet to purchase this asset.`
       : priceType === 'free'

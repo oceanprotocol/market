@@ -8,7 +8,7 @@ import React, {
   ReactNode
 } from 'react'
 import { useUserPreferences } from '../UserPreferences'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import {
   getDownloadAssets,
   getPublishedAssets,
@@ -19,6 +19,7 @@ import axios, { CancelToken } from 'axios'
 import { useMarketMetadata } from '../MarketMetadata'
 import { getEnsProfile } from '@utils/ens'
 import { isAddress } from 'ethers/lib/utils'
+import { Asset } from '@oceanprotocol/ddo-js'
 
 interface ProfileProviderValue {
   profile: Profile
@@ -35,7 +36,7 @@ interface ProfileProviderValue {
 
 const ProfileContext = createContext({} as ProfileProviderValue)
 
-const refreshInterval = 10000 // 10 sec.
+const refreshInterval = 30000 // 30 sec.
 
 const clearedProfile: Profile = {
   name: null,
@@ -60,20 +61,22 @@ function ProfileProvider({
   const { appConfig } = useMarketMetadata()
 
   const [isEthAddress, setIsEthAddress] = useState<boolean>()
-  //
-  // Do nothing in all following effects
-  // when accountId is no ETH address
-  //
+  const [profile, setProfile] = useState<Profile>({ name: accountEns })
+  const [assets, setAssets] = useState<Asset[]>()
+  const [assetsTotal, setAssetsTotal] = useState(0)
+  const [downloads, setDownloads] = useState<DownloadedAsset[]>()
+  const [downloadsTotal, setDownloadsTotal] = useState(0)
+  const [isDownloadsLoading, setIsDownloadsLoading] = useState<boolean>()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [sales, setSales] = useState(0)
+
+  // Check if accountId is a valid Ethereum address
   useEffect(() => {
     const isEthAddress = isAddress(accountId)
     setIsEthAddress(isEthAddress)
   }, [accountId])
 
-  //
-  // User profile: ENS
-  //
-  const [profile, setProfile] = useState<Profile>({ name: accountEns })
-
+  // Fetch ENS profile
   useEffect(() => {
     if (!accountEns) return
     LoggerInstance.log(`[profile] ENS name found for ${accountId}:`, accountEns)
@@ -97,13 +100,7 @@ function ProfileProvider({
     getInfo()
   }, [accountId, isEthAddress])
 
-  //
-  // PUBLISHED ASSETS
-  //
-  const [assets, setAssets] = useState<Asset[]>()
-  const [assetsTotal, setAssetsTotal] = useState(0)
-  // const [assetsWithPrices, setAssetsWithPrices] = useState<AssetListPrices[]>()
-
+  // Fetch published assets
   useEffect(() => {
     if (!accountId || !isEthAddress) return
 
@@ -123,12 +120,6 @@ function ProfileProvider({
           `[profile] Fetched ${result.totalResults} assets.`,
           result.results
         )
-
-        // Hint: this would only make sense if we "search" in all subcomponents
-        // against this provider's state, meaning filtering via js rather then sending
-        // more queries to Aquarius.
-        // const assetsWithPrices = await getAssetsBestPrices(result.results)
-        // setAssetsWithPrices(assetsWithPrices)
       } catch (error) {
         LoggerInstance.error(error.message)
       }
@@ -138,49 +129,52 @@ function ProfileProvider({
     return () => {
       cancelTokenSource.cancel()
     }
-  }, [
-    accountId,
-    appConfig.metadataCacheUri,
-    chainIds,
-    isEthAddress,
-    ownAccount
-  ])
+  }, [accountId, chainIds, isEthAddress, ownAccount])
 
-  //
-  // DOWNLOADS
-  //
-  const [downloads, setDownloads] = useState<DownloadedAsset[]>()
-  const [downloadsTotal, setDownloadsTotal] = useState(0)
-  const [isDownloadsLoading, setIsDownloadsLoading] = useState<boolean>()
-  const [downloadsInterval, setDownloadsInterval] = useState<NodeJS.Timeout>()
-  const [currentPage, setCurrentPage] = useState(1)
-
+  // Fetch downloads
   const fetchDownloads = useCallback(
     async (cancelToken: CancelToken, page = 1) => {
       if (!accountId || !chainIds) return
 
       const dtList: string[] = []
-      const orders = await getUserOrders(accountId, cancelToken)
-      for (let i = 0; i < orders?.results?.length; i++) {
-        dtList.push(orders.results[i].datatokenAddress)
-      }
+      try {
+        const orders = await getUserOrders(accountId, cancelToken)
+        if (orders?.results?.length) {
+          dtList.push(...orders.results.map((order) => order.datatokenAddress))
+        }
 
-      const { downloadedAssets, totalResults } = await getDownloadAssets(
-        dtList,
-        // tokenOrders,
-        chainIds,
-        cancelToken,
-        ownAccount,
-        page
-      )
-      setDownloads(downloadedAssets)
-      setDownloadsTotal(totalResults)
-      LoggerInstance.log(
-        `[profile] Fetched ${downloadedAssets.length} download orders.`,
-        downloads
-      )
+        const result = await getDownloadAssets(
+          dtList,
+          chainIds,
+          cancelToken,
+          ownAccount,
+          page
+        )
+        if (!result) {
+          LoggerInstance.error('getDownloadAssets returned undefined')
+          setDownloads([])
+          setDownloadsTotal(0)
+          return
+        }
+
+        const { downloadedAssets, totalResults } = result
+        const sanitizedAssets = downloadedAssets.map((asset) => ({
+          ...asset,
+          timestamp: isNaN(asset.timestamp) ? 0 : asset.timestamp
+        }))
+        setDownloads(sanitizedAssets)
+        setDownloadsTotal(totalResults)
+        LoggerInstance.log(
+          `[profile] Fetched ${sanitizedAssets.length} download orders.`,
+          sanitizedAssets
+        )
+      } catch (error) {
+        LoggerInstance.error('Error in fetchDownloads:', error.message)
+        setDownloads([])
+        setDownloadsTotal(0)
+      }
     },
-    [accountId, chainIds, downloads, ownAccount]
+    [accountId, chainIds, ownAccount]
   )
 
   const handlePageChange = (page: number) => {
@@ -188,45 +182,42 @@ function ProfileProvider({
   }
 
   useEffect(() => {
-    const cancelToken = axios.CancelToken.source()
-    fetchDownloads(cancelToken.token, currentPage)
+    if (!accountId || !isEthAddress || !appConfig?.metadataCacheUri) {
+      setDownloads([])
+      setDownloadsTotal(0)
+      setIsDownloadsLoading(false)
+      return
+    }
 
-    return () => cancelToken.cancel('Request cancelled.')
-  }, [currentPage, fetchDownloads])
-
-  useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source()
 
-    async function getDownloadAssets() {
-      if (!appConfig?.metadataCacheUri) return
-
+    const fetchData = async () => {
       try {
         setIsDownloadsLoading(true)
-        await fetchDownloads(cancelTokenSource.token)
+        await fetchDownloads(cancelTokenSource.token, currentPage)
       } catch (err) {
-        LoggerInstance.log(err.message)
+        LoggerInstance.error('Error fetching downloads:', err.message)
       } finally {
         setIsDownloadsLoading(false)
       }
     }
-    getDownloadAssets()
 
-    if (downloadsInterval) return
-    const interval = setInterval(async () => {
-      await fetchDownloads(cancelTokenSource.token)
-    }, refreshInterval)
-    setDownloadsInterval(interval)
+    fetchData()
+    const interval = setInterval(fetchData, refreshInterval)
 
     return () => {
-      cancelTokenSource.cancel()
-      clearInterval(downloadsInterval)
+      cancelTokenSource.cancel('Cleanup: Request canceled')
+      clearInterval(interval)
     }
-  }, [fetchDownloads, appConfig.metadataCacheUri, downloadsInterval])
+  }, [
+    accountId,
+    isEthAddress,
+    appConfig?.metadataCacheUri,
+    currentPage,
+    fetchDownloads
+  ])
 
-  //
-  // SALES NUMBER
-  //
-  const [sales, setSales] = useState(0)
+  // Fetch sales number
   useEffect(() => {
     if (!accountId || chainIds.length === 0) {
       setSales(0)
@@ -264,7 +255,6 @@ function ProfileProvider({
   )
 }
 
-// Helper hook to access the provider values
 const useProfile = (): ProfileProviderValue => useContext(ProfileContext)
 
 export { ProfileProvider, useProfile, ProfileContext }

@@ -16,9 +16,9 @@ import useNftFactory from '@hooks/useNftFactory'
 import {
   ProviderInstance,
   LoggerInstance,
-  DDO,
   getErrorMessage
 } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/ddo-js'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
@@ -69,6 +69,7 @@ export default function PublishPage({
 
     try {
       const config = getOceanConfig(chain?.id)
+
       LoggerInstance.log('[publish] using config: ', config)
 
       const { erc721Address, datatokenAddress, txHash } =

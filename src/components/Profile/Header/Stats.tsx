@@ -23,8 +23,13 @@ export default function Stats({
       try {
         let count = 0
         for (const priceInfo of assets) {
-          if (priceInfo?.stats?.price?.value && priceInfo.stats.orders > 0) {
-            count += priceInfo.stats.price.value * priceInfo.stats.orders
+          if (
+            priceInfo?.indexedMetadata?.stats[0]?.prices[0]?.price &&
+            priceInfo.indexedMetadata?.stats[0]?.orders > 0
+          ) {
+            count +=
+              Number(priceInfo.indexedMetadata?.stats[0]?.prices[0].price) *
+              priceInfo.indexedMetadata?.stats[0]?.orders
           }
         }
         setTotalSales(count)

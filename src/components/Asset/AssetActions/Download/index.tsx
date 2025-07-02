@@ -6,12 +6,12 @@ import ButtonBuy from '../ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import styles from './index.module.css'
 import {
-  AssetPrice,
   FileInfo,
   LoggerInstance,
   UserCustomParameters,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
+import { AssetPrice, Service } from '@oceanprotocol/ddo-js'
 import { order } from '@utils/order'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
@@ -39,9 +39,14 @@ export default function Download({
   isBalanceSufficient,
   dtBalance,
   fileIsLoading,
-  consumableFeedback
+  consumableFeedback,
+  service,
+  accessDetails
 }: {
   asset: AssetExtended
+  service?: Service
+  accessDetails?: AccessDetails
+  serviceIndex?: number
   file: FileInfo
   isBalanceSufficient: boolean
   dtBalance: string
@@ -63,11 +68,11 @@ export default function Download({
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
   const [isOrderDisabled, setIsOrderDisabled] = useState(false)
+  const [assetPrice, setAssetPrice] = useState(null)
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
 
-  const price: AssetPrice = getAvailablePrice(asset)
   const isUnsupportedPricing =
     !asset?.accessDetails ||
     !asset.services.length ||
@@ -76,8 +81,12 @@ export default function Download({
       !asset?.accessDetails?.baseToken?.symbol)
 
   useEffect(() => {
-    Number(asset?.nft.state) === 4 && setIsOrderDisabled(true)
-  }, [asset?.nft.state])
+    const price: AssetPrice = getAvailablePrice(accessDetails)
+    setAssetPrice(price)
+  }, [accessDetails])
+  useEffect(() => {
+    Number(asset?.indexedMetadata?.nft.state) === 4 && setIsOrderDisabled(true)
+  }, [asset?.indexedMetadata?.nft.state])
 
   useEffect(() => {
     if (isUnsupportedPricing) return
@@ -95,9 +104,10 @@ export default function Download({
 
       try {
         !orderPriceAndFees && setIsPriceLoading(true)
-
         const _orderPriceAndFees = await getOrderPriceAndFees(
           asset,
+          service || asset.services[0],
+          accessDetails,
           ZERO_ADDRESS
         )
         setOrderPriceAndFees(_orderPriceAndFees)
@@ -108,7 +118,7 @@ export default function Download({
       }
     }
 
-    init()
+    if (!orderPriceAndFees) init()
 
     /**
      * we listen to the assets' changes to get the most updated price
@@ -208,7 +218,7 @@ export default function Download({
       hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
       btSymbol={asset?.accessDetails?.baseToken?.symbol}
-      dtSymbol={asset?.datatokens[0]?.symbol}
+      dtSymbol={asset?.indexedMetadata?.stats[0]?.symbol}
       dtBalance={dtBalance}
       type="submit"
       assetTimeout={secondsToString(asset?.services?.[0]?.timeout)}
@@ -227,6 +237,9 @@ export default function Download({
 
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
     const { isValid } = useFormikContext()
+    const isPricingLoaded =
+      asset?.accessDetails?.type === 'free' ||
+      (!isPriceLoading && orderPriceAndFees)
 
     return (
       <div>
@@ -236,23 +249,21 @@ export default function Download({
             state="info"
             text={`The publisher temporarily disabled ordering for this asset`}
           />
+        ) : !isPricingLoaded ? (
+          <Loader message="Loading pricing data..." />
+        ) : isUnsupportedPricing ? (
+          <Alert
+            className={styles.fieldWarning}
+            state="info"
+            text={`No pricing schema available for this asset.`}
+          />
         ) : (
           <>
-            {isUnsupportedPricing ? (
-              <Alert
-                className={styles.fieldWarning}
-                state="info"
-                text={`No pricing schema available for this asset.`}
-              />
-            ) : (
-              <>
-                {asset && <ConsumerParameters asset={asset} />}
-                {!isInPurgatory && (
-                  <div className={styles.buttonBuy}>
-                    <PurchaseButton isValid={isValid} />
-                  </div>
-                )}
-              </>
+            {asset && <ConsumerParameters asset={asset} />}
+            {!isInPurgatory && (
+              <div className={styles.buttonBuy}>
+                <PurchaseButton isValid={isValid} />
+              </div>
             )}
           </>
         )}
@@ -275,7 +286,6 @@ export default function Download({
           values?.dataServiceParams,
           asset.services[0].consumerParameters
         )
-
         await handleOrderOrDownload(dataServiceParams)
       }}
     >
@@ -290,7 +300,11 @@ export default function Download({
             ) : (
               <Price
                 className={styles.price}
-                price={price}
+                price={
+                  assetPrice?.price === null || assetPrice?.price === undefined
+                    ? null
+                    : assetPrice
+                }
                 orderPriceAndFees={orderPriceAndFees}
                 conversion
                 size="large"

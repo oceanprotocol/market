@@ -3,12 +3,10 @@ import { Formik } from 'formik'
 import {
   LoggerInstance,
   FixedRateExchange,
-  Asset,
   Datatoken,
-  Nft,
-  Metadata,
-  Service
+  Nft
 } from '@oceanprotocol/lib'
+import { Asset, Metadata, Service } from '@oceanprotocol/ddo-js'
 import { validationSchema } from './_validation'
 import { getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
@@ -162,7 +160,7 @@ export default function Edit({
       // delete custom helper properties injected in the market so we don't write them on chain
       delete (updatedAsset as AssetExtended).accessDetails
       delete (updatedAsset as AssetExtended).datatokens
-      delete (updatedAsset as AssetExtended).stats
+      delete (updatedAsset as AssetExtended).indexedMetadata?.stats
       const setMetadataTx = await setNftMetadata(
         updatedAsset,
         accountId,

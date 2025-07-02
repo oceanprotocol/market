@@ -1,5 +1,5 @@
 import siteContent from '../../content/site.json'
-import appConfig from '../../app.config'
+import appConfig from '../../app.config.cjs'
 
 export default {
   getOpcFeeForToken: jest.fn(),

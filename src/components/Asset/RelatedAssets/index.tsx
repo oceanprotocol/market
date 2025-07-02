@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
+import { Asset } from '@oceanprotocol/ddo-js'
 import { generateBaseQuery, queryMetadata } from '@utils/aquarius'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useAsset } from '@context/Asset'
@@ -20,7 +21,7 @@ export default function RelatedAssets(): ReactElement {
     if (
       !chainIds?.length ||
       !asset?.nftAddress ||
-      !asset?.nft ||
+      !asset?.indexedMetadata?.nft ||
       !asset?.metadata
     ) {
       return
@@ -51,7 +52,7 @@ export default function RelatedAssets(): ReactElement {
               asset.nftAddress,
               4 - tagResults.length,
               null,
-              asset.nft.owner
+              asset.indexedMetadata.nft.owner
             )
           )
 

@@ -25,14 +25,14 @@ export default function AssetTeaser({
   const { name, type, description } = asset.metadata
   const { datatokens } = asset
   const accessType = 'access'
-  const { owner } = asset.nft
-  const { orders, allocated, price } = asset.stats
+  const owner = asset.indexedMetadata?.nft?.owner
+  const orders = asset.indexedMetadata?.stats[0]?.orders
+  const price = asset.indexedMetadata?.stats[0]?.prices[0]
   const isUnsupportedPricing =
     !asset.services.length ||
-    price.value === undefined ||
+    price === undefined ||
     asset?.accessDetails?.type === 'NOT_SUPPORTED'
   const { locale } = useUserPreferences()
-
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${asset.id}`} className={styles.link}>

@@ -1,4 +1,4 @@
-import { ConsumerParameter } from '@oceanprotocol/lib'
+import { ConsumerParameter } from '@oceanprotocol/ddo-js'
 import * as Yup from 'yup'
 import { SchemaLike } from 'yup/lib/types'
 

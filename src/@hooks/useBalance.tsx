@@ -33,8 +33,15 @@ function useBalance(): BalanceProviderValue {
       !address ||
       !chain?.id ||
       !web3provider
-    )
+    ) {
+      LoggerInstance.warn('[useBalance] Missing required data:', {
+        balanceNativeToken: balanceNativeToken?.formatted,
+        address,
+        chainId: chain?.id,
+        web3provider: !!web3provider
+      })
       return
+    }
 
     try {
       const userBalance = balanceNativeToken?.formatted
@@ -45,19 +52,30 @@ function useBalance(): BalanceProviderValue {
         await Promise.all(
           approvedBaseTokens.map(async (token) => {
             const { address: tokenAddress, decimals, symbol } = token
-            const tokenBalance = await getTokenBalance(
-              address,
-              decimals,
-              tokenAddress,
-              web3provider
-            )
-            newBalance[symbol.toLocaleLowerCase()] = tokenBalance
+            try {
+              const tokenBalance = await getTokenBalance(
+                address,
+                decimals,
+                tokenAddress,
+                web3provider
+              )
+              newBalance[symbol.toLocaleLowerCase()] = tokenBalance
+            } catch (error) {
+              LoggerInstance.error(
+                '[useBalance] Error fetching token balance:',
+                {
+                  symbol,
+                  tokenAddress,
+                  error: error.message
+                }
+              )
+            }
           })
         )
+      } else {
+        LoggerInstance.warn('[useBalance] No approved base tokens found')
       }
-
       setBalance(newBalance)
-      LoggerInstance.log('[useBalance] Balance: ', newBalance)
     } catch (error) {
       LoggerInstance.error('[useBalance] Error: ', error.message)
     }

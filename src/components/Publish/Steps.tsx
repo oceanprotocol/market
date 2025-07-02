@@ -66,7 +66,7 @@ export function Steps({
     const config = getOceanConfig(values.user.chainId)
     if (config) {
       setFieldValue('services[0].providerUrl', {
-        url: config.providerUri,
+        url: config.oceanNodeUri,
         valid: true,
         custom: false
       })

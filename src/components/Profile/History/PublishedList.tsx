@@ -41,9 +41,8 @@ export default function PublishedList({
           chainIds,
           cancelToken,
           ownAccount,
-          page,
-          service,
-          access
+          ownAccount,
+          page
         )
         setQueryResult(result)
       } catch (error) {

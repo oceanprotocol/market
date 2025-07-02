@@ -16,7 +16,7 @@ async function emptySearch() {
   const searchParams = new URLSearchParams(window?.location.href)
   const text = searchParams.get('text')
 
-  if (text !== ('' || undefined || null)) {
+  if (text !== '' && text !== undefined && text !== null) {
     await addExistingParamsToUrl(location, ['text', 'owner', 'tags'])
   }
 }
@@ -37,7 +37,7 @@ export default function SearchBar({
     ;(text || owner) && setValue((text || owner) as string)
   }, [text, owner])
 
-  async function startSearch(e: FormEvent<HTMLButtonElement>) {
+  async function startSearch(e: React.SyntheticEvent) {
     e.preventDefault()
 
     if (value === '') setValue(' ')

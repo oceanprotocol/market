@@ -1,14 +1,13 @@
 import {
   LoggerInstance,
-  Asset,
   getHash,
   Nft,
   ProviderInstance,
-  DDO,
   MetadataAndTokenURI,
   NftCreateData,
   getErrorMessage
 } from '@oceanprotocol/lib'
+import { Asset, DDO } from '@oceanprotocol/ddo-js'
 import { SvgWaves } from './SvgWaves'
 import { customProviderUrl } from '../../app.config.cjs'
 import { Signer, ethers } from 'ethers'
@@ -175,9 +174,8 @@ export async function setNFTMetadataAndTokenURI(
       external_url: externalUrl
     })
   ).toString('base64')
-  const nft = new Nft(signer)
+  const nft = new Nft(signer, asset.chainId)
 
-  // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
   const flags = '0x02'
 
   const metadataAndTokenURI: MetadataAndTokenURI = {
