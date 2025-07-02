@@ -86,7 +86,7 @@ function getAlgoHelpText(
         isSupportedOceanNetwork
       ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
       : hasDatatokenSelectedComputeAsset
-      ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
+      ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying WETH again.`
       : isAccountConnected && !isSupportedOceanNetwork
       ? `Connect to the correct network to interact with this asset.`
       : isBalanceSufficient === false

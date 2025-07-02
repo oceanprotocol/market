@@ -48,7 +48,7 @@ export default function Stats({
           totalSales > 0 ? (
             <Conversion
               price={totalSales}
-              symbol={'ocean'}
+              symbol={'weth'}
               hideApproximateSymbol
             />
           ) : (

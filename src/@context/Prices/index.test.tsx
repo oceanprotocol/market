@@ -27,8 +27,8 @@ test('useSWR is called', async () => {
   // expect(result.current.prices['ocean-protocol'].eur).toBe('2')
 })
 
-test('should get correct Coingecko API ID for OCEAN', async () => {
-  const id1 = getCoingeckoTokenId('OCEAN')
+test('should get correct Coingecko API ID for WETH', async () => {
+  const id1 = getCoingeckoTokenId('WETH')
   expect(id1).toBe('ocean-protocol')
 
   const id2 = getCoingeckoTokenId('mOCEAN')

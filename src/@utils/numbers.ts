@@ -6,12 +6,16 @@ export function formatNumber(
   locale: string,
   decimals?: string
 ): string {
+  const priceStr = price.toString()
+  const decimalPlacesInPrice = priceStr.includes('.')
+    ? priceStr.split('.')[1].length
+    : 0
+  const targetDecimalPlaces = decimals
+    ? Math.min(Number(decimals), decimalPlacesInPrice)
+    : decimalPlacesInPrice
+
   return formatCurrency(price, '', locale, false, {
-    // Not exactly clear what `significant figures` are for this library,
-    // but setting this seems to give us the formatting we want.
-    // See https://github.com/oceanprotocol/market/issues/70
-    significantFigures: 4,
-    ...(decimals && { decimalPlaces: Number(decimals) })
+    decimalPlaces: targetDecimalPlaces
   })
 }
 

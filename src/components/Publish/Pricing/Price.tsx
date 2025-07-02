@@ -36,7 +36,7 @@ export default function Price({
             <div className={styles.form}>
               <Input
                 type="number"
-                min="1"
+                min="0.0001"
                 placeholder="0"
                 prefix={
                   approvedBaseTokens?.length > 1 ? (

@@ -22,8 +22,8 @@ export default function Preview(): ReactElement {
           price: `${values.pricing.price}`,
           baseToken: {
             address: ZERO_ADDRESS,
-            name: values.pricing?.baseToken?.symbol || 'OCEAN',
-            symbol: values.pricing?.baseToken?.symbol || 'OCEAN'
+            name: values.pricing?.baseToken?.symbol || 'WETH',
+            symbol: values.pricing?.baseToken?.symbol || 'WETH'
           },
           datatoken: {
             address: ZERO_ADDRESS,

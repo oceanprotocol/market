@@ -112,7 +112,10 @@ const validationPricing = {
   // https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
 
   price: Yup.number()
-    .min(1, (param: { min: number }) => `Must be more or equal to ${param.min}`)
+    .min(
+      0.0001,
+      (param: { min: number }) => `Must be more or equal to ${param.min}`
+    )
     .max(
       1000000,
       (param: { max: number }) => `Must be less than or equal to ${param.max}`

@@ -18,7 +18,7 @@ export function sanitizeDevelopmentConfig(config: Config): Config {
       process.env.NEXT_PUBLIC_FIXED_RATE_EXCHANGE_ADDRESS,
     dispenserAddress: process.env.NEXT_PUBLIC_DISPENSER_ADDRESS,
     oceanTokenAddress: process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS,
-    oceanTokenSymbol: process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL || 'OCEAN',
+    oceanTokenSymbol: process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL || 'WETH',
     nftFactoryAddress: process.env.NEXT_PUBLIC_NFT_FACTORY_ADDRESS,
     routerFactoryAddress: process.env.NEXT_PUBLIC_ROUTER_FACTORY_ADDRESS,
     accessListFactory: process.env.NEXT_PUBLIC_ACCESS_LIST_FACTORY_ADDRESS
@@ -48,6 +48,8 @@ export function getOceanConfig(network: string | number): Config {
   // Override RPC URL for Sepolia if it's set (the reason is ocean.js supports only infura)
   if (network === 11155111 && process.env.NEXT_PUBLIC_NODE_URI) {
     config.nodeUri = process.env.NEXT_PUBLIC_NODE_URI
+    config.oceanTokenSymbol =
+      process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL || 'WETH'
     // config.oceanNodeUri = process.env.NEXT_PUBLIC_NODE_URL
   }
 

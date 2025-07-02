@@ -4,7 +4,7 @@ import AddToken from '@shared/AddToken'
 import ExplorerLink from '@shared/ExplorerLink'
 import Publisher from '@shared/Publisher'
 import React, { ReactElement } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 import styles from './MetaAsset.module.css'
 import { getOceanConfig } from '@utils/ocean'
 
@@ -15,7 +15,8 @@ export default function MetaAsset({
   asset: AssetExtended
   isBlockscoutExplorer: boolean
 }): ReactElement {
-  const oceanConfig = getOceanConfig(11155111) // replace chainId with actual id
+  const { chain } = useNetwork()
+  const oceanConfig = getOceanConfig(chain.id)
   const symbol = oceanConfig.oceanTokenSymbol
   const { isAssetNetwork } = useAsset()
   const { connector: activeConnector } = useAccount()
