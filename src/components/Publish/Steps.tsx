@@ -32,7 +32,9 @@ export function Steps({
 
     const defaultBaseToken =
       approvedBaseTokens?.find((token) =>
-        token.name.toLowerCase().includes('weth')
+        token.name
+          .toLowerCase()
+          .includes(process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL.toLowerCase())
       ) || approvedBaseTokens?.[0]
     const isBaseTokenSet = !!approvedBaseTokens?.find(
       (token) => token?.address === values?.pricing?.baseToken?.address

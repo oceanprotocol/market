@@ -96,7 +96,7 @@ export default function FormEditMetadata({
           component={Input}
           name="price"
           type="number"
-          min="0.0001"
+          min={process.env.NEXT_PUBLIC_MIN_ASSET_PRICE}
           step="any"
         />
       )}

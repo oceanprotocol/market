@@ -8,7 +8,9 @@ import { validationConsumerParameters } from '@components/@shared/FormInput/Inpu
 // TODO: conditional validation
 // e.g. when algo is selected, Docker image is required
 // hint, hint: https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
-
+const minAssetPrice = parseFloat(
+  process.env.NEXT_PUBLIC_MIN_ASSET_PRICE || '0.0001'
+)
 const validationMetadata = {
   type: Yup.string()
     .matches(/dataset|algorithm/g, { excludeEmptyString: true })
@@ -113,7 +115,7 @@ const validationPricing = {
 
   price: Yup.number()
     .min(
-      0.0001,
+      minAssetPrice,
       (param: { min: number }) => `Must be more or equal to ${param.min}`
     )
     .max(

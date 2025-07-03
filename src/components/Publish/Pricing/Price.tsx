@@ -36,7 +36,7 @@ export default function Price({
             <div className={styles.form}>
               <Input
                 type="number"
-                min="0.0001"
+                min={process.env.NEXT_PUBLIC_MIN_ASSET_PRICE}
                 placeholder="0"
                 prefix={
                   approvedBaseTokens?.length > 1 ? (
