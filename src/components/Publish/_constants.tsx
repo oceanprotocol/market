@@ -75,7 +75,7 @@ export const initialValues: FormPublishData = {
     }
   ],
   pricing: {
-    baseToken: { address: '', name: '', symbol: 'OCEAN', decimals: 18 },
+    baseToken: { address: '', name: '', symbol: 'WETH', decimals: 18 },
     price: 0,
     type: allowFixedPricing === 'true' ? 'fixed' : 'free',
     freeAgreement: false

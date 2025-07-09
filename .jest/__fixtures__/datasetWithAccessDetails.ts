@@ -15,7 +15,7 @@ export const asset: AssetExtended = {
     baseToken: {
       address: '0xcfdda22c9837ae76e0faa845354f33c62e03653a',
       name: 'Ocean Token',
-      symbol: 'OCEAN',
+      symbol: 'WETH',
       decimals: 18
     },
     datatoken: {

@@ -19,9 +19,9 @@ Using Ocean Market is already a big improvement on the alternatives that are out
 
 The tutorial covers:
 
-* Forking and running Ocean Market locally
-* Customizing your fork of Ocean market
-* Quick deployment of Ocean Market
+- Forking and running Ocean Market locally
+- Customizing your fork of Ocean market
+- Quick deployment of Ocean Market
 
 ## Preparation
 
@@ -29,19 +29,19 @@ The tutorial covers:
 
 If you’re completely unfamiliar with Ocean Market or web3 applications in general, you will benefit from reading these guides first:
 
-* To use your clone of Ocean Market, you’ll need a wallet. We recommend getting set up with metamask.
-* You’ll also need some OCEAN on a testnet to use your marketplace.
-* When you have the testnet tokens, have a go at publishing a data NFT on Ocean Market.
-* Run through the process of consuming a data asset on Ocean Market.
+- To use your clone of Ocean Market, you’ll need a wallet. We recommend getting set up with metamask.
+- You’ll also need some WETH on a testnet to use your marketplace.
+- When you have the testnet tokens, have a go at publishing a data NFT on Ocean Market.
+- Run through the process of consuming a data asset on Ocean Market.
 
 For more information visit the [Ocean Docs](https://docs.oceanprotocol.com/)
 
 **Required Prerequisites**
 
-* Git. Instructions for installing Git can be found [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-* Node.js can be downloaded from [here](https://nodejs.org/en/download/) (we’re using version 18 in this guide)
-* A decent code editor, such as [Visual Studio Code](https://code.visualstudio.com/).
-* You’ll need a Github account to fork Ocean Market via [Github](https://github.com/).
+- Git. Instructions for installing Git can be found [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+- Node.js can be downloaded from [here](https://nodejs.org/en/download/) (we’re using version 18 in this guide)
+- A decent code editor, such as [Visual Studio Code](https://code.visualstudio.com/).
+- You’ll need a Github account to fork Ocean Market via [Github](https://github.com/).
 
 {% hint style="warning" %}
 Let's emphasize an important aspect of building dApps. It's crucial to keep in mind that practically everything can be added to the blockchain 😵 When you integrate with these components, it becomes **crucial** for you, as a developer, to ensure **proper sanitization** of the responses on your end. This means you should carefully **validate and filter** the data received to **prevent** any potential vulnerabilities or security risks in your applications.

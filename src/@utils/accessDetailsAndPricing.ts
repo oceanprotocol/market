@@ -15,7 +15,7 @@ import {
   publisherMarketOrderFee,
   customProviderUrl
 } from '../../app.config.cjs'
-import { Signer } from 'ethers'
+import { Signer, ethers } from 'ethers'
 import { toast } from 'react-toastify'
 import { getDummySigner } from './wallet'
 // import { Service } from 'src/@types/ddo/Service'
@@ -36,6 +36,8 @@ export async function getOrderPriceAndFees( // this function give price
   signer?: Signer,
   providerFees?: ProviderFees
 ): Promise<OrderPriceAndFees> {
+  const tokenDecimals = 18 // Replace with actual token decimals (fetch via contract if needed)
+
   const orderPriceAndFee = {
     price: accessDetails.price || '0',
     publisherMarketOrderFee: publisherMarketOrderFee || '0',
@@ -67,59 +69,73 @@ export async function getOrderPriceAndFees( // this function give price
     }
     const message = getErrorMessage(error.message)
     LoggerInstance.error('[Initialize Provider] Error:', message)
-
-    // Customize error message for accountId non included in allow list
     if (
-      // TODO: verify if the error code is correctly resolved by the provider
       message.includes('ConsumableCodes.CREDENTIAL_NOT_IN_ALLOW_LIST') ||
       message.includes('denied with code: 3')
     ) {
       if (accountId !== ZERO_ADDRESS) {
         toast.error(
-          `Consumer address not found in allow list for service ${asset.id}. Access has been denied.`
+          `Consumer address not found in allow list for service ${asset.id}.`
         )
       }
-      return
+      return orderPriceAndFee
     }
-    // Customize error message for accountId included in deny list
     if (
-      // TODO: verify if the error code is correctly resolved by the provider
       message.includes('ConsumableCodes.CREDENTIAL_IN_DENY_LIST') ||
       message.includes('denied with code: 4')
     ) {
       if (accountId !== ZERO_ADDRESS) {
         toast.error(
-          `Consumer address found in deny list for service ${asset.id}. Access has been denied.`
+          `Consumer address found in deny list for service ${asset.id}.`
         )
       }
-      return
+      return orderPriceAndFee
     }
     toast.error(message)
   }
   orderPriceAndFee.providerFee = providerFees || initializeData?.providerFee
 
-  // fetch price and swap fees
+  // Fetch price and swap fees
   if (accessDetails.type === 'fixed') {
     const fixed = await getFixedBuyPrice(accessDetails, asset.chainId, signer)
-    orderPriceAndFee.price = accessDetails.price
-    orderPriceAndFee.opcFee = fixed.oceanFeeAmount
-    orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount
-    orderPriceAndFee.consumeMarketFixedSwapFee = fixed.consumeMarketFeeAmount
+    orderPriceAndFee.price = ethers.utils
+      .parseUnits(accessDetails.price, tokenDecimals)
+      .toString()
+    orderPriceAndFee.opcFee = ethers.utils
+      .parseUnits(fixed.oceanFeeAmount, tokenDecimals)
+      .toString()
+    orderPriceAndFee.publisherMarketFixedSwapFee = ethers.utils
+      .parseUnits(fixed.marketFeeAmount, tokenDecimals)
+      .toString()
+    orderPriceAndFee.consumeMarketFixedSwapFee = ethers.utils
+      .parseUnits(fixed.consumeMarketFeeAmount, tokenDecimals)
+      .toString()
+  } else {
+    const price = new Decimal(+accessDetails.price || 0)
+    const consumeMarketFeePercentage =
+      Number(orderPriceAndFee?.consumeMarketOrderFee) || 0
+    const publisherMarketFeePercentage =
+      Number(orderPriceAndFee?.publisherMarketOrderFee) || 0
+
+    if (
+      isNaN(consumeMarketFeePercentage) ||
+      isNaN(publisherMarketFeePercentage)
+    ) {
+      LoggerInstance.error('Invalid fee percentage')
+      return orderPriceAndFee
+    }
+
+    const consumeMarketFee = price.mul(consumeMarketFeePercentage).div(100)
+    const publisherMarketFee = price.mul(publisherMarketFeePercentage).div(100)
+    const result = price.add(consumeMarketFee).add(publisherMarketFee)
+
+    // Format result to respect token decimals
+    orderPriceAndFee.price = ethers.utils
+      .parseUnits(result.toFixed(tokenDecimals), tokenDecimals)
+      .toString()
   }
 
-  const price = new Decimal(+accessDetails.price || 0)
-  const consumeMarketFeePercentage =
-    +orderPriceAndFee?.consumeMarketOrderFee || 0
-  const publisherMarketFeePercentage =
-    +orderPriceAndFee?.publisherMarketOrderFee || 0
-
-  // Calculate percentage-based fees
-  const consumeMarketFee = price.mul(consumeMarketFeePercentage).div(100)
-  const publisherMarketFee = price.mul(publisherMarketFeePercentage).div(100)
-
-  // Calculate total
-  const result = price.add(consumeMarketFee).add(publisherMarketFee).toString()
-  orderPriceAndFee.price = result
+  LoggerInstance.log('OrderPriceAndFees:', orderPriceAndFee)
   return orderPriceAndFee
 }
 

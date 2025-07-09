@@ -115,7 +115,7 @@ export const assets: AssetExtended[] = [
         {
           datatokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
           name: 'string',
-          symbol: 'OCEAN',
+          symbol: 'WETH',
           serviceId:
             'dbc42f4c62d2452f8731fd023eacfae74e9c7a42fbd12ce84310f13342e4aab1',
           orders: 1,
@@ -230,7 +230,7 @@ export const assets: AssetExtended[] = [
         {
           datatokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
           name: 'string',
-          symbol: 'OCEAN',
+          symbol: 'WETH',
           serviceId:
             'dbc42f4c62d2452f8731fd023eacfae74e9c7a42fbd12ce84310f13342e4aab1',
           orders: 1,
@@ -345,7 +345,7 @@ export const assets: AssetExtended[] = [
         {
           datatokenAddress: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a',
           name: 'string',
-          symbol: 'OCEAN',
+          symbol: 'WETH',
           serviceId:
             'dbc42f4c62d2452f8731fd023eacfae74e9c7a42fbd12ce84310f13342e4aab1',
           orders: 2,

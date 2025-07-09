@@ -3,6 +3,7 @@ import { AssetPrice } from '@oceanprotocol/ddo-js'
 import PriceUnit from './PriceUnit'
 import { getOceanConfig } from '@utils/ocean'
 import Loader from '@shared/atoms/Loader'
+import { useNetwork } from 'wagmi'
 
 export default function Price({
   price,
@@ -18,7 +19,9 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
-  const oceanConfig = getOceanConfig(11155111)
+  const { chain } = useNetwork()
+  const chainId = chain?.id || 11155111
+  const oceanConfig = getOceanConfig(chainId)
   const symbol = oceanConfig.oceanTokenSymbol
 
   if (!price && !orderPriceAndFees) return
@@ -27,7 +30,6 @@ export default function Price({
   }
 
   const rawPrice = price?.price
-  console.log('Raw price', rawPrice)
   const parsedPrice =
     rawPrice === null || rawPrice === undefined
       ? null
@@ -41,6 +43,7 @@ export default function Price({
       className={className}
       size={size}
       conversion={conversion}
+      decimals="4"
     />
   )
 }

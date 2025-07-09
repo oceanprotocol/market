@@ -10,7 +10,7 @@ export default function Conversion({
   className,
   hideApproximateSymbol
 }: {
-  price: number // expects price in OCEAN, not wei
+  price: number // expects price in WETH, not wei
   symbol: string
   className?: string
   hideApproximateSymbol?: boolean

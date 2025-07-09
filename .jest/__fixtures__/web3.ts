@@ -5,13 +5,13 @@ export default {
   accountId: '0x99840Df5Cb42faBE0Feb8811Aaa4BC99cA6C84e0',
   approvedBaseTokens: [
     {
-      address: '0xcfdda22c9837ae76e0faa845354f33c62e03653a',
-      symbol: 'OCEAN',
-      name: 'Ocean Token',
+      address: '0x5f207d42f869fd1c71d7f0f81a2a67fc20ff7323',
+      symbol: 'WETH',
+      name: 'WETH Token',
       decimals: 18
     }
   ],
-  balance: { eth: '0', ocean: '1000' },
+  balance: { eth: '0', weth: '1000' },
   block: 7751969,
   chainId: 5,
   connect: jest.fn(),
