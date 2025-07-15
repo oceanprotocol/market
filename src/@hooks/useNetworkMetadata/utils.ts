@@ -37,6 +37,9 @@ export function getNetworkDisplayName(data: EthereumListsChain): string {
     case 80001:
       displayName = 'Mumbai'
       break
+    case 8453:
+      displayName = 'Base'
+      break
     case 8996:
       displayName = 'Development'
       break
