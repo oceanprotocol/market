@@ -105,7 +105,7 @@
         "name": "providerUrl",
         "label": "Ocean Node URL",
         "type": "providerUrl",
-        "help": "Enter the URL for your custom [Ocean Node](https://github.com/oceanprotocol/provider/) or leave as is to use the default one. If you change your Ocean Node URL after adding your file, please add & validate your file again.",
+        "help": "Enter the URL for your custom [Ocean Node](https://docs.oceanprotocol.com/developers/ocean-node/) or leave as is to use the default one. If you change your Ocean Node URL after adding your file, please add & validate your file again.",
         "placeholder": "e.g. https://provider.oceanprotocol.com/",
         "required": true
       },
