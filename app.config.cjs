@@ -10,9 +10,9 @@ module.exports = {
     'https://2.c2d.nodes.oceanprotocol.com:8000',
 
   // This preselects the Chains user preferences.
-  chainIds: [11155111, 8996],
+  chainIds: [1, 10, 137, 11155111],
 
-  chainIdsSupported: [11155111, 8996],
+  chainIdsSupported: [1, 10, 137, 11155111],
 
   customProviderUrl: process.env.NEXT_PUBLIC_NODE_URL,
   allowDynamicPricing: process.env.NEXT_PUBLIC_ALLOW_DYNAMIC_PRICING || 'false',

@@ -50,6 +50,7 @@ export function getOceanConfig(network: string | number): Config {
     config.nodeUri = process.env.NEXT_PUBLIC_NODE_URI
     config.oceanTokenSymbol =
       process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL || 'WETH'
+    config.oceanTokenAddress = process.env.NEXT_PUBLIC_OCEAN_TOKEN_ADDRESS
     // config.oceanNodeUri = process.env.NEXT_PUBLIC_NODE_URL
   }
 
