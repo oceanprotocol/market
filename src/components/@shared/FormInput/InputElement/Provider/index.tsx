@@ -121,7 +121,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
         onClick={handleDefault}
         className={styles.default}
       >
-        Use Default Provider
+        Use Default Node
       </Button>
     </>
   )
