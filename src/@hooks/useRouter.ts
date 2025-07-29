@@ -34,13 +34,22 @@ function useFactoryRouter() {
         router.contract.getOPCConsumeFee(),
         router.contract.getOPCProviderFee()
       ])
+
       return {
         swapOceanFee: ethers.utils.formatUnits(opcFees[0], 18),
         swapNonOceanFee: ethers.utils.formatUnits(opcFees[1], 18),
         consumeFee: ethers.utils.formatUnits(consumeFee, 18),
         providerFee: ethers.utils.formatUnits(providerFee, 18)
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (
+        error.code === 'NETWORK_ERROR' &&
+        error.message?.includes('underlying network changed')
+      ) {
+        console.warn('Network changed during fetchFees, skipping...')
+        return
+      }
+
       console.error('Error fetching fees:', error)
     }
   }
@@ -101,8 +110,11 @@ function useFactoryRouter() {
         const config = getOceanConfig(chainId)
         return !!config?.routerFactoryAddress
       })
-      const opcData = await Promise.all(
-        validChainIds.map(async (chainId) => {
+
+      const opcData: OpcFee[] = []
+
+      for (const chainId of validChainIds) {
+        try {
           const fees = await fetchFees(factoryRouter)
           const approvedTokensAddresses =
             await factoryRouter.contract.getApprovedTokens()
@@ -111,16 +123,32 @@ function useFactoryRouter() {
               fetchTokenDetails(tokenAddress)
             )
           )
-          return {
+
+          opcData.push({
             chainId,
             approvedTokens: tokenDetails.map((token) => token.address),
-            swapApprovedFee: fees.swapOceanFee,
-            swapNotApprovedFee: fees.swapNonOceanFee
+            swapApprovedFee: fees?.swapOceanFee || '0',
+            swapNotApprovedFee: fees?.swapNonOceanFee || '0'
+          })
+        } catch (error: any) {
+          if (
+            error.code === 'NETWORK_ERROR' &&
+            error.message?.includes('underlying network changed')
+          ) {
+            console.warn(
+              `Network changed during fetch for chainId ${chainId}, skipping...`
+            )
+            continue
           }
-        })
-      )
 
-      return opcData as OpcFee[]
+          console.error(
+            `Error fetching OPC data for chainId ${chainId}:`,
+            error
+          )
+        }
+      }
+
+      return opcData
     }
 
     if (factoryRouter) {

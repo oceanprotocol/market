@@ -159,15 +159,27 @@ export async function getTokenBalance(
   decimals: number,
   tokenAddress: string,
   web3Provider: ethers.providers.Provider
-): Promise<string> {
+): Promise<string | undefined> {
   if (!web3Provider || !accountId || !tokenAddress) return
 
   try {
+    if (!ethers.utils.isAddress(tokenAddress)) {
+      LoggerInstance.warn(`Invalid token address: ${tokenAddress}`)
+      return
+    }
+
+    const code = await web3Provider.getCode(tokenAddress)
+    if (code === '0x') {
+      LoggerInstance.warn(`No contract found at token address: ${tokenAddress}`)
+      return
+    }
+
     const token = new Contract(tokenAddress, erc20ABI, web3Provider)
     const balance = await token.balanceOf(accountId)
+
     const adjustedDecimalsBalance = `${balance}${'0'.repeat(18 - decimals)}`
     return formatEther(adjustedDecimalsBalance)
-  } catch (e) {
+  } catch (e: any) {
     LoggerInstance.error(`ERROR: Failed to get the balance: ${e.message}`)
   }
 }
