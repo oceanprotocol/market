@@ -16,14 +16,14 @@ import useNftFactory from '@hooks/useNftFactory'
 import {
   ProviderInstance,
   LoggerInstance,
-  DDO,
   getErrorMessage
 } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/ddo-js'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
 import { setNFTMetadataAndTokenURI } from '@utils/nft'
-import { customProviderUrl } from '../../../app.config'
+import { customProviderUrl } from '../../../app.config.cjs'
 import { useAccount, useNetwork, useSigner } from 'wagmi'
 
 export default function PublishPage({
@@ -69,6 +69,7 @@ export default function PublishPage({
 
     try {
       const config = getOceanConfig(chain?.id)
+
       LoggerInstance.log('[publish] using config: ', config)
 
       const { erc721Address, datatokenAddress, txHash } =

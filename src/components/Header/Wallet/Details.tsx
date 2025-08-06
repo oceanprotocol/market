@@ -57,11 +57,11 @@ export default function Details(): ReactElement {
                 significantFigures: 4
               })}
             </span>
-            <Conversion
+            {/* <Conversion
               className={styles.conversion}
               price={Number(value)}
               symbol={key}
-            />
+            /> */}
           </li>
         ))}
 

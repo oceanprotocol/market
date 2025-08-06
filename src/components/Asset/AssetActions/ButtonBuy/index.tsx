@@ -54,7 +54,7 @@ function getConsumeHelpText(
       : hasPreviousOrder && isAccountConnected && isSupportedOceanNetwork
       ? `You bought this ${assetType} already allowing you to use it without paying again.`
       : hasDatatoken
-      ? `You own ${dtBalance} ${dtSymbol} allowing you to use this dataset by spending 1 ${dtSymbol}, but without paying ${btSymbol} again.`
+      ? `To use this dataset, you will buy 1  ${dtSymbol} and immediately send it back to the publisher.`
       : isBalanceSufficient === false
       ? `You do not have enough ${btSymbol} in your wallet to purchase this asset.`
       : priceType === 'free'
@@ -86,7 +86,7 @@ function getAlgoHelpText(
         isSupportedOceanNetwork
       ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
       : hasDatatokenSelectedComputeAsset
-      ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
+      ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying WETH again.`
       : isAccountConnected && !isSupportedOceanNetwork
       ? `Connect to the correct network to interact with this asset.`
       : isBalanceSufficient === false

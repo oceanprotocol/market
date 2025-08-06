@@ -1,11 +1,14 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { createClient, erc20ABI } from 'wagmi'
 import { mainnet, polygon, optimism, sepolia } from 'wagmi/chains'
+import { localhost } from '@wagmi/core/chains'
 import { ethers, Contract, Signer } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { getDefaultClient } from 'connectkit'
 import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { getOceanConfig } from '../ocean'
+import { getSupportedChains } from './chains'
+import { chainIdsSupported } from '../../../app.config.cjs'
 
 export async function getDummySigner(chainId: number): Promise<Signer> {
   if (typeof chainId !== 'number') {
@@ -25,12 +28,15 @@ export async function getDummySigner(chainId: number): Promise<Signer> {
 }
 
 // Wagmi client
+const chains = [...getSupportedChains(chainIdsSupported)]
+if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
+  chains.push({ ...localhost, id: 8996 })
+}
 export const wagmiClient = createClient(
   getDefaultClient({
     appName: 'Ocean Market',
     infuraId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID,
-    // TODO: mapping between appConfig.chainIdsSupported and wagmi chainId
-    chains: [mainnet, polygon, optimism, sepolia],
+    chains,
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
   })
 )
@@ -153,15 +159,27 @@ export async function getTokenBalance(
   decimals: number,
   tokenAddress: string,
   web3Provider: ethers.providers.Provider
-): Promise<string> {
+): Promise<string | undefined> {
   if (!web3Provider || !accountId || !tokenAddress) return
 
   try {
+    if (!ethers.utils.isAddress(tokenAddress)) {
+      LoggerInstance.warn(`Invalid token address: ${tokenAddress}`)
+      return
+    }
+
+    const code = await web3Provider.getCode(tokenAddress)
+    if (code === '0x') {
+      LoggerInstance.warn(`No contract found at token address: ${tokenAddress}`)
+      return
+    }
+
     const token = new Contract(tokenAddress, erc20ABI, web3Provider)
     const balance = await token.balanceOf(accountId)
+
     const adjustedDecimalsBalance = `${balance}${'0'.repeat(18 - decimals)}`
     return formatEther(adjustedDecimalsBalance)
-  } catch (e) {
+  } catch (e: any) {
     LoggerInstance.error(`ERROR: Failed to get the balance: ${e.message}`)
   }
 }

@@ -1,4 +1,4 @@
-import { Asset, Metadata, Service } from '@oceanprotocol/lib'
+import { Asset, Metadata, Service } from '@oceanprotocol/ddo-js'
 import React, { ReactElement, useEffect, useState } from 'react'
 import DebugOutput from '@shared/DebugOutput'
 import { MetadataEditForm } from './_types'

@@ -31,7 +31,9 @@ const columns: TableOceanColumn<AssetExtended>[] = [
   },
   {
     name: 'Price',
-    selector: (row) => <Price price={row.stats.price} size="small" />,
+    selector: (row) => (
+      <Price price={row.indexedMetadata.stats[0].prices[0]} size="small" />
+    ),
     right: true
   }
 ]

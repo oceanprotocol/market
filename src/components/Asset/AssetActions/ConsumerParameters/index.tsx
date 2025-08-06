@@ -2,7 +2,8 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import FormConsumerParameters from './FormConsumerParameters'
 import styles from './index.module.css'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
-import { ConsumerParameter, UserCustomParameters } from '@oceanprotocol/lib'
+import { UserCustomParameters } from '@oceanprotocol/lib'
+import { ConsumerParameter } from '@oceanprotocol/ddo-js'
 
 export function parseConsumerParameterValues(
   formValues?: UserCustomParameters,

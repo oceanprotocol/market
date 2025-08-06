@@ -22,10 +22,10 @@ export function generateQuery(
       tags && {
         terms: { 'metadata.tags.keyword': tags }
       },
-      owner && { term: { 'nft.owner.keyword': owner } }
+      owner && { term: { 'indexedMetadata.nft.owner.keyword': owner } }
     ],
     sort: {
-      'stats.orders': 'desc'
+      'indexedMetadata.stats.orders': 'desc'
     },
     sortOptions: {
       sortBy: SortTermOptions.Orders

@@ -1,4 +1,10 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, {
+  ReactElement,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo
+} from 'react'
 import Download from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import { compareAsBN } from '@utils/numbers'
@@ -15,7 +21,10 @@ import AssetStats from './AssetStats'
 import { useAccount, useProvider, useNetwork } from 'wagmi'
 import useBalance from '@hooks/useBalance'
 
-export default function AssetActions({
+// Simple in-memory cache for file metadata
+const fileMetadataCache = new Map<string, FileInfo>()
+
+export default React.memo(function AssetActions({
   asset
 }: {
   asset: AssetExtended
@@ -27,99 +36,113 @@ export default function AssetActions({
   const { isAssetNetwork } = useAsset()
   const newCancelToken = useCancelToken()
   const isMounted = useIsMounted()
-
-  // TODO: using this for the publish preview works fine, but produces a console warning
-  // on asset details page as there is no formik context there:
-  // Warning: Formik context is undefined, please verify you are calling useFormikContext()
-  // as child of a <Formik> component.
-  const formikState = useFormikContext<FormPublishData>()
+  const formikValues = useFormikContext<FormPublishData>()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
   const [fileMetadata, setFileMetadata] = useState<FileInfo>()
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
 
-  // Get and set file info
-  useEffect(() => {
+  // Memoized file info initialization
+  const initFileInfo = useCallback(async () => {
+    const cacheKey = `${asset?.id}-${asset?.services[0]?.id}`
+    if (fileMetadataCache.has(cacheKey)) {
+      setFileMetadata(fileMetadataCache.get(cacheKey))
+      return
+    }
+
     const oceanConfig = getOceanConfig(asset?.chainId)
     if (!oceanConfig) return
 
-    async function initFileInfo() {
-      setFileIsLoading(true)
-      const providerUrl =
-        formikState?.values?.services[0].providerUrl.url ||
-        asset?.services[0]?.serviceEndpoint
+    setFileIsLoading(true)
+    const providerUrl =
+      formikValues?.values.services[0].providerUrl.url ||
+      asset?.services[0]?.serviceEndpoint
 
-      const storageType = formikState?.values?.services
-        ? formikState?.values?.services[0].files[0].type
-        : null
+    const storageType = formikValues?.values.services
+      ? formikValues?.values.services[0].files[0].type
+      : null
+    const file = formikValues?.values.services[0].files[0] as any
+    const query = file?.query || undefined
+    const abi = file?.abi || undefined
+    const headers = file?.headers || undefined
+    const method = file?.method || undefined
 
-      // TODO: replace 'any' with correct typing
-      const file = formikState?.values?.services[0].files[0] as any
-      const query = file?.query || undefined
-      const abi = file?.abi || undefined
-      const headers = file?.headers || undefined
-      const method = file?.method || undefined
+    try {
+      const fileInfoResponse = formikValues?.values.services?.[0].files?.[0].url
+        ? await getFileInfo(
+            formikValues?.values.services?.[0].files?.[0].url,
+            providerUrl,
+            storageType,
+            query,
+            headers,
+            abi,
+            chain?.id,
+            method
+          )
+        : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
 
-      try {
-        const fileInfoResponse = formikState?.values?.services?.[0].files?.[0]
-          .url
-          ? await getFileInfo(
-              formikState?.values?.services?.[0].files?.[0].url,
-              providerUrl,
-              storageType,
-              query,
-              headers,
-              abi,
-              chain?.id,
-              method
-            )
-          : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
+      if (fileInfoResponse && isMounted()) {
+        setFileMetadata(fileInfoResponse[0])
+        fileMetadataCache.set(cacheKey, fileInfoResponse[0])
 
-        fileInfoResponse && setFileMetadata(fileInfoResponse[0])
-
-        // set the content type in the Dataset Schema
+        // Update dataset schema
         const datasetSchema = document.scripts?.namedItem('datasetSchema')
         if (datasetSchema) {
           const datasetSchemaJSON = JSON.parse(datasetSchema.innerText)
           if (datasetSchemaJSON?.distribution[0]['@type'] === 'DataDownload') {
-            const contentType = fileInfoResponse[0]?.contentType
-            datasetSchemaJSON.distribution[0].encodingFormat = contentType
+            datasetSchemaJSON.distribution[0].encodingFormat =
+              fileInfoResponse[0]?.contentType
             datasetSchema.innerText = JSON.stringify(datasetSchemaJSON)
           }
         }
-
-        setFileIsLoading(false)
-      } catch (error) {
-        setFileIsLoading(false)
-        LoggerInstance.error(error.message)
       }
+    } catch (error) {
+      LoggerInstance.error(error.message)
+    } finally {
+      if (isMounted()) setFileIsLoading(false)
     }
-    initFileInfo()
-  }, [asset, isMounted, newCancelToken, formikState?.values?.services])
+  }, [asset, formikValues, chain?.id, newCancelToken, isMounted])
 
-  // Get and set user DT balance
+  // Memoized datatoken balance initialization
+  const initDtBalance = useCallback(async () => {
+    if (
+      !web3Provider ||
+      !accountId ||
+      !asset?.accessDetails?.baseToken?.address ||
+      !isAssetNetwork
+    )
+      return
+
+    try {
+      const datatokenInstance = new Datatoken(web3Provider as any)
+      const dtBalance = await datatokenInstance.balance(
+        asset.accessDetails.baseToken.address,
+        accountId
+      )
+      if (isMounted()) setDtBalance(dtBalance)
+    } catch (e: any) {
+      LoggerInstance.error('[DT Balance Error]', e.message || e)
+    }
+  }, [web3Provider, accountId, asset, isAssetNetwork, isMounted])
+
+  // Fetch file info
   useEffect(() => {
-    if (!web3Provider || !accountId || !isAssetNetwork) return
+    initFileInfo()
+  }, [initFileInfo])
 
-    async function init() {
-      try {
-        const datatokenInstance = new Datatoken(web3Provider as any)
-        const dtBalance = await datatokenInstance.balance(
-          asset.services[0].datatokenAddress,
-          accountId
-        )
-        setDtBalance(dtBalance)
-      } catch (e) {
-        LoggerInstance.error(e.message)
-      }
-    }
-    init()
-  }, [web3Provider, accountId, asset, isAssetNetwork])
+  // Fetch datatoken balance
+  useEffect(() => {
+    initDtBalance()
+  }, [initDtBalance])
 
   // Check user balance against price
   useEffect(() => {
-    if (asset?.accessDetails?.type === 'free') setIsBalanceSufficient(true)
+    if (asset?.accessDetails?.type === 'free') {
+      setIsBalanceSufficient(true)
+      return
+    }
+
     if (
       !asset?.accessDetails?.price ||
       !asset?.accessDetails?.baseToken?.symbol ||
@@ -133,15 +156,16 @@ export default function AssetActions({
       balance,
       asset?.accessDetails?.baseToken?.symbol
     )
-    setIsBalanceSufficient(
+    const isSufficient =
       compareAsBN(baseTokenBalance, `${asset?.accessDetails.price}`) ||
-        Number(dtBalance) >= 1
-    )
+      Number(dtBalance) >= 1
+
+    if (isMounted()) setIsBalanceSufficient(isSufficient)
 
     return () => {
-      setIsBalanceSufficient(false)
+      if (isMounted()) setIsBalanceSufficient(false)
     }
-  }, [balance, accountId, asset?.accessDetails, dtBalance])
+  }, [balance, accountId, asset?.accessDetails, dtBalance, isMounted])
 
   return (
     <div className={styles.actions}>
@@ -151,8 +175,9 @@ export default function AssetActions({
         isBalanceSufficient={isBalanceSufficient}
         file={fileMetadata}
         fileIsLoading={fileIsLoading}
+        accessDetails={asset.accessDetails}
       />
       <AssetStats />
     </div>
   )
-}
+})

@@ -1,4 +1,4 @@
-import { PublisherTrustedAlgorithm, Asset } from '@oceanprotocol/lib'
+import { PublisherTrustedAlgorithm, Asset } from '@oceanprotocol/ddo-js'
 import { AssetSelectionAsset } from '@shared/FormInput/InputElement/AssetSelection'
 import { getServiceByName } from './ddo'
 import normalizeUrl from 'normalize-url'
@@ -14,7 +14,7 @@ export async function transformAssetToAssetSelection(
     const algoService = getServiceByName(asset, 'access')
 
     if (
-      asset?.stats?.price?.value >= 0 &&
+      Number(asset?.indexedMetadata?.stats[0]?.prices[0]?.price) >= 0 &&
       normalizeUrl(algoService?.serviceEndpoint) ===
         normalizeUrl(datasetProviderEndpoint)
     ) {
@@ -27,9 +27,9 @@ export async function transformAssetToAssetSelection(
       const algorithmAsset: AssetSelectionAsset = {
         did: asset.id,
         name: asset.metadata.name,
-        price: asset.stats.price.value,
+        price: Number(asset.indexedMetadata?.stats[0]?.prices[0]?.price),
         checked: selected,
-        symbol: asset.datatokens[0].symbol
+        symbol: asset.indexedMetadata.stats[0].symbol
       }
       selected
         ? algorithmList.unshift(algorithmAsset)

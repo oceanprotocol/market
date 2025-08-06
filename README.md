@@ -1,7 +1,3 @@
-> 🚨 **Announcement**  
-> **Ocean Market** is part of the old version of the Ocean stack and is not actively maintained.  
-> [See the docs](https://docs.oceanprotocol.com/developers/ocean-node) to learn about Ocean Node and the new stack.
-
 [![banner](https://raw.githubusercontent.com/oceanprotocol/art/master/github/repo-banner%402x.png)](https://oceanprotocol.com)
 
 <h1 align="center">Ocean Marketplace</h1>

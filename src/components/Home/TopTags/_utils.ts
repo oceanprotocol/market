@@ -1,19 +1,29 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { generateBaseQuery, queryMetadata } from '@utils/aquarius'
+import { generateBaseQuery, queryMetadataTags } from '@utils/aquarius'
 import axios, { CancelToken } from 'axios'
 import { SortTermOptions } from '../../../../src/@types/aquarius/SearchQuery'
 
 export async function getTopTags(
   chainIds: number[],
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
+  size = 20
 ): Promise<string[]> {
   const baseQueryParams = {
     chainIds,
+    query: {
+      bool: {
+        filter: [
+          { terms: { chainId: chainIds } },
+          { exists: { field: 'indexedMetadata.stats.orders' } },
+          { exists: { field: 'metadata.tags' } }
+        ]
+      }
+    },
     aggs: {
       topTags: {
         terms: {
           field: 'metadata.tags.keyword',
-          size: 20,
+          size,
           order: { totalSales: 'desc' }
         },
         aggs: {
@@ -28,18 +38,23 @@ export async function getTopTags(
     esPaginationOptions: { from: 0, size: 0 }
   } as BaseQueryParams
 
-  const query = generateBaseQuery(baseQueryParams)
   try {
-    const result = await queryMetadata(query, cancelToken)
-    const tagsList = result?.aggregations?.topTags?.buckets.map(
-      (x: { key: string }) => x.key
-    )
+    const query = generateBaseQuery(baseQueryParams)
+    const result = await queryMetadataTags(query, cancelToken)
+
+    const tagsList = result?.tags || []
+
+    if (tagsList.length === 0) {
+      LoggerInstance.warn('No tags found in aggregation results')
+    }
+
     return tagsList
   } catch (error) {
     if (axios.isCancel(error)) {
-      LoggerInstance.log(error.message)
+      LoggerInstance.log('Query canceled:', error.message)
     } else {
-      LoggerInstance.error(error.message)
+      LoggerInstance.error('Error fetching top tags:', error.message)
     }
+    return []
   }
 }

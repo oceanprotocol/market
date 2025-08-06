@@ -48,6 +48,7 @@ declare global {
     validOrderTx: string
     publisherMarketOrderFee: string
     validProviderFees?: ProviderFees
+    paymentCollector?: string
   }
 
   interface PricePublishOptions {

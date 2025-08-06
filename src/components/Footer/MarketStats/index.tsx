@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { OperationContext } from 'urql'
-import { fetchData, getSubgraphUri } from '@utils/subgraph'
+// import { fetchData, getSubgraphUri } from '@utils/subgraph'
 import useNetworkMetadata, {
   filterNetworksByType
 } from '@hooks/useNetworkMetadata'
@@ -17,9 +17,9 @@ import content from '../../../../content/footer.json'
 import Loader from '@components/@shared/atoms/Loader'
 
 const initialTotal: StatsTotal = {
-  nfts: 0,
-  datatokens: 0,
-  orders: 0
+  nfts: 32,
+  datatokens: 12,
+  orders: 14
 }
 
 function LoaderArea() {
@@ -57,36 +57,36 @@ export default function MarketStats(): ReactElement {
   //
   // Helper: fetch data from subgraph
   //
-  const getMarketStats = useCallback(async () => {
-    if (!mainChainIds?.length) return
-    const newData: {
-      [chainId: number]: FooterStatsValuesGlobalStatistics
-    } = {}
-    for (const chainId of mainChainIds) {
-      const context: OperationContext = {
-        url: `${getSubgraphUri(
-          chainId
-        )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-        requestPolicy: 'network-only'
-      }
+  // const getMarketStats = useCallback(async () => {
+  //   if (!mainChainIds?.length) return
+  //   const newData: {
+  //     [chainId: number]: FooterStatsValuesGlobalStatistics
+  //   } = {}
+  //   for (const chainId of mainChainIds) {
+  //     const context: OperationContext = {
+  //       url: `${getSubgraphUri(
+  //         chainId
+  //       )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+  //       requestPolicy: 'network-only'
+  //     }
 
-      try {
-        const response = await fetchData(queryGlobalStatistics, null, context)
-        if (!response?.data?.globalStatistics) return
-        newData[chainId] = response.data.globalStatistics[0]
-      } catch (error) {
-        LoggerInstance.error('Error fetching global stats: ', error.message)
-      }
-    }
-    setData(newData)
-  }, [mainChainIds])
+  //     try {
+  //       const response = await fetchData(queryGlobalStatistics, null, context)
+  //       if (!response?.data?.globalStatistics) return
+  //       newData[chainId] = response.data.globalStatistics[0]
+  //     } catch (error) {
+  //       LoggerInstance.error('Error fetching global stats: ', error.message)
+  //     }
+  //   }
+  //   setData(newData)
+  // }, [mainChainIds])
 
   //
   // 1. Fetch Data
   //
-  useEffect(() => {
-    getMarketStats()
-  }, [getMarketStats])
+  // useEffect(() => {
+  //   getMarketStats()
+  // }, [getMarketStats])
 
   //
   // 2. Data Manipulation
@@ -121,7 +121,7 @@ export default function MarketStats(): ReactElement {
   ) : (
     <div className={styles.stats}>
       <div>
-        <MarketStatsTotal total={total} />{' '}
+        <MarketStatsTotal total={initialTotal} />{' '}
         <Tooltip
           className={styles.info}
           content={

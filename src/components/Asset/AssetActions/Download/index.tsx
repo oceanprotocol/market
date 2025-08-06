@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState, useCallback } from 'react'
 import FileIcon from '@shared/FileIcon'
 import Price from '@shared/Price'
 import { useAsset } from '@context/Asset'
@@ -6,7 +6,6 @@ import ButtonBuy from '../ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import styles from './index.module.css'
 import {
-  AssetPrice,
   FileInfo,
   LoggerInstance,
   UserCustomParameters,
@@ -33,20 +32,23 @@ import { Form, Formik, useFormikContext } from 'formik'
 import { getDownloadValidationSchema } from './_validation'
 import { getDefaultValues } from '../ConsumerParameters/FormConsumerParameters'
 
-export default function Download({
+// Cache for pricing data
+const priceCache = new Map<string, OrderPriceAndFees>()
+
+export default React.memo(function Download({
   asset,
   file,
   isBalanceSufficient,
   dtBalance,
   fileIsLoading,
-  consumableFeedback
+  accessDetails
 }: {
   asset: AssetExtended
   file: FileInfo
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
-  consumableFeedback?: string
+  accessDetails?: AccessDetails
 }): ReactElement {
   const { address: accountId, isConnected } = useAccount()
   const { data: signer } = useSigner()
@@ -63,143 +65,158 @@ export default function Download({
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
   const [isOrderDisabled, setIsOrderDisabled] = useState(false)
+  const [assetPrice, setAssetPrice] = useState<any>(null)
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   const [retry, setRetry] = useState<boolean>(false)
 
-  const price: AssetPrice = getAvailablePrice(asset)
   const isUnsupportedPricing =
-    !asset?.accessDetails ||
+    !accessDetails ||
     !asset.services.length ||
-    asset?.accessDetails?.type === 'NOT_SUPPORTED' ||
-    (asset?.accessDetails?.type === 'fixed' &&
-      !asset?.accessDetails?.baseToken?.symbol)
+    accessDetails?.type === 'NOT_SUPPORTED' ||
+    (accessDetails?.type === 'fixed' && !accessDetails?.baseToken?.symbol)
 
-  useEffect(() => {
-    Number(asset?.nft.state) === 4 && setIsOrderDisabled(true)
-  }, [asset?.nft.state])
+  // Memoized price fetching
+  const fetchPriceAndFees = useCallback(async () => {
+    if (
+      isUnsupportedPricing ||
+      accessDetails.addressOrId === ZERO_ADDRESS ||
+      accessDetails.type === 'free'
+    )
+      return
 
+    const cacheKey = `${asset.id}-${accessDetails.addressOrId}`
+    if (priceCache.has(cacheKey)) {
+      setOrderPriceAndFees(priceCache.get(cacheKey))
+      return
+    }
+
+    try {
+      setIsPriceLoading(true)
+      const _orderPriceAndFees = await getOrderPriceAndFees(
+        asset,
+        asset.services[0],
+        accessDetails,
+        ZERO_ADDRESS
+      )
+      if (isMounted()) {
+        setOrderPriceAndFees(_orderPriceAndFees)
+        priceCache.set(cacheKey, _orderPriceAndFees)
+      }
+    } catch (error) {
+      LoggerInstance.error('getOrderPriceAndFees', error)
+    } finally {
+      if (isMounted()) setIsPriceLoading(false)
+    }
+  }, [accessDetails, isUnsupportedPricing, isMounted])
+
+  // Initialize pricing and ownership
   useEffect(() => {
     if (isUnsupportedPricing) return
 
-    setIsOwned(asset?.accessDetails?.isOwned || false)
-    setValidOrderTx(asset?.accessDetails?.validOrderTx || '')
+    setAssetPrice(getAvailablePrice(accessDetails))
+    setIsOwned(accessDetails?.isOwned || false)
+    setValidOrderTx(accessDetails?.validOrderTx || '')
+    setIsOrderDisabled(Number(asset?.indexedMetadata?.nft.state) === 4)
 
-    // get full price and fees
-    async function init() {
-      if (
-        asset.accessDetails.addressOrId === ZERO_ADDRESS ||
-        asset.accessDetails.type === 'free'
-      )
-        return
+    fetchPriceAndFees()
+  }, [
+    accessDetails,
+    asset?.indexedMetadata?.nft.state,
+    isUnsupportedPricing,
+    fetchPriceAndFees
+  ])
 
-      try {
-        !orderPriceAndFees && setIsPriceLoading(true)
-
-        const _orderPriceAndFees = await getOrderPriceAndFees(
-          asset,
-          ZERO_ADDRESS
-        )
-        setOrderPriceAndFees(_orderPriceAndFees)
-        !orderPriceAndFees && setIsPriceLoading(false)
-      } catch (error) {
-        LoggerInstance.error('getOrderPriceAndFees', error)
-        setIsPriceLoading(false)
-      }
-    }
-
-    init()
-
-    /**
-     * we listen to the assets' changes to get the most updated price
-     * based on the asset and the poolData's information.
-     * Not adding isLoading and getOpcFeeForToken because we set these here. It is a compromise
-     */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asset, getOpcFeeForToken, isUnsupportedPricing])
-
+  // Update datatoken status
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
   }, [dtBalance])
 
+  // Update disabled state
   useEffect(() => {
-    if (
-      (asset?.accessDetails?.type === 'fixed' && !orderPriceAndFees) ||
-      !isMounted ||
-      !accountId ||
-      isUnsupportedPricing
-    )
-      return
+    if (isUnsupportedPricing || !isMounted || !accountId) return
 
-    /**
-     * disabled in these cases:
-     * - if the asset is not purchasable
-     * - if the user is on the wrong network
-     * - if user balance is not sufficient
-     * - if user has no datatokens
-     */
     const isDisabled =
-      !asset?.accessDetails.isPurchasable ||
+      !accessDetails?.isPurchasable ||
       !isAssetNetwork ||
       ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
 
-    setIsDisabled(isDisabled)
+    if (isMounted()) setIsDisabled(isDisabled)
   }, [
     isMounted,
-    asset?.accessDetails,
     isBalanceSufficient,
     isAssetNetwork,
     hasDatatoken,
     accountId,
     isOwned,
-    isUnsupportedPricing,
-    orderPriceAndFees
+    isUnsupportedPricing
   ])
 
-  async function handleOrderOrDownload(dataParams?: UserCustomParameters) {
-    setIsLoading(true)
-    setRetry(false)
-    try {
-      if (isOwned) {
-        setStatusText(
-          getOrderFeedback(
-            asset.accessDetails.baseToken?.symbol,
-            asset.accessDetails.datatoken?.symbol
-          )[3]
-        )
+  // Handle order or download with retry logic
+  const handleOrderOrDownload = useCallback(
+    async (dataParams?: UserCustomParameters, attempt = 1, maxAttempts = 3) => {
+      setIsLoading(true)
+      setRetry(false)
 
-        await downloadFile(signer, asset, accountId, validOrderTx, dataParams)
-      } else {
-        setStatusText(
-          getOrderFeedback(
-            asset.accessDetails.baseToken?.symbol,
-            asset.accessDetails.datatoken?.symbol
-          )[asset.accessDetails.type === 'fixed' ? 2 : 1]
-        )
-        const orderTx = await order(
-          signer,
-          asset,
-          orderPriceAndFees,
-          accountId,
-          hasDatatoken
-        )
-        const tx = await orderTx.wait()
-        if (!tx) {
-          throw new Error()
+      try {
+        if (isOwned) {
+          setStatusText(
+            getOrderFeedback(
+              accessDetails.baseToken?.symbol,
+              accessDetails.datatoken?.symbol
+            )[3]
+          )
+          await downloadFile(signer, asset, accountId, validOrderTx, dataParams)
+        } else {
+          setStatusText(
+            getOrderFeedback(
+              accessDetails.baseToken?.symbol,
+              accessDetails.datatoken?.symbol
+            )[accessDetails.type === 'fixed' ? 2 : 1]
+          )
+          const orderTx = await order(
+            signer,
+            asset,
+            orderPriceAndFees,
+            accountId,
+            hasDatatoken
+          )
+          const tx = await orderTx.wait()
+          if (!tx) throw new Error()
+          if (isMounted()) {
+            setIsOwned(true)
+            setValidOrderTx(tx.transactionHash)
+          }
         }
-        setIsOwned(true)
-        setValidOrderTx(tx.transactionHash)
+      } catch (error) {
+        LoggerInstance.error(error)
+        if (attempt < maxAttempts) {
+          const delay = Math.pow(2, attempt) * 1000 // Exponential backoff
+          await new Promise((resolve) => setTimeout(resolve, delay))
+          return handleOrderOrDownload(dataParams, attempt + 1, maxAttempts)
+        }
+        setRetry(true)
+        toast.error(
+          isOwned
+            ? 'Failed to download file!'
+            : 'An error occurred, please retry.'
+        )
+      } finally {
+        if (isMounted()) setIsLoading(false)
       }
-    } catch (error) {
-      LoggerInstance.error(error)
-      setRetry(true)
-      const message = isOwned
-        ? 'Failed to download file!'
-        : 'An error occurred, please retry. Check console for more information.'
-      toast.error(message)
-    }
-    setIsLoading(false)
-  }
+    },
+    [
+      isOwned,
+      accessDetails,
+      signer,
+      asset,
+      accountId,
+      validOrderTx,
+      orderPriceAndFees,
+      hasDatatoken,
+      isMounted
+    ]
+  )
 
   const PurchaseButton = ({ isValid }: { isValid?: boolean }) => (
     <ButtonBuy
@@ -207,18 +224,18 @@ export default function Download({
       disabled={isDisabled || !isValid}
       hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
-      btSymbol={asset?.accessDetails?.baseToken?.symbol}
-      dtSymbol={asset?.datatokens[0]?.symbol}
+      btSymbol={accessDetails?.baseToken?.symbol}
+      dtSymbol={asset?.indexedMetadata?.stats[0]?.symbol}
       dtBalance={dtBalance}
       type="submit"
       assetTimeout={secondsToString(asset?.services?.[0]?.timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
       isLoading={isLoading}
-      priceType={asset.accessDetails?.type}
-      isConsumable={asset.accessDetails?.isPurchasable}
+      priceType={accessDetails?.type}
+      isConsumable={accessDetails?.isPurchasable}
       isBalanceSufficient={isBalanceSufficient}
-      consumableFeedback={consumableFeedback}
+      consumableFeedback={undefined}
       retry={retry}
       isSupportedOceanNetwork={isSupportedOceanNetwork}
       isAccountConnected={isConnected}
@@ -227,6 +244,8 @@ export default function Download({
 
   const AssetAction = ({ asset }: { asset: AssetExtended }) => {
     const { isValid } = useFormikContext()
+    const isPricingLoaded =
+      accessDetails?.type === 'free' || (!isPriceLoading && orderPriceAndFees)
 
     return (
       <div>
@@ -236,23 +255,21 @@ export default function Download({
             state="info"
             text={`The publisher temporarily disabled ordering for this asset`}
           />
+        ) : !isPricingLoaded ? (
+          <Loader message="Loading pricing data..." />
+        ) : isUnsupportedPricing ? (
+          <Alert
+            className={styles.fieldWarning}
+            state="info"
+            text={`No pricing schema available for this asset.`}
+          />
         ) : (
           <>
-            {isUnsupportedPricing ? (
-              <Alert
-                className={styles.fieldWarning}
-                state="info"
-                text={`No pricing schema available for this asset.`}
-              />
-            ) : (
-              <>
-                {asset && <ConsumerParameters asset={asset} />}
-                {!isInPurgatory && (
-                  <div className={styles.buttonBuy}>
-                    <PurchaseButton isValid={isValid} />
-                  </div>
-                )}
-              </>
+            <ConsumerParameters asset={asset} />
+            {!isInPurgatory && (
+              <div className={styles.buttonBuy}>
+                <PurchaseButton isValid={isValid} />
+              </div>
             )}
           </>
         )}
@@ -275,7 +292,6 @@ export default function Download({
           values?.dataServiceParams,
           asset.services[0].consumerParameters
         )
-
         await handleOrderOrDownload(dataServiceParams)
       }}
     >
@@ -290,7 +306,7 @@ export default function Download({
             ) : (
               <Price
                 className={styles.price}
-                price={price}
+                price={assetPrice}
                 orderPriceAndFees={orderPriceAndFees}
                 conversion
                 size="large"
@@ -302,4 +318,4 @@ export default function Download({
       </Form>
     </Formik>
   )
-}
+})

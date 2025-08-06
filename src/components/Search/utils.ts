@@ -1,4 +1,5 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
+import { State } from '@oceanprotocol/ddo-js'
 import {
   escapeEsReservedCharacters,
   generateBaseQuery,
@@ -42,6 +43,11 @@ export function getSearchQuery(
   text = escapeEsReservedCharacters(text)
   const emptySearchTerm = text === undefined || text === ''
   const filters: FilterTerm[] = []
+  filters.push({
+    term: {
+      'indexedMetadata.nft.state': State.Active
+    }
+  })
   let searchTerm = text || ''
   let nestedQuery
   if (tags) {
@@ -59,10 +65,10 @@ export function getSearchQuery(
         : '**'
     const searchFields = [
       'id',
-      'nft.owner',
-      'datatokens.address',
-      'datatokens.name',
-      'datatokens.symbol',
+      'indexedMetadata.nft.owner',
+      'indexedMetadata.stats.datatokenAddress',
+      'indexedMetadata.stats.name',
+      'indexedMetadata.stats.symbol',
       'metadata.name^10',
       'metadata.author',
       'metadata.description',
@@ -121,8 +127,8 @@ export function getSearchQuery(
     chainIds,
     nestedQuery,
     esPaginationOptions: {
-      from: (Number(page) - 1 || 0) * (Number(offset) || 21),
-      size: Number(offset) || 21
+      from: page || 0,
+      size: Number(offset) || 1000
     },
     sortOptions: { sortBy: sort, sortDirection },
     filters

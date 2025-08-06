@@ -21,21 +21,29 @@ export default function PriceUnit({
 }): ReactElement {
   const { locale } = useUserPreferences()
 
+  if (price === 0) {
+    return (
+      <div className={`${styles.price} ${styles[size]} ${className}`}>Free</div>
+    )
+  }
+
+  if (isNaN(price)) {
+    return (
+      <div className={`${styles.price} ${styles[size]} ${className}`}>
+        Invalid Price
+      </div>
+    )
+  }
+
   return (
     <div className={`${styles.price} ${styles[size]} ${className}`}>
-      {price === 0 ? (
-        <div>Free</div>
-      ) : !price || Number.isNaN(price) ? (
-        <div>-</div>
-      ) : (
-        <>
-          <div>
-            {formatNumber(price, locale, decimals)}
-            <span className={styles.symbol}>{symbol}</span>
-          </div>
-          {conversion && <Conversion price={price} symbol={symbol} />}
-        </>
-      )}
+      <>
+        <div>
+          {formatNumber(price, locale, decimals)}
+          <span className={styles.symbol}>{symbol}</span>
+        </div>
+        {conversion && <Conversion price={price} symbol={symbol} />}
+      </>
     </div>
   )
 }

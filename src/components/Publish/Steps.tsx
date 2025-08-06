@@ -32,7 +32,9 @@ export function Steps({
 
     const defaultBaseToken =
       approvedBaseTokens?.find((token) =>
-        token.name.toLowerCase().includes('ocean')
+        token.name
+          .toLowerCase()
+          .includes(process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL.toLowerCase())
       ) || approvedBaseTokens?.[0]
     const isBaseTokenSet = !!approvedBaseTokens?.find(
       (token) => token?.address === values?.pricing?.baseToken?.address
@@ -66,7 +68,7 @@ export function Steps({
     const config = getOceanConfig(values.user.chainId)
     if (config) {
       setFieldValue('services[0].providerUrl', {
-        url: config.providerUri,
+        url: config.oceanNodeUri,
         valid: true,
         custom: false
       })

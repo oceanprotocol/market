@@ -1,2 +1,2 @@
 # Set
-node ./scripts/load-development-addresses.js
+node ./scripts/load-development-addresses.cjs

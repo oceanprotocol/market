@@ -12,7 +12,7 @@ export default function Stats({
   accountId: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { assets, assetsTotal, sales } = useProfile()
+  const { assets, assetsTotal, sales, downloadsTotal } = useProfile()
 
   const [totalSales, setTotalSales] = useState(0)
 
@@ -23,8 +23,13 @@ export default function Stats({
       try {
         let count = 0
         for (const priceInfo of assets) {
-          if (priceInfo?.stats?.price?.value && priceInfo.stats.orders > 0) {
-            count += priceInfo.stats.price.value * priceInfo.stats.orders
+          if (
+            priceInfo?.indexedMetadata?.stats[0]?.prices[0]?.price &&
+            priceInfo.indexedMetadata?.stats[0]?.orders > 0
+          ) {
+            count +=
+              Number(priceInfo.indexedMetadata?.stats[0]?.prices[0].price) *
+              priceInfo.indexedMetadata?.stats[0]?.orders
           }
         }
         setTotalSales(count)
@@ -43,7 +48,7 @@ export default function Stats({
           totalSales > 0 ? (
             <Conversion
               price={totalSales}
-              symbol={'ocean'}
+              symbol={'weth'}
               hideApproximateSymbol
             />
           ) : (
@@ -56,6 +61,7 @@ export default function Stats({
         value={sales < 0 ? 0 : sales}
       />
       <NumberUnit label="Published" value={assetsTotal} />
+      <NumberUnit label="Downloads" value={downloadsTotal} />
     </div>
   )
 }

@@ -18,7 +18,7 @@ import {
   consumeMarketOrderFee,
   consumeMarketFixedSwapFee,
   customProviderUrl
-} from '../../app.config'
+} from '../../app.config.cjs'
 import { toast } from 'react-toastify'
 
 async function initializeProvider(
@@ -85,8 +85,6 @@ export async function order(
 
   switch (asset.accessDetails?.type) {
     case 'fixed': {
-      // this assumes all fees are in ocean
-
       const freParams = {
         exchangeContract: config.fixedRateExchangeAddress,
         exchangeId: asset.accessDetails.addressOrId,
@@ -135,13 +133,20 @@ export async function order(
         )
       }
       if (asset.accessDetails?.templateId === 2) {
+        freParams.maxBaseTokenAmount = (
+          Number(freParams.maxBaseTokenAmount) +
+          (Number(freParams.maxBaseTokenAmount) +
+            Number(orderPriceAndFees.opcFee))
+        ).toString()
         const tx: any = await approve(
           signer,
           config,
           accountId,
           asset.accessDetails.baseToken.address,
           asset.accessDetails.datatoken.address,
-          orderPriceAndFees.price,
+          (
+            Number(orderPriceAndFees.price) + Number(orderPriceAndFees.opcFee)
+          ).toString(),
           false
         )
 

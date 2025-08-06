@@ -95,6 +95,9 @@ export default function FormEditMetadata({
           {...getFieldContent('price', data)}
           component={Input}
           name="price"
+          type="number"
+          min={process.env.NEXT_PUBLIC_MIN_ASSET_PRICE}
+          step="any"
         />
       )}
 

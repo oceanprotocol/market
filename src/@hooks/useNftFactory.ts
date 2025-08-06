@@ -11,8 +11,16 @@ function useNftFactory(): NftFactory {
   useEffect(() => {
     if (!signer || !chain?.id) return
 
+    const networkId = chain.id
+
     const config = getOceanConfig(chain.id)
-    const factory = new NftFactory(config?.nftFactoryAddress, signer)
+
+    if (!config) {
+      console.error(`No config found for network ${networkId}`)
+      return
+    }
+
+    const factory = new NftFactory(config.nftFactoryAddress, signer)
     setNftFactory(factory)
   }, [signer, chain?.id])
 

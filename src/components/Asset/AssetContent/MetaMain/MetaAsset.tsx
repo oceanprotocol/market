@@ -1,11 +1,12 @@
 import { useAsset } from '@context/Asset'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset } from '@oceanprotocol/ddo-js'
 import AddToken from '@shared/AddToken'
 import ExplorerLink from '@shared/ExplorerLink'
 import Publisher from '@shared/Publisher'
 import React, { ReactElement } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 import styles from './MetaAsset.module.css'
+import { getOceanConfig } from '@utils/ocean'
 
 export default function MetaAsset({
   asset,
@@ -14,6 +15,10 @@ export default function MetaAsset({
   asset: AssetExtended
   isBlockscoutExplorer: boolean
 }): ReactElement {
+  const { chain } = useNetwork()
+  const chainId = chain?.id || 11155111
+  const oceanConfig = getOceanConfig(chainId)
+  const symbol = oceanConfig.oceanTokenSymbol
   const { isAssetNetwork } = useAsset()
   const { connector: activeConnector } = useAccount()
 
@@ -22,7 +27,7 @@ export default function MetaAsset({
   return (
     <div className={styles.wrapper}>
       <span className={styles.owner}>
-        Owned by <Publisher account={asset?.nft?.owner} />
+        Owned by <Publisher account={asset?.indexedMetadata?.nft?.owner} />
       </span>
       <span>
         <ExplorerLink
@@ -40,8 +45,8 @@ export default function MetaAsset({
           <span className={styles.addWrap}>
             <AddToken
               address={asset?.services[0].datatokenAddress}
-              symbol={(asset as Asset)?.datatokens[0]?.symbol}
-              text={`Add ${(asset as Asset)?.datatokens[0]?.symbol} to wallet`}
+              symbol={symbol}
+              text={`Add ${symbol} to wallet`}
               className={styles.add}
               minimal
             />

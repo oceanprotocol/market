@@ -9,6 +9,7 @@ import AssetContent from './AssetContent'
 export default function AssetDetails({ uri }: { uri: string }): ReactElement {
   const router = useRouter()
   const { asset, title, error, isInPurgatory, loading } = useAsset()
+
   const [pageTitle, setPageTitle] = useState<string>()
 
   useEffect(() => {

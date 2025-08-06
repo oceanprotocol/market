@@ -1,8 +1,18 @@
-module.exports = (phase, { defaultConfig }) => {
-  /**
-   * @type {import('next').NextConfig}
-   */
-  const nextConfig = {
+import withTM from 'next-transpile-modules'
+import { fileURLToPath } from 'url'
+import path from 'path'
+import pkg from 'webpack'
+const { ProvidePlugin, IgnorePlugin } = pkg
+
+// Resolve __dirname for ESM
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+/** @type {import('next').NextConfig} */
+const nextConfig = (phase, { defaultConfig }) => {
+  const config = {
+    experimental: {
+      esmExternals: 'loose'
+    },
     webpack: (config, options) => {
       config.module.rules.push(
         {
@@ -12,26 +22,22 @@ module.exports = (phase, { defaultConfig }) => {
         },
         {
           test: /\.gif$/,
-          // yay for webpack 5
-          // https://webpack.js.org/guides/asset-management/#loading-images
           type: 'asset/resource'
         }
       )
-      // for old ocean.js, most likely can be removed later on
+
+      // Ignore electron imports
       config.plugins.push(
-        new options.webpack.IgnorePlugin({
+        new IgnorePlugin({
           resourceRegExp: /^electron$/
         })
       )
+
+      // Configure resolve.fallback
       const fallback = config.resolve.fallback || {}
       Object.assign(fallback, {
-        // crypto: require.resolve('crypto-browserify'),
-        // stream: require.resolve('stream-browserify'),
-        // assert: require.resolve('assert'),
-        // os: require.resolve('os-browserify'),
-        // url: require.resolve('url'),
-        http: require.resolve('stream-http'),
-        https: require.resolve('https-browserify'),
+        http: path.resolve(__dirname, 'node_modules/stream-http'),
+        https: path.resolve(__dirname, 'node_modules/https-browserify'),
         fs: false,
         crypto: false,
         os: false,
@@ -42,12 +48,15 @@ module.exports = (phase, { defaultConfig }) => {
       })
       config.resolve.fallback = fallback
 
+      // Provide process and Buffer
       config.plugins = (config.plugins || []).concat([
-        new options.webpack.ProvidePlugin({
-          process: 'process/browser',
-          Buffer: ['buffer', 'Buffer']
+        new ProvidePlugin({
+          process: path.resolve(__dirname, 'node_modules/process/browser'),
+          Buffer: [path.resolve(__dirname, 'node_modules/buffer'), 'Buffer']
         })
       ])
+
+      // Apply defaultConfig.webpack if it’s a function
       return typeof defaultConfig.webpack === 'function'
         ? defaultConfig.webpack(config, options)
         : config
@@ -61,11 +70,9 @@ module.exports = (phase, { defaultConfig }) => {
         }
       ]
     }
-
-    // Prefer loading of ES Modules over CommonJS
-    // https://nextjs.org/blog/next-11-1#es-modules-support
-    // experimental: { esmExternals: true }
   }
 
-  return nextConfig
+  return withTM(['@oceanprotocol/lib', '@oceanprotocol/ddo-js'])(config)
 }
+
+export default nextConfig

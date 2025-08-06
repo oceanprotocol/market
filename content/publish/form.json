@@ -103,10 +103,10 @@
       },
       {
         "name": "providerUrl",
-        "label": "Provider URL",
+        "label": "Ocean Node URL",
         "type": "providerUrl",
-        "help": "Enter the URL for your custom [provider](https://github.com/oceanprotocol/provider/) or leave as is to use the default one. If you change your provider URL after adding your file, please add & validate your file again.",
-        "placeholder": "e.g. https://provider.oceanprotocol.com/",
+        "help": "Enter the URL for your custom [Ocean Node](https://docs.oceanprotocol.com/developers/ocean-node/) or leave as is to use the default one. If you change your Ocean Node URL after adding your file, please add & validate your file again.",
+        "placeholder": "e.g. https://2.c2d.nodes.oceanprotocol.com/",
         "required": true
       },
       {
@@ -159,7 +159,9 @@
                 "required": false
               }
             ]
-          },
+          }
+        ],
+        "_disabledFields": [
           {
             "value": "graphql",
             "title": "Graphql",

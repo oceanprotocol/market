@@ -1,6 +1,5 @@
 import {
   Config,
-  DDO,
   FreCreationParams,
   generateDid,
   DatatokenCreateParams,
@@ -10,11 +9,14 @@ import {
   NftCreateData,
   NftFactory,
   ZERO_ADDRESS,
-  getEventFromTx,
+  getEventFromTx
+} from '@oceanprotocol/lib'
+import {
   ConsumerParameter,
   Metadata,
-  Service
-} from '@oceanprotocol/lib'
+  Service,
+  DDO
+} from '@oceanprotocol/ddo-js'
 import { mapTimeoutStringToSeconds, normalizeFile } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
@@ -31,7 +33,7 @@ import {
   publisherMarketFixedSwapFee,
   defaultDatatokenTemplateIndex,
   customProviderUrl
-} from '../../../app.config'
+} from '../../../app.config.cjs'
 import { sanitizeUrl } from '@utils/url'
 import { getContainerChecksum } from '@utils/docker'
 import { parseEther } from 'ethers/lib/utils'
@@ -290,7 +292,6 @@ export async function createTokensAndPricing(
         ercParams,
         freParams
       )
-
       const trxReceipt = await result.wait()
       const nftCreatedEvent = getEventFromTx(trxReceipt, 'NFTCreated')
       const tokenCreatedEvent = getEventFromTx(trxReceipt, 'TokenCreated')

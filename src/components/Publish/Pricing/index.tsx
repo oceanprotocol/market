@@ -21,7 +21,7 @@ export default function PricingFields(): ReactElement {
 
   const defaultBaseToken =
     approvedBaseTokens?.find((token) =>
-      token.name.toLowerCase().includes('ocean')
+      token.name.toLowerCase().includes('weth')
     ) || approvedBaseTokens?.[0]
 
   const isBaseTokenSet = !!approvedBaseTokens?.find(
