@@ -508,7 +508,10 @@ export async function getTopAssetsPublishers(
   try {
     const result = await getTopPublishers(chainIds, null)
 
-    if (result.aggregations?.topPublishers?.buckets) {
+    if (
+      result?.aggregations?.topPublishers?.buckets &&
+      Array.isArray(result.aggregations.topPublishers.buckets)
+    ) {
       const { topPublishers } = result.aggregations
       for (const bucket of topPublishers.buckets) {
         publishers.push({
@@ -516,50 +519,48 @@ export async function getTopAssetsPublishers(
           totalSales: parseInt(bucket.totalSales.value)
         })
       }
-    } else if (result.results && Array.isArray(result.results)) {
+    } else if (Array.isArray(result?.results)) {
       const publisherMap: { [key: string]: number } = {}
 
       for (const asset of result.results) {
-        // Extract owner from indexedMetadata.nft.owner
-        const owner = asset.indexedMetadata?.nft?.owner
+        const owner = asset?.indexedMetadata?.nft?.owner
         if (!owner) {
           console.warn('Asset missing owner:', {
-            id: asset.id,
-            nftAddress: asset.nftAddress,
-            indexedMetadata: asset.indexedMetadata
+            id: asset?.id,
+            nftAddress: asset?.nftAddress,
+            indexedMetadata: asset?.indexedMetadata
           })
           continue
         }
 
-        // Extract orders from indexedMetadata.stats[0].orders
-        const orders = asset.indexedMetadata?.stats?.[0]?.orders || 0
+        const orders = asset?.indexedMetadata?.stats?.[0]?.orders || 0
         if (typeof orders !== 'number') {
           console.warn('Invalid orders value for asset:', {
-            id: asset.id,
+            id: asset?.id,
             owner,
-            orders: asset.indexedMetadata?.stats?.[0]?.orders
+            orders: asset?.indexedMetadata?.stats?.[0]?.orders
           })
           continue
         }
 
-        // Accumulate sales for the owner
         publisherMap[owner] = (publisherMap[owner] || 0) + orders
       }
 
-      // Convert publisherMap to UserSales array
       for (const [id, totalSales] of Object.entries(publisherMap)) {
         publishers.push({ id, totalSales })
       }
     } else {
-      console.warn('Unexpected response format from getTopPublishers:', result)
+      console.warn(
+        'Unexpected or empty response from getTopPublishers:',
+        result
+      )
       return []
     }
 
-    // Sort by totalSales (descending) and take top nrItems
     publishers.sort((a, b) => b.totalSales - a.totalSales)
     return publishers.slice(0, nrItems)
-  } catch (error) {
-    console.error('Error in getTopAssetsPublishers:', error.message)
+  } catch (error: any) {
+    console.error('Error in getTopAssetsPublishers:', error?.message || error)
     return []
   }
 }

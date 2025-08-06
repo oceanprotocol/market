@@ -22,7 +22,7 @@ export default function Price({
   const { chain } = useNetwork()
   const chainId = chain?.id || 11155111
   const oceanConfig = getOceanConfig(chainId)
-  const symbol = oceanConfig.oceanTokenSymbol
+  const symbol = oceanConfig?.oceanTokenSymbol
 
   if (!price && !orderPriceAndFees) return
   if (!price || price.price === undefined || price.price === null) {
