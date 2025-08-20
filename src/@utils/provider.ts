@@ -158,7 +158,7 @@ export async function downloadFile(
       asset.services[0].id,
       0,
       validOrderTx || asset.accessDetails.validOrderTx,
-      customProviderUrl || asset.services[0].serviceEndpoint,
+      asset.services[0].serviceEndpoint,
       signer,
       userCustomParameters
     )
