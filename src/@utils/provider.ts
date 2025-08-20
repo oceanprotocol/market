@@ -47,12 +47,12 @@ export async function getFileDidInfo(
     const response = await ProviderInstance.checkDidFiles(
       did,
       serviceId,
-      customProviderUrl || providerUrl,
+      providerUrl,
       withChecksum
     )
     return response
   } catch (error) {
-    const message = getErrorMessage(error.message)
+    const message = getErrorMessage(error?.message)
     LoggerInstance.error('[Initialize check file did] Error:', message)
     toast.error(`[Initialize check file did] Error: ${message}`)
     throw new Error(`[Initialize check file did] Error: ${message}`)
