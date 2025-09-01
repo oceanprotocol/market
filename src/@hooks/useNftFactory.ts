@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react'
 import { NftFactory } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
-import { useNetwork, useSigner } from 'wagmi'
+import { useSigner } from './useSigner'
+import { useAppKitNetworkCore } from '@reown/appkit/react'
 
 function useNftFactory(): NftFactory {
-  const { chain } = useNetwork()
-  const { data: signer } = useSigner()
+  const { chainId } = useAppKitNetworkCore()
+  const { signer } = useSigner()
   const [nftFactory, setNftFactory] = useState<NftFactory>()
 
   useEffect(() => {
-    if (!signer || !chain?.id) return
+    if (!signer || !chainId) return
 
-    const networkId = chain.id
+    const networkId = chainId
 
-    const config = getOceanConfig(chain.id)
+    const config = getOceanConfig(chainId)
 
     if (!config) {
       console.error(`No config found for network ${networkId}`)
@@ -22,7 +23,7 @@ function useNftFactory(): NftFactory {
 
     const factory = new NftFactory(config.nftFactoryAddress, signer)
     setNftFactory(factory)
-  }, [signer, chain?.id])
+  }, [signer, chainId])
 
   return nftFactory
 }

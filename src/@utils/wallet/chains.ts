@@ -1,5 +1,5 @@
-import { Chain } from 'wagmi'
 import * as wagmiChains from 'wagmi/chains'
+import { Chain } from 'wagmi/chains'
 
 export const getSupportedChains = (chainIdsSupported: number[]): Chain[] => {
   const supportedChains = [wagmiChains]

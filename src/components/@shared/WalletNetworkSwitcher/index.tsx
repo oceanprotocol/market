@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
 import useNetworkMetadata, {
@@ -6,16 +6,17 @@ import useNetworkMetadata, {
   getNetworkDisplayName
 } from '@hooks/useNetworkMetadata'
 import { useAsset } from '@context/Asset'
-import { useNetwork, useSwitchNetwork } from 'wagmi'
+import { useAppKitNetwork, useAppKitNetworkCore } from '@reown/appkit/react'
+import { AppKitNetwork } from '@reown/appkit/networks'
 
 export default function WalletNetworkSwitcher(): ReactElement {
-  const { chain } = useNetwork()
   const { asset } = useAsset()
-  const { switchNetwork } = useSwitchNetwork({ chainId: asset?.chainId })
+  const { chainId } = useAppKitNetworkCore()
+  const { switchNetwork } = useAppKitNetwork()
   const { networksList } = useNetworkMetadata()
 
   const ddoNetworkData = getNetworkDataById(networksList, asset.chainId)
-  const walletNetworkData = getNetworkDataById(networksList, chain?.id)
+  const walletNetworkData = getNetworkDataById(networksList, Number(chainId))
 
   const ddoNetworkName = (
     <strong>{getNetworkDisplayName(ddoNetworkData)}</strong>
@@ -31,7 +32,12 @@ export default function WalletNetworkSwitcher(): ReactElement {
         to {walletNetworkName}. Connect to {ddoNetworkName} to interact with
         this asset.
       </p>
-      <Button size="small" onClick={() => switchNetwork()}>
+      <Button
+        size="small"
+        onClick={() =>
+          switchNetwork(ddoNetworkData as unknown as AppKitNetwork)
+        }
+      >
         Switch to {ddoNetworkName}
       </Button>
     </>

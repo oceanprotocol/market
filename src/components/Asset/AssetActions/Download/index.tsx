@@ -23,7 +23,6 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
-import { useAccount, useSigner } from 'wagmi'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
 import ConsumerParameters, {
   parseConsumerParameterValues
@@ -31,6 +30,8 @@ import ConsumerParameters, {
 import { Form, Formik, useFormikContext } from 'formik'
 import { getDownloadValidationSchema } from './_validation'
 import { getDefaultValues } from '../ConsumerParameters/FormConsumerParameters'
+import { useAppKitAccount } from '@reown/appkit/react'
+import { useSigner } from '@hooks/useSigner'
 
 // Cache for pricing data
 const priceCache = new Map<string, OrderPriceAndFees>()
@@ -50,8 +51,8 @@ export default React.memo(function Download({
   fileIsLoading?: boolean
   accessDetails?: AccessDetails
 }): ReactElement {
-  const { address: accountId, isConnected } = useAccount()
-  const { data: signer } = useSigner()
+  const { address: accountId, isConnected } = useAppKitAccount()
+  const { signer } = useSigner()
   const { isSupportedOceanNetwork } = useNetworkMetadata()
   const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()

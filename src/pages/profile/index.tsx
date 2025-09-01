@@ -1,17 +1,20 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import Page from '@shared/Page'
 import ProfilePage from '../../components/Profile'
 import { accountTruncate } from '@utils/wallet'
 import ProfileProvider from '@context/Profile'
 import { getEnsAddress, getEnsName } from '@utils/ens'
 import { useRouter } from 'next/router'
-import { useAccount, useEnsName } from 'wagmi'
+import { useEnsName } from 'wagmi'
 import { isAddress } from 'ethers/lib/utils'
+import { useAppKitAccount } from '@reown/appkit/react'
 
 export default function PageProfile(): ReactElement {
   const router = useRouter()
-  const { address: accountId } = useAccount()
-  const { data: accountEns } = useEnsName({ address: accountId })
+  const { address: accountId } = useAppKitAccount()
+  const { data: accountEns } = useEnsName({
+    address: accountId as `0x${string}`
+  })
   const [finalAccountId, setFinalAccountId] = useState<string>()
   const [finalAccountEns, setFinalAccountEns] = useState<string>()
   const [ownAccount, setOwnAccount] = useState(false)

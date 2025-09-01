@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "baseUrl": ".", // This must be specified if "paths" is.
-    "target": "es2015",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es2020",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,

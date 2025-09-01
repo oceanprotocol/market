@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Router as FactoryRouter, LoggerInstance } from '@oceanprotocol/lib'
+import { Router as FactoryRouter } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
-import { useNetwork, useSigner } from 'wagmi'
 import { ethers } from 'ethers'
 import { Fees, TokenDetails } from '../@types/factoryRouter/FactoryRouter.type'
 import { OpcFee } from '@context/MarketMetadata/_types'
+import { useAppKitNetworkCore } from '@reown/appkit/react'
+import { useSigner } from './useSigner'
 
 function useFactoryRouter() {
-  const { chain } = useNetwork()
-  const { data: signer } = useSigner()
+  const { chainId } = useAppKitNetworkCore()
+  const { signer } = useSigner()
+
   const [factoryRouter, setFactoryRouter] = useState<FactoryRouter>()
   const [approvedTokens, setApprovedTokens] = useState<TokenDetails[]>([])
   const [fees, setFees] = useState<Fees>({
@@ -19,13 +21,13 @@ function useFactoryRouter() {
   })
 
   useEffect(() => {
-    if (!signer || !chain?.id) return
-    const config = getOceanConfig(chain.id)
+    if (!signer || !chainId) return
+    const config = getOceanConfig(chainId)
     if (!config) return
     setFactoryRouter(
       new FactoryRouter(config?.routerFactoryAddress, signer, config.chainId)
     )
-  }, [signer, chain?.id])
+  }, [signer, chainId])
 
   const fetchFees = async (router: FactoryRouter) => {
     try {

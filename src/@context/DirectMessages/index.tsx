@@ -1,4 +1,4 @@
-import React, {
+import {
   useContext,
   createContext,
   useState,
@@ -10,7 +10,6 @@ import React, {
 import { useInterval } from '@hooks/useInterval'
 import { Orbis } from '@orbisclub/orbis-sdk'
 import { accountTruncate } from '@utils/wallet'
-import { useAccount, useSigner, useProvider } from 'wagmi'
 import { didToAddress, sleep } from '@shared/DirectMessages/_utils'
 import { getEnsName } from '@utils/ens'
 import usePrevious from '@hooks/usePrevious'
@@ -23,6 +22,9 @@ import {
   IConversationWithAdditionalData
 } from './_types'
 import { LoggerInstance } from '@oceanprotocol/lib'
+import { useSigner } from '@hooks/useSigner'
+import { useProvider } from '@hooks/useProvider'
+import { useAppKitAccount } from '@reown/appkit/react'
 
 const OrbisContext = createContext({} as IOrbisProvider)
 
@@ -32,8 +34,8 @@ const CONVERSATION_CONTEXT =
   process.env.NEXT_PUBLIC_ORBIS_CONTEXT || 'ocean_market' // Can be changed to whatever
 
 function OrbisProvider({ children }: { children: ReactNode }): ReactElement {
-  const { address: accountId } = useAccount()
-  const { data: signer } = useSigner()
+  const { address: accountId } = useAppKitAccount()
+  const { signer } = useSigner()
   const web3Provider = useProvider()
   const prevAccountId = usePrevious(accountId)
 

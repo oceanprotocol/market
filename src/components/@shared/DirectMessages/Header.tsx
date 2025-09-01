@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import styles from './Header.module.css'
-import { useAccount } from 'wagmi'
 import { useOrbis } from '@context/DirectMessages'
 import { didToAddress } from './_utils'
 import { toast } from 'react-toastify'
@@ -8,9 +7,10 @@ import ChatBubble from '@images/chatbubble.svg'
 import ArrowBack from '@images/arrow.svg'
 import ChevronUp from '@images/chevronup.svg'
 import Copy from '@images/copy.svg'
+import { useAppKitAccount } from '@reown/appkit/react'
 
 export default function Header() {
-  const { address: accountId } = useAccount()
+  const { address: accountId } = useAppKitAccount()
   const {
     conversations,
     conversationId,

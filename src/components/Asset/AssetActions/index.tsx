@@ -1,10 +1,4 @@
-import React, {
-  ReactElement,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo
-} from 'react'
+import React, { ReactElement, useState, useEffect, useCallback } from 'react'
 import Download from './Download'
 import { FileInfo, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import { compareAsBN } from '@utils/numbers'
@@ -18,8 +12,9 @@ import { useFormikContext } from 'formik'
 import { FormPublishData } from '@components/Publish/_types'
 import { getTokenBalanceFromSymbol } from '@utils/wallet'
 import AssetStats from './AssetStats'
-import { useAccount, useProvider, useNetwork } from 'wagmi'
 import useBalance from '@hooks/useBalance'
+import { useAppKitAccount, useAppKitNetworkCore } from '@reown/appkit/react'
+import { useProvider } from '@hooks/useProvider'
 
 // Simple in-memory cache for file metadata
 const fileMetadataCache = new Map<string, FileInfo>()
@@ -29,9 +24,9 @@ export default React.memo(function AssetActions({
 }: {
   asset: AssetExtended
 }): ReactElement {
-  const { address: accountId } = useAccount()
+  const { address: accountId } = useAppKitAccount()
   const { balance } = useBalance()
-  const { chain } = useNetwork()
+  const { chainId } = useAppKitNetworkCore()
   const web3Provider = useProvider()
   const { isAssetNetwork } = useAsset()
   const newCancelToken = useCancelToken()
@@ -77,7 +72,7 @@ export default React.memo(function AssetActions({
             query,
             headers,
             abi,
-            chain?.id,
+            Number(chainId),
             method
           )
         : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
@@ -102,7 +97,7 @@ export default React.memo(function AssetActions({
     } finally {
       if (isMounted()) setFileIsLoading(false)
     }
-  }, [asset, formikValues, chain?.id, newCancelToken, isMounted])
+  }, [asset, formikValues, chainId, newCancelToken, isMounted])
 
   // Memoized datatoken balance initialization
   const initDtBalance = useCallback(async () => {

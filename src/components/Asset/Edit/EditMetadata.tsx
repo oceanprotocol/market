@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import { ReactElement, useState, useEffect } from 'react'
 import { Formik } from 'formik'
 import {
   LoggerInstance,
@@ -25,8 +25,10 @@ import { setNftMetadata } from '@utils/nft'
 import { sanitizeUrl } from '@utils/url'
 import { getEncryptedFiles } from '@utils/provider'
 import { assetStateToNumber } from '@utils/assetState'
-import { useAccount, useProvider, useNetwork, useSigner } from 'wagmi'
 import { transformConsumerParameters } from '@components/Publish/_utils'
+import { useAppKitAccount, useAppKitNetworkCore } from '@reown/appkit/react'
+import { useProvider } from '@hooks/useProvider'
+import { useSigner } from '@hooks/useSigner'
 
 export default function Edit({
   asset
@@ -35,10 +37,10 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { fetchAsset, isAssetNetwork, assetState } = useAsset()
-  const { address: accountId } = useAccount()
-  const { chain } = useNetwork()
+  const { chainId } = useAppKitNetworkCore()
+  const { address: accountId } = useAppKitAccount()
   const provider = useProvider()
-  const { data: signer } = useSigner()
+  const { signer } = useSigner()
   const newAbortController = useAbortController()
 
   const [success, setSuccess] = useState<string>()
@@ -127,7 +129,11 @@ export default function Edit({
           nftAddress: asset.nftAddress,
           datatokenAddress: asset.services[0].datatokenAddress,
           files: [
-            normalizeFile(values.files[0].type, values.files[0], chain?.id)
+            normalizeFile(
+              values.files[0].type,
+              values.files[0],
+              Number(chainId)
+            )
           ]
         }
 

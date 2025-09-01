@@ -1,53 +1,47 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
+import { ethers } from 'ethers'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useMarketMetadata } from '../@context/MarketMetadata'
-import {
-  useNetwork,
-  useAccount,
-  useProvider,
-  useBalance as useBalanceWagmi
-} from 'wagmi'
 import { getTokenBalance } from '@utils/wallet'
+import { useProvider } from './useProvider'
+import { useAppKitAccount, useAppKitNetworkCore } from '@reown/appkit/react'
+
+interface UserBalance {
+  [symbol: string]: string
+}
 
 interface BalanceProviderValue {
   balance: UserBalance
 }
 
 function useBalance(): BalanceProviderValue {
-  const { address } = useAccount()
-  const { data: balanceNativeToken } = useBalanceWagmi({ address })
+  const { address } = useAppKitAccount()
   const web3provider = useProvider()
   const { approvedBaseTokens } = useMarketMetadata()
-  const { chain } = useNetwork()
+  const { chainId } = useAppKitNetworkCore()
 
-  const [balance, setBalance] = useState<UserBalance>({
-    eth: '0'
-  })
+  const [balance, setBalance] = useState<UserBalance>({})
 
   // -----------------------------------
-  // Helper: Get user balance
+  // Fetch balances
   // -----------------------------------
-  const getUserBalance = useCallback(async () => {
-    if (
-      !balanceNativeToken?.formatted ||
-      !address ||
-      !chain?.id ||
-      !web3provider
-    ) {
+  const getUserBalance = async () => {
+    if (!address || !chainId || !web3provider) {
       LoggerInstance.warn('[useBalance] Missing required data:', {
-        balanceNativeToken: balanceNativeToken?.formatted,
         address,
-        chainId: chain?.id,
+        chainId,
         web3provider: !!web3provider
       })
       return
     }
 
     try {
-      const userBalance = balanceNativeToken?.formatted
-      const key = balanceNativeToken?.symbol.toLowerCase()
-      const newBalance: UserBalance = { [key]: userBalance }
+      // Native balance
+      const rawBalance = await web3provider.getBalance(address)
+      const userBalance = ethers.utils.formatEther(rawBalance)
+      const newBalance: UserBalance = { eth: userBalance }
 
+      // Token balances
       if (approvedBaseTokens?.length > 0) {
         await Promise.all(
           approvedBaseTokens.map(async (token) => {
@@ -59,15 +53,11 @@ function useBalance(): BalanceProviderValue {
                 tokenAddress,
                 web3provider
               )
-              newBalance[symbol.toLocaleLowerCase()] = tokenBalance
-            } catch (error) {
+              newBalance[symbol.toLowerCase()] = tokenBalance
+            } catch (error: any) {
               LoggerInstance.error(
                 '[useBalance] Error fetching token balance:',
-                {
-                  symbol,
-                  tokenAddress,
-                  error: error.message
-                }
+                { symbol, tokenAddress, error: error.message }
               )
             }
           })
@@ -75,15 +65,17 @@ function useBalance(): BalanceProviderValue {
       } else {
         LoggerInstance.warn('[useBalance] No approved base tokens found')
       }
+
       setBalance(newBalance)
-    } catch (error) {
+    } catch (error: any) {
       LoggerInstance.error('[useBalance] Error: ', error.message)
     }
-  }, [address, approvedBaseTokens, chain?.id, web3provider, balanceNativeToken])
+  }
 
+  // Run whenever the wallet context changes
   useEffect(() => {
     getUserBalance()
-  }, [getUserBalance])
+  }, [address, chainId, web3provider, approvedBaseTokens])
 
   return { balance }
 }

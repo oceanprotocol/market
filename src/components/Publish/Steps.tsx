@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik'
 import { wizardSteps, initialPublishFeedback } from './_constants'
 import { FormPublishData, PublishFeedback } from './_types'
 import { getOceanConfig } from '@utils/ocean'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAppKitAccount, useAppKitNetworkCore } from '@reown/appkit/react'
 import { useMarketMetadata } from '@context/MarketMetadata'
 
 export function Steps({
@@ -11,21 +11,21 @@ export function Steps({
 }: {
   feedback: PublishFeedback
 }): ReactElement {
-  const { address: accountId } = useAccount()
-  const { chain } = useNetwork()
+  const { address: accountId } = useAppKitAccount()
+  const { chainId } = useAppKitNetworkCore()
   const { approvedBaseTokens } = useMarketMetadata()
   const { values, setFieldValue, touched, setTouched } =
     useFormikContext<FormPublishData>()
 
   const isCustomProviderUrl = values?.services?.[0]?.providerUrl.custom
 
-  // auto-sync user chain?.id & account into form data values
+  // auto-sync user chainId & account into form data values
   useEffect(() => {
-    if (!chain?.id || !accountId) return
+    if (!chainId || !accountId) return
 
-    setFieldValue('user.chainId', chain?.id)
+    setFieldValue('user.chainId', chainId)
     setFieldValue('user.accountId', accountId)
-  }, [chain?.id, accountId, setFieldValue])
+  }, [chainId, accountId, setFieldValue])
 
   useEffect(() => {
     if (!approvedBaseTokens?.length) return

@@ -1,5 +1,5 @@
 import { useUserPreferences } from '@context/UserPreferences'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import Price from '@shared/Price'
@@ -8,7 +8,7 @@ import AssetTitle from '@shared/AssetListTitle'
 import { getAssetsFromDids } from '@utils/aquarius'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import { useAccount } from 'wagmi'
+import { useAppKitAccount } from '@reown/appkit/react'
 
 const columns: TableOceanColumn<AssetExtended>[] = [
   {
@@ -40,7 +40,7 @@ const columns: TableOceanColumn<AssetExtended>[] = [
 
 export default function Bookmarks(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { address: accountId } = useAccount()
+  const { address: accountId } = useAppKitAccount()
   const { bookmarks } = useUserPreferences()
 
   const [pinned, setPinned] = useState<AssetExtended[]>()

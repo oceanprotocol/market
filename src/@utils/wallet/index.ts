@@ -1,14 +1,9 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { createClient, erc20ABI } from 'wagmi'
-import { mainnet, polygon, optimism, sepolia } from 'wagmi/chains'
-import { localhost } from '@wagmi/core/chains'
 import { ethers, Contract, Signer } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
-import { getDefaultClient } from 'connectkit'
 import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { getOceanConfig } from '../ocean'
-import { getSupportedChains } from './chains'
-import { chainIdsSupported } from '../../../app.config.cjs'
+import erc20ABI from '@oceanprotocol/contracts/artifacts/contracts/templates/ERC20Template.sol/ERC20Template.json'
 
 export async function getDummySigner(chainId: number): Promise<Signer> {
   if (typeof chainId !== 'number') {
@@ -20,26 +15,13 @@ export async function getDummySigner(chainId: number): Promise<Signer> {
   try {
     const privateKey =
       '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
-    const provider = new ethers.providers.JsonRpcProvider(config.nodeUri)
+    const provider = new ethers.providers.JsonRpcProvider(config.nodeUri, config.chainId)
     return new ethers.Wallet(privateKey, provider)
   } catch (error) {
     throw new Error(`Failed to create dummy signer: ${error.message}`)
   }
 }
 
-// Wagmi client
-const chains = [...getSupportedChains(chainIdsSupported)]
-if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
-  chains.push({ ...localhost, id: 8996 })
-}
-export const wagmiClient = createClient(
-  getDefaultClient({
-    appName: 'Ocean Market',
-    infuraId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID,
-    chains,
-    walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
-  })
-)
 
 // ConnectKit CSS overrides
 // https://docs.family.co/connectkit/theming#theme-variables
@@ -77,26 +59,25 @@ export async function addTokenToWallet(
     options: { address, symbol, image, decimals: 18 }
   }
 
-  ;(window?.ethereum.request as any)(
-    {
-      method: 'wallet_watchAsset',
-      params: tokenMetadata,
-      id: Math.round(Math.random() * 100000)
-    },
-    (err: { code: number; message: string }, added: any) => {
-      if (err || 'error' in added) {
-        LoggerInstance.error(
-          `Couldn't add ${tokenMetadata.options.symbol} (${
-            tokenMetadata.options.address
-          }) to MetaMask, error: ${err.message || added.error}`
-        )
-      } else {
-        LoggerInstance.log(
-          `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
-        )
+    ; (window?.ethereum.request as any)(
+      {
+        method: 'wallet_watchAsset',
+        params: tokenMetadata,
+        id: Math.round(Math.random() * 100000)
+      },
+      (err: { code: number; message: string }, added: any) => {
+        if (err || 'error' in added) {
+          LoggerInstance.error(
+            `Couldn't add ${tokenMetadata.options.symbol} (${tokenMetadata.options.address
+            }) to MetaMask, error: ${err.message || added.error}`
+          )
+        } else {
+          LoggerInstance.log(
+            `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
+          )
+        }
       }
-    }
-  )
+    )
 }
 
 export async function addCustomNetwork(
@@ -132,8 +113,7 @@ export async function addCustomNetwork(
         (err: string, added: any) => {
           if (err || 'error' in added) {
             LoggerInstance.error(
-              `Couldn't add ${network.name} (0x${
-                network.chainId
+              `Couldn't add ${network.name} (0x${network.chainId
               }) network to MetaMask, error: ${err || added.error}`
             )
           } else {
@@ -174,7 +154,7 @@ export async function getTokenBalance(
       return
     }
 
-    const token = new Contract(tokenAddress, erc20ABI, web3Provider)
+    const token = new Contract(tokenAddress, erc20ABI.abi, web3Provider)
     const balance = await token.balanceOf(accountId)
 
     const adjustedDecimalsBalance = `${balance}${'0'.repeat(18 - decimals)}`

@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import DebugOutput from '@shared/DebugOutput'
 import { FormPublishData } from '../_types'
 import { useFormikContext } from 'formik'
@@ -6,18 +6,18 @@ import { transformPublishFormToDdo } from '../_utils'
 import styles from './index.module.css'
 import { DDO } from '@oceanprotocol/ddo-js'
 import { previewDebugPatch } from '@utils/ddo'
-import { useNetwork } from 'wagmi'
+import { useAppKitNetworkCore } from '@reown/appkit/react'
 
 export default function Debug(): ReactElement {
   const { values } = useFormikContext<FormPublishData>()
   const [valuePreview, setValuePreview] = useState({})
   const [ddo, setDdo] = useState<DDO>()
-  const { chain } = useNetwork()
+  const { chainId } = useAppKitNetworkCore()
 
   useEffect(() => {
     async function makeDdo() {
       const ddo = await transformPublishFormToDdo(values)
-      setValuePreview(previewDebugPatch(values, chain?.id))
+      setValuePreview(previewDebugPatch(values, Number(chainId)))
       setDdo(ddo)
     }
     makeDdo()

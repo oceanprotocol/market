@@ -8,11 +8,11 @@ import {
   NetworkType
 } from './utils'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import { useNetwork } from 'wagmi'
+import { useAppKitNetworkCore } from '@reown/appkit/react'
 
 export default function useNetworkMetadata(): UseNetworkMetadata {
   const { appConfig } = useMarketMetadata()
-  const { chain } = useNetwork()
+  const { chainId } = useAppKitNetworkCore()
 
   const [networkDisplayName, setNetworkDisplayName] = useState<string>()
   const [networkData, setNetworkData] = useState<EthereumListsChain>()
@@ -25,9 +25,9 @@ export default function useNetworkMetadata(): UseNetworkMetadata {
   // Get and set network metadata
   // -----------------------------------
   useEffect(() => {
-    if (!chain?.id) return
+    if (!chainId) return
 
-    const networkData = getNetworkDataById(networksList, chain.id)
+    const networkData = getNetworkDataById(networksList, Number(chainId))
     setNetworkData(networkData)
 
     // Construct network display name
@@ -35,7 +35,7 @@ export default function useNetworkMetadata(): UseNetworkMetadata {
     setNetworkDisplayName(networkDisplayName)
 
     // Check if network is supported by Ocean Protocol
-    if (appConfig.chainIdsSupported.includes(chain.id)) {
+    if (appConfig.chainIdsSupported.includes(Number(chainId))) {
       setIsSupportedOceanNetwork(true)
     } else {
       setIsSupportedOceanNetwork(false)
@@ -43,7 +43,7 @@ export default function useNetworkMetadata(): UseNetworkMetadata {
 
     // Check if network is testnet
     setIsTestnet(getNetworkType(networkData) !== NetworkType.Mainnet)
-  }, [chain?.id, networksList, appConfig.chainIdsSupported])
+  }, [chainId, networksList, appConfig.chainIdsSupported])
 
   return {
     networksList,

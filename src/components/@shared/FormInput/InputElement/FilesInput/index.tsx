@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Field, useField } from 'formik'
 import FileInfoDetails from './Info'
 import UrlInput from '../URLInput'
@@ -7,7 +7,6 @@ import { getFileInfo, checkValidProvider } from '@utils/provider'
 import { LoggerInstance, FileInfo } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import styles from './index.module.css'
-import { useNetwork } from 'wagmi'
 import InputKeyValue from '../KeyValueInput'
 import Button from '@shared/atoms/Button'
 import Loader from '@shared/atoms/Loader'
@@ -15,14 +14,14 @@ import { checkJson } from '@utils/codemirror'
 import { isGoogleUrl } from '@utils/url/index'
 import isUrl from 'is-url-superb'
 import MethodInput from '../MethodInput'
+import { useAppKitNetworkCore } from '@reown/appkit/react'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
   const [disabledButton, setDisabledButton] = useState(true)
   const { asset } = useAsset()
-  const { chain } = useNetwork()
-  const chainId = chain?.id
+  const { chainId } = useAppKitNetworkCore()
 
   const providerUrl = props.form?.values?.services
     ? props.form?.values?.services[0].providerUrl.url
@@ -61,7 +60,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         query,
         headers,
         abi,
-        chain?.id,
+        Number(chainId),
         method
       )
 
@@ -83,7 +82,7 @@ export default function FilesInput(props: InputProps): ReactElement {
           query,
           headers,
           abi,
-          chainId,
+          chainId: Number(chainId),
           ...checkedFile[0]
         }
       ])

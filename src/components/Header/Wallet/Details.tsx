@@ -1,27 +1,30 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '@context/UserPreferences'
 import Button from '@shared/atoms/Button'
 import AddToken from '@shared/AddToken'
-import Conversion from '@shared/Price/Conversion'
 import { useOrbis } from '@context/DirectMessages'
 import { getOceanConfig } from '@utils/ocean'
-import { useNetwork, useDisconnect, useAccount, useConnect } from 'wagmi'
-import { useModal } from 'connectkit'
+import { useDisconnect } from 'wagmi'
 import styles from './Details.module.css'
 import useBalance from '@hooks/useBalance'
 import useNetworkMetadata from '@hooks/useNetworkMetadata'
+import {
+  useAppKit,
+  useAppKitAccount,
+  useAppKitNetworkCore
+} from '@reown/appkit/react'
 
 export default function Details(): ReactElement {
-  const { chain } = useNetwork()
-  const { connector: activeConnector, address: accountId } = useAccount()
-  const { connect } = useConnect()
-  const { setOpen } = useModal()
+  const { chainId } = useAppKitNetworkCore()
+  const { address: accountId } = useAppKitAccount()
+  const { open } = useAppKit()
   const { disconnect } = useDisconnect()
   const { balance } = useBalance()
   const { networkData } = useNetworkMetadata()
   const { locale } = useUserPreferences()
   const { checkOrbisConnection, disconnectOrbis } = useOrbis()
+  const connector = 'metaMask'
 
   const [mainCurrency, setMainCurrency] = useState<string>()
   const [oceanTokenMetadata, setOceanTokenMetadata] = useState<{
@@ -30,19 +33,19 @@ export default function Details(): ReactElement {
   }>()
 
   useEffect(() => {
-    if (!chain?.id) return
+    if (!chainId) return
 
     const symbol = networkData?.nativeCurrency.symbol
     setMainCurrency(symbol)
 
-    const oceanConfig = getOceanConfig(chain.id)
+    const oceanConfig = getOceanConfig(chainId)
 
     oceanConfig &&
       setOceanTokenMetadata({
         address: oceanConfig.oceanTokenAddress,
         symbol: oceanConfig.oceanTokenSymbol
       })
-  }, [networkData, chain?.id])
+  }, [networkData, chainId])
 
   return (
     <div className={styles.details}>
@@ -69,9 +72,9 @@ export default function Details(): ReactElement {
           <div title="Connected provider" className={styles.walletInfo}>
             <span className={styles.walletLogoWrap}>
               {/* <img className={styles.walletLogo} src={activeConnector?.logo} /> */}
-              {activeConnector?.name}
+              {connector}
             </span>
-            {activeConnector?.name === 'MetaMask' && (
+            {connector === 'metaMask' && (
               <AddToken
                 address={oceanTokenMetadata?.address}
                 symbol={oceanTokenMetadata?.symbol}
@@ -84,7 +87,7 @@ export default function Details(): ReactElement {
               style="text"
               size="small"
               onClick={async () => {
-                connect()
+                open()
                 checkOrbisConnection({ address: accountId })
               }}
             >

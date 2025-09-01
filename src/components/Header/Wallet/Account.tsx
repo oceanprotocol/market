@@ -4,25 +4,28 @@ import { accountTruncate } from '@utils/wallet'
 // import Loader from '@shared/atoms/Loader'
 import styles from './Account.module.css'
 import Avatar from '@shared/atoms/Avatar'
-import { useAccount, useEnsName, useEnsAvatar } from 'wagmi'
-import { useModal } from 'connectkit'
+import { useEnsName, useEnsAvatar } from 'wagmi'
+import { useAppKit, useAppKitAccount } from '@reown/appkit/react'
 
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { address: accountId } = useAccount()
-  const { data: accountEns } = useEnsName({ address: accountId, chainId: 1 })
-  const { data: accountEnsAvatar } = useEnsAvatar({
-    address: accountId,
+  const { address: accountId } = useAppKitAccount()
+  const { data: accountEns } = useEnsName({
+    address: accountId as `0x${string}`,
     chainId: 1
   })
-  const { setOpen } = useModal()
+  const { data: accountEnsAvatar } = useEnsAvatar({
+    address: accountId as `0x${string}`,
+    chainId: 1
+  })
+  const { open } = useAppKit()
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in
     e.preventDefault()
 
-    setOpen(true)
+    open()
   }
 
   // return

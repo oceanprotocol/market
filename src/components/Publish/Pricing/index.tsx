@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useEffect, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useFormikContext } from 'formik'
 import Tabs from '@shared/atoms/Tabs'
 import { FormPublishData } from '../_types'
@@ -7,12 +7,12 @@ import Free from './Free'
 import content from '../../../../content/price.json'
 import styles from './index.module.css'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import { useNetwork } from 'wagmi'
+import { useAppKitNetworkCore } from '@reown/appkit/react'
 
 export default function PricingFields(): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { chain } = useNetwork()
   const { approvedBaseTokens } = useMarketMetadata()
+  const { chainId } = useAppKitNetworkCore()
 
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
@@ -34,7 +34,7 @@ export default function PricingFields(): ReactElement {
     setFieldValue('pricing.baseToken', defaultBaseToken)
   }, [
     approvedBaseTokens,
-    chain?.id,
+    chainId,
     defaultBaseToken,
     isBaseTokenSet,
     setFieldValue,

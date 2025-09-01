@@ -1,4 +1,4 @@
-import React, {
+import {
   useContext,
   useState,
   useEffect,
@@ -18,7 +18,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useMarketMetadata } from './MarketMetadata'
 import { assetStateToString } from '@utils/assetState'
 import { isValidDid } from '@utils/ddo'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAppKitAccount, useAppKitNetworkCore } from '@reown/appkit/react'
 
 export interface AssetProviderValue {
   isInPurgatory: boolean
@@ -45,8 +45,8 @@ function AssetProvider({
   children: ReactNode
 }): ReactElement {
   const { appConfig } = useMarketMetadata()
-  const { address: accountId } = useAccount()
-  const { chain } = useNetwork()
+  const { address: accountId } = useAppKitAccount()
+  const { chainId } = useAppKitNetworkCore()
 
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
@@ -191,11 +191,11 @@ function AssetProvider({
   // Check user network against asset network
   // -----------------------------------
   useEffect(() => {
-    if (!chain?.id || !asset?.chainId) return
+    if (!chainId || !asset?.chainId) return
 
-    const isAssetNetwork = chain?.id === asset?.chainId
+    const isAssetNetwork = Number(chainId) === asset?.chainId
     setIsAssetNetwork(isAssetNetwork)
-  }, [chain?.id, asset?.chainId])
+  }, [chainId, asset?.chainId])
 
   // -----------------------------------
   // Asset owner check against wallet user

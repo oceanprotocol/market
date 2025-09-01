@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   ReactElement,
   ReactNode,
@@ -21,7 +21,7 @@ function MarketMetadataProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const { isLoading } = useConnect()
+  const { isPending: isLoading } = useConnect()
   const { signer, getOpcData } = useFactoryRouter()
 
   const [opcFees, setOpcFees] = useState<OpcFee[]>()

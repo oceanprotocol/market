@@ -2,14 +2,14 @@ import React from 'react'
 import styles from './index.module.css'
 import Conversation from './Conversation'
 import { useOrbis } from '@context/DirectMessages'
-import { useAccount, useConnect } from 'wagmi'
 import Header from './Header'
 import List from './List'
 import walletStyles from '../../Header/Wallet/Account.module.css'
+import { useAppKitAccount } from '@reown/appkit/react'
 
 const BodyContent = () => {
   const { account, conversationId, checkOrbisConnection } = useOrbis()
-  const { address: accountId } = useAccount()
+  const { address: accountId } = useAppKitAccount()
 
   const handleActivation = async (e: React.MouseEvent) => {
     e.preventDefault()

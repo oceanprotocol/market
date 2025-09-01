@@ -1,11 +1,11 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './Fees.module.css'
 import Input from '@shared/FormInput'
 import { useMarketMetadata } from '@context/MarketMetadata'
 import Decimal from 'decimal.js'
-import { useNetwork } from 'wagmi'
 import useFactoryRouter from '@hooks/useRouter'
+import { useAppKitNetworkCore } from '@reown/appkit/react'
 
 const Default = ({
   title,
@@ -39,16 +39,16 @@ export default function Fees({
   tooltips: { [key: string]: string }
 }): ReactElement {
   const [oceanCommunitySwapFee, setOceanCommunitySwapFee] = useState<string>('')
-  const { chain } = useNetwork()
   const { appConfig } = useMarketMetadata()
   const { fees } = useFactoryRouter()
+  const { chainId } = useAppKitNetworkCore()
   useEffect(() => {
     setOceanCommunitySwapFee(
       fees.swapOceanFee
         ? new Decimal(fees.swapOceanFee).mul(100).toString()
         : '0'
     )
-  }, [chain?.id, fees])
+  }, [chainId, fees])
 
   return (
     <>

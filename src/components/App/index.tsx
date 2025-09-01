@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import Alert from '@shared/atoms/Alert'
 import Footer from '../Footer/Footer'
 import Header from '../Header'
@@ -9,7 +9,7 @@ import styles from './index.module.css'
 import { ToastContainer } from 'react-toastify'
 import contentPurgatory from '../../../content/purgatory.json'
 import { useMarketMetadata } from '@context/MarketMetadata'
-import { useAccount } from 'wagmi'
+import { useAppKitAccount } from '@reown/appkit/react'
 
 export default function App({
   children
@@ -17,7 +17,7 @@ export default function App({
   children: ReactElement
 }): ReactElement {
   const { siteContent, appConfig } = useMarketMetadata()
-  const { address } = useAccount()
+  const { address } = useAppKitAccount()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(address)
 
   return (

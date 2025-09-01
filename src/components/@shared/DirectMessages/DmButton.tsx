@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
-import { useAccount } from 'wagmi'
 import { useOrbis } from '@context/DirectMessages'
+import { useAppKitAccount } from '@reown/appkit/react'
 
 export default function DmButton({
   accountId,
@@ -10,7 +10,7 @@ export default function DmButton({
   accountId: string
   text?: string
 }) {
-  const { address: ownAccountId } = useAccount()
+  const { address: ownAccountId } = useAppKitAccount()
   const {
     checkOrbisConnection,
     getConversationByDid,

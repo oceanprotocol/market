@@ -1,9 +1,9 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { AssetPrice } from '@oceanprotocol/ddo-js'
 import PriceUnit from './PriceUnit'
 import { getOceanConfig } from '@utils/ocean'
 import Loader from '@shared/atoms/Loader'
-import { useNetwork } from 'wagmi'
+import { useAppKitNetworkCore } from '@reown/appkit/react'
 
 export default function Price({
   price,
@@ -19,8 +19,7 @@ export default function Price({
   conversion?: boolean
   size?: 'small' | 'mini' | 'large'
 }): ReactElement {
-  const { chain } = useNetwork()
-  const chainId = chain?.id || 11155111
+  const { chainId } = useAppKitNetworkCore()
   const oceanConfig = getOceanConfig(chainId)
   const symbol = oceanConfig?.oceanTokenSymbol
 
