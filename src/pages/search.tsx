@@ -1,10 +1,10 @@
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import Search from '../components/Search'
 import Page from '@shared/Page'
 import { accountTruncate } from '@utils/wallet'
 import { MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS } from '@utils/aquarius'
 import { useRouter } from 'next/router'
-import { isAddress } from 'ethers/lib/utils'
+import { isAddress } from 'ethers'
 
 export default function PageSearch(): ReactElement {
   const router = useRouter()

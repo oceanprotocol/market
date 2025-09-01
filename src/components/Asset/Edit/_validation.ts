@@ -1,8 +1,8 @@
 import { FileInfo } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
-import { isAddress } from 'ethers/lib/utils'
 import { testLinks } from '@utils/yup'
 import { validationConsumerParameters } from '@shared/FormInput/InputElement/ConsumerParameters/_validation'
+import { isAddress } from 'ethers'
 
 export const validationSchema = Yup.object().shape({
   name: Yup.string()

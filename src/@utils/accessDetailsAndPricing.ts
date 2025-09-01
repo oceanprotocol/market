@@ -15,11 +15,10 @@ import {
   publisherMarketOrderFee,
   customProviderUrl
 } from '../../app.config.cjs'
-import { Signer, ethers } from 'ethers'
+import { Signer, parseUnits } from 'ethers'
 import { toast } from 'react-toastify'
 import { getDummySigner } from './wallet'
 // import { Service } from 'src/@types/ddo/Service'
-import AssetExtended from 'src/@types/AssetExtended'
 import { CancelToken } from 'axios'
 import { getUserOrders } from './aquarius'
 
@@ -98,18 +97,10 @@ export async function getOrderPriceAndFees( // this function give price
   // Fetch price and swap fees
   if (accessDetails.type === 'fixed') {
     const fixed = await getFixedBuyPrice(accessDetails, asset.chainId, signer)
-    orderPriceAndFee.price = ethers.utils
-      .parseUnits(accessDetails.price, tokenDecimals)
-      .toString()
-    orderPriceAndFee.opcFee = ethers.utils
-      .parseUnits(fixed.oceanFeeAmount, tokenDecimals)
-      .toString()
-    orderPriceAndFee.publisherMarketFixedSwapFee = ethers.utils
-      .parseUnits(fixed.marketFeeAmount, tokenDecimals)
-      .toString()
-    orderPriceAndFee.consumeMarketFixedSwapFee = ethers.utils
-      .parseUnits(fixed.consumeMarketFeeAmount, tokenDecimals)
-      .toString()
+    orderPriceAndFee.price = parseUnits(accessDetails.price, tokenDecimals).toString()
+    orderPriceAndFee.opcFee = parseUnits(fixed.oceanFeeAmount, tokenDecimals).toString()
+    orderPriceAndFee.publisherMarketFixedSwapFee = parseUnits(fixed.marketFeeAmount, tokenDecimals).toString()
+    orderPriceAndFee.consumeMarketFixedSwapFee = parseUnits(fixed.consumeMarketFeeAmount, tokenDecimals).toString()
   } else {
     const price = new Decimal(+accessDetails.price || 0)
     const consumeMarketFeePercentage =
@@ -130,9 +121,7 @@ export async function getOrderPriceAndFees( // this function give price
     const result = price.add(consumeMarketFee).add(publisherMarketFee)
 
     // Format result to respect token decimals
-    orderPriceAndFee.price = ethers.utils
-      .parseUnits(result.toFixed(tokenDecimals), tokenDecimals)
-      .toString()
+    orderPriceAndFee.price = parseUnits(result.toFixed(tokenDecimals), tokenDecimals).toString()
   }
 
   LoggerInstance.log('OrderPriceAndFees:', orderPriceAndFee)
@@ -198,7 +187,7 @@ export async function getAccessDetails(
     const order = allOrders.find(
       (order) =>
         order.datatokenAddress.toLowerCase() ===
-          datatokenAddress.toLowerCase() ||
+        datatokenAddress.toLowerCase() ||
         order.payer.toLowerCase() === datatokenAddress.toLowerCase()
     )
     if (order) {
@@ -242,8 +231,8 @@ export async function getAccessDetails(
         price: exchange.fixedRate,
         baseToken: {
           address: exchange.baseToken,
-          name: await datatoken.getName(exchange.baseToken), // reuse the datatoken instance since it is ERC20
-          symbol: await datatoken.getSymbol(exchange.baseToken),
+          name: (await datatoken.getName(exchange.baseToken)) || '',
+          symbol: (await datatoken.getSymbol(exchange.baseToken)) || '',
           decimals: parseInt(exchange.btDecimals)
         }
       }

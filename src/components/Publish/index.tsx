@@ -211,7 +211,7 @@ export default function PublishPage({
         newAbortController()
       )
       const tx = await res.wait()
-      if (!tx?.transactionHash)
+      if (!tx?.hash)
         throw new Error(
           'Metadata could not be written into the NFT. Please try again.'
         )
@@ -223,7 +223,7 @@ export default function PublishPage({
         '3': {
           ...prevState['3'],
           status: tx ? 'success' : 'error',
-          txHash: tx?.transactionHash
+          txHash: tx?.hash
         }
       }))
 

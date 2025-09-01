@@ -1,4 +1,4 @@
-import React, {
+import {
   useContext,
   useState,
   useEffect,
@@ -18,8 +18,8 @@ import {
 import axios, { CancelToken } from 'axios'
 import { useMarketMetadata } from '../MarketMetadata'
 import { getEnsProfile } from '@utils/ens'
-import { isAddress } from 'ethers/lib/utils'
 import { Asset } from '@oceanprotocol/ddo-js'
+import { isAddress } from 'ethers'
 
 interface ProfileProviderValue {
   profile: Profile

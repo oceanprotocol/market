@@ -21,7 +21,7 @@ function useNftFactory(): NftFactory {
       return
     }
 
-    const factory = new NftFactory(config.nftFactoryAddress, signer)
+    const factory = new NftFactory(config.nftFactoryAddress, signer, chainId)
     setNftFactory(factory)
   }, [signer, chainId])
 

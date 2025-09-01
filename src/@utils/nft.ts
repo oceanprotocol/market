@@ -10,7 +10,7 @@ import {
 import { Asset, DDO } from '@oceanprotocol/ddo-js'
 import { SvgWaves } from './SvgWaves'
 import { customProviderUrl } from '../../app.config.cjs'
-import { Signer, ethers } from 'ethers'
+import { Signer, TransactionResponse, toBeHex } from 'ethers'
 import { toast } from 'react-toastify'
 
 // https://docs.opensea.io/docs/metadata-standards
@@ -87,8 +87,8 @@ export function decodeTokenURI(tokenURI: string): NftMetadata {
   try {
     const nftMeta = tokenURI.includes('data:application/json')
       ? (JSON.parse(
-          Buffer.from(tokenURI.replace(tokenUriPrefix, ''), 'base64').toString()
-        ) as NftMetadata)
+        Buffer.from(tokenURI.replace(tokenUriPrefix, ''), 'base64').toString()
+      ) as NftMetadata)
       : ({ image: tokenURI } as NftMetadata)
 
     return nftMeta
@@ -102,7 +102,7 @@ export async function setNftMetadata(
   accountId: string,
   signer: Signer,
   signal: AbortSignal
-): Promise<ethers.providers.TransactionResponse> {
+): Promise<TransactionResponse> {
   let encryptedDdo
   try {
     encryptedDdo = await ProviderInstance.encrypt(
@@ -122,7 +122,7 @@ export async function setNftMetadata(
   const nft = new Nft(signer)
 
   // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
-  const flags = ethers.utils.hexlify(2)
+  const flags = toBeHex(2)
 
   const setMetadataTx = await nft.setMetadata(
     asset.nftAddress,
@@ -144,7 +144,7 @@ export async function setNFTMetadataAndTokenURI(
   signer: Signer,
   nftMetadata: NftMetadata,
   signal: AbortSignal
-): Promise<ethers.providers.TransactionResponse> {
+): Promise<TransactionResponse> {
   let encryptedDdo
   try {
     encryptedDdo = await ProviderInstance.encrypt(

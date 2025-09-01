@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { ethers } from 'ethers'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useMarketMetadata } from '../@context/MarketMetadata'
 import { getTokenBalance } from '@utils/wallet'
 import { useProvider } from './useProvider'
 import { useAppKitAccount, useAppKitNetworkCore } from '@reown/appkit/react'
+import { formatEther } from 'ethers'
 
 interface UserBalance {
   [symbol: string]: string
@@ -38,7 +38,7 @@ function useBalance(): BalanceProviderValue {
     try {
       // Native balance
       const rawBalance = await web3provider.getBalance(address)
-      const userBalance = ethers.utils.formatEther(rawBalance)
+      const userBalance = formatEther(rawBalance)
       const newBalance: UserBalance = { eth: userBalance }
 
       // Token balances

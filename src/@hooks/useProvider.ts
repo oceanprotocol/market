@@ -1,5 +1,5 @@
 import { useAppKitProvider, useAppKitNetworkCore, Provider } from "@reown/appkit/react";
-import { ethers } from "ethers";
+import { BrowserProvider } from "ethers";
 import { useMemo } from "react";
 
 export const useProvider = () => {
@@ -8,7 +8,7 @@ export const useProvider = () => {
 
     const provider = useMemo(() => {
         if (!walletProvider || !chainId) return undefined;
-        return new ethers.providers.Web3Provider(walletProvider, chainId);
+        return new BrowserProvider(walletProvider, chainId);
     }, [walletProvider, chainId]);
 
     return provider

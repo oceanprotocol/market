@@ -11,7 +11,7 @@ import {
   ProviderInitialize,
   getErrorMessage
 } from '@oceanprotocol/lib'
-import { Signer, ethers } from 'ethers'
+import { Signer, TransactionResponse, ethers } from 'ethers'
 import { getOceanConfig } from './ocean'
 import {
   marketFeeAddress,
@@ -60,7 +60,7 @@ export async function order(
   hasDatatoken: boolean,
   providerFees?: ProviderFees,
   computeConsumerAddress?: string
-): Promise<ethers.providers.TransactionResponse> {
+): Promise<TransactionResponse> {
   const datatoken = new Datatoken(signer)
   const config = getOceanConfig(asset.chainId)
 
@@ -204,7 +204,7 @@ export async function reuseOrder(
   accountId: string,
   validOrderTx: string,
   providerFees?: ProviderFees
-): Promise<ethers.providers.TransactionResponse> {
+): Promise<TransactionResponse> {
   const datatoken = new Datatoken(signer)
   const initializeData = await initializeProvider(
     asset,

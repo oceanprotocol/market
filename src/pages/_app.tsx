@@ -11,8 +11,13 @@ import { OrbisProvider } from '@context/DirectMessages'
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../stylesGlobal/styles.css'
 import Decimal from 'decimal.js'
-import MarketMetadataProvider from '@context/MarketMetadata'
 import { AppKit } from '@context/Appkit'
+import dynamic from 'next/dynamic'
+
+const MarketMetadataProvider = dynamic(
+  () => import('@context/MarketMetadata'),
+  { ssr: false }
+)
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
   Decimal.set({ rounding: 1 })

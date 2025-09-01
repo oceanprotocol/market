@@ -1,12 +1,12 @@
 import { LoggerInstance, Datatoken } from '@oceanprotocol/lib'
-import { Signer, ethers } from 'ethers'
+import { Signer, TransactionResponse } from 'ethers'
 
 export async function setMinterToPublisher(
   signer: Signer,
   datatokenAddress: string,
   accountId: string,
   setError: (msg: string) => void
-): Promise<ethers.providers.TransactionResponse> {
+): Promise<TransactionResponse> {
   const datatokenInstance = new Datatoken(signer)
 
   const response = await datatokenInstance.removeMinter(
@@ -27,7 +27,7 @@ export async function setMinterToDispenser(
   datatokenAddress: string,
   accountId: string,
   setError: (msg: string) => void
-): Promise<ethers.providers.TransactionResponse> {
+): Promise<TransactionResponse> {
   const datatokenInstance = new Datatoken(signer)
 
   const response = await datatokenInstance.addMinter(

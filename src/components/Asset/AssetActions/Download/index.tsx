@@ -186,7 +186,7 @@ export default React.memo(function Download({
           if (!tx) throw new Error()
           if (isMounted()) {
             setIsOwned(true)
-            setValidOrderTx(tx.transactionHash)
+            setValidOrderTx(tx.hash)
           }
         }
       } catch (error) {

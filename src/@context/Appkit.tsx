@@ -7,6 +7,7 @@ import { getSupportedChains } from '@utils/wallet/chains'
 import { chainIdsSupported } from 'app.config.cjs'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
+import { EthersAdapter } from '@reown/appkit-adapter-ethers'
 
 const projectId = '555782ec07321ad166d432d993bfc8f3'
 const queryClient = new QueryClient()
@@ -36,7 +37,7 @@ export const wagmiAdapter = new WagmiAdapter({
 export const config = wagmiAdapter.wagmiConfig
 
 createAppKit({
-  adapters: [wagmiAdapter],
+  adapters: [wagmiAdapter, new EthersAdapter()],
   metadata,
   networks,
   projectId,

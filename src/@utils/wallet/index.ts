@@ -1,6 +1,5 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { ethers, Contract, Signer } from 'ethers'
-import { formatEther } from 'ethers/lib/utils'
+import { Contract, Signer, JsonRpcProvider, Wallet, Provider, isAddress, formatEther } from 'ethers'
 import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { getOceanConfig } from '../ocean'
 import erc20ABI from '@oceanprotocol/contracts/artifacts/contracts/templates/ERC20Template.sol/ERC20Template.json'
@@ -15,8 +14,8 @@ export async function getDummySigner(chainId: number): Promise<Signer> {
   try {
     const privateKey =
       '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
-    const provider = new ethers.providers.JsonRpcProvider(config.nodeUri, config.chainId)
-    return new ethers.Wallet(privateKey, provider)
+    const provider = new JsonRpcProvider(config.nodeUri, config.chainId)
+    return new Wallet(privateKey, provider)
   } catch (error) {
     throw new Error(`Failed to create dummy signer: ${error.message}`)
   }
@@ -138,12 +137,12 @@ export async function getTokenBalance(
   accountId: string,
   decimals: number,
   tokenAddress: string,
-  web3Provider: ethers.providers.Provider
+  web3Provider: Provider
 ): Promise<string | undefined> {
   if (!web3Provider || !accountId || !tokenAddress) return
 
   try {
-    if (!ethers.utils.isAddress(tokenAddress)) {
+    if (!isAddress(tokenAddress)) {
       LoggerInstance.warn(`Invalid token address: ${tokenAddress}`)
       return
     }
