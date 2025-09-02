@@ -8,12 +8,15 @@ import BoxSelection, {
   BoxSelectionOption
 } from '@shared/FormInput/InputElement/BoxSelection'
 import styles from './Appearance.module.css'
+import { appkit } from '@context/Appkit'
+import { useAppKitTheme } from '@reown/appkit/react'
 
 export default function Appearance({
   darkMode
 }: {
   darkMode: DarkMode
 }): ReactElement {
+  const { setThemeMode } = useAppKitTheme()
   const options: BoxSelectionOption[] = [
     {
       name: 'Light',
@@ -29,8 +32,17 @@ export default function Appearance({
     }
   ]
 
+  const enableDarkMode = () => {
+    setThemeMode('dark')
+    darkMode.enable()
+  }
+  const disableDarkMode = () => {
+    setThemeMode('light')
+    darkMode.disable()
+  }
+
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    event.target.value === 'Dark' ? darkMode.enable() : darkMode.disable()
+    event.target.value === 'Dark' ? enableDarkMode() : disableDarkMode()
   }
 
   return (
