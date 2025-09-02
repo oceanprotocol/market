@@ -97,10 +97,22 @@ export async function getOrderPriceAndFees( // this function give price
   // Fetch price and swap fees
   if (accessDetails.type === 'fixed') {
     const fixed = await getFixedBuyPrice(accessDetails, asset.chainId, signer)
-    orderPriceAndFee.price = parseUnits(accessDetails.price, tokenDecimals).toString()
-    orderPriceAndFee.opcFee = parseUnits(fixed.oceanFeeAmount, tokenDecimals).toString()
-    orderPriceAndFee.publisherMarketFixedSwapFee = parseUnits(fixed.marketFeeAmount, tokenDecimals).toString()
-    orderPriceAndFee.consumeMarketFixedSwapFee = parseUnits(fixed.consumeMarketFeeAmount, tokenDecimals).toString()
+    orderPriceAndFee.price = parseUnits(
+      accessDetails.price,
+      tokenDecimals
+    ).toString()
+    orderPriceAndFee.opcFee = parseUnits(
+      fixed.oceanFeeAmount,
+      tokenDecimals
+    ).toString()
+    orderPriceAndFee.publisherMarketFixedSwapFee = parseUnits(
+      fixed.marketFeeAmount,
+      tokenDecimals
+    ).toString()
+    orderPriceAndFee.consumeMarketFixedSwapFee = parseUnits(
+      fixed.consumeMarketFeeAmount,
+      tokenDecimals
+    ).toString()
   } else {
     const price = new Decimal(+accessDetails.price || 0)
     const consumeMarketFeePercentage =
@@ -121,7 +133,10 @@ export async function getOrderPriceAndFees( // this function give price
     const result = price.add(consumeMarketFee).add(publisherMarketFee)
 
     // Format result to respect token decimals
-    orderPriceAndFee.price = parseUnits(result.toFixed(tokenDecimals), tokenDecimals).toString()
+    orderPriceAndFee.price = parseUnits(
+      result.toFixed(tokenDecimals),
+      tokenDecimals
+    ).toString()
   }
 
   LoggerInstance.log('OrderPriceAndFees:', orderPriceAndFee)
@@ -187,7 +202,7 @@ export async function getAccessDetails(
     const order = allOrders.find(
       (order) =>
         order.datatokenAddress.toLowerCase() ===
-        datatokenAddress.toLowerCase() ||
+          datatokenAddress.toLowerCase() ||
         order.payer.toLowerCase() === datatokenAddress.toLowerCase()
     )
     if (order) {

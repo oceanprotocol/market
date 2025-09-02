@@ -16,6 +16,7 @@ const Account = React.forwardRef((props, ref: any) => {
     chainId: 1
   })
   const { data: accountEnsAvatar } = useEnsAvatar({
+    // @ts-ignore
     address: accountId as `0x${string}`,
     chainId: 1
   })

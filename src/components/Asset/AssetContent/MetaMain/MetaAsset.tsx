@@ -6,6 +6,7 @@ import { ReactElement } from 'react'
 import styles from './MetaAsset.module.css'
 import { getOceanConfig } from '@utils/ocean'
 import { useAppKitNetworkCore } from '@reown/appkit/react'
+import { appkit } from '@context/Appkit'
 
 export default function MetaAsset({
   asset,
@@ -18,7 +19,8 @@ export default function MetaAsset({
   const oceanConfig = getOceanConfig(chainId)
   const symbol = oceanConfig.oceanTokenSymbol
   const { isAssetNetwork } = useAsset()
-  const connector = 'metaMask'
+  const connectionInfo = appkit.getConnectors()
+  const connector = connectionInfo[0]?.type
 
   const dataTokenSymbol = asset?.datatokens[0]?.symbol
 
@@ -39,7 +41,7 @@ export default function MetaAsset({
         >
           {`Accessed with ${dataTokenSymbol}`}
         </ExplorerLink>
-        {connector === 'metaMask' && isAssetNetwork && (
+        {connector === 'INJECTED' && isAssetNetwork && (
           <span className={styles.addWrap}>
             <AddToken
               address={asset?.services[0].datatokenAddress}

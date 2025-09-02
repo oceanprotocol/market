@@ -87,8 +87,8 @@ export function decodeTokenURI(tokenURI: string): NftMetadata {
   try {
     const nftMeta = tokenURI.includes('data:application/json')
       ? (JSON.parse(
-        Buffer.from(tokenURI.replace(tokenUriPrefix, ''), 'base64').toString()
-      ) as NftMetadata)
+          Buffer.from(tokenURI.replace(tokenUriPrefix, ''), 'base64').toString()
+        ) as NftMetadata)
       : ({ image: tokenURI } as NftMetadata)
 
     return nftMeta

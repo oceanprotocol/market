@@ -74,11 +74,7 @@ function useFactoryRouter() {
       'function symbol() view returns (string)',
       'function name() view returns (string)'
     ]
-    const tokenContract = new Contract(
-      tokenAddress,
-      tokenAbi,
-      provider
-    )
+    const tokenContract = new Contract(tokenAddress, tokenAbi, provider)
 
     const [decimals, symbol, name] = await Promise.all([
       tokenContract.decimals(),

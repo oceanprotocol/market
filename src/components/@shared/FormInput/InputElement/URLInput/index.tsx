@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import { ErrorMessage, useField } from 'formik'
 import Loader from '@shared/atoms/Loader'
@@ -9,7 +9,7 @@ import isUrl from 'is-url-superb'
 import { isCID } from '@utils/ipfs'
 export interface URLInputProps {
   submitText: string
-  handleButtonClick(e: React.SyntheticEvent, data: string): void
+  handleButtonClick(e: SyntheticEvent, data: string): void
   isLoading: boolean
   name: string
   checkUrl?: boolean

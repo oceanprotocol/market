@@ -1,5 +1,13 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { Contract, Signer, JsonRpcProvider, Wallet, Provider, isAddress, formatEther } from 'ethers'
+import {
+  Contract,
+  Signer,
+  JsonRpcProvider,
+  Wallet,
+  Provider,
+  isAddress,
+  formatEther
+} from 'ethers'
 import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { getOceanConfig } from '../ocean'
 import erc20ABI from '@oceanprotocol/contracts/artifacts/contracts/templates/ERC20Template.sol/ERC20Template.json'
@@ -19,22 +27,6 @@ export async function getDummySigner(chainId: number): Promise<Signer> {
   } catch (error) {
     throw new Error(`Failed to create dummy signer: ${error.message}`)
   }
-}
-
-
-// ConnectKit CSS overrides
-// https://docs.family.co/connectkit/theming#theme-variables
-export const connectKitTheme = {
-  '--ck-font-family': 'var(--font-family-base)',
-  '--ck-border-radius': 'var(--border-radius)',
-  '--ck-overlay-background': 'var(--background-body-transparent)',
-  '--ck-modal-box-shadow': '0 0 20px 20px var(--box-shadow-color)',
-  '--ck-body-background': 'var(--background-body)',
-  '--ck-body-color': 'var(--font-color-text)',
-  '--ck-primary-button-border-radius': 'var(--border-radius)',
-  '--ck-primary-button-color': 'var(--font-color-heading)',
-  '--ck-primary-button-background': 'var(--background-content)',
-  '--ck-secondary-button-border-radius': 'var(--border-radius)'
 }
 
 export function accountTruncate(account: string): string {
@@ -58,25 +50,26 @@ export async function addTokenToWallet(
     options: { address, symbol, image, decimals: 18 }
   }
 
-    ; (window?.ethereum.request as any)(
-      {
-        method: 'wallet_watchAsset',
-        params: tokenMetadata,
-        id: Math.round(Math.random() * 100000)
-      },
-      (err: { code: number; message: string }, added: any) => {
-        if (err || 'error' in added) {
-          LoggerInstance.error(
-            `Couldn't add ${tokenMetadata.options.symbol} (${tokenMetadata.options.address
-            }) to MetaMask, error: ${err.message || added.error}`
-          )
-        } else {
-          LoggerInstance.log(
-            `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
-          )
-        }
+  ;(window?.ethereum.request as any)(
+    {
+      method: 'wallet_watchAsset',
+      params: tokenMetadata,
+      id: Math.round(Math.random() * 100000)
+    },
+    (err: { code: number; message: string }, added: any) => {
+      if (err || 'error' in added) {
+        LoggerInstance.error(
+          `Couldn't add ${tokenMetadata.options.symbol} (${
+            tokenMetadata.options.address
+          }) to MetaMask, error: ${err.message || added.error}`
+        )
+      } else {
+        LoggerInstance.log(
+          `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
+        )
       }
-    )
+    }
+  )
 }
 
 export async function addCustomNetwork(
@@ -112,7 +105,8 @@ export async function addCustomNetwork(
         (err: string, added: any) => {
           if (err || 'error' in added) {
             LoggerInstance.error(
-              `Couldn't add ${network.name} (0x${network.chainId
+              `Couldn't add ${network.name} (0x${
+                network.chainId
               }) network to MetaMask, error: ${err || added.error}`
             )
           } else {

@@ -5,8 +5,7 @@ import {
   dedupExchange,
   fetchExchange
 } from 'urql'
-import { refocusExchange } from '@urql/exchange-refocus'
-import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
+import { useState, useEffect, ReactNode, ReactElement } from 'react'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 
@@ -16,7 +15,7 @@ function createUrqlClient(subgraphUri: string) {
   // for now let's keep this file
   const client = createClient({
     url: `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    exchanges: [dedupExchange, refocusExchange(), fetchExchange]
+    exchanges: [dedupExchange, fetchExchange]
   })
   return client
 }

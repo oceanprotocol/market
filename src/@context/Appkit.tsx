@@ -8,8 +8,9 @@ import { chainIdsSupported } from 'app.config.cjs'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { EthersAdapter } from '@reown/appkit-adapter-ethers'
+import { ReactNode } from 'react'
 
-const projectId = '555782ec07321ad166d432d993bfc8f3'
+const projectId = process.env.NEXT_PUBLIC_APPKIT_PROJECT_ID
 const queryClient = new QueryClient()
 
 const metadata = {
@@ -36,7 +37,7 @@ export const wagmiAdapter = new WagmiAdapter({
 
 export const config = wagmiAdapter.wagmiConfig
 
-createAppKit({
+export const appkit = createAppKit({
   adapters: [wagmiAdapter, new EthersAdapter()],
   metadata,
   networks,
@@ -60,7 +61,7 @@ createAppKit({
   defaultAccountTypes: { eip155: 'eoa' }
 })
 
-export function AppKit({ children }: { children: React.ReactNode }) {
+export function AppKit({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

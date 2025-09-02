@@ -74,9 +74,9 @@ export function transformConsumerParameters(
     const options =
       param.type === 'select'
         ? // Transform from { key: string, value: string } into { key: value }
-        JSON.stringify(
-          param.options?.map((opt) => ({ [opt.key]: opt.value }))
-        )
+          JSON.stringify(
+            param.options?.map((opt) => ({ [opt.key]: opt.value }))
+          )
         : undefined
 
     const required = param.required === 'required'
@@ -152,32 +152,32 @@ export async function transformPublishFormToDdo(
     },
     ...(type === 'algorithm' &&
       dockerImage !== '' && {
-      algorithm: {
-        language: filesTransformed?.length
-          ? getUrlFileExtension(filesTransformed[0])
-          : '',
-        version: '0.1',
-        container: {
-          entrypoint:
-            dockerImage === 'custom'
-              ? dockerImageCustomEntrypoint
-              : algorithmContainerPresets.entrypoint,
-          image:
-            dockerImage === 'custom'
-              ? dockerImageCustom
-              : algorithmContainerPresets.image,
-          tag:
-            dockerImage === 'custom'
-              ? dockerImageCustomTag
-              : algorithmContainerPresets.tag,
-          checksum:
-            dockerImage === 'custom'
-              ? dockerImageCustomChecksum
-              : algorithmContainerPresets.checksum
-        },
-        consumerParameters: consumerParametersTransformed
-      }
-    })
+        algorithm: {
+          language: filesTransformed?.length
+            ? getUrlFileExtension(filesTransformed[0])
+            : '',
+          version: '0.1',
+          container: {
+            entrypoint:
+              dockerImage === 'custom'
+                ? dockerImageCustomEntrypoint
+                : algorithmContainerPresets.entrypoint,
+            image:
+              dockerImage === 'custom'
+                ? dockerImageCustom
+                : algorithmContainerPresets.image,
+            tag:
+              dockerImage === 'custom'
+                ? dockerImageCustomTag
+                : algorithmContainerPresets.tag,
+            checksum:
+              dockerImage === 'custom'
+                ? dockerImageCustomChecksum
+                : algorithmContainerPresets.checksum
+          },
+          consumerParameters: consumerParametersTransformed
+        }
+      })
   }
 
   const file = {

@@ -5,7 +5,8 @@ import {
   Ipfs,
   LoggerInstance,
   ProviderInstance,
-  UrlFile, UserCustomParameters,
+  UrlFile,
+  UserCustomParameters,
   getErrorMessage
 } from '@oceanprotocol/lib'
 // if customProviderUrl is set, we need to call provider using this custom endpoint

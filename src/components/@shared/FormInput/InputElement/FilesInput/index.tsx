@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 import { Field, useField } from 'formik'
 import FileInfoDetails from './Info'
 import UrlInput from '../URLInput'
@@ -33,7 +33,7 @@ export default function FilesInput(props: InputProps): ReactElement {
   const headers = field.value[0].headers || undefined
   const method = field.value[0].method || 'GET'
 
-  async function handleValidation(e: React.SyntheticEvent, url: string) {
+  async function handleValidation(e: SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e?.preventDefault()
 
@@ -175,7 +175,7 @@ export default function FilesInput(props: InputProps): ReactElement {
 
               <Button
                 style="primary"
-                onClick={(e: React.SyntheticEvent) => {
+                onClick={(e: SyntheticEvent) => {
                   e.preventDefault()
                   handleValidation(e, field.value[0].url)
                 }}

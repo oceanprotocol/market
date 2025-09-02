@@ -1,7 +1,8 @@
 import AssetTeaser from '@shared/AssetTeaser'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
+import { Dispatch, SetStateAction } from 'react'
 
 export declare type AssetListProps = {
   assets: AssetExtended[]
@@ -9,7 +10,7 @@ export declare type AssetListProps = {
   page?: number
   totalPages?: number
   isLoading?: boolean
-  onPageChange?: React.Dispatch<React.SetStateAction<number>>
+  onPageChange?: Dispatch<SetStateAction<number>>
   className?: string
   noPublisher?: boolean
   noDescription?: boolean
