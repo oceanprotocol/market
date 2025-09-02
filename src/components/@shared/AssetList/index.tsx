@@ -1,8 +1,7 @@
 import AssetTeaser from '@shared/AssetTeaser'
-import { ReactElement } from 'react'
+import { ReactElement, Dispatch, SetStateAction } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
-import { Dispatch, SetStateAction } from 'react'
 
 export declare type AssetListProps = {
   assets: AssetExtended[]
