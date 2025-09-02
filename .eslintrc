@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended", "prettier"],
+  "extends": ["eslint:recommended", "prettier", "next"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaFeatures": {
