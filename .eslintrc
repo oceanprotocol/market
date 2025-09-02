@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "prettier"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaFeatures": {
@@ -22,15 +19,10 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/*.ts",
-        "**/*.tsx"
-      ],
+      "files": ["**/*.ts", "**/*.tsx"],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
-        "project": [
-          "./tsconfig.json"
-        ]
+        "project": ["./tsconfig.json"]
       },
       "extends": [
         "oceanprotocol",
@@ -52,7 +44,6 @@
         "react/prop-types": "off",
         "react/no-unused-prop-types": "off",
         "react/jsx-no-bind": "off",
-        "react/react-in-jsx-scope": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": "error",
