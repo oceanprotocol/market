@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import { useOrbis } from '@context/DirectMessages'
 import { useAppKitAccount } from '@reown/appkit/react'

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import { AssetPrice } from '@oceanprotocol/ddo-js'
 import PriceUnit from './PriceUnit'
 import { getOceanConfig } from '@utils/ocean'

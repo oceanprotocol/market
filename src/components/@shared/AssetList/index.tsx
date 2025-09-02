@@ -1,5 +1,5 @@
 import AssetTeaser from '@shared/AssetTeaser'
-import { ReactElement, Dispatch, SetStateAction } from 'react'
+import React, { ReactElement, Dispatch, SetStateAction } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
 

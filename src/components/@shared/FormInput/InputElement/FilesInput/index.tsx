@@ -1,4 +1,4 @@
-import { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
+import React, { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 import { Field, useField } from 'formik'
 import FileInfoDetails from './Info'
 import UrlInput from '../URLInput'

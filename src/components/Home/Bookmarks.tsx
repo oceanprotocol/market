@@ -1,5 +1,5 @@
 import { useUserPreferences } from '@context/UserPreferences'
-import { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Table, { TableOceanColumn } from '@shared/atoms/Table'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import Price from '@shared/Price'

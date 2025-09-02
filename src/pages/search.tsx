@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import Search from '../components/Search'
 import Page from '@shared/Page'
 import { accountTruncate } from '@utils/wallet'

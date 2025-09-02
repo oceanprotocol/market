@@ -1,5 +1,5 @@
 // import App from "next/app";
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import type { AppProps /*, AppContext */ } from 'next/app'
 import { GoogleTagManager } from '@next/third-parties/google'
 import { UserPreferencesProvider } from '@context/UserPreferences'

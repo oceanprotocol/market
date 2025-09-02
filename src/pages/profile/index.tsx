@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Page from '@shared/Page'
 import ProfilePage from '../../components/Profile'
 import { accountTruncate } from '@utils/wallet'

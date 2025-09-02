@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import NetworkName from '@shared/NetworkName'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './index.module.css'

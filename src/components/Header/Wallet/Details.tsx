@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '@context/UserPreferences'
 import Button from '@shared/atoms/Button'

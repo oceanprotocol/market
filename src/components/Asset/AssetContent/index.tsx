@@ -1,4 +1,4 @@
-import { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import Markdown from '@shared/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'

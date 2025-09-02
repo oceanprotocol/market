@@ -8,7 +8,7 @@ import { chainIdsSupported } from 'app.config.cjs'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { EthersAdapter } from '@reown/appkit-adapter-ethers'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 const projectId = process.env.NEXT_PUBLIC_APPKIT_PROJECT_ID
 const queryClient = new QueryClient()

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import Account from './Account'
 import Details from './Details'
 import Tooltip from '@shared/atoms/Tooltip'

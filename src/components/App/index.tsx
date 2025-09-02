@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import Alert from '@shared/atoms/Alert'
 import Footer from '../Footer/Footer'
 import Header from '../Header'

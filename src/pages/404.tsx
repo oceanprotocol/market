@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import Page from '@shared/Page'
 import Head from 'next/head'
 import Button from '@shared/atoms/Button'
