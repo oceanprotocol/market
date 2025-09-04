@@ -8,7 +8,6 @@ import BoxSelection, {
   BoxSelectionOption
 } from '@shared/FormInput/InputElement/BoxSelection'
 import styles from './Appearance.module.css'
-import { appkit } from '@context/Appkit'
 import { useAppKitTheme } from '@reown/appkit/react'
 
 export default function Appearance({

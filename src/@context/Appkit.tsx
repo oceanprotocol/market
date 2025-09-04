@@ -9,8 +9,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { EthersAdapter } from '@reown/appkit-adapter-ethers'
 import React, { ReactNode } from 'react'
-import useDarkMode from '@oceanprotocol/use-dark-mode'
-import { useMarketMetadata } from './MarketMetadata'
 
 const projectId = process.env.NEXT_PUBLIC_APPKIT_PROJECT_ID
 const queryClient = new QueryClient()

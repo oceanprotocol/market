@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '@context/UserPreferences'
 import Button from '@shared/atoms/Button'
@@ -83,6 +83,16 @@ export default function Details(): ReactElement {
             )}
           </div>
           <p>
+            <Button
+              style="text"
+              size="small"
+              onClick={async () => {
+                open({ view: 'OnRampProviders' })
+                checkOrbisConnection({ address: accountId })
+              }}
+            >
+              Add funds
+            </Button>
             <Button
               style="text"
               size="small"
