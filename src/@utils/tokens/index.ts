@@ -38,7 +38,7 @@ export function getApprovedBaseTokensForNetwork(
   chainId: number,
   oceanTokenAddress?: string,
   customTokens?: Record<string, TokenInfo[]>,
-  autoAddWETH: boolean = true
+  autoAddWETH = true
 ): TokenInfo[] {
   const tokens: TokenInfo[] = []
 
