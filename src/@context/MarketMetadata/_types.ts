@@ -26,6 +26,10 @@ export interface AppConfig {
     classNameLight: string
     storageKey: string
   }
+  approvedBaseTokens: {
+    autoAddWETH: boolean
+    customTokens: Record<string, TokenInfo[]>
+  }
 }
 export interface SiteContent {
   siteTitle: string

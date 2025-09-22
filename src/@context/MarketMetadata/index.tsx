@@ -13,6 +13,7 @@ import appConfig from '../../../app.config.cjs'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useConnect } from 'wagmi'
 import useFactoryRouter from '@hooks/useRouter'
+import { getApprovedBaseTokensForNetwork } from '@utils/tokens'
 
 const MarketMetadataContext = createContext({} as MarketMetadataProviderValue)
 
@@ -26,6 +27,7 @@ function MarketMetadataProvider({
 
   const [opcFees, setOpcFees] = useState<OpcFee[]>()
   const [approvedBaseTokens, setApprovedBaseTokens] = useState<TokenInfo[]>()
+  const [currentChainId, setCurrentChainId] = useState<number>()
 
   useEffect(() => {
     async function getData() {
@@ -60,20 +62,37 @@ function MarketMetadataProvider({
   useEffect(() => {
     if (isLoading) return
 
-    const oceanToken: TokenInfo = {
-      address: appConfig.oceanTokenAddress,
-      name: process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL,
-      symbol: process.env.NEXT_PUBLIC_OCEAN_TOKEN_SYMBOL,
-      decimals: 18
+    if (signer?.provider) {
+      signer.provider.getNetwork().then((network) => {
+        setCurrentChainId(Number(network.chainId))
+      })
     }
+  }, [isLoading, signer])
 
-    setApprovedBaseTokens((prevTokens = []) => {
-      const hasOceanToken = prevTokens.some(
-        (token) => token.address === oceanToken.address
-      )
-      return hasOceanToken ? prevTokens : [...prevTokens, oceanToken]
-    })
-  }, [isLoading, approvedBaseTokens])
+  useEffect(() => {
+    if (!currentChainId) return
+
+    const networkTokens = getApprovedBaseTokensForNetwork(
+      currentChainId,
+      appConfig.oceanTokenAddress,
+      appConfig.approvedBaseTokens?.customTokens,
+      appConfig.approvedBaseTokens?.autoAddWETH ?? true
+    )
+
+    LoggerInstance.log(
+      '[MarketMetadata] Setting approved base tokens for chain:',
+      {
+        chainId: currentChainId,
+        tokens: networkTokens
+      }
+    )
+
+    setApprovedBaseTokens(networkTokens)
+  }, [
+    currentChainId,
+    appConfig.oceanTokenAddress,
+    appConfig.approvedBaseTokens
+  ])
 
   return (
     <MarketMetadataContext.Provider

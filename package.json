@@ -135,7 +135,7 @@
     "url": "https://github.com/oceanprotocol/market"
   },
   "engines": {
-    "node": "18"
+    "node": "22.x"
   },
   "browser": {
     "fs": false,
