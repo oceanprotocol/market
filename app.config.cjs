@@ -85,5 +85,14 @@ module.exports = {
   // is used to create and show a privacy preference center / cookie banner
   // To learn more about how to configure and use this, please refer to the readme
   privacyPreferenceCenter:
-    process.env.NEXT_PUBLIC_PRIVACY_PREFERENCE_CENTER || 'false'
+    process.env.NEXT_PUBLIC_PRIVACY_PREFERENCE_CENTER || 'false',
+
+  // Approved base tokens configuration
+  approvedBaseTokens: {
+    autoAddWETH: true,
+    customTokens: {
+      // 1: [{ address: '0x...', name: 'Custom Token', symbol: 'CT', decimals: 18 }],
+      // 137: [{ address: '0x...', name: 'Custom Token', symbol: 'CT', decimals: 18 }]
+    }
+  }
 }
