@@ -320,6 +320,28 @@ export async function createTokensAndPricing(
         '[publish] Creating free pricing with dispenserParams',
         dispenserParams
       )
+      console.log('[publish] nftCreateData:', nftCreateData)
+      console.log('[publish] ercParams:', ercParams)
+      console.log('[publish] dispenserParams:', dispenserParams)
+
+      try {
+        const result = await nftFactory.createNftWithDatatokenWithDispenser(
+          nftCreateData,
+          ercParams,
+          dispenserParams
+        )
+        console.log('[publish] tx sent:', result?.hash || result)
+        const receipt = await result.wait()
+        console.log(
+          '[publish] tx mined:',
+          receipt?.transactionHash,
+          'status:',
+          receipt?.status
+        )
+      } catch (e) {
+        console.error('[publish] createNftWithDatatokenWithDispenser error:', e)
+        throw e
+      }
 
       const result = await nftFactory.createNftWithDatatokenWithDispenser(
         nftCreateData,

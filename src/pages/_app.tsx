@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GA_ID} />
       <WagmiConfig client={wagmiClient}>
         <ConnectKitProvider
-          options={{ initialChainId: 0 }}
+          options={{ initialChainId: 11155111 }}
           customTheme={connectKitTheme}
         >
           <MarketMetadataProvider>

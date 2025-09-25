@@ -1,48 +1,84 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { createClient, erc20ABI } from 'wagmi'
-import { mainnet, polygon, optimism, sepolia } from 'wagmi/chains'
+import { createClient, configureChains, erc20ABI } from 'wagmi'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
+import { sepolia } from 'wagmi/chains'
 import { localhost } from '@wagmi/core/chains'
 import { ethers, Contract, Signer } from 'ethers'
-import { formatEther } from 'ethers/lib/utils'
-import { getDefaultClient } from 'connectkit'
+import { formatEther, formatUnits } from 'ethers/lib/utils'
 import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { getOceanConfig } from '../ocean'
 import { getSupportedChains } from './chains'
 import { chainIdsSupported } from '../../../app.config.cjs'
 
+// ---------------------------------------------------------
+// Dummy signer (solo utilidades internas, NO para producción)
+// ---------------------------------------------------------
 export async function getDummySigner(chainId: number): Promise<Signer> {
   if (typeof chainId !== 'number') {
     throw new Error('Chain ID must be a number')
   }
 
-  // Get config from ocean lib
   const config = getOceanConfig(chainId)
   try {
     const privateKey =
       '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
     const provider = new ethers.providers.JsonRpcProvider(config.nodeUri)
     return new ethers.Wallet(privateKey, provider)
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(`Failed to create dummy signer: ${error.message}`)
   }
 }
 
-// Wagmi client
-const chains = [...getSupportedChains(chainIdsSupported)]
+// ---------------------------------------------------------
+// Wagmi client — forzamos RPC propio y quitamos fallbacks públicos
+// ---------------------------------------------------------
+const supportedChains = [...getSupportedChains(chainIdsSupported)]
 if (process.env.NEXT_PUBLIC_MARKET_DEVELOPMENT === 'true') {
-  chains.push({ ...localhost, id: 8996 })
+  supportedChains.push({ ...localhost, id: 8996 })
 }
-export const wagmiClient = createClient(
-  getDefaultClient({
-    appName: 'Ocean Market',
-    infuraId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID,
-    chains,
-    walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
-  })
+
+const { chains, provider, webSocketProvider } = configureChains(
+  supportedChains,
+  [
+    jsonRpcProvider({
+      rpc: (chain) => {
+        // Sepolia → usa el RPC del .env (evita rpc.sepolia.org y CORS)
+        if (chain.id === sepolia.id && process.env.NEXT_PUBLIC_RPC_URI) {
+          return { http: process.env.NEXT_PUBLIC_RPC_URI }
+        }
+        // Localhost 8996
+        if (chain.id === 8996) return { http: 'http://127.0.0.1:8545' }
+
+        // Fallback: nodeUri de ocean.js si existe
+        const uri = getOceanConfig(chain.id)?.nodeUri
+        return uri ? { http: uri } : null
+      }
+    })
+  ]
 )
 
-// ConnectKit CSS overrides
-// https://docs.family.co/connectkit/theming#theme-variables
+// Conectores SIN WalletConnect (evita WS a wss://2.bridge.walletconnect.org)
+const connectors = [
+  new MetaMaskConnector({ chains }),
+  new InjectedConnector({ chains, options: { shimDisconnect: true } }),
+  new CoinbaseWalletConnector({ chains, options: { appName: 'Ocean Market' } })
+]
+
+export const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
+  webSocketProvider
+})
+
+export { chains }
+
+// ---------------------------------------------------------
+// ConnectKit CSS theme (puedes dejarlo, no usa WalletConnect)
+// ---------------------------------------------------------
 export const connectKitTheme = {
   '--ck-font-family': 'var(--font-family-base)',
   '--ck-border-radius': 'var(--border-radius)',
@@ -63,6 +99,9 @@ export function accountTruncate(account: string): string {
   return truncated
 }
 
+// ---------------------------------------------------------
+// Wallet utils
+// ---------------------------------------------------------
 export async function addTokenToWallet(
   address: string,
   symbol: string,
@@ -88,7 +127,7 @@ export async function addTokenToWallet(
         LoggerInstance.error(
           `Couldn't add ${tokenMetadata.options.symbol} (${
             tokenMetadata.options.address
-          }) to MetaMask, error: ${err.message || added.error}`
+          }) to MetaMask, error: ${err?.message || added?.error}`
         )
       } else {
         LoggerInstance.log(
@@ -103,11 +142,9 @@ export async function addCustomNetwork(
   web3Provider: any,
   network: EthereumListsChain
 ): Promise<void> {
-  // Always add explorer URL from ocean.js first, as it's null sometimes
-  // in network data
   const blockExplorerUrls = [
     getOceanConfig(network.networkId).explorerUri,
-    network.explorers && network.explorers[0].url
+    network.explorers && network.explorers[0]?.url
   ]
 
   const newNetworkData = {
@@ -117,13 +154,14 @@ export async function addCustomNetwork(
     rpcUrls: network.rpc,
     blockExplorerUrls
   }
+
   try {
     await web3Provider.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: newNetworkData.chainId }]
     })
-  } catch (switchError) {
-    if (switchError.code === 4902) {
+  } catch (switchError: any) {
+    if (switchError?.code === 4902) {
       await web3Provider.request(
         {
           method: 'wallet_addEthereumChain',
@@ -134,7 +172,7 @@ export async function addCustomNetwork(
             LoggerInstance.error(
               `Couldn't add ${network.name} (0x${
                 network.chainId
-              }) network to MetaMask, error: ${err || added.error}`
+              }) network to MetaMask, error: ${err || added?.error}`
             )
           } else {
             LoggerInstance.log(
@@ -149,11 +187,15 @@ export async function addCustomNetwork(
       )
     }
   }
+
   LoggerInstance.log(
     `Added ${network.name} (0x${network.chainId}) network to MetaMask`
   )
 }
 
+// ---------------------------------------------------------
+// Token balance helpers
+// ---------------------------------------------------------
 export async function getTokenBalance(
   accountId: string,
   decimals: number,
@@ -177,8 +219,8 @@ export async function getTokenBalance(
     const token = new Contract(tokenAddress, erc20ABI, web3Provider)
     const balance = await token.balanceOf(accountId)
 
-    const adjustedDecimalsBalance = `${balance}${'0'.repeat(18 - decimals)}`
-    return formatEther(adjustedDecimalsBalance)
+    // usa formatUnits para respetar 'decimals'
+    return formatUnits(balance, decimals)
   } catch (e: any) {
     LoggerInstance.error(`ERROR: Failed to get the balance: ${e.message}`)
   }
@@ -189,7 +231,6 @@ export function getTokenBalanceFromSymbol(
   symbol: string
 ): string {
   if (!symbol) return
-
   const baseTokenBalance = balance?.[symbol.toLocaleLowerCase()]
   return baseTokenBalance || '0'
 }

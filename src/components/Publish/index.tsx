@@ -40,8 +40,6 @@ export default function PublishPage({
   const nftFactory = useNftFactory()
   const newAbortController = useAbortController()
 
-  // This `feedback` state is auto-synced into Formik context under `values.feedback`
-  // for use in other components. Syncing defined in ./Steps.tsx child component.
   const [feedback, setFeedback] = useState(initialPublishFeedback)
 
   // Collecting output of each publish step, enabling retry of failed steps
@@ -52,105 +50,149 @@ export default function PublishPage({
   const [did, setDid] = useState<string>()
 
   // --------------------------------------------------
-  // 1. Create NFT & datatokens & create pricing schema
+  // 1) Create NFT & DT & pricing
   // --------------------------------------------------
-  async function create(values: FormPublishData): Promise<{
-    erc721Address: string
-    datatokenAddress: string
-  }> {
-    setFeedback((prevState) => ({
-      ...prevState,
-      '1': {
-        ...prevState['1'],
-        status: 'active',
-        errorMessage: null
-      }
+  async function create(
+    values: FormPublishData
+  ): Promise<{ erc721Address: string; datatokenAddress: string }> {
+    setFeedback((prev) => ({
+      ...prev,
+      '1': { ...prev['1'], status: 'active', errorMessage: null }
     }))
 
     try {
-      const config = getOceanConfig(chain?.id)
+      // ---------- contexto básico ----------
+      LoggerInstance.log('[publish] chain?.id:', chain?.id)
+      LoggerInstance.log('[publish] accountId:', accountId)
+      LoggerInstance.log('[publish] nftFactory present:', Boolean(nftFactory))
 
-      LoggerInstance.log('[publish] using config: ', config)
+      // Usa el chainId efectivo (Sepolia por defecto si aún no hay chain.id)
+      const effectiveChainId =
+        typeof chain?.id === 'number'
+          ? chain.id
+          : Number(process.env.NEXT_PUBLIC_CHAIN_IDS || 11155111)
 
+      let config
+      try {
+        config = getOceanConfig(effectiveChainId)
+      } catch (e: any) {
+        LoggerInstance.error('[publish] getOceanConfig threw:', e?.message || e)
+      }
+
+      if (!config) {
+        const msg = `[publish] no config for chainId=${effectiveChainId}. Aborting create().`
+        LoggerInstance.error(msg)
+        throw new Error(msg)
+      }
+
+      LoggerInstance.log('[publish] using config:', {
+        chainId: config.chainId,
+        nodeUri: config.nodeUri,
+        metadataCacheUri: config.metadataCacheUri,
+        subgraphUri: config.subgraphUri,
+        providerUri: config.providerUri,
+        nftFactoryAddress: config.nftFactoryAddress,
+        fixedRateExchangeAddress: config.fixedRateExchangeAddress,
+        dispenserAddress: config.dispenserAddress,
+        oceanTokenAddress: config.oceanTokenAddress
+      })
+
+      // ---------- snapshot inputs relevantes ----------
+      LoggerInstance.log('[publish] input snapshot:', {
+        pricing: values.pricing,
+        servicesProvider: values?.services?.[0]?.providerUrl?.url || '(none)'
+      })
+
+      // ---------- create tokens & pricing ----------
       const { erc721Address, datatokenAddress, txHash } =
         await createTokensAndPricing(values, accountId, config, nftFactory)
 
       const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
       if (!isSuccess) throw new Error('No Token created. Please try again.')
 
-      LoggerInstance.log('[publish] createTokensAndPricing tx', txHash)
-      LoggerInstance.log('[publish] erc721Address', erc721Address)
-      LoggerInstance.log('[publish] datatokenAddress', datatokenAddress)
+      LoggerInstance.log('[publish] tx sent/mined OK:', txHash)
+      LoggerInstance.log('[publish] erc721Address:', erc721Address)
+      LoggerInstance.log('[publish] datatokenAddress:', datatokenAddress)
 
-      setFeedback((prevState) => ({
-        ...prevState,
-        '1': {
-          ...prevState['1'],
-          status: 'success',
-          txHash
-        }
+      setFeedback((prev) => ({
+        ...prev,
+        '1': { ...prev['1'], status: 'success', txHash }
       }))
 
       return { erc721Address, datatokenAddress }
-    } catch (error) {
-      LoggerInstance.error('[publish] error', error.message)
-      if (error.message.length > 65) {
+    } catch (error: any) {
+      LoggerInstance.error(
+        '[publish] error in create():',
+        error?.message || error
+      )
+      if (error?.message?.length > 65) {
         error.message = 'No Token created. Please try again.'
       }
-
-      setFeedback((prevState) => ({
-        ...prevState,
-        '1': {
-          ...prevState['1'],
-          status: 'error',
-          errorMessage: error.message
-        }
+      setFeedback((prev) => ({
+        ...prev,
+        '1': { ...prev['1'], status: 'error', errorMessage: error.message }
       }))
+      // para satisfacer el tipo, relanzamos; el caller (handleSubmit) ya captura el estado
+      throw error
     }
   }
 
   // --------------------------------------------------
-  // 2. Construct and encrypt DDO
+  // 2) Build & encrypt DDO
   // --------------------------------------------------
   async function encrypt(
     values: FormPublishData,
     erc721Address: string,
     datatokenAddress: string
   ): Promise<{ ddo: DDO; ddoEncrypted: string }> {
-    setFeedback((prevState) => ({
-      ...prevState,
-      '2': {
-        ...prevState['2'],
-        status: 'active',
-        errorMessage: null
-      }
+    setFeedback((prev) => ({
+      ...prev,
+      '2': { ...prev['2'], status: 'active', errorMessage: null }
     }))
 
     try {
-      if (!datatokenAddress || !erc721Address)
+      if (!datatokenAddress || !erc721Address) {
         throw new Error('No NFT or Datatoken received. Please try again.')
+      }
 
       const ddo = await transformPublishFormToDdo(
         values,
         datatokenAddress,
         erc721Address
       )
-
       if (!ddo) throw new Error('No DDO received. Please try again.')
 
       setDdo(ddo)
-      LoggerInstance.log('[publish] Got new DDO', ddo)
+
+      // LOG clave: inspeccionamos DDO mínimo necesario
+      const svc = ddo?.services?.[0]
+      LoggerInstance.log('[publish] DDO built:', {
+        id: ddo?.id,
+        chainId: ddo?.chainId,
+        nftAddress: (ddo as any)?.nftAddress, // algunas builds lo traen
+        servicesCount: ddo?.services?.length,
+        firstService: {
+          type: svc?.type,
+          datatokenAddress: (svc as any)?.datatokenAddress,
+          serviceEndpoint: svc?.serviceEndpoint
+        }
+      })
+
+      // resolver provider que usaremos para encrypt
+      const resolvedProviderUrl =
+        customProviderUrl || values?.services?.[0]?.providerUrl?.url
+      LoggerInstance.log('[publish] Provider for encrypt:', resolvedProviderUrl)
 
       let ddoEncrypted: string
       try {
         ddoEncrypted = await ProviderInstance.encrypt(
           ddo,
           ddo.chainId,
-          customProviderUrl || values.services[0].providerUrl.url,
+          resolvedProviderUrl,
           newAbortController()
         )
-      } catch (error) {
-        const message = getErrorMessage(error.message)
+      } catch (e: any) {
+        const message = getErrorMessage(e?.message)
         LoggerInstance.error('[Provider Encrypt] Error:', message)
       }
 
@@ -158,49 +200,50 @@ export default function PublishPage({
         throw new Error('No encrypted DDO received. Please try again.')
 
       setDdoEncrypted(ddoEncrypted)
-      LoggerInstance.log('[publish] Got encrypted DDO', ddoEncrypted)
+      LoggerInstance.log('[publish] DDO encrypted length:', ddoEncrypted.length)
 
-      setFeedback((prevState) => ({
-        ...prevState,
-        '2': {
-          ...prevState['2'],
-          status: 'success'
-        }
+      setFeedback((prev) => ({
+        ...prev,
+        '2': { ...prev['2'], status: 'success' }
       }))
+
       return { ddo, ddoEncrypted }
-    } catch (error) {
-      LoggerInstance.error('[publish] error', error.message)
-      setFeedback((prevState) => ({
-        ...prevState,
-        '2': {
-          ...prevState['2'],
-          status: 'error',
-          errorMessage: error.message
-        }
+    } catch (error: any) {
+      LoggerInstance.error(
+        '[publish] error in encrypt():',
+        error?.message || error
+      )
+      setFeedback((prev) => ({
+        ...prev,
+        '2': { ...prev['2'], status: 'error', errorMessage: error.message }
       }))
     }
   }
 
   // --------------------------------------------------
-  // 3. Write DDO into NFT metadata
+  // 3) Write DDO into NFT metadata (on-chain)
   // --------------------------------------------------
   async function publish(
     values: FormPublishData,
     ddo: DDO,
     ddoEncrypted: string
   ): Promise<{ did: string }> {
-    setFeedback((prevState) => ({
-      ...prevState,
-      '3': {
-        ...prevState['3'],
-        status: 'active',
-        errorMessage: null
-      }
+    setFeedback((prev) => ({
+      ...prev,
+      '3': { ...prev['3'], status: 'active', errorMessage: null }
     }))
 
     try {
-      if (!ddo || !ddoEncrypted)
+      if (!ddo || !ddoEncrypted) {
         throw new Error('No DDO received. Please try again.')
+      }
+
+      LoggerInstance.log('[publish] setNFTMetadataAndTokenURI =>', {
+        did: ddo?.id,
+        chainId: ddo?.chainId,
+        nftAddress: (ddo as any)?.nftAddress,
+        hasEncrypted: Boolean(ddoEncrypted)
+      })
 
       const res = await setNFTMetadataAndTokenURI(
         ddo,
@@ -215,27 +258,26 @@ export default function PublishPage({
           'Metadata could not be written into the NFT. Please try again.'
         )
 
-      LoggerInstance.log('[publish] setMetadata result', tx)
+      LoggerInstance.log('[publish] setMetadata txHash:', tx?.transactionHash)
 
-      setFeedback((prevState) => ({
-        ...prevState,
+      setFeedback((prev) => ({
+        ...prev,
         '3': {
-          ...prevState['3'],
+          ...prev['3'],
           status: tx ? 'success' : 'error',
           txHash: tx?.transactionHash
         }
       }))
 
       return { did: ddo.id }
-    } catch (error) {
-      LoggerInstance.error('[publish] error', error.message)
-      setFeedback((prevState) => ({
-        ...prevState,
-        '3': {
-          ...prevState['3'],
-          status: 'error',
-          errorMessage: error.message
-        }
+    } catch (error: any) {
+      LoggerInstance.error(
+        '[publish] error in publish():',
+        error?.message || error
+      )
+      setFeedback((prev) => ({
+        ...prev,
+        '3': { ...prev['3'], status: 'error', errorMessage: error.message }
       }))
     }
   }
@@ -244,6 +286,8 @@ export default function PublishPage({
   // Orchestrate publishing
   // --------------------------------------------------
   async function handleSubmit(values: FormPublishData) {
+    LoggerInstance.log('=== [publish] handleSubmit START ===')
+
     // Syncing variables with state, enabling retry of failed steps
     let _erc721Address = erc721Address
     let _datatokenAddress = datatokenAddress
@@ -252,30 +296,40 @@ export default function PublishPage({
     let _did = did
 
     if (!_erc721Address || !_datatokenAddress) {
-      const { erc721Address, datatokenAddress } = await create(values)
-      _erc721Address = erc721Address
-      _datatokenAddress = datatokenAddress
-      setErc721Address(erc721Address)
-      setDatatokenAddress(datatokenAddress)
+      LoggerInstance.log('[publish] Step 1: create()')
+      const result = await create(values)
+      _erc721Address = result?.erc721Address
+      _datatokenAddress = result?.datatokenAddress
+      setErc721Address(_erc721Address)
+      setDatatokenAddress(_datatokenAddress)
+      LoggerInstance.log('[publish] Step 1 done:', {
+        erc721: _erc721Address,
+        datatoken: _datatokenAddress
+      })
     }
 
     if (!_ddo || !_ddoEncrypted) {
-      const { ddo, ddoEncrypted } = await encrypt(
-        values,
-        _erc721Address,
-        _datatokenAddress
-      )
-      _ddo = ddo
-      _ddoEncrypted = ddoEncrypted
-      setDdo(ddo)
-      setDdoEncrypted(ddoEncrypted)
+      LoggerInstance.log('[publish] Step 2: encrypt()')
+      const result = await encrypt(values, _erc721Address, _datatokenAddress)
+      _ddo = result?.ddo
+      _ddoEncrypted = result?.ddoEncrypted
+      setDdo(_ddo)
+      setDdoEncrypted(_ddoEncrypted)
+      LoggerInstance.log('[publish] Step 2 done:', {
+        did: _ddo?.id,
+        hasEncrypted: Boolean(_ddoEncrypted)
+      })
     }
 
     if (!_did) {
-      const { did } = await publish(values, _ddo, _ddoEncrypted)
-      _did = did
-      setDid(did)
+      LoggerInstance.log('[publish] Step 3: publish()')
+      const result = await publish(values, _ddo, _ddoEncrypted)
+      _did = result?.did
+      setDid(_did)
+      LoggerInstance.log('[publish] Step 3 done. DID:', _did)
     }
+
+    LoggerInstance.log('=== [publish] handleSubmit END ===')
   }
 
   return isInPurgatory && purgatoryData ? null : (
@@ -283,7 +337,6 @@ export default function PublishPage({
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={async (values) => {
-        // kick off publishing
         await handleSubmit(values)
       }}
     >

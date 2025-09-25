@@ -1,0 +1,16 @@
+services:
+  aquarius:
+    image: ghcr.io/oceanprotocol/aquarius:latest
+    container_name: aquarius-local
+    restart: unless-stopped
+    ports:
+      - '5000:5000'
+    env_file:
+      - .env
+    environment:
+      AQUARIUS_LOG_LEVEL: 'INFO'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5000/health']
+      interval: 20s
+      timeout: 5s
+      retries: 15

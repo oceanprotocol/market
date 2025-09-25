@@ -1,70 +1,51 @@
-// chain configs in ocean.js ConfigHelperConfig format
-// see: https://github.com/oceanprotocol/ocean.js/blob/e07a7cb6ecea12b39ed96f994b4abe37806799a1/src/utils/ConfigHelper.ts#L8
-
-const chains = [
-  {
-    chainId: 11155111,
-    isDefault: false,
-    isCustom: true,
-    network: 'Eth Sepolia',
-    oceanTokenSymbol: 'WETH',
-    oceanTokenAddress: '0x5f207d42f869fd1c71d7f0f81a2a67fc20ff7323',
-    nftFactoryAddress: '0xFdC4a5DEaCDfc6D82F66e894539461a269900E13',
-    fixedRateExchangeAddress: '0x8372715D834d286c9aECE1AcD51Da5755B32D505',
-    dispenserAddress: '0x5461b629E01f72E0A468931A36e039Eea394f9eA',
-    opfCommunityFeeCollector: '0x1f84fB438292269219f9396D57431eA9257C23d4',
-    startBlock: 57428,
-    transactionBlockTimeout: 50,
-    transactionConfirmationBlocks: 1,
-    transactionPollingTimeout: 750,
-    gasFeeMultiplier: 1.1,
-    providerUri: 'https://provider.dev.pontus-x.eu',
-    providerAddress: '0x68C24FA5b2319C81b34f248d1f928601D2E5246B',
-    metadataCacheUri: 'https://aquarius.pontus-x.eu',
-    nodeUri: 'https://rpc.dev.pontus-x.eu',
-    subgraphUri: 'https://subgraph.dev.pontus-x.eu',
-    explorerUri: 'https://explorer.pontus-x.eu/devnet/pontusx'
-  },
-  {
-    chainId: 8996,
-    isDefault: true,
-    isCustom: true,
-    network: 'pontusx-testnet',
-    oceanTokenSymbol: 'WETH',
-    oceanTokenAddress: '0x5f207d42f869fd1c71d7f0f81a2a67fc20ff7323',
-    nftFactoryAddress: '0x2C4d542ff791890D9290Eec89C9348A4891A6Fd2',
-    fixedRateExchangeAddress: '0xcE0F39abB6DA2aE4d072DA78FA0A711cBB62764E',
-    dispenserAddress: '0xaB5B68F88Bc881CAA427007559E9bbF8818026dE',
-    opfCommunityFeeCollector: '0xACC8d1B2a0007951fb4ed622ACB1C4fcCAbe778D',
-    startBlock: 82191,
-    transactionBlockTimeout: 50,
-    transactionConfirmationBlocks: 1,
-    transactionPollingTimeout: 750,
-    gasFeeMultiplier: 1.1,
-    providerUri: 'https://provider.test.pontus-x.eu',
-    providerAddress: '0x9546d39CE3E48BC942f0be4AA9652cBe0Aff3592',
-    metadataCacheUri: 'https://aquarius.pontus-x.eu',
-    nodeUri: 'https://rpc.test.pontus-x.eu',
-    subgraphUri: 'https://subgraph.test.pontus-x.eu',
-    explorerUri: 'https://explorer.pontus-x.eu/testnet/pontusx'
-  }
-]
-
-const getDefaultChainIds = () => {
-  return chains.filter((chain) => chain.isDefault).map((c) => c.chainId)
-}
-
-const getSupportedChainIds = () => {
-  return chains.map((c) => c.chainId)
-}
-
-const getCustomChainIds = () => {
-  return chains.filter((c) => c.isCustom).map((c) => c.chainId)
-}
+// chains.config.cjs
+// Mapa por chainId (no array).
+// Valores públicos de Sepolia usados por Ocean Market v4.
 
 module.exports = {
-  chains,
-  getDefaultChainIds,
-  getSupportedChainIds,
-  getCustomChainIds
+  11155111: {
+    chainId: 11155111,
+    network: 'Ethereum Sepolia',
+    isDefault: true,
+    isCustom: true,
+
+    // Token base
+    oceanTokenSymbol: 'OCEAN',
+    oceanTokenAddress: '0x1B083D8584dd3e6Ff37d04a6e7e82b5F622f3985',
+
+    // Contratos públicos en Sepolia
+    nftFactoryAddress: '0xEF62FB495266C72a5212A11Dce8baa79Ec0ABeB1',
+    fixedRateExchangeAddress: '0x80E63f73cAc60c1662f27D2DFd2EA834acddBaa8',
+    dispenserAddress: '0x2720d405ef7cDC8a2E2e5AeBC8883C99611d893C',
+    opfCommunityFeeCollector: '0x69B6E54Ad2b3c2801d11d8Ad56ea1d892555b776',
+
+    // RPC (pon tu INFURA real: usa el de tu .env)
+    nodeUri:
+      process.env.NEXT_PUBLIC_RPC_URI ||
+      `https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`,
+
+    // Provider público v4 y su address para Sepolia
+    providerUri:
+      process.env.NEXT_PUBLIC_PROVIDER_URL ||
+      'https://v4.provider.oceanprotocol.com',
+    // Dirección del provider para 11155111 (vista en el / root del provider v4)
+    providerAddress: '0x00c6A0BC5cD0078d6Cd0b659E8061B404cfa5704',
+
+    // Aquarius & Subgraph públicos de Sepolia
+    metadataCacheUri:
+      process.env.NEXT_PUBLIC_METADATACACHE_URI ||
+      'https://aquarius.sepolia.oceanprotocol.com',
+    subgraphUri:
+      process.env.NEXT_PUBLIC_SUBGRAPH_URI ||
+      'https://subgraph.sepolia.oceanprotocol.com',
+
+    explorerUri: 'https://sepolia.etherscan.io',
+
+    // Opcionales (seguros):
+    startBlock: 3722802,
+    transactionBlockTimeout: 50,
+    transactionConfirmationBlocks: 1,
+    transactionPollingTimeout: 750,
+    gasFeeMultiplier: 1.1
+  }
 }

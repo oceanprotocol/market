@@ -2,6 +2,7 @@ import { LoggerInstance } from '@oceanprotocol/lib'
 import { Asset } from '@oceanprotocol/ddo-js'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { metadataCacheUri, allowDynamicPricing } from '../../../app.config.cjs'
+console.log('[Aquarius] metadataCacheUri =>', metadataCacheUri)
 import addressConfig from '../../../address.config.cjs'
 import {
   SortDirectionOptions,

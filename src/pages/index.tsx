@@ -15,6 +15,8 @@ export default function PageHome(): ReactElement {
       uri={router.route}
       headerCenter
     >
+      {' '}
+      <div>Hola mundo!!!</div>
       <Home />
     </Page>
   )
