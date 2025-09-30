@@ -48,7 +48,7 @@
     "date-fns": "^3.6.0",
     "decimal.js": "^10.4.3",
     "dom-confetti": "^0.2.2",
-    "ethers": "^5.7.2",
+    "ethers": "^5.8.0",
     "filesize": "^10.1.2",
     "formik": "^2.4.2",
     "gray-matter": "^4.0.3",
